@@ -2,7 +2,8 @@ package com.cmoney.backend2.cmtalk.service
 
 import com.cmoney.backend2.cmtalk.service.api.TargetMediaListInfo
 import retrofit2.Response
-import retrofit2.http.*
+import retrofit2.http.GET
+import retrofit2.http.Query
 
 interface CMTalkService {
     /**
