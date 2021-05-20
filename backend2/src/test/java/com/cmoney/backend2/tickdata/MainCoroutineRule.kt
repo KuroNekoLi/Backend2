@@ -1,4 +1,4 @@
-package com.cmoney.backend2.trial
+package com.cmoney.backend2.tickdata
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers

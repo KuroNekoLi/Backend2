@@ -1,12 +1,9 @@
-package com.cmoney.backend2.tickdata
+package com.cmoney.backend2.tickdata.service
 
 import com.cmoney.backend2.base.model.request.MemberApiParam
-import com.cmoney.backend2.tickdata.service.TickDataService
-import com.cmoney.backend2.tickdata.service.TickDataWeb
-import com.cmoney.backend2.tickdata.service.TickDataWebImpl
-import com.cmoney.backend2.trial.FakeSetting
-import com.cmoney.backend2.trial.MainCoroutineRule
-import com.cmoney.backend2.trial.TestDispatcher
+import com.cmoney.backend2.tickdata.FakeSetting
+import com.cmoney.backend2.tickdata.MainCoroutineRule
+import com.cmoney.backend2.tickdata.TestDispatcher
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.MockK
