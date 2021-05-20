@@ -3,6 +3,7 @@ package com.cmoney.backend2.cellphone.service
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.cellphone.MainCoroutineRule
+import com.cmoney.backend2.cellphone.TestDispatcher
 import com.cmoney.backend2.cellphone.TestSetting
 import com.cmoney.backend2.cellphone.service.api.CellphoneParam
 import com.cmoney.backend2.cellphone.service.api.bindcellphone.BindCellphoneResponseBodyWithError
@@ -14,7 +15,6 @@ import com.cmoney.backend2.cellphone.service.api.getverifycode.CellphoneGetVerif
 import com.cmoney.backend2.cellphone.service.api.register.CellphoneRegisterWithError
 import com.cmoney.backend2.cellphone.service.api.unbindcellphone.UnbindCellphoneResponseBodyWithError
 import com.cmoney.backend2.cellphone.service.api.updatepassword.UpdatePasswordResponseBodyWithError
-import com.cmoney.backend2.portal.TestDispatcher
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations

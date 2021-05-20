@@ -1,4 +1,4 @@
-package com.cmoney.backend2.portal
+package com.cmoney.backend2.cellphone
 
 import com.cmoney.backend2.base.model.dispatcher.DispatcherProvider
 import kotlinx.coroutines.CoroutineDispatcher
