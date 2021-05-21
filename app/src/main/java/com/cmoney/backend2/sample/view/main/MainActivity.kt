@@ -11,6 +11,7 @@ import com.cmoney.backend2.sample.databinding.ActivityMainBinding
 import com.cmoney.backend2.sample.extension.lockWindows
 import com.cmoney.backend2.sample.extension.toast
 import com.cmoney.backend2.sample.extension.unlockWindows
+import com.cmoney.backend2.sample.servicecase.ActivityServiceCase
 import com.cmoney.backend2.sample.view.main.data.LoginEvent
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -93,7 +94,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun apiTest() {
         lifecycleScope.launch {
-
+            ActivityServiceCase().testAll()
         }
     }
 }

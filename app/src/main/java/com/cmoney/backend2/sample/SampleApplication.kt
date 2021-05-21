@@ -1,6 +1,7 @@
 package com.cmoney.backend2.sample
 
 import android.app.Application
+import com.cmoney.backend2.activity.di.activityServiceModule
 import com.cmoney.backend2.base.di.BACKEND2_SETTING
 import com.cmoney.backend2.base.di.backendBaseModule
 import com.cmoney.backend2.base.model.setting.Platform
@@ -27,7 +28,8 @@ class SampleApplication : Application() {
                     viewModule,
                     //backend module
                     backendBaseModule,
-                    identityProviderServiceModule
+                    identityProviderServiceModule,
+                    activityServiceModule
                 )
             )
         }
