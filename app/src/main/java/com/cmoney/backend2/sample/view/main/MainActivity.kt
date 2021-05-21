@@ -11,8 +11,11 @@ import com.cmoney.backend2.sample.databinding.ActivityMainBinding
 import com.cmoney.backend2.sample.extension.lockWindows
 import com.cmoney.backend2.sample.extension.toast
 import com.cmoney.backend2.sample.extension.unlockWindows
-import com.cmoney.backend2.sample.servicecase.ActivityServiceCase
+import com.cmoney.backend2.sample.servicecase.AdditionalInformationRevisitTestCase
+import com.cmoney.backend2.sample.servicecase.ServiceCase
 import com.cmoney.backend2.sample.view.main.data.LoginEvent
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -94,7 +97,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun apiTest() {
         lifecycleScope.launch {
-            ActivityServiceCase().testAll()
+            val deferredList = listOf<ServiceCase>(
+//                ActivityServiceCase(),
+                AdditionalInformationRevisitTestCase(isSignal = true)
+            ).map { serviceCase ->
+                async {
+                    serviceCase.testAll()
+                }
+            }
+            deferredList.awaitAll()
         }
     }
 }
