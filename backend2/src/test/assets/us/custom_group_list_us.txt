@@ -1,0 +1,59 @@
+{
+  "Group": [
+    {
+      "Order": 13,
+      "DocType": 5,
+      "DocNo": 13506511,
+      "CustomerID": 1496571,
+      "DocName": "自選股清單1",
+      "Flag": 1,
+      "DocRight": "",
+      "SP_CMID": "B107",
+      "CreateTime": "2020-10-30T14:08:34"
+    },
+    {
+      "Order": 14,
+      "DocType": 5,
+      "DocNo": 13506512,
+      "CustomerID": 1496571,
+      "DocName": "自選股清單2",
+      "Flag": 1,
+      "DocRight": "",
+      "SP_CMID": "B107",
+      "CreateTime": "2020-10-30T14:08:34"
+    },
+    {
+      "Order": 15,
+      "DocType": 5,
+      "DocNo": 13506513,
+      "CustomerID": 1496571,
+      "DocName": "自選股清單3",
+      "Flag": 1,
+      "DocRight": "",
+      "SP_CMID": "B107",
+      "CreateTime": "2020-10-30T14:08:34"
+    },
+    {
+      "Order": 16,
+      "DocType": 5,
+      "DocNo": 13506514,
+      "CustomerID": 1496571,
+      "DocName": "自選股清單4",
+      "Flag": 1,
+      "DocRight": "",
+      "SP_CMID": "B107",
+      "CreateTime": "2020-10-30T14:08:34"
+    },
+    {
+      "Order": 17,
+      "DocType": 5,
+      "DocNo": 13506515,
+      "CustomerID": 1496571,
+      "DocName": "自選股清單5",
+      "Flag": 1,
+      "DocRight": "",
+      "SP_CMID": "B107",
+      "CreateTime": "2020-10-30T14:08:34"
+    }
+  ]
+}
