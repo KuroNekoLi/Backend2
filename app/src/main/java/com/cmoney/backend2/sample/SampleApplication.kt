@@ -1,10 +1,17 @@
 package com.cmoney.backend2.sample
 
 import android.app.Application
+import com.cmoney.backend2.activity.di.activityServiceModule
+import com.cmoney.backend2.additioninformationrevisit.di.additionalInformationRevisitServiceModule
 import com.cmoney.backend2.base.di.BACKEND2_SETTING
 import com.cmoney.backend2.base.di.backendBaseModule
 import com.cmoney.backend2.base.model.setting.Platform
 import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.backend2.billing.di.billingServiceModule
+import com.cmoney.backend2.cellphone.di.cellphoneServiceModule
+import com.cmoney.backend2.chat.di.chatServiceModule
+import com.cmoney.backend2.cmtalk.di.cmtalkServiceModule
+import com.cmoney.backend2.customgroup.di.customGroupServiceModule
 import com.cmoney.backend2.identityprovider.di.identityProviderServiceModule
 import com.cmoney.backend2.sample.di.viewModule
 import org.koin.android.ext.android.get
@@ -27,7 +34,14 @@ class SampleApplication : Application() {
                     viewModule,
                     //backend module
                     backendBaseModule,
-                    identityProviderServiceModule
+                    identityProviderServiceModule,
+                    activityServiceModule,
+                    additionalInformationRevisitServiceModule,
+                    billingServiceModule,
+                    cellphoneServiceModule,
+                    chatServiceModule,
+                    cmtalkServiceModule,
+                    customGroupServiceModule
                 )
             )
         }
