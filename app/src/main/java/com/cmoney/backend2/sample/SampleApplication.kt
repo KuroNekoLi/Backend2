@@ -15,6 +15,7 @@ import com.cmoney.backend2.customgroup.di.customGroupServiceModule
 import com.cmoney.backend2.dtno.di.dtnoServiceModule
 import com.cmoney.backend2.emilystock.di.emilyServiceModule
 import com.cmoney.backend2.identityprovider.di.identityProviderServiceModule
+import com.cmoney.backend2.media.di.mediaServiceModule
 import com.cmoney.backend2.sample.di.viewModule
 import org.koin.android.ext.android.get
 import org.koin.android.ext.koin.androidContext
@@ -45,7 +46,8 @@ class SampleApplication : Application() {
                     cmtalkServiceModule,
                     customGroupServiceModule,
                     dtnoServiceModule,
-                    emilyServiceModule
+                    emilyServiceModule,
+                    mediaServiceModule
                 )
             )
         }
