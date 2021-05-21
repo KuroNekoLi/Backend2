@@ -1,0 +1,54 @@
+[
+  {
+    "mobileProductSn": 70,
+    "productId": "com.cmoney.purchasesample.30_31",
+    "productName": "30_31商品",
+    "appId": 98,
+    "device": 2,
+    "purchaseType": 3,
+    "purchaseAuthType": 1,
+    "price": 31,
+    "packageName": null,
+    "itemId": 0,
+    "productType": 888003
+  },
+  {
+    "mobileProductSn": 71,
+    "productId": "com.cmoney.purchasesample.360_31",
+    "productName": "360_31商品",
+    "appId": 98,
+    "device": 2,
+    "purchaseType": 3,
+    "purchaseAuthType": 3,
+    "price": 31,
+    "packageName": null,
+    "itemId": 0,
+    "productType": 888003
+  },
+  {
+    "mobileProductSn": 74,
+    "productId": "com.cmoney.purchasesample.item1",
+    "productName": "寶石30顆",
+    "appId": 98,
+    "device": 2,
+    "purchaseType": 1,
+    "purchaseAuthType": 1,
+    "price": 31,
+    "packageName": null,
+    "itemId": 0,
+    "productType": 888003
+  },
+  {
+    "mobileProductSn": 75,
+    "productId": "com.cmoney.purchasesample.item2",
+    "productName": "寶石60顆",
+    "appId": 98,
+    "device": 2,
+    "purchaseType": 1,
+    "purchaseAuthType": 1,
+    "price": 31,
+    "packageName": null,
+    "itemId": 0,
+    "productType": 888003
+  }
+]
