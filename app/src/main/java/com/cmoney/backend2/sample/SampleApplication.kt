@@ -7,6 +7,7 @@ import com.cmoney.backend2.base.di.BACKEND2_SETTING
 import com.cmoney.backend2.base.di.backendBaseModule
 import com.cmoney.backend2.base.model.setting.Platform
 import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.backend2.billing.di.billingServiceModule
 import com.cmoney.backend2.identityprovider.di.identityProviderServiceModule
 import com.cmoney.backend2.sample.di.viewModule
 import org.koin.android.ext.android.get
@@ -31,7 +32,8 @@ class SampleApplication : Application() {
                     backendBaseModule,
                     identityProviderServiceModule,
                     activityServiceModule,
-                    additionalInformationRevisitServiceModule
+                    additionalInformationRevisitServiceModule,
+                    billingServiceModule
                 )
             )
         }
