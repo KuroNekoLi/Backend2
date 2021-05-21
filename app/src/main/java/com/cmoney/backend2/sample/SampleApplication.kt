@@ -18,6 +18,7 @@ import com.cmoney.backend2.identityprovider.di.identityProviderServiceModule
 import com.cmoney.backend2.media.di.mediaServiceModule
 import com.cmoney.backend2.notes.di.notesServiceModule
 import com.cmoney.backend2.notification.di.notificationServiceModule
+import com.cmoney.backend2.notification2.di.notification2ServiceModule
 import com.cmoney.backend2.sample.di.viewModule
 import org.koin.android.ext.android.get
 import org.koin.android.ext.koin.androidContext
@@ -51,7 +52,8 @@ class SampleApplication : Application() {
                     emilyServiceModule,
                     mediaServiceModule,
                     notesServiceModule,
-                    notificationServiceModule
+                    notificationServiceModule,
+                    notification2ServiceModule
                 )
             )
         }
