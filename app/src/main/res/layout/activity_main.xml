@@ -4,15 +4,73 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context="com.cmoney.backend2.sample.view.main.MainActivity">
 
-    <TextView
+    <Spinner
+        android:id="@+id/domain_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:background="@android:color/holo_purple"
+        android:entries="@array/domain_url"
+        android:spinnerMode="dialog"
+        app:layout_constraintEnd_toEndOf="@+id/account_editText"
+        app:layout_constraintStart_toStartOf="@+id/account_editText"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.8" />
+
+    <Spinner
+        android:id="@+id/app_id_spinner"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="20dp"
+        android:background="@android:color/holo_orange_light"
+        android:entries="@array/app_list"
+        android:spinnerMode="dialog"
+        app:layout_constraintEnd_toEndOf="@+id/account_editText"
+        app:layout_constraintStart_toStartOf="@+id/account_editText"
+        app:layout_constraintTop_toBottomOf="@+id/domain_spinner"
+        app:layout_constraintWidth_percent="0.8" />
+
+    <EditText
+        android:id="@+id/account_editText"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="20dp"
+        android:autofillHints="email"
+        android:hint="@string/account"
+        android:imeOptions="actionNext"
+        android:inputType="textEmailAddress"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/app_id_spinner"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintWidth_percent="0.8"
+        tools:targetApi="o" />
+
+    <EditText
+        android:id="@+id/password_editText"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="20dp"
+        android:autofillHints="password"
+        android:hint="@string/password"
+        android:imeOptions="actionDone"
+        android:inputType="textPassword"
+        app:layout_constraintBottom_toTopOf="@+id/login_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/account_editText"
+        app:layout_constraintWidth_percent="0.8"
+        tools:targetApi="o" />
+
+    <Button
+        android:id="@+id/login_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginTop="40dp"
+        android:text="@string/login"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/password_editText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

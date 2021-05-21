@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="domain_url">
+        <item>https://www.cmoney.tw/</item><!--default-->
+        <item>https://api.cmoney.tw/</item>
+        <item>http://192.168.10.93/</item>
+        <item>https://outpost.cmoney.tw/</item>
+        <item>http://192.168.10.148/</item>
+        <item>http://192.168.99.148/</item>
+        <item>http://192.168.10.187/</item>
+    </string-array>
+
+    <string-array name="app_list">
+        <item>2,籌碼K線,cmchipkmobile</item>
+        <item>18,股市爆料同學會,cmstockcommunity</item>
+        <item>99,Backend測試,testapp</item>
+    </string-array>
+</resources>
