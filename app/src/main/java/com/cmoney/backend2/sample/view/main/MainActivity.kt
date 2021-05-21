@@ -11,7 +11,7 @@ import com.cmoney.backend2.sample.databinding.ActivityMainBinding
 import com.cmoney.backend2.sample.extension.lockWindows
 import com.cmoney.backend2.sample.extension.toast
 import com.cmoney.backend2.sample.extension.unlockWindows
-import com.cmoney.backend2.sample.servicecase.ChatRoomServiceCase
+import com.cmoney.backend2.sample.servicecase.CMTalkServiceCase
 import com.cmoney.backend2.sample.servicecase.ServiceCase
 import com.cmoney.backend2.sample.view.main.data.LoginEvent
 import kotlinx.coroutines.async
@@ -102,7 +102,8 @@ class MainActivity : AppCompatActivity() {
 //                AdditionalInformationRevisitTestCase(isSignal = true),
 //                BillingServiceCase(),
 //                CellphoneServiceCase(),
-                ChatRoomServiceCase()
+//                ChatRoomServiceCase(),
+                CMTalkServiceCase()
             ).map { serviceCase ->
                 async {
                     serviceCase.testAll()
