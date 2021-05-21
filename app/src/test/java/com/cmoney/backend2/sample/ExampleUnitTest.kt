@@ -1,4 +1,4 @@
-package com.cmoney.backend.sample
+package com.cmoney.backend2.sample
 
 import org.junit.Assert.assertEquals
 import org.junit.Test
