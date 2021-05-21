@@ -13,6 +13,7 @@ import com.cmoney.backend2.chat.di.chatServiceModule
 import com.cmoney.backend2.cmtalk.di.cmtalkServiceModule
 import com.cmoney.backend2.customgroup.di.customGroupServiceModule
 import com.cmoney.backend2.dtno.di.dtnoServiceModule
+import com.cmoney.backend2.emilystock.di.emilyServiceModule
 import com.cmoney.backend2.identityprovider.di.identityProviderServiceModule
 import com.cmoney.backend2.sample.di.viewModule
 import org.koin.android.ext.android.get
@@ -43,7 +44,8 @@ class SampleApplication : Application() {
                     chatServiceModule,
                     cmtalkServiceModule,
                     customGroupServiceModule,
-                    dtnoServiceModule
+                    dtnoServiceModule,
+                    emilyServiceModule
                 )
             )
         }
