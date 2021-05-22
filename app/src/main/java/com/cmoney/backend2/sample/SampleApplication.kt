@@ -22,6 +22,7 @@ import com.cmoney.backend2.notification2.di.notification2ServiceModule
 import com.cmoney.backend2.portal.di.portalServiceModule
 import com.cmoney.backend2.realtimeaftermarket.di.realtimeAfterMarketServiceModule
 import com.cmoney.backend2.sample.di.viewModule
+import com.cmoney.backend2.tickdata.di.tickDataServiceModule
 import org.koin.android.ext.android.get
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -57,7 +58,8 @@ class SampleApplication : Application() {
                     notificationServiceModule,
                     notification2ServiceModule,
                     portalServiceModule,
-                    realtimeAfterMarketServiceModule
+                    realtimeAfterMarketServiceModule,
+                    tickDataServiceModule
                 )
             )
         }
