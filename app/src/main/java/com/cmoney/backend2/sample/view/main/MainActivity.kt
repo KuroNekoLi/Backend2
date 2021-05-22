@@ -12,7 +12,7 @@ import com.cmoney.backend2.sample.extension.lockWindows
 import com.cmoney.backend2.sample.extension.toast
 import com.cmoney.backend2.sample.extension.unlockWindows
 import com.cmoney.backend2.sample.servicecase.ServiceCase
-import com.cmoney.backend2.sample.servicecase.TickDataServiceCase
+import com.cmoney.backend2.sample.servicecase.TrialServiceCase
 import com.cmoney.backend2.sample.view.main.data.LoginEvent
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -113,7 +113,8 @@ class MainActivity : AppCompatActivity() {
 //                Notification2ServiceCase(),
 //                PortalServiceCase(),
 //                RealTimeAfterMarketServiceCase(),
-                TickDataServiceCase()
+//                TickDataServiceCase(),
+                TrialServiceCase()
             ).map { serviceCase ->
                 async {
                     serviceCase.testAll()
