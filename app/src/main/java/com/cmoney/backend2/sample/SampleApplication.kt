@@ -10,6 +10,7 @@ import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.billing.di.billingServiceModule
 import com.cmoney.backend2.cellphone.di.cellphoneServiceModule
 import com.cmoney.backend2.chat.di.chatServiceModule
+import com.cmoney.backend2.chipk.di.chipkServiceModule
 import com.cmoney.backend2.cmtalk.di.cmtalkServiceModule
 import com.cmoney.backend2.customgroup.di.customGroupServiceModule
 import com.cmoney.backend2.dtno.di.dtnoServiceModule
@@ -51,6 +52,7 @@ class SampleApplication : Application() {
                     billingServiceModule,
                     cellphoneServiceModule,
                     chatServiceModule,
+                    chipkServiceModule,
                     cmtalkServiceModule,
                     customGroupServiceModule,
                     dtnoServiceModule,
