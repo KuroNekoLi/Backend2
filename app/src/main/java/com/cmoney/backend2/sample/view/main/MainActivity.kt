@@ -12,7 +12,6 @@ import com.cmoney.backend2.sample.extension.lockWindows
 import com.cmoney.backend2.sample.extension.toast
 import com.cmoney.backend2.sample.extension.unlockWindows
 import com.cmoney.backend2.sample.servicecase.ServiceCase
-import com.cmoney.backend2.sample.servicecase.VirtualAssetsServiceCase
 import com.cmoney.backend2.sample.view.main.data.LoginEvent
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -98,6 +97,7 @@ class MainActivity : AppCompatActivity() {
     private fun apiTest() {
         lifecycleScope.launch {
             val deferredList = listOf<ServiceCase>(
+                // 要測試記得取消註解
 //                ActivityServiceCase(),
 //                AdditionalInformationRevisitTestCase(isSignal = true),
 //                BillingServiceCase(),
@@ -115,7 +115,7 @@ class MainActivity : AppCompatActivity() {
 //                RealTimeAfterMarketServiceCase(),
 //                TickDataServiceCase(),
 //                TrialServiceCase(),
-                VirtualAssetsServiceCase()
+//                VirtualAssetsServiceCase()
             ).map { serviceCase ->
                 async {
                     serviceCase.testAll()
