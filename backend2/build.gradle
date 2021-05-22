@@ -3,6 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-android-extensions'
 }
+apply from: 'mavenpush.gradle'
 
 android {
     compileSdkVersion compile_sdk_version
