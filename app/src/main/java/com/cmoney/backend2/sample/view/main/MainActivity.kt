@@ -103,6 +103,7 @@ class MainActivity : AppCompatActivity() {
 //                BillingServiceCase(),
 //                CellphoneServiceCase(),
 //                ChatRoomServiceCase(),
+//                ChipKServiceCase(),
 //                CMTalkServiceCase(),
 //                CustomGroupServiceCase(),
 //                DtnoServiceCase(),
