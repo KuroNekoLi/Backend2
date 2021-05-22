@@ -24,6 +24,7 @@ import com.cmoney.backend2.realtimeaftermarket.di.realtimeAfterMarketServiceModu
 import com.cmoney.backend2.sample.di.viewModule
 import com.cmoney.backend2.tickdata.di.tickDataServiceModule
 import com.cmoney.backend2.trial.di.trialServiceModule
+import com.cmoney.backend2.virtualassets.di.virtualAssetsServiceModule
 import org.koin.android.ext.android.get
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -61,7 +62,8 @@ class SampleApplication : Application() {
                     portalServiceModule,
                     realtimeAfterMarketServiceModule,
                     tickDataServiceModule,
-                    trialServiceModule
+                    trialServiceModule,
+                    virtualAssetsServiceModule
                 )
             )
         }
