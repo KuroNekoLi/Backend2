@@ -11,8 +11,8 @@ import com.cmoney.backend2.sample.databinding.ActivityMainBinding
 import com.cmoney.backend2.sample.extension.lockWindows
 import com.cmoney.backend2.sample.extension.toast
 import com.cmoney.backend2.sample.extension.unlockWindows
-import com.cmoney.backend2.sample.servicecase.DtnoServiceCase
 import com.cmoney.backend2.sample.servicecase.ServiceCase
+import com.cmoney.backend2.sample.servicecase.VirtualAssetsServiceCase
 import com.cmoney.backend2.sample.view.main.data.LoginEvent
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -105,7 +105,17 @@ class MainActivity : AppCompatActivity() {
 //                ChatRoomServiceCase(),
 //                CMTalkServiceCase(),
 //                CustomGroupServiceCase(),
-                DtnoServiceCase()
+//                DtnoServiceCase(),
+//                EmilyServiceCase(),
+//                MediaServiceCase(),
+//                NotesServiceCase(),
+//                NotificationServiceCase(),
+//                Notification2ServiceCase(),
+//                PortalServiceCase(),
+//                RealTimeAfterMarketServiceCase(),
+//                TickDataServiceCase(),
+//                TrialServiceCase(),
+                VirtualAssetsServiceCase()
             ).map { serviceCase ->
                 async {
                     serviceCase.testAll()
