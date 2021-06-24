@@ -16,6 +16,7 @@ import com.cmoney.backend2.customgroup.di.customGroupServiceModule
 import com.cmoney.backend2.dtno.di.dtnoServiceModule
 import com.cmoney.backend2.emilystock.di.emilyServiceModule
 import com.cmoney.backend2.identityprovider.di.identityProviderServiceModule
+import com.cmoney.backend2.image.di.imageServiceModule
 import com.cmoney.backend2.media.di.mediaServiceModule
 import com.cmoney.backend2.notes.di.notesServiceModule
 import com.cmoney.backend2.notification.di.notificationServiceModule
@@ -46,7 +47,6 @@ class SampleApplication : Application() {
                     viewModule,
                     //backend module
                     backendBaseModule,
-                    identityProviderServiceModule,
                     activityServiceModule,
                     additionalInformationRevisitServiceModule,
                     billingServiceModule,
@@ -57,6 +57,8 @@ class SampleApplication : Application() {
                     customGroupServiceModule,
                     dtnoServiceModule,
                     emilyServiceModule,
+                    identityProviderServiceModule,
+                    imageServiceModule,
                     mediaServiceModule,
                     notesServiceModule,
                     notificationServiceModule,
