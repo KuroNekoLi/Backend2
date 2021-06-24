@@ -10,6 +10,7 @@
 allprojects {
     repositories {
         google()
+		mavenCentral()
         jcenter()
         maven { url "http://192.168.99.70:8081/repository/maven-public/" }
     }
@@ -95,7 +96,8 @@ class SampleApplication : Application() {
             androidContext(this@SampleApplication)
             loadKoinModules(
                 listOf(
-                   backendBaseModule
+				    // 在此宣告需要的定義
+                    backendBaseModule
                 )
             )
         }
@@ -121,7 +123,7 @@ get<Setting>(BACKEND2_SETTING).apply {
 
 ### 實作Setting介面
 
-Base模組預設實作的Setting是沒有加密的SharedPreference，如果需要加密需自己Override，Koin的DI設定。
+Base模組預設實作的Setting是沒有加密的SharedPreference，如果需要加密需自己Override(目前登入模組已實作)，Koin的DI設定。
 
 ```
 val overrideSettingModule = module {
@@ -134,7 +136,7 @@ val overrideSettingModule = module {
 }
 ```
 
-#### 沒有加密得Setting
+#### 沒有加密的Setting
 
 使用SharedPreference為存儲體，避免記憶體不夠時回收。如果要使用記憶體，必須考慮到欄位是一個常數才可以用，不然回收後會使用預設值，不會使用更改後的值。
 
