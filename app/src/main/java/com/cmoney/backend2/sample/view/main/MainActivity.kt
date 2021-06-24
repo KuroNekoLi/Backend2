@@ -106,6 +106,7 @@ class MainActivity : AppCompatActivity() {
 //                ChatRoomServiceCase(),
 //                ChipKServiceCase(),
 //                CMTalkServiceCase(),
+//                CommonServiceCase(),
 //                CustomGroupServiceCase(),
 //                DtnoServiceCase(),
 //                EmilyServiceCase(),
