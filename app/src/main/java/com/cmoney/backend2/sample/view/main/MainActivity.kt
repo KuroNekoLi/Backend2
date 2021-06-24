@@ -111,6 +111,7 @@ class MainActivity : AppCompatActivity() {
 //                DtnoServiceCase(),
 //                EmilyServiceCase(),
 //                MediaServiceCase(),
+//                MobileOceanServiceCase(),
 //                NotesServiceCase(),
 //                NotificationServiceCase(),
 //                Notification2ServiceCase(),
