@@ -105,6 +105,69 @@ class SampleApplication : Application() {
 }
 ```
 
+##### 目前定義好的Module
+
+| 定義名稱                                  | 對應PackageName            |
+|-------------------------------------------|----------------------------|
+| activityServiceModule                     | activity                   |
+| additionalInformationRevisitServiceModule | additionInformationReviist |
+| authorizationServiceModule,               | authorization              |
+| backendBaseModule,                        | base                       |
+| billingServiceModule,                     | billing                    |
+| cellphoneServiceModule,                   | cellphone                  |
+| chatServiceModule,                        | chat                       |
+| chipkServiceModule,                       | chipk                      |
+| cmtalkServiceModule,                      | cmtalk                     |
+| commonServiceModule,                      | common                     |
+| customGroupServiceModule,                 | customgroup                |
+| dtnoServiceModule,                        | dtno                       |
+| emilyServiceModule,                       | emilystock                 |
+| forumOceanServiceModule,                  | forumocean                 |
+| identityProviderServiceModule,            | identityprovider           |
+| imageServiceModule,                       | image                      |
+| mediaServiceModule,                       | media                      |
+| mobileOceanServiceModule,                 | mobileocean                |
+| noteExtensionServiceModule,               | note_extension             |
+| notesServiceModule,                       | notes                      |
+| notificationServiceModule,                | notification               |
+| notification2ServiceModule,               | notification2              |
+| oceanServiceModule,                       | ocean                      |
+| portalServiceModule,                      | portal                     |
+| profileServiceModule,                     | profile                    |
+| realtimeAfterMarketServiceModule,         | realtimeaftermarket        |
+| tickDataServiceModule,                    | tickdata                   |
+| trialServiceModule,                       | trial                      |
+| virtualAssetsServiceModule                | virtualassets              |
+
+#### 選擇使用Module的步驟
+
+- 確認目前需要使用的服務的host之後的path，以下舉例說明
+
+```text
+AuthorizationServer/Authorization/ExpiredTime/{type}/{subjectId}
+```
+
+- 於模組專案中使用`Find in Path`進行搜尋
+- 搜尋到後，目前有兩個方式可以找到其koin定義Module
+    
+    1. 找到該`XXXService.kt`在哪個backend2/{packageName}，再來上方表格搜尋
+    
+    ```text
+    +--- targetPackage
+    |    +--- service
+    |         +--- XXXService.kt
+    ```
+    
+    2. 在該`XXXService.kt`的package(常為service)，同層找到`di`package，其中檔案(ServiceModule.kt)中就有定義
+    
+    ```text
+    +--- package
+    |    +--- di
+    |    |    +--- ServiceModule.kt
+    |    \--- service
+    |         +--- XXXService.kt
+    ```
+
 #### 更改設定的值
 
 通常在Application要把基本預設值設定完成
