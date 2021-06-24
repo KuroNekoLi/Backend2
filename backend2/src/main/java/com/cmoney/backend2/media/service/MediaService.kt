@@ -102,7 +102,7 @@ interface MediaService {
 
     /**
      * 服務9.1.取得手機影音清單
-     *
+     * 20210615 新增 tagIdList
      * @param chargeType 0: All, 1: Paid, 2: Free
      * @return The raw json element which may be array or error object.
      */
@@ -115,7 +115,8 @@ interface MediaService {
         @Field("guid") guid: String,
         @Field("skipCount") skipCount: Int,
         @Field("fetchCount") fetchCount: Int,
-        @Field("chargeType") chargeType: Int
+        @Field("chargeType") chargeType: Int,
+        @Field("tagIdList") tagIdList : String
     ): Response<ResponseBody>
 
     /**

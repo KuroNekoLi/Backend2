@@ -16,13 +16,15 @@ interface MediaWeb {
         apiParam: MemberApiParam,
         skipCount: Int,
         fetchCount: Int,
-        chargeType: Int
+        chargeType: Int,
+        tagIdList : List<Int> = emptyList()
     ): Result<List<VideoInfo>>
 
     suspend fun getMediaList(
         skipCount: Int,
         fetchCount: Int,
-        chargeType: Int
+        chargeType: Int,
+        tagIdList : List<Int> = emptyList()
     ): Result<List<VideoInfo>>
 
     @Deprecated("ApiParam no longer required")
@@ -32,7 +34,6 @@ interface MediaWeb {
 
     @Deprecated("ApiParam no longer required")
     suspend fun getMediaUrl(apiParam: MemberApiParam, mediaId: Long): Result<String>
-
     suspend fun getMediaUrl(mediaId: Long): Result<String>
 
     @Deprecated("ApiParam no longer required")
