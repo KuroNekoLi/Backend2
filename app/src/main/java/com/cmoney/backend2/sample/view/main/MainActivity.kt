@@ -110,6 +110,7 @@ class MainActivity : AppCompatActivity() {
 //                CustomGroupServiceCase(),
 //                DtnoServiceCase(),
 //                EmilyServiceCase(),
+//                ForumOceanServiceCase(),
 //                MediaServiceCase(),
 //                MobileOceanServiceCase(),
 //                NotesServiceCase(),
