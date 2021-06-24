@@ -10,7 +10,7 @@ class MediaServiceCase : ServiceCase {
 
     override suspend fun testAll() {
         mediaWeb.apply {
-            this.getMediaList(0, 10, 0).logResponse(TAG)
+            this.getMediaList(0, 10, 0, emptyList()).logResponse(TAG)
             this.getLiveStreamList(0, 10, 0).logResponse(TAG)
             this.getPaidMediaList(0, 10).logResponse(TAG)
             this.getPaidLiveList(0, 10).logResponse(TAG)

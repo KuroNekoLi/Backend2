@@ -50,14 +50,16 @@ class MediaWebImplTest {
                 guid = any(),
                 skipCount = any(),
                 fetchCount = any(),
-                chargeType = any()
+                chargeType = any(),
+                tagIdList = any()
             )
         } returns Response.success("[]".toResponseBody())
 
         val result = mediaWeb.getMediaList(
             skipCount = 0,
             fetchCount = 0,
-            chargeType = 0
+            chargeType = 0,
+            tagIdList = listOf(1)
         )
 
         Truth.assertThat(result.isSuccess).isTrue()
@@ -73,14 +75,16 @@ class MediaWebImplTest {
                 guid = any(),
                 skipCount = any(),
                 fetchCount = any(),
-                chargeType = any()
+                chargeType = any(),
+                tagIdList = any()
             )
         } returns Response.error(400, "".toResponseBody())
 
         val result = mediaWeb.getMediaList(
             skipCount = 0,
             fetchCount = 0,
-            chargeType = 0
+            chargeType = 0,
+            tagIdList = listOf(1)
         )
         Truth.assertThat(result.isSuccess).isFalse()
     }
@@ -95,7 +99,8 @@ class MediaWebImplTest {
                 guid = any(),
                 skipCount = any(),
                 fetchCount = any(),
-                chargeType = any()
+                chargeType = any(),
+                tagIdList = any()
             )
         } returns Response.success(
             // language=JSON
@@ -112,7 +117,8 @@ class MediaWebImplTest {
         val result = mediaWeb.getMediaList(
             skipCount = 0,
             fetchCount = 0,
-            chargeType = 0
+            chargeType = 0,
+            tagIdList = listOf(1)
         )
         Truth.assertThat(result.isSuccess).isFalse()
     }

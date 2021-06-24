@@ -32,15 +32,18 @@ class MediaWebImpl(
         apiParam: MemberApiParam,
         skipCount: Int,
         fetchCount: Int,
-        chargeType: Int
-    ): Result<List<VideoInfo>> = getMediaList(skipCount, fetchCount, chargeType)
+        chargeType: Int,
+        tagIdList : List<Int>
+    ): Result<List<VideoInfo>> = getMediaList(skipCount, fetchCount, chargeType , tagIdList)
 
     override suspend fun getMediaList(
         skipCount: Int,
         fetchCount: Int,
-        chargeType: Int
+        chargeType: Int,
+        tagIdList : List<Int>
     ): Result<List<VideoInfo>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
+            val tagIdListString = tagIdList.joinToString(separator = ",")
             solvedJsonArrayResponseQuestion<List<VideoInfo>>(
                 service.getMediaList(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -48,7 +51,8 @@ class MediaWebImpl(
                     guid = setting.identityToken.getMemberGuid(),
                     skipCount = skipCount,
                     fetchCount = fetchCount,
-                    chargeType = chargeType
+                    chargeType = chargeType,
+                    tagIdList = tagIdListString
                 ).checkIsSuccessful()
                     .requireBody()
                     .string()
