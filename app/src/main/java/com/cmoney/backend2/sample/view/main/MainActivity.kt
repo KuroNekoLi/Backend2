@@ -115,6 +115,7 @@ class MainActivity : AppCompatActivity() {
 //                NotesServiceCase(),
 //                NotificationServiceCase(),
 //                Notification2ServiceCase(),
+//                OceanServiceCase(),
 //                PortalServiceCase(),
 //                RealTimeAfterMarketServiceCase(),
 //                TickDataServiceCase(),
