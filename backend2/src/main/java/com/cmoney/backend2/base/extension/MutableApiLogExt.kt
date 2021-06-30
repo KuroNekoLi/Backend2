@@ -11,6 +11,9 @@ import com.cmoney.domain_logdatarecorder.data.api.log.ApiLogResponse
 import retrofit2.HttpException
 import retrofit2.Response
 
+/**
+ * 使用try catch紀錄Api行為，並在finally真正紀錄。
+ */
 internal suspend fun <R> runCatchingWithLog(block: suspend MutableApiLog.() -> R): Result<R> {
     val mutableApiLog = MutableApiLog()
     return try {
@@ -32,6 +35,10 @@ internal suspend fun <R> runCatchingWithLog(block: suspend MutableApiLog.() -> R
     }
 }
 
+/**
+ * 取用字串紀錄客製化的RequestBody，只要是能辨別出API的RequestBody的字串即可。
+ * ex: "field1,field2"
+ */
 internal fun MutableApiLog.customRequestBody(block: () -> String): Unit {
     val requestBodyString = block()
     this.apiLogRequest = this.apiLogRequest?.copy(
@@ -41,6 +48,12 @@ internal fun MutableApiLog.customRequestBody(block: () -> String): Unit {
     )
 }
 
+/**
+ * 紀錄Request
+ *
+ * @param setting Backend的Setting，主要紀錄userId
+ * @param block 呼叫Api的行為
+ */
 internal suspend fun <R : Response<ResponseBody>, ResponseBody> MutableApiLog.logRequest(
     setting: Setting,
     block: suspend () -> R
@@ -77,6 +90,9 @@ internal suspend fun <R : Response<ResponseBody>, ResponseBody> MutableApiLog.lo
     return response
 }
 
+/**
+ * 紀錄API的錯誤行為
+ */
 internal fun MutableApiLog.logError(exception: Exception) {
     val errorTime = System.currentTimeMillis()
     when (exception) {

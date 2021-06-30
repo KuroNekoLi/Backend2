@@ -36,7 +36,6 @@ class IdentityProviderWebImpl(
         hashedPassword: String
     ): Result<GetTokenResponseBody> = withContext(dispatcherProvider.io()) {
         runCatchingWithLog {
-            this.userId = setting.identityToken.getClientId()
             val response = logRequest(setting) {
                 val xApiLog = XApiLog(
                     appId = setting.appId,

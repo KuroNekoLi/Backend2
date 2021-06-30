@@ -480,6 +480,33 @@ suspend fun action(
 
 #### NO，以上都不符合，恭喜你，請自己寫判斷邏輯，幫你QQ，但現在新的API都應該是`Status Code 2xx代表成功，4xx代表失敗`，如果不是請跟核心組或是後台反應。
 
+
+## 紀錄API
+
+- 使用`runCatchingWithLog`開始紀錄API
+
+```
+runCatchingWithLog {
+	
+}
+```
+
+- 在`runCatchingWithLog `使用`logRequest(Setting)`紀錄發送的請求
+
+```
+val response = logRequest(setting) {
+    service.XXX()
+}
+```
+
+- 如果有ReqeustBody要紀錄，在`runCatchingWithLog `使用`customRequestBody`。
+
+```
+customRequestBody {
+	"field1,field2"
+}
+```
+
 [BaseModule]:http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/Base/blob/master/base/src/main/java/com/cmoney/backend2/base/di/BaseModule.kt
 
 [ApiLog]:http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/Base/blob/master/base/src/main/java/com/cmoney/backend2/base/model/log/ApiLog.kt
