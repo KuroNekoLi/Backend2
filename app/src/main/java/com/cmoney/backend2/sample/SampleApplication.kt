@@ -34,6 +34,7 @@ import com.cmoney.backend2.sample.di.viewModule
 import com.cmoney.backend2.tickdata.di.tickDataServiceModule
 import com.cmoney.backend2.trial.di.trialServiceModule
 import com.cmoney.backend2.virtualassets.di.virtualAssetsServiceModule
+import com.cmoney.data_logdatarecorder.recorder.LogDataRecorder
 import org.koin.android.ext.android.get
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -84,6 +85,10 @@ class SampleApplication : Application() {
                     virtualAssetsServiceModule
                 )
             )
+        }
+        LogDataRecorder.initialization(this) {
+            appId = 2
+            platform = com.cmoney.domain_logdatarecorder.data.information.Platform.Android
         }
         get<Setting>(BACKEND2_SETTING).apply {
             appVersion = BuildConfig.VERSION_NAME

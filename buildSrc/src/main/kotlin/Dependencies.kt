@@ -30,6 +30,9 @@ object Dependencies {
     const val RETROFIT = "com.squareup.retrofit2:retrofit:${Versions.RETROFIT}"
     const val RETROFIT_CONVERTER_GSON = "com.squareup.retrofit2:converter-gson:${Versions.RETROFIT}"
 
+    const val LOG_DATA_RECORDER_DATA = "com.cmoney.logdatarecorder:logdatarecorder-data:${Versions.LOG_DATA_RECORDER}"
+    const val LOG_DATA_RECORDER_DOMAIN = "com.cmoney.logdatarecorder:logdatarecorder-domain:${Versions.LOG_DATA_RECORDER}"
+
     const val JUNIT = "junit:junit:${Versions.JUNIT}"
     const val TRUTH = "com.google.truth:truth:${Versions.TRUTH}"
     const val TRUTH_EXTENSION_JAVA8 = "com.google.truth.extensions:truth-java8-extension:${Versions.TRUTH}"

@@ -1,7 +1,6 @@
 package com.cmoney.backend2.identityprovider.service
 
-import com.cmoney.backend2.base.extension.checkResponseBody
-import com.cmoney.backend2.base.extension.createAuthorizationBearer
+import com.cmoney.backend2.base.extension.*
 import com.cmoney.backend2.base.model.dispatcher.DefaultDispatcherProvider
 import com.cmoney.backend2.base.model.dispatcher.DispatcherProvider
 import com.cmoney.backend2.base.model.log.XApiLog
@@ -32,21 +31,24 @@ class IdentityProviderWebImpl(
         account: String,
         hashedPassword: String
     ): Result<GetTokenResponseBody> = withContext(dispatcherProvider.io()) {
-        runCatching {
-            val xApiLog = XApiLog(
-                appId = setting.appId,
-                platform = setting.platform.code,
-                mode = 1
-            ).let { gson.toJson(it) }
+        runCatchingWithLog {
+            val response = logRequest(setting) {
+                val xApiLog = XApiLog(
+                    appId = setting.appId,
+                    platform = setting.platform.code,
+                    mode = 1
+                ).let { gson.toJson(it) }
 
-            service.getIdentityToken(
-                xApiLog = xApiLog,
-                grantType = "password",
-                clientId = setting.clientId,
-                account = account,
-                hashedPassword = hashedPassword,
-                loginMethod = "email"
-            ).checkResponseBody(gson)
+                service.getIdentityToken(
+                    xApiLog = xApiLog,
+                    grantType = "password",
+                    clientId = setting.clientId,
+                    account = account,
+                    hashedPassword = hashedPassword,
+                    loginMethod = "email"
+                )
+            }
+            response.checkResponseBody(gson)
                 .toRealResponse()
         }
     }
@@ -55,70 +57,79 @@ class IdentityProviderWebImpl(
         cellphone: String,
         hashedPassword: String
     ): Result<GetTokenResponseBody> = withContext(dispatcherProvider.io()) {
-        kotlin.runCatching {
-            val xApiLog = XApiLog(
-                appId = setting.appId,
-                platform = setting.platform.code,
-                mode = 3
-            ).let { gson.toJson(it) }
+        runCatchingWithLog {
+            val response = logRequest(setting) {
+                val xApiLog = XApiLog(
+                    appId = setting.appId,
+                    platform = setting.platform.code,
+                    mode = 3
+                ).let { gson.toJson(it) }
 
-            service.getIdentityToken(
-                xApiLog = xApiLog,
-                grantType = "password",
-                clientId = setting.clientId,
-                account = cellphone,
-                hashedPassword = hashedPassword,
-                loginMethod = "cellphone"
-            ).checkResponseBody(gson)
+                service.getIdentityToken(
+                    xApiLog = xApiLog,
+                    grantType = "password",
+                    clientId = setting.clientId,
+                    account = cellphone,
+                    hashedPassword = hashedPassword,
+                    loginMethod = "cellphone"
+                )
+            }
+            response.checkResponseBody(gson)
                 .toRealResponse()
         }
     }
 
     override suspend fun loginByFacebook(accessToken: String): Result<GetTokenResponseBody> =
         withContext(dispatcherProvider.io()) {
-            kotlin.runCatching {
-                val xApiLog = XApiLog(
-                    appId = setting.appId,
-                    platform = setting.platform.code,
-                    mode = 2
-                ).let { gson.toJson(it) }
+            runCatchingWithLog {
+                val response = logRequest(setting) {
+                    val xApiLog = XApiLog(
+                        appId = setting.appId,
+                        platform = setting.platform.code,
+                        mode = 2
+                    ).let { gson.toJson(it) }
 
-                service.getIdentityToken(
-                    xApiLog = xApiLog,
-                    grantType = "token-exchange",
-                    clientId = setting.clientId,
-                    providerToken = accessToken,
-                    provider = "facebook"
-                )
-                    .checkResponseBody(gson)
+                    service.getIdentityToken(
+                        xApiLog = xApiLog,
+                        grantType = "token-exchange",
+                        clientId = setting.clientId,
+                        providerToken = accessToken,
+                        provider = "facebook"
+                    )
+                }
+                response.checkResponseBody(gson)
                     .toRealResponse()
             }
         }
 
     override suspend fun loginByFirebaseAnonymousToken(anonymousToken: String): Result<GetTokenResponseBody> =
         withContext(dispatcherProvider.io()) {
-            kotlin.runCatching {
-                val xApiLog = XApiLog(
-                    appId = setting.appId,
-                    platform = setting.platform.code,
-                    mode = 5
-                ).let { gson.toJson(it) }
+            runCatchingWithLog {
+                val response = logRequest(setting) {
+                    val xApiLog = XApiLog(
+                        appId = setting.appId,
+                        platform = setting.platform.code,
+                        mode = 5
+                    ).let { gson.toJson(it) }
 
-                service.getIdentityToken(
-                    xApiLog = xApiLog,
-                    grantType = "token-exchange",
-                    clientId = setting.clientId,
-                    providerToken = anonymousToken,
-                    provider = "guest"
-                )
-                    .checkResponseBody(gson)
+                    service.getIdentityToken(
+                        xApiLog = xApiLog,
+                        grantType = "token-exchange",
+                        clientId = setting.clientId,
+                        providerToken = anonymousToken,
+                        provider = "guest"
+                    )
+                }
+                response.checkResponseBody(gson)
                     .toRealResponse()
             }
         }
 
-    override suspend fun refreshToken(refreshToken: String): Result<GetTokenResponseBody> =
-        withContext(dispatcherProvider.io()) {
-            kotlin.runCatching {
+    override suspend fun refreshToken(
+        refreshToken: String
+    ): Result<GetTokenResponseBody> = withContext(dispatcherProvider.io()) {
+        runCatchingWithLog {
+            val response = logRequest(setting) {
                 val xApiLog = XApiLog(
                     appId = setting.appId,
                     platform = setting.platform.code,
@@ -131,24 +142,26 @@ class IdentityProviderWebImpl(
                     clientId = setting.clientId,
                     refreshToken = refreshToken
                 )
-                    .checkResponseBody(gson)
-                    .toRealResponse()
             }
+            response.checkResponseBody(gson)
+                .toRealResponse()
         }
+    }
 
     override suspend fun revokeToken(
         token: String
-    ): Result<RevokeResponseBody> =
-        withContext(dispatcherProvider.io()) {
-            kotlin.runCatching {
+    ): Result<RevokeResponseBody> = withContext(dispatcherProvider.io()) {
+        runCatchingWithLog {
+            val response = logRequest(setting) {
                 service.revokeIdentityToken(
                     accessToken = setting.accessToken.createAuthorizationBearer(),
                     clientId = setting.clientId,
                     token = token,
                     tokenType = "refresh_token"
                 )
-                    .checkResponseBody(gson)
-                    .toRealResponse()
             }
+            response.checkResponseBody(gson)
+                .toRealResponse()
         }
+    }
 }

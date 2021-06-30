@@ -51,6 +51,8 @@ dependencies {
     implementation(Dependencies.COROUTINES_ANDROID)
 
     implementation(project(":backend2"))
+    implementation(Dependencies.LOG_DATA_RECORDER_DATA)
+    implementation(Dependencies.LOG_DATA_RECORDER_DOMAIN)
 
     testImplementation(Dependencies.JUNIT)
     androidTestImplementation(Dependencies.ANDROID_TEST_JUNIT)
