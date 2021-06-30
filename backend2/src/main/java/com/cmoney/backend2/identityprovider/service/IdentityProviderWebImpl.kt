@@ -1,6 +1,9 @@
 package com.cmoney.backend2.identityprovider.service
 
-import com.cmoney.backend2.base.extension.*
+import com.cmoney.backend2.base.extension.checkResponseBody
+import com.cmoney.backend2.base.extension.createAuthorizationBearer
+import com.cmoney.backend2.base.extension.logRequest
+import com.cmoney.backend2.base.extension.runCatchingWithLog
 import com.cmoney.backend2.base.model.dispatcher.DefaultDispatcherProvider
 import com.cmoney.backend2.base.model.dispatcher.DispatcherProvider
 import com.cmoney.backend2.base.model.log.XApiLog
@@ -18,12 +21,13 @@ class IdentityProviderWebImpl(
 ) : IdentityProviderWeb {
 
     override suspend fun isTokenLatest(): Result<Boolean> = withContext(dispatcherProvider.io()) {
-        runCatching {
-            val responseBody = service.isTokenLatest(
-                accessToken = setting.accessToken.createAuthorizationBearer()
-            ).checkResponseBody(gson)
+        runCatchingWithLog {
+            val response = logRequest(setting) {
+                service.isTokenLatest(accessToken = setting.accessToken.createAuthorizationBearer())
+            }
+            response.checkResponseBody(gson)
                 .toRealResponse()
-            return@runCatching responseBody.isSuccess
+                .isSuccess
         }
     }
 
@@ -32,6 +36,7 @@ class IdentityProviderWebImpl(
         hashedPassword: String
     ): Result<GetTokenResponseBody> = withContext(dispatcherProvider.io()) {
         runCatchingWithLog {
+            this.userId = setting.identityToken.getClientId()
             val response = logRequest(setting) {
                 val xApiLog = XApiLog(
                     appId = setting.appId,

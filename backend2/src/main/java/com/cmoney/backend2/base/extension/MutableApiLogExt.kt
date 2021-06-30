@@ -11,8 +11,6 @@ import com.cmoney.domain_logdatarecorder.data.api.log.ApiLogResponse
 import retrofit2.HttpException
 import retrofit2.Response
 
-
-
 internal suspend fun <R> runCatchingWithLog(block: suspend MutableApiLog.() -> R): Result<R> {
     val mutableApiLog = MutableApiLog()
     return try {
@@ -36,12 +34,17 @@ internal suspend fun <R> runCatchingWithLog(block: suspend MutableApiLog.() -> R
 
 internal fun MutableApiLog.customRequestBody(block: () -> String): Unit {
     val requestBodyString = block()
-    this.apiLogRequest = ApiLogRequest(
+    this.apiLogRequest = this.apiLogRequest?.copy(
+        body = requestBodyString
+    ) ?: ApiLogRequest(
         time = null, headers = null, body = requestBodyString, query = null
     )
 }
 
-internal suspend fun <R : Response<ResponseBody>, ResponseBody> MutableApiLog.logRequest(setting: Setting, block: suspend () -> R): R {
+internal suspend fun <R : Response<ResponseBody>, ResponseBody> MutableApiLog.logRequest(
+    setting: Setting,
+    block: suspend () -> R
+): R {
     this.userId = setting.identityToken.getMemberId()
     val response = block()
     val rawResponse = response.raw()
@@ -82,39 +85,39 @@ internal fun MutableApiLog.logError(exception: Exception) {
                 time = errorTime,
                 errorMsg = exception.message,
                 errorCode = exception.code,
-                errorPoint = 1
+                errorPoint = ApiLogError.ERROR_POINT_SERVER
             ) ?: ApiLogError(
                 time = errorTime,
                 errorMsg = exception.message,
                 errorCode = exception.code,
                 statusCode = null,
-                errorPoint = 1
+                errorPoint = ApiLogError.ERROR_POINT_SERVER
             )
         }
         is HttpException -> {
             this.apiLogError = this.apiLogError?.copy(
                 time = errorTime,
-                errorMsg = exception.message(),
-                errorPoint = 1
+                errorMsg = exception.message,
+                errorPoint = ApiLogError.ERROR_POINT_SERVER
             ) ?: ApiLogError(
                 time = errorTime,
                 errorMsg = exception.message,
                 errorCode = null,
                 statusCode = null,
-                errorPoint = 1
+                errorPoint = ApiLogError.ERROR_POINT_SERVER
             )
         }
         else -> {
             this.apiLogError = this.apiLogError?.copy(
                 time = errorTime,
-                errorMsg = exception.message,
-                errorPoint = 2
+                errorMsg = exception.toString(),
+                errorPoint = ApiLogError.ERROR_POINT_CLIENT
             ) ?: ApiLogError(
                 time = errorTime,
                 errorMsg = exception.toString(),
                 errorCode = null,
                 statusCode = null,
-                errorPoint = 2
+                errorPoint = ApiLogError.ERROR_POINT_CLIENT
             )
         }
     }

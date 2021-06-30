@@ -16,7 +16,7 @@ object Versions {
     // retrofit
     const val RETROFIT = "2.9.0"
     // logDataRecorder
-    const val LOG_DATA_RECORDER = "1.0.1"
+    const val LOG_DATA_RECORDER = "1.0.2"
     // koin
     const val KOIN = "2.1.6"
     // gson
