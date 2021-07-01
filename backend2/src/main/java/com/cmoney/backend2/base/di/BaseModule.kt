@@ -2,6 +2,7 @@ package com.cmoney.backend2.base.di
 
 import android.content.Context
 import com.cmoney.backend2.BuildConfig
+import com.cmoney.backend2.base.model.calladapter.RecordApiLogCallAdapterFactory
 import com.cmoney.backend2.base.model.log.ApiLog
 import com.cmoney.backend2.base.model.setting.BackendSettingSharedPreference
 import com.cmoney.backend2.base.model.setting.DefaultSetting
@@ -53,6 +54,7 @@ val backendBaseModule = module {
             .baseUrl(DEFAULT_URL)
             .client(createOkHttpClient())
             .addConverterFactory(GsonConverterFactory.create(get(BACKEND2_GSON)))
+            .addCallAdapterFactory(RecordApiLogCallAdapterFactory(get(BACKEND2_SETTING)))
             .build()
     }
 }
@@ -112,3 +114,4 @@ private fun OkHttpClient.Builder.addUrlInterceptor() = apply {
         chain.proceed(newRequest)
     }
 }
+
