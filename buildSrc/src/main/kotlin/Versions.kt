@@ -13,6 +13,7 @@ object Versions {
     const val ANDROID_KTX_CORE = "1.3.2"
     // okHttp
     const val OKHTTP = "4.8.1"
+    const val OKHTTP_TESTING_SUPPORT = "3.14.9"
     // retrofit
     const val RETROFIT = "2.9.0"
     // logDataRecorder
