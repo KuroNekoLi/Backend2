@@ -1,5 +1,6 @@
 package com.cmoney.backend2.identityprovider.service
 
+import com.cmoney.backend2.base.model.calladapter.RecordApi
 import com.cmoney.backend2.identityprovider.service.api.gettoken.GetTokenResponseBodyWithError
 import com.cmoney.backend2.identityprovider.service.api.islatest.IsLatestResponseBodyWithError
 import com.cmoney.backend2.identityprovider.service.api.revoke.RevokeResponseBodyWithError
@@ -11,6 +12,7 @@ interface IdentityProviderService {
      * 確認Token是否為最新
      *
      */
+    @RecordApi
     @GET(value = "identity/session/isLatest")
     suspend fun isTokenLatest(
         @Header("Authorization")
@@ -34,6 +36,7 @@ interface IdentityProviderService {
      * @param refreshToken 用來取得新的access token
      *
      */
+    @RecordApi(isLogRequestBody = false)
     @POST(value = "identity/token")
     @FormUrlEncoded
     suspend fun getIdentityToken(
@@ -74,6 +77,7 @@ interface IdentityProviderService {
      * @param tokenType token的類型，目前只支援refresh_token。
      * @return
      */
+    @RecordApi
     @POST(value = "identity/revocation")
     @FormUrlEncoded
     suspend fun revokeIdentityToken(
