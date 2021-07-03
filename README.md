@@ -2,17 +2,17 @@
 
 [教學參考](http://192.168.99.115/books/mobile-android/page/%E6%96%B0%E5%A2%9E%E4%B8%80%E6%94%AFapi)
 
-### 引用
+## 引用
 
 - build.gradle
 
 ```
 allprojects {
     repositories {
-        google()
+		google()
 		mavenCentral()
-        jcenter()
-        maven { url "http://192.168.99.70:8081/repository/maven-public/" }
+		jcenter()
+		maven { url "http://192.168.99.70:8081/repository/maven-public/" }
     }
 }
 ```
@@ -32,7 +32,9 @@ android {
     }
 }
 dependecies {
-    implementation 'com.cmoney.backend2:backend2:目前最新版'
+	implementation 'com.cmoney.backend2:backend2:目前最新版'
+	implementation("com.cmoney.logdatarecorder:logdatarecorder-data:1.0.3")
+	implementation("com.cmoney.logdatarecorder:logdatarecorder-domain:1.0.3")
 }
 ```
 
@@ -40,8 +42,10 @@ dependecies {
 
 ```
 dependecies {
-    releaseImplementation 'com.cmoney.backend2:backend2:目前最新版'
-    debugImplementation 'com.cmoney.backend2:backend2-debug:目前最新版'
+	releaseImplementation 'com.cmoney.backend2:backend2:目前最新版'
+	debugImplementation 'com.cmoney.backend2:backend2-debug:目前最新版'
+	implementation("com.cmoney.logdatarecorder:logdatarecorder-data:1.0.3")
+	implementation("com.cmoney.logdatarecorder:logdatarecorder-domain:1.0.3")
 }
 ```
 
@@ -64,7 +68,25 @@ dependecies {
 
 ---
 
-### 使用 [Koin](https://insert-koin.io/)
+## 初始化LogDataRecorder.
+
+為了紀錄Api行為，需要在Application加入初始化設定。
+
+```
+class SampleApplication : Application() {
+
+    override fun onCreate() {
+        super.onCreate()
+        LogDataRecorder.initialization(this) {
+            appId = 你的AppId
+            platform = com.cmoney.domain_logdatarecorder.data.information.Platform.Android
+        }
+    }
+}
+```
+
+
+## 使用 [Koin](https://insert-koin.io/)
 
 以下這些StringQualifier已被使用
 
@@ -483,28 +505,66 @@ suspend fun action(
 
 ## 紀錄API
 
-- 使用`runCatchingWithLog`開始紀錄API
+在服務介面的方法上加上註譯`@RecordApi`，代表要記錄這個API的行為。  
+`@RecordApi`有一個可選的參數`isLogRequestBody`，預設true，代表會紀錄此API的發送請求的Body。
 
 ```
-runCatchingWithLog {
-	
-}
+@RecordApi
+@GET(value = "identity/session/isLatest")
+suspend fun isTokenLatest(
+    @Header("Authorization")
+    accessToken: String
+): Response<IsLatestResponseBodyWithError>
 ```
 
-- 在`runCatchingWithLog `使用`logRequest(Setting)`紀錄發送的請求
+但還是有不需要上傳ReqeustBody的時候，例如：一些使用者敏感資料、上傳的類型是檔案。會直接影響紀錄在本地資料庫的大小，所以要特別注意，這時候需要將`isLogRequestBody `改為`false`。
+
+上傳檔案類型
 
 ```
-val response = logRequest(setting) {
-    service.XXX()
-}
+@RecordApi(isLogRequestBody = false)
+@POST("MobileService/ashx/MobileCode.ashx")
+suspend fun replyArticle(
+    @Header("Authorization") authorization: String,
+    @Body body: MultipartBody
+): Response<ReplyArticleResponse>
 ```
 
-- 如果有ReqeustBody要紀錄，在`runCatchingWithLog `使用`customRequestBody`。
+登入行為的帳密
 
 ```
-customRequestBody {
-	"field1,field2"
-}
+@RecordApi(isLogRequestBody = false)
+@POST(value = "identity/token")
+@FormUrlEncoded
+suspend fun getIdentityToken(
+    @Header("x-cmapi-trace-context")
+    xApiLog: String,
+    @Field(value = "grant_type")
+    grantType: String,
+    @Field(value = "client_id")
+    clientId: String,
+    @Field(value = "scope")
+    scope: String? = null,
+    @Field(value = "client_secret")
+    clientSecret: String? = null,
+    @Field(value = "account")
+    account: String? = null,
+    @Field(value = "hashed_password")
+    hashedPassword: String? = null,
+    @Field(value = "token")
+    providerToken: String? = null,
+    @Field(value = "provider")
+    provider: String? = null,
+    @Field(value = "login_method")
+    loginMethod: String? = null,
+    @Field(value = "code")
+    code: String? = null,
+    @Field(value = "redirect_uri")
+    redirectUri: String? = null,
+    @Field(value = "refresh_token")
+    refreshToken: String? = null
+): Response<GetTokenResponseBodyWithError>
+
 ```
 
 [BaseModule]:http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/Base/blob/master/base/src/main/java/com/cmoney/backend2/base/di/BaseModule.kt
