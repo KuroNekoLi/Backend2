@@ -1,5 +1,6 @@
 package com.cmoney.backend2.ocean.service
 
+import com.cmoney.backend2.base.model.calladapter.RecordApi
 import com.cmoney.backend2.ocean.service.api.RequestIds
 import com.cmoney.backend2.ocean.service.api.answers.AnswersBody
 import com.cmoney.backend2.ocean.service.api.answers.AnswersResultWithError
@@ -114,6 +115,7 @@ interface OceanService {
     /**
      * 全穿或脫掉所有徽章
      */
+    @RecordApi
     @POST("OceanService/api/Badge/ChangeAllBadge")
     suspend fun changeAllBadge(
         @Header("Authorization") authorization: String,
@@ -124,6 +126,7 @@ interface OceanService {
     /**
      * 更換裝備的徽章(目前單選由前端控制)
      */
+    @RecordApi
     @POST("OceanService/api/Badge/ChangeWearBadge")
     suspend fun changeWearBadge(
         @Header("Authorization") authorization: String,
@@ -134,6 +137,7 @@ interface OceanService {
     /**
      * 取得所有達成徽章及達成條件
      */
+    @RecordApi
     @GET("OceanService/api/Badge/GetBadgeAndRequirement")
     suspend fun getBadgeAndRequirement(): Response<JsonElement>
 
@@ -141,6 +145,7 @@ interface OceanService {
     /**
      * 取得所有徽章持有狀態
      */
+    @RecordApi
     @POST("OceanService/api/Badge/GetBadgesCollection")
     suspend fun getBadgesCollection(
         @Header("Authorization") authorization: String,
@@ -151,6 +156,7 @@ interface OceanService {
     /**
      * 取得目前所有指標清單
      */
+    @RecordApi
     @POST("OceanService/api/Badge/GetMetricsStats")
     suspend fun getMetricsStats(
         @Header("Authorization") authorization: String,
@@ -160,6 +166,7 @@ interface OceanService {
     /**
      * 取得未讀徽章
      */
+    @RecordApi
     @POST("OceanService/api/Badge/GetUnreadBadges")
     suspend fun getUnreadBadges(
         @Header("Authorization") authorization: String,
@@ -169,6 +176,7 @@ interface OceanService {
     /**
      * 取得頻道裝備的徽章(多個頻道)
      */
+    @RecordApi
     @POST("OceanService/api/Badge/ChannelWearBadge")
     suspend fun channelWearBadge(
         @Header("Authorization") authorization: String,
@@ -178,6 +186,7 @@ interface OceanService {
     /**
      * 標記徽章已讀
      */
+    @RecordApi
     @POST("OceanService/api/Badge/SetBadgeRead")
     suspend fun setBadgeRead(
         @Header("Authorization") authorization: String,
@@ -190,6 +199,7 @@ interface OceanService {
      * @param body
      * @return
      */
+    @RecordApi
     @POST("OceanService/api/Questionnaire/GetChannelQuestions")
     suspend fun getChannelQuestions(
         @Header("Authorization") authorization: String,
@@ -202,6 +212,7 @@ interface OceanService {
      * @param body
      * @return
      */
+    @RecordApi
     @POST("OceanService/api/Questionnaire/ChannelQuestions")
     suspend fun channelQuestions(
         @Header("Authorization") authorization: String,
@@ -214,6 +225,7 @@ interface OceanService {
      * @param body
      * @return
      */
+    @RecordApi
     @POST("OceanService/api/Questionnaire/ChannelQuestionsActivation")
     suspend fun channelQuestionsActivation(
         @Header("Authorization") authorization: String,
@@ -226,6 +238,7 @@ interface OceanService {
      * @param body
      * @return
      */
+    @RecordApi
     @POST("OceanService/api/Questionnaire/GetAnswers")
     suspend fun getAnswers(
         @Header("Authorization") authorization: String,
@@ -238,6 +251,7 @@ interface OceanService {
      * @param body
      * @return
      */
+    @RecordApi
     @POST("OceanService/api/Questionnaire/Answers")
     suspend fun answers(
         @Header("Authorization") authorization: String,
@@ -250,6 +264,7 @@ interface OceanService {
      * @param body
      * @return
      */
+    @RecordApi
     @POST("OceanService/api/MemberBadge/HadPhoneAuthentication")
     suspend fun hadPhoneAuthentication(
         @Header("Authorization") authorization: String,
@@ -262,6 +277,7 @@ interface OceanService {
      * @param body
      * @return
      */
+    @RecordApi
     @POST("OceanService/api/Article/GetStockLatestArticle")
     suspend fun getStockLatestArticle(
         @Header("Authorization") authorization: String,
@@ -274,6 +290,7 @@ interface OceanService {
      * @param body
      * @return
      */
+    @RecordApi
     @POST("OceanService/api/Article/GetChannelLatestArticle")
     suspend fun getChannelLatestArticle(
         @Header("Authorization") authorization: String,
@@ -283,6 +300,7 @@ interface OceanService {
     /**
      * 設定收藏文章/取消收藏文章
      */
+    @RecordApi
     @POST("OceanService/api/SetArticle/ChangeCollectArticleState")
     suspend fun changeCollectArticleState(
         @Header("Authorization") authorization: String,
@@ -295,6 +313,7 @@ interface OceanService {
      * @param body
      * @return
      */
+    @RecordApi
     @POST("OceanService/api/SetArticle/ImpeachArticle")
     suspend fun impeachArticle(
         @Header("Authorization") authorization: String,
@@ -306,6 +325,7 @@ interface OceanService {
      *
      * Note: 限定對此文章有管理權限用的會員使用
      */
+    @RecordApi
     @POST("OceanService/api/SetArticle/DeleteArticle")
     suspend fun deleteArticle(
         @Header("Authorization") authorization: String,
@@ -318,6 +338,7 @@ interface OceanService {
      * @param body
      * @return
      */
+    @RecordApi
     @POST("OceanService/api/Article/GetStockPopularArticle")
     suspend fun getStockPopularArticle(
         @Header("Authorization") authorization: String,
@@ -330,6 +351,7 @@ interface OceanService {
      * @param body
      * @return
      */
+    @RecordApi
     @POST("OceanService/api/ChannelBlackList/PutOnBlackList")
     suspend fun putOnBlackList(
         @Header("Authorization") authorization: String,
@@ -342,6 +364,7 @@ interface OceanService {
      * @param body
      * @return
      */
+    @RecordApi
     @POST("OceanService/api/ChannelBlackList/SpinOffBlackList")
     suspend fun spinOffBlackList(
         @Header("Authorization") authorization: String,
@@ -354,6 +377,7 @@ interface OceanService {
      * @param body
      * @return
      */
+    @RecordApi
     @POST("OceanService/api/ChannelBlackList/GetBlackList")
     suspend fun getBlackList(
         @Header("Authorization") authorization: String,
@@ -366,6 +390,7 @@ interface OceanService {
      * @param body
      * @return
      */
+    @RecordApi
     @POST("OceanService/api/ChannelBlackList/GetBlockList")
     suspend fun getBlockList(
         @Header("Authorization") authorization: String,
@@ -378,6 +403,7 @@ interface OceanService {
      * @param body
      * @return
      */
+    @RecordApi
     @POST("OceanService/api/Notify/GetNotify")
     suspend fun getNotify(
         @Header("Authorization") authorization: String,
@@ -390,6 +416,7 @@ interface OceanService {
      * @param body
      * @return
      */
+    @RecordApi
     @POST("OceanService/api/Notify/GetUnreadCount")
     suspend fun getUnreadCount(
         @Header("Authorization") authorization: String,
@@ -402,6 +429,7 @@ interface OceanService {
      * @param body
      * @return
      */
+    @RecordApi
     @POST("OceanService/api/Notify/SetReaded")
     suspend fun setReaded(
         @Header("Authorization") authorization: String,
@@ -414,6 +442,7 @@ interface OceanService {
      * @param body
      * @return
      */
+    @RecordApi
     @POST("OceanService/api/Article/GetSingleArticleV2")
     suspend fun getSingleArticle(
         @Header("Authorization") authorization: String,
@@ -426,6 +455,7 @@ interface OceanService {
      * @param body
      * @return
      */
+    @RecordApi
     @POST("OceanService/api/Comment/GetComments")
     suspend fun getComments(
         @Header("Authorization") authorization: String,
@@ -435,6 +465,7 @@ interface OceanService {
     /**
      * 取得管理者清單 (幹部、社長)
      */
+    @RecordApi
     @POST("OceanService/api/GetClub/GetMangerList")
     suspend fun getManagerList(
         @Header("Authorization") authorization: String,
@@ -444,6 +475,7 @@ interface OceanService {
     /**
      * 是否有參加的社團
      */
+    @RecordApi
     @POST("OceanService/api/GetClub/CheckHasJoinedClub")
     suspend fun isJoinClub(
         @Header("Authorization") authorization: String,
@@ -456,6 +488,7 @@ interface OceanService {
      * @param requestBody
      * @return
      */
+    @RecordApi
     @POST("OceanService/api/GetChannel/GetChannelInfo")
     suspend fun getOtherChannelInfo(
         @Header("Authorization") authorization: String,
@@ -468,6 +501,7 @@ interface OceanService {
      * @param requestBody
      * @return
      */
+    @RecordApi
     @POST("OceanService/api/GetChannel/GetChannelInfo")
     suspend fun getRssSignalChannelInfo(
         @Header("Authorization") authorization: String,
@@ -480,6 +514,7 @@ interface OceanService {
      * @param requestBody
      * @return
      */
+    @RecordApi
     @POST("OceanService/api/GetChannel/GetChannelInfo")
     suspend fun getMemberChannelInfo(
         @Header("Authorization") authorization: String,
@@ -492,6 +527,7 @@ interface OceanService {
      * @param requestBody
      * @return
      */
+    @RecordApi
     @POST("OceanService/api/GetChannel/GetChannelInfo")
     suspend fun getClubChannelInfo(
         @Header("Authorization") authorization: String,
@@ -504,6 +540,7 @@ interface OceanService {
      * @param requestBody
      * @return
      */
+    @RecordApi
     @POST("OceanService/api/GetChannel/SearchChannel")
     suspend fun searchChannel(
         @Header("Authorization") authorization: String,
@@ -516,6 +553,7 @@ interface OceanService {
      * @param requestBody
      * @return
      */
+    @RecordApi
     @POST("OceanService/api/GetChannel/GetFansListExcludeJoinedClub")
     suspend fun getFanListExcludeJoinedClub(
         @Header("Authorization") authorization: String,
@@ -528,6 +566,7 @@ interface OceanService {
      * @param requestBody
      * @return
      */
+    @RecordApi
     @POST("OceanService/api/GetChannel/GetSimpleChannelInfo")
     suspend fun getSimpleChannelInfo(
         @Header("Authorization") authorization: String,
@@ -540,6 +579,7 @@ interface OceanService {
      * @param requestBody
      * @return
      */
+    @RecordApi
     @POST("OceanService/api/Evaluation/SetEvaluation")
     suspend fun setEvaluation(
         @Header("Authorization") authorization: String,
@@ -552,6 +592,7 @@ interface OceanService {
      * @param requestBody
      * @return
      */
+    @RecordApi
     @POST("OceanService/api/Evaluation/CheckHasEvaluated")
     suspend fun checkHasEvaluated(
         @Header("Authorization") authorization: String,
@@ -564,6 +605,7 @@ interface OceanService {
      * @param requestBody
      * @return
      */
+    @RecordApi
     @POST("OceanService/api/Evaluation/GetEvaluationList")
     suspend fun getEvaluationList(
         @Header("Authorization") authorization: String,
@@ -576,6 +618,7 @@ interface OceanService {
      * @param requestBody
      * @return
      */
+    @RecordApi
     @POST("OceanService/api/GetArticleList/GetCollectArticleList")
     suspend fun getCollectArticleList(
         @Header("Authorization") authorization: String,
@@ -587,6 +630,7 @@ interface OceanService {
      *
      * @param requestBody
      */
+    @RecordApi
     @POST("OceanService/api/CreateArticleWhiteList/InCreateArticleWhiteList")
     suspend fun isInCreateArticleWhiteList(
         @Header("Authorization") authorization: String,
@@ -598,6 +642,7 @@ interface OceanService {
      *
      * @param requestBody
      */
+    @RecordApi
     @POST("OceanService/api/Customization/GetMasters")
     suspend fun getMasters(
         @Header("Authorization") authorization: String,
@@ -610,6 +655,7 @@ interface OceanService {
      * @param requestBody
      * @return
      */
+    @RecordApi
     @POST("OceanService/api/Article/GetAskLatestArticle")
     suspend fun getAskLatestArticle(
         @Header("Authorization") authorization: String,
@@ -621,6 +667,7 @@ interface OceanService {
      * @param requestBody
      * @return
      */
+    @RecordApi
     @POST("OceanService/api/Customization/GetStockMasterEvaluationList")
     suspend fun getStockMasterEvaluationList(
         @Header("Authorization") authorization: String,
@@ -632,6 +679,7 @@ interface OceanService {
      * @param requestBody
      * @return
      */
+    @RecordApi
     @POST("OceanService/api/Customization/GetStockMasterEvaluation")
     suspend fun getStockMasterEvaluation(
         @Header("Authorization") authorization: String,
@@ -641,6 +689,7 @@ interface OceanService {
     /**
      * 上傳社團頭像
      */
+    @RecordApi(isLogRequestBody = false)
     @POST("OceanService/api/File/UploadChannelImage")
     suspend fun uploadChannelImage(
         @Header("Authorization") authorization: String,
@@ -650,6 +699,7 @@ interface OceanService {
     /**
      * 創建社團
      */
+    @RecordApi
     @POST("OceanService/api/SetClub/CreateClub")
     suspend fun createClub(
         @Header("Authorization") authorization: String,
@@ -659,6 +709,7 @@ interface OceanService {
     /**
      * 關閉社團(解散社團)
      */
+    @RecordApi
     @POST("OceanService/api/SetClub/DeleteClub")
     suspend fun deleteClub(
         @Header("Authorization") authorization: String,
@@ -668,6 +719,7 @@ interface OceanService {
     /**
      * 離開社團
      */
+    @RecordApi
     @POST("OceanService/api/SetClub/LeaveClub")
     suspend fun leaveClub(
         @Header("Authorization") authorization: String,
@@ -677,6 +729,7 @@ interface OceanService {
     /**
      * 邀請加入社團
      */
+    @RecordApi
     @POST("OceanService/api/SetClub/Invitation")
     suspend fun invite(
         @Header("Authorization") authorization: String,
@@ -686,6 +739,7 @@ interface OceanService {
     /**
      * 加入社團
      */
+    @RecordApi
     @POST("OceanService/api/SetClub/JoinClub")
     suspend fun joinClub(
         @Header("Authorization") authorization: String,
@@ -695,6 +749,7 @@ interface OceanService {
     /**
      * 取得指定會員的社團清單
      */
+    @RecordApi
     @POST("OceanService/api/GetClub/GetMemberClubs")
     suspend fun getMemberClubs(
         @Header("Authorization") authorization: String,
@@ -704,6 +759,7 @@ interface OceanService {
     /**
      * 取得推薦社團
      */
+    @RecordApi
     @POST("OceanService/api/GetClub/GetRecommendClubs")
     suspend fun getRecommendClubs(
         @Header("Authorization") authorization: String,
@@ -713,6 +769,7 @@ interface OceanService {
     /**
      * 改變會員身分
      */
+    @RecordApi
     @POST("OceanService/api/SetClub/ChangeMemberStatus")
     suspend fun changeMemberStatus(
         @Header("Authorization") authorization: String,
@@ -722,6 +779,7 @@ interface OceanService {
     /**
      * 變更社團描述
      */
+    @RecordApi
     @POST("OceanService/api/SetClub/UpdateClubDescription")
     suspend fun updateClubDescription(
         @Header("Authorization") authorization: String,
@@ -731,6 +789,7 @@ interface OceanService {
     /**
      * 取得指定身份的社團成員清單(審核清單,黑名單)
      */
+    @RecordApi
     @POST("OceanService/api/GetClub/GetMemberStatusList")
     suspend fun getMemberStatusList(
         @Header("Authorization") authorization: String,
@@ -740,6 +799,7 @@ interface OceanService {
     /**
      * 取得公告清單
      */
+    @RecordApi
     @POST("OceanService/api/club/{channelId}/readannouncements")
     suspend fun getAnnouncements(
         @Header("Authorization") authorization: String,
@@ -750,6 +810,7 @@ interface OceanService {
     /**
      * 移除公告
      */
+    @RecordApi
     @POST("OceanService/api/club/{channelId}/removeannouncement")
     suspend fun removeAnnouncement(
         @Header("Authorization") authorization: String,
@@ -757,6 +818,7 @@ interface OceanService {
         @Body body: RemoveAnnouncementRequest
     ): Response<RemoveAnnouncementResponseWithError>
 
+    @RecordApi
     @POST("OceanService/api/club/{channelId}/createorupdateannouncement")
     suspend fun createAnnouncement(
         @Header("Authorization") authorization: String,
@@ -767,6 +829,7 @@ interface OceanService {
     /**
      * 取得與某會員相關的重要留言(現為作者或管理者回覆)
      */
+    @RecordApi
     @POST("OceanService/api/Article/GetRelevantComments")
     suspend fun getRelevantComments(
         @Header("Authorization") authorization: String,
@@ -776,6 +839,7 @@ interface OceanService {
     /**
      * 取得主題標籤文章(可訪客)
      */
+    @RecordApi
     @POST("OceanService/api/Article/GetTopicArticles")
     suspend fun getTopicArticles(
         @Header("Authorization") authorization: String,
@@ -785,6 +849,7 @@ interface OceanService {
     /**
      * 取得個股下有主題標籤文章(可訪客)
      */
+    @RecordApi
     @POST("OceanService/api/Article/GetStockAndTopicArticles")
     suspend fun getStockAndTopicArticles(
         @Header("Authorization") authorization: String,
@@ -796,6 +861,7 @@ interface OceanService {
      * @param channelId String
      * @param requestBody CreateOrUpdateAnnouncementRequestBody
      */
+    @RecordApi
     @POST("OceanService/api/club/{channelId}/createorupdateannouncement")
     suspend fun createOrUpdateAnnouncement(
         @Header("Authorization") authorization: String,
@@ -808,6 +874,7 @@ interface OceanService {
      * @param channelId String
      * @param requestBody ReadAnnouncementsRequestBody
      */
+    @RecordApi
     @POST("OceanService/api/club/{channelId}/readannouncements")
     suspend fun readAnnouncement(
         @Header("Authorization") authorization: String,
@@ -820,6 +887,7 @@ interface OceanService {
      * @param channelId String
      * @param requestBody RemoveAnnouncementRequestBody
      */
+    @RecordApi
     @POST("OceanService/api/club/{channelId}/removeannouncement")
     suspend fun removeAnnouncement(
         @Header("Authorization") authorization: String,

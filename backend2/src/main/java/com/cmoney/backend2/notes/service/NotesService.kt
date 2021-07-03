@@ -1,5 +1,6 @@
 package com.cmoney.backend2.notes.service
 
+import com.cmoney.backend2.base.model.calladapter.RecordApi
 import com.cmoney.backend2.notes.service.api.getnotesbycoauthorIds.GetNotesByCoAuthorIdsRequestBody
 import com.cmoney.backend2.notes.service.api.getnotesbycoauthorIds.GetNotesByCoAuthorIdsResponseBody
 import com.cmoney.backend2.notes.service.api.getnotesbytags.GetNotesByTagsRequestBody
@@ -22,6 +23,7 @@ interface NotesService {
      * Notes API
      * 服務1. 取得網誌文章
      */
+    @RecordApi
     @FormUrlEncoded
     @POST("notes/ashx/chipkapi.ashx")
     suspend fun getNotes(
@@ -40,6 +42,7 @@ interface NotesService {
      * Notes API
      * 服務2. 取得網誌文章ByTag分類
      */
+    @RecordApi
     @FormUrlEncoded
     @POST("notes/ashx/chipkapi.ashx")
     suspend fun getNotesByTagsUsingNotesApi(
@@ -61,6 +64,7 @@ interface NotesService {
      * 取得指定標籤的網誌文章清單
      *
      */
+    @RecordApi
     @POST("NotesService/Notes/GetNotesByTags")
     suspend fun getNotesByTags(
         @Header("Authorization") authorization: String,
@@ -71,6 +75,7 @@ interface NotesService {
      * Notes Services
      * 取得網誌近三天觀看次數達5000以上以及近一日付費文章清單
      */
+    @RecordApi
     @POST("NotesService/Notes/GetPopularAndPayNotes")
     suspend fun getPopularAndPayNotes(
         @Header("Authorization") authorization: String,
@@ -82,6 +87,7 @@ interface NotesService {
      * Notes Services
      * 取得指定網誌作者(撰文者)的網誌文章清單
      */
+    @RecordApi
     @POST("NotesService/Notes/GetNotesByCoAuthorIds")
     suspend fun getNotesByCoAuthorIds(
         @Header("Authorization") authorization: String,

@@ -1,5 +1,6 @@
 package com.cmoney.backend2.realtimeaftermarket.service
 
+import com.cmoney.backend2.base.model.calladapter.RecordApi
 import com.cmoney.backend2.base.model.response.dtno.DtnoWithError
 import com.cmoney.backend2.realtimeaftermarket.service.api.getInternationalTicks.InternationalNewTicks
 import com.cmoney.backend2.realtimeaftermarket.service.api.getafterhourstime.AfterHoursTimeWithError
@@ -28,6 +29,7 @@ interface RealTimeAfterMarketService {
      * @param isSimplified 是否要簡化版(預設為false)
      *
      */
+    @RecordApi
     @FormUrlEncoded
     @POST("MobileService/ashx/InstantTrading/InstantTrading.ashx")
     suspend fun getNewTickInfo(
@@ -60,6 +62,7 @@ interface RealTimeAfterMarketService {
      * @param guid 該會員的guid
      *
      */
+    @RecordApi
     @FormUrlEncoded
     @POST("MobileService/ashx/InstantTrading/InstantTrading.ashx")
     suspend fun getSingleStockNewTick(
@@ -80,6 +83,7 @@ interface RealTimeAfterMarketService {
      * @param guid 該會員的guid
      *
      */
+    @RecordApi
     @FormUrlEncoded
     @POST("MobileService/ashx/InstantTrading/InstantTrading.ashx")
     suspend fun getMarketNewTick(
@@ -100,6 +104,7 @@ interface RealTimeAfterMarketService {
      * @param guid 該會員的guid
      *
      */
+    @RecordApi
     @FormUrlEncoded
     @POST("MobileService/ashx/InstantTrading/InternationalTrading.ashx")
     suspend fun getInternationalNewTick(
@@ -123,6 +128,7 @@ interface RealTimeAfterMarketService {
      * @param guid 該會員的guid
      *
      */
+    @RecordApi
     @FormUrlEncoded
     @POST("MobileService/ashx/GetDtnoData.ashx")
     suspend fun getDtno(
@@ -140,6 +146,7 @@ interface RealTimeAfterMarketService {
     /**
      * 服務10. 取得盤後資料日期(加上身份識別)
      */
+    @RecordApi
     @FormUrlEncoded
     @POST("MobileService/ashx/InstantTrading/InstantTrading.ashx")
     suspend fun getAfterHoursTime(
@@ -155,6 +162,7 @@ interface RealTimeAfterMarketService {
      * @param queryKey 關鍵字
      *
      */
+    @RecordApi
     @FormUrlEncoded
     @POST("MobileService/ashx/CustomerGroup/CustomGroup.ashx")
     suspend fun searchStock(
@@ -169,6 +177,7 @@ interface RealTimeAfterMarketService {
      * @param queryKey 關鍵字
      *
      */
+    @RecordApi
     @FormUrlEncoded
     @POST("MobileService/ashx/CustomerGroup/CustomGroup.ashx")
     suspend fun searchUsStock(
@@ -187,6 +196,7 @@ interface RealTimeAfterMarketService {
      * @param perReturnCode 每批次回覆成交明細數量
      *
      */
+    @RecordApi
     @FormUrlEncoded
     @POST("MobileService/ashx/InstantTrading/InstantTrading.ashx")
     suspend fun getStockDealDetail(
@@ -202,6 +212,7 @@ interface RealTimeAfterMarketService {
     /**
      * 服務20. 取得是否盤中
      */
+    @RecordApi
     @FormUrlEncoded
     @POST("MobileService/ashx/InstantTrading/InstantTrading.ashx")
     suspend fun getIsInTradeDay(
