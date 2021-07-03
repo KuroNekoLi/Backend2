@@ -20,7 +20,8 @@ import java.nio.charset.StandardCharsets
 import java.util.*
 
 class RecordApiLogCallAdapterFactory(
-    private val setting: Setting
+    private val setting: Setting,
+    private val logDataRecorder: LogDataRecorder
 ) : CallAdapter.Factory() {
 
     override fun get(
@@ -82,14 +83,15 @@ class RecordApiLogCallAdapterFactory(
                     query = logQueryMap.toMap(),
                     body = logRequestBody
                 )
-                return ApiLogCall(mutableApiLog, call)
+                return ApiLogCall(mutableApiLog, call, logDataRecorder)
             }
         }
     }
 
     internal class ApiLogCall<T>(
         private val mutableApiLog: MutableApiLog,
-        private val delegate: Call<T?>
+        private val delegate: Call<T?>,
+        private val logDataRecorder: LogDataRecorder
     ) : Call<T?> {
         private fun logApi(mutableApiLog: MutableApiLog) {
             val apiLog = ApiLog(
@@ -100,7 +102,7 @@ class RecordApiLogCallAdapterFactory(
                 apiLogResponse = mutableApiLog.apiLogResponse,
                 apiLogError = mutableApiLog.apiLogError
             )
-            LogDataRecorder.getInstance().logApi(apiLog)
+            logDataRecorder.logApi(apiLog)
         }
 
         override fun enqueue(callback: Callback<T?>) {
@@ -166,7 +168,7 @@ class RecordApiLogCallAdapterFactory(
         }
 
         override fun clone(): Call<T?> {
-            return ApiLogCall(mutableApiLog, delegate.clone())
+            return ApiLogCall(mutableApiLog, delegate.clone(), logDataRecorder)
         }
 
         override fun request(): Request {

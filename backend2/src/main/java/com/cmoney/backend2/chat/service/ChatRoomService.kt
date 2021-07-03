@@ -1,5 +1,6 @@
 package com.cmoney.backend2.chat.service
 
+import com.cmoney.backend2.base.model.calladapter.RecordApi
 import com.cmoney.backend2.chat.service.api.chatroomsetting.response.ChatRoomSettingResponseBody
 import com.cmoney.backend2.chat.service.api.getallreport.request.ReportInfo
 import com.cmoney.backend2.chat.service.api.gethistorymessage.response.Message
@@ -23,6 +24,7 @@ interface ChatRoomService {
      * @param subjectId 對象ID
      * @return 使用者對Subject所有角色的陣列
      */
+    @RecordApi
     @GET("api/Authorization/{subject}/Role/Current/{subjectId}")
     suspend fun getUserCurrentSubjectRoles(
         @Header("Authorization") authorization: String,
@@ -38,11 +40,12 @@ interface ChatRoomService {
      * @param subjectId 對象ID
      * @return 所有使用者對角色的字典
      */
+    @RecordApi
     @GET("api/Authorization/{subject}/Role/Lookup/{subjectId}")
     suspend fun lookUpSubjectAllRoles(
-        @Header("Authorization") authorization: String, @Path("subject") subject: String, @Path(
-            "subjectId"
-        ) subjectId: Long
+        @Header("Authorization") authorization: String,
+        @Path("subject") subject: String,
+        @Path("subjectId") subjectId: Long
     ): Response<Map<String, List<String?>>>
 
     /**
@@ -54,11 +57,13 @@ interface ChatRoomService {
      * @param ruleSetId 規則ID
      * @return 成功則 status code 200, 失敗則status code 非 200
      */
+    @RecordApi
     @POST("api/Authorization/{subject}/Binding/{subjectId}/{ruleSetId}")
     suspend fun bindRuleSet(
-        @Header("Authorization") authorization: String, @Path("subject") subject: String, @Path(
-            "subjectId"
-        ) subjectId: Long, @Path("ruleSetId") ruleSetId: Long
+        @Header("Authorization") authorization: String,
+        @Path("subject") subject: String,
+        @Path("subjectId") subjectId: Long,
+        @Path("ruleSetId") ruleSetId: Long
     ): Response<ResponseBody>
 
     /**
@@ -70,11 +75,13 @@ interface ChatRoomService {
      * @param role 角色名稱
      * @return 成功則 status code 200, 失敗則status code 非 200
      */
+    @RecordApi
     @POST("api/Authorization/{subject}/Request/{subjectId}/{role}")
     suspend fun requestJoinChatRoom(
-        @Header("Authorization") authorization: String, @Path("subject") subject: String, @Path(
-            "subjectId"
-        ) subjectId: Long, @Path("role") role: String
+        @Header("Authorization") authorization: String,
+        @Path("subject") subject: String,
+        @Path("subjectId") subjectId: Long,
+        @Path("role") role: String
     ): Response<ResponseBody>
 
     /**
@@ -87,11 +94,14 @@ interface ChatRoomService {
      * @param role 角色名稱
      * @return 成功則 status code 200, 失敗則status code 非 200
      */
+    @RecordApi
     @POST("api/Authorization/{subject}/Role/{subjectId}/{userId}/{role}")
     suspend fun addRole(
-        @Header("Authorization") authorization: String, @Path("subject") subject: String, @Path(
-            "subjectId"
-        ) subjectId: Long, @Path("userId") userId: Long, @Path("role") role: String
+        @Header("Authorization") authorization: String,
+        @Path("subject") subject: String,
+        @Path("subjectId") subjectId: Long,
+        @Path("userId") userId: Long,
+        @Path("role") role: String
     ): Response<ResponseBody>
 
     /**
@@ -104,11 +114,14 @@ interface ChatRoomService {
      * @param role 角色名稱
      * @return 成功則 status code 200, 失敗則status code 非 200
      */
+    @RecordApi
     @DELETE("api/Authorization/{subject}/Role/{subjectId}/{userId}/{role}")
     suspend fun deleteRole(
-        @Header("Authorization") authorization: String, @Path("subject") subject: String, @Path(
-            "subjectId"
-        ) subjectId: Long, @Path("userId") userId: Long, @Path("role") role: String
+        @Header("Authorization") authorization: String,
+        @Path("subject") subject: String,
+        @Path("subjectId") subjectId: Long,
+        @Path("userId") userId: Long,
+        @Path("role") role: String
     ): Response<ResponseBody>
 
     /**
@@ -126,6 +139,7 @@ interface ChatRoomService {
      * @param subjectId 對象ID
      * @return 申請物件的陣列
      */
+    @RecordApi
     @GET("api/Authorization/{subject}/Request/{subjectId}")
     suspend fun getSubjectAllAuthorizationRequests(
         @Header("Authorization") authorization: String,
@@ -141,6 +155,7 @@ interface ChatRoomService {
      * @param subjectId 對象ID
      * @return 綁定的規則清單
      */
+    @RecordApi
     @GET("api/Authorization/{subject}/Binding/{subjectId}")
     suspend fun getBindingSubjectRuleSets(
         @Header("Authorization") authorization: String,
@@ -156,6 +171,7 @@ interface ChatRoomService {
      * @param authorization JWT Token
      * @return 可用聊天室設定陣列
      */
+    @RecordApi
     @GET("api/Chatroom")
     suspend fun getAvailableRoom(@Header("Authorization") authorization: String): Response<List<ChatRoomSettingResponseBody?>>
 
@@ -166,6 +182,7 @@ interface ChatRoomService {
      * @param chatRoomId 聊天室ID
      * @return 目標聊天室ID
      */
+    @RecordApi
     @GET("api/Chatroom/{chatroomId}")
     suspend fun getTargetRoomSetting(
         @Header("Authorization") authorization: String,
@@ -180,6 +197,7 @@ interface ChatRoomService {
      * @param settingMap 更新設定
      * @return 更新後的設定檔
      */
+    @RecordApi
     @PATCH("api/Chatroom/{chatroomId}")
     suspend fun updateChatRoomSetting(
         @Header("Authorization") authorization: String,
@@ -194,6 +212,7 @@ interface ChatRoomService {
      * @param messageId Long 訊息ID
      * @return 目標訊息
      */
+    @RecordApi
     @GET("api/Chatroom/Message/{messageId}")
     suspend fun getMessageById(
         @Header("Authorization") authorization: String,
@@ -208,6 +227,7 @@ interface ChatRoomService {
      * @param map 參數KeyValueMap
      * @return 歷史訊息陣列
      */
+    @RecordApi
     @GET("api/Chatroom/{chatroomId}/Message/Latest")
     suspend fun getHistoryMessageLatest(
         @Header("Authorization") authorization: String,
@@ -223,6 +243,7 @@ interface ChatRoomService {
      * @param map 參數KeyValueMap
      * @return 歷史訊息陣列
      */
+    @RecordApi
     @GET("api/Chatroom/{chatroomId}/Message/Oldest")
     suspend fun getHistoryMessageOldest(
         @Header("Authorization") authorization: String,
@@ -238,6 +259,7 @@ interface ChatRoomService {
      * @param messageId Long 訊息ID
      * @return Response<ResponseBody> statusCode 200 success 非200則失敗
      */
+    @RecordApi
     @DELETE("api/Chatroom/{chatroomId}/Message/{messageId}")
     suspend fun deleteMessage(
         @Header("Authorization") authorization: String,
@@ -253,6 +275,7 @@ interface ChatRoomService {
      * @param formFile 圖片檔案
      * @return 圖片下載網址
      */
+    @RecordApi(isLogRequestBody = false)
     @Multipart
     @POST("api/Image/Upload")
     suspend fun uploadImage(@Part formFile: MultipartBody.Part): Response<ResponseBody>
@@ -268,6 +291,7 @@ interface ChatRoomService {
      * @param roomId 在哪個聊天室
      * @param body 被檢舉人的資訊
      */
+    @RecordApi(isLogRequestBody = false)
     @POST("api/Chatroom/{chatroomId}/Report")
     suspend fun reportSomeone(
         @Header("Authorization") authorization: String,
@@ -281,6 +305,7 @@ interface ChatRoomService {
      * @param authorization JWT token
      * @param roomId
      */
+    @RecordApi
     @GET("api/Chatroom/{chatroomId}/Report")
     suspend fun getAllReport(
         @Header("Authorization") authorization: String,
@@ -295,6 +320,7 @@ interface ChatRoomService {
      * @param id Long 檢舉ID
      * @return Response<ResponseBody> statusCode 200 success, not 200 fail
      */
+    @RecordApi
     @DELETE("api/Chatroom/{chatroomId}/Report")
     suspend fun deleteReport(
         @Header("Authorization") authorization: String,
@@ -311,6 +337,7 @@ interface ChatRoomService {
      * @param roomId 聊天室ID
      * @return ID清單
      */
+    @RecordApi
     @GET("api/Chatroom/{chatroomId}/Statistic/OnlineUser")
     suspend fun getAllOnlineUser(
         @Header("Authorization") authorization: String,
@@ -324,6 +351,7 @@ interface ChatRoomService {
      * @param roomId 聊天室ID
      * @return 人數
      */
+    @RecordApi
     @GET("api/Chatroom/{chatroomId}/Statistic/OnlineUserCount")
     suspend fun getOnlineUserCount(
         @Header("Authorization") authorization: String,
@@ -337,6 +365,7 @@ interface ChatRoomService {
      * @param roomId 聊天室ID
      * @return ID清單
      */
+    @RecordApi
     @GET("api/Chatroom/{chatroomId}/Statistic/User")
     suspend fun getAllUser(
         @Header("Authorization") authorization: String,
@@ -350,6 +379,7 @@ interface ChatRoomService {
      * @param roomId 聊天室ID
      * @return 人數
      */
+    @RecordApi
     @GET("api/Chatroom/{chatroomId}/Statistic/UserCount")
     suspend fun getUserCount(
         @Header("Authorization") authorization: String,
@@ -364,6 +394,7 @@ interface ChatRoomService {
      * @param authorization JWT token
      * @return 使用者資訊Map
      */
+    @RecordApi
     @GET("api/UserProfile/")
     suspend fun getUserProfileSelf(@Header("Authorization") authorization: String): Response<UserProfileResponseBody>
 
@@ -374,6 +405,7 @@ interface ChatRoomService {
      * @param userProfile 欲更新的物件
      * @return 更新後的使用者資訊Map
      */
+    @RecordApi
     @PATCH("api/UserProfile")
     suspend fun updateUserProfile(
         @Header("Authorization") authorization: String,
@@ -387,6 +419,7 @@ interface ChatRoomService {
      * @param idList 目標ID清單(以`,`區隔)
      * @return 使用者資訊Map清單
      */
+    @RecordApi(isLogRequestBody = false)
     @GET("api/UserProfile/{idList}")
     suspend fun getUserProfile(
         @Header("Authorization") authorization: String,

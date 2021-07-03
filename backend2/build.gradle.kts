@@ -81,6 +81,8 @@ dependencies {
     testImplementation(Dependencies.KOIN_TEST)
     //coroutine
     testImplementation(Dependencies.COROUTINES_TEST)
+    // okhttp
+    testImplementation(Dependencies.OKHTTP_MOCK_SERVER)
     //Mock
     testImplementation(Dependencies.MOCKK)
     testImplementation(Dependencies.MOCKK_ANDROID)

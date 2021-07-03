@@ -1,5 +1,6 @@
 package com.cmoney.backend2.cellphone.service
 
+import com.cmoney.backend2.base.model.calladapter.RecordApi
 import com.cmoney.backend2.cellphone.service.api.bindcellphone.BindCellphoneResponseBodyWithError
 import com.cmoney.backend2.cellphone.service.api.checkcellphonebindingverifycode.CheckCellphoneBindingVerifyCodeResponseBodyWithError
 import com.cmoney.backend2.cellphone.service.api.checkverifycode.CellphoneCheckVerifyCodeWithError
@@ -27,6 +28,7 @@ interface CellphoneService {
      * @param cellphoneNumber 註冊的手機號碼(09開頭或9開頭都可以)
      *
      */
+    @RecordApi
     @FormUrlEncoded
     @POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
     suspend fun getVerifyCode(
@@ -43,6 +45,7 @@ interface CellphoneService {
      * @param verifyCode 驗證碼
      *
      */
+    @RecordApi
     @FormUrlEncoded
     @POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
     suspend fun checkVerifyCode(
@@ -62,6 +65,7 @@ interface CellphoneService {
      * @param platform 平台
      * @return Response<CellphoneRegisterWithError>
      */
+    @RecordApi(isLogRequestBody = false)
     @FormUrlEncoded
     @POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
     suspend fun registerByCellphone(
@@ -80,6 +84,7 @@ interface CellphoneService {
      * @param cellphoneNumber 手機號碼
      *
      */
+    @RecordApi
     @FormUrlEncoded
     @POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
     suspend fun forgotPasswordForCellphone(
@@ -97,6 +102,7 @@ interface CellphoneService {
      * @param newPassword 新密碼(MD5加密過)
      *
      */
+    @RecordApi(isLogRequestBody = false)
     @FormUrlEncoded
     @POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
     suspend fun updatePassword(
@@ -115,6 +121,7 @@ interface CellphoneService {
      * @param appId App編號
      *
      */
+    @RecordApi
     @FormUrlEncoded
     @POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
     suspend fun getAccountInfo(
@@ -133,6 +140,7 @@ interface CellphoneService {
      * @param cellphoneNumber 手機電話號碼
      *
      */
+    @RecordApi
     @FormUrlEncoded
     @POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
     suspend fun bindCellphone(
@@ -154,6 +162,7 @@ interface CellphoneService {
      * @param cellphoneNumber 手機號碼(09開頭或9開頭都可以)
      * @param verifyCode 驗證碼(若已經使用服務2進行驗證可不填寫)
      */
+    @RecordApi
     @FormUrlEncoded
     @POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
     suspend fun checkCellphoneBindingVerifyCode(
@@ -173,6 +182,7 @@ interface CellphoneService {
      * @param appId App編號
      *
      */
+    @RecordApi
     @FormUrlEncoded
     @POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
     suspend fun unbindCellphone(

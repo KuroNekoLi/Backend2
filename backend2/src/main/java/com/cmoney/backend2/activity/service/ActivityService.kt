@@ -5,6 +5,7 @@ import com.cmoney.backend2.activity.service.api.getdaycount.GetDayCountResponseB
 import com.cmoney.backend2.activity.service.api.getreferralcount.GetReferralCountRequestBody
 import com.cmoney.backend2.activity.service.api.getreferralcount.GetReferralCountResponseBody
 import com.cmoney.backend2.activity.service.api.requestbonus.RequestBonusRequestBody
+import com.cmoney.backend2.base.model.calladapter.RecordApi
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Header
@@ -14,6 +15,7 @@ interface ActivityService {
     /**
      * 取得用戶這個月開啟幾天APP
      */
+    @RecordApi
     @POST("ActivityService/Statistics/ActiveApp/Month/DayCount")
     suspend fun getDayCount(
         @Header("Authorization") authorization: String,
@@ -23,6 +25,7 @@ interface ActivityService {
     /**
      * 請求獎勵
      */
+    @RecordApi
     @POST("ActivityService/Referral/Request")
     suspend fun requestBonus(
         @Header("Authorization") authorization: String,
@@ -32,6 +35,7 @@ interface ActivityService {
     /**
      * 取得推薦人總共成功推薦次數
      */
+    @RecordApi
     @POST("ActivityService/Referral/ReferralCount")
     suspend fun getReferralCount(
         @Header("Authorization") authorization: String,
