@@ -21,9 +21,7 @@ import java.util.*
 
 class RecordApiLogCallAdapterFactory(
     private val setting: Setting,
-    private val getLogger: (() -> LogDataRecorder) = {
-        LogDataRecorder.getInstance()
-    }
+    private val logDataRecorder: LogDataRecorder
 ) : CallAdapter.Factory() {
 
     override fun get(
@@ -85,7 +83,7 @@ class RecordApiLogCallAdapterFactory(
                     query = logQueryMap.toMap(),
                     body = logRequestBody
                 )
-                return ApiLogCall(mutableApiLog, call, getLogger)
+                return ApiLogCall(mutableApiLog, call, logDataRecorder)
             }
         }
     }
@@ -93,7 +91,7 @@ class RecordApiLogCallAdapterFactory(
     internal class ApiLogCall<T>(
         private val mutableApiLog: MutableApiLog,
         private val delegate: Call<T?>,
-        private val getLogger: () -> LogDataRecorder
+        private val logDataRecorder: LogDataRecorder
     ) : Call<T?> {
         private fun logApi(mutableApiLog: MutableApiLog) {
             val apiLog = ApiLog(
@@ -104,7 +102,7 @@ class RecordApiLogCallAdapterFactory(
                 apiLogResponse = mutableApiLog.apiLogResponse,
                 apiLogError = mutableApiLog.apiLogError
             )
-            getLogger().logApi(apiLog)
+            logDataRecorder.logApi(apiLog)
         }
 
         override fun enqueue(callback: Callback<T?>) {
@@ -170,7 +168,7 @@ class RecordApiLogCallAdapterFactory(
         }
 
         override fun clone(): Call<T?> {
-            return ApiLogCall(mutableApiLog, delegate.clone(), getLogger)
+            return ApiLogCall(mutableApiLog, delegate.clone(), logDataRecorder)
         }
 
         override fun request(): Request {

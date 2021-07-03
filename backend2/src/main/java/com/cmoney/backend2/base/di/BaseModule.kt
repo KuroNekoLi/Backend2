@@ -7,6 +7,7 @@ import com.cmoney.backend2.base.model.log.ApiLog
 import com.cmoney.backend2.base.model.setting.BackendSettingSharedPreference
 import com.cmoney.backend2.base.model.setting.DefaultSetting
 import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.data_logdatarecorder.recorder.LogDataRecorder
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import okhttp3.ConnectionSpec
@@ -54,7 +55,12 @@ val backendBaseModule = module {
             .baseUrl(DEFAULT_URL)
             .client(createOkHttpClient())
             .addConverterFactory(GsonConverterFactory.create(get(BACKEND2_GSON)))
-            .addCallAdapterFactory(RecordApiLogCallAdapterFactory(get(BACKEND2_SETTING)))
+            .addCallAdapterFactory(
+                RecordApiLogCallAdapterFactory(
+                    setting = get(BACKEND2_SETTING),
+                    logDataRecorder = LogDataRecorder.getInstance()
+                )
+            )
             .build()
     }
 }
