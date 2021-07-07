@@ -36,6 +36,76 @@ class ChipKWebImpl(
             }
         }
 
+    override suspend fun getIndexForeignInvestment(tickCount: Int): Result<DtnoData> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                val response = service.getIndexForeignInvestment(
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    appId = setting.appId,
+                    guid = setting.identityToken.getMemberGuid(),
+                    tickCount = tickCount
+                )
+                response.checkResponseBody(gson).checkIWithError().toRealResponse()
+            }
+        }
+    }
+
+    override suspend fun getIndexMain(tickCount: Int): Result<DtnoData> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                val response = service.getIndexMain(
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    appId = setting.appId,
+                    guid = setting.identityToken.getMemberGuid(),
+                    tickCount = tickCount
+                )
+                response.checkResponseBody(gson).checkIWithError().toRealResponse()
+            }
+        }
+    }
+
+    override suspend fun getIndexFunded(tickCount: Int): Result<DtnoData> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                val response = service.getIndexFunded(
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    appId = setting.appId,
+                    guid = setting.identityToken.getMemberGuid(),
+                    tickCount = tickCount
+                )
+                response.checkResponseBody(gson).checkIWithError().toRealResponse()
+            }
+        }
+    }
+
+    override suspend fun getCreditRate(): Result<DtnoData> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                val response = service.getCreditRate(
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    appId = setting.appId,
+                    guid = setting.identityToken.getMemberGuid()
+                )
+                response.checkResponseBody(gson).checkIWithError().toRealResponse()
+            }
+        }
+    }
+
+    override suspend fun getIndexCalculateRate(commKey: String, timeRange: Int): Result<DtnoData> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                val response = service.getIndexCalculateRate(
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    commKey = commKey,
+                    timeRange = timeRange,
+                    appId = setting.appId,
+                    guid = setting.identityToken.getMemberGuid()
+                )
+                response.checkResponseBody(gson).checkIWithError().toRealResponse()
+            }
+        }
+    }
+
     override suspend fun getIndexKData(commKey: String, timeRange: Int): Result<DtnoData> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {

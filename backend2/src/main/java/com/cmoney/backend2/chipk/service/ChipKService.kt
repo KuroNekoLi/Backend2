@@ -23,6 +23,61 @@ interface ChipKService {
         @Field("type") type: Int
     ): Response<DtnoWithError>
 
+    //服務6-6. 要求大盤外資的資料(TWA00)
+    @FormUrlEncoded
+    @POST("chipk/ashx/GetDtnoData.ashx")
+    suspend fun getIndexForeignInvestment(
+        @Header("Authorization") authorization: String,
+        @Field("Action") action: String = "IndexForeignInvestment",
+        @Field("appId") appId: Int,
+        @Field("guid") guid: String,
+        @Field("tickCount") tickCount: Int
+    ): Response<DtnoWithError>
+
+    //服務6-7. 要求大盤主力的資料(TWA00)
+    @FormUrlEncoded
+    @POST("chipk/ashx/GetDtnoData.ashx")
+    suspend fun getIndexMain(
+        @Header("Authorization") authorization: String,
+        @Field("Action") action: String = "IndexMain",
+        @Field("appId") appId: Int,
+        @Field("guid") guid: String,
+        @Field("tickCount") tickCount: Int
+    ): Response<DtnoWithError>
+
+    //服務6-8. 要求大盤資券資料(TWA00)
+    @FormUrlEncoded
+    @POST("chipk/ashx/GetDtnoData.ashx")
+    suspend fun getIndexFunded(
+        @Header("Authorization") authorization: String,
+        @Field("Action") action: String = "IndexFunded",
+        @Field("appId") appId: Int,
+        @Field("guid") guid: String,
+        @Field("tickCount") tickCount: Int
+    ): Response<DtnoWithError>
+
+    //服務6-10. 取得加權指數融資維持率
+    @FormUrlEncoded
+    @POST("chipk/ashx/GetDtnoData.ashx")
+    suspend fun getCreditRate(
+        @Header("Authorization") authorization: String,
+        @Field("Action") action: String = "GetCreditRate",
+        @Field("appId") appId: Int,
+        @Field("guid") guid: String
+    ): Response<DtnoWithError>
+
+    //服務6-11. 取得指數技術圖
+    @FormUrlEncoded
+    @POST("chipk/ashx/GetDtnoData.ashx")
+    suspend fun getIndexCalculateRate(
+        @Header("Authorization") authorization: String,
+        @Field("Action") action: String = "GetIndexCalculateRate",
+        @Field("appId") appId: Int,
+        @Field("guid") guid: String,
+        @Field("CommKey") commKey: String,
+        @Field("TimeRange") timeRange: Int
+    ): Response<DtnoWithError>
+
     // 服務6-12. 取得K圖資料
     @FormUrlEncoded
     @POST("chipk/ashx/GetDtnoData.ashx")
