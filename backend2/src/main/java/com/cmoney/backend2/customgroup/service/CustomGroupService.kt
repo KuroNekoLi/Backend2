@@ -26,7 +26,7 @@ interface CustomGroupService {
      * @param docType 群組類別，all: 全部，stock: 個股，broker: 券商，warrant: 權證，ustock: 美股，bond: 債券。
      *
      */
-    @RecordApi
+    @RecordApi(cmoneyAction = "getcustomgroup")
     @Deprecated("使用1-2 getCustomGroupWithOrder帶替")
     @FormUrlEncoded
     @POST("MobileService/ashx/CustomerGroup/CustomGroup.ashx")
@@ -44,7 +44,7 @@ interface CustomGroupService {
      * @param docType 群組類別，all: 全部，stock: 個股，broker: 券商，warrant: 權證，ustock: 美股，bond: 債券。
      *
      */
-    @RecordApi
+    @RecordApi(cmoneyAction = "getcustomgroupwithorder")
     @FormUrlEncoded
     @POST("MobileService/ashx/CustomerGroup/CustomGroup.ashx")
     suspend fun getCustomGroupWithOrder(
@@ -60,7 +60,7 @@ interface CustomGroupService {
      *
      * @param docNo 自選股清單的編號
      */
-    @RecordApi
+    @RecordApi(cmoneyAction = "getcustomlist")
     @FormUrlEncoded
     @POST("MobileService/ashx/CustomerGroup/CustomGroup.ashx")
     suspend fun getCustomGroupContent(
@@ -77,7 +77,7 @@ interface CustomGroupService {
      * @param docType 群組類別，all: 全部，stock: 個股，broker: 券商，warrant: 權證，ustock: 美股，bond: 債券。
      *
      */
-    @RecordApi
+    @RecordApi(cmoneyAction = "getcustomgroupwithorderandlist")
     @FormUrlEncoded
     @POST("MobileService/ashx/CustomerGroup/CustomGroup.ashx")
     suspend fun getCustomGroupWithOrderAndList(
@@ -93,7 +93,7 @@ interface CustomGroupService {
      *
      * @param docType 群組類別，all: 全部，stock: 個股，broker: 券商，warrant: 權證，ustock: 美股，bond: 債券。
      */
-    @RecordApi
+    @RecordApi(cmoneyAction = "updatecustomlist")
     @FormUrlEncoded
     @POST("MobileService/ashx/CustomerGroup/CustomGroup.ashx")
     suspend fun updateCustomList(
@@ -110,7 +110,7 @@ interface CustomGroupService {
     /**
      * 服務4. 新增自選股群組
      */
-    @RecordApi
+    @RecordApi(cmoneyAction = "addcustomgroup")
     @FormUrlEncoded
     @POST("MobileService/ashx/CustomerGroup/CustomGroup.ashx")
     suspend fun addCustomGroup(
@@ -125,7 +125,7 @@ interface CustomGroupService {
     /**
      * 服務5. 刪除自選股群組
      */
-    @RecordApi
+    @RecordApi(cmoneyAction = "deletecustomgroup")
     @FormUrlEncoded
     @POST("MobileService/ashx/CustomerGroup/CustomGroup.ashx")
     suspend fun deleteCustomGroup(
@@ -139,7 +139,7 @@ interface CustomGroupService {
     /**
      * 服務6. 修改自選股群組名稱
      */
-    @RecordApi
+    @RecordApi(cmoneyAction = "updatecustomgroupname")
     @FormUrlEncoded
     @POST("MobileService/ashx/CustomerGroup/CustomGroup.ashx")
     suspend fun updateCustomGroupName(
@@ -157,7 +157,7 @@ interface CustomGroupService {
      *
      * @param orderMap 自選股群組順序，格式{docNo:Order,docNo:Order}，範例：{30444:3,1539393:4}}
      */
-    @RecordApi
+    @RecordApi(cmoneyAction = "updatecustomgrouporder")
     @FormUrlEncoded
     @POST("MobileService/ashx/CustomerGroup/CustomGroup.ashx")
     suspend fun updateCustomGroupOrder(

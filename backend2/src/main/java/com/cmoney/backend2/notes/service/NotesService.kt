@@ -23,12 +23,12 @@ interface NotesService {
      * Notes API
      * 服務1. 取得網誌文章
      */
-    @RecordApi
+    @RecordApi(cmoneyAction = "GetNotes")
     @FormUrlEncoded
     @POST("notes/ashx/chipkapi.ashx")
     suspend fun getNotes(
         @Header("Authorization") authorization: String,
-        @Field("action") action: String,
+        @Field("action") action: String = "GetNotes",
         @Field("Guid") guid: String,
         @Field("AppId") appId: Int,
         @Field("noteid") noteId: Long,
@@ -42,12 +42,12 @@ interface NotesService {
      * Notes API
      * 服務2. 取得網誌文章ByTag分類
      */
-    @RecordApi
+    @RecordApi(cmoneyAction = "GetNotesByTags")
     @FormUrlEncoded
     @POST("notes/ashx/chipkapi.ashx")
     suspend fun getNotesByTagsUsingNotesApi(
         @Header("Authorization") authorization: String,
-        @Field("action") action: String,
+        @Field("action") action: String = "GetNotesByTags",
         @Field("Guid") guid: String,
         @Field("AppId") appId: Int,
         @Field("noteid") noteId: Long,

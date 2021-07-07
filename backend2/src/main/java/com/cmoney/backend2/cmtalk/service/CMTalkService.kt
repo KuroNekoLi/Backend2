@@ -13,7 +13,7 @@ interface CMTalkService {
      * @param baseId 從哪開始往後取(第一次傳0)
      * @param fetchSize 要拉幾則
      */
-    @RecordApi
+    @RecordApi(cmoneyAction = "gettargetmedialist")
     @GET("CMTalk/Ashx/media.ashx")
     suspend fun getTargetMediaList(
         @Query("action") action: String = "gettargetmedialist",

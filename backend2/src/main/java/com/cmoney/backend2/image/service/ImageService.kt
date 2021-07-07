@@ -18,7 +18,7 @@ interface ImageService {
      * @param file 圖片檔案
      * @return
      */
-    @RecordApi(isLogRequestBody = false)
+    @RecordApi
     @Multipart
     @POST("image/v1/upload")
     suspend fun upload(

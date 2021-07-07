@@ -12,7 +12,7 @@ interface MediaService {
     /**
      * 服務2.取得影音詳細資訊(有單元課程的影音才會用)-已廢除
      */
-    @RecordApi
+    @RecordApi(cmoneyAction = "GetMediaDetail")
     @GET("MobileService/ashx/Media/Media.ashx")
     suspend fun getMediaDetail(
         @Header("Authorization") authorization: String,
@@ -26,7 +26,7 @@ interface MediaService {
     /**
      * 服務3.取得網頁付費影音清單
      */
-    @RecordApi
+    @RecordApi(cmoneyAction = "getpaidmedialist")
     @GET("MobileService/ashx/Media/Media.ashx")
     suspend fun getPaidMediaList(
         @Header("Authorization") authorization: String,
@@ -40,7 +40,7 @@ interface MediaService {
     /**
      * 服務4.取得網頁付費直播清單
      */
-    @RecordApi
+    @RecordApi(cmoneyAction = "getpaidlivevideolist")
     @GET("MobileService/ashx/Media/Media.ashx")
     suspend fun getPaidLiveList(
         @Header("Authorization") authorization: String,
@@ -54,7 +54,7 @@ interface MediaService {
     /**
      * 服務5.取得影音詳情內容
      */
-    @RecordApi
+    @RecordApi(cmoneyAction = "getmediainfo")
     @POST("MobileService/ashx/Media/Media.ashx")
     @FormUrlEncoded
     suspend fun getMediaInfo(
@@ -69,7 +69,7 @@ interface MediaService {
      * 服務6.取得會員已購買的影音清單
      * @return The raw json element which may be array or error object.
      */
-    @RecordApi
+    @RecordApi(cmoneyAction = "getpaidmedialistofmember")
     @GET("MobileService/ashx/Media/Media.ashx")
     suspend fun getPaidMediaListOfMember(
         @Header("Authorization") authorization: String,
@@ -83,7 +83,7 @@ interface MediaService {
     /**
      * 服務7.取得影音購買網址
      */
-    @RecordApi
+    @RecordApi(cmoneyAction = "getmediapurchaseurl")
     @POST("MobileService/ashx/Media/Media.ashx")
     @FormUrlEncoded
     suspend fun getMediaPurchaseUrl(
@@ -97,7 +97,7 @@ interface MediaService {
     /**
      * 服務8.取得影音播放網址
      */
-    @RecordApi
+    @RecordApi(cmoneyAction = "getmediaplayurl")
     @POST("MobileService/ashx/Media/Media.ashx")
     @FormUrlEncoded
     suspend fun getMediaUrl(
@@ -114,7 +114,7 @@ interface MediaService {
      * @param chargeType 0: All, 1: Paid, 2: Free
      * @return The raw json element which may be array or error object.
      */
-    @RecordApi
+    @RecordApi(cmoneyAction = "getmedialistbyappid")
     @POST("MobileService/ashx/Media/Media.ashx")
     @FormUrlEncoded
     suspend fun getMediaList(
@@ -133,7 +133,7 @@ interface MediaService {
      * @param chargeType 0: All, 1: Paid, 2: Free
      * @return The raw json element which may be array or error object.
      */
-    @RecordApi
+    @RecordApi(cmoneyAction = "getlivevideolistbyappid")
     @POST("MobileService/ashx/Media/Media.ashx")
     @FormUrlEncoded
     suspend fun getLiveStreamList(
@@ -149,7 +149,7 @@ interface MediaService {
     /**
      * 服務11.取得指定app的會員已購買的影音清單
      */
-    @RecordApi
+    @RecordApi(cmoneyAction = "getpaidmedialistofmemberbyappid")
     @GET("MobileService/ashx/Media/Media.ashx")
     suspend fun getPaidMediaListOfMemberByAppId(
         @Header("Authorization") authorization: String,

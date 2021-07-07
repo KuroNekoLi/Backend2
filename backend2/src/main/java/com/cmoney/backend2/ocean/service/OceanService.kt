@@ -689,7 +689,7 @@ interface OceanService {
     /**
      * 上傳社團頭像
      */
-    @RecordApi(isLogRequestBody = false)
+    @RecordApi
     @POST("OceanService/api/File/UploadChannelImage")
     suspend fun uploadChannelImage(
         @Header("Authorization") authorization: String,

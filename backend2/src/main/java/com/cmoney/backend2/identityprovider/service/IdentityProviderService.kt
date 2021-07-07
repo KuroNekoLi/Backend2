@@ -36,7 +36,7 @@ interface IdentityProviderService {
      * @param refreshToken 用來取得新的access token
      *
      */
-    @RecordApi(isLogRequestBody = false)
+    @RecordApi
     @POST(value = "identity/token")
     @FormUrlEncoded
     suspend fun getIdentityToken(
