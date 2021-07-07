@@ -432,14 +432,14 @@ interface ForumOceanService {
         @Path("officialId") officialId: Long
     ): Response<GetOfficialSubscribedCountResponseBody>
 
-    @RecordApi(isLogRequestBody = false)
+    @RecordApi
     @GET("ForumOcean/api/OfficialSubscriber/GetSubscribedCount")
     suspend fun getSubscribedCount(
         @Header("Authorization") authorization: String,
         @Query("memberId") memberId: Long
     ): Response<GetSubscribedCountResponseBody>
 
-    @RecordApi(isLogRequestBody = false)
+    @RecordApi
     @GET("ForumOcean/api/OfficialSubscriber/GetSubscribeds")
     suspend fun getSubscribed(
         @Header("Authorization") authorization: String,
@@ -480,28 +480,28 @@ interface ForumOceanService {
         @Path("memberId") memberId: Long
     ): Response<List<Long>>
 
-    @RecordApi(isLogRequestBody = false)
+    @RecordApi
     @POST("ForumOcean/api/Relationship/Follow")
     suspend fun follow(
         @Header("Authorization") authorization: String,
         @Query("memberId") memberId: Long
     ): Response<Void>
 
-    @RecordApi(isLogRequestBody = false)
+    @RecordApi
     @DELETE("ForumOcean/api/Relationship/Unfollow")
     suspend fun unfollow(
         @Header("Authorization") authorization: String,
         @Query("memberId") memberId: Long
     ): Response<Void>
 
-    @RecordApi(isLogRequestBody = false)
+    @RecordApi
     @POST("ForumOcean/api/Relationship/Block")
     suspend fun block(
         @Header("Authorization") authorization: String,
         @Query("memberId") memberId: Long
     ): Response<Void>
 
-    @RecordApi(isLogRequestBody = false)
+    @RecordApi
     @DELETE("ForumOcean/api/Relationship/Unblock")
     suspend fun unblock(
         @Header("Authorization") authorization: String,
@@ -535,14 +535,14 @@ interface ForumOceanService {
         @Path("articleId") articleId: Long
     ): Response<Void>
 
-    @RecordApi(isLogRequestBody = false)
+    @RecordApi
     @GET("ForumOcean/api/Support/GetMemberIds")
     suspend fun getMemberIds(
             @Header("Authorization") authorization: String,
             @Query("channelIds") channelIds : String
     ): Response<List<ChannelIdAndMemberId>>
 
-    @RecordApi(isLogRequestBody = false)
+    @RecordApi
     @GET("ForumOcean/api/Support/GetChannelIds")
     suspend fun getChannelIds(
             @Header("Authorization") authorization: String,

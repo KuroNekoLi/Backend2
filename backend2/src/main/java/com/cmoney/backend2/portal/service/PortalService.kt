@@ -86,7 +86,7 @@ interface PortalService {
     /**
      * 取得會員戰績
      */
-    @RecordApi(isLogRequestBody = false)
+    @RecordApi
     @POST("CMPortal/api/GuessBullBear/GetMemberPerformance")
     suspend fun getMemberPerformance(
         @Header("Authorization") authorization: String,
@@ -108,7 +108,7 @@ interface PortalService {
      * 取得某人的活動歷史紀錄
      *
      */
-    @RecordApi(isLogRequestBody = false)
+    @RecordApi
     @POST("CMPortal/api/GuessBullBear/GetPersonActivityHistory")
     suspend fun getPersonActivityHistory(
         @Header("Authorization") authorization: String,
@@ -149,7 +149,7 @@ interface PortalService {
     /**
      * 詢問會員某App上期全部的猜多空活動參與狀況(驗證身分)
      */
-    @RecordApi(isLogRequestBody = false)
+    @RecordApi
     @POST("CMPortal/api/GuessBullBear/AskAllMemberLastForecastInfo")
     suspend fun askAllMemberLastForecastInfo(
         @Header("Authorization") authorization: String,

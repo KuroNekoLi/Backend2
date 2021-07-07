@@ -15,7 +15,7 @@ interface ChipKService {
     /**
      * 服務6-2. 籌碼K統一要求Dtno的方法
      */
-    @RecordApi
+    @RecordApi(cmoneyAction = "GetData")
     @FormUrlEncoded
     @POST("chipk/ashx/GetDtnoData.ashx")
     suspend fun getData(
@@ -31,7 +31,7 @@ interface ChipKService {
      * 服務6-12. 取得K圖資料
      *
      */
-    @RecordApi
+    @RecordApi(cmoneyAction = "GetIndexKData")
     @FormUrlEncoded
     @POST("chipk/ashx/GetDtnoData.ashx")
     suspend fun getIndexKData(
@@ -43,7 +43,7 @@ interface ChipKService {
         @Field("guid") guid: String
     ): Response<DtnoWithError>
 
-    @RecordApi
+    @RecordApi(cmoneyAction = "GetChipKData")
     @FormUrlEncoded
     @POST("chipk/ashx/ChipK.ashx")
     suspend fun getChipKData(
@@ -58,7 +58,7 @@ interface ChipKService {
     /**
      * 取得官方資料
      */
-    @RecordApi
+    @RecordApi(cmoneyAction = "GetOfficialStockPick")
     @FormUrlEncoded
     @POST("chipk/Ashx/GetDtnoData.ashx")
     suspend fun getOfficialStockPickData(
@@ -73,7 +73,7 @@ interface ChipKService {
     /**
      * 取得官方標題
      */
-    @RecordApi
+    @RecordApi(cmoneyAction = "GetOfficialStockPickTitle")
     @FormUrlEncoded
     @POST("chipk/Ashx/GetDtnoData.ashx")
     suspend fun getOfficialStockPickTitle(

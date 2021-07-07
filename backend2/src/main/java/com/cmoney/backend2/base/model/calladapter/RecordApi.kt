@@ -1,12 +1,12 @@
 package com.cmoney.backend2.base.model.calladapter
 
 /**
- * 紀錄Api的參數，在[RecordApiLogCallAdapterFactory]
+ * 紀錄Api的參數，在[RecordApiLogCallAdapterFactory]中使用。
  *
- * @property isLogRequestBody 是否要紀錄RequestBody，預設為true。在特定情況是不需要紀錄Body的，例如：登入API的帳號密碼。
+ * @property cmoneyAction 紀錄mobile service的Request Action，
  */
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)
 annotation class RecordApi(
-    val isLogRequestBody: Boolean = true
+    val cmoneyAction: String = ""
 )

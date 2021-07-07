@@ -8,10 +8,8 @@ import com.cmoney.domain_logdatarecorder.data.api.log.ApiLogError
 import com.cmoney.domain_logdatarecorder.data.api.log.ApiLogRequest
 import com.cmoney.domain_logdatarecorder.data.api.log.ApiLogResponse
 import okhttp3.Request
-import okio.Buffer
 import okio.Timeout
 import retrofit2.*
-import java.io.EOFException
 import java.io.IOException
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
@@ -32,7 +30,7 @@ class RecordApiLogCallAdapterFactory(
         val recordApiLogAnnotation = annotations.find {
             it is RecordApi
         } ?: return null
-        val isLogRequestBody = (recordApiLogAnnotation as RecordApi).isLogRequestBody
+        val isLogCMoneyAction = (recordApiLogAnnotation as RecordApi).cmoneyAction.isNotEmpty()
 
         if (getRawType(returnType) != Call::class.java) {
             return null
@@ -51,37 +49,34 @@ class RecordApiLogCallAdapterFactory(
                 val mutableApiLog = MutableApiLog()
                 mutableApiLog.domain = setting.domainUrl
                 mutableApiLog.userId = setting.identityToken.getMemberId()
-
+                val logCMoneyAction =
+                    recordApiLogAnnotation.cmoneyAction.takeIf { isLogCMoneyAction }
                 val request = call.request()
                 val requestUrl = request.url
-                val requestBody = request.body
+                val logHeaders = request.headers.toMap()
+                    .filter { header ->
+                        header.key != "Authorization"
+                    }.takeIf { it.isNotEmpty() }
 
                 mutableApiLog.path = requestUrl.encodedPath
 
-                var logRequestBody: String? = null
-                if (isLogRequestBody) {
-                    val buffer = Buffer()
-                    requestBody?.writeTo(buffer)
-                    val contentType = requestBody?.contentType()
-                    val charset: Charset = contentType?.charset(StandardCharsets.UTF_8) ?: StandardCharsets.UTF_8
-                    if (buffer.isProbablyUtf8()) {
-                        logRequestBody = buffer.use {
-                            it.readString(charset)
-                        }
+
+                val logQueryMap = requestUrl.queryParameterNames
+                    .flatMap { name ->
+                        requestUrl.queryParameterValues(name)
+                            .filterNotNull().map { value ->
+                                name to value
+                            }
                     }
-                }
-                val logQueryMap = mutableMapOf<String, String>()
-                requestUrl.queryParameterNames.forEach { name ->
-                    requestUrl.queryParameterValues(name).forEach { value ->
-                        logQueryMap[name] = value.orEmpty()
-                    }
-                }
+                    .toMap()
+                    .takeIf { it.isNotEmpty() }
 
                 mutableApiLog.apiLogRequest = ApiLogRequest(
                     time = System.currentTimeMillis(),
-                    headers = request.headers.toMap(),
-                    query = logQueryMap.toMap(),
-                    body = logRequestBody
+                    headers = logHeaders,
+                    query = logQueryMap,
+                    body = null,
+                    action = logCMoneyAction
                 )
                 return ApiLogCall(mutableApiLog, call, logDataRecorder)
             }
@@ -120,7 +115,9 @@ class RecordApiLogCallAdapterFactory(
                             val errorResponseBody = response.errorBody()?.source()?.buffer?.clone()
                                 ?.use { buffer ->
                                     val contentType = rawResponse.body?.contentType()
-                                    val charset: Charset = contentType?.charset(StandardCharsets.UTF_8) ?: StandardCharsets.UTF_8
+                                    val charset: Charset =
+                                        contentType?.charset(StandardCharsets.UTF_8)
+                                            ?: StandardCharsets.UTF_8
                                     buffer.readString(charset)
                                 }
                             mutableApiLog.apiLogError = ApiLogError(
@@ -177,38 +174,6 @@ class RecordApiLogCallAdapterFactory(
 
         override fun timeout(): Timeout {
             return delegate.timeout()
-        }
-    }
-
-    private fun isAnnotationPresent(
-        annotations: Array<Annotation>,
-        cls: Class<out Annotation?>
-    ): Boolean {
-        for (annotation in annotations) {
-            if (cls.isInstance(annotation)) {
-                return true
-            }
-        }
-        return false
-    }
-
-    private fun Buffer.isProbablyUtf8(): Boolean {
-        try {
-            val prefix = Buffer()
-            val byteCount = size.coerceAtMost(64)
-            copyTo(prefix, 0, byteCount)
-            for (i in 0 until 16) {
-                if (prefix.exhausted()) {
-                    break
-                }
-                val codePoint = prefix.readUtf8CodePoint()
-                if (Character.isISOControl(codePoint) && !Character.isWhitespace(codePoint)) {
-                    return false
-                }
-            }
-            return true
-        } catch (_: EOFException) {
-            return false // Truncated UTF-8 sequence.
         }
     }
 }

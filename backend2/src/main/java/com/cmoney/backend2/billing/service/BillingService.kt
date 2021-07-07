@@ -56,7 +56,7 @@ interface BillingService {
     /**
      * 華為-InApp商品購買的訂單驗證
      */
-    @RecordApi(isLogRequestBody = false)
+    @RecordApi
     @POST("PurchaseService/HuaWei/VerifyHUAWEIOrderReceipt")
     suspend fun verifyHuaweiInAppReceipt(
         @Header("Authorization") authorization: String,
@@ -66,7 +66,7 @@ interface BillingService {
     /**
      * 華為-Sub商品購買的訂單驗證
      */
-    @RecordApi(isLogRequestBody = false)
+    @RecordApi
     @POST("PurchaseService/HuaWei/VerifyHUAWEISubscriptReceipt")
     suspend fun verifyHuaweiSubReceipt(
         @Header("Authorization") authorization: String,
@@ -77,7 +77,7 @@ interface BillingService {
      * 華為-恢復InApp商品權限
      *
      */
-    @RecordApi(isLogRequestBody = false)
+    @RecordApi
     @POST("PurchaseService/HuaWei/RecoveryHUAWEIOrderReceipt")
     suspend fun recoveryHuaweiInAppReceipt(
         @Header("Authorization") authorization: String,
@@ -88,7 +88,7 @@ interface BillingService {
      * 華為-恢復Sub商品權限
      *
      */
-    @RecordApi(isLogRequestBody = false)
+    @RecordApi
     @POST("PurchaseService/HuaWei/RecoveryHUAWEISubscriptReceipt")
     suspend fun recoveryHuaweiSubReceipt(
         @Header("Authorization") authorization: String,
@@ -98,7 +98,7 @@ interface BillingService {
     /**
      * Google-InApp商品購買的訂單驗證
      */
-    @RecordApi(isLogRequestBody = false)
+    @RecordApi
     @POST("PurchaseService/Google/VerifyOrderReceipt")
     suspend fun verifyGoogleInAppReceipt(
         @Header("Authorization") authorization: String,
@@ -108,7 +108,7 @@ interface BillingService {
     /**
      * Google-Sub商品購買的訂單驗證
      */
-    @RecordApi(isLogRequestBody = false)
+    @RecordApi
     @POST("PurchaseService/Google/VerifySubscriptReceipt")
     suspend fun verifyGoogleSubReceipt(
         @Header("Authorization") authorization: String,
@@ -118,7 +118,7 @@ interface BillingService {
     /**
      * Google-恢復InApp商品權限
      */
-    @RecordApi(isLogRequestBody = false)
+    @RecordApi
     @POST("PurchaseService/Google/RecoveryOrderReceipt")
     suspend fun recoveryGoogleInAppReceipt(
         @Header("Authorization") authorization: String,
@@ -128,7 +128,7 @@ interface BillingService {
     /**
      * Google-恢復Sub商品權限
      */
-    @RecordApi(isLogRequestBody = false)
+    @RecordApi
     @POST("PurchaseService/Google/RecoverySubscriptReceipt")
     suspend fun recoveryGoogleSubReceipt(
         @Header("Authorization") authorization: String,
@@ -139,7 +139,7 @@ interface BillingService {
      * MobileService-取得是否有付費授權(加上身份識別)
      * 由於授權服務尚未完成，暫時放在這邊，之後會更動。
      */
-    @RecordApi
+    @RecordApi(cmoneyAction = "getauth")
     @FormUrlEncoded
     @POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
     suspend fun getAuthStatus(
@@ -153,7 +153,7 @@ interface BillingService {
      * MobileService-取得指定App是否有付費授權
      * 由於授權服務尚未完成，暫時放在這邊，之後會更動。
      */
-    @RecordApi
+    @RecordApi(cmoneyAction = "getappauth")
     @FormUrlEncoded
     @POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
     suspend fun getTargetAppAuthStatus(

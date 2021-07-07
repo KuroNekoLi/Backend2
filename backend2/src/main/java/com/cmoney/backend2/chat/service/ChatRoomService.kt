@@ -275,7 +275,7 @@ interface ChatRoomService {
      * @param formFile 圖片檔案
      * @return 圖片下載網址
      */
-    @RecordApi(isLogRequestBody = false)
+    @RecordApi
     @Multipart
     @POST("api/Image/Upload")
     suspend fun uploadImage(@Part formFile: MultipartBody.Part): Response<ResponseBody>
@@ -291,7 +291,7 @@ interface ChatRoomService {
      * @param roomId 在哪個聊天室
      * @param body 被檢舉人的資訊
      */
-    @RecordApi(isLogRequestBody = false)
+    @RecordApi
     @POST("api/Chatroom/{chatroomId}/Report")
     suspend fun reportSomeone(
         @Header("Authorization") authorization: String,
@@ -419,7 +419,7 @@ interface ChatRoomService {
      * @param idList 目標ID清單(以`,`區隔)
      * @return 使用者資訊Map清單
      */
-    @RecordApi(isLogRequestBody = false)
+    @RecordApi
     @GET("api/UserProfile/{idList}")
     suspend fun getUserProfile(
         @Header("Authorization") authorization: String,
