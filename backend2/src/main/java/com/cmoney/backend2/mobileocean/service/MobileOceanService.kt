@@ -108,12 +108,12 @@ interface MobileOceanService {
      * @param isIncludeLimitedAskArticle 是否包含時效內的問答文章 ( 預設:false )
      * @return
      */
-    @RecordApi(cmoneyAction = "GetStockArticleList")
+    @RecordApi(cmoneyAction = "getstockarticlelist")
     @FormUrlEncoded
     @POST("MobileService/ashx/MobileCode.ashx")
     suspend fun getStockArticleList(
         @Header("Authorization") authorization: String,
-        @Field("action") action: String = "GetStockArticleList",
+        @Field("action") action: String = "getstockarticlelist",
         @Field("AppId") appId: Int,
         @Field("Guid") guid: String,
         @Field("stockId") stockId: String,
@@ -389,12 +389,12 @@ interface MobileOceanService {
     /**
      *  服務3-1. 按讚
      */
-    @RecordApi(cmoneyAction = "LikeArticle")
+    @RecordApi(cmoneyAction = "likearticle")
     @FormUrlEncoded
     @POST("MobileService/ashx/MobileCode.ashx")
     suspend fun likeArticle(
         @Header("Authorization") authorization: String,
-        @Field("action") action: String = "LikeArticle",
+        @Field("action") action: String = "likearticle",
         @Field("AppId") appId: Int,
         @Field("Guid") guid: String,
         @Field("articleId") articleId: Long
@@ -447,12 +447,12 @@ interface MobileOceanService {
     /**
      * 服務4-1. 詢問今天是否跪求過
      */
-    @RecordApi(cmoneyAction = "IsTodayAskedStockTendency")
+    @RecordApi(cmoneyAction = "istodayaskedstocktendency")
     @FormUrlEncoded
     @POST("MobileService/ashx/MobileCode.ashx")
     suspend fun isTodayAskedStockTendency(
         @Header("Authorization") authorization: String,
-        @Field("Action") action: String = "IsTodayAskedStockTendency",
+        @Field("Action") action: String = "istodayaskedstocktendency",
         @Field("AppId") appId: Int,
         @Field("Guid") guid: String,
         @Field("StockId") stockId: String
@@ -461,12 +461,12 @@ interface MobileOceanService {
     /**
      *  服務4-2. 跪求股票趨勢
      */
-    @RecordApi(cmoneyAction = "AddAskStockTendnecyLog")
+    @RecordApi(cmoneyAction = "addaskstocktendnecylog")
     @FormUrlEncoded
     @POST("MobileService/ashx/MobileCode.ashx")
     suspend fun addAskStockTendencyLog(
         @Header("Authorization") authorization: String,
-        @Field("Action") action: String = "AddAskStockTendnecyLog",
+        @Field("Action") action: String = "addaskstocktendnecylog",
         @Field("AppId") appId: Int,
         @Field("Guid") guid: String,
         @Field("StockId") stockId: String
@@ -475,12 +475,12 @@ interface MobileOceanService {
     /**
      *  服務4-3 取得跪求股票趨勢數量
      */
-    @RecordApi(cmoneyAction = "GetAskStockTendencyAmount")
+    @RecordApi(cmoneyAction = "getaskstocktendencyamount")
     @FormUrlEncoded
     @POST("MobileService/ashx/MobileCode.ashx")
     suspend fun getAskStockTredencyAmount(
         @Header("Authorization") authorization: String,
-        @Field("action") action: String = "GetAskStockTendencyAmount",
+        @Field("action") action: String = "getaskstocktendencyamount",
         @Field("AppId") appId: Int,
         @Field("Guid") guid: String,
         @Field("StockId") stockId: String

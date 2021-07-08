@@ -505,8 +505,9 @@ suspend fun action(
 
 ## 紀錄API
 
-在服務介面的方法上加上註譯`@RecordApi`，代表要記錄這個API的行為。  
-`@RecordApi`有一個可選的參數`isLogRequestBody`，預設true，代表會紀錄此API的發送請求的Body。
+目前所有API都要記錄  
+需要在服務介面的方法上加上註譯`@RecordApi`，代表要記錄這個API的行為。    
+`@RecordApi`有一個可選的參數`cmoneyAction`，預設空字串，代表不會紀錄此API的發送請求中的action。
 
 ```
 @RecordApi
@@ -517,54 +518,25 @@ suspend fun isTokenLatest(
 ): Response<IsLatestResponseBodyWithError>
 ```
 
-但還是有不需要上傳ReqeustBody的時候，例如：一些使用者敏感資料、上傳的類型是檔案。會直接影響紀錄在本地資料庫的大小，所以要特別注意，這時候需要將`isLogRequestBody `改為`false`。
-
-上傳檔案類型
+目前MobileService部分API以`Action`作為服務的分類故需要加上`cmoneyAction`參數以利後續資料分析。
 
 ```
-@RecordApi(isLogRequestBody = false)
-@POST("MobileService/ashx/MobileCode.ashx")
-suspend fun replyArticle(
-    @Header("Authorization") authorization: String,
-    @Body body: MultipartBody
-): Response<ReplyArticleResponse>
-```
-
-登入行為的帳密
-
-```
-@RecordApi(isLogRequestBody = false)
-@POST(value = "identity/token")
+/**
+ * 服務7. 取得帳號資訊
+ *
+ * @param guid 該會員的Guid
+ * @param appId App編號
+ *
+ */
+@RecordApi(cmoneyAction = "getaccountinfo")
 @FormUrlEncoded
-suspend fun getIdentityToken(
-    @Header("x-cmapi-trace-context")
-    xApiLog: String,
-    @Field(value = "grant_type")
-    grantType: String,
-    @Field(value = "client_id")
-    clientId: String,
-    @Field(value = "scope")
-    scope: String? = null,
-    @Field(value = "client_secret")
-    clientSecret: String? = null,
-    @Field(value = "account")
-    account: String? = null,
-    @Field(value = "hashed_password")
-    hashedPassword: String? = null,
-    @Field(value = "token")
-    providerToken: String? = null,
-    @Field(value = "provider")
-    provider: String? = null,
-    @Field(value = "login_method")
-    loginMethod: String? = null,
-    @Field(value = "code")
-    code: String? = null,
-    @Field(value = "redirect_uri")
-    redirectUri: String? = null,
-    @Field(value = "refresh_token")
-    refreshToken: String? = null
-): Response<GetTokenResponseBodyWithError>
-
+@POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
+suspend fun getAccountInfo(
+    @Header("Authorization") authorization: String,
+    @Field("Action") action: String = "getaccountinfo",
+    @Field("Guid") guid: String,
+    @Field("AppId") appId: Int
+): Response<AccountInfoWithError>
 ```
 
 [BaseModule]:http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/Base/blob/master/base/src/main/java/com/cmoney/backend2/base/di/BaseModule.kt
