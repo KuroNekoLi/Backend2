@@ -15,12 +15,12 @@ interface ChipKService {
     /**
      * 服務6-2. 籌碼K統一要求Dtno的方法
      */
-    @RecordApi(cmoneyAction = "GetData")
+    @RecordApi(cmoneyAction = "getdata")
     @FormUrlEncoded
     @POST("chipk/ashx/GetDtnoData.ashx")
     suspend fun getData(
         @Header("Authorization") authorization: String,
-        @Field("Action") action: String = "GetData",
+        @Field("Action") action: String = "getdata",
         @Field("stockId") stockId: String,
         @Field("appId") appId: Int,
         @Field("guid") guid: String,
@@ -31,24 +31,24 @@ interface ChipKService {
      * 服務6-12. 取得K圖資料
      *
      */
-    @RecordApi(cmoneyAction = "GetIndexKData")
+    @RecordApi(cmoneyAction = "getindexkdata")
     @FormUrlEncoded
     @POST("chipk/ashx/GetDtnoData.ashx")
     suspend fun getIndexKData(
         @Header("Authorization") authorization: String,
-        @Field("Action") action: String = "GetIndexKData",
+        @Field("Action") action: String = "getindexkdata",
         @Field("CommKey") commKey: String,
         @Field("TimeRange") timeRange: Int,
         @Field("appId") appId: Int,
         @Field("guid") guid: String
     ): Response<DtnoWithError>
 
-    @RecordApi(cmoneyAction = "GetChipKData")
+    @RecordApi(cmoneyAction = "getchipkdata")
     @FormUrlEncoded
     @POST("chipk/ashx/ChipK.ashx")
     suspend fun getChipKData(
         @Header("Authorization") authorization: String,
-        @Field("action") action: String = "GetChipKData",
+        @Field("action") action: String = "getchipkdata",
         @Field("fundId") fundId: Int,
         @Field("params") params: String,
         @Field("guid") guid: String,
@@ -58,12 +58,12 @@ interface ChipKService {
     /**
      * 取得官方資料
      */
-    @RecordApi(cmoneyAction = "GetOfficialStockPick")
+    @RecordApi(cmoneyAction = "getofficialstockpick")
     @FormUrlEncoded
     @POST("chipk/Ashx/GetDtnoData.ashx")
     suspend fun getOfficialStockPickData(
         @Header("Authorization") authorization: String,
-        @Field("action") action: String = "GetOfficialStockPick",
+        @Field("action") action: String = "getofficialstockpick",
         @Field("appId") appId: Int,
         @Field("guid") guid: String,
         @Field("index") index: Int,
@@ -73,12 +73,12 @@ interface ChipKService {
     /**
      * 取得官方標題
      */
-    @RecordApi(cmoneyAction = "GetOfficialStockPickTitle")
+    @RecordApi(cmoneyAction = "getofficialstockpicktitle")
     @FormUrlEncoded
     @POST("chipk/Ashx/GetDtnoData.ashx")
     suspend fun getOfficialStockPickTitle(
         @Header("Authorization") authorization: String,
-        @Field("action") action: String = "GetOfficialStockPickTitle",
+        @Field("action") action: String = "getofficialstockpicktitle",
         @Field("appId") appId: Int,
         @Field("guid") guid: String,
         @Field("type") type: Int

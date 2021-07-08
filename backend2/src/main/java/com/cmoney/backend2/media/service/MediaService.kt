@@ -12,11 +12,11 @@ interface MediaService {
     /**
      * 服務2.取得影音詳細資訊(有單元課程的影音才會用)-已廢除
      */
-    @RecordApi(cmoneyAction = "GetMediaDetail")
+    @RecordApi(cmoneyAction = "getmediadetail")
     @GET("MobileService/ashx/Media/Media.ashx")
     suspend fun getMediaDetail(
         @Header("Authorization") authorization: String,
-        @Query("action") action: String = "GetMediaDetail",
+        @Query("action") action: String = "getmediadetail",
         @Query("appId") appId: Int,
         @Query("guid") guid: String,
         @Query("mediaId") mediaId: Long,
