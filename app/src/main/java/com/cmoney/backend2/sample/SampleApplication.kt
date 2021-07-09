@@ -96,6 +96,7 @@ class SampleApplication : Application() {
             )
         }
         LogDataRecorder.initialization(this) {
+            isEnable = true
             appId = 2
             platform = com.cmoney.domain_logdatarecorder.data.information.Platform.Android
         }
