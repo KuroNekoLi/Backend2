@@ -1,11 +1,11 @@
 package com.cmoney.backend2.notification2.service
 
+import com.cmoney.backend2.MainCoroutineRule
+import com.cmoney.backend2.TestDispatcher
+import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.response.error.CMoneyError
 import com.cmoney.backend2.base.model.setting.Setting
-import com.cmoney.backend2.notification2.MainCoroutineRule
-import com.cmoney.backend2.notification2.TestDispatcher
-import com.cmoney.backend2.notification2.TestSetting
 import com.cmoney.backend2.notification2.service.api.getbranchfcm.BranchSettingRequestBody
 import com.cmoney.backend2.notification2.service.api.getclubfcm.ClubFcmSettingResponseBody
 import com.cmoney.backend2.notification2.service.api.gethistorynotifyall.GetNotifyAllResponseBody
@@ -166,7 +166,7 @@ class UserSettingTest {
     fun `getBranchFcm_失敗_ServerException`() = mainCoroutineRule.runBlockingTest {
         val errorBody = gson.toJson(
             CMoneyError(
-                CMoneyError.Detail(
+                detail = CMoneyError.Detail(
                     code = 101
                 )
             )
@@ -201,7 +201,7 @@ class UserSettingTest {
     fun `updateBranchFcm_失敗_ServerException`() = mainCoroutineRule.runBlockingTest {
         val errorBody = gson.toJson(
             CMoneyError(
-                CMoneyError.Detail(
+                detail = CMoneyError.Detail(
                     code = 101
                 )
             )
@@ -226,10 +226,12 @@ class UserSettingTest {
             )
         } returns Response.success<Void>(204, null)
 
-        val result = notification2Web.updateBranchFcmMultipleSettings(listOf(
-            PushSetting( true, 17),
-            PushSetting( true, 18)
-        ))
+        val result = notification2Web.updateBranchFcmMultipleSettings(
+            listOf(
+                PushSetting(true, 17),
+                PushSetting(true, 18)
+            )
+        )
         Truth.assertThat(result.isSuccess).isTrue()
         val data = result.getOrThrow()
         Truth.assertThat(data).isEqualTo(Unit)
@@ -239,7 +241,7 @@ class UserSettingTest {
     fun `updateBranchFcmMultipleSettings_失敗_ServerException`() = mainCoroutineRule.runBlockingTest {
         val errorBody = gson.toJson(
             CMoneyError(
-                CMoneyError.Detail(
+                detail = CMoneyError.Detail(
                     code = 101
                 )
             )
@@ -251,10 +253,12 @@ class UserSettingTest {
             )
         } returns Response.error(400, errorBody)
 
-        val result = notification2Web.updateBranchFcmMultipleSettings(listOf(
-            PushSetting( true, 17),
-            PushSetting( true, 18)
-        ))
+        val result = notification2Web.updateBranchFcmMultipleSettings(
+            listOf(
+                PushSetting(true, 17),
+                PushSetting(true, 18)
+            )
+        )
         result.getOrThrow()
     }
 
@@ -285,7 +289,7 @@ class UserSettingTest {
     fun `getClubFcm_失敗_ServerException`() = mainCoroutineRule.runBlockingTest {
         val errorBody = gson.toJson(
             CMoneyError(
-                CMoneyError.Detail(
+                detail = CMoneyError.Detail(
                     code = 101
                 )
             )
@@ -319,7 +323,7 @@ class UserSettingTest {
     fun `updateClubFcm_失敗_ServerException`() = mainCoroutineRule.runBlockingTest {
         val errorBody = gson.toJson(
             CMoneyError(
-                CMoneyError.Detail(
+                detail = CMoneyError.Detail(
                     code = 101
                 )
             )
@@ -353,7 +357,7 @@ class UserSettingTest {
     fun `getMainFcm_失敗_ServerException`() = mainCoroutineRule.runBlockingTest {
         val errorBody = gson.toJson(
             CMoneyError(
-                CMoneyError.Detail(
+                detail = CMoneyError.Detail(
                     code = 101
                 )
             )
@@ -387,7 +391,7 @@ class UserSettingTest {
     fun `updateMainFcm_失敗_ServerException`() = mainCoroutineRule.runBlockingTest {
         val errorBody = gson.toJson(
             CMoneyError(
-                CMoneyError.Detail(
+                detail = CMoneyError.Detail(
                     code = 101
                 )
             )

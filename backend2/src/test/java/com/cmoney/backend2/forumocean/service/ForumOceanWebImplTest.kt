@@ -1,8 +1,8 @@
 package com.cmoney.backend2.forumocean.service
 
-import com.cmoney.backend2.base.extension.createAuthorizationBearer
-import com.cmoney.backend2.forumocean.FakeSetting
-import com.cmoney.backend2.forumocean.MainCoroutineRule
+import com.cmoney.backend2.MainCoroutineRule
+import com.cmoney.backend2.TestDispatcher
+import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.forumocean.service.api.article.create.CreateArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.create.variable.Content
 import com.cmoney.backend2.forumocean.service.api.article.createquestion.CreateQuestionResponseBody
@@ -32,7 +32,6 @@ import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.After
@@ -50,14 +49,13 @@ class ForumOceanWebImplTest {
     @ExperimentalCoroutinesApi
     @get:Rule
     val mainCoroutineRule = MainCoroutineRule()
-    private val setting = FakeSetting()
 
     @MockK
     private val forumOceanService = mockk<ForumOceanService>()
     private val jsonParser =
         GsonBuilder().serializeNulls().setLenient().setPrettyPrinting().create()
     private val service: ForumOceanWeb =
-        ForumOceanWebImpl(forumOceanService, setting, jsonParser, Dispatchers.Main)
+        ForumOceanWebImpl(forumOceanService, TestSetting(), jsonParser, TestDispatcher())
 
     @Before
     fun setUp() {
@@ -82,7 +80,7 @@ class ForumOceanWebImplTest {
         )
         coEvery {
             forumOceanService.createArticle(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 requestBody = createContent
             )
         } returns Response.success(responseBody)
@@ -108,7 +106,7 @@ class ForumOceanWebImplTest {
         )
         coEvery {
             forumOceanService.createArticle(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 requestBody = createContent
             )
         } returns Response.success(responseBody)
@@ -133,7 +131,7 @@ class ForumOceanWebImplTest {
         )
         coEvery {
             forumOceanService.createArticle(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 requestBody = createContent
             )
         } returns Response.success(responseBody)
@@ -156,7 +154,7 @@ class ForumOceanWebImplTest {
         )
         coEvery {
             forumOceanService.createQuestion(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 requestBody = createContent
             )
         } returns Response.success(responseBody)
@@ -190,7 +188,7 @@ class ForumOceanWebImplTest {
         )
         coEvery {
             forumOceanService.getArticle(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 articleId = articleId
             )
         } returns Response.success(successResponse)
@@ -222,7 +220,7 @@ class ForumOceanWebImplTest {
         )
         coEvery {
             forumOceanService.getQuestionArticle(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 articleId = articleId
             )
         } returns Response.success(successResponse)
@@ -254,7 +252,7 @@ class ForumOceanWebImplTest {
         )
         coEvery {
             forumOceanService.getGroupArticle(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 articleId = articleId
             )
         } returns Response.success(successResponse)
@@ -287,7 +285,7 @@ class ForumOceanWebImplTest {
         )
         coEvery {
             forumOceanService.getSharedArticle(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 articleId = articleId
             )
         } returns Response.success(successResponse)
@@ -316,7 +314,7 @@ class ForumOceanWebImplTest {
         )
         coEvery {
             forumOceanService.getSignalArticle(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 articleId = articleId
             )
         } returns Response.success(successResponse)
@@ -345,7 +343,7 @@ class ForumOceanWebImplTest {
         )
         coEvery {
             forumOceanService.getNewsArticle(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 articleId = articleId
             )
         } returns Response.success(successResponse)
@@ -381,7 +379,7 @@ class ForumOceanWebImplTest {
         )
         coEvery {
             forumOceanService.getUnknownArticle(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 articleId = articleId
             )
         } returns Response.success(successResponse)
@@ -397,7 +395,7 @@ class ForumOceanWebImplTest {
         helper.deleteMultiMedia()
         coEvery {
             forumOceanService.updateArticle(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 articleId = any(),
                 body = helper.create()
             )
@@ -412,7 +410,7 @@ class ForumOceanWebImplTest {
     fun `deleteArticle_刪除文章成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.deleteArticle(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 articleId = any()
             )
         } returns Response.success<Void>(204, null)
@@ -426,7 +424,7 @@ class ForumOceanWebImplTest {
     fun `getChannelsArticleByWeight_取得頻道文章清單以權重取成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.getChannelsArticleByWeight(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 channelNameList = any(),
                 startScore = any(),
                 count = any()
@@ -470,7 +468,7 @@ class ForumOceanWebImplTest {
     fun `createCollection_收藏文章成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.createCollection(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 articleId = any()
             )
         } returns Response.success<Void>(204, null)
@@ -483,7 +481,7 @@ class ForumOceanWebImplTest {
     fun `deleteCollection_取消收藏文章成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.deleteCollection(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 articleId = any()
             )
         } returns Response.success<Void>(204, null)
@@ -497,11 +495,14 @@ class ForumOceanWebImplTest {
         val commentId = 123L
         coEvery {
             forumOceanService.createComment(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 articleId = any(),
                 body = any()
             )
-        } returns Response.success<CreateCommentResponseBody>(200, CreateCommentResponseBody(commentId))
+        } returns Response.success<CreateCommentResponseBody>(
+            200,
+            CreateCommentResponseBody(commentId)
+        )
         val result = service.createComment(
             articleId = 0,
             text = null,
@@ -517,7 +518,7 @@ class ForumOceanWebImplTest {
     fun `getComment_取得回復清單成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.getComment(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 articleId = any(),
                 commentId = any(),
                 offsetCount = any()
@@ -549,7 +550,7 @@ class ForumOceanWebImplTest {
     fun `getCommentWithIds_取得指定回文清單成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.getCommentWithId(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 articleId = any(),
                 commentIds = any()
             )
@@ -583,7 +584,7 @@ class ForumOceanWebImplTest {
                 )
             )
         )
-        val result = service.getCommentWithId(10101, listOf(2,3))
+        val result = service.getCommentWithId(10101, listOf(2, 3))
         assertThat(result.isSuccess).isTrue()
         assertThat(result.getOrThrow()).hasSize(2)
     }
@@ -593,7 +594,7 @@ class ForumOceanWebImplTest {
     fun `updateComment_更新回覆成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.updateComment(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 articleId = any(),
                 commentId = any(),
                 body = any()
@@ -608,7 +609,7 @@ class ForumOceanWebImplTest {
     fun `deleteComment_刪除回復成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.deleteComment(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 articleId = any(),
                 commentIndex = any()
             )
@@ -622,7 +623,7 @@ class ForumOceanWebImplTest {
     fun `reactionComment_對回復做反應成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.reactComment(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 articleId = any(),
                 commentIndex = any(),
                 body = any()
@@ -637,7 +638,7 @@ class ForumOceanWebImplTest {
     fun `getReactionDetail_取得反映詳細資料成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.getReactionDetail(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 articleId = any(),
                 commentIndex = any()
             )
@@ -657,7 +658,7 @@ class ForumOceanWebImplTest {
     fun `removeReactionComment_移除回文反應成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.removeCommentReaction(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 articleId = any(),
                 commentIndex = any(),
                 originalReactionType = any()
@@ -672,7 +673,7 @@ class ForumOceanWebImplTest {
     fun `createArticleReaction_建立文章反應成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.createArticleReaction(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 articleId = any(),
                 reactionType = any()
             )
@@ -686,7 +687,7 @@ class ForumOceanWebImplTest {
     fun `getArticleReactionDetail_取得主文反應成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.getArticleReactionDetail(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 articleId = any(),
                 reactions = any(),
                 count = any()
@@ -707,7 +708,7 @@ class ForumOceanWebImplTest {
     fun `deleteArticleReaction_刪除文章反應成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.deleteArticleReaction(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 articleId = any()
             )
         } returns Response.success<Void>(204, null)
@@ -720,7 +721,7 @@ class ForumOceanWebImplTest {
     fun `createArticleInterest_對文章有興趣成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.createArticleInterest(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 articleId = any()
             )
         } returns Response.success<Void>(204, null)
@@ -733,7 +734,7 @@ class ForumOceanWebImplTest {
     fun `createArticleDonate_對文章做打賞成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.createArticleDonate(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 articleId = any(),
                 donateValue = any()
             )
@@ -747,7 +748,7 @@ class ForumOceanWebImplTest {
     fun `getArticleDonate_取得文章打賞成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.getArticleDonate(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 articleId = any()
             )
         } returns Response.success(
@@ -769,7 +770,7 @@ class ForumOceanWebImplTest {
         val groupId = 1161616L
         coEvery {
             forumOceanService.getGroup(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 groupId = groupId
             )
         } returns Response.success(
@@ -794,7 +795,7 @@ class ForumOceanWebImplTest {
     fun `getUserOwnGroup_取得用戶所擁有社團成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.getUserOwnGroup(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 ownerId = any()
             )
         } returns Response.success(
@@ -831,7 +832,7 @@ class ForumOceanWebImplTest {
     fun `getMemberBelongGroups_取得用戶所屬社團成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.getMemberBelongGroups(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 memberId = any()
             )
         } returns Response.success(
@@ -858,7 +859,7 @@ class ForumOceanWebImplTest {
     fun `createGroup_建立社團成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.createGroup(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 groupName = any()
             )
         } returns Response.success(
@@ -882,7 +883,7 @@ class ForumOceanWebImplTest {
         )
         coEvery {
             forumOceanService.updateGroup(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 groupId = any(),
                 body = updateRequestBody
             )
@@ -899,7 +900,7 @@ class ForumOceanWebImplTest {
     fun `transferGroup_轉讓社團成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.transferGroup(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 groupId = any(),
                 memberId = any()
             )
@@ -913,7 +914,7 @@ class ForumOceanWebImplTest {
     fun `deleteGroup_刪除社團成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.deleteGroup(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 groupId = any()
             )
         } returns Response.success<Void>(204, null)
@@ -926,7 +927,7 @@ class ForumOceanWebImplTest {
     fun `join_加入社團成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.join(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 groupId = any(),
                 reason = any()
             )
@@ -940,7 +941,7 @@ class ForumOceanWebImplTest {
     fun `getMembers_取得社團用戶成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.getMembers(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 groupId = any(),
                 includeManagerInfo = any()
             )
@@ -961,7 +962,7 @@ class ForumOceanWebImplTest {
     fun `getApprovals_取得社團待審核清單成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.getApprovals(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 groupId = any()
             )
         } returns Response.success(
@@ -984,7 +985,7 @@ class ForumOceanWebImplTest {
     fun `approval_審核用戶加入社團成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.approval(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 groupId = any(),
                 memberId = any(),
                 isAgree = any()
@@ -999,7 +1000,7 @@ class ForumOceanWebImplTest {
     fun `changeGroupMemberPosition_設定社團成員職位成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.changeGroupMemberPosition(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 groupId = any(),
                 memberId = any(),
                 position = any()
@@ -1014,7 +1015,7 @@ class ForumOceanWebImplTest {
     fun `kick_踢出社員成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.kick(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 groupId = any(),
                 memberId = any()
             )
@@ -1028,7 +1029,7 @@ class ForumOceanWebImplTest {
     fun `leave_離開社團成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.leave(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 groupId = any()
             )
         } returns Response.success<Void>(204, null)
@@ -1041,7 +1042,7 @@ class ForumOceanWebImplTest {
     fun `deleteGroupArticle_管理員刪除社團文章成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.deleteGroupArticle(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 articleId = any()
             )
         } returns Response.success<Void>(204, null)
@@ -1054,8 +1055,8 @@ class ForumOceanWebImplTest {
     fun `getOfficials_取得官方頻道成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.getOfficials(
-                authorization = setting.accessToken.createAuthorizationBearer(),
-                officialIds = listOf(213213,1321321).joinToString(",")
+                authorization = any(),
+                officialIds = listOf(213213, 1321321).joinToString(",")
             )
         } returns Response.success(
             listOf(
@@ -1075,7 +1076,7 @@ class ForumOceanWebImplTest {
                 )
             )
         )
-        val result = service.getOfficials(listOf(213213,1321321))
+        val result = service.getOfficials(listOf(213213, 1321321))
         assertThat(result.isSuccess)
         assertThat(result.getOrThrow()).hasSize(2)
     }
@@ -1085,7 +1086,7 @@ class ForumOceanWebImplTest {
     fun `getOfficialSubscribedCount_取得官方訂閱數成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.getOfficialSubscribedCount(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 officialId = any()
             )
         } returns Response.success(
@@ -1101,7 +1102,7 @@ class ForumOceanWebImplTest {
     fun `getSubscribedCount_取得用戶訂閱數成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.getSubscribedCount(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 memberId = any()
             )
         } returns Response.success(GetSubscribedCountResponseBody(2134979))
@@ -1115,11 +1116,11 @@ class ForumOceanWebImplTest {
     fun `getSubscribed_取得訂閱用戶清單成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.getSubscribed(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 memberId = any()
             )
         } returns Response.success(
-            listOf(1,2,3,4,5,6)
+            listOf(1, 2, 3, 4, 5, 6)
         )
         val result = service.getSubscribed(21321)
         assertThat(result.isSuccess)
@@ -1131,10 +1132,10 @@ class ForumOceanWebImplTest {
     fun `subscribe_訂閱官方成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.subscribe(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 officialId = any()
             )
-        } returns Response.success<Void>(204,null)
+        } returns Response.success<Void>(204, null)
         val result = service.subscribe(21321)
         assertThat(result.isSuccess)
     }
@@ -1144,7 +1145,7 @@ class ForumOceanWebImplTest {
     fun `unsubscribe_解除訂閱官方成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.unsubscribe(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 officialId = any()
             )
         }
@@ -1157,9 +1158,9 @@ class ForumOceanWebImplTest {
     fun `unsubscribeAll_解除訂閱所有官方成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.unsubscribeAll(
-                authorization = setting.accessToken.createAuthorizationBearer()
+                authorization = any()
             )
-        } returns Response.success<Void>(204,null)
+        } returns Response.success<Void>(204, null)
         val result = service.unsubscribeAll()
         assertThat(result.isSuccess)
     }
@@ -1169,11 +1170,11 @@ class ForumOceanWebImplTest {
     fun `getFollowingList_取得指定會員追蹤中的清單成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.getFollowingList(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 memberId = any()
             )
         } returns Response.success(
-            listOf<Long>(1,2,3,4)
+            listOf<Long>(1, 2, 3, 4)
         )
         val result = service.getFollowingList(4564)
         assertThat(result.isSuccess)
@@ -1185,10 +1186,10 @@ class ForumOceanWebImplTest {
     fun `getFollowers_取得指定會員被追蹤中清單成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.getFollowers(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 memberId = any()
             )
-        } returns Response.success(listOf<Long>(1,2,3,4))
+        } returns Response.success(listOf<Long>(1, 2, 3, 4))
         val result = service.getFollowers(43241321)
         assertThat(result.isSuccess)
         assertThat(result.getOrThrow()).hasSize(4)
@@ -1199,10 +1200,10 @@ class ForumOceanWebImplTest {
     fun `follow_追蹤成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.follow(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 memberId = any()
             )
-        } returns Response.success<Void>(204,null)
+        } returns Response.success<Void>(204, null)
         val result = service.follow(1324324)
         assertThat(result.isSuccess)
     }
@@ -1212,10 +1213,10 @@ class ForumOceanWebImplTest {
     fun `unfollow_解除追蹤成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.unfollow(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 memberId = any()
             )
-        } returns Response.success<Void>(204,null)
+        } returns Response.success<Void>(204, null)
         val result = service.unfollow(21324324)
         assertThat(result.isSuccess)
     }
@@ -1225,10 +1226,10 @@ class ForumOceanWebImplTest {
     fun `block_封鎖用戶成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.block(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 memberId = any()
             )
-        } returns Response.success<Void>(204,null)
+        } returns Response.success<Void>(204, null)
         val result = service.block(2344654)
         assertThat(result.isSuccess)
     }
@@ -1238,10 +1239,10 @@ class ForumOceanWebImplTest {
     fun `unblock_解除封鎖用戶成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.unblock(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 memberId = any()
             )
-        } returns Response.success<Void>(204,null)
+        } returns Response.success<Void>(204, null)
         val result = service.unblock(342321)
         assertThat(result.isSuccess)
     }
@@ -1251,9 +1252,9 @@ class ForumOceanWebImplTest {
     fun `getBlockingList_取得封鎖用戶清單成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.getBlockingList(
-                authorization = setting.accessToken.createAuthorizationBearer()
+                authorization = any()
             )
-        } returns Response.success(listOf<Long>(1,2,3,4,5))
+        } returns Response.success(listOf<Long>(1, 2, 3, 4, 5))
         val result = service.getBlockingList()
         assertThat(result.isSuccess)
         assertThat(result.getOrThrow()).hasSize(5)
@@ -1264,9 +1265,9 @@ class ForumOceanWebImplTest {
     fun `getBlockers_取得被用戶封鎖清單成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.getBlockers(
-                authorization = setting.accessToken.createAuthorizationBearer()
+                authorization = any()
             )
-        } returns Response.success(listOf<Long>(1,3,5,7,9))
+        } returns Response.success(listOf<Long>(1, 3, 5, 7, 9))
         val result = service.getBlockers()
         assertThat(result.isSuccess)
         assertThat(result.getOrThrow()).hasSize(5)
@@ -1277,12 +1278,12 @@ class ForumOceanWebImplTest {
     fun `createReport_檢舉文章成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.createReport(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 articleId = any(),
                 reasonType = any()
             )
-        } returns Response.success<Void>(204,null)
-        val result = service.createReport(231321,ReasonType.AD)
+        } returns Response.success<Void>(204, null)
+        val result = service.createReport(231321, ReasonType.AD)
         assertThat(result.isSuccess)
     }
 
@@ -1291,10 +1292,10 @@ class ForumOceanWebImplTest {
     fun `deleteReport_刪除檢舉成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.deleteReport(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 articleId = any()
             )
-        } returns Response.success<Void>(204,null)
+        } returns Response.success<Void>(204, null)
         val result = service.deleteReport(2136541)
         assertThat(result.isSuccess)
     }
@@ -1303,22 +1304,24 @@ class ForumOceanWebImplTest {
     @Test
     fun `getMemberIds_取得會員ID成功測試`() = mainCoroutineRule.runBlockingTest {
 
-        val memberIds : List<Long> = listOf(67,68)
+        val memberIds: List<Long> = listOf(67, 68)
         coEvery {
             forumOceanService.getMemberIds(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    channelIds = memberIds.joinToString(",")
+                authorization = any(),
+                channelIds = memberIds.joinToString(",")
             )
-        } returns Response.success(listOf(
+        } returns Response.success(
+            listOf(
                 ChannelIdAndMemberId(
-                        channelId = 1979787,
-                        memberId = 67
+                    channelId = 1979787,
+                    memberId = 67
                 ),
                 ChannelIdAndMemberId(
-                        channelId = 2266693,
-                        memberId = 68
+                    channelId = 2266693,
+                    memberId = 68
                 )
-        ))
+            )
+        )
         val result = service.getMemberIds(memberIds)
         assertThat(result.isSuccess)
         val mappingList = result.getOrThrow().associateBy { it.memberId }
@@ -1330,22 +1333,24 @@ class ForumOceanWebImplTest {
     @Test
     fun `getChannelIds_取得頻道ID成功測試`() = mainCoroutineRule.runBlockingTest {
 
-        val channelIds : List<Long> = listOf(1979787,2266693)
+        val channelIds: List<Long> = listOf(1979787, 2266693)
         coEvery {
             forumOceanService.getChannelIds(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    memberIds = channelIds.joinToString(",")
+                authorization = any(),
+                memberIds = channelIds.joinToString(",")
             )
-        } returns Response.success(listOf(
+        } returns Response.success(
+            listOf(
                 ChannelIdAndMemberId(
-                        channelId = 1979787,
-                        memberId = 67
+                    channelId = 1979787,
+                    memberId = 67
                 ),
                 ChannelIdAndMemberId(
-                        channelId = 2266693,
-                        memberId = 68
+                    channelId = 2266693,
+                    memberId = 68
                 )
-        ))
+            )
+        )
         val result = service.getChannelIds(channelIds)
         assertThat(result.isSuccess)
         val mappingList = result.getOrThrow().associateBy { it.channelId }
@@ -1358,12 +1363,12 @@ class ForumOceanWebImplTest {
     fun `createVote_投票成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.createVote(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 articleId = any(),
                 optionIndex = any()
             )
-        } returns Response.success<Void>(204,null)
-        val result = service.createVote(132434,4)
+        } returns Response.success<Void>(204, null)
+        val result = service.createVote(132434, 4)
         assertThat(result.isSuccess)
     }
 
@@ -1372,7 +1377,7 @@ class ForumOceanWebImplTest {
     fun `getCurrentVote_取得目前投票結果成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.getCurrentVote(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                authorization = any(),
                 articleId = any()
             )
         } returns Response.success(

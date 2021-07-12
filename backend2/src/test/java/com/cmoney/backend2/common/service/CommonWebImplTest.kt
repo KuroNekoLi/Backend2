@@ -1,11 +1,11 @@
 package com.cmoney.backend2.common.service
 
+import com.cmoney.backend2.MainCoroutineRule
+import com.cmoney.backend2.TestDispatcher
+import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.response.error.CMoneyError
 import com.cmoney.backend2.base.model.setting.Setting
-import com.cmoney.backend2.common.MainCoroutineRule
-import com.cmoney.backend2.common.TestDispatcher
-import com.cmoney.backend2.common.TestSetting
 import com.cmoney.backend2.common.service.api.adddeviceidentification.AddDeviceIdentificationComplete
 import com.cmoney.backend2.common.service.api.changenickname.ChangeNicknameResponseWithError
 import com.cmoney.backend2.common.service.api.changeuserimage.ChangeUserImageResponseWithError
@@ -750,7 +750,7 @@ class CommonWebImplTest {
 
     @Test
     fun `getDailyHeadline 取得清單失敗`() = mainCoroutineRule.runBlockingTest {
-        val errorBody = CMoneyError(CMoneyError.Detail(104, ""))
+        val errorBody = CMoneyError(detail = CMoneyError.Detail(104, ""))
         val errorString = gson.toJson(errorBody)
         val errorResponse =
             gson.fromJson<HeadlineResponse>(errorString, HeadlineResponse::class.java)
@@ -830,7 +830,7 @@ class CommonWebImplTest {
 
     @Test
     fun `getStockRssArticleResponse 取得清單失敗`() = mainCoroutineRule.runBlockingTest {
-        val errorBody = CMoneyError(CMoneyError.Detail(103, ""))
+        val errorBody = CMoneyError(detail = CMoneyError.Detail(103, ""))
         val errorString = gson.toJson(errorBody)
         val errorResponse =
             gson.fromJson<StockRssNewsResponse>(errorString, StockRssNewsResponse::class.java)
@@ -889,7 +889,7 @@ class CommonWebImplTest {
 
     @Test
     fun `addRssStockNewsResponse 增加失敗`() = mainCoroutineRule.runBlockingTest {
-        val error = CMoneyError(CMoneyError.Detail(101, ""))
+        val error = CMoneyError(detail = CMoneyError.Detail(101, ""))
         val errorString = gson.toJson(error)
         coEvery {
             service.addRssArticleClickCount(

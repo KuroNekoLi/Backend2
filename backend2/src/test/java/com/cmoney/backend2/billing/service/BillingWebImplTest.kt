@@ -2,13 +2,13 @@ package com.cmoney.backend2.billing.service
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
+import com.cmoney.backend2.MainCoroutineRule
+import com.cmoney.backend2.TestDispatcher
+import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.response.error.CMoneyError
 import com.cmoney.backend2.base.model.setting.Setting
-import com.cmoney.backend2.billing.MainCoroutineRule
 import com.cmoney.backend2.billing.TestApplication
-import com.cmoney.backend2.billing.TestDispatcher
-import com.cmoney.backend2.billing.TestSetting
 import com.cmoney.backend2.billing.service.api.getappauth.GetAppAuthResponseBody
 import com.cmoney.backend2.billing.service.api.getauth.GetAuthResponseBody
 import com.cmoney.backend2.billing.service.api.getdevelpoerpayload.GetDeveloperPayloadResponseBody
@@ -91,7 +91,7 @@ class BillingWebImplTest {
     fun `getDeveloperPayload_失敗400_有Error物件`() = mainCoroutineRule.runBlockingTest {
         val errorBody = gson.toJson(
             CMoneyError(
-                CMoneyError.Detail(
+                detail = CMoneyError.Detail(
                     code = 10001
                 )
             )
@@ -148,7 +148,7 @@ class BillingWebImplTest {
     fun `isReadyToPurchase_錯誤_ServerException`() = mainCoroutineRule.runBlockingTest {
         val errorBody = gson.toJson(
             CMoneyError(
-                CMoneyError.Detail(
+                detail = CMoneyError.Detail(
                     code = 10001
                 )
             )
@@ -210,7 +210,7 @@ class BillingWebImplTest {
     fun `getIapProductInfo_失敗_有錯誤碼`() = mainCoroutineRule.runBlockingTest {
         val errorBody = gson.toJson(
             CMoneyError(
-                CMoneyError.Detail(
+                detail = CMoneyError.Detail(
                     code = 10001
                 )
             )
@@ -583,7 +583,7 @@ class BillingWebImplTest {
     fun `verifyHuaweiInAppReceipt_購買失敗，收據錯誤_ServerException`() = mainCoroutineRule.runBlockingTest {
         val errorBody = gson.toJson(
             CMoneyError(
-                CMoneyError.Detail(
+                detail = CMoneyError.Detail(
                     code = 10001
                 )
             )
@@ -635,7 +635,7 @@ class BillingWebImplTest {
     fun `verifyHuaweiSubReceipt_購買失敗，收據錯誤_ServerException`() = mainCoroutineRule.runBlockingTest {
         val errorBody = gson.toJson(
             CMoneyError(
-                CMoneyError.Detail(
+                detail = CMoneyError.Detail(
                     code = 10001
                 )
             )
@@ -683,7 +683,7 @@ class BillingWebImplTest {
         mainCoroutineRule.runBlockingTest {
             val errorBody = gson.toJson(
                 CMoneyError(
-                    CMoneyError.Detail(
+                    detail = CMoneyError.Detail(
                         code = 10001
                     )
                 )
@@ -722,7 +722,7 @@ class BillingWebImplTest {
     fun `recoveryHuaweiSubReceipt_購買失敗，收據錯誤_ServerException`() = mainCoroutineRule.runBlockingTest {
         val errorBody = gson.toJson(
             CMoneyError(
-                CMoneyError.Detail(
+                detail = CMoneyError.Detail(
                     code = 10001
                 )
             )
@@ -764,7 +764,7 @@ class BillingWebImplTest {
     fun `verifyGoogleInAppReceipt_購買失敗，收據錯誤_ServerException`() = mainCoroutineRule.runBlockingTest {
         val errorBody = gson.toJson(
             CMoneyError(
-                CMoneyError.Detail(
+                detail = CMoneyError.Detail(
                     code = 10001
                 )
             )
@@ -809,7 +809,7 @@ class BillingWebImplTest {
     fun `verifyGoogleSubReceipt_購買失敗，收據錯誤_ServerException`() = mainCoroutineRule.runBlockingTest {
         val errorBody = gson.toJson(
             CMoneyError(
-                CMoneyError.Detail(
+                detail = CMoneyError.Detail(
                     code = 10001
                 )
             )
@@ -853,7 +853,7 @@ class BillingWebImplTest {
         mainCoroutineRule.runBlockingTest {
             val errorBody = gson.toJson(
                 CMoneyError(
-                    CMoneyError.Detail(
+                    detail = CMoneyError.Detail(
                         code = 10001
                     )
                 )
@@ -893,7 +893,7 @@ class BillingWebImplTest {
     fun `recoveryGoogleSubReceipt_購買失敗，收據錯誤_ServerException`() = mainCoroutineRule.runBlockingTest {
         val errorBody = gson.toJson(
             CMoneyError(
-                CMoneyError.Detail(
+                detail = CMoneyError.Detail(
                     code = 10001
                 )
             )

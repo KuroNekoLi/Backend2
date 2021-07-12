@@ -2,9 +2,9 @@ package com.cmoney.backend2.authorization.service
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
-import com.cmoney.backend2.authorization.MainCoroutineRule
-import com.cmoney.backend2.authorization.TestDispatcher
-import com.cmoney.backend2.authorization.TestSetting
+import com.cmoney.backend2.MainCoroutineRule
+import com.cmoney.backend2.TestDispatcher
+import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.authorization.service.api.ExpiredTime
 import com.cmoney.backend2.base.model.exception.EmptyBodyException
 import com.cmoney.backend2.base.model.exception.ServerException
@@ -144,7 +144,7 @@ class AuthorizationWebImplTest {
     fun `getExpiredTime_400_失敗`() = mainCoroutineRule.runBlockingTest {
         val errorBody = gson.toJson(
             CMoneyError(
-                CMoneyError.Detail(
+                detail = CMoneyError.Detail(
                     code = 400
                 )
             )
@@ -172,7 +172,7 @@ class AuthorizationWebImplTest {
     fun `getExpiredTime_401_失敗`() = mainCoroutineRule.runBlockingTest {
         val errorBody = gson.toJson(
             CMoneyError(
-                CMoneyError.Detail(
+                detail = CMoneyError.Detail(
                     code = 401
                 )
             )
@@ -200,7 +200,7 @@ class AuthorizationWebImplTest {
     fun `getExpiredTime_500_失敗`() = mainCoroutineRule.runBlockingTest {
         val errorBody = gson.toJson(
             CMoneyError(
-                CMoneyError.Detail(
+                detail = CMoneyError.Detail(
                     code = 500
                 )
             )

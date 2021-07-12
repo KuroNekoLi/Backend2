@@ -1,7 +1,9 @@
 package com.cmoney.backend2.cmtalk.service
 
+import com.cmoney.backend2.MainCoroutineRule
+import com.cmoney.backend2.TestDispatcher
+import com.cmoney.backend2.base.model.dispatcher.DefaultDispatcherProvider
 import com.cmoney.backend2.base.model.request.MemberApiParam
-import com.cmoney.backend2.cmtalk.MainCoroutineRule
 import com.cmoney.backend2.cmtalk.service.api.TargetMediaListInfo
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
@@ -35,41 +37,41 @@ class CMTalkWebImplTest {
     fun setUp() {
         apiParam = MemberApiParam(99, UUID.randomUUID().toString(), UUID.randomUUID().toString())
         MockKAnnotations.init(this)
-        webImpl = CMTalkWebImpl(service, MainDispatcherProvider())
+        webImpl = CMTalkWebImpl(service, TestDispatcher())
     }
 
     @Test
-    fun `getTargetMediaList_response code is 1_成功`() = mainCoroutineRule.runBlockingTest{
+    fun `getTargetMediaList_response code is 1_成功`() = mainCoroutineRule.runBlockingTest {
         val responseBody = TargetMediaListInfo(
             listOf(),
             1,
-            "")
+            ""
+        )
         coEvery {
             service.getTargetMediaList(
                 mediaType = any(),
                 baseId = any(),
                 fetchSize = any()
             )
-        }returns Response.success(responseBody)
+        } returns Response.success(responseBody)
 
-        val result = webImpl.getTargetMediaList(0,0,0)
+        val result = webImpl.getTargetMediaList(0, 0, 0)
         Truth.assertThat(result.isSuccess).isTrue()
         Truth.assertThat(result.getOrNull()?.responseCode).isEqualTo(1)
     }
 
     @Test
-    fun `getTargetMediaList_失敗`()= mainCoroutineRule.runBlockingTest {
+    fun `getTargetMediaList_失敗`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             service.getTargetMediaList(
                 mediaType = any(),
                 baseId = any(),
                 fetchSize = any()
             )
-        }returns Response.error(400,"".toResponseBody())
-        val result = webImpl.getTargetMediaList(0,0,0)
+        } returns Response.error(400, "".toResponseBody())
+        val result = webImpl.getTargetMediaList(0, 0, 0)
         Truth.assertThat(result.isSuccess).isFalse()
     }
-
 
 
     @After

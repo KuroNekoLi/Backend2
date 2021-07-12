@@ -2,6 +2,7 @@ package com.cmoney.backend2.base.extension
 
 import com.cmoney.backend2.base.model.exception.EmptyBodyException
 import com.cmoney.backend2.base.model.exception.ServerException
+import com.cmoney.backend2.base.model.request.Constant
 import com.cmoney.backend2.base.model.response.error.CMoneyError
 import com.cmoney.backend2.base.model.response.error.ISuccess
 import com.google.common.truth.Truth.assertThat
@@ -247,11 +248,11 @@ class ResponseExtensionKtTest {
         """.trimIndent()
         val response = Response.success(body.toResponseBody())
         response.handleHttpStatusCode<Response<ResponseBody>, MockResponseBody>(gson) { _: Int, responseBody: ResponseBody? ->
-                return@handleHttpStatusCode gson.fromJson(
-                    responseBody?.string(),
-                    MockResponseBody::class.java
-                )
-            }
+            return@handleHttpStatusCode gson.fromJson(
+                responseBody?.string(),
+                MockResponseBody::class.java
+            )
+        }
     }
 
     @Test
@@ -339,4 +340,34 @@ class ResponseExtensionKtTest {
             )
         }
     }
+
+    @Test
+    fun `parseServerException_解析第一層的ErrorMessage`() {
+        val errorBody = """
+            {
+                "message": "錯誤訊息"
+            }
+        """.trimIndent()
+        val response = Response.error<ResponseBody>(400, errorBody.toResponseBody())
+        val cmoneyError = response.parseServerException(gson)
+        assertThat(cmoneyError.message).isEqualTo("錯誤訊息")
+    }
+
+    @Test
+    fun `parseServerException_有兩種錯誤訊息，優先解析第一層的ErrorMessage`() {
+        val errorBody = """
+            {
+                "message": "錯誤訊息",
+                 "Error":{
+                    "Code":101,
+                    "Message":"Auth Failed"
+                }
+            }
+        """.trimIndent()
+        val response = Response.error<ResponseBody>(400, errorBody.toResponseBody())
+        val serverException = response.parseServerException(gson)
+        assertThat(serverException.message).isEqualTo("錯誤訊息")
+        assertThat(serverException.code).isEqualTo(Constant.SERVICE_NOT_SUPPORT_ERROR_CODE)
+    }
+
 }
