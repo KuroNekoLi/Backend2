@@ -1,5 +1,6 @@
 package com.cmoney.backend2.crm.service
 
+import com.cmoney.backend2.base.model.calladapter.RecordApi
 import com.cmoney.backend2.crm.service.api.creatlivechat.CreateLiveChatRequestBody
 import com.cmoney.backend2.crm.service.api.creatlivechat.CreateLiveChatResponseBody
 import retrofit2.Response
@@ -11,6 +12,7 @@ interface CrmService {
     /**
      * 建立與客服對話視窗
      */
+    @RecordApi
     @POST("CRM/livechat")
     suspend fun createLiveChat(
         @Header("Authorization") authorization: String,
