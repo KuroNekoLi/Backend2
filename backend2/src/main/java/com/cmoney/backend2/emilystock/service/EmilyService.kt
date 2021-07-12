@@ -1,5 +1,6 @@
 package com.cmoney.backend2.emilystock.service
 
+import com.cmoney.backend2.base.model.calladapter.RecordApi
 import com.cmoney.backend2.emilystock.service.api.getemilycommkeys.GetEmilyCommKeysResponse
 import com.cmoney.backend2.emilystock.service.api.getfiltercondition.GetFilterConditionResponse
 import com.cmoney.backend2.emilystock.service.api.getstockinfos.GetStockInfosResponse
@@ -14,6 +15,7 @@ interface EmilyService {
     /**
      * 取得艾蜜莉股票清單
      */
+    @RecordApi
     @FormUrlEncoded
     @POST("EmilyFixedStock/api/EmilyStock/GetEmilyCommKeys")
     suspend fun getEmilyCommKeys(
@@ -25,6 +27,7 @@ interface EmilyService {
     /**
      * 取得艾蜜莉股票清單詳細資訊
      */
+    @RecordApi
     @FormUrlEncoded
     @POST("EmilyFixedStock/api/EmilyStock/GetStockInfos")
     suspend fun getStockInfos(
@@ -37,6 +40,7 @@ interface EmilyService {
     /**
      * 取得指定股票艾蜜莉股票資訊
      */
+    @RecordApi
     @FormUrlEncoded
     @POST("EmilyFixedStock/api/EmilyStock/GetTargetStockInfos")
     suspend fun getTargetStockInfos(
@@ -50,6 +54,7 @@ interface EmilyService {
     /**
      * 取得指定股票的體質評估
      */
+    @RecordApi
     @FormUrlEncoded
     @POST("EmilyFixedStock/api/EmilyStock/GetTargetConstitution")
     suspend fun getTargetConstitution(
@@ -63,6 +68,7 @@ interface EmilyService {
     /**
      * 取得篩選條件
      */
+    @RecordApi
     @FormUrlEncoded
     @POST("EmilyFixedStock/api/EmilyStock/GetFilterCondition")
     suspend fun getFilterCondition(
@@ -74,6 +80,7 @@ interface EmilyService {
     /**
      * 取得某會員的紅綠燈紀錄(需要再測試)
      */
+    @RecordApi
     @FormUrlEncoded
     @POST("EmilyFixedStock/api/EmilyStock/GetTrafficLightRecord")
     suspend fun getTrafficLightRecord(

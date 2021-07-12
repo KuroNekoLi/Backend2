@@ -66,7 +66,9 @@ dependencies {
     implementation(Dependencies.OKHTTP_LOGGIN_INTERCEPTOR)
     implementation(Dependencies.RETROFIT)
     implementation(Dependencies.RETROFIT_CONVERTER_GSON)
-
+    //logger
+    implementation(Dependencies.LOG_DATA_RECORDER_DATA)
+    implementation(Dependencies.LOG_DATA_RECORDER_DOMAIN)
     //test
     testImplementation(Dependencies.JUNIT)
     testImplementation(Dependencies.ANDROID_TEST_JUNIT)
@@ -79,6 +81,8 @@ dependencies {
     testImplementation(Dependencies.KOIN_TEST)
     //coroutine
     testImplementation(Dependencies.COROUTINES_TEST)
+    // okhttp
+    testImplementation(Dependencies.OKHTTP_MOCK_SERVER)
     //Mock
     testImplementation(Dependencies.MOCKK)
     testImplementation(Dependencies.MOCKK_ANDROID)

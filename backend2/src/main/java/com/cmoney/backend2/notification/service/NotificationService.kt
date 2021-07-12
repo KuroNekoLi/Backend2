@@ -1,5 +1,6 @@
 package com.cmoney.backend2.notification.service
 
+import com.cmoney.backend2.base.model.calladapter.RecordApi
 import com.cmoney.backend2.notification.service.api.devicetoken.updateguesttoken.UpdateGuestTokenRequestBody
 import com.cmoney.backend2.notification.service.api.devicetoken.updatemembertoken.UpdateMemberTokenRequestBody
 import com.cmoney.backend2.notification.service.api.statistics.updatearrived.UpdateArrivedRequestBody
@@ -13,6 +14,7 @@ interface NotificationService {
     /**
      * 新增訪客Token
      */
+    @RecordApi
     @POST("NotificationService/DeviceToken/guest")
     suspend fun updateGuestPushToken(
         @Header("Authorization") authorization: String,
@@ -22,6 +24,7 @@ interface NotificationService {
     /**
      * 新增會員Token
      */
+    @RecordApi
     @POST("NotificationService/DeviceToken/member")
     suspend fun updateMemberPushToken(
         @Header("Authorization") authorization: String,
@@ -31,6 +34,7 @@ interface NotificationService {
     /**
      * 增加點擊數
      */
+    @RecordApi
     @POST("NotificationService/Statistics/clicked")
     suspend fun updateClickCount(
         @Header("Authorization") authorization: String,
@@ -40,6 +44,7 @@ interface NotificationService {
     /**
      * 增加到達數
      */
+    @RecordApi
     @POST("NotificationService/Statistics/arrived")
     suspend fun updateArriveCount(
         @Header("Authorization") authorization: String,

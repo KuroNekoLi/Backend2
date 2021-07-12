@@ -1,5 +1,6 @@
 package com.cmoney.backend2.portal.service
 
+import com.cmoney.backend2.base.model.calladapter.RecordApi
 import com.cmoney.backend2.portal.service.api.askallmemberlastforecastinfo.AskAllMemberLastForecastInfoRequestBody
 import com.cmoney.backend2.portal.service.api.askallmemberlastforecastinfo.AskAllMemberLastForecastInfoWithError
 import com.cmoney.backend2.portal.service.api.askmemberforecaststatus.AskMemberForecastStatusRequestBody
@@ -33,6 +34,7 @@ interface PortalService {
     /**
      * 服務1. 取得選股監控對象股票清單
      */
+    @RecordApi
     @POST("cmportal/api/pickstock/gettarget/")
     suspend fun getTarget(
         @Header("Authorization") authorization: String,
@@ -42,6 +44,7 @@ interface PortalService {
     /**
      * 服務2. 取得選股全部條件篩選狀態
      */
+    @RecordApi
     @POST("cmportal/api/pickstock/getsignals/")
     suspend fun getSignals(
         @Header("Authorization") authorization: String,
@@ -51,6 +54,7 @@ interface PortalService {
     /**
      * 服務3. 取得顯示資訊欄位資料
      */
+    @RecordApi
     @POST("cmportal/api/additionalinformation/getadditionalInfo/")
     suspend fun getAdditionalInfo(
         @Header("Authorization") authorization: String,
@@ -61,6 +65,7 @@ interface PortalService {
      * 詢問App的所有猜多空活動基本資訊
      *
      */
+    @RecordApi
     @POST("CMPortal/api/GuessBullBear/GetActivitiesBaseInfo")
     suspend fun getActivitiesBaseInfo(
         @Header("Authorization") authorization: String,
@@ -71,6 +76,7 @@ interface PortalService {
      * 詢問目前猜多空活動狀況
      *
      */
+    @RecordApi
     @POST("CMPortal/api/GuessBullBear/GetActivityNowInfo")
     suspend fun getActivityNowInfo(
         @Header("Authorization") authorization: String,
@@ -80,6 +86,7 @@ interface PortalService {
     /**
      * 取得會員戰績
      */
+    @RecordApi
     @POST("CMPortal/api/GuessBullBear/GetMemberPerformance")
     suspend fun getMemberPerformance(
         @Header("Authorization") authorization: String,
@@ -90,6 +97,7 @@ interface PortalService {
      * 取得排行榜資料
      *
      */
+    @RecordApi
     @POST("CMPortal/api/GuessBullBear/GetRanking")
     suspend fun getRanking(
         @Header("Authorization") authorization: String,
@@ -100,6 +108,7 @@ interface PortalService {
      * 取得某人的活動歷史紀錄
      *
      */
+    @RecordApi
     @POST("CMPortal/api/GuessBullBear/GetPersonActivityHistory")
     suspend fun getPersonActivityHistory(
         @Header("Authorization") authorization: String,
@@ -110,6 +119,7 @@ interface PortalService {
      * 詢問會員目前猜多空活動參與狀況(驗證身分)
      *
      */
+    @RecordApi
     @POST("CMPortal/api/GuessBullBear/AskMemberForecastStatus")
     suspend fun askMemberForecastStatus(
         @Header("Authorization") authorization: String,
@@ -119,6 +129,7 @@ interface PortalService {
     /**
      * 詢問會員上期猜多空活動參與狀況(驗證身分)
      */
+    @RecordApi
     @POST("CMPortal/api/GuessBullBear/AskMemberLastForecastInfo")
     suspend fun askMemberLastForecastInfo(
         @Header("Authorization") authorization: String,
@@ -128,6 +139,7 @@ interface PortalService {
     /**
      * 參與活動(驗證身分)
      */
+    @RecordApi
     @POST("CMPortal/api/GuessBullBear/JoinActivity")
     suspend fun joinActivity(
         @Header("Authorization") authorization: String,
@@ -137,6 +149,7 @@ interface PortalService {
     /**
      * 詢問會員某App上期全部的猜多空活動參與狀況(驗證身分)
      */
+    @RecordApi
     @POST("CMPortal/api/GuessBullBear/AskAllMemberLastForecastInfo")
     suspend fun askAllMemberLastForecastInfo(
         @Header("Authorization") authorization: String,

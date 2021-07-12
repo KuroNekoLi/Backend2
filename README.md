@@ -2,17 +2,17 @@
 
 [教學參考](http://192.168.99.115/books/mobile-android/page/%E6%96%B0%E5%A2%9E%E4%B8%80%E6%94%AFapi)
 
-### 引用
+## 引用
 
 - build.gradle
 
 ```
 allprojects {
     repositories {
-        google()
+		google()
 		mavenCentral()
-        jcenter()
-        maven { url "http://192.168.99.70:8081/repository/maven-public/" }
+		jcenter()
+		maven { url "http://192.168.99.70:8081/repository/maven-public/" }
     }
 }
 ```
@@ -32,7 +32,9 @@ android {
     }
 }
 dependecies {
-    implementation 'com.cmoney.backend2:backend2:目前最新版'
+	implementation 'com.cmoney.backend2:backend2:目前最新版'
+	implementation("com.cmoney.logdatarecorder:logdatarecorder-data:1.0.3")
+	implementation("com.cmoney.logdatarecorder:logdatarecorder-domain:1.0.3")
 }
 ```
 
@@ -40,8 +42,10 @@ dependecies {
 
 ```
 dependecies {
-    releaseImplementation 'com.cmoney.backend2:backend2:目前最新版'
-    debugImplementation 'com.cmoney.backend2:backend2-debug:目前最新版'
+	releaseImplementation 'com.cmoney.backend2:backend2:目前最新版'
+	debugImplementation 'com.cmoney.backend2:backend2-debug:目前最新版'
+	implementation("com.cmoney.logdatarecorder:logdatarecorder-data:1.0.3")
+	implementation("com.cmoney.logdatarecorder:logdatarecorder-domain:1.0.3")
 }
 ```
 
@@ -64,7 +68,25 @@ dependecies {
 
 ---
 
-### 使用 [Koin](https://insert-koin.io/)
+## 初始化LogDataRecorder.
+
+為了紀錄Api行為，需要在Application加入初始化設定。
+
+```
+class SampleApplication : Application() {
+
+    override fun onCreate() {
+        super.onCreate()
+        LogDataRecorder.initialization(this) {
+            appId = 你的AppId
+            platform = com.cmoney.domain_logdatarecorder.data.information.Platform.Android
+        }
+    }
+}
+```
+
+
+## 使用 [Koin](https://insert-koin.io/)
 
 以下這些StringQualifier已被使用
 
@@ -479,6 +501,43 @@ suspend fun action(
 ```
 
 #### NO，以上都不符合，恭喜你，請自己寫判斷邏輯，幫你QQ，但現在新的API都應該是`Status Code 2xx代表成功，4xx代表失敗`，如果不是請跟核心組或是後台反應。
+
+
+## 紀錄API
+
+目前所有API都要記錄  
+需要在服務介面的方法上加上註譯`@RecordApi`，代表要記錄這個API的行為。    
+`@RecordApi`有一個可選的參數`cmoneyAction`，預設空字串，代表不會紀錄此API的發送請求中的action。
+
+```
+@RecordApi
+@GET(value = "identity/session/isLatest")
+suspend fun isTokenLatest(
+    @Header("Authorization")
+    accessToken: String
+): Response<IsLatestResponseBodyWithError>
+```
+
+目前MobileService部分API以`Action`作為服務的分類故需要加上`cmoneyAction`參數以利後續資料分析。
+
+```
+/**
+ * 服務7. 取得帳號資訊
+ *
+ * @param guid 該會員的Guid
+ * @param appId App編號
+ *
+ */
+@RecordApi(cmoneyAction = "getaccountinfo")
+@FormUrlEncoded
+@POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
+suspend fun getAccountInfo(
+    @Header("Authorization") authorization: String,
+    @Field("Action") action: String = "getaccountinfo",
+    @Field("Guid") guid: String,
+    @Field("AppId") appId: Int
+): Response<AccountInfoWithError>
+```
 
 [BaseModule]:http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/Base/blob/master/base/src/main/java/com/cmoney/backend2/base/di/BaseModule.kt
 

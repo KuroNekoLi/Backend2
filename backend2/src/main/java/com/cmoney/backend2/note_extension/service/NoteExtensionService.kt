@@ -1,5 +1,6 @@
 package com.cmoney.backend2.note_extension.service
 
+import com.cmoney.backend2.base.model.calladapter.RecordApi
 import com.cmoney.backend2.note_extension.service.api.createreply.CreateCommentRequestBody
 import com.cmoney.backend2.note_extension.service.api.createreply.CreateCommentResponseBody
 import com.cmoney.backend2.note_extension.service.api.getnotecommentcount.GetCommentCountByNoteIdsResponseBody
@@ -13,6 +14,7 @@ interface NoteExtensionService {
      * NotesExtension API
      * 對指定網誌文章發一篇回文
      */
+    @RecordApi
     @POST("NoteExtension/api/Comment/Create/{noteId}")
     suspend fun createComment(
         @Path("noteId") noteId: Long,
@@ -24,6 +26,7 @@ interface NoteExtensionService {
      * NotesExtension API
      * 取得指定主文的回文清單
      */
+    @RecordApi
     @GET("NoteExtension/api/Comment/Get/{noteId}")
     suspend fun getCommentListByNoteId(
         @Path("noteId") noteId: Long,
@@ -36,6 +39,7 @@ interface NoteExtensionService {
      * NotesExtension API
      * 刪除回文
      */
+    @RecordApi
     @DELETE("NoteExtension/api/Comment/Delete/{noteId}/{commentId}")
     suspend fun deleteComment(
         @Path("noteId") noteId: Long,
@@ -47,6 +51,7 @@ interface NoteExtensionService {
      * NotesExtension API
      * 取得網誌回文數量
      */
+    @RecordApi
     @GET("NoteExtension/api/Note/GetNoteCommentCount/{noteIds}")
     suspend fun getCommentCountByNoteIds(
         @Path("noteIds") noteIds: String,

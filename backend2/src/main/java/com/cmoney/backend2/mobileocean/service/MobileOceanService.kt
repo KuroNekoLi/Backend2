@@ -1,5 +1,6 @@
 package com.cmoney.backend2.mobileocean.service
 
+import com.cmoney.backend2.base.model.calladapter.RecordApi
 import com.cmoney.backend2.mobileocean.service.api.activefollow.ActiveFollowResponseWithError
 import com.cmoney.backend2.mobileocean.service.api.addaskstocktendnecylog.AddAskStockTendencyLogResponseWithError
 import com.cmoney.backend2.mobileocean.service.api.addinterestedinarticleinfo.AddInterestedInArticleInfoResponseWithError
@@ -45,6 +46,7 @@ interface MobileOceanService {
     /**
      * 服務1-1-2. 發文到給....一點建議(加上身份識別)
      */
+    @RecordApi(cmoneyAction = "createarticletoocean")
     @FormUrlEncoded
     @POST("MobileService/ashx/MobileCode.ashx")
     suspend fun createArticleToOcean(
@@ -62,6 +64,7 @@ interface MobileOceanService {
     /**
      * 服務1-2. 發表文章到股票追訊頻道
      */
+    @RecordApi
     @POST("MobileService/ashx/MobileCode.ashx")
     suspend fun createArticle(
         @Header("Authorization") authorization: String,
@@ -72,6 +75,7 @@ interface MobileOceanService {
      * 服務1-3. 回應文章到追訊頻道
      *
      */
+    @RecordApi
     @POST("MobileService/ashx/MobileCode.ashx")
     suspend fun replyArticle(
         @Header("Authorization") authorization: String,
@@ -81,6 +85,7 @@ interface MobileOceanService {
     /**
      * 服務2-1-2. 取得追訊文章最新一篇回應ID(加上身份識別)
      */
+    @RecordApi(cmoneyAction = "getrepliedarticleids")
     @GET("MobileService/ashx/MobileCode.ashx")
     suspend fun getRepliedArticleIds(
         @Header("Authorization") authorization: String,
@@ -103,11 +108,12 @@ interface MobileOceanService {
      * @param isIncludeLimitedAskArticle 是否包含時效內的問答文章 ( 預設:false )
      * @return
      */
+    @RecordApi(cmoneyAction = "getstockarticlelist")
     @FormUrlEncoded
     @POST("MobileService/ashx/MobileCode.ashx")
     suspend fun getStockArticleList(
         @Header("Authorization") authorization: String,
-        @Field("action") action: String = "GetStockArticleList",
+        @Field("action") action: String = "getstockarticlelist",
         @Field("AppId") appId: Int,
         @Field("Guid") guid: String,
         @Field("stockId") stockId: String,
@@ -126,6 +132,7 @@ interface MobileOceanService {
      * @param articleId
      * @return
      */
+    @RecordApi(cmoneyAction = "getreplyarticlelist")
     @FormUrlEncoded
     @POST("MobileService/ashx/MobileCode.ashx")
     suspend fun getReplyArticleList(
@@ -147,6 +154,7 @@ interface MobileOceanService {
      * @param IsIncludeLimitedAskArticle 是否包含時效內的問答文章 ( 預設:false )
      * @return
      */
+    @RecordApi(cmoneyAction = "getforumlatestarticles")
     @FormUrlEncoded
     @POST("MobileService/ashx/MobileCode.ashx")
     suspend fun getForumLatestArticles(
@@ -171,6 +179,7 @@ interface MobileOceanService {
      * @param IsIncludeLimitedAskArticle 是否包含時效內的問答文章 ( 預設:false )
      * @return
      */
+    @RecordApi(cmoneyAction = "getforumpopulararticles")
     @FormUrlEncoded
     @POST("MobileService/ashx/MobileCode.ashx")
     suspend fun getForumPopularArticles(
@@ -196,6 +205,7 @@ interface MobileOceanService {
      * @param IsIncludeLimitedAskArticle 是否包含時效內的問答文章 ( 預設:false )
      * @return
      */
+    @RecordApi(cmoneyAction = "getstocklatestarticles")
     @FormUrlEncoded
     @POST("MobileService/ashx/MobileCode.ashx")
     @Deprecated("Use Ocean version")
@@ -224,6 +234,7 @@ interface MobileOceanService {
      * @param IsIncludeLimitedAskArticle 是否包含時效內的問答文章 ( 預設:false )
      * @return
      */
+    @RecordApi(cmoneyAction = "getstockpopulararticles")
     @FormUrlEncoded
     @POST("MobileService/ashx/MobileCode.ashx")
     @Deprecated("Use Ocean version")
@@ -247,6 +258,7 @@ interface MobileOceanService {
      * @param fetchCount 要取得筆數
      * @param isIncludeLimitedAskArticle 是否包含時效內的問答文章 ( 預設:false )
      */
+    @RecordApi(cmoneyAction = "getchannellatestarticles")
     @POST("MobileService/ashx/MobileCode.ashx")
     @FormUrlEncoded
     @Deprecated("Use Ocean version")
@@ -273,6 +285,7 @@ interface MobileOceanService {
      * @param isIncludeLimitedAskArticle
      * @return
      */
+    @RecordApi(cmoneyAction = "getchannelpopulararticles")
     @POST("MobileService/ashx/MobileCode.ashx")
     @FormUrlEncoded
     suspend fun getChannelPopularArticles(
@@ -289,6 +302,7 @@ interface MobileOceanService {
     /**
      *  服務2-11. 取得指定文章(可訪客)
      */
+    @RecordApi(cmoneyAction = "getsinglearticle")
     @POST("MobileService/ashx/MobileCode.ashx")
     @FormUrlEncoded
     suspend fun getSingleArticle(
@@ -310,6 +324,7 @@ interface MobileOceanService {
      * @param fetchCount 要取得筆數
      * @param isIncludeLimitedAskArticle 是否包含時效內的問答文章( 預設:false )
      */
+    @RecordApi(cmoneyAction = "getfollowedchannelarticles")
     @POST("MobileService/ashx/MobileCode.ashx")
     @FormUrlEncoded
     suspend fun getFollowedChannelArticles(
@@ -334,6 +349,7 @@ interface MobileOceanService {
      * @param fetchCount 要取得筆數
      * @return
      */
+    @RecordApi(cmoneyAction = "getpopularquestionarticles")
     @FormUrlEncoded
     @POST("MobileService/ashx/MobileCode.ashx")
     suspend fun getPopularQuestionArticles(
@@ -357,6 +373,7 @@ interface MobileOceanService {
      * @param fetchCount 要取得筆數
      * @return
      */
+    @RecordApi(cmoneyAction = "getlatestquestionarticles")
     @FormUrlEncoded
     @POST("MobileService/ashx/MobileCode.ashx")
     suspend fun getLatestQuestionArticles(
@@ -372,11 +389,12 @@ interface MobileOceanService {
     /**
      *  服務3-1. 按讚
      */
+    @RecordApi(cmoneyAction = "likearticle")
     @FormUrlEncoded
     @POST("MobileService/ashx/MobileCode.ashx")
     suspend fun likeArticle(
         @Header("Authorization") authorization: String,
-        @Field("action") action: String = "LikeArticle",
+        @Field("action") action: String = "likearticle",
         @Field("AppId") appId: Int,
         @Field("Guid") guid: String,
         @Field("articleId") articleId: Long
@@ -385,6 +403,7 @@ interface MobileOceanService {
     /**
      *  服務3-3. 會員打賞文章
      */
+    @RecordApi(cmoneyAction = "givearticletip")
     @FormUrlEncoded
     @POST("MobileService/ashx/MobileCode.ashx")
     suspend fun giveArticleTip(
@@ -399,6 +418,7 @@ interface MobileOceanService {
     /**
      *  服務3-4. 我也想知道回答
      */
+    @RecordApi(cmoneyAction = "addinterestedinarticleInfo")
     @FormUrlEncoded
     @POST("MobileService/ashx/MobileCode.ashx")
     suspend fun addInterestedInArticleInfo(
@@ -413,6 +433,7 @@ interface MobileOceanService {
     /**
      *  服務3-5. 按噓
      */
+    @RecordApi(cmoneyAction = "dislikearticle")
     @FormUrlEncoded
     @POST("MobileService/ashx/MobileCode.ashx")
     suspend fun dislikeArticle(
@@ -426,11 +447,12 @@ interface MobileOceanService {
     /**
      * 服務4-1. 詢問今天是否跪求過
      */
+    @RecordApi(cmoneyAction = "istodayaskedstocktendency")
     @FormUrlEncoded
     @POST("MobileService/ashx/MobileCode.ashx")
     suspend fun isTodayAskedStockTendency(
         @Header("Authorization") authorization: String,
-        @Field("Action") action: String = "IsTodayAskedStockTendency",
+        @Field("Action") action: String = "istodayaskedstocktendency",
         @Field("AppId") appId: Int,
         @Field("Guid") guid: String,
         @Field("StockId") stockId: String
@@ -439,11 +461,12 @@ interface MobileOceanService {
     /**
      *  服務4-2. 跪求股票趨勢
      */
+    @RecordApi(cmoneyAction = "addaskstocktendnecylog")
     @FormUrlEncoded
     @POST("MobileService/ashx/MobileCode.ashx")
     suspend fun addAskStockTendencyLog(
         @Header("Authorization") authorization: String,
-        @Field("Action") action: String = "AddAskStockTendnecyLog",
+        @Field("Action") action: String = "addaskstocktendnecylog",
         @Field("AppId") appId: Int,
         @Field("Guid") guid: String,
         @Field("StockId") stockId: String
@@ -452,11 +475,12 @@ interface MobileOceanService {
     /**
      *  服務4-3 取得跪求股票趨勢數量
      */
+    @RecordApi(cmoneyAction = "getaskstocktendencyamount")
     @FormUrlEncoded
     @POST("MobileService/ashx/MobileCode.ashx")
     suspend fun getAskStockTredencyAmount(
         @Header("Authorization") authorization: String,
-        @Field("action") action: String = "GetAskStockTendencyAmount",
+        @Field("action") action: String = "getaskstocktendencyamount",
         @Field("AppId") appId: Int,
         @Field("Guid") guid: String,
         @Field("StockId") stockId: String
@@ -467,6 +491,7 @@ interface MobileOceanService {
      *
      * @return
      */
+    @RecordApi(cmoneyAction = "followchannel")
     @FormUrlEncoded
     @POST("MobileService/ashx/MobileCode.ashx")
     suspend fun followChannel(
@@ -481,6 +506,7 @@ interface MobileOceanService {
      * 服務6-2. 離開頻道(取消追蹤)
      *
      */
+    @RecordApi(cmoneyAction = "leavechannel")
     @FormUrlEncoded
     @POST("MobileService/ashx/MobileCode.ashx")
     suspend fun leaveChannel(
@@ -495,6 +521,7 @@ interface MobileOceanService {
      * 服務6-3. 更新頻道描述
      *
      */
+    @RecordApi(cmoneyAction = "updatechanneldescription")
     @FormUrlEncoded
     @POST("MobileService/ashx/MobileCode.ashx")
     suspend fun updateChannelDescription(
@@ -508,6 +535,7 @@ interface MobileOceanService {
     /**
      * 服務7-1. 取得熱門股票(可訪客)
      */
+    @RecordApi(cmoneyAction = "getpopularstocks")
     @FormUrlEncoded
     @POST("MobileService/ashx/MobileCode.ashx")
     suspend fun getPopularStocks(
@@ -533,6 +561,7 @@ interface MobileOceanService {
      * @param skipCount 跳過數量
      * @return
      */
+    @RecordApi(cmoneyAction = "getarticletips")
     @FormUrlEncoded
     @POST("MobileService/ashx/MobileCode.ashx")
     suspend fun getArticleTips(
@@ -549,6 +578,7 @@ interface MobileOceanService {
      * 服務8-3. 取得指定頻道的粉絲清單(被哪些人追蹤)
      * NeedInfo 參考文件 https://docs.google.com/document/d/1AQRWgjmuVKZ3j69U-uutpMgTcfzk87WEFN75HyqBKH8/edit#heading=h.6bfg5lqmur1v
      */
+    @RecordApi(cmoneyAction = "getfanschannel")
     @FormUrlEncoded
     @POST("MobileService/ashx/MobileCode.ashx")
     suspend fun getFansChannel(
@@ -566,6 +596,7 @@ interface MobileOceanService {
      * 服務8-4. 取得指定頻道所關注的頻道清單(追蹤哪些人)
      * NeedInfo 參考文件 https://docs.google.com/document/d/1AQRWgjmuVKZ3j69U-uutpMgTcfzk87WEFN75HyqBKH8/edit#heading=h.6bfg5lqmur1v
      */
+    @RecordApi(cmoneyAction = "getattentionchannel")
     @FormUrlEncoded
     @POST("MobileService/ashx/MobileCode.ashx")
     suspend fun getAttentionChannel(
@@ -589,6 +620,7 @@ interface MobileOceanService {
      * @param pictureType
      * @return
      */
+    @RecordApi(cmoneyAction = "getstockpicture")
     @FormUrlEncoded
     @POST("MobileService/ashx/MobileCode.ashx")
     suspend fun getStockPicture(
@@ -608,6 +640,7 @@ interface MobileOceanService {
      * @param guid
      * @return
      */
+    @RecordApi(cmoneyAction = "getmembermasterranking")
     @FormUrlEncoded
     @POST("MobileService/ashx/MobileCode.ashx")
     suspend fun getMemberMasterRanking(
@@ -625,6 +658,7 @@ interface MobileOceanService {
      * @param guid
      * @return
      */
+    @RecordApi(cmoneyAction = "activiefollow")
     @FormUrlEncoded
     @POST("MobileService/ashx/MobileCode.ashx")
     suspend fun activeFollow(

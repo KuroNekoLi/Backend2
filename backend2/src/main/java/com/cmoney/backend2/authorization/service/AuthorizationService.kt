@@ -1,6 +1,7 @@
 package com.cmoney.backend2.authorization.service
 
 import com.cmoney.backend2.authorization.service.api.ExpiredTime
+import com.cmoney.backend2.base.model.calladapter.RecordApi
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -17,6 +18,7 @@ interface AuthorizationService {
      * @param subjectId appId
      *
      */
+    @RecordApi
     @GET("AuthorizationServer/Authorization/ExpiredTime/{type}/{subjectId}")
     suspend fun getExpiredTime(
         @Header("Authorization") authorization: String,

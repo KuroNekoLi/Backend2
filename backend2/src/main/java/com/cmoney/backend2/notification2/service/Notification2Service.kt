@@ -1,5 +1,6 @@
 package com.cmoney.backend2.notification2.service
 
+import com.cmoney.backend2.base.model.calladapter.RecordApi
 import com.cmoney.backend2.notification2.service.api.deletemonitor.DeleteMonitorRequestBody
 import com.cmoney.backend2.notification2.service.api.getbranchfcm.BranchSettingRequestBody
 import com.cmoney.backend2.notification2.service.api.getclubfcm.ClubFcmSettingResponseBody
@@ -25,6 +26,7 @@ interface Notification2Service {
     /**
      * 取得所有人都有的通知
      */
+    @RecordApi
     @GET("notification/History/NotifyAll")
     suspend fun getHistoryNotifyAll(
         @Header("Authorization") authorization: String,
@@ -34,6 +36,7 @@ interface Notification2Service {
     /**
      * 取得推播分支設定(個別設定)
      */
+    @RecordApi
     @GET("notification/usersetting/Branch")
     suspend fun getBranchFcm(
         @Header("Authorization") authorization: String,
@@ -44,6 +47,7 @@ interface Notification2Service {
     /**
      * 更新推播分支設定(個別設定)
      */
+    @RecordApi
     @PUT("notification/usersetting/Branch")
     suspend fun updateBranchFcm(
         @Header("Authorization") authorization: String,
@@ -53,6 +57,7 @@ interface Notification2Service {
     /**
      * 更新推播分支設定(多組設定)
      */
+    @RecordApi
     @PATCH("notification/usersetting/Branch")
     suspend fun updateBranchFcmMultipleSettings(
         @Header("Authorization") authorization: String,
@@ -63,6 +68,7 @@ interface Notification2Service {
      * 取得社團推播設定
      *
      */
+    @RecordApi
     @GET("notification/usersetting/Club")
     suspend fun getClubFcm(
         @Header("Authorization") authorization: String,
@@ -74,6 +80,7 @@ interface Notification2Service {
     /**
      * 更新社團推播設定
      */
+    @RecordApi
     @PUT("notification/usersetting/Club")
     suspend fun updateClubFcm(
         @Header("Authorization") authorization: String,
@@ -83,6 +90,7 @@ interface Notification2Service {
     /**
      * 取得總推播設定
      */
+    @RecordApi
     @GET("notification/usersetting/Main")
     suspend fun getMainFcm(
         @Header("Authorization") authorization: String,
@@ -93,6 +101,7 @@ interface Notification2Service {
     /**
      * 更新總推播設定
      */
+    @RecordApi
     @PUT("notification/usersetting/Main")
     suspend fun updateMainFcm(
         @Header("Authorization") authorization: String,
@@ -102,6 +111,7 @@ interface Notification2Service {
     /**
      * 取的某個App的監控列表
      */
+    @RecordApi
     @GET("notification/userCondition/Monitor")
     suspend fun getMonitorList(
         @Header("Authorization") authorization: String,
@@ -112,6 +122,7 @@ interface Notification2Service {
     /**
      * 新增監控
      */
+    @RecordApi
     @POST("notification/userCondition/Monitor")
     suspend fun insertMonitor(
         @Header("Authorization") authorization: String,
@@ -121,6 +132,7 @@ interface Notification2Service {
     /**
      * 更新監控
      */
+    @RecordApi
     @PUT("notification/userCondition/Monitor")
     suspend fun updateMonitor(
         @Header("Authorization") authorization: String,
@@ -130,6 +142,7 @@ interface Notification2Service {
     /**
      * 刪除監控
      */
+    @RecordApi
     @HTTP(method = "DELETE", path = "notification/userCondition/Monitor", hasBody = true)
     suspend fun deleteMonitor(
         @Header("Authorization") authorization: String,
@@ -139,6 +152,7 @@ interface Notification2Service {
     /**
      * 取得監控歷史列表
      */
+    @RecordApi
     @GET("notification/userCondition/Monitor/history")
     suspend fun getMonitorHistoryList(
         @Header("Authorization") authorization: String,
@@ -149,6 +163,7 @@ interface Notification2Service {
     /**
      * 更新監控推播
      */
+    @RecordApi
     @PUT("notification/userCondition/Monitor/isNeedPush")
     suspend fun updateMonitorPushNotification(
         @Header("Authorization") authorization: String,
@@ -163,6 +178,7 @@ interface Notification2Service {
      * @param appId Int
      * @return List<MrOptionCondition>
      */
+    @RecordApi
     @GET("notification/userCondition/MrOption/Option")
     suspend fun getMrOptionOptionConditionList(
         @Header("Authorization") authorization: String,
@@ -177,6 +193,7 @@ interface Notification2Service {
      * @param appId Int
      * @return List<MrOptionCondition>
      */
+    @RecordApi
     @GET("notification/userCondition/MrOption/SpotGoods")
     suspend fun getMrOptionSpotGoodsConditionList(
         @Header("Authorization") authorization: String,
@@ -188,6 +205,7 @@ interface Notification2Service {
      * 更新條件
      * @param updateMrOptionConditionRequestBody UpdateMrOptionCondition
      */
+    @RecordApi
     @PUT("notification/userCondition/MrOption")
     suspend fun updateMrOptionConditionList(
         @Header("Authorization") authorization: String,

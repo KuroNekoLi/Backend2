@@ -71,7 +71,6 @@ class NotesWebImpl(
         kotlin.runCatching {
             service.getNotes(
                 authorization = setting.accessToken.createAuthorizationBearer(),
-                action = "GetNotes",
                 appId = setting.appId,
                 guid = setting.identityToken.getMemberGuid(),
                 noteId = noteId,
@@ -110,7 +109,6 @@ class NotesWebImpl(
         kotlin.runCatching {
             service.getNotesByTagsUsingNotesApi(
                 authorization = setting.accessToken.createAuthorizationBearer(),
-                action = "GetNotesByTags",
                 appId = setting.appId,
                 guid = setting.identityToken.getMemberGuid(),
                 noteId = noteId,

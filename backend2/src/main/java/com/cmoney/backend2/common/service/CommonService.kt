@@ -1,5 +1,6 @@
 package com.cmoney.backend2.common.service
 
+import com.cmoney.backend2.base.model.calladapter.RecordApi
 import com.cmoney.backend2.common.service.api.adddeviceidentification.AddDeviceIdentificationComplete
 import com.cmoney.backend2.common.service.api.changenickname.ChangeNicknameResponseWithError
 import com.cmoney.backend2.common.service.api.changeuserimage.ChangeUserImageResponseWithError
@@ -37,6 +38,7 @@ interface CommonService {
      * @param version 版本號碼
      *
      */
+    @RecordApi(cmoneyAction = "getconfig")
     @FormUrlEncoded
     @POST("MobileService/ashx/SystemCheck.ashx")
     suspend fun getConfig(
@@ -49,6 +51,7 @@ interface CommonService {
     /**
      * 服務4. 忘記密碼
      */
+    @RecordApi(cmoneyAction = "forgetpassword")
     @FormUrlEncoded
     @POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
     suspend fun forgotPasswordForEmail(
@@ -61,6 +64,7 @@ interface CommonService {
      *
      * @param password 需要被md5過
      */
+    @RecordApi(cmoneyAction = "registeraccount")
     @FormUrlEncoded
     @POST("/MobileService/ashx/LoginCheck/LoginCheck.ashx")
     suspend fun registerByEmail(
@@ -74,6 +78,7 @@ interface CommonService {
     /**
      * 服務6-2. 取得該會員資訊(加上身份識別)
      */
+    @RecordApi(cmoneyAction = "getmemberprofile")
     @FormUrlEncoded
     @POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
     suspend fun getMemberProfile(
@@ -85,9 +90,8 @@ interface CommonService {
 
     /**
      * 改變暱稱
-     *
-     * @return
      */
+    @RecordApi(cmoneyAction = "changenickname")
     @FormUrlEncoded
     @POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
     suspend fun changeNickname(
@@ -101,6 +105,7 @@ interface CommonService {
     /**
      * 服務11. 登出(清除推播Token)
      */
+    @RecordApi(cmoneyAction = "logout")
     @FormUrlEncoded
     @POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
     suspend fun logout(
@@ -113,6 +118,7 @@ interface CommonService {
     /**
      * 服務12. 更新會員頭像
      */
+    @RecordApi
     @POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
     suspend fun changeUserImage(
         @Header("Authorization") authorization: String,
@@ -122,6 +128,7 @@ interface CommonService {
     /**
      * 服務14-2. 每天登入給獎
      */
+    @RecordApi(cmoneyAction = "loginreward")
     @FormUrlEncoded
     @POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
     suspend fun loginReward(
@@ -134,6 +141,7 @@ interface CommonService {
     /**
      * 服務15. 查詢今日是否已發放登入獎勵
      */
+    @RecordApi(cmoneyAction = "hassentloginrewardtoday")
     @FormUrlEncoded
     @POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
     suspend fun hasSentLoginRewardToday(
@@ -146,6 +154,7 @@ interface CommonService {
     /**
      * 服務18. 更改是否需要接收推播(含驗證)
      */
+    @RecordApi(cmoneyAction = "updateisneedpush")
     @FormUrlEncoded
     @POST("MobileService/ashx/MobilePush.ashx")
     suspend fun updateIsNeedPush(
@@ -160,6 +169,7 @@ interface CommonService {
     /**
      * 服務1. 開始試用
      */
+    @RecordApi(cmoneyAction = "starttrialtiming")
     @FormUrlEncoded
     @POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
     suspend fun startTrial(
@@ -172,6 +182,7 @@ interface CommonService {
     /**
      * 服務2. 暫停試用計時
      */
+    @RecordApi(cmoneyAction = "pausetrialtiming")
     @FormUrlEncoded
     @POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
     suspend fun pauseTrial(
@@ -186,6 +197,7 @@ interface CommonService {
     /**
      * 服務1. 啟用序號
      */
+    @RecordApi(cmoneyAction = "enableserialnum")
     @FormUrlEncoded
     @POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
     suspend fun invocationSerialNumber(
@@ -199,6 +211,7 @@ interface CommonService {
     /**
      * 服務3. 取得Access-Token
      */
+    @RecordApi(cmoneyAction = "getaccesstoken")
     @FormUrlEncoded
     @POST("MobileService/ashx/AccessToken.ashx")
     suspend fun getAccessToken(
@@ -211,6 +224,7 @@ interface CommonService {
     /**
      * 服務5. 紀錄AAID或IDFA(紀錄廣告識別碼)
      */
+    @RecordApi(cmoneyAction = "adddeviceidentification")
     @GET("MobileService/ashx/LoginCheck/LoginCheck.ashx")
     suspend fun addDeviceIdentification(
         @Header("Authorization") authorization: String,
@@ -227,6 +241,7 @@ interface CommonService {
      * @param newsType Int 新聞種類(1:每日頭條 2:討論區)
      * @param fetchSize Int
      */
+    @RecordApi(cmoneyAction = "getdailyheadline")
     @FormUrlEncoded
     @POST("MobileService/ashx/StockNews/StockNews.ashx")
     suspend fun getDailyHeadLine(
@@ -262,6 +277,7 @@ interface CommonService {
      * @param filterType Int 篩選方式(And 0, Or 1)
      * @param fetchSize Int
      */
+    @RecordApi(cmoneyAction = "getstockrssarticleswithfiltertype")
     @FormUrlEncoded
     @POST("MobileService/ashx/StockNews/StockNews.ashx")
     suspend fun getStockRssArticlesWithFilterType(
@@ -278,6 +294,7 @@ interface CommonService {
         @Field("fetchSize") fetchSize: Int
     ): Response<StockRssNewsResponse>
 
+    @RecordApi(cmoneyAction = "addrssarticleclickcount")
     @FormUrlEncoded
     @POST("MobileService/ashx/StockNews/StockNews.ashx")
     suspend fun addRssArticleClickCount(
@@ -292,6 +309,7 @@ interface CommonService {
     /**
      *  服務1. 取得會員購物金
      */
+    @RecordApi(cmoneyAction = "getmemberbonus")
     @FormUrlEncoded
     @POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
     suspend fun getMemberBonus(
@@ -305,6 +323,7 @@ interface CommonService {
     /**
      * 服務16 . 查詢是否曾經領過"手機綁定"獎勵
      */
+    @RecordApi(cmoneyAction = "hasreceivedcellphoneBindReward")
     @FormUrlEncoded
     @POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
     suspend fun hasReceivedCellphoneBindReward(

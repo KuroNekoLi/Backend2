@@ -50,7 +50,9 @@ dependencies {
     implementation(Dependencies.GSON)
     implementation(Dependencies.COROUTINES_ANDROID)
 
-    implementation(project(":backend2"))
+    implementation(project(ModuleConfig.PROJECT_PATH))
+    implementation(Dependencies.LOG_DATA_RECORDER_DATA)
+    implementation(Dependencies.LOG_DATA_RECORDER_DOMAIN)
 
     testImplementation(Dependencies.JUNIT)
     androidTestImplementation(Dependencies.ANDROID_TEST_JUNIT)

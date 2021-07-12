@@ -27,8 +27,13 @@ object Dependencies {
 
     const val OKHTTP = "com.squareup.okhttp3:okhttp:${Versions.OKHTTP}"
     const val OKHTTP_LOGGIN_INTERCEPTOR = "com.squareup.okhttp3:logging-interceptor:${Versions.OKHTTP}"
+    const val OKHTTP_TESTING_SUPPORT = "com.squareup.okhttp3:okhttp-testing-support:${Versions.OKHTTP_TESTING_SUPPORT}"
+    const val OKHTTP_MOCK_SERVER = "com.squareup.okhttp3:mockwebserver:${Versions.OKHTTP}"
     const val RETROFIT = "com.squareup.retrofit2:retrofit:${Versions.RETROFIT}"
     const val RETROFIT_CONVERTER_GSON = "com.squareup.retrofit2:converter-gson:${Versions.RETROFIT}"
+
+    const val LOG_DATA_RECORDER_DATA = "com.cmoney.logdatarecorder:logdatarecorder-data:${Versions.LOG_DATA_RECORDER}"
+    const val LOG_DATA_RECORDER_DOMAIN = "com.cmoney.logdatarecorder:logdatarecorder-domain:${Versions.LOG_DATA_RECORDER}"
 
     const val JUNIT = "junit:junit:${Versions.JUNIT}"
     const val TRUTH = "com.google.truth:truth:${Versions.TRUTH}"

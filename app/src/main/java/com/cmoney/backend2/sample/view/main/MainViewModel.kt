@@ -57,7 +57,6 @@ class MainViewModel(
             val result = identityProviderWeb.loginByEmail(account, md5edPassword)
             _windowsLock.value = WindowsLock.Unlock
             result.fold({ body ->
-                println("${body.accessToken}")
                 backendSetting.accessToken = AccessToken(body.accessToken.orEmpty())
                 backendSetting.identityToken = IdentityToken(body.idToken.orEmpty())
                 backendSetting.refreshToken = body.refreshToken.orEmpty()

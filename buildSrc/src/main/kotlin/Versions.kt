@@ -13,8 +13,11 @@ object Versions {
     const val ANDROID_KTX_CORE = "1.3.2"
     // okHttp
     const val OKHTTP = "4.8.1"
+    const val OKHTTP_TESTING_SUPPORT = "3.14.9"
     // retrofit
     const val RETROFIT = "2.9.0"
+    // logDataRecorder
+    const val LOG_DATA_RECORDER = "1.1.0"
     // koin
     const val KOIN = "2.1.6"
     // gson
