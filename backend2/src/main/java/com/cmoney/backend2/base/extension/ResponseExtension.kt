@@ -139,16 +139,26 @@ fun <T : Response<ResponseBody>, R> T.handleHttpStatusCode(
 }
 
 /**
- * 處理CMoneyError
+ * 處理CMoneyError。
+ * 優先解析第一層結構的message，並且沒有code。
+ * 如果第一層沒有message，則解析第一層的detail。
  */
 @Throws(JsonSyntaxException::class)
 fun <T> Response<T>.parseServerException(gson: Gson): ServerException {
+    val errorBody = errorBody()?.string()
     val cmoneyError = gson.fromJson(
-        errorBody()?.string(),
+        errorBody,
         CMoneyError::class.java
     )
-    return ServerException(
-        cmoneyError.detail?.code ?: Constant.SERVICE_ERROR_CODE,
-        cmoneyError.detail?.message.orEmpty()
-    )
+    return if (cmoneyError.message.isNullOrEmpty()) {
+        ServerException(
+            code = cmoneyError.detail?.code ?: Constant.SERVICE_ERROR_CODE,
+            message = cmoneyError.detail?.message.orEmpty()
+        )
+    } else {
+        ServerException(
+            code = Constant.SERVICE_NOT_SUPPORT_ERROR_CODE,
+            message = cmoneyError.message.orEmpty()
+        )
+    }
 }

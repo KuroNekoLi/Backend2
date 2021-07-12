@@ -3,6 +3,8 @@ package com.cmoney.backend2.forumocean.service
 import com.cmoney.backend2.base.extension.checkResponseBody
 import com.cmoney.backend2.base.extension.createAuthorizationBearer
 import com.cmoney.backend2.base.extension.handleNoContent
+import com.cmoney.backend2.base.model.dispatcher.DefaultDispatcherProvider
+import com.cmoney.backend2.base.model.dispatcher.DispatcherProvider
 import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.forumocean.service.api.article.create.CreateArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.create.variable.Content
@@ -31,21 +33,19 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.commentrespo
 import com.cmoney.backend2.forumocean.service.api.variable.response.groupresponse.GroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.vote.get.VoteInfo
 import com.google.gson.Gson
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class ForumOceanWebImpl(
     private val service: ForumOceanService,
     private val setting: Setting,
     private val jsonParser: Gson,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider()
 ) : ForumOceanWeb {
 
     //region article
 
     override suspend fun createArticle(body: Content.Article): Result<CreateArticleResponseBody> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 val response = when (body) {
                     is Content.Article.General -> service.createArticle(
@@ -66,7 +66,7 @@ class ForumOceanWebImpl(
         }
 
     override suspend fun createQuestion(body: Content.Question): Result<CreateQuestionResponseBody> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.createQuestion(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -76,7 +76,7 @@ class ForumOceanWebImpl(
         }
 
     override suspend fun getArticle(articleId: Long): Result<ArticleResponseBody.GeneralArticleResponseBody> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getArticle(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -86,7 +86,7 @@ class ForumOceanWebImpl(
         }
 
     override suspend fun getQuestionArticle(articleId: Long): Result<ArticleResponseBody.QuestionArticleResponseBody> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getQuestionArticle(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -96,7 +96,7 @@ class ForumOceanWebImpl(
         }
 
     override suspend fun getGroupArticle(articleId: Long): Result<ArticleResponseBody.GroupArticleResponseBody> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getGroupArticle(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -106,7 +106,7 @@ class ForumOceanWebImpl(
         }
 
     override suspend fun getSharedArticle(articleId: Long): Result<ArticleResponseBody.SharedArticleResponseBody> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getSharedArticle(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -116,7 +116,7 @@ class ForumOceanWebImpl(
         }
 
     override suspend fun getSignalArticle(articleId: Long): Result<ArticleResponseBody.SignalArticleResponseBody> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getSignalArticle(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -126,7 +126,7 @@ class ForumOceanWebImpl(
         }
 
     override suspend fun getNewsArticle(articleId: Long): Result<ArticleResponseBody.NewsArticleResponseBody> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getNewsArticle(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -136,7 +136,7 @@ class ForumOceanWebImpl(
         }
 
     override suspend fun getUnknownArticle(articleId: Long): Result<ArticleResponseBody.UnknownArticleResponseBody> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getUnknownArticle(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -149,7 +149,7 @@ class ForumOceanWebImpl(
         articleId: Long,
         updateHelper: UpdateArticleHelper
     ): Result<Unit> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.updateArticle(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -160,7 +160,7 @@ class ForumOceanWebImpl(
         }
 
     override suspend fun deleteArticle(articleId: Long): Result<Unit> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.deleteArticle(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -175,7 +175,7 @@ class ForumOceanWebImpl(
         channelNameBuilderList: List<ChannelNameBuilder>,
         weight: Long,
         count: Int
-    ): Result<List<ArticleResponseBody.UnknownArticleResponseBody>> = withContext(ioDispatcher) {
+    ): Result<List<ArticleResponseBody.UnknownArticleResponseBody>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getChannelsArticleByWeight(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -187,7 +187,7 @@ class ForumOceanWebImpl(
     }
 
     override suspend fun createCollection(articleId: Long): Result<Unit> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.createCollection(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -197,7 +197,7 @@ class ForumOceanWebImpl(
         }
 
     override suspend fun deleteCollection(articleId: Long): Result<Unit> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.deleteCollection(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -211,7 +211,7 @@ class ForumOceanWebImpl(
         text: String?,
         multiMedia: List<MediaType>?,
         position: Any?
-    ): Result<CreateCommentResponseBody> = withContext(ioDispatcher) {
+    ): Result<CreateCommentResponseBody> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.createComment(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -228,7 +228,7 @@ class ForumOceanWebImpl(
         articleId: Long,
         commentId: Long?,
         offsetCount: Int?
-    ): Result<List<CommentResponseBody>> = withContext(ioDispatcher) {
+    ): Result<List<CommentResponseBody>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getComment(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -242,7 +242,7 @@ class ForumOceanWebImpl(
     override suspend fun getCommentWithId(
         articleId: Long,
         commentIds: List<Long>
-    ): Result<List<CommentResponseBody>> = withContext(ioDispatcher) {
+    ): Result<List<CommentResponseBody>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getCommentWithId(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -257,7 +257,7 @@ class ForumOceanWebImpl(
         commentId: Long,
         helper: UpdateCommentHelper
     ): Result<Unit> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.updateComment(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -270,7 +270,7 @@ class ForumOceanWebImpl(
 
 
     override suspend fun deleteComment(articleId: Long, commentIndex: Int): Result<Unit> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.deleteComment(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -285,7 +285,7 @@ class ForumOceanWebImpl(
         commentIndex: Int,
         reactionType: ReactionType,
         originalReactionType: ReactionType?
-    ): Result<Unit> = withContext(ioDispatcher) {
+    ): Result<Unit> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.reactComment(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -303,7 +303,7 @@ class ForumOceanWebImpl(
     override suspend fun getReactionDetail(
         articleId: Long,
         commentIndex: Int
-    ): Result<Map<String?, List<Long>?>> = withContext(ioDispatcher) {
+    ): Result<Map<String?, List<Long>?>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getReactionDetail(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -318,7 +318,7 @@ class ForumOceanWebImpl(
         articleId: Long,
         commentIndex: Int,
         reactionType: ReactionType
-    ): Result<Unit> = withContext(ioDispatcher) {
+    ): Result<Unit> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.removeCommentReaction(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -330,7 +330,7 @@ class ForumOceanWebImpl(
     }
 
     override suspend fun createArticleReaction(articleId: Long, type: ReactionType): Result<Unit> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.createArticleReaction(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -344,7 +344,7 @@ class ForumOceanWebImpl(
         articleId: Long,
         reactionTypeList: List<ReactionType>,
         count: Int
-    ): Result<Map<String?, List<Long>?>> = withContext(ioDispatcher) {
+    ): Result<Map<String?, List<Long>?>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getArticleReactionDetail(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -356,7 +356,7 @@ class ForumOceanWebImpl(
     }
 
     override suspend fun deleteArticleReaction(articleId: Long): Result<Unit> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.deleteArticleReaction(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -366,7 +366,7 @@ class ForumOceanWebImpl(
         }
 
     override suspend fun createArticleInterest(articleId: Long): Result<Unit> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.createArticleInterest(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -376,7 +376,7 @@ class ForumOceanWebImpl(
         }
 
     override suspend fun createArticleDonate(articleId: Long, donateValue: Int): Result<Unit> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.createArticleDonate(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -387,7 +387,7 @@ class ForumOceanWebImpl(
         }
 
     override suspend fun getArticleDonate(articleId: Long): Result<Map<Long?, Int?>> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getArticleDonate(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -397,7 +397,7 @@ class ForumOceanWebImpl(
         }
 
     override suspend fun getGroup(groupId: Long): Result<GroupResponseBody> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getGroup(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -407,7 +407,7 @@ class ForumOceanWebImpl(
         }
 
     override suspend fun getUserOwnGroup(ownId: Long): Result<List<GroupResponseBody>> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getUserOwnGroup(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -417,7 +417,7 @@ class ForumOceanWebImpl(
         }
 
     override suspend fun getMemberBelongGroups(memberId: Long): Result<List<GroupResponseBody>> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getMemberBelongGroups(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -426,17 +426,18 @@ class ForumOceanWebImpl(
             }
         }
 
-    override suspend fun createGroup(groupName: String): Result<CreateGroupResponseBody> = withContext(ioDispatcher) {
-        kotlin.runCatching {
-            service.createGroup(
-                authorization = setting.accessToken.createAuthorizationBearer(),
-                groupName = groupName
-            ).checkResponseBody(jsonParser)
+    override suspend fun createGroup(groupName: String): Result<CreateGroupResponseBody> =
+        withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.createGroup(
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    groupName = groupName
+                ).checkResponseBody(jsonParser)
+            }
         }
-    }
 
     override suspend fun updateGroup(groupId: Long, body: UpdateGroupRequestBody): Result<Unit> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.updateGroup(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -447,7 +448,7 @@ class ForumOceanWebImpl(
         }
 
     override suspend fun transferGroup(groupId: Long, memberId: Long): Result<Unit> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.transferGroup(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -457,7 +458,7 @@ class ForumOceanWebImpl(
             }
         }
 
-    override suspend fun deleteGroup(groupId: Long): Result<Unit> = withContext(ioDispatcher) {
+    override suspend fun deleteGroup(groupId: Long): Result<Unit> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.deleteGroup(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -467,7 +468,7 @@ class ForumOceanWebImpl(
     }
 
     override suspend fun join(groupId: Long, reason: String): Result<Unit> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.join(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -480,7 +481,7 @@ class ForumOceanWebImpl(
     override suspend fun getMembers(
         groupId: Long,
         includeManagerInfo: Boolean
-    ): Result<List<GroupMember>> = withContext(ioDispatcher) {
+    ): Result<List<GroupMember>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getMembers(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -491,7 +492,7 @@ class ForumOceanWebImpl(
     }
 
     override suspend fun getApprovals(groupId: Long): Result<List<GroupPendingApproval>> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getApprovals(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -501,7 +502,7 @@ class ForumOceanWebImpl(
         }
 
     override suspend fun approval(groupId: Long, memberId: Long, isAgree: Boolean): Result<Unit> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.approval(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -516,7 +517,7 @@ class ForumOceanWebImpl(
         groupId: Long,
         memberId: Long,
         position: GroupPosition
-    ): Result<Unit> = withContext(ioDispatcher) {
+    ): Result<Unit> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.changeGroupMemberPosition(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -528,7 +529,7 @@ class ForumOceanWebImpl(
     }
 
     override suspend fun kick(groupId: Long, memberId: Long): Result<Unit> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.kick(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -538,7 +539,7 @@ class ForumOceanWebImpl(
             }
         }
 
-    override suspend fun leave(groupId: Long): Result<Unit> = withContext(ioDispatcher) {
+    override suspend fun leave(groupId: Long): Result<Unit> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.leave(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -548,7 +549,7 @@ class ForumOceanWebImpl(
     }
 
     override suspend fun deleteGroupArticle(articleId: Long): Result<Unit> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.deleteGroupArticle(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -558,7 +559,7 @@ class ForumOceanWebImpl(
         }
 
     override suspend fun getOfficials(officialIds: List<Long>): Result<List<OfficialChannelInfo>> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getOfficials(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -568,7 +569,7 @@ class ForumOceanWebImpl(
         }
 
     override suspend fun getOfficialSubscribedCount(officialId: Long): Result<GetOfficialSubscribedCountResponseBody> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getOfficialSubscribedCount(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -578,7 +579,7 @@ class ForumOceanWebImpl(
         }
 
     override suspend fun getSubscribedCount(memberId: Long): Result<GetSubscribedCountResponseBody> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getSubscribedCount(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -588,7 +589,7 @@ class ForumOceanWebImpl(
         }
 
     override suspend fun getSubscribed(memberId: Long): Result<List<Int>> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getSubscribed(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -597,7 +598,7 @@ class ForumOceanWebImpl(
             }
         }
 
-    override suspend fun subscribe(officialId: Long): Result<Unit> = withContext(ioDispatcher) {
+    override suspend fun subscribe(officialId: Long): Result<Unit> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.subscribe(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -606,16 +607,17 @@ class ForumOceanWebImpl(
         }
     }
 
-    override suspend fun unsubscribe(officialId: Long): Result<Unit> = withContext(ioDispatcher) {
-        kotlin.runCatching {
-            service.unsubscribe(
-                authorization = setting.accessToken.createAuthorizationBearer(),
-                officialId = officialId
-            ).handleNoContent(jsonParser)
+    override suspend fun unsubscribe(officialId: Long): Result<Unit> =
+        withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.unsubscribe(
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    officialId = officialId
+                ).handleNoContent(jsonParser)
+            }
         }
-    }
 
-    override suspend fun unsubscribeAll(): Result<Unit> = withContext(ioDispatcher) {
+    override suspend fun unsubscribeAll(): Result<Unit> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.unsubscribeAll(
                 authorization = setting.accessToken.createAuthorizationBearer()
@@ -624,7 +626,7 @@ class ForumOceanWebImpl(
     }
 
     override suspend fun getFollowingList(memberId: Long): Result<List<Long>> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getFollowingList(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -634,7 +636,7 @@ class ForumOceanWebImpl(
         }
 
     override suspend fun getFollowers(memberId: Long): Result<List<Long>> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getFollowers(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -643,7 +645,7 @@ class ForumOceanWebImpl(
             }
         }
 
-    override suspend fun follow(memberId: Long): Result<Unit> = withContext(ioDispatcher) {
+    override suspend fun follow(memberId: Long): Result<Unit> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.follow(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -652,7 +654,7 @@ class ForumOceanWebImpl(
         }
     }
 
-    override suspend fun unfollow(memberId: Long): Result<Unit> = withContext(ioDispatcher) {
+    override suspend fun unfollow(memberId: Long): Result<Unit> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.unfollow(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -661,7 +663,7 @@ class ForumOceanWebImpl(
         }
     }
 
-    override suspend fun block(memberId: Long): Result<Unit> = withContext(ioDispatcher) {
+    override suspend fun block(memberId: Long): Result<Unit> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.block(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -670,7 +672,7 @@ class ForumOceanWebImpl(
         }
     }
 
-    override suspend fun unblock(memberId: Long): Result<Unit> = withContext(ioDispatcher) {
+    override suspend fun unblock(memberId: Long): Result<Unit> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.unblock(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -679,7 +681,7 @@ class ForumOceanWebImpl(
         }
     }
 
-    override suspend fun getBlockingList() = withContext(ioDispatcher) {
+    override suspend fun getBlockingList() = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getBlockingList(
                 authorization = setting.accessToken.createAuthorizationBearer()
@@ -687,7 +689,7 @@ class ForumOceanWebImpl(
         }
     }
 
-    override suspend fun getBlockers()= withContext(ioDispatcher) {
+    override suspend fun getBlockers() = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getBlockers(
                 authorization = setting.accessToken.createAuthorizationBearer()
@@ -696,7 +698,7 @@ class ForumOceanWebImpl(
     }
 
     override suspend fun createReport(articleId: Long, reason: ReasonType): Result<Unit> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.createReport(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -706,17 +708,18 @@ class ForumOceanWebImpl(
             }
         }
 
-    override suspend fun deleteReport(articleId: Long): Result<Unit> = withContext(ioDispatcher) {
-        kotlin.runCatching {
-            service.deleteReport(
-                authorization = setting.accessToken.createAuthorizationBearer(),
-                articleId = articleId
-            ).handleNoContent(jsonParser)
+    override suspend fun deleteReport(articleId: Long): Result<Unit> =
+        withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.deleteReport(
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    articleId = articleId
+                ).handleNoContent(jsonParser)
+            }
         }
-    }
 
     override suspend fun getMemberIds(channelIdList: List<Long>): Result<List<ChannelIdAndMemberId>> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getMemberIds(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -726,7 +729,7 @@ class ForumOceanWebImpl(
         }
 
     override suspend fun getChannelIds(memberIdList: List<Long>): Result<List<ChannelIdAndMemberId>> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getChannelIds(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -736,7 +739,7 @@ class ForumOceanWebImpl(
         }
 
     override suspend fun createVote(articleId: Long, optionIndex: Int): Result<Unit> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.createVote(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -747,7 +750,7 @@ class ForumOceanWebImpl(
         }
 
     override suspend fun getCurrentVote(articleId: Long): Result<List<VoteInfo>> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getCurrentVote(
                     authorization = setting.accessToken.createAuthorizationBearer(),

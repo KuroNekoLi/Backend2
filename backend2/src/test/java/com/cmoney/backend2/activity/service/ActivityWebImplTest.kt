@@ -1,7 +1,7 @@
 package com.cmoney.backend2.activity.service
 
-import com.cmoney.backend2.activity.FakeSetting
-import com.cmoney.backend2.activity.MainCoroutineRule
+import com.cmoney.backend2.MainCoroutineRule
+import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.activity.service.api.getdaycount.GetDayCountResponseBody
 import com.cmoney.backend2.activity.service.api.getreferralcount.GetReferralCountResponseBody
 import com.cmoney.backend2.base.model.exception.ServerException
@@ -34,7 +34,7 @@ class ActivityWebImplTest {
     private val activityService = mockk<ActivityService>()
     private val gson = GsonBuilder().serializeNulls().setLenient().setPrettyPrinting().create()
     private val service: ActivityWeb = ActivityWebImpl(
-        FakeSetting(),
+        TestSetting(),
         gson,
         activityService,
         Dispatchers.Main
@@ -82,7 +82,7 @@ class ActivityWebImplTest {
                 authorization = any(),
                 requestBody = any()
             )
-        } returns Response.error(401,json.toResponseBody())
+        } returns Response.error(401, json.toResponseBody())
 
         //確認api是否成功
         val result = service.getDayCount()
@@ -98,8 +98,8 @@ class ActivityWebImplTest {
                 authorization = any(),
                 requestBody = any()
             )
-        } returns Response.success(204, null as? Void)         //確認api是否成功
-        val result = service.requestBonus(123504,7)
+        } returns Response.success<Void>(204, null)         //確認api是否成功
+        val result = service.requestBonus(123504, 7)
         Truth.assertThat(result.isSuccess).isTrue()
 
         //確認api回傳是否如預期
@@ -122,10 +122,10 @@ class ActivityWebImplTest {
                 authorization = any(),
                 requestBody = any()
             )
-        } returns Response.error(400,json.toResponseBody())
+        } returns Response.error(400, json.toResponseBody())
 
         //確認api是否成功
-        val result = service.requestBonus(123504,7)
+        val result = service.requestBonus(123504, 7)
         checkServerException(result)
     }
 
@@ -166,7 +166,7 @@ class ActivityWebImplTest {
                 authorization = any(),
                 requestBody = any()
             )
-        } returns Response.error(400,json.toResponseBody())
+        } returns Response.error(400, json.toResponseBody())
 
         //確認api是否成功
         val result = service.getReferralCount(7)

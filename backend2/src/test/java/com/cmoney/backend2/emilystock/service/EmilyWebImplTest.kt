@@ -1,10 +1,10 @@
 package com.cmoney.backend2.emilystock.service
 
+import com.cmoney.backend2.MainCoroutineRule
+import com.cmoney.backend2.TestDispatcher
+import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.EmptyBodyException
 import com.cmoney.backend2.base.model.exception.ServerException
-import com.cmoney.backend2.emilystock.FakeSetting
-import com.cmoney.backend2.emilystock.MainCoroutineRule
-import com.cmoney.backend2.emilystock.TestDispatcher
 import com.cmoney.backend2.emilystock.service.api.getemilycommkeys.GetEmilyCommKeysResponse
 import com.cmoney.backend2.emilystock.service.api.getfiltercondition.GetFilterConditionResponse
 import com.cmoney.backend2.emilystock.service.api.getstockinfos.GetStockInfosResponse
@@ -37,13 +37,13 @@ class EmilyWebImplTest {
 
     @MockK
     private val emilyService = mockk<EmilyService>()
-    private val setting = FakeSetting()
     private val gson = Gson()
-    private val emilyWeb: EmilyWeb = EmilyWebImpl(setting, emilyService, gson, TestDispatcher())
+    private lateinit var emilyWeb: EmilyWeb
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
+        emilyWeb = EmilyWebImpl(TestSetting(), emilyService, gson, TestDispatcher())
     }
 
     @Test
@@ -88,7 +88,7 @@ class EmilyWebImplTest {
     }
 
     @Test
-    fun `getStockInfos_成功`()  = mainCoroutineRule.runBlockingTest {
+    fun `getStockInfos_成功`() = mainCoroutineRule.runBlockingTest {
         val response = GetStockInfosResponse(
             listOf(
                 GetStockInfosResponse.StockInfo(
@@ -122,7 +122,7 @@ class EmilyWebImplTest {
     }
 
     @Test(expected = EmptyBodyException::class)
-    fun `getStockInfos_沒資料`()  = mainCoroutineRule.runBlockingTest {
+    fun `getStockInfos_沒資料`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             emilyService.getStockInfos(
                 authorization = any(),
@@ -306,7 +306,10 @@ class EmilyWebImplTest {
                 }
             }
         """.trimIndent()
-        val errorResponse = gson.fromJson<GetTargetConstitutionWithError>(errorText, GetTargetConstitutionWithError::class.java)
+        val errorResponse = gson.fromJson<GetTargetConstitutionWithError>(
+            errorText,
+            GetTargetConstitutionWithError::class.java
+        )
         coEvery {
             emilyService.getTargetConstitution(
                 authorization = any(),
@@ -424,7 +427,10 @@ class EmilyWebImplTest {
                 }
             }
         """.trimIndent()
-        val errorResponse = gson.fromJson<GetTrafficLightRecordWithError>(errorText, GetTrafficLightRecordWithError::class.java)
+        val errorResponse = gson.fromJson<GetTrafficLightRecordWithError>(
+            errorText,
+            GetTrafficLightRecordWithError::class.java
+        )
         coEvery {
             emilyService.getTrafficLightRecord(
                 authorization = any(),

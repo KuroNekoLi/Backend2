@@ -1,11 +1,11 @@
 package com.cmoney.backend2.notification2.service
 
+import com.cmoney.backend2.MainCoroutineRule
+import com.cmoney.backend2.TestDispatcher
+import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.response.error.CMoneyError
 import com.cmoney.backend2.base.model.setting.Setting
-import com.cmoney.backend2.notification2.MainCoroutineRule
-import com.cmoney.backend2.notification2.TestDispatcher
-import com.cmoney.backend2.notification2.TestSetting
 import com.cmoney.backend2.notification2.service.api.getmonitor.GetMonitorResponseBody
 import com.cmoney.backend2.notification2.service.api.getmonitorhistory.GetMonitorHistoryResponseBody
 import com.google.common.truth.Truth
@@ -98,7 +98,7 @@ class MonitorTest {
     fun `getMonitorList_失敗_ServerException`() = mainCoroutineRule.runBlockingTest {
         val errorBody = gson.toJson(
             CMoneyError(
-                CMoneyError.Detail(
+                detail = CMoneyError.Detail(
                     code = 101
                 )
             )
@@ -133,7 +133,7 @@ class MonitorTest {
     fun `insertMonitor_失敗_ServerException`() = mainCoroutineRule.runBlockingTest {
         val errorBody = gson.toJson(
             CMoneyError(
-                CMoneyError.Detail(
+                detail = CMoneyError.Detail(
                     code = 10001
                 )
             )
@@ -167,7 +167,7 @@ class MonitorTest {
     fun `updateMonitor_失敗_ServerException`() = mainCoroutineRule.runBlockingTest {
         val errorBody = gson.toJson(
             CMoneyError(
-                CMoneyError.Detail(
+                detail = CMoneyError.Detail(
                     code = 10001
                 )
             )
@@ -200,7 +200,7 @@ class MonitorTest {
     fun `deleteMonitor_失敗_ServerException`() = mainCoroutineRule.runBlockingTest {
         val errorBody = gson.toJson(
             CMoneyError(
-                CMoneyError.Detail(
+                detail = CMoneyError.Detail(
                     code = 10001
                 )
             )
@@ -248,7 +248,7 @@ class MonitorTest {
     fun `getMonitorHistoryList_失敗_ServerException`() = mainCoroutineRule.runBlockingTest {
         val errorBody = gson.toJson(
             CMoneyError(
-                CMoneyError.Detail(
+                detail = CMoneyError.Detail(
                     code = 10001
                 )
             )
@@ -282,7 +282,7 @@ class MonitorTest {
     fun `updateMonitorPushNotification_失敗_ServerException`() = mainCoroutineRule.runBlockingTest {
         val errorBody = gson.toJson(
             CMoneyError(
-                CMoneyError.Detail(
+                detail = CMoneyError.Detail(
                     code = 10001
                 )
             )

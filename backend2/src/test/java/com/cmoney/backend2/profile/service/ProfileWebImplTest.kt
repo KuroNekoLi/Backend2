@@ -1,9 +1,9 @@
 package com.cmoney.backend2.profile.service
 
+import com.cmoney.backend2.MainCoroutineRule
+import com.cmoney.backend2.TestDispatcher
+import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.setting.Setting
-import com.cmoney.backend2.profile.MainCoroutineRule
-import com.cmoney.backend2.profile.TestDispatcher
-import com.cmoney.backend2.profile.TestSetting
 import com.cmoney.backend2.profile.data.GetNicknameAndAvatarResponse
 import com.cmoney.backend2.profile.service.api.checkregistrationcodebyemail.GetRegistrationCodeByEmailResponseBody
 import com.cmoney.backend2.profile.service.api.checkregistrationcodebyphone.GetRegistrationCodeByPhoneResponseBody

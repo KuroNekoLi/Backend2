@@ -1,10 +1,10 @@
 package com.cmoney.backend2.mobileocean.service
 
 import android.text.TextUtils
+import com.cmoney.backend2.MainCoroutineRule
+import com.cmoney.backend2.TestDispatcher
+import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.ServerException
-import com.cmoney.backend2.base.model.setting.Setting
-import com.cmoney.backend2.mobileocean.MainCoroutineRule
-import com.cmoney.backend2.mobileocean.TestSetting
 import com.cmoney.backend2.mobileocean.service.api.activefollow.ActiveFollowResponseWithError
 import com.cmoney.backend2.mobileocean.service.api.addaskstocktendnecylog.AddAskStockTendencyLogResponseWithError
 import com.cmoney.backend2.mobileocean.service.api.addinterestedinarticleinfo.AddInterestedInArticleInfoResponseWithError
@@ -58,7 +58,6 @@ import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockkStatic
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.After
@@ -78,14 +77,13 @@ class MobileOceanWebImplTest {
     @MockK
     private lateinit var service: MobileOceanService
 
-    private val setting: Setting = TestSetting()
     private val gson = GsonBuilder().serializeNulls().setLenient().setPrettyPrinting().create()
     private lateinit var webImpl: MobileOceanWeb
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        webImpl = MobileOceanWebImpl(service, setting, Dispatchers.Main)
+        webImpl = MobileOceanWebImpl(service, TestSetting(), TestDispatcher())
     }
 
     @After
@@ -1158,7 +1156,8 @@ class MobileOceanWebImplTest {
         val responseBodyJson = """
             {"Error":{"Code":9001,"Message":"參數錯誤"}}
         """.trimIndent()
-        val responseBody = gson.fromJson(responseBodyJson, FollowChannelResponseWithError::class.java)
+        val responseBody =
+            gson.fromJson(responseBodyJson, FollowChannelResponseWithError::class.java)
         coEvery {
             service.followChannel(
                 authorization = any(),
@@ -1205,7 +1204,8 @@ class MobileOceanWebImplTest {
         val responseBodyJson = """
             {"Error":{"Code":9001,"Message":"參數錯誤"}}
         """.trimIndent()
-        val responseBody = gson.fromJson(responseBodyJson, LeaveChannelResponseWithError::class.java)
+        val responseBody =
+            gson.fromJson(responseBodyJson, LeaveChannelResponseWithError::class.java)
         coEvery {
             service.leaveChannel(
                 authorization = any(),
@@ -1252,7 +1252,8 @@ class MobileOceanWebImplTest {
         val responseBodyJson = """
             {"Error":{"Code":9001,"Message":"參數錯誤"}}
         """.trimIndent()
-        val responseBody = gson.fromJson(responseBodyJson, UpdateChannelIdDescriptionResponseWithError::class.java)
+        val responseBody =
+            gson.fromJson(responseBodyJson, UpdateChannelIdDescriptionResponseWithError::class.java)
         coEvery {
             service.updateChannelDescription(
                 authorization = any(),
@@ -1574,6 +1575,7 @@ class MobileOceanWebImplTest {
         Truth.assertThat(exception).isNotNull()
         Truth.assertThat(exception.code).isEqualTo(9001)
     }
+
     @Test
     fun `getStockPicture_成功`() = mainCoroutineRule.runBlockingTest {
         val response = GetStockPictureResponseWithError(
@@ -1630,8 +1632,7 @@ class MobileOceanWebImplTest {
     @Test
     fun `activeFollow_成功`() = mainCoroutineRule.runBlockingTest {
         val response = ActiveFollowResponseWithError(
-            isSuccess = true,
-            message = "已啟用過追訊"
+            isSuccess = true
         )
         coEvery {
             service.activeFollow(

@@ -1,10 +1,10 @@
 package com.cmoney.backend2.cellphone.service
 
+import com.cmoney.backend2.MainCoroutineRule
+import com.cmoney.backend2.TestDispatcher
+import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.setting.Setting
-import com.cmoney.backend2.cellphone.MainCoroutineRule
-import com.cmoney.backend2.cellphone.TestDispatcher
-import com.cmoney.backend2.cellphone.TestSetting
 import com.cmoney.backend2.cellphone.service.api.CellphoneParam
 import com.cmoney.backend2.cellphone.service.api.bindcellphone.BindCellphoneResponseBodyWithError
 import com.cmoney.backend2.cellphone.service.api.checkcellphonebindingverifycode.CheckCellphoneBindingVerifyCodeResponseBodyWithError
@@ -285,7 +285,10 @@ class CellphoneWebImplTest {
 
     @Test
     fun `bindCellphone_成功`() = mainCoroutineRule.runBlockingTest {
-        val responseBody = BindCellphoneResponseBodyWithError(verifyCodeDuration = 300, verifyCodeResendInterval = 120)
+        val responseBody = BindCellphoneResponseBodyWithError(
+            verifyCodeDuration = 300,
+            verifyCodeResendInterval = 120
+        )
         coEvery {
             service.bindCellphone(
                 authorization = any(),
@@ -297,8 +300,10 @@ class CellphoneWebImplTest {
             )
         } returns Response.success(responseBody)
 
-        val result = web.bindCellphone(CellphoneParam(
-            countryCode = "886", cellphoneNumber = "1234")
+        val result = web.bindCellphone(
+            CellphoneParam(
+                countryCode = "886", cellphoneNumber = "1234"
+            )
         )
         Truth.assertThat(result.isSuccess).isTrue()
         val data = result.getOrThrow()
@@ -322,8 +327,10 @@ class CellphoneWebImplTest {
             )
         } returns Response.success(responseBody)
 
-        val result = web.bindCellphone(CellphoneParam(
-            countryCode = "886", cellphoneNumber = "1234")
+        val result = web.bindCellphone(
+            CellphoneParam(
+                countryCode = "886", cellphoneNumber = "1234"
+            )
         )
         result.getOrThrow()
     }
@@ -331,22 +338,25 @@ class CellphoneWebImplTest {
     @Test
     fun `checkCellphoneBindingVerifyCode_成功`() = mainCoroutineRule.runBlockingTest {
         val responseBody = CheckCellphoneBindingVerifyCodeResponseBodyWithError(isSuccess = true)
-        coEvery { service.checkCellphoneBindingVerifyCode(
-            action = any(),
-            guid = any(),
-            authorization = any(),
-            appId = any(),
-            countryCode = any(),
-            cellphoneNumber = any(),
-            verifyCode = any()
-        )} returns Response.success(responseBody)
+        coEvery {
+            service.checkCellphoneBindingVerifyCode(
+                action = any(),
+                guid = any(),
+                authorization = any(),
+                appId = any(),
+                countryCode = any(),
+                cellphoneNumber = any(),
+                verifyCode = any()
+            )
+        } returns Response.success(responseBody)
 
         val result = web.checkCellphoneBindingVerifyCode(
             CellphoneParam(
                 "886",
                 "09123456789"
             ),
-            "12345")
+            "12345"
+        )
         Truth.assertThat(result.isSuccess).isTrue()
         val data = result.getOrThrow()
         Truth.assertThat(data.isSuccess).isTrue()
@@ -357,19 +367,24 @@ class CellphoneWebImplTest {
         val responseBodyJson = """
             {"Error":{"Code":9001,"Message":"新密碼不能為空"}}
         """.trimIndent()
-        val responseBody = gson.fromJson(responseBodyJson, CheckCellphoneBindingVerifyCodeResponseBodyWithError::class.java)
-        coEvery { service.checkCellphoneBindingVerifyCode(
-            action = any(),
-            guid = any(),
-            authorization = any(),
-            appId = any(),
-            countryCode = any(),
-            cellphoneNumber = any(),
-            verifyCode = any()
-        )} returns Response.success(responseBody)
+        val responseBody = gson.fromJson(
+            responseBodyJson,
+            CheckCellphoneBindingVerifyCodeResponseBodyWithError::class.java
+        )
+        coEvery {
+            service.checkCellphoneBindingVerifyCode(
+                action = any(),
+                guid = any(),
+                authorization = any(),
+                appId = any(),
+                countryCode = any(),
+                cellphoneNumber = any(),
+                verifyCode = any()
+            )
+        } returns Response.success(responseBody)
 
         val result = web.checkCellphoneBindingVerifyCode(
-            CellphoneParam("", ""),""
+            CellphoneParam("", ""), ""
         )
         result.getOrThrow()
     }

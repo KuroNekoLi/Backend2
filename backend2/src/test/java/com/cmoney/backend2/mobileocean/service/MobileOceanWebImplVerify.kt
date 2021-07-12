@@ -1,13 +1,12 @@
 package com.cmoney.backend2.mobileocean.service
 
-import com.cmoney.backend2.mobileocean.MainCoroutineRule
-import com.cmoney.backend2.mobileocean.TestSetting
+import com.cmoney.backend2.MainCoroutineRule
+import com.cmoney.backend2.TestDispatcher
+import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.mobileocean.service.api.createarticletoocean.requestbody.SubmitAdviceParam
 import io.mockk.MockKAnnotations
 import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
-import io.mockk.mockk
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.After
@@ -25,14 +24,13 @@ class MobileOceanWebImplVerify {
     val mainCoroutineRule = MainCoroutineRule()
 
     @MockK
-    private val service = mockk<MobileOceanService>()
-    private val setting = TestSetting()
+    private lateinit var service: MobileOceanService
     private lateinit var webImpl: MobileOceanWeb
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        webImpl = MobileOceanWebImpl(service, setting, Dispatchers.Main)
+        webImpl = MobileOceanWebImpl(service, TestSetting(), TestDispatcher())
     }
 
     @After
@@ -41,7 +39,7 @@ class MobileOceanWebImplVerify {
     }
 
     @Test
-    fun `createArticleToOcean_成功`() = mainCoroutineRule.runBlockingTest{
+    fun `createArticleToOcean_成功`() = mainCoroutineRule.runBlockingTest {
 
         webImpl.createArticleToOcean(
             SubmitAdviceParam(
@@ -53,7 +51,17 @@ class MobileOceanWebImplVerify {
         )
 
         coVerify {
-            service.createArticleToOcean(any(),any(),any(),any(),any(),any(),any(),any(),any())
+            service.createArticleToOcean(
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
         }
     }
 }

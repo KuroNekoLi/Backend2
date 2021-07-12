@@ -1,9 +1,9 @@
 package com.cmoney.backend2.chipk.service
 
+import com.cmoney.backend2.MainCoroutineRule
+import com.cmoney.backend2.TestDispatcher
+import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.response.dtno.DtnoWithError
-import com.cmoney.backend2.chipk.FakeSetting
-import com.cmoney.backend2.chipk.MainCoroutineRule
-import com.cmoney.backend2.chipk.TestDispatcher
 import com.cmoney.backend2.chipk.service.api.getOfficialStockPickData.OfficialStock
 import com.cmoney.backend2.chipk.service.api.getOfficialStockPickData.OfficialStockInfoWithError
 import com.google.common.truth.Truth
@@ -32,13 +32,13 @@ class ChipKWebImplTest {
 
     @MockK
     private val chipKService = mockk<ChipKService>()
-    private val setting = FakeSetting()
     private val gson = Gson()
-    private val chipKWeb: ChipKWeb = ChipKWebImpl(setting, chipKService, gson, TestDispatcher())
+    private lateinit var chipKWeb: ChipKWeb
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
+        chipKWeb = ChipKWebImpl(TestSetting(), chipKService, gson, TestDispatcher())
     }
 
     @Test

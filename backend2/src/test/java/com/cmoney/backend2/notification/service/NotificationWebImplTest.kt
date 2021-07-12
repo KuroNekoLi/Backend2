@@ -1,11 +1,11 @@
 package com.cmoney.backend2.notification.service
 
+import com.cmoney.backend2.MainCoroutineRule
+import com.cmoney.backend2.TestDispatcher
+import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.response.error.CMoneyError
 import com.cmoney.backend2.base.model.setting.Setting
-import com.cmoney.backend2.notification.MainCoroutineRule
-import com.cmoney.backend2.notification.TestDispatcher
-import com.cmoney.backend2.notification.TestSetting
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
@@ -69,7 +69,7 @@ class NotificationWebImplTest {
     fun `updateArrivedCount_失敗_ServerException`() = mainCoroutineRule.runBlockingTest {
         val errorBody = gson.toJson(
             CMoneyError(
-                CMoneyError.Detail(
+                detail = CMoneyError.Detail(
                     code = 101
                 )
             )
@@ -111,7 +111,7 @@ class NotificationWebImplTest {
     fun `updateClickCount_失敗_ServerException`() = mainCoroutineRule.runBlockingTest {
         val errorBody = gson.toJson(
             CMoneyError(
-                CMoneyError.Detail(
+                detail = CMoneyError.Detail(
                     code = 101
                 )
             )
@@ -148,7 +148,7 @@ class NotificationWebImplTest {
     fun `updateGuestPushToken_失敗_ServerException`() = mainCoroutineRule.runBlockingTest {
         val errorBody = gson.toJson(
             CMoneyError(
-                CMoneyError.Detail(
+                detail = CMoneyError.Detail(
                     code = 101
                 )
             )
@@ -180,7 +180,7 @@ class NotificationWebImplTest {
     fun `updateMemberPushToken_失敗_ServerException`() = mainCoroutineRule.runBlockingTest {
         val errorBody = gson.toJson(
             CMoneyError(
-                CMoneyError.Detail(
+                detail = CMoneyError.Detail(
                     code = 101
                 )
             )
