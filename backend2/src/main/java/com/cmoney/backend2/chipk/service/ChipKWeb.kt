@@ -17,6 +17,50 @@ interface ChipKWeb {
     ): Result<DtnoData>
 
     /**
+     * 服務6-6. 要求大盤外資的資料(TWA00)
+     * @param tickCount 根數
+     * @return 請使用DtnoData.toListOfSomething 轉換成自定義的物件
+     */
+    suspend fun getIndexForeignInvestment(
+        tickCount: Int
+    ): Result<DtnoData>
+
+    /**
+     * 服務6-7. 要求大盤主力的資料(TWA00)
+     * @param tickCount 根數
+     * @return 請使用DtnoData.toListOfSomething 轉換成自定義的物件
+     */
+    suspend fun getIndexMain(
+        tickCount: Int
+    ): Result<DtnoData>
+
+    /**
+     * 服務6-8. 要求大盤資券資料(TWA00)
+     * @param tickCount 根數
+     * @return 請使用DtnoData.toListOfSomething 轉換成自定義的物件
+     */
+    suspend fun getIndexFunded(
+        tickCount: Int
+    ): Result<DtnoData>
+
+    /**
+     * 服務6-10. 取得加權指數融資維持率
+     * @return 請使用DtnoData.toListOfSomething 轉換成自定義的物件
+     */
+    suspend fun getCreditRate(): Result<DtnoData>
+
+    /**
+     * 服務6-11. 取得指數技術圖
+     * @param commKey 股票代號
+     * @param timeRange 1-日, 2-週, 3-月
+     * @return 請使用DtnoData.toListOfSomething 轉換成自定義的物件
+     */
+    suspend fun getIndexCalculateRate(
+        commKey: String,
+        timeRange: Int
+    ): Result<DtnoData>
+
+    /**
      * 服務6-12. 取得K圖資料
      * @param commKey 股票代號
      * @param timeRange 1-日, 2-週, 3-月
