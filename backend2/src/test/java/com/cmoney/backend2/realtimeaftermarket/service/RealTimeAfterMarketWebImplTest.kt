@@ -76,7 +76,7 @@ class RealTimeAfterMarketWebImplTest {
                     1,
                     listOf(
                         ProductInfo(
-                            commkey = "MYMF1",
+                            commKey = "MYMF1",
                             name = "小道瓊期貨",
                             countryCode = 840,
                             isShowPreviousClosePr = false
@@ -103,7 +103,7 @@ class RealTimeAfterMarketWebImplTest {
         Truth.assertThat(product.areaId).isEqualTo(1)
         Truth.assertThat(product.productInfos?.size).isEqualTo(1)
         val productInfo = product.productInfos!!.first()
-        Truth.assertThat(productInfo.commkey).isEqualTo("MYMF1")
+        Truth.assertThat(productInfo.commKey).isEqualTo("MYMF1")
         Truth.assertThat(productInfo.name).isEqualTo("小道瓊期貨")
         Truth.assertThat(productInfo.countryCode).isEqualTo(840)
         Truth.assertThat(productInfo.isShowPreviousClosePr).isFalse()
