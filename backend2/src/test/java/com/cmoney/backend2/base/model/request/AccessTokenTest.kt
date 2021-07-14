@@ -25,6 +25,7 @@ class AccessTokenTest{
         Truth.assertThat(accessToken.getExpiredTime()).isEqualTo(1603350179)
         Truth.assertThat(accessToken.getClientId()).isEqualTo("cmoneyapi")
         Truth.assertThat(accessToken.getIssuer()).isEqualTo("https://www.cmoney.tw")
+        Truth.assertThat(accessToken.getIsGuest()).isFalse()
     }
 
     @Test
@@ -37,6 +38,7 @@ class AccessTokenTest{
         Truth.assertThat(actual.getExpiredTime()).isEqualTo(0)
         Truth.assertThat(actual.getIssuer()).isEmpty()
         Truth.assertThat(actual.getClientId()).isEmpty()
+        Truth.assertThat(actual.getIsGuest()).isFalse()
     }
 
     @Test
@@ -49,6 +51,7 @@ class AccessTokenTest{
         Truth.assertThat(actual.getExpiredTime()).isEqualTo(0)
         Truth.assertThat(actual.getIssuer()).isEmpty()
         Truth.assertThat(actual.getClientId()).isEmpty()
+        Truth.assertThat(actual.getIsGuest()).isFalse()
     }
 
     @Test
@@ -61,6 +64,7 @@ class AccessTokenTest{
         Truth.assertThat(accessToken.getExpiredTime()).isEqualTo(1603350179)
         Truth.assertThat(accessToken.getClientId()).isEqualTo("cmoneyapi")
         Truth.assertThat(accessToken.getIssuer()).isEqualTo("https://www.cmoney.tw")
+        Truth.assertThat(accessToken.getIsGuest()).isTrue()
     }
 
     @Test

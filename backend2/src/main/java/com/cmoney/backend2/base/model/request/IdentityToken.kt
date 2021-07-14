@@ -6,7 +6,7 @@ import org.json.JSONObject
 /**
  * 會員資訊辨識Token
  */
-class IdentityToken(originContent: String = "{}") : JwtToken<IdentityToken.Payload>(originContent) {
+class IdentityToken(originContent: String = CONTENT_DEFAULT) : JwtToken<IdentityToken.Payload>(originContent) {
     private val payload: Payload
 
     init {
@@ -22,7 +22,8 @@ class IdentityToken(originContent: String = "{}") : JwtToken<IdentityToken.Paylo
             issuedTime = payloadJson.optLong("nbf"),
             expiredTime = payloadJson.optLong("exp"),
             issuer = payloadJson.optString("iss"),
-            clientId = payloadJson.optString("aud")
+            clientId = payloadJson.optString("aud"),
+            isNewUser = payloadJson.optBoolean("is_new_user", false)
         )
     }
 
@@ -48,6 +49,8 @@ class IdentityToken(originContent: String = "{}") : JwtToken<IdentityToken.Paylo
 
     fun getClientId() = payload.clientId
 
+    fun getIsNewUser() = payload.isNewUser
+
     /**
      * 載體
      *
@@ -58,6 +61,7 @@ class IdentityToken(originContent: String = "{}") : JwtToken<IdentityToken.Paylo
      * @property expiredTime 過期時間
      * @property issuer 發行者
      * @property clientId 客戶端ID
+     * @property isNewUser 是否為新註冊用戶
      */
     data class Payload(
         val memberId: String,
@@ -66,6 +70,7 @@ class IdentityToken(originContent: String = "{}") : JwtToken<IdentityToken.Paylo
         val issuedTime: Long,
         val expiredTime: Long,
         val issuer: String,
-        val clientId: String
+        val clientId: String,
+        val isNewUser: Boolean
     )
 }
