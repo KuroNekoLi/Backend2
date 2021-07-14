@@ -12,7 +12,6 @@ import com.cmoney.backend2.forumocean.service.api.article.createquestion.CreateQ
 import com.cmoney.backend2.forumocean.service.api.article.update.UpdateArticleHelper
 import com.cmoney.backend2.forumocean.service.api.channel.channelname.ChannelNameBuilder
 import com.cmoney.backend2.forumocean.service.api.channel.channelname.ChannelNameBuilder.Companion.createChannelNameList
-import com.cmoney.backend2.forumocean.service.api.channel.getmemberstatistics.GetMemberStatisticsResponseBody
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentRequestBody
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.comment.update.UpdateCommentHelper
@@ -20,7 +19,6 @@ import com.cmoney.backend2.forumocean.service.api.group.create.CreateGroupRespon
 import com.cmoney.backend2.forumocean.service.api.group.getapprovals.GroupPendingApproval
 import com.cmoney.backend2.forumocean.service.api.group.getmember.GroupMember
 import com.cmoney.backend2.forumocean.service.api.group.update.UpdateGroupRequestBody
-import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.ReactionInfo
 import com.cmoney.backend2.forumocean.service.api.official.get.OfficialChannelInfo
 import com.cmoney.backend2.forumocean.service.api.officialsubscriber.getofficialsubscribedcount.GetOfficialSubscribedCountResponseBody
 import com.cmoney.backend2.forumocean.service.api.officialsubscriber.getsubscribedcount.GetSubscribedCountResponseBody
@@ -32,6 +30,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.request.mediatype.Med
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.groupresponse.GroupResponseBody
+import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.ReactionInfo
 import com.cmoney.backend2.forumocean.service.api.vote.get.VoteInfo
 import com.google.gson.Gson
 import kotlinx.coroutines.withContext
@@ -305,7 +304,7 @@ class ForumOceanWebImpl(
         articleId: Long,
         commentIndex: Long,
         reactionType: ReactionType
-    ): Result<Unit> = withContext(dispatcher) {
+    ): Result<Unit> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.reactComment(
                 authorization = setting.accessToken.createAuthorizationBearer(),
