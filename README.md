@@ -2,11 +2,15 @@
 
 [教學參考](http://192.168.99.115/books/mobile-android/page/%E6%96%B0%E5%A2%9E%E4%B8%80%E6%94%AFapi)
 
+## MIGRATE
+
+- [3.x.x -> 4.0.0](documents/migrate/3.x.x_4.0.0.md)
+
 ## 引用
 
 - build.gradle
 
-```
+```groovy
 allprojects {
     repositories {
 		google()
@@ -19,7 +23,7 @@ allprojects {
 
 - app/build.gradle
 
-```
+```groovy
 android {
 	compileOptions {
         sourceCompatibility = '1.8'
@@ -32,20 +36,20 @@ android {
     }
 }
 dependecies {
-	implementation 'com.cmoney.backend2:backend2:目前最新版'
-	implementation("com.cmoney.logdatarecorder:logdatarecorder-data:1.0.3")
-	implementation("com.cmoney.logdatarecorder:logdatarecorder-domain:1.0.3")
+	implementation 'com.cmoney.backend2:backend2:4.0.0'
+	implementation("com.cmoney.logdatarecorder:logdatarecorder-data:1.1.0")
+	implementation("com.cmoney.logdatarecorder:logdatarecorder-domain:1.1.0")
 }
 ```
 
 - 指定debug/release
 
-```
+```groovy
 dependecies {
-	releaseImplementation 'com.cmoney.backend2:backend2:目前最新版'
-	debugImplementation 'com.cmoney.backend2:backend2-debug:目前最新版'
-	implementation("com.cmoney.logdatarecorder:logdatarecorder-data:1.0.3")
-	implementation("com.cmoney.logdatarecorder:logdatarecorder-domain:1.0.3")
+	releaseImplementation 'com.cmoney.backend2:backend2:4.0.0'
+	debugImplementation 'com.cmoney.backend2:backend2-debug:4.0.0'
+	implementation("com.cmoney.logdatarecorder:logdatarecorder-data:1.1.0")
+	implementation("com.cmoney.logdatarecorder:logdatarecorder-domain:1.1.0")
 }
 ```
 
@@ -72,12 +76,13 @@ dependecies {
 
 為了紀錄Api行為，需要在Application加入初始化設定。
 
-```
+```kotlin
 class SampleApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
         LogDataRecorder.initialization(this) {
+            isEnable = 是否開啟紀錄
             appId = 你的AppId
             platform = com.cmoney.domain_logdatarecorder.data.information.Platform.Android
         }
@@ -90,7 +95,7 @@ class SampleApplication : Application() {
 
 以下這些StringQualifier已被使用
 
-```
+```kotlin
 val BACKEND2_GSON = named("backend2_gson")
 val BACKEND2_RETROFIT = named("backend2_retrofit")
 val BACKEND2_SETTING = named("backend2_setting")
@@ -196,7 +201,7 @@ AuthorizationServer/Authorization/ExpiredTime/{type}/{subjectId}
 
 Setting.domainUrl基本上不會在Application使用，會在Activity，因為需透過RemoteConfig設定。
 
-```
+```kotlin
 get<Setting>(BACKEND2_SETTING).apply {
 	appId = 2
 	clientId = "cmchipkmobile"
@@ -210,7 +215,7 @@ get<Setting>(BACKEND2_SETTING).apply {
 
 Base模組預設實作的Setting是沒有加密的SharedPreference，如果需要加密需自己Override(目前登入模組已實作)，Koin的DI設定。
 
-```
+```kotlin
 val overrideSettingModule = module {
     single<Setting>(
         qualifier = BACKEND2_SETTING,
@@ -225,17 +230,17 @@ val overrideSettingModule = module {
 
 使用SharedPreference為存儲體，避免記憶體不夠時回收。如果要使用記憶體，必須考慮到欄位是一個常數才可以用，不然回收後會使用預設值，不會使用更改後的值。
 
-```
-class InsecuritySetting(InsecuritySharedPreference): Setting {
-	//使用SharedPreference
+```kotlin
+class InsecuritySetting(InsecuritySharedPreference: SharedPreferences): Setting {
+	// 使用SharedPreference
 	override var domainUrl: String = InsecuritySharedPreference.domainUrl
 		set(value) {
 		    InsecuritySharedPreference.domainUrl = value
 		    field = value
 		}
-	//使用記憶體
+	// 使用記憶體
 	override var appId: Int = 2
-	...
+	// ...
 }
 ```
 
@@ -282,38 +287,51 @@ val setting = getKoin().get<Setting>(BACKEND2_SETTING)
 
 #### 在需要驗證的Retrofit的API中，加入Header的Authorization欄位
 
-```
+```kotlin
 @GET(value = "identity/session/isLatest")
-    suspend fun isTokenLatest(
-        @Header("Authorization")
-        accessToken: String
-    ): Response<IsLatestResponseBodyWithError>
+suspend fun isTokenLatest(
+    @Header("Authorization")
+    accessToken: String
+): Response<IsLatestResponseBodyWithError>
+```
+
+#### 若是API PATH相同，服務是以參數進行區分(例如: action)，請全小寫
+
+```kotlin
+@FormUrlEncoded
+@POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
+suspend fun getAuthStatus(
+    @Header("Authorization") authorization: String,
+    @Field("Action") action: String = "getauth",
+    @Field("Guid") guid: String,
+    @Field("AppId") appId: Int
+): Response<GetAuthResponseBody>
 ```
 
 #### 在實作的WebImpl中，產生Authorization Bear格式，並傳給Retrofit Service。
 
 * 傳入實作的設定物件
 
-```
+```kotlin
 class IdentityProviderWebImpl(
     private val service: IdentityProviderService,
     private val gson: Gson,
     private val setting: Setting,
     private val dispatcherProvider: DispatcherProvider = DefaultDispatcherProvider()
 ) : IdentityProviderWeb {
-	...
+	// ...
 }
 ```
 
 * 產生Authorization Bear格式：`AccessToken.createAuthorizationBearer()`
 
-```
- override suspend fun isTokenLatest(): Result<Boolean> = withContext(dispatcherProvider.io()) {
+```kotlin
+override suspend fun isTokenLatest(): Result<Boolean> = withContext(dispatcherProvider.io()) {
 	runCatching {
 		val responseBody = service.isTokenLatest(
 			accessToken = setting.accessToken.createAuthorizationBearer()
 		)
-		...         
+		// ...         
 	}
 }
 
@@ -448,22 +466,22 @@ code是204的狀態的狀態，並且沒有[ResponseBody]。
 
 * 在Retrofit回傳介面使用Response<Void>
 
-```
-@POST(RUL)
+```kotlin
+@POST(URL)
 suspend fun action(
-	...
+	// ...
 ): Response<Void>
 ```
 
 * 在WebImpl中使用handleNoContent(Gson)解析ResponseBody，回傳介面使用Result<Unit>
 
-```
- override suspend fun action(): Result<Unit> = withContext(dispatcher.io()) {
-        runCatching {
-            val response = ...
-            return@runCatching response.handleNoContent(gson)
-        }
+```kotlin
+override suspend fun action(): Result<Unit> = withContext(dispatcher.io()) {
+    runCatching {
+        val response = // ...
+        return@runCatching response.handleNoContent(gson)
     }
+}
 ```
 
 ##### 第三種：當上面兩種都不符合時
@@ -474,16 +492,16 @@ suspend fun action(
 
 * 在Retrofit回傳介面使用Response<ResponseBody>
 
-```
-@POST(RUL)
+```kotlin
+@POST(URL)
 suspend fun action(
-	...
+	// ...
 ): Response<ResponseBody>
 ```
 
 * 在WebImpl中使用handleHttpStatusCode<Response<ResponseBody>。
 
-```
+```kotlin
  val response = Response.success(body.toResponseBody())
  response.handleHttpStatusCode<Response<ResponseBody>, MockResponseBody?>(gson) { code: Int, responseBody: ResponseBody? ->
 	return@handleHttpStatusCode when(code) {
@@ -509,7 +527,7 @@ suspend fun action(
 需要在服務介面的方法上加上註譯`@RecordApi`，代表要記錄這個API的行為。    
 `@RecordApi`有一個可選的參數`cmoneyAction`，預設空字串，代表不會紀錄此API的發送請求中的action。
 
-```
+```kotlin
 @RecordApi
 @GET(value = "identity/session/isLatest")
 suspend fun isTokenLatest(
@@ -518,9 +536,9 @@ suspend fun isTokenLatest(
 ): Response<IsLatestResponseBodyWithError>
 ```
 
-目前MobileService部分API以`Action`作為服務的分類故需要加上`cmoneyAction`參數以利後續資料分析。
+目前MobileService部分API以`Action`作為服務的分類故需要加上`cmoneyAction`參數以利後續資料分析，請全小寫。
 
-```
+```kotlin
 /**
  * 服務7. 取得帳號資訊
  *
