@@ -6,5 +6,7 @@ data class CommodityTagInfo(
     @SerializedName("commodityKey")
     val commodityKey : String?,
     @SerializedName("bullOrBear")
-    val bullOrBear : BullOrBearInfo?
+    val bullOrBear : BullOrBearInfo?,
+    @SerializedName("type")
+    val type : StockType?
 )

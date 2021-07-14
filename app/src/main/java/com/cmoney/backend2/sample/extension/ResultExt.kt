@@ -12,3 +12,15 @@ inline fun <reified T> Result<T>.logResponse(tag: String) {
         }
     )
 }
+
+inline fun <reified T>Result<T>.logResponse(tag: String,successCallback : (T)-> Unit) {
+    this.fold(
+        {
+            successCallback.invoke(it)
+            Log.d(tag, "response: $it")
+        },
+        {
+            it.printStackTrace()
+        }
+    )
+}

@@ -10,14 +10,15 @@ import com.cmoney.backend2.forumocean.service.api.article.createquestion.CreateQ
 import com.cmoney.backend2.forumocean.service.api.article.update.UpdateArticleHelper
 import com.cmoney.backend2.forumocean.service.api.channel.channelname.ChannelNameBuilder
 import com.cmoney.backend2.forumocean.service.api.channel.channelname.ChannelNameBuilder.Companion.createChannelNameList
+import com.cmoney.backend2.forumocean.service.api.channel.getmemberstatistics.GetMemberStatisticsResponseBody
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentRequestBody
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBody
-import com.cmoney.backend2.forumocean.service.api.comment.react.ReactCommentRequestBody
 import com.cmoney.backend2.forumocean.service.api.comment.update.UpdateCommentHelper
 import com.cmoney.backend2.forumocean.service.api.group.create.CreateGroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.getapprovals.GroupPendingApproval
 import com.cmoney.backend2.forumocean.service.api.group.getmember.GroupMember
 import com.cmoney.backend2.forumocean.service.api.group.update.UpdateGroupRequestBody
+import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.ReactionInfo
 import com.cmoney.backend2.forumocean.service.api.official.get.OfficialChannelInfo
 import com.cmoney.backend2.forumocean.service.api.officialsubscriber.getofficialsubscribedcount.GetOfficialSubscribedCountResponseBody
 import com.cmoney.backend2.forumocean.service.api.officialsubscriber.getsubscribedcount.GetSubscribedCountResponseBody
@@ -171,6 +172,15 @@ class ForumOceanWebImpl(
 
     //endregion
 
+    override suspend fun getMemberStatistics(memberId: Long) = withContext(ioDispatcher) {
+        kotlin.runCatching {
+            service.getMemberStatistics(
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                memberId = memberId
+            ).checkResponseBody(jsonParser)
+        }
+    }
+
     override suspend fun getChannelsArticleByWeight(
         channelNameBuilderList: List<ChannelNameBuilder>,
         weight: Long,
@@ -252,6 +262,17 @@ class ForumOceanWebImpl(
         }
     }
 
+    override suspend fun getGroupManagerComments(
+        articleId: Long
+    ): Result<List<CommentResponseBody>> = withContext(ioDispatcher) {
+        kotlin.runCatching {
+            service.getGroupManagerComments(
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                articleId = articleId
+            ).checkResponseBody(jsonParser)
+        }
+    }
+
     override suspend fun updateComment(
         articleId: Long,
         commentId: Long,
@@ -269,7 +290,7 @@ class ForumOceanWebImpl(
         }
 
 
-    override suspend fun deleteComment(articleId: Long, commentIndex: Int): Result<Unit> =
+    override suspend fun deleteComment(articleId: Long, commentIndex: Long): Result<Unit> =
         withContext(ioDispatcher) {
             kotlin.runCatching {
                 service.deleteComment(
@@ -282,19 +303,15 @@ class ForumOceanWebImpl(
 
     override suspend fun reactionComment(
         articleId: Long,
-        commentIndex: Int,
-        reactionType: ReactionType,
-        originalReactionType: ReactionType?
+        commentIndex: Long,
+        reactionType: ReactionType
     ): Result<Unit> = withContext(ioDispatcher) {
         kotlin.runCatching {
             service.reactComment(
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 articleId = articleId,
                 commentIndex = commentIndex,
-                body = ReactCommentRequestBody(
-                    reactionType = reactionType.value,
-                    originalReactionType = originalReactionType?.value
-                )
+                reactionType = reactionType.value
             ).handleNoContent(jsonParser)
         }
     }
@@ -302,13 +319,19 @@ class ForumOceanWebImpl(
 
     override suspend fun getReactionDetail(
         articleId: Long,
-        commentIndex: Int
-    ): Result<Map<String?, List<Long>?>> = withContext(ioDispatcher) {
+        commentIndex: Long,
+        reactions: List<ReactionType>,
+        skipCount: Int,
+        takeCount: Int
+    ): Result<List<ReactionInfo>> = withContext(ioDispatcher) {
         kotlin.runCatching {
             service.getReactionDetail(
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 articleId = articleId,
-                commentIndex = commentIndex
+                commentIndex = commentIndex,
+                reactions = reactions.joinToString { it.value.toString() },
+                skipCount = skipCount,
+                takeCount = takeCount
             ).checkResponseBody(jsonParser)
         }
     }
@@ -316,15 +339,13 @@ class ForumOceanWebImpl(
 
     override suspend fun removeReactionComment(
         articleId: Long,
-        commentIndex: Int,
-        reactionType: ReactionType
+        commentIndex: Long
     ): Result<Unit> = withContext(ioDispatcher) {
         kotlin.runCatching {
             service.removeCommentReaction(
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 articleId = articleId,
-                commentIndex = commentIndex,
-                originalReactionType = reactionType.value
+                commentIndex = commentIndex
             ).handleNoContent(jsonParser)
         }
     }
@@ -343,13 +364,15 @@ class ForumOceanWebImpl(
     override suspend fun getArticleReactionDetail(
         articleId: Long,
         reactionTypeList: List<ReactionType>,
+        skipCount: Int,
         count: Int
-    ): Result<Map<String?, List<Long>?>> = withContext(ioDispatcher) {
+    ): Result<List<ReactionInfo>> = withContext(ioDispatcher) {
         kotlin.runCatching {
             service.getArticleReactionDetail(
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 articleId = articleId,
                 reactions = reactionTypeList.joinToString { it.value.toString() },
+                skipCount = skipCount,
                 count = count
             ).checkResponseBody(jsonParser)
         }
@@ -426,14 +449,15 @@ class ForumOceanWebImpl(
             }
         }
 
-    override suspend fun createGroup(groupName: String): Result<CreateGroupResponseBody> = withContext(ioDispatcher) {
-        kotlin.runCatching {
-            service.createGroup(
-                authorization = setting.accessToken.createAuthorizationBearer(),
-                groupName = groupName
-            ).checkResponseBody(jsonParser)
+    override suspend fun createGroup(groupName: String): Result<CreateGroupResponseBody> =
+        withContext(ioDispatcher) {
+            kotlin.runCatching {
+                service.createGroup(
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    groupName = groupName
+                ).checkResponseBody(jsonParser)
+            }
         }
-    }
 
     override suspend fun updateGroup(groupId: Long, body: UpdateGroupRequestBody): Result<Unit> =
         withContext(ioDispatcher) {
@@ -479,12 +503,16 @@ class ForumOceanWebImpl(
 
     override suspend fun getMembers(
         groupId: Long,
+        offset: Int,
+        fetch: Int,
         includeManagerInfo: Boolean
     ): Result<List<GroupMember>> = withContext(ioDispatcher) {
         kotlin.runCatching {
             service.getMembers(
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 groupId = groupId,
+                offset = offset,
+                fetch = fetch,
                 includeManagerInfo = includeManagerInfo
             ).checkResponseBody(jsonParser)
         }
@@ -543,6 +571,24 @@ class ForumOceanWebImpl(
             service.leave(
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 groupId = groupId
+            ).handleNoContent(jsonParser)
+        }
+    }
+
+    override suspend fun pinArticle(articleId: Long) = withContext(ioDispatcher) {
+        kotlin.runCatching {
+            service.pinArticle(
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                articleId = articleId
+            ).handleNoContent(jsonParser)
+        }
+    }
+
+    override suspend fun unpinArticle(articleId: Long) = withContext(ioDispatcher) {
+        kotlin.runCatching {
+            service.unpinArticle(
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                articleId = articleId
             ).handleNoContent(jsonParser)
         }
     }
@@ -687,7 +733,7 @@ class ForumOceanWebImpl(
         }
     }
 
-    override suspend fun getBlockers()= withContext(ioDispatcher) {
+    override suspend fun getBlockers() = withContext(ioDispatcher) {
         kotlin.runCatching {
             service.getBlockers(
                 authorization = setting.accessToken.createAuthorizationBearer()
@@ -695,13 +741,18 @@ class ForumOceanWebImpl(
         }
     }
 
-    override suspend fun createReport(articleId: Long, reason: ReasonType): Result<Unit> =
+    override suspend fun createReport(
+        articleId: Long,
+        reason: ReasonType,
+        commentId: Long?
+    ): Result<Unit> =
         withContext(ioDispatcher) {
             kotlin.runCatching {
                 service.createReport(
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     articleId = articleId,
-                    reasonType = reason.value
+                    reasonType = reason.value,
+                    commentId = commentId
                 ).handleNoContent(jsonParser)
             }
         }

@@ -5,9 +5,9 @@ import com.cmoney.backend2.forumocean.service.api.article.create.CreateArticleRe
 import com.cmoney.backend2.forumocean.service.api.article.create.variable.Content
 import com.cmoney.backend2.forumocean.service.api.article.createquestion.CreateQuestionResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.update.UpdateArticleRequestBody
+import com.cmoney.backend2.forumocean.service.api.channel.getmemberstatistics.GetMemberStatisticsResponseBody
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentRequestBody
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBody
-import com.cmoney.backend2.forumocean.service.api.comment.react.ReactCommentRequestBody
 import com.cmoney.backend2.forumocean.service.api.comment.update.UpdateCommentRequestBody
 import com.cmoney.backend2.forumocean.service.api.group.create.CreateGroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.getapprovals.GroupPendingApproval
@@ -20,6 +20,7 @@ import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.groupresponse.GroupResponseBody
+import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.ReactionInfo
 import com.cmoney.backend2.forumocean.service.api.vote.get.VoteInfo
 import retrofit2.Response
 import retrofit2.http.*
@@ -168,6 +169,13 @@ interface ForumOceanService {
     ): Response<Void>
 
     @RecordApi
+    @GET("ForumOcean/api/Channel/GetMemberStatistics/{memberId}")
+    suspend fun getMemberStatistics(
+        @Header("Authorization") authorization: String,
+        @Path("memberId") memberId: Long
+    ) : Response<GetMemberStatisticsResponseBody>
+
+    @RecordApi
     @GET("ForumOcean/api/Channel/GetChannelsArticleByWeight")
     suspend fun getChannelsArticleByWeight(
         @Header("Authorization") authorization: String,
@@ -216,6 +224,13 @@ interface ForumOceanService {
     ): Response<List<CommentResponseBody>>
 
     @RecordApi
+    @GET("ForumOcean/api/Comment/GetGroupManagerComments/{articleId}")
+    suspend fun getGroupManagerComments(
+        @Header("Authorization") authorization: String,
+        @Path("articleId") articleId: Long
+    ): Response<List<CommentResponseBody>>
+
+    @RecordApi
     @PUT("ForumOcean/api/Comment/Update/{articleId}/{commentId}")
     suspend fun updateComment(
         @Header("Authorization") authorization: String,
@@ -229,7 +244,7 @@ interface ForumOceanService {
     suspend fun deleteComment(
         @Header("Authorization") authorization: String,
         @Path("articleId") articleId: Long,
-        @Path("commentIndex") commentIndex: Int
+        @Path("commentIndex") commentIndex: Long
     ): Response<Void>
 
     @RecordApi
@@ -237,8 +252,8 @@ interface ForumOceanService {
     suspend fun reactComment(
         @Header("Authorization") authorization: String,
         @Path("articleId") articleId: Long,
-        @Path("commentIndex") commentIndex: Int,
-        @Body body: ReactCommentRequestBody
+        @Path("commentIndex") commentIndex: Long,
+        @Query("reactionType") reactionType : Int
     ): Response<Void>
 
     @RecordApi
@@ -246,16 +261,18 @@ interface ForumOceanService {
     suspend fun getReactionDetail(
         @Header("Authorization") authorization: String,
         @Path("articleId") articleId: Long,
-        @Path("commentIndex") commentIndex: Int
-    ): Response<Map<String?, List<Long>?>>
+        @Path("commentIndex") commentIndex: Long,
+        @Query("reactions") reactions : String,
+        @Query("skipCount") skipCount : Int,
+        @Query("takeCount") takeCount : Int
+    ): Response<List<ReactionInfo>>
 
     @RecordApi
     @DELETE("ForumOcean/api/CommentInteractive/RemoveReaction/{articleId}/{commentIndex}")
     suspend fun removeCommentReaction(
         @Header("Authorization") authorization: String,
         @Path("articleId") articleId: Long,
-        @Path("commentIndex") commentIndex: Int,
-        @Query("originalReactionType") originalReactionType: Int
+        @Path("commentIndex") commentIndex: Long
     ): Response<Void>
 
     @RecordApi
@@ -272,8 +289,17 @@ interface ForumOceanService {
         @Header("Authorization") authorization: String,
         @Path("articleId") articleId: Long,
         @Query("reactions") reactions: String,
-        @Query("count") count: Int
-    ): Response<Map<String?, List<Long>?>>
+        @Query("skipCount") skipCount: Int,
+        @Query("takeCount") count: Int
+    ): Response<List<ReactionInfo>>
+
+    @RecordApi
+    @POST("ForumOcean/api/Interactive/Donate/{articleId}")
+    suspend fun createArticleDonate(
+        @Header("Authorization") authorization: String,
+        @Path("articleId") articleId: Long,
+        @Query("donateValue") donateValue: Int
+    ): Response<Void>
 
     @RecordApi
     @DELETE("ForumOcean/api/Interactive/RemoveReaction/{articleId}")
@@ -287,14 +313,6 @@ interface ForumOceanService {
     suspend fun createArticleInterest(
         @Header("Authorization") authorization: String,
         @Path("articleId") articleId: Long
-    ): Response<Void>
-
-    @RecordApi
-    @POST("ForumOcean/api/Interactive/Donate/{articleId}")
-    suspend fun createArticleDonate(
-        @Header("Authorization") authorization: String,
-        @Path("articleId") articleId: Long,
-        @Query("donateValue") donateValue: Int
     ): Response<Void>
 
     @RecordApi
@@ -368,6 +386,8 @@ interface ForumOceanService {
     suspend fun getMembers(
         @Header("Authorization") authorization: String,
         @Path("groupId") groupId: Long,
+        @Query("offset") offset : Int,
+        @Query("fetch") fetch : Int,
         @Query("includeManagerInfo") includeManagerInfo: Boolean
     ): Response<List<GroupMember>>
 
@@ -409,6 +429,20 @@ interface ForumOceanService {
     suspend fun leave(
         @Header("Authorization") authorization: String,
         @Path("groupId") groupId: Long
+    ): Response<Void>
+
+    @RecordApi
+    @POST("ForumOcean/api/GroupArticle/PinArticle/{articleId}")
+    suspend fun pinArticle(
+        @Header("Authorization") authorization: String,
+        @Path("articleId") articleId: Long
+    ): Response<Void>
+
+    @RecordApi
+    @DELETE("ForumOcean/api/GroupArticle/UnpinArticle/{articleId}")
+    suspend fun unpinArticle(
+        @Header("Authorization") authorization: String,
+        @Path("articleId") articleId: Long
     ): Response<Void>
 
     @RecordApi
@@ -525,7 +559,8 @@ interface ForumOceanService {
     suspend fun createReport(
         @Header("Authorization") authorization: String,
         @Path("articleId") articleId: Long,
-        @Query("reasonType") reasonType : Int
+        @Query("reasonType") reasonType : Int,
+        @Query("commentId") commentId :Long?
     ): Response<Void>
 
     @RecordApi

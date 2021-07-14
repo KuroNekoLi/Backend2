@@ -7,6 +7,7 @@ import com.cmoney.backend2.forumocean.service.ForumOceanWeb
 import com.cmoney.backend2.forumocean.service.api.article.create.variable.Content
 import com.cmoney.backend2.forumocean.service.api.article.create.variable.commoditytag.BullOrBear
 import com.cmoney.backend2.forumocean.service.api.article.create.variable.commoditytag.CommodityTag
+import com.cmoney.backend2.forumocean.service.api.article.create.variable.commoditytag.StockTypeInfo
 import com.cmoney.backend2.forumocean.service.api.article.update.UpdateArticleHelper
 import com.cmoney.backend2.forumocean.service.api.channel.channelname.ChannelNameBuilder
 import com.cmoney.backend2.forumocean.service.api.channel.channelname.StockClassification
@@ -37,6 +38,9 @@ class ForumOceanServiceCase : ServiceCase {
 
     override suspend fun testAll() {
         forumOceanWeb.apply {
+
+            getMemberStatistics(setting.identityToken.getMemberId().toLong()).logResponse(TAG)
+
             val articleId = createArticle(
                 Content.Article.General(
                     text = "測試發文設計",
@@ -46,7 +50,7 @@ class ForumOceanServiceCase : ServiceCase {
                             "https://zh.wikipedia.org/wiki/Google_Chrome#/media/File:Google_Chrome_icon_(September_2014).svg"
                         )
                     ),
-                    commodityTags = listOf(CommodityTag("1234", BullOrBear.Bear)),
+                    commodityTags = listOf(CommodityTag("1234", BullOrBear.Bear,StockTypeInfo.Stock)),
                     voteOptions = null,
                     voteMinutes = null
                 )
@@ -118,12 +122,13 @@ class ForumOceanServiceCase : ServiceCase {
 
     private suspend fun ForumOceanWeb.testInteractive(articleId: Long) {
         createArticleReaction(articleId, ReactionType.LIKE).logResponse(TAG)
-        getArticleReactionDetail(articleId, listOf(ReactionType.LIKE), -1).logResponse(TAG)
+        getArticleReactionDetail(articleId, listOf(ReactionType.LIKE), 0,20).logResponse(TAG)
         createArticleReaction(articleId, ReactionType.DISLIKE).logResponse(TAG)
         getArticleReactionDetail(
             articleId,
             listOf(ReactionType.LIKE, ReactionType.DISLIKE),
-            -1
+            0,
+            20
         ).logResponse(TAG)
         deleteArticleReaction(articleId).logResponse(TAG)
     }
@@ -155,10 +160,10 @@ class ForumOceanServiceCase : ServiceCase {
             updateCommentHelper.setText("我修改回復了")
             updateComment(articleId, this, updateCommentHelper).logResponse(TAG)
             getComment(articleId, this, null).logResponse(TAG)
-            reactionComment(articleId, 1, ReactionType.LIKE, null).logResponse(TAG)
-            reactionComment(articleId, 1, ReactionType.DISLIKE, ReactionType.LIKE).logResponse(TAG)
-            getReactionDetail(articleId, 1).logResponse(TAG)
-            removeReactionComment(articleId, 1, ReactionType.DISLIKE).logResponse(TAG)
+            reactionComment(articleId, 1, ReactionType.LIKE).logResponse(TAG)
+            reactionComment(articleId, 1, ReactionType.DISLIKE).logResponse(TAG)
+            getReactionDetail(articleId, 1,ReactionType.values().toList(),0,20).logResponse(TAG)
+            removeReactionComment(articleId, 1).logResponse(TAG)
             deleteComment(articleId, 1).logResponse(TAG)
             getComment(articleId, this, null).logResponse(TAG)
         }
@@ -329,11 +334,8 @@ class ForumOceanServiceCase : ServiceCase {
 
         user1.changeUser(setting)
         var groupId: Long? = null
-        createGroup("測試用社團名稱").also { result ->
-            result.logResponse(TAG)
-            result.onSuccess { responseBody ->
-                groupId = responseBody.groupId
-            }
+        createGroup("測試用社團名稱").logResponse(TAG) {
+            groupId = it.groupId
         }
 
         groupId?.apply {
@@ -367,7 +369,7 @@ class ForumOceanServiceCase : ServiceCase {
             join(this, "測試api用").logResponse(TAG)
 
             user1.changeUser(setting)
-            getMembers(this, true).logResponse(TAG)
+            getMembers(this,0,200,true).logResponse(TAG)
             val needApprovalId = getApprovals(this).getOrNull()?.firstOrNull()?.memberId
             needApprovalId?.let {
                 approval(this, needApprovalId, true).logResponse(TAG)
@@ -424,7 +426,7 @@ class ForumOceanServiceCase : ServiceCase {
         ).getOrNull()?.articleId
 
         articleId?.apply {
-            createReport(articleId, ReasonType.AD).logResponse(TAG)
+            createReport(articleId, ReasonType.AD,null).logResponse(TAG)
             deleteReport(articleId).logResponse(TAG)
             deleteArticle(articleId)
         }
@@ -474,11 +476,13 @@ class ForumOceanServiceCase : ServiceCase {
                     voteOptions = null,
                     voteMinutes = null
                 )
-            ).also { result ->
-                result.logResponse(TAG)
-                result.onSuccess { responseBody ->
-                    presidentGroupArticleId = responseBody.articleId
-                }
+            ).logResponse(TAG) {
+                presidentGroupArticleId = it.articleId
+            }
+
+            presidentGroupArticleId?.apply {
+                pinArticle(this).logResponse(TAG)
+                unpinArticle(this).logResponse(TAG)
             }
 
             user2.changeUser(setting)
@@ -529,11 +533,8 @@ class ForumOceanServiceCase : ServiceCase {
                     voteOptions = null,
                     voteMinutes = null
                 )
-            ).also { result ->
-                result.logResponse(TAG)
-                result.onSuccess { responseBody ->
-                    groupArticleId = responseBody.articleId
-                }
+            ).logResponse(TAG) {
+                groupArticleId = it.articleId
             }
 
             groupArticleId?.apply {
@@ -543,6 +544,7 @@ class ForumOceanServiceCase : ServiceCase {
                     multiMedia = listOf(),
                     position = Any()
                 ).logResponse(TAG)
+                getGroupManagerComments(this).logResponse(TAG)
             }
 
             user1.changeUser(setting)
@@ -553,11 +555,8 @@ class ForumOceanServiceCase : ServiceCase {
     private suspend fun ForumOceanWeb.testSupport(vararg memberId: Long) {
 
         var channelIdAndMemberMapList: List<ChannelIdAndMemberId>? = null
-        getChannelIds(memberId.toList()).also { result ->
-            result.logResponse(TAG)
-            result.onSuccess { list ->
-                channelIdAndMemberMapList = list
-            }
+        getChannelIds(memberId.toList()).logResponse(TAG) {
+            channelIdAndMemberMapList = it
         }
 
         channelIdAndMemberMapList?.apply {
@@ -577,13 +576,9 @@ class ForumOceanServiceCase : ServiceCase {
             commodityTags = listOf(),
             voteOptions = listOf(),
             voteMinutes = null
-        )).also { result ->
-            result.logResponse(TAG)
-            result.onSuccess { responseBody ->
-                articleId = responseBody.articleId
-            }
+        )).logResponse(TAG){
+            articleId = it.articleId
         }
-
         articleId?.apply {
             user2.changeUser(setting)
             val user2MemberId = setting.identityToken.getMemberId().toLong()
