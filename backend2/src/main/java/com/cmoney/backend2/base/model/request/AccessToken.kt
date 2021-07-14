@@ -6,7 +6,7 @@ import org.json.JSONObject
 /**
  * 授權連接Token
  */
-class AccessToken(originContent: String = "{}") : JwtToken<AccessToken.Payload>(originContent) {
+class AccessToken(originContent: String = CONTENT_DEFAULT) : JwtToken<AccessToken.Payload>(originContent) {
 
     private val payload: Payload
 
@@ -20,6 +20,7 @@ class AccessToken(originContent: String = "{}") : JwtToken<AccessToken.Payload>(
             memberId = payloadJson.optString("sub"),
             appId = payloadJson.optString("app_id"),
             tokenId = payloadJson.optString("token_id"),
+            isGuest = payloadJson.optBoolean("is_guest", false),
             issuedTime = payloadJson.optLong("nbf"),
             expiredTime = payloadJson.optLong("exp"),
             issuer = payloadJson.optString("iss"),
@@ -41,6 +42,8 @@ class AccessToken(originContent: String = "{}") : JwtToken<AccessToken.Payload>(
 
     fun getTokenId() = payload.tokenId
 
+    fun getIsGuest() = payload.isGuest
+
     fun getIssuedTime() = payload.issuedTime
 
     fun getExpiredTime() = payload.expiredTime
@@ -55,6 +58,7 @@ class AccessToken(originContent: String = "{}") : JwtToken<AccessToken.Payload>(
      * @property memberId 會員ID
      * @property appId App的ID
      * @property tokenId Token的ID
+     * @property isGuest 是否為訪客登入
      * @property issuedTime 發行時間
      * @property expiredTime 過期時間
      * @property issuer 發行者
@@ -64,6 +68,7 @@ class AccessToken(originContent: String = "{}") : JwtToken<AccessToken.Payload>(
         val memberId: String,
         val appId: String,
         val tokenId: String,
+        val isGuest: Boolean,
         val issuedTime: Long,
         val expiredTime: Long,
         val issuer: String,

@@ -12,4 +12,13 @@ abstract class JwtToken<T>(val originContent: String) {
         String(Base64.decode(originContent.split(".").getOrNull(2).orEmpty(), Base64.URL_SAFE))
 
     open fun isEmpty() = originContent.isEmpty()
+
+    /**
+     * Is payload content default value.
+     */
+    open fun isDefault() = originContent == CONTENT_DEFAULT
+
+    companion object {
+        internal const val CONTENT_DEFAULT = "{}"
+    }
 }
