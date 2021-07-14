@@ -1,10 +1,10 @@
 package com.cmoney.backend2.portal.service
 
+import com.cmoney.backend2.MainCoroutineRule
+import com.cmoney.backend2.TestDispatcher
+import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.setting.Setting
-import com.cmoney.backend2.cellphone.TestDispatcher
-import com.cmoney.backend2.portal.MainCoroutineRule
-import com.cmoney.backend2.portal.TestSetting
 import com.cmoney.backend2.portal.service.api.getadditionalinfo.CmPortalAdditionWithError
 import com.cmoney.backend2.portal.service.api.getsignals.CmPortalSignalWithError
 import com.cmoney.backend2.portal.service.api.gettarget.CmPortalTargetWithError

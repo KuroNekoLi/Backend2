@@ -14,6 +14,7 @@ import com.cmoney.backend2.chat.di.chatServiceModule
 import com.cmoney.backend2.chipk.di.chipkServiceModule
 import com.cmoney.backend2.cmtalk.di.cmtalkServiceModule
 import com.cmoney.backend2.common.di.commonServiceModule
+import com.cmoney.backend2.crm.di.crmServiceModule
 import com.cmoney.backend2.customgroup.di.customGroupServiceModule
 import com.cmoney.backend2.dtno.di.dtnoServiceModule
 import com.cmoney.backend2.emilystock.di.emilyServiceModule
@@ -91,7 +92,8 @@ class SampleApplication : Application() {
                     realtimeAfterMarketServiceModule,
                     tickDataServiceModule,
                     trialServiceModule,
-                    virtualAssetsServiceModule
+                    virtualAssetsServiceModule,
+                    crmServiceModule
                 )
             )
         }

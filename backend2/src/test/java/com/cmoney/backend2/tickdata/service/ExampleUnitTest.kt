@@ -1,9 +1,9 @@
 package com.cmoney.backend2.tickdata.service
 
+import com.cmoney.backend2.MainCoroutineRule
+import com.cmoney.backend2.TestDispatcher
+import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.request.MemberApiParam
-import com.cmoney.backend2.tickdata.FakeSetting
-import com.cmoney.backend2.tickdata.MainCoroutineRule
-import com.cmoney.backend2.tickdata.TestDispatcher
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.MockK
@@ -38,7 +38,7 @@ class ExampleUnitTest {
     fun setUp() {
         apiParam = MemberApiParam(99, UUID.randomUUID().toString(), UUID.randomUUID().toString())
         MockKAnnotations.init(this)
-        tickDataWeb = TickDataWebImpl(gson, FakeSetting(), service, TestDispatcher())
+        tickDataWeb = TickDataWebImpl(gson, TestSetting(), service, TestDispatcher())
     }
 
     @Test

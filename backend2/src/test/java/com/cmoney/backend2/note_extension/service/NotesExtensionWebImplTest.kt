@@ -1,9 +1,9 @@
 package com.cmoney.backend2.note_extension.service
 
+import com.cmoney.backend2.MainCoroutineRule
+import com.cmoney.backend2.TestDispatcher
+import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.setting.Setting
-import com.cmoney.backend2.note_extension.MainCoroutineRule
-import com.cmoney.backend2.note_extension.TestDispatcher
-import com.cmoney.backend2.note_extension.TestSetting
 import com.cmoney.backend2.note_extension.service.api.createreply.CreateCommentResponseBody
 import com.cmoney.backend2.note_extension.service.api.getnotecommentcount.GetCommentCountByNoteIdsResponseBody
 import com.cmoney.backend2.note_extension.service.api.getreplylistbyid.GetCommentListByNoteIdResponseBody
@@ -55,8 +55,8 @@ class NotesExtensionWebImplTest {
     private fun List<Long>.toStringWithFormat(): String {
         return this.toString().filter {
             it != '[' &&
-                    it != ']' &&
-                    it != ' '
+                it != ']' &&
+                it != ' '
         }
     }
 

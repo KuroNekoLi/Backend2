@@ -1,11 +1,11 @@
 package com.cmoney.backend2.identityprovider.service
 
+import com.cmoney.backend2.MainCoroutineRule
+import com.cmoney.backend2.TestDispatcher
+import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.response.error.CMoneyError
 import com.cmoney.backend2.base.model.setting.Setting
-import com.cmoney.backend2.identityprovider.MainCoroutineRule
-import com.cmoney.backend2.identityprovider.TestDispatcher
-import com.cmoney.backend2.identityprovider.TestSetting
 import com.cmoney.backend2.identityprovider.service.api.gettoken.GetTokenResponseBodyWithError
 import com.cmoney.backend2.identityprovider.service.api.islatest.IsLatestResponseBodyWithError
 import com.cmoney.backend2.identityprovider.service.api.revoke.RevokeResponseBodyWithError
@@ -28,7 +28,7 @@ import retrofit2.Response
 
 @ExperimentalCoroutinesApi
 @RunWith(RobolectricTestRunner::class)
-@Config(manifest=Config.NONE)
+@Config(manifest = Config.NONE)
 class IdentityProviderWebImplTest {
 
     @get:Rule
@@ -78,7 +78,7 @@ class IdentityProviderWebImplTest {
     fun `isTokenLatest_status is 400_ServerException`() = mainCoroutineRule.runBlockingTest {
         val errorBody = gson.toJson(
             CMoneyError(
-                CMoneyError.Detail(
+                detail = CMoneyError.Detail(
                     code = 101
                 )
             )
@@ -95,7 +95,7 @@ class IdentityProviderWebImplTest {
     fun `isTokenLatest_status is 401_HttpException`() = mainCoroutineRule.runBlockingTest {
         val errorBody = gson.toJson(
             CMoneyError(
-                CMoneyError.Detail(
+                detail = CMoneyError.Detail(
                     code = 101
                 )
             )
@@ -144,7 +144,7 @@ class IdentityProviderWebImplTest {
     fun `loginByEmail_status is 400_ServerException`() = mainCoroutineRule.runBlockingTest {
         val errorBody = gson.toJson(
             CMoneyError(
-                CMoneyError.Detail(
+                detail = CMoneyError.Detail(
                     code = 101
                 )
             )
@@ -175,7 +175,7 @@ class IdentityProviderWebImplTest {
     fun `loginByEmail_status is 400_HttpException`() = mainCoroutineRule.runBlockingTest {
         val errorBody = gson.toJson(
             CMoneyError(
-                CMoneyError.Detail(
+                detail = CMoneyError.Detail(
                     code = 101
                 )
             )
@@ -238,7 +238,7 @@ class IdentityProviderWebImplTest {
     fun `loginByCellphone_status is 400_ServerException`() = mainCoroutineRule.runBlockingTest {
         val errorBody = gson.toJson(
             CMoneyError(
-                CMoneyError.Detail(
+                detail = CMoneyError.Detail(
                     code = 101
                 )
             )
@@ -269,7 +269,7 @@ class IdentityProviderWebImplTest {
     fun `loginByCellphone_status is 400_HttpException`() = mainCoroutineRule.runBlockingTest {
         val errorBody = gson.toJson(
             CMoneyError(
-                CMoneyError.Detail(
+                detail = CMoneyError.Detail(
                     code = 101
                 )
             )
@@ -332,7 +332,7 @@ class IdentityProviderWebImplTest {
     fun `loginByFacebook_status is 400_ServerException`() = mainCoroutineRule.runBlockingTest {
         val errorBody = gson.toJson(
             CMoneyError(
-                CMoneyError.Detail(
+                detail = CMoneyError.Detail(
                     code = 101
                 )
             )
@@ -363,7 +363,7 @@ class IdentityProviderWebImplTest {
     fun `loginByFacebook_status is 400_HttpException`() = mainCoroutineRule.runBlockingTest {
         val errorBody = gson.toJson(
             CMoneyError(
-                CMoneyError.Detail(
+                detail = CMoneyError.Detail(
                     code = 101
                 )
             )
@@ -427,7 +427,7 @@ class IdentityProviderWebImplTest {
         mainCoroutineRule.runBlockingTest {
             val errorBody = gson.toJson(
                 CMoneyError(
-                    CMoneyError.Detail(
+                    detail = CMoneyError.Detail(
                         code = 101
                     )
                 )
@@ -459,7 +459,7 @@ class IdentityProviderWebImplTest {
         mainCoroutineRule.runBlockingTest {
             val errorBody = gson.toJson(
                 CMoneyError(
-                    CMoneyError.Detail(
+                    detail = CMoneyError.Detail(
                         code = 101
                     )
                 )
@@ -522,7 +522,7 @@ class IdentityProviderWebImplTest {
     fun `revokeToken_status is 400_ServerException`() = mainCoroutineRule.runBlockingTest {
         val errorBody = gson.toJson(
             CMoneyError(
-                CMoneyError.Detail(
+                detail = CMoneyError.Detail(
                     code = 101
                 )
             )
@@ -544,7 +544,7 @@ class IdentityProviderWebImplTest {
     fun `revokeToken_status is 401_HttpException`() = mainCoroutineRule.runBlockingTest {
         val errorBody = gson.toJson(
             CMoneyError(
-                CMoneyError.Detail(
+                detail = CMoneyError.Detail(
                     code = 101
                 )
             )
@@ -598,7 +598,7 @@ class IdentityProviderWebImplTest {
     fun `refreshToken_status is 400_ServerException`() = mainCoroutineRule.runBlockingTest {
         val errorBody = gson.toJson(
             CMoneyError(
-                CMoneyError.Detail(
+                detail = CMoneyError.Detail(
                     code = 101
                 )
             )
@@ -629,7 +629,7 @@ class IdentityProviderWebImplTest {
     fun `refreshToken_status is 401_HttpException`() = mainCoroutineRule.runBlockingTest {
         val errorBody = gson.toJson(
             CMoneyError(
-                CMoneyError.Detail(
+                detail = CMoneyError.Detail(
                     code = 101
                 )
             )

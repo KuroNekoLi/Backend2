@@ -17,11 +17,11 @@ class ImageWebImpl(
     private val service: ImageService,
     private val setting: Setting,
     private val jsonParser: Gson,
-    private val ioDispatcher: DispatcherProvider = DefaultDispatcherProvider()
+    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider()
 ) : ImageWeb {
 
     override suspend fun upload(file: File): Result<UploadResponseBody> =
-        withContext(ioDispatcher.io()) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 val kb = file.length() / 1024
                 if (kb > 1024){

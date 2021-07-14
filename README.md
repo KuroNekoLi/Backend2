@@ -160,7 +160,7 @@ class SampleApplication : Application() {
 | tickDataServiceModule,                    | tickdata                   |
 | trialServiceModule,                       | trial                      |
 | virtualAssetsServiceModule                | virtualassets              |
-
+| crmServiceModule                          | crm              |
 #### 選擇使用Module的步驟
 
 - 確認目前需要使用的服務的host之後的path，以下舉例說明

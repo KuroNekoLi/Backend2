@@ -1,5 +1,6 @@
 package com.cmoney.backend2.base.model.response.error
 
+import com.cmoney.backend2.base.model.request.Constant
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import org.junit.Test
@@ -7,6 +8,17 @@ import org.junit.Test
 class CMoneyErrorTest {
 
     private val gson = GsonBuilder().serializeNulls().setLenient().setPrettyPrinting().create()
+
+    @Test
+    fun `解析第一層的ErrorMessage`() {
+        val errorJson = """
+            {
+                "message": "錯誤訊息"
+            }
+        """.trimIndent()
+        val cmoneyError = gson.fromJson<CMoneyError>(errorJson, CMoneyError::class.java)
+        Truth.assertThat(cmoneyError.message).isEqualTo("錯誤訊息")
+    }
 
     @Test
     fun `getErrorDetail_解析大寫錯誤_有error code和message`() {
@@ -79,7 +91,7 @@ class CMoneyErrorTest {
     fun `getErrorDetail_產生預設CMoneyError，並設定Detail_code預設值1和message不是空的`() {
         val expectCode = 1
         val cmoneyError = CMoneyError(
-            CMoneyError.Detail(
+            detail = CMoneyError.Detail(
                 code = expectCode,
                 message = "YO"
             )

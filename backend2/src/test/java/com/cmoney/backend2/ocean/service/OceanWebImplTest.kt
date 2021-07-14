@@ -1,8 +1,9 @@
 package com.cmoney.backend2.ocean.service
 
+import com.cmoney.backend2.MainCoroutineRule
+import com.cmoney.backend2.TestDispatcher
+import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.ServerException
-import com.cmoney.backend2.ocean.FakeSetting
-import com.cmoney.backend2.ocean.MainCoroutineRule
 import com.cmoney.backend2.ocean.service.api.changememberstatus.ChangeMemberStatusResponseBodyWithError
 import com.cmoney.backend2.ocean.service.api.changememberstatus.Operation
 import com.cmoney.backend2.ocean.service.api.checkHasJoinedClub.HasJoinedClubResponseWithError
@@ -58,7 +59,6 @@ import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import okhttp3.ResponseBody.Companion.toResponseBody
@@ -79,16 +79,16 @@ class OceanWebImplTest {
     @ExperimentalCoroutinesApi
     @get:Rule
     val mainCoroutineRule = MainCoroutineRule()
-    private val setting = FakeSetting()
 
     @MockK
     private val oceanService = mockk<OceanService>()
     private val gson = GsonBuilder().serializeNulls().setLenient().setPrettyPrinting().create()
-    private val service: OceanWeb = OceanWebImpl(gson, oceanService, setting, Dispatchers.Main)
+    private lateinit var service: OceanWeb
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
+        service = OceanWebImpl(gson, oceanService, TestSetting(), TestDispatcher())
     }
 
     @After
@@ -636,14 +636,7 @@ class OceanWebImplTest {
             coEvery {
                 oceanService.getFanListExcludeJoinedClub(
                     authorization = any(),
-                    requestBody = GetFansListExcludeJoinedClubRequestBody(
-                        appId = setting.appId,
-                        excludeClubChannelId = 0,
-                        fetchCount = 0,
-                        guid = setting.identityToken.getMemberGuid(),
-                        needInfo = 0,
-                        skipCount = 0
-                    )
+                    requestBody = any()
                 )
             } returns Response.success(responseBody)
 
@@ -671,11 +664,7 @@ class OceanWebImplTest {
         coEvery {
             oceanService.getSimpleChannelInfo(
                 authorization = any(),
-                requestBody = GetSimpleChannelInfoRequestBody(
-                    appId = setting.appId,
-                    channelIds = listOf(),
-                    guid = setting.identityToken.getMemberGuid()
-                )
+                requestBody = any()
             )
         } returns Response.success(responseBody)
 
@@ -918,7 +907,7 @@ class OceanWebImplTest {
         } returns Response.success(responseBody)
 
         //確認api是否成功
-        val result = service.getMasters( MasterType.Popularity, 20)
+        val result = service.getMasters(MasterType.Popularity, 20)
         Truth.assertThat(result.isSuccess).isTrue()
 
         //確認api回傳是否如預期
@@ -960,7 +949,7 @@ class OceanWebImplTest {
         } returns Response.success(responseBody)
 
         //確認api是否成功
-        val result = service.getAskLatestArticle(0,20, listOf(), ArticleNeedInfo())
+        val result = service.getAskLatestArticle(0, 20, listOf(), ArticleNeedInfo())
         Truth.assertThat(result.isSuccess).isTrue()
 
         //確認api回傳是否如預期
@@ -986,7 +975,7 @@ class OceanWebImplTest {
         } returns Response.error(400, json.toResponseBody())
 
         //確認api是否成功
-        val result = service.getAskLatestArticle(-1,20, listOf(), ArticleNeedInfo())
+        val result = service.getAskLatestArticle(-1, 20, listOf(), ArticleNeedInfo())
         checkServerException(result)
     }
 
@@ -1001,7 +990,8 @@ class OceanWebImplTest {
         } returns Response.error(401, "".toResponseBody())
 
         //確認api是否成功
-        val result = service.getAskLatestArticle(0, 20, listOf("字串"),
+        val result = service.getAskLatestArticle(
+            0, 20, listOf("字串"),
             ArticleNeedInfo()
         )
         checkHttpException(result)
@@ -1067,7 +1057,8 @@ class OceanWebImplTest {
 
         //確認api是否成功
         val result = service.getStockMasterEvaluation(
-             "2330")
+            "2330"
+        )
         Truth.assertThat(result.isSuccess).isTrue()
 
         //確認api回傳是否如預期
@@ -1091,7 +1082,8 @@ class OceanWebImplTest {
 
         //確認api是否成功
         val result = service.getStockMasterEvaluation(
-             "2330")
+            "2330"
+        )
         checkHttpException(result)
     }
 
@@ -1110,7 +1102,7 @@ class OceanWebImplTest {
         } returns Response.success(responseBody)
 
         //確認api是否成功
-        val result =  service.uploadChannelImage( 105498)
+        val result = service.uploadChannelImage(105498)
         Truth.assertThat(result.isSuccess).isTrue()
 
         //確認api回傳是否如預期
@@ -1139,7 +1131,7 @@ class OceanWebImplTest {
         } returns Response.success(responseBody)
 
         //確認api是否成功
-        val result = service.uploadChannelImage( 105498)
+        val result = service.uploadChannelImage(105498)
         checkServerException(result)
     }
 
@@ -1158,7 +1150,7 @@ class OceanWebImplTest {
         } returns Response.success(responseBody)
 
         //確認api是否成功
-        val result =  service.createClub( "我的新社團", "新的呦", JoinMethod.Join)
+        val result = service.createClub("我的新社團", "新的呦", JoinMethod.Join)
         Truth.assertThat(result.isSuccess).isTrue()
 
         //確認api回傳是否如預期
@@ -1187,7 +1179,7 @@ class OceanWebImplTest {
         } returns Response.success(responseBody)
 
         //確認api是否成功
-        val result = service.createClub( "我的新社團", "新的呦", JoinMethod.Join)
+        val result = service.createClub("我的新社團", "新的呦", JoinMethod.Join)
         checkServerException(result)
     }
 
@@ -1206,7 +1198,7 @@ class OceanWebImplTest {
         } returns Response.success(responseBody)
 
         //確認api是否成功
-        val result =  service.deleteClub( 0L)
+        val result = service.deleteClub(0L)
         Truth.assertThat(result.isSuccess).isTrue()
 
         //確認api回傳是否如預期
@@ -1235,7 +1227,7 @@ class OceanWebImplTest {
         } returns Response.success(responseBody)
 
         //確認api是否成功
-        val result = service.deleteClub( 0L)
+        val result = service.deleteClub(0L)
         checkServerException(result)
     }
 
@@ -1254,7 +1246,7 @@ class OceanWebImplTest {
         } returns Response.success(responseBody)
 
         //確認api是否成功
-        val result =  service.leaveClub( 0L)
+        val result = service.leaveClub(0L)
         Truth.assertThat(result.isSuccess).isTrue()
 
         //確認api回傳是否如預期
@@ -1283,7 +1275,7 @@ class OceanWebImplTest {
         } returns Response.success(responseBody)
 
         //確認api是否成功
-        val result = service.leaveClub( 0L)
+        val result = service.leaveClub(0L)
         checkServerException(result)
     }
 
@@ -1302,7 +1294,7 @@ class OceanWebImplTest {
         } returns Response.success(responseBody)
 
         //確認api是否成功
-        val result = service.isJoinedClub( 2850768, Relation.ClubCreated)
+        val result = service.isJoinedClub(2850768, Relation.ClubCreated)
         Truth.assertThat(result.isSuccess).isTrue()
 
         //確認api回傳是否如預期
@@ -1331,7 +1323,7 @@ class OceanWebImplTest {
         } returns Response.success(responseBody)
 
         //確認api是否成功
-        val result =  service.isJoinedClub( 2850768, Relation.ClubCreated)
+        val result = service.isJoinedClub(2850768, Relation.ClubCreated)
         checkServerException(result)
     }
 
@@ -1379,7 +1371,7 @@ class OceanWebImplTest {
         } returns Response.success(responseBody)
 
         //確認api是否成功
-        val result =  service.invite(4277314, listOf(7869455))
+        val result = service.invite(4277314, listOf(7869455))
         checkServerException(result)
     }
 
@@ -1398,7 +1390,7 @@ class OceanWebImplTest {
         } returns Response.success(responseBody)
 
         //確認api是否成功
-        val result = service.joinClub( 4277314L, "")
+        val result = service.joinClub(4277314L, "")
         Truth.assertThat(result.isSuccess).isTrue()
 
         //確認api回傳是否如預期
@@ -1427,7 +1419,7 @@ class OceanWebImplTest {
         } returns Response.success(responseBody)
 
         //確認api是否成功
-        val result =  service.joinClub( 0L, "")
+        val result = service.joinClub(0L, "")
         checkServerException(result)
     }
 
@@ -1435,7 +1427,7 @@ class OceanWebImplTest {
     fun `getMemberClubs取得指定會員的社團清單 成功`() = mainCoroutineRule.runBlockingTest {
         //準備api成功時的回傳
         val responseBody = GetMemberClubsResponseBodyWithError(
-           clubs = listOf()
+            clubs = listOf()
         )
         //設定api成功時的回傳
         coEvery {
@@ -1450,7 +1442,7 @@ class OceanWebImplTest {
         clubNeedInfo.add(ChannelInfoOption.Club.ClubInfo)
 
         //確認api是否成功
-        val result = service.getMemberClubs( 0L, clubNeedInfo, Relation.AllClub)
+        val result = service.getMemberClubs(0L, clubNeedInfo, Relation.AllClub)
         Truth.assertThat(result.isSuccess).isTrue()
 
         //確認api回傳是否如預期
@@ -1483,7 +1475,7 @@ class OceanWebImplTest {
         clubNeedInfo.add(ChannelInfoOption.Club.ClubInfo)
 
         //確認api是否成功
-        val result =  service.getMemberClubs( 0L, clubNeedInfo, Relation.AllClub)
+        val result = service.getMemberClubs(0L, clubNeedInfo, Relation.AllClub)
         checkServerException(result)
     }
 
@@ -1509,7 +1501,7 @@ class OceanWebImplTest {
         clubNeedInfo.add(RecommendClubsNeedInfo.NeedInfo.MemberClubInfo)
 
         //確認api是否成功
-        val result = service.getRecommendClubs( 10, 0, clubNeedInfo)
+        val result = service.getRecommendClubs(10, 0, clubNeedInfo)
         Truth.assertThat(result.isSuccess).isTrue()
 
         //確認api回傳是否如預期
@@ -1545,7 +1537,7 @@ class OceanWebImplTest {
         clubNeedInfo.add(RecommendClubsNeedInfo.NeedInfo.MemberClubInfo)
 
         //確認api是否成功
-        val result = service.getRecommendClubs( 10, 0, clubNeedInfo)
+        val result = service.getRecommendClubs(10, 0, clubNeedInfo)
         checkServerException(result)
     }
 
@@ -1564,7 +1556,7 @@ class OceanWebImplTest {
         } returns Response.success(responseBody)
 
         //確認api是否成功
-        val result = service.changeMemberStatus( 4277314, listOf(7869455), Operation.MoveBlackList)
+        val result = service.changeMemberStatus(4277314, listOf(7869455), Operation.MoveBlackList)
         Truth.assertThat(result.isSuccess).isTrue()
 
         //確認api回傳是否如預期
@@ -1593,7 +1585,7 @@ class OceanWebImplTest {
         } returns Response.success(responseBody)
 
         //確認api是否成功
-        val result = service.changeMemberStatus( 4277314, listOf(7869455), Operation.MoveBlackList)
+        val result = service.changeMemberStatus(4277314, listOf(7869455), Operation.MoveBlackList)
         checkServerException(result)
     }
 
@@ -1612,7 +1604,7 @@ class OceanWebImplTest {
         } returns Response.success(responseBody)
 
         //確認api是否成功
-        val result = service.updateClubDescription( 4277314, "社團的功能有些單調123456")
+        val result = service.updateClubDescription(4277314, "社團的功能有些單調123456")
         Truth.assertThat(result.isSuccess).isTrue()
 
         //確認api回傳是否如預期
@@ -1641,7 +1633,7 @@ class OceanWebImplTest {
         } returns Response.success(responseBody)
 
         //確認api是否成功
-        val result = service.updateClubDescription( 4277314, "社團的功能有些單調123456")
+        val result = service.updateClubDescription(4277314, "社團的功能有些單調123456")
         checkServerException(result)
     }
 
@@ -1659,7 +1651,7 @@ class OceanWebImplTest {
             )
         } returns Response.success(responseBody)
 
-        val clubNeedInfo =  ChannelNeedInfo<ChannelInfoOption.Member>()
+        val clubNeedInfo = ChannelNeedInfo<ChannelInfoOption.Member>()
         clubNeedInfo.add(ChannelInfoOption.Member.IsFollowed)
         clubNeedInfo.add(ChannelInfoOption.Member.LevelInfo)
         clubNeedInfo.add(ChannelInfoOption.Member.DiamondInfo)
@@ -1667,12 +1659,13 @@ class OceanWebImplTest {
 
         //確認api是否成功
         val result = service.getMemberStatusList(
-            
+
             4277314,
             MemberPosition.BlackList,
             50,
             0,
-            clubNeedInfo)
+            clubNeedInfo
+        )
         Truth.assertThat(result.isSuccess).isTrue()
 
         //確認api回傳是否如預期
@@ -1700,7 +1693,7 @@ class OceanWebImplTest {
             )
         } returns Response.success(responseBody)
 
-        val clubNeedInfo =  ChannelNeedInfo<ChannelInfoOption.Member>()
+        val clubNeedInfo = ChannelNeedInfo<ChannelInfoOption.Member>()
         clubNeedInfo.add(ChannelInfoOption.Member.IsFollowed)
         clubNeedInfo.add(ChannelInfoOption.Member.LevelInfo)
         clubNeedInfo.add(ChannelInfoOption.Member.DiamondInfo)
@@ -1708,12 +1701,13 @@ class OceanWebImplTest {
 
         //確認api是否成功
         val result = service.getMemberStatusList(
-            
+
             4277314,
             MemberPosition.BlackList,
             50,
             0,
-            clubNeedInfo)
+            clubNeedInfo
+        )
         checkServerException(result)
     }
 
@@ -1732,14 +1726,14 @@ class OceanWebImplTest {
             )
         } returns Response.success(responseBody)
 
-        val clubNeedInfo =  ChannelNeedInfo<ChannelInfoOption.Member>()
+        val clubNeedInfo = ChannelNeedInfo<ChannelInfoOption.Member>()
         clubNeedInfo.add(ChannelInfoOption.Member.IsFollowed)
         clubNeedInfo.add(ChannelInfoOption.Member.LevelInfo)
         clubNeedInfo.add(ChannelInfoOption.Member.DiamondInfo)
         clubNeedInfo.add(ChannelInfoOption.Member.Image)
 
         //確認api是否成功
-        val result = service.getManagerList( 4277314, clubNeedInfo)
+        val result = service.getManagerList(4277314, clubNeedInfo)
         Truth.assertThat(result.isSuccess).isTrue()
 
         //確認api回傳是否如預期
@@ -1767,14 +1761,14 @@ class OceanWebImplTest {
             )
         } returns Response.success(responseBody)
 
-        val clubNeedInfo =  ChannelNeedInfo<ChannelInfoOption.Member>()
+        val clubNeedInfo = ChannelNeedInfo<ChannelInfoOption.Member>()
         clubNeedInfo.add(ChannelInfoOption.Member.IsFollowed)
         clubNeedInfo.add(ChannelInfoOption.Member.LevelInfo)
         clubNeedInfo.add(ChannelInfoOption.Member.DiamondInfo)
         clubNeedInfo.add(ChannelInfoOption.Member.Image)
 
         //確認api是否成功
-        val result = service.getManagerList( 4277314, clubNeedInfo)
+        val result = service.getManagerList(4277314, clubNeedInfo)
         checkServerException(result)
     }
 
@@ -1991,7 +1985,7 @@ class OceanWebImplTest {
                 authorization = any(),
                 body = any()
             )
-        } returns  Response.success(200, responseBody)
+        } returns Response.success(200, responseBody)
 
         //確認api是否成功
         val result = service.getTopicArticles(
@@ -2036,37 +2030,38 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `getStockAndTopicArticles取得個股下有主題標籤文章 失敗200有ServerException`() = mainCoroutineRule.runBlockingTest {
-        val json = """{
+    fun `getStockAndTopicArticles取得個股下有主題標籤文章 失敗200有ServerException`() =
+        mainCoroutineRule.runBlockingTest {
+            val json = """{
           "Error": {
             "Code": 100,
             "Message": "參數錯誤"
           }
         }""".trimIndent()
 
-        val responseBody =
-            gson.fromJson(json, GetStockAndTopicArticlesResponseBodyWithError::class.java)
+            val responseBody =
+                gson.fromJson(json, GetStockAndTopicArticlesResponseBodyWithError::class.java)
 
-        //設定api成功時的回傳
-        coEvery {
-            oceanService.getStockAndTopicArticles(
-                authorization = any(),
-                body = any()
-            )
-        } returns  Response.success(200, responseBody)
+            //設定api成功時的回傳
+            coEvery {
+                oceanService.getStockAndTopicArticles(
+                    authorization = any(),
+                    body = any()
+                )
+            } returns Response.success(200, responseBody)
 
-        //確認api是否成功
-        val result = service.getStockAndTopicArticles(
-            stockId = "2330",
-            topic = "研究報告",
-            baseArticleId = 9223372036854775807,
-            fetchCount = 2,
-            articleNeedInfo = ArticleNeedInfo().apply {
-                addAll(ArticleNeedInfo.NeedInfo.values().toList())
-            })
-        checkServerException(result)
-    }
-    
+            //確認api是否成功
+            val result = service.getStockAndTopicArticles(
+                stockId = "2330",
+                topic = "研究報告",
+                baseArticleId = 9223372036854775807,
+                fetchCount = 2,
+                articleNeedInfo = ArticleNeedInfo().apply {
+                    addAll(ArticleNeedInfo.NeedInfo.values().toList())
+                })
+            checkServerException(result)
+        }
+
 //
 //    @Test
 //    fun `getManagerList取得管理者清單(幹部、社長) 失敗`() = mainCoroutineRule.runBlockingTest {
@@ -2096,7 +2091,7 @@ class OceanWebImplTest {
 //        val result = service.getManagerList(4277314, clubNeedInfo)
 //        checkServerException(result)
 //    }
-    
+
     @Test
     fun `createOrUpdateAnnouncement 新增公告Api回傳失敗`() = mainCoroutineRule.runBlockingTest {
         val json = """{
@@ -2105,10 +2100,10 @@ class OceanWebImplTest {
             "Message": "參數錯誤"
           }
         }""".trimIndent()
-        
+
         val responseBody =
             gson.fromJson(json, IsCreateOrUpdateSuccessResponseWithError::class.java)
-        
+
         //設定api成功時的回傳
         coEvery {
             oceanService.createOrUpdateAnnouncement(
@@ -2117,7 +2112,7 @@ class OceanWebImplTest {
                 requestBody = any()
             )
         } returns Response.success(responseBody)
-        
+
         val result = service.createOrUpdateAnnouncement(
             clubChannelId = 5083102,
             articleId = 1234,
@@ -2125,7 +2120,7 @@ class OceanWebImplTest {
         )
         checkServerException(result)
     }
-    
+
     @Test
     fun `createOrUpdateAnnouncement_新增或更新公告_回傳正確(成功)`() = mainCoroutineRule.runBlockingTest {
         val json = """{"IsSuccess":true}""".trimIndent()
@@ -2147,7 +2142,7 @@ class OceanWebImplTest {
         Truth.assertThat(result.getOrNull()?.isSuccess).isEqualTo(true)
         Truth.assertThat(result.exceptionOrNull()).isNull()
     }
-    
+
     @Test
     fun `createOrUpdateAnnouncement_新增或更新公告_回傳正確(失敗)`() = mainCoroutineRule.runBlockingTest {
         val json = """{"IsSuccess":false}""".trimIndent()
@@ -2169,7 +2164,7 @@ class OceanWebImplTest {
         Truth.assertThat(result.getOrNull()?.isSuccess).isEqualTo(false)
         Truth.assertThat(result.exceptionOrNull()).isNull()
     }
-    
+
     @Test
     fun `getAllAnnouncement_拿到所有公告_錯誤`() = mainCoroutineRule.runBlockingTest {
         val json = """{
@@ -2178,10 +2173,10 @@ class OceanWebImplTest {
             "Message": "參數錯誤"
           }
         }""".trimIndent()
-        
+
         val responseBody =
             gson.fromJson(json, AnnouncementListResponseWithError::class.java)
-        
+
         //設定api成功時的回傳
         coEvery {
             oceanService.readAnnouncement(
@@ -2190,13 +2185,13 @@ class OceanWebImplTest {
                 requestBody = any()
             )
         } returns Response.success(responseBody)
-        
+
         val result = service.getAllAnnouncements(
             clubChannelId = 5083102
         )
         checkServerException(result)
     }
-    
+
     @Test
     fun `getAllAnnouncement_拿到所有資料_正確有資料回傳`() = mainCoroutineRule.runBlockingTest {
         val json = """{
@@ -2264,16 +2259,16 @@ class OceanWebImplTest {
         Truth.assertThat(result.getOrNull()?.list?.size).isEqualTo(1)
         Truth.assertThat(result.exceptionOrNull()).isNull()
     }
-    
+
     @Test
-    fun `removeannouncement_刪除公告_失敗`()= mainCoroutineRule.runBlockingTest{
+    fun `removeannouncement_刪除公告_失敗`() = mainCoroutineRule.runBlockingTest {
         val json = """{
           "Error":{"Code":103,"Message":"該公告不存在"}
         }""".trimIndent()
-        
+
         val responseBody =
             gson.fromJson(json, IsRemoveAnnouncementSuccessWithError::class.java)
-        
+
         //設定api成功時的回傳
         coEvery {
             oceanService.removeAnnouncement(
@@ -2289,9 +2284,9 @@ class OceanWebImplTest {
         )
         checkServerException(result)
     }
-    
+
     @Test
-    fun `remove_announcement_成功`()= mainCoroutineRule.runBlockingTest{
+    fun `remove_announcement_成功`() = mainCoroutineRule.runBlockingTest {
         val json = """{
           "IsSuccess":true
         }""".trimIndent()
@@ -2305,7 +2300,7 @@ class OceanWebImplTest {
                 requestBody = any()
             )
         } returns Response.success(responseBody)
-        
+
         val result = service.removeAnnouncements(
             clubChannelId = 5083102,
             articleId = 108696750,
@@ -2314,5 +2309,5 @@ class OceanWebImplTest {
         Truth.assertThat(result.getOrNull()?.isSuccess).isEqualTo(true)
         Truth.assertThat(result.exceptionOrNull()).isNull()
     }
-    
+
 }
