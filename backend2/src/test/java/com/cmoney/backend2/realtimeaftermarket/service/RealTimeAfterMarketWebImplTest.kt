@@ -117,7 +117,7 @@ class RealTimeAfterMarketWebImplTest {
             responseCode = 0,
             responseMsg = "",
             tickInfoSet = listOf(
-                com.cmoney.backend2.realtimeaftermarket.service.api.getforeignexchangeticks.TickInfoSet(
+                com.cmoney.backend2.realtimeaftermarket.service.api.getforeignexchangeticks.TickInfo(
                     buyOrSell = 0,
                     commKey = "SUSDTWD",
                     dealPrice = 27.988,

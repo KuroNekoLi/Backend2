@@ -24,7 +24,7 @@ import com.google.gson.annotations.SerializedName
  * @property tickTime 交易時間(秒)
  * @property totalVolume 成交總量
  */
-data class TickInfoSet(
+data class TickInfo(
     @SerializedName("BuyOrSell")
     val buyOrSell: Int?,
     @SerializedName("Commkey")

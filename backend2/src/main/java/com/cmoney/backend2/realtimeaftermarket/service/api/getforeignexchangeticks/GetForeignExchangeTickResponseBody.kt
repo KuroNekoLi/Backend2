@@ -23,5 +23,5 @@ data class GetForeignExchangeTickResponseBody(
     @SerializedName("ResponseMsg")
     val responseMsg: String?,
     @SerializedName("TickInfoSet")
-    val tickInfoSet: List<TickInfoSet>?
+    val tickInfoSet: List<TickInfo>?
 )
