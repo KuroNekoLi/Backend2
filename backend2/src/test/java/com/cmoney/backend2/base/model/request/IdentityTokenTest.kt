@@ -26,6 +26,7 @@ class IdentityTokenTest{
         Truth.assertThat(token.getExpiredTime()).isEqualTo(1603511976)
         Truth.assertThat(token.getClientId()).isEqualTo("cmchipkmobile")
         Truth.assertThat(token.getIssuer()).isEqualTo("https://www.cmoney.tw")
+        Truth.assertThat(token.getIsNewUser()).isFalse()
     }
 
     @Test
@@ -38,6 +39,7 @@ class IdentityTokenTest{
         Truth.assertThat(token.getExpiredTime()).isEqualTo(0)
         Truth.assertThat(token.getClientId()).isEmpty()
         Truth.assertThat(token.getIssuer()).isEmpty()
+        Truth.assertThat(token.getIsNewUser()).isFalse()
     }
 
     @Test
@@ -50,6 +52,7 @@ class IdentityTokenTest{
         Truth.assertThat(token.getExpiredTime()).isEqualTo(0)
         Truth.assertThat(token.getClientId()).isEmpty()
         Truth.assertThat(token.getIssuer()).isEmpty()
+        Truth.assertThat(token.getIsNewUser()).isFalse()
     }
 
     @Test
@@ -62,6 +65,7 @@ class IdentityTokenTest{
         Truth.assertThat(token.getExpiredTime()).isEqualTo(1603511976)
         Truth.assertThat(token.getClientId()).isEqualTo("cmchipkmobile")
         Truth.assertThat(token.getIssuer()).isEqualTo("https://www.cmoney.tw")
+        Truth.assertThat(token.getIsNewUser()).isTrue()
     }
 
     @Test
