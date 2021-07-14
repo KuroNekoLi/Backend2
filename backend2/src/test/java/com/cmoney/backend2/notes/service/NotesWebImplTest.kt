@@ -1,11 +1,11 @@
 package com.cmoney.backend2.notes.service
 
+import com.cmoney.backend2.MainCoroutineRule
+import com.cmoney.backend2.TestDispatcher
+import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.EmptyBodyException
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.setting.Setting
-import com.cmoney.backend2.notes.MainCoroutineRule
-import com.cmoney.backend2.notes.TestDispatcher
-import com.cmoney.backend2.notes.TestSetting
 import com.cmoney.backend2.notes.service.api.getnotesbycoauthorIds.GetNotesByCoAuthorIdsResponseBody
 import com.cmoney.backend2.notes.service.api.getnotesbytags.GetNotesByTagsResponseWithError
 import com.cmoney.backend2.notes.service.api.getnotesbytags.Note

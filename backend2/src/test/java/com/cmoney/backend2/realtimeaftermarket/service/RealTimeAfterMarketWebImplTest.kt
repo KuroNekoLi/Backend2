@@ -1,14 +1,14 @@
 package com.cmoney.backend2.realtimeaftermarket.service
 
+import com.cmoney.backend2.MainCoroutineRule
+import com.cmoney.backend2.TestDispatcher
+import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.EmptyBodyException
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.request.GuestApiParam
 import com.cmoney.backend2.base.model.response.dtno.DtnoWithError
 import com.cmoney.backend2.base.model.response.error.ISuccess
 import com.cmoney.backend2.base.model.setting.Setting
-import com.cmoney.backend2.realtimeaftermarket.MainCoroutineRule
-import com.cmoney.backend2.realtimeaftermarket.TestDispatcher
-import com.cmoney.backend2.realtimeaftermarket.TestSetting
 import com.cmoney.backend2.realtimeaftermarket.service.api.getInternationalTicks.InternationalChartData
 import com.cmoney.backend2.realtimeaftermarket.service.api.getInternationalTicks.InternationalNewTicks
 import com.cmoney.backend2.realtimeaftermarket.service.api.getafterhourstime.AfterHoursTimeWithError
@@ -756,9 +756,9 @@ class RealTimeAfterMarketWebImplTest {
     fun `getAfterHoursTime_成功`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             service.getAfterHoursTime(
-                    authorization = any(),
-                    appId = any(),
-                    guid = any()
+                authorization = any(),
+                appId = any(),
+                guid = any()
             )
         } returns Response.success(AfterHoursTimeWithError("2021-01-20T00:00:00"))
         val result = webImpl.getAfterHoursTime()
@@ -769,9 +769,9 @@ class RealTimeAfterMarketWebImplTest {
     fun `getAfterHoursTime_日期格式錯誤`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             service.getAfterHoursTime(
-                    authorization = any(),
-                    appId = any(),
-                    guid = any()
+                authorization = any(),
+                appId = any(),
+                guid = any()
             )
         } returns Response.success(AfterHoursTimeWithError("2021-01-20T00:00"))
         val result = webImpl.getAfterHoursTime()
@@ -845,8 +845,10 @@ class RealTimeAfterMarketWebImplTest {
 
     @Test
     fun `getStockDealDetail_失敗_AuthFailed`() = mainCoroutineRule.runBlockingTest {
-        val errorJson = "{\"Error\":{\"Code\":101,\"Message\":\"Auth Failed\"},\"error\":{\"Code\":101,\"Message\":\"Auth Failed\"}}"
-        val responseBody = gson.fromJson<StockDealDetailWithError>(errorJson, StockDealDetailWithError::class.java)
+        val errorJson =
+            "{\"Error\":{\"Code\":101,\"Message\":\"Auth Failed\"},\"error\":{\"Code\":101,\"Message\":\"Auth Failed\"}}"
+        val responseBody =
+            gson.fromJson<StockDealDetailWithError>(errorJson, StockDealDetailWithError::class.java)
         coEvery {
             service.getStockDealDetail(
                 commKey = any(),
@@ -895,8 +897,12 @@ class RealTimeAfterMarketWebImplTest {
 
     @Test(expected = ServerException::class)
     fun `getIsInTradeDay_失敗_AuthFailed`() = mainCoroutineRule.runBlockingTest {
-        val errorJson = "{\"Error\":{\"Code\":101,\"Message\":\"Auth Failed\"},\"error\":{\"Code\":101,\"Message\":\"Auth Failed\"}}"
-        val responseBody = gson.fromJson<GetIsInTradeDayResponseBodyWithError>(errorJson, GetIsInTradeDayResponseBodyWithError::class.java)
+        val errorJson =
+            "{\"Error\":{\"Code\":101,\"Message\":\"Auth Failed\"},\"error\":{\"Code\":101,\"Message\":\"Auth Failed\"}}"
+        val responseBody = gson.fromJson<GetIsInTradeDayResponseBodyWithError>(
+            errorJson,
+            GetIsInTradeDayResponseBodyWithError::class.java
+        )
         coEvery {
             service.getIsInTradeDay(
                 appId = any(),

@@ -6,11 +6,9 @@ import com.google.gson.annotations.SerializedName
 
 data class ActiveFollowResponseWithError(
     @SerializedName("IsSuccess")
-    val isSuccess: Boolean?,
-    @SerializedName("Message")
-    val message: String?
-): CMoneyError(),
-    IWithError<ActiveFollowResponse>{
+    val isSuccess: Boolean?
+) : CMoneyError(),
+    IWithError<ActiveFollowResponse> {
     override fun toRealResponse(): ActiveFollowResponse {
         return ActiveFollowResponse(isSuccess, message)
     }

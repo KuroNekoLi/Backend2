@@ -1,9 +1,9 @@
 package com.cmoney.backend2.media.service
 
+import com.cmoney.backend2.MainCoroutineRule
+import com.cmoney.backend2.TestDispatcher
+import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.ServerException
-import com.cmoney.backend2.media.FakeSetting
-import com.cmoney.backend2.media.MainCoroutineRule
-import com.cmoney.backend2.media.TestDispatcher
 import com.cmoney.backend2.media.service.api.getmediadetail.GetMediaDetailResponseWithError
 import com.cmoney.backend2.media.service.api.getmediainfo.MediaInfoWithError
 import com.cmoney.backend2.media.service.api.getmediaurl.GetMediaUrlResponseBody
@@ -31,13 +31,13 @@ class MediaWebImplTest {
 
     @MockK
     private val mediaService = mockk<MediaService>()
-    private val setting = FakeSetting()
     private val gson = Gson()
-    private val mediaWeb: MediaWeb = MediaWebImpl(setting, mediaService, gson, TestDispatcher())
+    private lateinit var mediaWeb: MediaWeb
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
+        mediaWeb = MediaWebImpl(TestSetting(), mediaService, gson, TestDispatcher())
     }
 
     @Test

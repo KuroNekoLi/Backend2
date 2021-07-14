@@ -1,10 +1,9 @@
 package com.cmoney.backend2.image.service
 
+import com.cmoney.backend2.MainCoroutineRule
+import com.cmoney.backend2.TestDispatcher
+import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.ServerException
-import com.cmoney.backend2.base.model.setting.Setting
-import com.cmoney.backend2.image.MainCoroutineRule
-import com.cmoney.backend2.image.TestDispatcher
-import com.cmoney.backend2.image.TestSetting
 import com.cmoney.backend2.image.service.api.upload.UploadResponseBody
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
@@ -31,18 +30,16 @@ class ImageWebImplTest {
     @MockK
     private lateinit var service: ImageService
     private val gson = GsonBuilder().serializeNulls().setLenient().setPrettyPrinting().create()
-    private lateinit var setting: Setting
     private lateinit var webImpl: ImageWeb
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        setting = TestSetting()
         webImpl = ImageWebImpl(
             service = service,
-            setting = setting,
+            setting = TestSetting(),
             jsonParser = gson,
-            ioDispatcher = TestDispatcher()
+            dispatcher = TestDispatcher()
         )
     }
 

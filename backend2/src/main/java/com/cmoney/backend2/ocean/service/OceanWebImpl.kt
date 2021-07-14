@@ -2,6 +2,8 @@ package com.cmoney.backend2.ocean.service
 
 import androidx.annotation.IntRange
 import com.cmoney.backend2.base.extension.*
+import com.cmoney.backend2.base.model.dispatcher.DefaultDispatcherProvider
+import com.cmoney.backend2.base.model.dispatcher.DispatcherProvider
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.request.Constant
 import com.cmoney.backend2.base.model.request.MemberApiParam
@@ -126,8 +128,6 @@ import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -140,7 +140,7 @@ class OceanWebImpl(
     private val gson: Gson,
     private val oceanService: OceanService,
     private val setting: Setting,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider()
 ) : OceanWeb {
 
     /**
@@ -157,7 +157,7 @@ class OceanWebImpl(
 
 
     override suspend fun changeAllBadge(isWear: Boolean): Result<SuccessResult> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 oceanService.changeAllBadge(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -190,7 +190,7 @@ class OceanWebImpl(
     override suspend fun changeWearBadge(
         isWear: Boolean,
         badgeIds: List<Int>
-    ): Result<SuccessResult> = withContext(ioDispatcher) {
+    ): Result<SuccessResult> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             oceanService.changeWearBadge(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -213,7 +213,7 @@ class OceanWebImpl(
      * @return
      */
     override suspend fun getBadgeAndRequirement(): Result<List<GetBadgeAndRequirementResponse>> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 val response = oceanService.getBadgeAndRequirement()
                 solvedJsonArrayResponseQuestion<List<GetBadgeAndRequirementResponse>>(response)
@@ -231,7 +231,7 @@ class OceanWebImpl(
     ): Result<List<GetBadgesCollection>> = getBadgesCollection()
 
     override suspend fun getBadgesCollection(): Result<List<GetBadgesCollection>> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 val response = oceanService.getBadgesCollection(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -256,7 +256,7 @@ class OceanWebImpl(
     ): Result<List<GetMetricsStats>> = getMetricsStats()
 
     override suspend fun getMetricsStats(): Result<List<GetMetricsStats>> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 val response = oceanService.getMetricsStats(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -279,7 +279,7 @@ class OceanWebImpl(
         apiParam: MemberApiParam
     ): Result<List<Int>> = getUnreadBadges()
 
-    override suspend fun getUnreadBadges(): Result<List<Int>> = withContext(ioDispatcher) {
+    override suspend fun getUnreadBadges(): Result<List<Int>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             val response = oceanService.getUnreadBadges(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -305,7 +305,7 @@ class OceanWebImpl(
     ): Result<List<ChannelWearBadge>> = channelWearBadge(channelIds)
 
     override suspend fun channelWearBadge(channelIds: List<Long>): Result<List<ChannelWearBadge>> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 val response = oceanService.channelWearBadge(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -332,7 +332,7 @@ class OceanWebImpl(
     ): Result<SuccessResult> = setBadgeRead(badgeId)
 
     override suspend fun setBadgeRead(badgeId: Long): Result<SuccessResult> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 oceanService.setBadgeRead(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -362,7 +362,7 @@ class OceanWebImpl(
 
     override suspend fun getChannelQuestions(
         channelId: Long
-    ): Result<GetChannelQuestionsResponse> = withContext(ioDispatcher) {
+    ): Result<GetChannelQuestionsResponse> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             oceanService.getChannelQuestions(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -392,7 +392,7 @@ class OceanWebImpl(
 
     override suspend fun channelQuestions(
         questionnaire: ChannelQuestionnaire
-    ): Result<SuccessResult> = withContext(ioDispatcher) {
+    ): Result<SuccessResult> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             oceanService.channelQuestions(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -425,7 +425,7 @@ class OceanWebImpl(
         isActive: Boolean,
         channelId: Long
     ): Result<ChannelQuestionsActivationResponse> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 oceanService.channelQuestionsActivation(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -463,7 +463,7 @@ class OceanWebImpl(
         memberChannelIds: List<Long>,
         questionIds: List<Long>
     ): Result<GetAnswersResponse> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 oceanService.getAnswers(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -494,7 +494,7 @@ class OceanWebImpl(
     ): Result<SuccessResult> = answers(answers)
 
     override suspend fun answers(answers: List<AnswerParam>): Result<SuccessResult> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 oceanService.answers(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -523,7 +523,7 @@ class OceanWebImpl(
     ): Result<HadPhoneAuthResponse> = hadPhoneAuthentication(channelId)
 
     override suspend fun hadPhoneAuthentication(channelId: List<Long>): Result<HadPhoneAuthResponse> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 oceanService.hadPhoneAuthentication(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -574,7 +574,7 @@ class OceanWebImpl(
         stockIdList: List<String>,
         articleNeedInfo: ArticleNeedInfo,
         filterType: FilterType
-    ): Result<GetStockLatestArticleResponse> = withContext(ioDispatcher) {
+    ): Result<GetStockLatestArticleResponse> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             oceanService.getStockLatestArticle(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -622,7 +622,7 @@ class OceanWebImpl(
         isIncludeLimitedAskArticle: Boolean,
         channelIdList: List<Long>,
         articleNeedInfo: ArticleNeedInfo
-    ): Result<GetChannelLatestArticleResponse> = withContext(ioDispatcher) {
+    ): Result<GetChannelLatestArticleResponse> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             oceanService.getChannelLatestArticle(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -655,7 +655,7 @@ class OceanWebImpl(
     ): Result<SuccessResult> = impeachArticle(articleId, reason)
 
     override suspend fun impeachArticle(articleId: Long, reason: String): Result<SuccessResult> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 oceanService.impeachArticle(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -703,7 +703,7 @@ class OceanWebImpl(
         stockIdList: List<String>,
         articleNeedInfo: ArticleNeedInfo,
         filterType: FilterType
-    ): Result<GetStockPopularArticleResponse> = withContext(ioDispatcher) {
+    ): Result<GetStockPopularArticleResponse> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             oceanService.getStockPopularArticle(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -736,7 +736,7 @@ class OceanWebImpl(
 
 
     override suspend fun putOnBlackList(blackChannelId: Long): Result<SuccessResult> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 oceanService.putOnBlackList(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -765,7 +765,7 @@ class OceanWebImpl(
     ): Result<SuccessResult> = spinOffBlackList(blackChannelId)
 
     override suspend fun spinOffBlackList(blackChannelId: Long): Result<SuccessResult> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 oceanService.spinOffBlackList(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -792,7 +792,7 @@ class OceanWebImpl(
     ): Result<GetBlackListResponseBody> = getBlackList()
 
     override suspend fun getBlackList(): Result<GetBlackListResponseBody> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 oceanService.getBlackList(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -818,7 +818,7 @@ class OceanWebImpl(
     ): Result<GetBlockListResponseBody> = getBlockList()
 
     override suspend fun getBlockList(): Result<GetBlockListResponseBody> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 oceanService.getBlockList(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -861,7 +861,7 @@ class OceanWebImpl(
         lowerBoundNotifyTime: Long,
         notifyTypes: List<NotificationType>,
         fetchCount: Int
-    ): Result<GetNotifyResponseBody> = withContext(ioDispatcher) {
+    ): Result<GetNotifyResponseBody> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             oceanService.getNotify(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -899,7 +899,7 @@ class OceanWebImpl(
         isIncludeClub: Boolean,
         lowerBoundNotifyTime: Long,
         notifyTypes: List<NotificationType>
-    ): Result<GetUnreadCountResponseBody> = withContext(ioDispatcher) {
+    ): Result<GetUnreadCountResponseBody> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             oceanService.getUnreadCount(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -928,7 +928,7 @@ class OceanWebImpl(
 
     override suspend fun setReaded(
         notifyIdAndIsSpecificPair: List<NotifyIdAndIsSpecificPair>
-    ): Result<ResponseBody> = withContext(ioDispatcher) {
+    ): Result<ResponseBody> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             oceanService.setReaded(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -958,7 +958,7 @@ class OceanWebImpl(
     override suspend fun getSingleArticle(
         articleId: Long,
         articleNeedInfo: ArticleNeedInfo
-    ): Result<GetSingleArticleResponseBody> = withContext(ioDispatcher) {
+    ): Result<GetSingleArticleResponseBody> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             oceanService.getSingleArticle(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -994,7 +994,7 @@ class OceanWebImpl(
         articleId: Long,
         upperBoundArticleId: Long,
         fetchCount: Int
-    ): Result<GetCommentsResponseBody> = withContext(ioDispatcher) {
+    ): Result<GetCommentsResponseBody> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             oceanService.getComments(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -1017,7 +1017,7 @@ class OceanWebImpl(
     ): Result<GetManagerList> = getManagerList(needInfo, channelId)
 
     override suspend fun getManagerList(needInfo: Int, channelId: Long): Result<GetManagerList> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 oceanService.getManagerList(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -1076,7 +1076,7 @@ class OceanWebImpl(
     ): Result<SuccessResult> = deleteArticle(articleId)
 
     override suspend fun deleteArticle(articleId: Long): Result<SuccessResult> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 oceanService.deleteArticle(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -1105,7 +1105,7 @@ class OceanWebImpl(
     override suspend fun isJoinedClub(
         channelId: Long,
         relation: Relation
-    ): Result<HasJoinedClubComplete> = withContext(ioDispatcher) {
+    ): Result<HasJoinedClubComplete> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             oceanService.isJoinClub(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -1139,7 +1139,7 @@ class OceanWebImpl(
     override suspend fun getOtherChannelInfo(
         channelId: Long,
         needInfo: ChannelNeedInfo<ChannelInfoOption.Other>
-    ): Result<ChannelInfo.ChannelBaseInfo> = withContext(ioDispatcher) {
+    ): Result<ChannelInfo.ChannelBaseInfo> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             oceanService.getOtherChannelInfo(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -1172,7 +1172,7 @@ class OceanWebImpl(
     override suspend fun getRssSignalChannelInfo(
         channelId: Long,
         needInfo: ChannelNeedInfo<ChannelInfoOption.RssSignal>
-    ): Result<ChannelInfo.RssSignalChannelInfo> = withContext(ioDispatcher) {
+    ): Result<ChannelInfo.RssSignalChannelInfo> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             oceanService.getRssSignalChannelInfo(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -1203,7 +1203,7 @@ class OceanWebImpl(
     override suspend fun getMemberChannelInfo(
         channelId: Long,
         needInfo: ChannelNeedInfo<ChannelInfoOption.Member>
-    ): Result<ChannelInfo.MemberChannelInfo> = withContext(ioDispatcher) {
+    ): Result<ChannelInfo.MemberChannelInfo> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             val response = oceanService.getMemberChannelInfo(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -1235,7 +1235,7 @@ class OceanWebImpl(
     override suspend fun getClubChannelInfo(
         channelId: Long,
         needInfo: ChannelNeedInfo<ChannelInfoOption.Club>
-    ): Result<ChannelInfo.ClubChannelInfo> = withContext(ioDispatcher) {
+    ): Result<ChannelInfo.ClubChannelInfo> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             oceanService.getClubChannelInfo(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -1269,7 +1269,7 @@ class OceanWebImpl(
         channelTypes: ChannelTypes,
         fetchCount: Int,
         keyword: String
-    ): Result<SearchChannelResponseBody> = withContext(ioDispatcher) {
+    ): Result<SearchChannelResponseBody> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             oceanService.searchChannel(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -1306,7 +1306,7 @@ class OceanWebImpl(
         excludeClubChannelId: Long,
         fetchCount: Int,
         skipCount: Int
-    ): Result<GetFansListExcludeJoinedClubResponseBody> = withContext(ioDispatcher) {
+    ): Result<GetFansListExcludeJoinedClubResponseBody> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             oceanService.getFanListExcludeJoinedClub(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -1336,7 +1336,7 @@ class OceanWebImpl(
     ): Result<GetSimpleChannelInfoResponseBody> = getSimpleChannelInfo(channelIds)
 
     override suspend fun getSimpleChannelInfo(channelIds: List<Long>): Result<GetSimpleChannelInfoResponseBody> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 oceanService.getSimpleChannelInfo(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -1369,7 +1369,7 @@ class OceanWebImpl(
         channelId: Long,
         content: String,
         score: Int
-    ): Result<SuccessResult> = withContext(ioDispatcher) {
+    ): Result<SuccessResult> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             oceanService.setEvaluation(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -1400,7 +1400,7 @@ class OceanWebImpl(
     ): Result<CheckHasEvaluatedResponseBody> = checkHasEvaluated(channelId)
 
     override suspend fun checkHasEvaluated(channelId: Long): Result<CheckHasEvaluatedResponseBody> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 oceanService.checkHasEvaluated(
                     authorization = setting.accessToken.createAuthorizationBearer(),
@@ -1440,7 +1440,7 @@ class OceanWebImpl(
         fetchCount: Int,
         skipCount: Int,
         sortType: SortType
-    ): Result<GetEvaluationListResponseBody> = withContext(ioDispatcher) {
+    ): Result<GetEvaluationListResponseBody> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             oceanService.getEvaluationList(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -1462,7 +1462,7 @@ class OceanWebImpl(
     override suspend fun changeCollectArticleState(
         articleId: Long,
         isCollect: Boolean
-    ): Result<SuccessResult> = withContext(ioDispatcher) {
+    ): Result<SuccessResult> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             val response = oceanService.changeCollectArticleState(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -1510,7 +1510,7 @@ class OceanWebImpl(
         fetchCount: Int,
         articleNeedInfo: ArticleNeedInfo,
         isIncludeLimitedAskArticle: Boolean
-    ): Result<GetCollectArticleListResponseBody> = withContext(ioDispatcher) {
+    ): Result<GetCollectArticleListResponseBody> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             val response = oceanService.getCollectArticleList(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -1539,17 +1539,18 @@ class OceanWebImpl(
         apiParam: MemberApiParam
     ): Result<IsInCreateArticleWhiteListResponseBody> = isInCreateArticleWhiteList()
 
-    override suspend fun isInCreateArticleWhiteList(): Result<IsInCreateArticleWhiteListResponseBody> = withContext(ioDispatcher) {
-        kotlin.runCatching {
-            oceanService.isInCreateArticleWhiteList(
-                authorization = setting.accessToken.createAuthorizationBearer(),
-                requestBody = IsInCreateArticleWhiteListRequestBody(
-                    appId = setting.appId,
-                    guid = setting.identityToken.getMemberGuid()
-                )
-            ).checkOceanResponseBody(gson)
+    override suspend fun isInCreateArticleWhiteList(): Result<IsInCreateArticleWhiteListResponseBody> =
+        withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                oceanService.isInCreateArticleWhiteList(
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    requestBody = IsInCreateArticleWhiteListRequestBody(
+                        appId = setting.appId,
+                        guid = setting.identityToken.getMemberGuid()
+                    )
+                ).checkOceanResponseBody(gson)
+            }
         }
-    }
 
     /**
      * 取得大師排行榜
@@ -1567,7 +1568,7 @@ class OceanWebImpl(
     override suspend fun getMasters(
         masterType: MasterType,
         fetchCount: Int
-    ): Result<GetMastersResponseBody> = withContext(ioDispatcher) {
+    ): Result<GetMastersResponseBody> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             oceanService.getMasters(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -1600,14 +1601,15 @@ class OceanWebImpl(
         fetchCount: Int,
         stockListList: List<String>,
         articleNeedInfo: ArticleNeedInfo
-    ): Result<GetAskLatestArticleResponseBody> = getAskLatestArticle(baseArticleId, fetchCount, stockListList, articleNeedInfo)
+    ): Result<GetAskLatestArticleResponseBody> =
+        getAskLatestArticle(baseArticleId, fetchCount, stockListList, articleNeedInfo)
 
     override suspend fun getAskLatestArticle(
         baseArticleId: Long,
         fetchCount: Int,
         stockListList: List<String>,
         articleNeedInfo: ArticleNeedInfo
-    ): Result<GetAskLatestArticleResponseBody> = withContext(ioDispatcher)  {
+    ): Result<GetAskLatestArticleResponseBody> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             oceanService.getAskLatestArticle(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -1633,7 +1635,7 @@ class OceanWebImpl(
      */
     override suspend fun getStockMasterEvaluationList(
         stockIdList: List<String>
-    ): Result<GetStockMasterEvaluationListResponseBody> = withContext(ioDispatcher)  {
+    ): Result<GetStockMasterEvaluationListResponseBody> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             oceanService.getStockMasterEvaluationList(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -1661,20 +1663,20 @@ class OceanWebImpl(
      */
     override suspend fun getStockMasterEvaluation(
         stockId: String
-    ): Result<GetStockMasterEvaluationResponseBody> = withContext(ioDispatcher) {
-       kotlin.runCatching {
-           oceanService.getStockMasterEvaluation(
-               authorization = setting.accessToken.createAuthorizationBearer(),
-               requestBody = GetStockMasterEvaluationRequestBody(
-                   appId = setting.appId,
-                   guid = setting.identityToken.getMemberGuid(),
-                   stockId = stockId
-               )
-           ).checkIsSuccessful()
-               .requireBody()
-               .checkIWithError()
-               .toRealResponse()
-       }
+    ): Result<GetStockMasterEvaluationResponseBody> = withContext(dispatcher.io()) {
+        kotlin.runCatching {
+            oceanService.getStockMasterEvaluation(
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                requestBody = GetStockMasterEvaluationRequestBody(
+                    appId = setting.appId,
+                    guid = setting.identityToken.getMemberGuid(),
+                    stockId = stockId
+                )
+            ).checkIsSuccessful()
+                .requireBody()
+                .checkIWithError()
+                .toRealResponse()
+        }
     }
 
     override suspend fun uploadChannelImage(
@@ -1692,7 +1694,7 @@ class OceanWebImpl(
     override suspend fun uploadChannelImage(
         channelId: Long,
         image: File?
-    ): Result<UploadChannelImageResponseBody> = withContext(ioDispatcher) {
+    ): Result<UploadChannelImageResponseBody> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             val builder = MultipartBody.Builder().setType(MultipartBody.FORM)
             builder.apply {
@@ -1720,7 +1722,7 @@ class OceanWebImpl(
         clubName: String,
         description: String,
         joinMethod: JoinMethod
-    ): Result<CreateClubResponseBody>  = createClub(clubName, description, joinMethod)
+    ): Result<CreateClubResponseBody> = createClub(clubName, description, joinMethod)
 
     /**
      * 創建社團
@@ -1733,7 +1735,7 @@ class OceanWebImpl(
         clubName: String,
         description: String,
         joinMethod: JoinMethod
-    ):Result<CreateClubResponseBody> = withContext(ioDispatcher) {
+    ): Result<CreateClubResponseBody> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             oceanService.createClub(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -1764,7 +1766,7 @@ class OceanWebImpl(
      */
     override suspend fun deleteClub(
         clubChannelId: Long
-    ): Result<DeleteClubResponseBody> = withContext(ioDispatcher) {
+    ): Result<DeleteClubResponseBody> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             oceanService.deleteClub(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -1792,7 +1794,7 @@ class OceanWebImpl(
      */
     override suspend fun leaveClub(
         clubChannelId: Long
-    ): Result<LeaveClubResponseBody> = withContext(ioDispatcher) {
+    ): Result<LeaveClubResponseBody> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             oceanService.leaveClub(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -1823,7 +1825,7 @@ class OceanWebImpl(
     override suspend fun invite(
         clubChannelId: Long,
         memberChannelIds: List<Long>
-    ): Result<InviteResponseBody> = withContext(ioDispatcher) {
+    ): Result<InviteResponseBody> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             oceanService.invite(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -1855,7 +1857,7 @@ class OceanWebImpl(
     override suspend fun joinClub(
         clubChannelId: Long,
         message: String
-    ): Result<JoinClubResponseBody> = withContext(ioDispatcher) {
+    ): Result<JoinClubResponseBody> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             oceanService.joinClub(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -1889,7 +1891,7 @@ class OceanWebImpl(
         memberChannelId: Long,
         needInfo: ChannelNeedInfo<ChannelInfoOption.Club>,
         relation: Relation
-    ): Result<GetMemberClubsResponseBody> = withContext(ioDispatcher) {
+    ): Result<GetMemberClubsResponseBody> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             oceanService.getMemberClubs(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -1927,7 +1929,7 @@ class OceanWebImpl(
         fetchCount: Int,
         skipCount: Int,
         needInfo: RecommendClubsNeedInfo
-    ): Result<GetRecommendClubsResponseBody> = withContext(ioDispatcher) {
+    ): Result<GetRecommendClubsResponseBody> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             oceanService.getRecommendClubs(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -1967,7 +1969,7 @@ class OceanWebImpl(
         clubChannelId: Long,
         memberChannelIds: List<Long>,
         operation: Operation
-    ): Result<ChangeMemberStatusResponseBody> = withContext(ioDispatcher) {
+    ): Result<ChangeMemberStatusResponseBody> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             oceanService.changeMemberStatus(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -2001,7 +2003,7 @@ class OceanWebImpl(
     override suspend fun updateClubDescription(
         clubChannelId: Long,
         description: String
-    ): Result<UpdateClubDescriptionResponseBody> = withContext(ioDispatcher) {
+    ): Result<UpdateClubDescriptionResponseBody> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             oceanService.updateClubDescription(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -2048,7 +2050,7 @@ class OceanWebImpl(
         fetchCount: Int,
         skipCount: Int,
         needInfo: ChannelNeedInfo<ChannelInfoOption.Member>
-    ): Result<GetMemberStatusListResponseBody> = withContext(ioDispatcher) {
+    ): Result<GetMemberStatusListResponseBody> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             oceanService.getMemberStatusList(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -2083,7 +2085,7 @@ class OceanWebImpl(
     override suspend fun getManagerList(
         clubChannelId: Long,
         needInfo: ChannelNeedInfo<ChannelInfoOption.Member>
-    ): Result<GetManagerList> = withContext(ioDispatcher) {
+    ): Result<GetManagerList> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             oceanService.getManagerList(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -2102,7 +2104,7 @@ class OceanWebImpl(
 
     override suspend fun getAnnouncements(
         channelId: Long
-    ): Result<GetAnnouncementsResponse> = withContext(ioDispatcher) {
+    ): Result<GetAnnouncementsResponse> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             oceanService.getAnnouncements(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -2122,7 +2124,7 @@ class OceanWebImpl(
         channelId: Long,
         isPinned: Boolean,
         articleId: Long
-    ): Result<RemoveAnnouncementResponse> = withContext(ioDispatcher) {
+    ): Result<RemoveAnnouncementResponse> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             oceanService.removeAnnouncement(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -2144,7 +2146,7 @@ class OceanWebImpl(
         channelId: Long,
         isPinned: Boolean,
         articleId: Long
-    ): Result<CreateAnnouncementResponse> = withContext(ioDispatcher) {
+    ): Result<CreateAnnouncementResponse> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             oceanService.createAnnouncement(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -2165,7 +2167,7 @@ class OceanWebImpl(
     override suspend fun getRelevantComments(
         articleIds: List<Long>,
         fetch: Long
-    ): Result<GetRelevantCommentsResponse> = withContext(ioDispatcher) {
+    ): Result<GetRelevantCommentsResponse> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             oceanService.getRelevantComments(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -2187,7 +2189,7 @@ class OceanWebImpl(
         baseArticleId: Long,
         fetchCount: Int,
         articleNeedInfo: ArticleNeedInfo
-    ): Result<GetTopicArticlesResponseBody> = withContext(ioDispatcher) {
+    ): Result<GetTopicArticlesResponseBody> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             oceanService.getTopicArticles(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -2212,7 +2214,7 @@ class OceanWebImpl(
         baseArticleId: Long,
         fetchCount: Int,
         articleNeedInfo: ArticleNeedInfo
-    ): Result<GetStockAndTopicArticlesResponseBody> = withContext(ioDispatcher) {
+    ): Result<GetStockAndTopicArticlesResponseBody> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             oceanService.getStockAndTopicArticles(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -2231,7 +2233,7 @@ class OceanWebImpl(
                 .toRealResponse()
         }
     }
-    
+
     /**
      * 新增或更新公告
      * @param clubChannelId Long
@@ -2242,7 +2244,7 @@ class OceanWebImpl(
         clubChannelId: Long,
         articleId: Long,
         isPinned: Boolean
-    ): Result<IsCreateOrUpdateSuccessResponse> = withContext(ioDispatcher) {
+    ): Result<IsCreateOrUpdateSuccessResponse> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             oceanService.createOrUpdateAnnouncement(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -2259,14 +2261,14 @@ class OceanWebImpl(
                 .toRealResponse()
         }
     }
-    
+
     /**
      * 拿到所有公告
      * @param clubChannelId Long
      */
     override suspend fun getAllAnnouncements(
         clubChannelId: Long
-    ): Result<AnnouncementListResponse> = withContext(ioDispatcher) {
+    ): Result<AnnouncementListResponse> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             oceanService.readAnnouncement(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -2281,7 +2283,7 @@ class OceanWebImpl(
                 .toRealResponse()
         }
     }
-    
+
     /**
      * 刪除特定公告
      * @param clubChannelId Long
@@ -2292,7 +2294,7 @@ class OceanWebImpl(
         clubChannelId: Long,
         articleId: Long,
         isPinned: Boolean
-    ): Result<IsRemoveAnnouncementSuccessResponse> = withContext(ioDispatcher) {
+    ): Result<IsRemoveAnnouncementSuccessResponse> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             oceanService.removeAnnouncement(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -2309,8 +2311,8 @@ class OceanWebImpl(
                 .toRealResponse()
         }
     }
-    
-    
+
+
     /**
      * 解析json回傳
      *

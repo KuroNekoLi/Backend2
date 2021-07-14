@@ -1,7 +1,9 @@
 package com.cmoney.backend2.virtualassets.service
 
+import com.cmoney.backend2.MainCoroutineRule
+import com.cmoney.backend2.TestDispatcher
+import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.ServerException
-import com.cmoney.backend2.virtualassets.MainCoroutineRule
 import com.cmoney.backend2.virtualassets.service.api.getexchangeproductlist.GetExchangeProductListResponseBody
 import com.cmoney.backend2.virtualassets.service.api.getexchangeproductlist.ProductInfo
 import com.cmoney.backend2.virtualassets.service.api.getgrouplastexchangetime.GetGroupLastExchangeTimeResponseBody
@@ -10,8 +12,6 @@ import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
-import io.mockk.mockk
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import okhttp3.ResponseBody.Companion.toResponseBody
@@ -33,18 +33,20 @@ class VirtualAssetsWebImplTest {
     val mainCoroutineRule = MainCoroutineRule()
 
     @MockK
-    private val virtualAssetsService = mockk<VirtualAssetsService>()
+    private lateinit var virtualAssetsService: VirtualAssetsService
     private val gson = GsonBuilder().serializeNulls().setLenient().setPrettyPrinting().create()
-    private val service: VirtualAssetsWeb = VirtualAssetsWebImpl(
-        FakeSetting(),
-        gson,
-        virtualAssetsService,
-        Dispatchers.Main
-    )
+    private lateinit var service: VirtualAssetsWeb
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
+        service =
+            VirtualAssetsWebImpl(
+                TestSetting(),
+                gson,
+                virtualAssetsService,
+                TestDispatcher()
+            )
     }
 
     @After
@@ -104,7 +106,7 @@ class VirtualAssetsWebImplTest {
     @Test
     fun `getGroupLastExchangeTime批次取得會員最後一次兌換指定商品的時間 成功`() = mainCoroutineRule.runBlockingTest {
         //準備api成功時的回傳
-        val map = HashMap<String,Long>()
+        val map = HashMap<String, Long>()
         map["1"] = 123456L
         val responseBody = GetGroupLastExchangeTimeResponseBody(
             lastExchangeTime = map
@@ -118,7 +120,7 @@ class VirtualAssetsWebImplTest {
         } returns Response.success(responseBody)
 
         //確認api是否成功
-        val result = service.getGroupLastExchangeTime(listOf(1L,2L,3L,4L))
+        val result = service.getGroupLastExchangeTime(listOf(1L, 2L, 3L, 4L))
         Truth.assertThat(result.isSuccess).isTrue()
 
         //確認api回傳是否如預期
@@ -136,10 +138,10 @@ class VirtualAssetsWebImplTest {
                 authorization = any(),
                 requestBody = any()
             )
-        } returns Response.error(401,json.toResponseBody())
+        } returns Response.error(401, json.toResponseBody())
 
         //確認api是否成功
-        val result = service.getGroupLastExchangeTime(listOf(1L,2L,3L,4L))
+        val result = service.getGroupLastExchangeTime(listOf(1L, 2L, 3L, 4L))
         checkHttpException(result)
     }
 
@@ -178,7 +180,7 @@ class VirtualAssetsWebImplTest {
                 authorization = any(),
                 requestBody = any()
             )
-        } returns Response.error(400,json.toResponseBody())
+        } returns Response.error(400, json.toResponseBody())
 
         //確認api是否成功
         val result = service.exchange(1L)

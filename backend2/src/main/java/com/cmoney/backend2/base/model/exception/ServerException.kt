@@ -9,4 +9,7 @@ import java.io.IOException
  * @property code 錯誤碼
  * @property message 錯誤訊息
  */
-data class ServerException(val code: Int, override val message: String) : IOException()
+data class ServerException(
+    val code: Int,
+    override val message: String
+) : IOException()

@@ -1,6 +1,6 @@
 package com.cmoney.backend2.base.model.calladapter
 
-import com.cmoney.backend2.base.MainCoroutineRule
+import com.cmoney.backend2.MainCoroutineRule
 import com.cmoney.backend2.base.TestSetting
 import com.cmoney.backend2.testing.noContentMockResponse
 import com.cmoney.data_logdatarecorder.recorder.LogDataRecorder
