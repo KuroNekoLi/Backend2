@@ -26,6 +26,7 @@ class RealTimeAfterMarketServiceCase: ServiceCase {
         realTimeAfterMarketServiceImpl.searchStock("電子").logResponse(TAG)
         realTimeAfterMarketServiceImpl.searchStock("2330").logResponse(TAG)
         realTimeAfterMarketServiceImpl.searchUsStock("Apple").logResponse(TAG)
+        realTimeAfterMarketServiceImpl.getForeignExchangeTicks(listOf("SUSDTWD" to 0)).logResponse(TAG)
         realTimeAfterMarketServiceImpl.getStockDealDetail(
             commKey = "2330",
             perReturnCode = 0,

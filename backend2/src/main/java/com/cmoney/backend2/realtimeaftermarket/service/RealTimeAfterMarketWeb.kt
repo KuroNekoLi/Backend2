@@ -7,6 +7,7 @@ import com.cmoney.backend2.realtimeaftermarket.service.api.getInternationalTicks
 import com.cmoney.backend2.realtimeaftermarket.service.api.getafterhourstime.AfterHoursTime
 import com.cmoney.backend2.realtimeaftermarket.service.api.getcommlist.GetCommListResponseBody
 import com.cmoney.backend2.realtimeaftermarket.service.api.getdealdetail.StockDealDetail
+import com.cmoney.backend2.realtimeaftermarket.service.api.getforeignexchangeticks.GetForeignExchangeTickResponseBody
 import com.cmoney.backend2.realtimeaftermarket.service.api.getisintradeday.GetIsInTradeDayResponseBody
 import com.cmoney.backend2.realtimeaftermarket.service.api.getmarketnewtick.MarketNewTick
 import com.cmoney.backend2.realtimeaftermarket.service.api.getnewtickinfo.NewTickInfo
@@ -142,6 +143,15 @@ interface RealTimeAfterMarketWeb {
      * @param queryKey 股票關鍵字
      */
     suspend fun searchUsStock(queryKey: String): Result<List<UsResultEntry>>
+
+    /**
+     * 服務13. 取得外匯即時
+     *
+     * @return
+     */
+    suspend fun getForeignExchangeTicks(
+        commKeyWithStatusCodes: List<Pair<String, Int>>
+    ): Result<GetForeignExchangeTickResponseBody>
 
     @Deprecated("ApiParam no longer required")
     suspend fun getStockDealDetail(
