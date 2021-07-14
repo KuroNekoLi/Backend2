@@ -5,6 +5,7 @@ import com.cmoney.backend2.base.model.request.MemberApiParam
 import com.cmoney.backend2.base.model.response.dtno.DtnoData
 import com.cmoney.backend2.realtimeaftermarket.service.api.getInternationalTicks.InternationalNewTicks
 import com.cmoney.backend2.realtimeaftermarket.service.api.getafterhourstime.AfterHoursTime
+import com.cmoney.backend2.realtimeaftermarket.service.api.getcommlist.GetCommListResponseBody
 import com.cmoney.backend2.realtimeaftermarket.service.api.getdealdetail.StockDealDetail
 import com.cmoney.backend2.realtimeaftermarket.service.api.getisintradeday.GetIsInTradeDayResponseBody
 import com.cmoney.backend2.realtimeaftermarket.service.api.getmarketnewtick.MarketNewTick
@@ -13,8 +14,31 @@ import com.cmoney.backend2.realtimeaftermarket.service.api.getsinglenewtick.Sing
 import com.cmoney.backend2.realtimeaftermarket.service.api.searchstock.ResultEntry
 import com.cmoney.backend2.realtimeaftermarket.service.api.searchustock.UsResultEntry
 
-interface
-RealTimeAfterMarketWeb {
+interface RealTimeAfterMarketWeb {
+
+    /**
+     * 服務4-2.取得股市商品清單
+     *
+     * @param areaIds 資料範圍
+     * 1-籌碼K全球,
+     * 2-籌碼K亞洲,
+     * 3-籌碼K歐美,
+     * 4-籌碼K台灣,
+     * 5-籌碼K美股科技,
+     * 6-籌碼K美股非科技,
+     * 7-籌碼K台股ADR,
+     * 8-籌碼K外匯,
+     * 9-台股上市類股,
+     * 10-台股上櫃類股,
+     * 11-台股上市(含個股、指數、TDR、ETF),
+     * 12-台股上櫃(含個股、指數、TDR、ETF),
+     * 13-台股上市指數彙編類股,
+     * 14-台股上櫃指數彙編類股,
+     * 15-台股概念股,
+     * 16-原力美股)
+     * 上述已逗號分開，舉例: 1,2,3
+     */
+    suspend fun getCommList(areaIds: List<String>): Result<GetCommListResponseBody>
 
     @Deprecated("ApiParam no longer required")
     suspend fun getNewTickInfo(

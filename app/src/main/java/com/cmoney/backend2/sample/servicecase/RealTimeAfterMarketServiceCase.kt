@@ -9,6 +9,7 @@ class RealTimeAfterMarketServiceCase: ServiceCase {
     private val realTimeAfterMarketServiceImpl by inject<RealTimeAfterMarketWeb>()
 
     override suspend fun testAll() {
+        realTimeAfterMarketServiceImpl.getCommList(listOf("1")).logResponse(TAG)
         realTimeAfterMarketServiceImpl.getNewTickInfo(
             commKeys = listOf("2330"),
             statusCodes = listOf(0),

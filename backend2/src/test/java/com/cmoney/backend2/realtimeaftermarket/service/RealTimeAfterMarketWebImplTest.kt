@@ -12,6 +12,9 @@ import com.cmoney.backend2.realtimeaftermarket.TestSetting
 import com.cmoney.backend2.realtimeaftermarket.service.api.getInternationalTicks.InternationalChartData
 import com.cmoney.backend2.realtimeaftermarket.service.api.getInternationalTicks.InternationalNewTicks
 import com.cmoney.backend2.realtimeaftermarket.service.api.getafterhourstime.AfterHoursTimeWithError
+import com.cmoney.backend2.realtimeaftermarket.service.api.getcommlist.GetCommListResponseBody
+import com.cmoney.backend2.realtimeaftermarket.service.api.getcommlist.Product
+import com.cmoney.backend2.realtimeaftermarket.service.api.getcommlist.ProductInfo
 import com.cmoney.backend2.realtimeaftermarket.service.api.getdealdetail.StockDealDetailWithError
 import com.cmoney.backend2.realtimeaftermarket.service.api.getisintradeday.GetIsInTradeDayResponseBodyWithError
 import com.cmoney.backend2.realtimeaftermarket.service.api.getmarketnewtick.MarketChartData
@@ -62,6 +65,47 @@ class RealTimeAfterMarketWebImplTest {
             setting = setting,
             dispatcher = TestDispatcher()
         )
+    }
+
+    @Test
+    fun `getCommList_成功`() = mainCoroutineRule.runBlockingTest {
+        val mockResponse = GetCommListResponseBody(
+            products = listOf(
+                Product(
+                    1,
+                    listOf(
+                        ProductInfo(
+                            commkey = "MYMF1",
+                            name = "小道瓊期貨",
+                            countryCode = 840,
+                            isShowPreviousClosePr = false
+                        )
+                    )
+                )
+            ),
+            responseCode = 1
+        )
+        coEvery {
+            service.getCommList(
+                authorization = any(),
+                areaIds = any(),
+                appId = setting.appId,
+                guid = setting.identityToken.getMemberId()
+            )
+        } returns Response.success(mockResponse)
+        val result = webImpl.getCommList(listOf("1"))
+        Truth.assertThat(result.isSuccess).isTrue()
+        val data = result.getOrThrow()
+        Truth.assertThat(data.responseCode).isEqualTo(1)
+        Truth.assertThat(data.products?.size).isEqualTo(1)
+        val product = data.products?.firstOrNull()!!
+        Truth.assertThat(product.areaId).isEqualTo(1)
+        Truth.assertThat(product.productInfos?.size).isEqualTo(1)
+        val productInfo = product.productInfos!!.first()
+        Truth.assertThat(productInfo.commkey).isEqualTo("MYMF1")
+        Truth.assertThat(productInfo.name).isEqualTo("小道瓊期貨")
+        Truth.assertThat(productInfo.countryCode).isEqualTo(840)
+        Truth.assertThat(productInfo.isShowPreviousClosePr).isFalse()
     }
 
     @Test

@@ -23,6 +23,19 @@ class RealTimeAfterMarketWebImpl(
     private val dispatcher: DispatcherProvider = DefaultDispatcherProvider()
 ) : RealTimeAfterMarketWeb {
 
+    override suspend fun getCommList(areaIds: List<String>) = withContext(dispatcher.io()) {
+        kotlin.runCatching {
+            service.getCommList(
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                areaIds = areaIds.joinToString(","),
+                appId = setting.appId,
+                guid = setting.identityToken.getMemberGuid()
+            )
+                .checkIsSuccessful()
+                .requireBody()
+        }
+    }
+
     /**
      * 服務5-2 Polling取得多股的即時Tick資訊 (包含國際&午後&台股)
      *
