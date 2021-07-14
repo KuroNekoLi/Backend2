@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class CommentResponseBody(
     @SerializedName("id")
-    val id : Long,
+    val id : Long?,
     @SerializedName("content")
-    val content: CommentContent
+    val content: CommentContent?
 )

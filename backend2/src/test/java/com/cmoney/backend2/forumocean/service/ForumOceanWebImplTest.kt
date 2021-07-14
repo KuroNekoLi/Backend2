@@ -7,6 +7,7 @@ import com.cmoney.backend2.forumocean.service.api.article.create.CreateArticleRe
 import com.cmoney.backend2.forumocean.service.api.article.create.variable.Content
 import com.cmoney.backend2.forumocean.service.api.article.createquestion.CreateQuestionResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.update.UpdateArticleHelper
+import com.cmoney.backend2.forumocean.service.api.channel.getmemberstatistics.GetMemberStatisticsResponseBody
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.comment.update.UpdateCommentHelper
 import com.cmoney.backend2.forumocean.service.api.group.create.CreateGroupResponseBody
@@ -25,6 +26,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.articlerespo
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentContent
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.groupresponse.GroupResponseBody
+import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.ReactionInfo
 import com.cmoney.backend2.forumocean.service.api.vote.get.VoteInfo
 import com.google.common.truth.Truth.assertThat
 import com.google.gson.GsonBuilder
@@ -423,6 +425,27 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
+    fun `getMemberStatistics_取得指定使用者的統計資訊成功測試`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getMemberStatistics(
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                memberId = any()
+            )
+        } returns Response.success(
+            GetMemberStatisticsResponseBody(
+                totalCountArticle = 6,
+                totalCountReaction = 3
+            )
+        )
+        val result = service.getMemberStatistics(100)
+
+        assertThat(result.isSuccess).isTrue()
+        assertThat(result.getOrThrow().totalCountArticle).isEqualTo(6)
+        assertThat(result.getOrThrow().totalCountReaction).isEqualTo(3)
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
     fun `getChannelsArticleByWeight_取得頻道文章清單以權重取成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.getChannelsArticleByWeight(
@@ -590,6 +613,49 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
+    fun `getGroupManagerComments_取得指定主文的社團管理員回文清單成功測試`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getGroupManagerComments(
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                articleId = any()
+            )
+        } returns Response.success(
+            listOf(
+                CommentResponseBody(
+                    id = 2, content = CommentContent(
+                        creatorId = null,
+                        text = null,
+                        multiMedia = listOf(),
+                        position = null,
+                        commentState = null,
+                        reactionState = null,
+                        reaction = mapOf(),
+                        createTime = null,
+                        modifyTime = null
+                    )
+                ),
+                CommentResponseBody(
+                    id = 3, content = CommentContent(
+                        creatorId = null,
+                        text = null,
+                        multiMedia = listOf(),
+                        position = null,
+                        commentState = null,
+                        reactionState = null,
+                        reaction = mapOf(),
+                        createTime = null,
+                        modifyTime = null
+                    )
+                )
+            )
+        )
+        val result = service.getGroupManagerComments(10101)
+        assertThat(result.isSuccess).isTrue()
+        assertThat(result.getOrThrow()).hasSize(2)
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
     fun `updateComment_更新回覆成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.updateComment(
@@ -625,29 +691,39 @@ class ForumOceanWebImplTest {
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 articleId = any(),
                 commentIndex = any(),
-                body = any()
+                reactionType = ReactionType.LIKE.value
             )
         } returns Response.success<Void>(204, null)
-        val result = service.reactionComment(1010, 10, ReactionType.LIKE, null)
+        val result = service.reactionComment(1010, 10, ReactionType.LIKE)
         assertThat(result.isSuccess).isTrue()
     }
 
     @ExperimentalCoroutinesApi
     @Test
     fun `getReactionDetail_取得反映詳細資料成功測試`() = mainCoroutineRule.runBlockingTest {
+        val reactionTypeList = listOf(ReactionType.LIKE,ReactionType.DISLIKE)
         coEvery {
             forumOceanService.getReactionDetail(
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 articleId = any(),
-                commentIndex = any()
+                commentIndex = any(),
+                reactions = reactionTypeList.joinToString { it.value.toString() },
+                skipCount = any(),
+                takeCount = any()
             )
         } returns Response.success(
-            mapOf(
-                Pair<String?, List<Long>?>("1", listOf(67, 58)),
-                Pair<String?, List<Long>?>("2", listOf(68, 59))
+            listOf(
+                ReactionInfo(
+                    memberId = 67, reactionType =  1, time = 1625563759
+
+                ),
+                ReactionInfo(
+                    memberId = 68, reactionType = 2, time = 1625563759
+
+                )
             )
         )
-        val result = service.getReactionDetail(1010, 2000)
+        val result = service.getReactionDetail(1010, 2000,reactionTypeList,0,20)
         assertThat(result.isSuccess).isTrue()
         assertThat(result.getOrThrow()).hasSize(2)
     }
@@ -659,11 +735,10 @@ class ForumOceanWebImplTest {
             forumOceanService.removeCommentReaction(
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 articleId = any(),
-                commentIndex = any(),
-                originalReactionType = any()
+                commentIndex = any()
             )
         } returns Response.success<Void>(204, null)
-        val result = service.removeReactionComment(1010, 2020, ReactionType.LIKE)
+        val result = service.removeReactionComment(1010, 2020)
         assertThat(result.isSuccess).isTrue()
     }
 
@@ -684,22 +759,26 @@ class ForumOceanWebImplTest {
     @ExperimentalCoroutinesApi
     @Test
     fun `getArticleReactionDetail_取得主文反應成功測試`() = mainCoroutineRule.runBlockingTest {
+        val reactionTypeList = listOf(ReactionType.DISLIKE)
         coEvery {
             forumOceanService.getArticleReactionDetail(
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 articleId = any(),
                 reactions = any(),
-                count = any()
+                count = any(),
+                skipCount = any()
             )
         } returns Response.success(
-            mapOf(
-                Pair<String?, List<Long>?>(ReactionType.DISLIKE.value.toString(), listOf(67, 58))
+            listOf(
+                ReactionInfo(
+                    memberId = 67, reactionType = ReactionType.DISLIKE.value, time = 1625563759
+                )
             )
         )
-        val result = service.getArticleReactionDetail(1010, listOf(ReactionType.LIKE), -1)
+        val result = service.getArticleReactionDetail(1010, reactionTypeList, 0,20)
         assertThat(result.isSuccess).isTrue()
         assertThat(result.getOrThrow()).hasSize(1)
-        assertThat(result.getOrThrow()[ReactionType.DISLIKE.value.toString()]).isNotNull()
+        assertThat(result.getOrThrow().first()).isNotNull()
     }
 
     @ExperimentalCoroutinesApi
@@ -942,7 +1021,9 @@ class ForumOceanWebImplTest {
             forumOceanService.getMembers(
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 groupId = any(),
-                includeManagerInfo = any()
+                includeManagerInfo = any(),
+                offset = any(),
+                fetch = any()
             )
         } returns Response.success(
             listOf(
@@ -951,7 +1032,7 @@ class ForumOceanWebImplTest {
                 GroupMember(memberId = 3, position = GroupPositionInfo.Cadre)
             )
         )
-        val result = service.getMembers(132132, true)
+        val result = service.getMembers(132132, 0,20,true)
         assertThat(result.isSuccess)
         assertThat(result.getOrThrow().find { it.position == GroupPositionInfo.Cadre }).isNotNull()
     }
@@ -1033,6 +1114,32 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         val result = service.leave(5050)
+        assertThat(result.isSuccess)
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `pinArticle_置頂社團文章成功測試`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.pinArticle(
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                articleId = any()
+            )
+        } returns Response.success<Void>(204, null)
+        val result = service.pinArticle(1321342)
+        assertThat(result.isSuccess)
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `unpinArticle_取消置頂社團文章成功測試`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.unpinArticle(
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                articleId = any()
+            )
+        } returns Response.success<Void>(204, null)
+        val result = service.unpinArticle(1321342)
         assertThat(result.isSuccess)
     }
 
@@ -1279,10 +1386,12 @@ class ForumOceanWebImplTest {
             forumOceanService.createReport(
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 articleId = any(),
-                reasonType = any()
+                reasonType = any(),
+                commentId = any()
+
             )
         } returns Response.success<Void>(204,null)
-        val result = service.createReport(231321,ReasonType.AD)
+        val result = service.createReport(231321,ReasonType.AD,null)
         assertThat(result.isSuccess)
     }
 

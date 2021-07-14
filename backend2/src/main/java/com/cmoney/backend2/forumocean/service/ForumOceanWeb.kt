@@ -5,12 +5,14 @@ import com.cmoney.backend2.forumocean.service.api.article.create.variable.Conten
 import com.cmoney.backend2.forumocean.service.api.article.createquestion.CreateQuestionResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.update.UpdateArticleHelper
 import com.cmoney.backend2.forumocean.service.api.channel.channelname.ChannelNameBuilder
+import com.cmoney.backend2.forumocean.service.api.channel.getmemberstatistics.GetMemberStatisticsResponseBody
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.comment.update.UpdateCommentHelper
 import com.cmoney.backend2.forumocean.service.api.group.create.CreateGroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.getapprovals.GroupPendingApproval
 import com.cmoney.backend2.forumocean.service.api.group.getmember.GroupMember
 import com.cmoney.backend2.forumocean.service.api.group.update.UpdateGroupRequestBody
+import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.ReactionInfo
 import com.cmoney.backend2.forumocean.service.api.official.get.OfficialChannelInfo
 import com.cmoney.backend2.forumocean.service.api.officialsubscriber.getofficialsubscribedcount.GetOfficialSubscribedCountResponseBody
 import com.cmoney.backend2.forumocean.service.api.officialsubscriber.getsubscribedcount.GetSubscribedCountResponseBody
@@ -122,6 +124,14 @@ interface ForumOceanWeb {
     //region Channel 頻道
 
     /**
+     * 取得指定使用者的統計資訊
+     *
+     * @param memberId 會員Id
+     * @return
+     */
+    suspend fun getMemberStatistics(memberId: Long): Result<GetMemberStatisticsResponseBody>
+
+    /**
      * 取得頻道文章清單(by weight) 適用於常變動的清單
      *
      * @param channelNameBuilderList
@@ -196,6 +206,16 @@ interface ForumOceanWeb {
     ): Result<List<CommentResponseBody>>
 
     /**
+     * 取得指定主文的社團管理員回文清單
+     *
+     * @param articleId
+     * @return
+     */
+    suspend fun getGroupManagerComments(
+        articleId: Long
+    ): Result<List<CommentResponseBody>>
+
+    /**
      * 更新回文
      *
      * @param articleId 指定主文Id
@@ -216,7 +236,7 @@ interface ForumOceanWeb {
      * @param commentIndex 回文索引
      * @return
      */
-    suspend fun deleteComment(articleId: Long, commentIndex: Int): Result<Unit>
+    suspend fun deleteComment(articleId: Long, commentIndex: Long): Result<Unit>
 
     //endregion
 
@@ -228,14 +248,12 @@ interface ForumOceanWeb {
      * @param articleId 指定主文Id
      * @param commentIndex 回文索引
      * @param reactionType 反應
-     * @param originalReactionType 原始反應
      * @return
      */
     suspend fun reactionComment(
         articleId: Long,
-        commentIndex: Int,
-        reactionType: ReactionType,
-        originalReactionType: ReactionType?
+        commentIndex: Long,
+        reactionType: ReactionType
     ): Result<Unit>
 
     /**
@@ -243,30 +261,50 @@ interface ForumOceanWeb {
      *
      * @param articleId 指定主文Id
      * @param commentIndex 回文索引
+     * @param reactions 需要取得的反應
+     * @param skipCount 跳過的數量(選項)
+     * @param takeCount 取得的數項(選項)
      * @return 反應 對照 做此反應會員清單
      */
     suspend fun getReactionDetail(
         articleId: Long,
-        commentIndex: Int
-    ): Result<Map<String?, List<Long>?>>
+        commentIndex: Long,
+        reactions: List<ReactionType>,
+        skipCount: Int = 0,
+        takeCount: Int = Int.MAX_VALUE
+    ): Result<List<ReactionInfo>>
 
     /**
      * 移除對回文的反應
      *
      * @param articleId 指定主文Id
      * @param commentIndex 回文索引
-     * @param reactionType 反應類型
      * @return
      */
     suspend fun removeReactionComment(
         articleId: Long,
-        commentIndex: Int,
-        reactionType: ReactionType
+        commentIndex: Long
     ): Result<Unit>
 
     //endregion
 
     //region GroupArticle 社團文章管理
+
+    /**
+     * 置頂社團文章
+     *
+     * @param articleId 文章Id
+     * @return
+     */
+    suspend fun pinArticle(articleId: Long): Result<Unit>
+
+    /**
+     * 取消置頂社團文章
+     *
+     * @param articleId 文章Id
+     * @return
+     */
+    suspend fun unpinArticle(articleId: Long): Result<Unit>
 
     /**
      * 管理者刪文
@@ -358,12 +396,16 @@ interface ForumOceanWeb {
      * 取得社團成員清單
      *
      * @param groupId 社團Id
+     * @param offset 偏移筆數
+     * @param fetch 指定筆數
      * @param includeManagerInfo 是否包含管理者成員
      * @return 社團成員清單
      */
     suspend fun getMembers(
         groupId: Long,
-        includeManagerInfo: Boolean
+        offset: Int = 0,
+        fetch: Int = Int.MAX_VALUE,
+        includeManagerInfo: Boolean = false
     ): Result<List<GroupMember>>
 
     /**
@@ -447,14 +489,16 @@ interface ForumOceanWeb {
      *
      * @param articleId 文章Id
      * @param reactionTypeList 想取得的互動類型清單
-     * @param count 取得數量 -1代表全取
+     * @param skipCount 跳過的數量
+     * @param count 取得數量
      * @return 互動 對應 做此互動的會員清單
      */
     suspend fun getArticleReactionDetail(
         articleId: Long,
         reactionTypeList: List<ReactionType>,
-        count: Int
-    ): Result<Map<String?, List<Long>?>>
+        skipCount: Int = 0,
+        count: Int = Int.MAX_VALUE
+    ): Result<List<ReactionInfo>>
 
     /**
      * 移除對文章的反應
@@ -648,13 +692,14 @@ interface ForumOceanWeb {
     //region Report 檢舉API
 
     /**
-     * 使用者檢舉文章
+     * 使用者檢舉文章 (主文回文Id帶null 回文帶回文Id)
      *
      * @param articleId 文章ID
      * @param reason 檢舉原因
+     * @param commentId 回文Id
      * @return
      */
-    suspend fun createReport(articleId: Long, reason: ReasonType): Result<Unit>
+    suspend fun createReport(articleId: Long, reason: ReasonType, commentId: Long?): Result<Unit>
 
     /**
      * 刪除指定使用者檢舉文章的記錄
@@ -674,7 +719,7 @@ interface ForumOceanWeb {
      * @param channelIdList 頻道ID
      * @return
      */
-    suspend fun getMemberIds(channelIdList : List<Long>): Result<List<ChannelIdAndMemberId>>
+    suspend fun getMemberIds(channelIdList: List<Long>): Result<List<ChannelIdAndMemberId>>
 
     /**
      * 取得會員ID對應的頻道ID
@@ -682,7 +727,7 @@ interface ForumOceanWeb {
      * @param memberIdList 會員ID
      * @return
      */
-    suspend fun getChannelIds(memberIdList : List<Long>): Result<List<ChannelIdAndMemberId>>
+    suspend fun getChannelIds(memberIdList: List<Long>): Result<List<ChannelIdAndMemberId>>
 
     //endregion
 
