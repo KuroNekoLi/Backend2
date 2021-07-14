@@ -1,0 +1,48 @@
+{
+  "Group": [
+    {
+      "Order": 1,
+      "DocType": 5,
+      "DocNo": 14253986,
+      "CustomerID": 1496571,
+      "DocName": "test",
+      "Flag": 1,
+      "DocRight": "",
+      "SP_CMID": "B001",
+      "CreateTime": "2020-12-02T15:13:39"
+    },
+    {
+      "Order": 2,
+      "DocType": 5,
+      "DocNo": 5159757,
+      "CustomerID": 1496571,
+      "DocName": "123",
+      "Flag": 1,
+      "DocRight": "",
+      "SP_CMID": "B001",
+      "CreateTime": "2020-12-18T16:51:19"
+    },
+    {
+      "Order": 3,
+      "DocType": 5,
+      "DocNo": 6531328,
+      "CustomerID": 1496571,
+      "DocName": "自選股清單",
+      "Flag": 1,
+      "DocRight": "",
+      "SP_CMID": "B001",
+      "CreateTime": "2020-08-10T13:35:03"
+    },
+    {
+      "Order": 4,
+      "DocType": 5,
+      "DocNo": 11470876,
+      "CustomerID": 1496571,
+      "DocName": "自選股清單4",
+      "Flag": 1,
+      "DocRight": "",
+      "SP_CMID": "B001",
+      "CreateTime": "2020-08-10T13:35:03"
+    }
+  ]
+}
