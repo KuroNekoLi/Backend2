@@ -12,7 +12,11 @@ import com.cmoney.backend2.realtimeaftermarket.TestSetting
 import com.cmoney.backend2.realtimeaftermarket.service.api.getInternationalTicks.InternationalChartData
 import com.cmoney.backend2.realtimeaftermarket.service.api.getInternationalTicks.InternationalNewTicks
 import com.cmoney.backend2.realtimeaftermarket.service.api.getafterhourstime.AfterHoursTimeWithError
+import com.cmoney.backend2.realtimeaftermarket.service.api.getcommlist.GetCommListResponseBody
+import com.cmoney.backend2.realtimeaftermarket.service.api.getcommlist.Product
+import com.cmoney.backend2.realtimeaftermarket.service.api.getcommlist.ProductInfo
 import com.cmoney.backend2.realtimeaftermarket.service.api.getdealdetail.StockDealDetailWithError
+import com.cmoney.backend2.realtimeaftermarket.service.api.getforeignexchangeticks.GetForeignExchangeTickResponseBody
 import com.cmoney.backend2.realtimeaftermarket.service.api.getisintradeday.GetIsInTradeDayResponseBodyWithError
 import com.cmoney.backend2.realtimeaftermarket.service.api.getmarketnewtick.MarketChartData
 import com.cmoney.backend2.realtimeaftermarket.service.api.getmarketnewtick.MarketNewTick
@@ -62,6 +66,114 @@ class RealTimeAfterMarketWebImplTest {
             setting = setting,
             dispatcher = TestDispatcher()
         )
+    }
+
+    @Test
+    fun `getCommList_成功`() = mainCoroutineRule.runBlockingTest {
+        val mockResponse = GetCommListResponseBody(
+            products = listOf(
+                Product(
+                    1,
+                    listOf(
+                        ProductInfo(
+                            commKey = "MYMF1",
+                            name = "小道瓊期貨",
+                            countryCode = 840,
+                            isShowPreviousClosePr = false
+                        )
+                    )
+                )
+            ),
+            responseCode = 1
+        )
+        coEvery {
+            service.getCommList(
+                authorization = any(),
+                areaIds = any(),
+                appId = setting.appId,
+                guid = setting.identityToken.getMemberId()
+            )
+        } returns Response.success(mockResponse)
+        val result = webImpl.getCommList(listOf("1"))
+        Truth.assertThat(result.isSuccess).isTrue()
+        val data = result.getOrThrow()
+        Truth.assertThat(data.responseCode).isEqualTo(1)
+        Truth.assertThat(data.products?.size).isEqualTo(1)
+        val product = data.products?.firstOrNull()!!
+        Truth.assertThat(product.areaId).isEqualTo(1)
+        Truth.assertThat(product.productInfos?.size).isEqualTo(1)
+        val productInfo = product.productInfos!!.first()
+        Truth.assertThat(productInfo.commKey).isEqualTo("MYMF1")
+        Truth.assertThat(productInfo.name).isEqualTo("小道瓊期貨")
+        Truth.assertThat(productInfo.countryCode).isEqualTo(840)
+        Truth.assertThat(productInfo.isShowPreviousClosePr).isFalse()
+    }
+
+    @Test
+    fun `getForeignExchangeTicks_成功`() = mainCoroutineRule.runBlockingTest {
+        val responseBody = GetForeignExchangeTickResponseBody(
+            isMarketClosed = false,
+            isSuccess = true,
+            responseCode = 0,
+            responseMsg = "",
+            tickInfoSet = listOf(
+                com.cmoney.backend2.realtimeaftermarket.service.api.getforeignexchangeticks.TickInfo(
+                    buyOrSell = 0,
+                    commKey = "SUSDTWD",
+                    dealPrice = 27.988,
+                    highestPrice = 0.0,
+                    investorStatus = 0,
+                    limitDown = "0",
+                    limitUp = "0",
+                    lowestPrice = 0.0,
+                    openPrice = 0.0,
+                    packageDataType = 0,
+                    priceChange = -0.061,
+                    quoteChange = -0.2175,
+                    refPrice = 0.0,
+                    singleVolume = 0,
+                    statusCode = 12507,
+                    tickTime = 1626233984L,
+                    totalVolume = 0
+                )
+            )
+        )
+        coEvery {
+            service.getForeignExchangeTicks(
+                authorization = any(),
+                action = any(),
+                guid = any(),
+                appId = any(),
+                commKeys = any(),
+                statusCodes = any()
+            )
+        } returns Response.success(responseBody)
+        val result = webImpl.getForeignExchangeTicks(listOf("SUSDTWD" to 0))
+        Truth.assertThat(result.isSuccess)
+        val data = result.getOrThrow()
+        Truth.assertThat(data.isSuccess).isTrue()
+        Truth.assertThat(data.isMarketClosed).isFalse()
+        Truth.assertThat(data.responseCode).isEqualTo(0)
+        Truth.assertThat(data.responseMsg).isEmpty()
+        val tickInfoSets = data.tickInfoSet
+        Truth.assertThat(tickInfoSets).hasSize(1)
+        val tickInfoSet = tickInfoSets!!.first()
+        Truth.assertThat(tickInfoSet.buyOrSell).isEqualTo(0)
+        Truth.assertThat(tickInfoSet.commKey).isEqualTo("SUSDTWD")
+        Truth.assertThat(tickInfoSet.dealPrice).isEqualTo(27.988)
+        Truth.assertThat(tickInfoSet.highestPrice).isEqualTo(0.0)
+        Truth.assertThat(tickInfoSet.limitDown).isEqualTo("0")
+        Truth.assertThat(tickInfoSet.limitUp).isEqualTo("0")
+        Truth.assertThat(tickInfoSet.lowestPrice).isEqualTo(0.0)
+        Truth.assertThat(tickInfoSet.openPrice).isEqualTo(0.0)
+        Truth.assertThat(tickInfoSet.packageDataType).isEqualTo(0)
+        Truth.assertThat(tickInfoSet.priceChange).isEqualTo(-0.061)
+        Truth.assertThat(tickInfoSet.quoteChange).isEqualTo(-0.2175)
+        Truth.assertThat(tickInfoSet.refPrice).isEqualTo(0.0)
+        Truth.assertThat(tickInfoSet.singleVolume).isEqualTo(0)
+        Truth.assertThat(tickInfoSet.statusCode).isEqualTo(12507)
+        Truth.assertThat(tickInfoSet.tickTime).isEqualTo(1626233984L)
+        Truth.assertThat(tickInfoSet.totalVolume).isEqualTo(0)
     }
 
     @Test

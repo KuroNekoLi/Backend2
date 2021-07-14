@@ -10,6 +10,7 @@ import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.realtimeaftermarket.service.api.getInternationalTicks.InternationalNewTicks
 import com.cmoney.backend2.realtimeaftermarket.service.api.getafterhourstime.AfterHoursTime
 import com.cmoney.backend2.realtimeaftermarket.service.api.getdealdetail.StockDealDetail
+import com.cmoney.backend2.realtimeaftermarket.service.api.getforeignexchangeticks.GetForeignExchangeTickResponseBody
 import com.cmoney.backend2.realtimeaftermarket.service.api.getisintradeday.GetIsInTradeDayResponseBody
 import com.cmoney.backend2.realtimeaftermarket.service.api.getmarketnewtick.MarketNewTick
 import com.cmoney.backend2.realtimeaftermarket.service.api.getnewtickinfo.NewTickInfo
@@ -22,6 +23,19 @@ class RealTimeAfterMarketWebImpl(
     private val setting: Setting,
     private val dispatcher: DispatcherProvider = DefaultDispatcherProvider()
 ) : RealTimeAfterMarketWeb {
+
+    override suspend fun getCommList(areaIds: List<String>) = withContext(dispatcher.io()) {
+        kotlin.runCatching {
+            service.getCommList(
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                areaIds = areaIds.joinToString(","),
+                appId = setting.appId,
+                guid = setting.identityToken.getMemberGuid()
+            )
+                .checkIsSuccessful()
+                .requireBody()
+        }
+    }
 
     /**
      * 服務5-2 Polling取得多股的即時Tick資訊 (包含國際&午後&台股)
@@ -229,6 +243,27 @@ class RealTimeAfterMarketWebImpl(
                 .requireBody()
         }
     }
+
+    override suspend fun getForeignExchangeTicks(commKeyWithStatusCodes: List<Pair<String, Int>>): Result<GetForeignExchangeTickResponseBody> =
+        withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                val commKeys = commKeyWithStatusCodes.joinToString(",") { (commKey, _) ->
+                    commKey
+                }
+                val statusCodes = commKeyWithStatusCodes.joinToString(",") { (_, statusCode) ->
+                    statusCode.toString()
+                }
+                service.getForeignExchangeTicks(
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    guid = setting.identityToken.getMemberGuid(),
+                    appId = setting.appId,
+                    commKeys = commKeys,
+                    statusCodes = statusCodes
+                )
+                    .checkIsSuccessful()
+                    .requireBody()
+            }
+        }
 
     /**
      * 服務19 取得台股成交明細

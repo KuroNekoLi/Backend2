@@ -4,7 +4,9 @@ import com.cmoney.backend2.base.model.calladapter.RecordApi
 import com.cmoney.backend2.base.model.response.dtno.DtnoWithError
 import com.cmoney.backend2.realtimeaftermarket.service.api.getInternationalTicks.InternationalNewTicks
 import com.cmoney.backend2.realtimeaftermarket.service.api.getafterhourstime.AfterHoursTimeWithError
+import com.cmoney.backend2.realtimeaftermarket.service.api.getcommlist.GetCommListResponseBody
 import com.cmoney.backend2.realtimeaftermarket.service.api.getdealdetail.StockDealDetailWithError
+import com.cmoney.backend2.realtimeaftermarket.service.api.getforeignexchangeticks.GetForeignExchangeTickResponseBody
 import com.cmoney.backend2.realtimeaftermarket.service.api.getisintradeday.GetIsInTradeDayResponseBodyWithError
 import com.cmoney.backend2.realtimeaftermarket.service.api.getmarketnewtick.MarketNewTick
 import com.cmoney.backend2.realtimeaftermarket.service.api.getnewtickinfo.NewTickInfo
@@ -18,6 +20,44 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface RealTimeAfterMarketService {
+
+    /**
+     * 服務4-2.取得股市商品清單
+     *
+     * @param authorization 授權Token
+     * @param action API操作
+     * @param areaIds 資料範圍
+     * 1-籌碼K全球,
+     * 2-籌碼K亞洲,
+     * 3-籌碼K歐美,
+     * 4-籌碼K台灣,
+     * 5-籌碼K美股科技,
+     * 6-籌碼K美股非科技,
+     * 7-籌碼K台股ADR,
+     * 8-籌碼K外匯,
+     * 9-台股上市類股,
+     * 10-台股上櫃類股,
+     * 11-台股上市(含個股、指數、TDR、ETF),
+     * 12-台股上櫃(含個股、指數、TDR、ETF),
+     * 13-台股上市指數彙編類股,
+     * 14-台股上櫃指數彙編類股,
+     * 15-台股概念股,
+     * 16-原力美股)
+     * 上述已逗號分開
+     * @param appId App編號
+     * @param guid 會員的guid
+     * @return
+     */
+    @RecordApi(cmoneyAction = "getcommlist")
+    @FormUrlEncoded
+    @POST("MobileService/ashx/InstantTrading/InstantTrading.ashx")
+    suspend fun getCommList(
+        @Header("Authorization") authorization: String,
+        @Field("Action") action: String = "getcommlist",
+        @Field("AreaIds") areaIds: String,
+        @Field("AppId") appId: Int,
+        @Field("Guid") guid: String
+    ): Response<GetCommListResponseBody>
 
     /**
      * 服務5-2 Polling取得多股的即時Tick資訊 (包含國際&午後&台股)
@@ -185,6 +225,28 @@ interface RealTimeAfterMarketService {
         @Field("action") action: String = "searchustock",
         @Field("Querykey") queryKey: String
     ): Response<List<UsResultEntry>>
+
+    /**
+     * 服務13. 取得外匯即時
+     *
+     * @param authorization 授權Token
+     * @param action API操作
+     * @param appId App編號
+     * @param guid 會員的guid
+     * @param commKeys 幣別代號(以逗號分隔)
+     * @param statusCodes 狀態碼(以逗號分隔)
+     */
+    @RecordApi(cmoneyAction = "getforeignexchangeticks")
+    @FormUrlEncoded
+    @POST("MobileService/ashx/InstantTrading/ForeignExchangeTrading.ashx")
+    suspend fun getForeignExchangeTicks(
+        @Header("Authorization") authorization: String,
+        @Field("action") action: String = "getforeignexchangeticks",
+        @Field("guid") guid: String,
+        @Field("appId") appId: Int,
+        @Field("commkeys") commKeys: String,
+        @Field("statusCodes") statusCodes: String
+    ): Response<GetForeignExchangeTickResponseBody>
 
     /**
      * 服務19. 取得台股成交明細
