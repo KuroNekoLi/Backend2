@@ -1,4 +1,4 @@
-package com.cmoney.backend2.image.extension
+package com.cmoney.backend2.centralizedimage.extension
 
 /**
  * 取得60px的縮圖網址

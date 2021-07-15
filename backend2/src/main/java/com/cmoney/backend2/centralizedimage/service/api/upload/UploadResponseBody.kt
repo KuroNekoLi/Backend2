@@ -1,4 +1,4 @@
-package com.cmoney.backend2.image.service.api.upload
+package com.cmoney.backend2.centralizedimage.service.api.upload
 
 import com.google.gson.annotations.SerializedName
 

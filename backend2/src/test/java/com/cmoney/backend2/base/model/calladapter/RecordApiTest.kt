@@ -13,7 +13,7 @@ import com.cmoney.backend2.dtno.service.DtnoService
 import com.cmoney.backend2.emilystock.service.EmilyService
 import com.cmoney.backend2.forumocean.service.ForumOceanService
 import com.cmoney.backend2.identityprovider.service.IdentityProviderService
-import com.cmoney.backend2.image.service.ImageService
+import com.cmoney.backend2.centralizedimage.service.CentralizedImageService
 import com.cmoney.backend2.media.service.MediaService
 import com.cmoney.backend2.mobileocean.service.MobileOceanService
 import com.cmoney.backend2.note_extension.service.NoteExtensionService
@@ -71,7 +71,7 @@ class RecordApiTest(
                 arrayOf<Any?>(EmilyService::class),
                 arrayOf<Any?>(ForumOceanService::class),
                 arrayOf<Any?>(IdentityProviderService::class),
-                arrayOf<Any?>(ImageService::class),
+                arrayOf<Any?>(CentralizedImageService::class),
                 arrayOf<Any?>(MediaService::class),
                 arrayOf<Any?>(MobileOceanService::class),
                 arrayOf<Any?>(NoteExtensionService::class),

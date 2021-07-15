@@ -1,28 +1,29 @@
-package com.cmoney.backend2.image.service
+package com.cmoney.backend2.centralizedimage.service
 
 import com.cmoney.backend2.base.model.calladapter.RecordApi
-import com.cmoney.backend2.image.service.api.upload.UploadResponseBody
+import com.cmoney.backend2.centralizedimage.service.api.upload.UploadResponseBody
 import okhttp3.MultipartBody
 import retrofit2.Response
-import retrofit2.http.Header
-import retrofit2.http.Multipart
-import retrofit2.http.POST
-import retrofit2.http.Part
+import retrofit2.http.*
 
-interface ImageService {
+interface CentralizedImageService {
 
     /**
      * 上傳單張圖片
      *
      * @param authorization
+     * @param genre 分類
+     * @param subGenre 子分類
      * @param file 圖片檔案
      * @return
      */
     @RecordApi
     @Multipart
-    @POST("image/v1/upload")
+    @POST("centralizedImage/v1/upload/{genre}/{subgenre}")
     suspend fun upload(
         @Header("Authorization") authorization: String,
+        @Path("genre") genre : String,
+        @Path("subgenre") subGenre : String,
         @Part file: MultipartBody.Part
     ): Response<UploadResponseBody>
 }
