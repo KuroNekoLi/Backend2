@@ -15,7 +15,36 @@
 -keep class com.cmoney.backend2.base.model.response.** { *; }
 -keep class com.cmoney.backend2.base.model.setting.** { *; }
 -keep class com.cmoney.backend2.base.model.log.** { *; }
-
+-keep class com.cmoney.backend2.activity.service.api.** { *; }
+-keep class com.cmoney.backend2.additioninformationrevisit.service.api.** { *; }
+-keep class com.cmoney.backend2.authorization.service.api.** { *; }
+-keep class com.cmoney.backend2.billing.service.api.** { *; }
+-keep class com.cmoney.backend2.billing.service.common.** { *; }
+-keep class com.cmoney.backend2.cellphone.service.api.** { *; }
+-keep class com.cmoney.backend2.centralizedimage.service.api.** { *; }
+-keep class com.cmoney.backend2.chat.service.api.** { *; }
+-keep class com.cmoney.backend2.chipk.service.api.** { *; }
+-keep class com.cmoney.backend2.cmtalk.service.api.** { *; }
+-keep class com.cmoney.backend2.common.service.api.** { *; }
+-keep class com.cmoney.backend2.crm.service.api.** { *; }
+-keep class com.cmoney.backend2.customgroup.service.api.** { *; }
+-keep class com.cmoney.backend2.dtno.service.api.** { *; }
+-keep class com.cmoney.backend2.emilystock.service.api.** { *; }
+-keep class com.cmoney.backend2.forumocean.service.api.** { *; }
+-keep class com.cmoney.backend2.identityprovider.service.api.** { *; }
+-keep class com.cmoney.backend2.media.service.api.** { *; }
+-keep class com.cmoney.backend2.mobileocean.service.api.** { *; }
+-keep class com.cmoney.backend2.note_extension.service.api.** { *; }
+-keep class com.cmoney.backend2.notes.service.api.** { *; }
+-keep class com.cmoney.backend2.notification.service.api.** { *; }
+-keep class com.cmoney.backend2.notification2.service.api.** { *; }
+-keep class com.cmoney.backend2.ocean.service.api.** { *; }
+-keep class com.cmoney.backend2.portal.service.api.** { *; }
+-keep class com.cmoney.backend2.profile.service.api.** { *; }
+-keep class com.cmoney.backend2.realtimeaftermarket.service.api.** { *; }
+-keep class com.cmoney.backend2.tickdata.service.api.** { *; }
+-keep class com.cmoney.backend2.trial.service.api.** { *; }
+-keep class com.cmoney.backend2.virtualassets.service.api.** { *; }
 
 # Prevent proguard from stripping interface information from TypeAdapterFactory,
 # JsonSerializer, JsonDeserializer instances (so they can be used in @JsonAdapter)
