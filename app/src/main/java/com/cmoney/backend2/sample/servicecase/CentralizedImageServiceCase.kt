@@ -1,7 +1,7 @@
 package com.cmoney.backend2.sample.servicecase
 
 import android.content.Context
-import com.cmoney.backend2.image.service.ImageWeb
+import com.cmoney.backend2.centralizedimage.service.CentralizedImageWeb
 import com.cmoney.backend2.sample.extension.logResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -9,9 +9,9 @@ import org.koin.core.get
 import org.koin.core.inject
 import java.io.File
 
-class ImageServiceCase() : ServiceCase {
+class CentralizedImageServiceCase() : ServiceCase {
 
-    private val imageWebImpl by inject<ImageWeb>()
+    private val imageWebImpl by inject<CentralizedImageWeb>()
 
     override suspend fun testAll() = withContext(Dispatchers.IO) {
         val context = get<Context>()
@@ -22,7 +22,7 @@ class ImageServiceCase() : ServiceCase {
                 }
             }
         }
-        imageWebImpl.upload(mapleFile).logResponse(TAG)
+        imageWebImpl.upload("servicetest","swagger",mapleFile).logResponse(TAG)
         mapleFile.delete()
         Unit
     }

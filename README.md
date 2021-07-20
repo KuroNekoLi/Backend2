@@ -1,6 +1,13 @@
 ## Backend2
 
-[教學參考](http://192.168.99.115/books/mobile-android/page/%E6%96%B0%E5%A2%9E%E4%B8%80%E6%94%AFapi)
+## 新API資料夾教學
+
+[教學參考](./documents/CreateNewApiService.md)
+
+## 現有API加入教學
+
+[教學參考](./documents/CreateOldApi.md)
+
 
 ## MIGRATE
 
@@ -36,7 +43,7 @@ android {
     }
 }
 dependecies {
-	implementation 'com.cmoney.backend2:backend2:4.1.0'
+	implementation 'com.cmoney.backend2:backend2:4.1.1'
 	implementation("com.cmoney.logdatarecorder:logdatarecorder-data:1.1.0")
 	implementation("com.cmoney.logdatarecorder:logdatarecorder-domain:1.1.0")
 }
@@ -46,8 +53,8 @@ dependecies {
 
 ```groovy
 dependecies {
-	releaseImplementation 'com.cmoney.backend2:backend2:4.1.0'
-	debugImplementation 'com.cmoney.backend2:backend2-debug:4.1.0'
+	releaseImplementation 'com.cmoney.backend2:backend2:4.1.1'
+	debugImplementation 'com.cmoney.backend2:backend2-debug:4.1.1'
 	implementation("com.cmoney.logdatarecorder:logdatarecorder-data:1.1.0")
 	implementation("com.cmoney.logdatarecorder:logdatarecorder-domain:1.1.0")
 }
@@ -339,23 +346,27 @@ override suspend fun isTokenLatest(): Result<Boolean> = withContext(dispatcherPr
 
 ### 解析Response寫法的選擇
 
-解析Response都在ResponseExtension.kt底下
-
-先認識CMoneyError，再繼續往下觀看。
+CMoney的錯誤格式有很多種，大部分會以下面範例code的格式出現，對應的物件為CMoneyError，根據不同的status code會有不同的解析策略。而解析Response的方法都在ResponseExtension.kt底下。
 
 ```
-{
+{	
+	"message":"錯誤訊息",
 	"Error":{
 		"Code":101,
 		"Message":"Auth Failed"
 	}
-	or
+}
+
+{	
+	"message":"錯誤訊息",
 	"error":{
 		"code":101,
 		"message":"Auth Failed"
 	}
 }
 ```
+
+下面會以不同的情況說明用哪一種方法
 
 #### Status Code 200內有CMoneyError
 
