@@ -10,17 +10,18 @@ import com.cmoney.backend2.base.model.setting.Platform
 import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.billing.di.billingServiceModule
 import com.cmoney.backend2.cellphone.di.cellphoneServiceModule
+import com.cmoney.backend2.centralizedimage.di.centralizedImageServiceModule
 import com.cmoney.backend2.chat.di.chatServiceModule
 import com.cmoney.backend2.chipk.di.chipkServiceModule
 import com.cmoney.backend2.cmtalk.di.cmtalkServiceModule
 import com.cmoney.backend2.common.di.commonServiceModule
 import com.cmoney.backend2.crm.di.crmServiceModule
 import com.cmoney.backend2.customgroup.di.customGroupServiceModule
+import com.cmoney.backend2.customgroup2.di.customGroup2ServiceModule
 import com.cmoney.backend2.dtno.di.dtnoServiceModule
 import com.cmoney.backend2.emilystock.di.emilyServiceModule
 import com.cmoney.backend2.forumocean.di.forumOceanServiceModule
 import com.cmoney.backend2.identityprovider.di.identityProviderServiceModule
-import com.cmoney.backend2.centralizedimage.di.centralizedImageServiceModule
 import com.cmoney.backend2.media.di.mediaServiceModule
 import com.cmoney.backend2.mobileocean.di.mobileOceanServiceModule
 import com.cmoney.backend2.note_extension.di.noteExtensionServiceModule
@@ -75,6 +76,7 @@ class SampleApplication : Application() {
                     cmtalkServiceModule,
                     commonServiceModule,
                     customGroupServiceModule,
+                    customGroup2ServiceModule,
                     dtnoServiceModule,
                     emilyServiceModule,
                     forumOceanServiceModule,
