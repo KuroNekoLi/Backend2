@@ -154,6 +154,7 @@ class SampleApplication : Application() {
 | cmtalkServiceModule,                      | cmtalk                     |
 | commonServiceModule,                      | common                     |
 | customGroupServiceModule,                 | customgroup                |
+| customGroup2ServiceModule,                | customgroup2                |
 | dtnoServiceModule,                        | dtno                       |
 | emilyServiceModule,                       | emilystock                 |
 | forumOceanServiceModule,                  | forumocean                 |
