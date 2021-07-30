@@ -7,6 +7,6 @@ data class SearchStocksByMarketTypeRequestBody(
     val keyword: String,
     @SerializedName("language")
     val language: String,
-    @SerializedName("marketType")
+    @SerializedName("marketTypes")
     val marketTypes: List<String>
 )
