@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
 data class CreateCommentRequestBody(
     @SerializedName("text")
     val text : String?,
-    @SerializedName("multimedia")
+    @SerializedName("multiMedia")
     val multiMedia : List<MediaType>?,
     @SerializedName("position")
     val position : Any?

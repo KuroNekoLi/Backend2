@@ -11,8 +11,6 @@ import com.cmoney.backend2.sample.databinding.ActivityMainBinding
 import com.cmoney.backend2.sample.extension.lockWindows
 import com.cmoney.backend2.sample.extension.toast
 import com.cmoney.backend2.sample.extension.unlockWindows
-import com.cmoney.backend2.sample.servicecase.CentralizedImageServiceCase
-import com.cmoney.backend2.sample.servicecase.CrmServiceCase
 import com.cmoney.backend2.sample.servicecase.ServiceCase
 import com.cmoney.backend2.sample.view.main.data.LoginEvent
 import kotlinx.coroutines.async
@@ -126,7 +124,8 @@ class MainActivity : AppCompatActivity() {
 //                TickDataServiceCase(),
 //                TrialServiceCase(),
 //                VirtualAssetsServiceCase(),
-//                CrmServiceCase()
+//                CrmServiceCase(),
+//                CustomGroup2ServiceCase()
             ).map { serviceCase ->
                 async {
                     serviceCase.testAll()
