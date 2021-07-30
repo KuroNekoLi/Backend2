@@ -1,4 +1,18 @@
-#  (2021-07-20)
+#  (2021-07-30)
+
+
+
+# [4.2.0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/4.2.0-alpha01...4.2.0) (2021-07-30)
+
+
+### Bug Fixes
+
+* 修正發回文時 。回文的附加多媒體的Key ([fe2b95e](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/fe2b95e72ce87b841ee927339de64610549a3ff4))
+
+
+### Features
+
+* 新增CustomGroup2 service及UnitTest ([9bbc1ac](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/9bbc1aca0a58e9fdbdb9d24ae773dd3d6edc0637))
 
 
 
