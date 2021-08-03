@@ -18,6 +18,7 @@ import com.cmoney.backend2.forumocean.service.api.comment.update.UpdateCommentHe
 import com.cmoney.backend2.forumocean.service.api.group.create.CreateGroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.getapprovals.GroupPendingApproval
 import com.cmoney.backend2.forumocean.service.api.group.getmember.GroupMember
+import com.cmoney.backend2.forumocean.service.api.group.getmemberjoinanygroups.GetMemberJoinAnyGroupsResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.update.UpdateGroupRequestBody
 import com.cmoney.backend2.forumocean.service.api.official.get.OfficialChannelInfo
 import com.cmoney.backend2.forumocean.service.api.officialsubscriber.getofficialsubscribedcount.GetOfficialSubscribedCountResponseBody
@@ -171,11 +172,11 @@ class ForumOceanWebImpl(
 
     //endregion
 
-    override suspend fun getMemberStatistics(memberId: Long) = withContext(dispatcher.io()) {
+    override suspend fun getMemberStatistics(memberIdList: List<Long>) = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getMemberStatistics(
                 authorization = setting.accessToken.createAuthorizationBearer(),
-                memberId = memberId
+                memberIds = memberIdList.joinToString(",")
             ).checkResponseBody(jsonParser)
         }
     }
@@ -438,6 +439,16 @@ class ForumOceanWebImpl(
             }
         }
 
+    override suspend fun getMemberManagedGroups(managerId: Long): Result<List<GroupResponseBody>> =
+            withContext(dispatcher.io()){
+                kotlin.runCatching {
+                    service.getMemberManagedGroups(
+                            authorization = setting.accessToken.createAuthorizationBearer(),
+                            managerId = managerId
+                    ).checkResponseBody(jsonParser)
+                }
+            }
+
     override suspend fun getMemberBelongGroups(memberId: Long): Result<List<GroupResponseBody>> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
@@ -447,6 +458,16 @@ class ForumOceanWebImpl(
                 ).checkResponseBody(jsonParser)
             }
         }
+
+    override suspend fun getMemberJoinAnyGroups(memberId: Long): Result<GetMemberJoinAnyGroupsResponseBody> =
+            withContext(dispatcher.io()) {
+                kotlin.runCatching {
+                    service.getMemberJoinAnyGroups(
+                            authorization = setting.accessToken.createAuthorizationBearer(),
+                            memberId = memberId
+                    ).checkResponseBody(jsonParser)
+                }
+            }
 
     override suspend fun createGroup(groupName: String): Result<CreateGroupResponseBody> =
         withContext(dispatcher.io()) {
@@ -757,12 +778,13 @@ class ForumOceanWebImpl(
             }
         }
 
-    override suspend fun deleteReport(articleId: Long): Result<Unit> =
+    override suspend fun deleteReport(articleId: Long, commentId: Long?): Result<Unit> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.deleteReport(
                     authorization = setting.accessToken.createAuthorizationBearer(),
-                    articleId = articleId
+                    articleId = articleId,
+                    commentId = commentId
                 ).handleNoContent(jsonParser)
             }
         }

@@ -3,7 +3,7 @@ package com.cmoney.backend2.forumocean.service.api.article.create.variable.commo
 import com.google.gson.annotations.SerializedName
 
 data class CommodityTag(
-    @SerializedName("commodityKey")
+    @SerializedName("key")
     val commodityKey : String,
     @SerializedName("bullOrBear")
     val bullOrBear : BullOrBear,

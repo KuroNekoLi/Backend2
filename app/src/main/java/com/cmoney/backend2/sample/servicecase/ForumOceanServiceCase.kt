@@ -25,6 +25,7 @@ import com.cmoney.backend2.sample.extension.logResponse
 import com.cmoney.backend2.sample.servicecase.data.AccountSettingInfo.Companion.changeUser
 import com.cmoney.backend2.sample.servicecase.data.MultiAccountLoginManager
 import org.koin.core.inject
+import retrofit2.HttpException
 
 class ForumOceanServiceCase : ServiceCase {
 
@@ -39,7 +40,7 @@ class ForumOceanServiceCase : ServiceCase {
     override suspend fun testAll() {
         forumOceanWeb.apply {
 
-            getMemberStatistics(setting.identityToken.getMemberId().toLong()).logResponse(TAG)
+            getMemberStatistics(listOf(setting.identityToken.getMemberId().toLong(),35)).logResponse(TAG)
 
             val articleId = createArticle(
                 Content.Article.General(
@@ -71,7 +72,36 @@ class ForumOceanServiceCase : ServiceCase {
             }
 
             articleId?.apply {
+                createArticle(
+                        Content.Article.General(
+                                text = "補一篇文章為了看刪除文章被夾在中間",
+                                multiMedia = listOf(
+                                        MediaType(
+                                                Type.IMAGE,
+                                                "https://zh.wikipedia.org/wiki/Google_Chrome#/media/File:Google_Chrome_icon_(September_2014).svg"
+                                        )
+                                ),
+                                commodityTags = listOf(CommodityTag("1234", BullOrBear.Bear,StockTypeInfo.Stock)),
+                                voteOptions = null,
+                                voteMinutes = null
+                        )
+                ).logResponse(TAG)
                 deleteArticle(this)
+                getArticle(this).fold(
+                        {
+                            Log.d(TAG, "response: $it")
+                        },
+                        {
+                            Log.d(TAG,"預期接收到Http Code 404 結果:${(it as HttpException).code()}")
+                        }
+                )
+
+                getChannelsArticleByWeight(listOf(
+                        ChannelNameBuilder().also {
+                            it.systemClassification = SystemClassification.Member(null)
+                            it.stockClassification = StockClassification.Stock("1234")
+                        }
+                ),Long.MAX_VALUE,20).logResponse(TAG)
             }
 
             testGroup()
@@ -295,7 +325,9 @@ class ForumOceanServiceCase : ServiceCase {
         groupId?.apply {
             getGroup(this).logResponse(TAG)
             getUserOwnGroup(setting.identityToken.getMemberId().toLong()).logResponse(TAG)
+            getMemberManagedGroups(setting.identityToken.getMemberId().toLong()).logResponse(TAG)
             getMemberBelongGroups(setting.identityToken.getMemberId().toLong()).logResponse(TAG)
+            getMemberJoinAnyGroups(setting.identityToken.getMemberId().toLong()).logResponse(TAG)
             updateGroup(
                 this,
                 UpdateGroupRequestBody(joinType = GroupJoinType.Invitation)
@@ -425,10 +457,16 @@ class ForumOceanServiceCase : ServiceCase {
             )
         ).getOrNull()?.articleId
 
+        articleId?.also {
+            val commentId = createComment(articleId = articleId, text = "需被檢舉的回文", multiMedia = null, position = null).getOrNull()
+            createReport(articleId,ReasonType.Fraud,commentId?.commentIndex).logResponse(TAG)
+            getComment(articleId,null,null).logResponse(TAG)
+        }
+
         articleId?.apply {
             createReport(articleId, ReasonType.AD,null).logResponse(TAG)
-            deleteReport(articleId).logResponse(TAG)
-            deleteArticle(articleId)
+            getArticle(articleId).logResponse(TAG)
+            deleteReport(articleId,null).logResponse(TAG)
         }
     }
 

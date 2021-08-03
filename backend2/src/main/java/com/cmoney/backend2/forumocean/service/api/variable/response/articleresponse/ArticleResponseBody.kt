@@ -1,6 +1,7 @@
 package com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse
 
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.articleoption.*
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.articlestate.ArticleState
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.contentoption.ArticleContent
 import com.google.gson.annotations.SerializedName
 
@@ -40,6 +41,9 @@ sealed class ArticleResponseBody(
      * @property rewardPoints 問答獎金
      * @property voteCount 投票人數
      * @property voteStatus 會員投票狀態(第幾個Index)
+     * @property totalReportCount 總檢舉數
+     * @property report 是否檢舉
+     * @property articleState 文章狀態
      */
     data class UnknownArticleResponseBody(
         @SerializedName("content")
@@ -79,7 +83,13 @@ sealed class ArticleResponseBody(
         @SerializedName("voteStatus")
         override val voteStatus : Int?,
         @SerializedName("weight")
-        override val weight : Long?
+        override val weight : Long?,
+        @SerializedName("@value-reportCount")
+        override val totalReportCount: Int?,
+        @SerializedName("report")
+        override val report: Any?,
+        @SerializedName("articleState")
+        override val articleState: ArticleState?
     ) : ArticleResponseBody(createTime, id, modifyTime),
         ReactionInfo,
         CollectedInfo,
@@ -88,7 +98,9 @@ sealed class ArticleResponseBody(
         QuestionInfo,
         DonateInfo,
         VoteStatusInfo,
-        WeightInfo
+        WeightInfo,
+        ReportInfo,
+        ArticleStateInfo
 
     /**
      * 一般文章
@@ -106,6 +118,9 @@ sealed class ArticleResponseBody(
      * @property commentCount 總回文數
      * @property voteCount 投票人數
      * @property voteStatus 會員投票狀態(第幾個Index)
+     * @property totalReportCount 總檢舉數
+     * @property report 是否檢舉
+     * @property articleState 文章狀態
      */
     data class GeneralArticleResponseBody(
         @SerializedName("content")
@@ -137,14 +152,22 @@ sealed class ArticleResponseBody(
         @SerializedName("voteStatus")
         override val voteStatus : Int?,
         @SerializedName("weight")
-        override val weight : Long?
+        override val weight : Long?,
+        @SerializedName("@value-reportCount")
+        override val totalReportCount: Int?,
+        @SerializedName("report")
+        override val report: Any?,
+        @SerializedName("articleState")
+        override val articleState: ArticleState?
     ) : ArticleResponseBody(createTime, id, modifyTime),
         ReactionInfo,
         CollectedInfo,
         CommentInfo,
         DonateInfo,
         VoteStatusInfo,
-        WeightInfo
+        WeightInfo,
+        ReportInfo,
+        ArticleStateInfo
 
     /**
      * 新聞文章
@@ -160,6 +183,9 @@ sealed class ArticleResponseBody(
      * @property collectCount  總收藏數
      * @property myCommentIndex 我的回文位置
      * @property commentCount 總回文數
+     * @property totalReportCount 總檢舉數
+     * @property report 是否檢舉
+     * @property articleState 文章狀態
      */
     data class NewsArticleResponseBody(
         @SerializedName("content")
@@ -185,12 +211,20 @@ sealed class ArticleResponseBody(
         @SerializedName("@list-comment")
         override val commentCount: Int?,
         @SerializedName("weight")
-        override val weight : Long?
+        override val weight : Long?,
+        @SerializedName("@value-reportCount")
+        override val totalReportCount: Int?,
+        @SerializedName("report")
+        override val report: Any?,
+        @SerializedName("articleState")
+        override val articleState: ArticleState?
     ) : ArticleResponseBody(createTime, id, modifyTime),
         ReactionInfo,
         CollectedInfo,
         CommentInfo,
-        WeightInfo
+        WeightInfo,
+        ReportInfo,
+        ArticleStateInfo
 
     /**
      * 訊號文章
@@ -206,6 +240,9 @@ sealed class ArticleResponseBody(
      * @property collectCount  總收藏數
      * @property myCommentIndex 我的回文位置
      * @property commentCount 總回文數
+     * @property totalReportCount 總檢舉數
+     * @property report 是否檢舉
+     * @property articleState 文章狀態
      */
     data class SignalArticleResponseBody(
         @SerializedName("content")
@@ -231,12 +268,20 @@ sealed class ArticleResponseBody(
         @SerializedName("@list-comment")
         override val commentCount: Int?,
         @SerializedName("weight")
-        override val weight : Long?
+        override val weight : Long?,
+        @SerializedName("@value-reportCount")
+        override val totalReportCount: Int?,
+        @SerializedName("report")
+        override val report: Any?,
+        @SerializedName("articleState")
+        override val articleState: ArticleState?
     ) : ArticleResponseBody(createTime, id, modifyTime),
         ReactionInfo,
         CollectedInfo,
         CommentInfo,
-        WeightInfo
+        WeightInfo,
+        ReportInfo,
+        ArticleStateInfo
 
     /**
      * 社團文章
@@ -254,6 +299,9 @@ sealed class ArticleResponseBody(
      * @property commentCount 總回文數
      * @property voteCount 投票人數
      * @property voteStatus 會員投票狀態(第幾個Index)
+     * @property totalReportCount 總檢舉數
+     * @property report 是否檢舉
+     * @property articleState 文章狀態
      */
     data class GroupArticleResponseBody(
         @SerializedName("content")
@@ -285,14 +333,22 @@ sealed class ArticleResponseBody(
         @SerializedName("voteStatus")
         override val voteStatus : Int?,
         @SerializedName("weight")
-        override val weight : Long?
+        override val weight : Long?,
+        @SerializedName("@value-reportCount")
+        override val totalReportCount: Int?,
+        @SerializedName("report")
+        override val report: Any?,
+        @SerializedName("articleState")
+        override val articleState: ArticleState?
     ) : ArticleResponseBody(createTime, id, modifyTime),
         ReactionInfo,
         CollectedInfo,
         CommentInfo,
         DonateInfo,
         VoteStatusInfo,
-        WeightInfo
+        WeightInfo,
+        ReportInfo,
+        ArticleStateInfo
 
     /**
      * 轉推文章
@@ -311,6 +367,9 @@ sealed class ArticleResponseBody(
      * @property shareCount 轉推數
      * @property voteCount 投票人數
      * @property voteStatus 會員投票狀態(第幾個Index)
+     * @property totalReportCount 總檢舉數
+     * @property report 是否檢舉
+     * @property articleState 文章狀態
      */
     data class SharedArticleResponseBody(
         @SerializedName("content")
@@ -344,7 +403,13 @@ sealed class ArticleResponseBody(
         @SerializedName("voteStatus")
         override val voteStatus : Int?,
         @SerializedName("weight")
-        override val weight : Long?
+        override val weight : Long?,
+        @SerializedName("@value-reportCount")
+        override val totalReportCount: Int?,
+        @SerializedName("report")
+        override val report: Any?,
+        @SerializedName("articleState")
+        override val articleState: ArticleState?
     ) : ArticleResponseBody(createTime, id, modifyTime),
         ReactionInfo,
         CollectedInfo,
@@ -352,7 +417,9 @@ sealed class ArticleResponseBody(
         SharedInfo,
         DonateInfo,
         VoteStatusInfo,
-        WeightInfo
+        WeightInfo,
+        ReportInfo,
+        ArticleStateInfo
 
     /**
      * 問答文章
@@ -371,6 +438,9 @@ sealed class ArticleResponseBody(
      * @property interested 是否感興趣，有此屬性代表感興趣
      * @property interestCount 感興趣的人總數
      * @property rewardPoints 問答獎金
+     * @property totalReportCount 總檢舉數
+     * @property report 是否檢舉
+     * @property articleState 文章狀態
      */
     data class QuestionArticleResponseBody(
         @SerializedName("content")
@@ -402,12 +472,20 @@ sealed class ArticleResponseBody(
         @SerializedName("rewardPoints")
         override val rewardPoints: Int?,
         @SerializedName("weight")
-        override val weight : Long?
+        override val weight : Long?,
+        @SerializedName("@value-reportCount")
+        override val totalReportCount: Int?,
+        @SerializedName("report")
+        override val report: Any?,
+        @SerializedName("articleState")
+        override val articleState: ArticleState?
     ) : ArticleResponseBody(createTime, id, modifyTime),
         ReactionInfo,
         CollectedInfo,
         CommentInfo,
         QuestionInfo,
-        WeightInfo
+        WeightInfo,
+        ReportInfo,
+        ArticleStateInfo
 }
 
