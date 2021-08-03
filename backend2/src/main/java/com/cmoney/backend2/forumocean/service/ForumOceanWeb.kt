@@ -11,6 +11,7 @@ import com.cmoney.backend2.forumocean.service.api.comment.update.UpdateCommentHe
 import com.cmoney.backend2.forumocean.service.api.group.create.CreateGroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.getapprovals.GroupPendingApproval
 import com.cmoney.backend2.forumocean.service.api.group.getmember.GroupMember
+import com.cmoney.backend2.forumocean.service.api.group.getmemberjoinanygroups.GetMemberJoinAnyGroupsResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.update.UpdateGroupRequestBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.ReactionInfo
 import com.cmoney.backend2.forumocean.service.api.official.get.OfficialChannelInfo
@@ -126,16 +127,16 @@ interface ForumOceanWeb {
     /**
      * 取得指定使用者的統計資訊
      *
-     * @param memberId 會員Id
+     * @param memberIdList 會員Id
      * @return
      */
-    suspend fun getMemberStatistics(memberId: Long): Result<GetMemberStatisticsResponseBody>
+    suspend fun getMemberStatistics(memberIdList: List<Long>): Result<List<GetMemberStatisticsResponseBody>>
 
     /**
      * 取得頻道文章清單(by weight) 適用於常變動的清單
      *
      * @param channelNameBuilderList
-     * @param weight 權重 根據不同的頻道 權重的定義有所差別 例如取得頻道最新清單  權重就會是時間(UnixTime)
+     * @param weight 權重
      * @param count 取得筆數(正數往舊的取N筆，負數往新的取N筆)
      */
     suspend fun getChannelsArticleByWeight(
@@ -337,12 +338,28 @@ interface ForumOceanWeb {
     suspend fun getUserOwnGroup(ownId: Long): Result<List<GroupResponseBody>>
 
     /**
+     * 取得指定使用者管理的所有社團
+     *
+     * @param managerId
+     * @return
+     */
+    suspend fun getMemberManagedGroups(managerId : Long) : Result<List<GroupResponseBody>>
+
+    /**
      * 取得指定使用者加入的所有社團
      *
      * @param memberId 使用者Id
      * @return
      */
     suspend fun getMemberBelongGroups(memberId: Long): Result<List<GroupResponseBody>>
+
+    /**
+     * 取得指定使用者是否加入或擁有任何社團
+     *
+     * @param memberId 使用者Id
+     * @return
+     */
+    suspend fun getMemberJoinAnyGroups(memberId: Long) : Result<GetMemberJoinAnyGroupsResponseBody>
 
     /**
      * 創建社團
@@ -707,7 +724,7 @@ interface ForumOceanWeb {
      * @param articleId 文章ID
      * @return
      */
-    suspend fun deleteReport(articleId: Long): Result<Unit>
+    suspend fun deleteReport(articleId: Long, commentId: Long?): Result<Unit>
 
     //endregion
 
