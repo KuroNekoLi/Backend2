@@ -170,10 +170,10 @@ interface ForumOceanService {
     ): Response<Void>
 
     @RecordApi
-    @GET("ForumOcean/api/Channel/GetMemberStatistics/{memberId}")
+    @GET("ForumOcean/api/Channel/GetMemberStatistics")
     suspend fun getMemberStatistics(
         @Header("Authorization") authorization: String,
-        @Path("memberIds") memberIds: String
+        @Query("memberIds") memberIds: String
     ) : Response<List<GetMemberStatisticsResponseBody>>
 
     @RecordApi
