@@ -19,6 +19,8 @@ interface IdentityProviderWeb {
 
     suspend fun loginByFacebook(accessToken: String): Result<GetTokenResponseBody>
 
+    suspend fun loginByGoogle(accessToken: String): Result<GetTokenResponseBody>
+
     suspend fun loginByFirebaseAnonymousToken(anonymousToken: String): Result<GetTokenResponseBody>
 
     suspend fun refreshToken(refreshToken: String): Result<GetTokenResponseBody>
