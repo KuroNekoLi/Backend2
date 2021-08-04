@@ -19,6 +19,6 @@ enum class GraphQLFieldDefinition(val value: String) {
     InvestmentTools("investmentTools"),
     CustomerId("customerId"),
     Account("account { email cellphone { code number } facebook { fbId email name } appleId guestId }"),
-    Level("levelInfo { exp level toNext threshold }"),
-    Badge("badges { id equipped read }")
+    Level("levelInfo { exp level levelExp levelExpToNext}"),
+    Badge("badges { badgeId isEquipped hasRead }")
 }
