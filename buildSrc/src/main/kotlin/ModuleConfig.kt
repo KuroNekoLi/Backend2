@@ -1,6 +1,6 @@
 object ModuleConfig {
     // project
-    const val PROJECT_VERSION = "4.3.0-alpha03"
+    const val PROJECT_VERSION = "4.3.0-alpha04"
     // project path
     const val PROJECT_PATH = ":backend2"
     // project SDK
