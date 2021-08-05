@@ -2,6 +2,8 @@ package com.cmoney.backend2.sample.servicecase
 
 import com.cmoney.backend2.profile.service.ProfileWeb
 import com.cmoney.backend2.profile.service.api.getusergraphqlinfo.UserGraphQLInfo
+import com.cmoney.backend2.profile.service.api.mutationmyusergraphqlinfo.City
+import com.cmoney.backend2.profile.service.api.mutationmyusergraphqlinfo.Education
 import com.cmoney.backend2.profile.service.api.mutationmyusergraphqlinfo.MutationData
 import com.cmoney.backend2.profile.service.api.variable.GraphQLFieldDefinition
 import com.cmoney.backend2.sample.extension.logResponse
@@ -53,7 +55,13 @@ class ProfileServiceCase : ServiceCase {
         ).logResponse(TAG)
 
         profileWeb.getMyUserGraphQlInfo<GetNicknameAndAvatarResponse>(
-            fields = setOf(GraphQLFieldDefinition.NickName,GraphQLFieldDefinition.Image,GraphQLFieldDefinition.Level,GraphQLFieldDefinition.Badge),
+            fields = setOf(
+                    GraphQLFieldDefinition.NickName,
+                    GraphQLFieldDefinition.Image,
+                    GraphQLFieldDefinition.Level,
+                    GraphQLFieldDefinition.Badge,
+                    GraphQLFieldDefinition.Bio
+            ),
             type = object : TypeToken<GetNicknameAndAvatarResponse>(){}.type
 
         ).logResponse(TAG)
@@ -61,8 +69,19 @@ class ProfileServiceCase : ServiceCase {
             type = object : TypeToken<GetNicknameAndAvatarResponse>(){}.type,
             variable = MutationData.Builder(
                 nickname = "泰瑞瑞瑞瑞",
-                image = "https://storage.googleapis.com/cmoney-image/1378ceeb-2f10-4ef5-8d38-cb63f8f97422"
+                image = "https://storage.googleapis.com/cmoney-image/1378ceeb-2f10-4ef5-8d38-cb63f8f97422",
+                bio = "我的自我介紹"
             ).build()
+        ).logResponse(TAG)
+        profileWeb.getMyUserGraphQlInfo<GetNicknameAndAvatarResponse>(
+                fields = setOf(
+                        GraphQLFieldDefinition.NickName,
+                        GraphQLFieldDefinition.Image,
+                        GraphQLFieldDefinition.Level,
+                        GraphQLFieldDefinition.Badge
+                ),
+                type = object : TypeToken<GetNicknameAndAvatarResponse>(){}.type
+
         ).logResponse(TAG)
         profileWeb.getUserGraphQLInfo<GetNicknameAndAvatarResponse>(
             memberIds = listOf(

@@ -95,6 +95,27 @@ class IdentityProviderWebImpl(
             }
         }
 
+    override suspend fun loginByGoogle(accessToken: String): Result<GetTokenResponseBody> =
+        withContext(dispatcherProvider.io()) {
+            kotlin.runCatching {
+                val xApiLog = XApiLog(
+                    appId = setting.appId,
+                    platform = setting.platform.code,
+                    mode = 7
+                ).let { gson.toJson(it) }
+
+                service.getIdentityToken(
+                    xApiLog = xApiLog,
+                    grantType = "token-exchange",
+                    clientId = setting.clientId,
+                    providerToken = accessToken,
+                    provider = "google"
+                )
+                    .checkResponseBody(gson)
+                    .toRealResponse()
+            }
+        }
+
     override suspend fun loginByFirebaseAnonymousToken(anonymousToken: String): Result<GetTokenResponseBody> =
         withContext(dispatcherProvider.io()) {
             kotlin.runCatching {

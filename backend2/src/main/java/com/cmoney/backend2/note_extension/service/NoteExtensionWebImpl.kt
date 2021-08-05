@@ -12,6 +12,7 @@ import com.cmoney.backend2.note_extension.service.api.getnotecommentcount.GetCom
 import com.cmoney.backend2.note_extension.service.api.getreplylistbyid.GetCommentListByNoteIdResponseBody
 import com.google.gson.Gson
 import kotlinx.coroutines.withContext
+import java.util.concurrent.TimeUnit
 
 class NoteExtensionWebImpl(
     private val service: NoteExtensionService,
@@ -31,7 +32,7 @@ class NoteExtensionWebImpl(
                 noteId = noteId,
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 requestBody = CreateCommentRequestBody(
-                    createTime = createTime,
+                    createTime = TimeUnit.MILLISECONDS.toSeconds(createTime),
                     content = CreateCommentRequestBody.Content(
                         text = contentText,
                         image = contentImageUrl
