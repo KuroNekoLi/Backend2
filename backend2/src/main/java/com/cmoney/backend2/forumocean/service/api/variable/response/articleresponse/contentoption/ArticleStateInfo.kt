@@ -1,4 +1,4 @@
-package com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.articleoption
+package com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.contentoption
 
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.articlestate.ArticleState
 
