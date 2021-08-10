@@ -9,54 +9,48 @@ import retrofit2.http.*
 interface AdditionalInformationRevisitService {
 
     @RecordApi
-    @POST("{service}/api/GetAll/{typeName}")
+    @POST
     suspend fun getAll(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("service") service: String,
-        @Path("typeName") typeName: String,
         @Query("columns") columns: String,
         @Body param: GetRequestParam
     ): Response<List<List<String?>>>
 
     @RecordApi
-    @POST("{service}/api/GetTarget/{typeName}")
+    @POST
     suspend fun getTarget(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("service") service: String,
-        @Path("typeName") typeName: String,
         @Query("keyNamePath") keyNamePath: String,
         @Query("columns") columns: String,
         @Body param: GetRequestParam
     ): Response<List<List<String?>>>
 
     @RecordApi
-    @POST("{service}/api/GetMultiple/{typeName}")
+    @POST
     suspend fun getMultiple(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("service") service: String,
-        @Path("typeName") typeName: String,
         @Query("columns") columns: String,
         @Query("keyNamePath") keyNamePath: String,
         @Body param: GetRequestParam
     ): Response<List<List<String?>>>
 
     @RecordApi
-    @POST("{service}/api/GetOtherQuery/{requestTypeString}/{responseTypeString}")
+    @POST
     suspend fun getOtherQuery(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("service") service: String,
-        @Path("requestTypeString") requestType: String,
-        @Path("responseTypeString") responseType: String,
         @Query("columns") columns: String,
         @Body param: GetRequestParam
     ): Response<List<List<String?>>>
 
     @RecordApi
-    @POST("{service}/api/Signal/Get/{channels}")
+    @POST
     suspend fun getSignal(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("service") service: String,
-        @Path("channels") channels: String,
         @Body param: RequestIds
     ): Response<List<List<String?>>>
 }
