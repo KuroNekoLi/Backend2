@@ -55,7 +55,7 @@ class AdditionalInformationRevisitWebImplTest : KoinTest {
     @ExperimentalCoroutinesApi
     @Test
     fun getAll_success_ListListString() = mainCoroutineRule.runBlockingTest {
-        coEvery { service.getAll(any(), any(), any(), any(), any()) } returns Response.success(
+        coEvery { service.getAll(any(), any(), any(), any()) } returns Response.success(
             emptyList()
         )
         val typeName = "StockCalculation"
@@ -68,7 +68,6 @@ class AdditionalInformationRevisitWebImplTest : KoinTest {
     fun getTarget_success_ListListString() = mainCoroutineRule.runBlockingTest {
         coEvery {
             service.getTarget(
-                any(),
                 any(),
                 any(),
                 any(),
@@ -98,7 +97,6 @@ class AdditionalInformationRevisitWebImplTest : KoinTest {
                 any(),
                 any(),
                 any(),
-                any(),
                 any()
             )
         } returns Response.success(
@@ -123,8 +121,6 @@ class AdditionalInformationRevisitWebImplTest : KoinTest {
                 any(),
                 any(),
                 any(),
-                any(),
-                any(),
                 any()
             )
         } returns Response.success(
@@ -145,7 +141,7 @@ class AdditionalInformationRevisitWebImplTest : KoinTest {
     @ExperimentalCoroutinesApi
     @Test
     fun getSignal_success_ListListString() = mainCoroutineRule.runBlockingTest {
-        coEvery { service.getSignal(any(), any(), any(), any()) } returns Response.success(
+        coEvery { service.getSignal(any(), any(), any()) } returns Response.success(
             listOf(
                 listOf("2330", "1620696741000", "true", "true", "true")
             )

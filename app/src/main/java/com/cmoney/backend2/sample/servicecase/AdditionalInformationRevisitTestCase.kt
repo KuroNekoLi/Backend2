@@ -1,29 +1,34 @@
 package com.cmoney.backend2.sample.servicecase
 
-import com.cmoney.backend2.additioninformationrevisit.di.BACKEND_ADDITION_INFORMATION_REVISIT_SERVICE
 import com.cmoney.backend2.additioninformationrevisit.service.AdditionalInformationRevisitWeb
 import com.cmoney.backend2.additioninformationrevisit.service.ServicePath
 import com.cmoney.backend2.additioninformationrevisit.service.api.request.ProcessStep
 import com.cmoney.backend2.base.di.BACKEND2_GSON
+import com.cmoney.backend2.base.di.BACKEND2_SETTING
+import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.sample.extension.logResponse
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import org.koin.core.get
 import org.koin.core.inject
-import org.koin.core.parameter.parametersOf
 
-class AdditionalInformationRevisitTestCase(private val isSignal: Boolean) : ServiceCase {
+/**
+ * Additional information revisit test case
+ *
+ * @param hasSignal 是否有要測試[AdditionalInformationRevisitWeb.getSignal]，用於調整測試機的service name
+ */
+class AdditionalInformationRevisitTestCase(hasSignal: Boolean) : ServiceCase {
 
     private val web by lazy {
-        if (isSignal) {
-            get<AdditionalInformationRevisitWeb>(BACKEND_ADDITION_INFORMATION_REVISIT_SERVICE) {
-                parametersOf(ServicePath().copy(signal = "AdditionInformationRevisit_V2"))
-            }
-        } else {
-            get<AdditionalInformationRevisitWeb>()
-        }
+        get<AdditionalInformationRevisitWeb>()
     }
     private val gson by inject<Gson>(BACKEND2_GSON)
+    private val setting by inject<Setting>(BACKEND2_SETTING)
+    private val servicePath = if (hasSignal) {
+        ServicePath().copy(signal = "AdditionInformationRevisit_V2")
+    } else {
+        ServicePath()
+    }
 
     override suspend fun testAll() {
         test()
@@ -32,41 +37,55 @@ class AdditionalInformationRevisitTestCase(private val isSignal: Boolean) : Serv
     }
 
     private suspend fun test() {
-        web.getAll(TEST_COLUMNS, TEST_TYPE_NAME, emptyList())
+        web.getAll(
+            domain = setting.domainUrl,
+            serviceParam = servicePath.all,
+            columns = TEST_COLUMNS,
+            typeName = TEST_TYPE_NAME,
+            processSteps = emptyList()
+        )
             .logResponse(TAG)
         val commKeys = listOf("2330", "0050")
         web.getTarget(
-            TEST_TYPE_NAME,
-            TEST_COLUMNS,
-            listOf("Commodity", "CommKey"),
-            gson.toJson(commKeys),
-            emptyList()
+            domain = setting.domainUrl,
+            serviceParam = servicePath.target,
+            typeName = TEST_TYPE_NAME,
+            columns = TEST_COLUMNS,
+            keyNamePath = listOf("Commodity", "CommKey"),
+            value = gson.toJson(commKeys),
+            processSteps = emptyList()
         )
             .logResponse(TAG)
         web.getMultiple(
-            "CandlestickChart<StockCommodity>",
-            TEST_MULTIPLE_CANDLE_COLUMNS,
-            listOf("Key"),
-            gson.toJson(CandleChartRequestValue(commodity = "2330", minuteInterval = 1)),
-            emptyList()
+            domain = setting.domainUrl,
+            serviceParam = servicePath.multiple,
+            typeName = "CandlestickChart<StockCommodity>",
+            columns = TEST_MULTIPLE_CANDLE_COLUMNS,
+            keyNamePath = listOf("Key"),
+            value = gson.toJson(CandleChartRequestValue(commodity = "2330", minuteInterval = 1)),
+            processSteps = emptyList()
         )
             .logResponse(TAG)
         web.getOtherQuery(
-            "SectionTransactionDetailsRequest<StockTick>",
-            "IEnumerable<StockTick>",
-            TEST_COLUMNS,
-            gson.toJson(
+            domain = setting.domainUrl,
+            serviceParam = servicePath.otherQuery,
+            requestType = "SectionTransactionDetailsRequest<StockTick>",
+            responseType = "IEnumerable<StockTick>",
+            columns = TEST_COLUMNS,
+            value = gson.toJson(
                 StockTickRequestValue(
                     commKey = "2330",
                     startSeqNo = Int.MAX_VALUE,
                     requiredQuantity = 10
                 )
             ),
-            emptyList()
+            processSteps = emptyList()
         )
             .logResponse(TAG)
         web.getSignal(
-            listOf(
+            domain = setting.domainUrl,
+            serviceParam = servicePath.signal,
+            channels = listOf(
                 // 台股上市櫃(不含ETF)
                 "1175865",
                 // 可現股當沖標的(不含ETF)
@@ -78,6 +97,8 @@ class AdditionalInformationRevisitTestCase(private val isSignal: Boolean) : Serv
 
     private suspend fun testHasProcessStep() {
         web.getAll(
+            domain = setting.domainUrl,
+            serviceParam = servicePath.all,
             columns = TEST_COLUMNS,
             typeName = TEST_TYPE_NAME,
             processSteps = listOf(
@@ -94,10 +115,12 @@ class AdditionalInformationRevisitTestCase(private val isSignal: Boolean) : Serv
             .logResponse(TAG)
         val commKeys = listOf("2330", "0050", "2344", "3008")
         web.getTarget(
-            TEST_TYPE_NAME,
-            TEST_COLUMNS,
-            listOf("Commodity", "CommKey"),
-            gson.toJson(commKeys),
+            domain = setting.domainUrl,
+            serviceParam = servicePath.target,
+            typeName = TEST_TYPE_NAME,
+            columns = TEST_COLUMNS,
+            keyNamePath = listOf("Commodity", "CommKey"),
+            value = gson.toJson(commKeys),
             processSteps = listOf(
                 ProcessStep(
                     type = "TakeCount",
@@ -111,6 +134,8 @@ class AdditionalInformationRevisitTestCase(private val isSignal: Boolean) : Serv
         )
             .logResponse(TAG)
         web.getMultiple(
+            domain = setting.domainUrl,
+            serviceParam = servicePath.multiple,
             typeName = "CandlestickChart<StockCommodity>",
             columns = TEST_MULTIPLE_CANDLE_COLUMNS,
             keyNamePath = listOf("Key"),
@@ -128,6 +153,8 @@ class AdditionalInformationRevisitTestCase(private val isSignal: Boolean) : Serv
         )
             .logResponse(TAG)
         web.getOtherQuery(
+            domain = setting.domainUrl,
+            serviceParam = servicePath.otherQuery,
             requestType = "SectionTransactionDetailsRequest<StockTick>",
             responseType = "IEnumerable<StockTick>",
             columns = TEST_COLUMNS,
