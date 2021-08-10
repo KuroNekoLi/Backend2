@@ -6,7 +6,14 @@ import com.cmoney.backend2.base.model.request.MemberApiParam
 import com.cmoney.backend2.base.model.setting.Setting
 
 interface AdditionalInformationRevisitWeb {
+    /**
+     * 網路基本設定
+     */
     val setting: Setting
+
+    /**
+     * 服務名稱設定
+     */
     val servicePath: ServicePath
 
     /**
@@ -29,6 +36,8 @@ interface AdditionalInformationRevisitWeb {
 
     /**
      * 取得片面最新資料
+     *
+     * ※轉呼getAll(domain, serviceParam)，代入[setting]的[Setting.domainUrl]及[ServicePath.all]
      *
      * @param typeName String
      * @param columns List<String> 資料輸出欄位
@@ -83,6 +92,8 @@ interface AdditionalInformationRevisitWeb {
     /**
      * 取得以[value]篩選過的資料
      *
+     * ※轉呼 getTarget(domain, serviceParam)，代入[setting]的[Setting.domainUrl]及[ServicePath.target]
+     *
      * @param typeName String
      * @param columns List<String> 資料輸出欄位
      * @param keyNamePath List<String>
@@ -134,6 +145,8 @@ interface AdditionalInformationRevisitWeb {
     /**
      * 取得Channel Signal資料
      *
+     * ※轉呼 getSignal(domain, serviceParam)，代入[setting]的[Setting.domainUrl]及[ServicePath.signal]
+     *
      * @param channels List<String>
      * @return Result<List<List<String>>>
      */
@@ -148,8 +161,8 @@ interface AdditionalInformationRevisitWeb {
      * @return Result<List<List<String>>>
      */
     suspend fun getSignal(
-        domain: String,
-        serviceParam: String,
+        domain: String = setting.domainUrl,
+        serviceParam: String = servicePath.signal,
         channels: List<String>
     ): Result<List<List<String>>>
 
@@ -181,6 +194,8 @@ interface AdditionalInformationRevisitWeb {
      *
      * 範例請參考連結: http://192.168.99.148/AdditionInformationRevisit/swagger/index.html
      * GetServiceList 目前主機提供之服務
+     *
+     * ※轉呼 getMultiple(domain, serviceParam)，代入[setting]的[Setting.domainUrl]及[ServicePath.multiple]
      *
      * @param typeName String
      * @param columns List<String> 資料輸出欄位
@@ -269,6 +284,8 @@ interface AdditionalInformationRevisitWeb {
      *
      * 範例請參考連結: http://192.168.99.148/AdditionInformationRevisit/swagger/index.html
      * GetServiceList 目前主機提供之服務
+     *
+     * ※轉呼 getOtherQuery(domain, serviceParam)，代入[setting]的[Setting.domainUrl]及[ServicePath.otherQuery]
      *
      * @param domain 呼叫的server網域
      * @param serviceParam Service名稱
