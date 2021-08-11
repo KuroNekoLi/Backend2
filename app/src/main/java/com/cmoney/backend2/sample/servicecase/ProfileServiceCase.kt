@@ -1,5 +1,6 @@
 package com.cmoney.backend2.sample.servicecase
 
+import android.util.Log
 import com.cmoney.backend2.profile.service.ProfileWeb
 import com.cmoney.backend2.profile.service.api.getusergraphqlinfo.UserGraphQLInfo
 import com.cmoney.backend2.profile.service.api.mutationmyusergraphqlinfo.City
@@ -68,7 +69,7 @@ class ProfileServiceCase : ServiceCase {
         profileWeb.mutationMyUserGraphQlInfo<GetNicknameAndAvatarResponse>(
             type = object : TypeToken<GetNicknameAndAvatarResponse>(){}.type,
             variable = MutationData.Builder(
-                nickname = "泰瑞瑞瑞瑞",
+                nickname = "Tester_X",
                 image = "https://storage.googleapis.com/cmoney-image/1378ceeb-2f10-4ef5-8d38-cb63f8f97422",
                 bio = "我的自我介紹"
             ).build()
@@ -90,7 +91,8 @@ class ProfileServiceCase : ServiceCase {
             fields = setOf(
                 UserGraphQLInfo.NickName,
                 UserGraphQLInfo.ID,
-                UserGraphQLInfo.Image
+                UserGraphQLInfo.Image,
+                UserGraphQLInfo.Bio
             ),
             //注意，因為回傳會是List，記得在型別要先加上List -> TypeToken<List<T>>(){}.type
             type = object : TypeToken<List<GetNicknameAndAvatarResponse>>(){}.type

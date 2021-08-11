@@ -10,5 +10,6 @@ enum class UserGraphQLInfo(val value : String) {
     NickName("nickname"),
     Level("level"),
     Image("image"),
-    Badge("badges")
+    Badge("badges"),
+    Bio("bio")
 }
