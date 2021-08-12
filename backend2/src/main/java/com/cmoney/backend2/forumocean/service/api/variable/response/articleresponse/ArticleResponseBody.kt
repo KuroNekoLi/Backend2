@@ -3,6 +3,7 @@ package com.cmoney.backend2.forumocean.service.api.variable.response.articleresp
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.articleoption.*
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.articlestate.ArticleState
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.contentoption.ArticleContent
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.contentoption.ArticleStateInfo
 import com.google.gson.annotations.SerializedName
 
 /**
@@ -43,7 +44,6 @@ sealed class ArticleResponseBody(
      * @property voteStatus 會員投票狀態(第幾個Index)
      * @property totalReportCount 總檢舉數
      * @property report 是否檢舉
-     * @property articleState 文章狀態
      */
     data class UnknownArticleResponseBody(
         @SerializedName("content")
@@ -87,9 +87,7 @@ sealed class ArticleResponseBody(
         @SerializedName("@value-reportCount")
         override val totalReportCount: Int?,
         @SerializedName("report")
-        override val report: Any?,
-        @SerializedName("articleState")
-        override val articleState: ArticleState?
+        override val report: Any?
     ) : ArticleResponseBody(createTime, id, modifyTime),
         ReactionInfo,
         CollectedInfo,
@@ -99,8 +97,7 @@ sealed class ArticleResponseBody(
         DonateInfo,
         VoteStatusInfo,
         WeightInfo,
-        ReportInfo,
-        ArticleStateInfo
+        ReportInfo
 
     /**
      * 一般文章
@@ -120,7 +117,6 @@ sealed class ArticleResponseBody(
      * @property voteStatus 會員投票狀態(第幾個Index)
      * @property totalReportCount 總檢舉數
      * @property report 是否檢舉
-     * @property articleState 文章狀態
      */
     data class GeneralArticleResponseBody(
         @SerializedName("content")
@@ -156,9 +152,7 @@ sealed class ArticleResponseBody(
         @SerializedName("@value-reportCount")
         override val totalReportCount: Int?,
         @SerializedName("report")
-        override val report: Any?,
-        @SerializedName("articleState")
-        override val articleState: ArticleState?
+        override val report: Any?
     ) : ArticleResponseBody(createTime, id, modifyTime),
         ReactionInfo,
         CollectedInfo,
@@ -166,8 +160,7 @@ sealed class ArticleResponseBody(
         DonateInfo,
         VoteStatusInfo,
         WeightInfo,
-        ReportInfo,
-        ArticleStateInfo
+        ReportInfo
 
     /**
      * 新聞文章
@@ -185,7 +178,6 @@ sealed class ArticleResponseBody(
      * @property commentCount 總回文數
      * @property totalReportCount 總檢舉數
      * @property report 是否檢舉
-     * @property articleState 文章狀態
      */
     data class NewsArticleResponseBody(
         @SerializedName("content")
@@ -215,16 +207,13 @@ sealed class ArticleResponseBody(
         @SerializedName("@value-reportCount")
         override val totalReportCount: Int?,
         @SerializedName("report")
-        override val report: Any?,
-        @SerializedName("articleState")
-        override val articleState: ArticleState?
+        override val report: Any?
     ) : ArticleResponseBody(createTime, id, modifyTime),
         ReactionInfo,
         CollectedInfo,
         CommentInfo,
         WeightInfo,
-        ReportInfo,
-        ArticleStateInfo
+        ReportInfo
 
     /**
      * 訊號文章
@@ -242,7 +231,6 @@ sealed class ArticleResponseBody(
      * @property commentCount 總回文數
      * @property totalReportCount 總檢舉數
      * @property report 是否檢舉
-     * @property articleState 文章狀態
      */
     data class SignalArticleResponseBody(
         @SerializedName("content")
@@ -272,16 +260,13 @@ sealed class ArticleResponseBody(
         @SerializedName("@value-reportCount")
         override val totalReportCount: Int?,
         @SerializedName("report")
-        override val report: Any?,
-        @SerializedName("articleState")
-        override val articleState: ArticleState?
+        override val report: Any?
     ) : ArticleResponseBody(createTime, id, modifyTime),
         ReactionInfo,
         CollectedInfo,
         CommentInfo,
         WeightInfo,
-        ReportInfo,
-        ArticleStateInfo
+        ReportInfo
 
     /**
      * 社團文章
@@ -301,7 +286,6 @@ sealed class ArticleResponseBody(
      * @property voteStatus 會員投票狀態(第幾個Index)
      * @property totalReportCount 總檢舉數
      * @property report 是否檢舉
-     * @property articleState 文章狀態
      */
     data class GroupArticleResponseBody(
         @SerializedName("content")
@@ -337,9 +321,7 @@ sealed class ArticleResponseBody(
         @SerializedName("@value-reportCount")
         override val totalReportCount: Int?,
         @SerializedName("report")
-        override val report: Any?,
-        @SerializedName("articleState")
-        override val articleState: ArticleState?
+        override val report: Any?
     ) : ArticleResponseBody(createTime, id, modifyTime),
         ReactionInfo,
         CollectedInfo,
@@ -347,8 +329,7 @@ sealed class ArticleResponseBody(
         DonateInfo,
         VoteStatusInfo,
         WeightInfo,
-        ReportInfo,
-        ArticleStateInfo
+        ReportInfo
 
     /**
      * 轉推文章
@@ -369,7 +350,6 @@ sealed class ArticleResponseBody(
      * @property voteStatus 會員投票狀態(第幾個Index)
      * @property totalReportCount 總檢舉數
      * @property report 是否檢舉
-     * @property articleState 文章狀態
      */
     data class SharedArticleResponseBody(
         @SerializedName("content")
@@ -407,9 +387,7 @@ sealed class ArticleResponseBody(
         @SerializedName("@value-reportCount")
         override val totalReportCount: Int?,
         @SerializedName("report")
-        override val report: Any?,
-        @SerializedName("articleState")
-        override val articleState: ArticleState?
+        override val report: Any?
     ) : ArticleResponseBody(createTime, id, modifyTime),
         ReactionInfo,
         CollectedInfo,
@@ -418,8 +396,7 @@ sealed class ArticleResponseBody(
         DonateInfo,
         VoteStatusInfo,
         WeightInfo,
-        ReportInfo,
-        ArticleStateInfo
+        ReportInfo
 
     /**
      * 問答文章
@@ -440,7 +417,6 @@ sealed class ArticleResponseBody(
      * @property rewardPoints 問答獎金
      * @property totalReportCount 總檢舉數
      * @property report 是否檢舉
-     * @property articleState 文章狀態
      */
     data class QuestionArticleResponseBody(
         @SerializedName("content")
@@ -476,16 +452,13 @@ sealed class ArticleResponseBody(
         @SerializedName("@value-reportCount")
         override val totalReportCount: Int?,
         @SerializedName("report")
-        override val report: Any?,
-        @SerializedName("articleState")
-        override val articleState: ArticleState?
+        override val report: Any?
     ) : ArticleResponseBody(createTime, id, modifyTime),
         ReactionInfo,
         CollectedInfo,
         CommentInfo,
         QuestionInfo,
         WeightInfo,
-        ReportInfo,
-        ArticleStateInfo
+        ReportInfo
 }
 

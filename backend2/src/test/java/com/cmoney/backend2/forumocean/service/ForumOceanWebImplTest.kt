@@ -208,8 +208,7 @@ class ForumOceanWebImplTest {
             voteStatus = null,
             weight = null,
             totalReportCount = null,
-            report = null,
-            articleState = null
+            report = null
         )
         coEvery {
             forumOceanService.getArticle(
@@ -243,8 +242,7 @@ class ForumOceanWebImplTest {
             rewardPoints = null,
             weight = null,
             totalReportCount = null,
-            report = null,
-            articleState = null
+            report = null
         )
         coEvery {
             forumOceanService.getQuestionArticle(
@@ -278,8 +276,7 @@ class ForumOceanWebImplTest {
             voteStatus = null,
             weight = null,
             totalReportCount = null,
-            report = null,
-            articleState = null
+            report = null
 
         )
         coEvery {
@@ -315,8 +312,7 @@ class ForumOceanWebImplTest {
             voteStatus = null,
             weight = null,
             totalReportCount = null,
-            report = null,
-            articleState = null
+            report = null
         )
         coEvery {
             forumOceanService.getSharedArticle(
@@ -347,8 +343,7 @@ class ForumOceanWebImplTest {
             commentCount = null,
             weight = null,
             totalReportCount = null,
-            report = null,
-            articleState = null
+            report = null
         )
         coEvery {
             forumOceanService.getSignalArticle(
@@ -379,8 +374,7 @@ class ForumOceanWebImplTest {
             commentCount = null,
             weight = null,
             totalReportCount = null,
-            report = null,
-            articleState = null
+            report = null
         )
         coEvery {
             forumOceanService.getNewsArticle(
@@ -418,8 +412,7 @@ class ForumOceanWebImplTest {
             voteStatus = null,
             weight = null,
             totalReportCount = null,
-            report = null,
-            articleState = null
+            report = null
         )
         coEvery {
             forumOceanService.getUnknownArticle(
@@ -551,8 +544,7 @@ class ForumOceanWebImplTest {
                     voteStatus = null,
                     weight = null,
                     totalReportCount = null,
-                    report = null,
-                    articleState = null
+                    report = null
                 )
             )
         )
