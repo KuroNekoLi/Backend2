@@ -3,9 +3,13 @@ package com.cmoney.backend2.chipk.service
 import com.cmoney.backend2.MainCoroutineRule
 import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
+import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.response.dtno.DtnoWithError
 import com.cmoney.backend2.chipk.service.api.getOfficialStockPickData.OfficialStock
 import com.cmoney.backend2.chipk.service.api.getOfficialStockPickData.OfficialStockInfoWithError
+import com.cmoney.backend2.chipk.service.api.internationalkchart.ProductType
+import com.cmoney.backend2.chipk.service.api.internationalkchart.TickInfo
+import com.cmoney.backend2.chipk.service.api.internationalkchart.TickInfoSetWithError
 import com.google.common.truth.Truth
 import com.google.gson.Gson
 import com.google.gson.JsonArray
@@ -547,6 +551,71 @@ class ChipKWebImplTest {
 
         val result = chipKWeb.getIndexFunded(20)
         Truth.assertThat(result.isSuccess).isFalse()
+    }
+
+    @Test
+    fun `getInternationalKChart_success`() = mainCoroutineRule.runBlockingTest {
+        val tickInfo = TickInfo(
+            ceilingPrice = "28146.6800",
+            closePrice = "28070.5100",
+            date = "20210811",
+            lowestPrice = "27974.9900",
+            openPrice = "28045.8400",
+            priceChange = "182.3600",
+            quoteChange = "0.65",
+            totalQty = "614308700"
+        )
+        val response = TickInfoSetWithError(
+            tickInfoSet = listOf(tickInfo)
+        )
+        coEvery {
+            chipKService.getInternationalKData(
+                authorization = any(),
+                action = any(),
+                productType = any(),
+                productKey = any(),
+                appId = any()
+            )
+        } returns Response.success(response)
+
+        val result = chipKWeb.getInternationalKChart("#N225", ProductType.InternationalIndex)
+        Truth.assertThat(result.isSuccess).isTrue()
+        val data = result.getOrThrow()
+        Truth.assertThat(data.tickInfoSet).hasSize(1)
+        Truth.assertThat(data.tickInfoSet?.first()).isEqualTo(tickInfo)
+    }
+
+    @Test
+    fun `getInternationalKChart_failure`() = mainCoroutineRule.runBlockingTest {
+        val errorResponseBodyJson = """
+            {
+                "error": {
+                    "Code": 2,
+                    "Message": "找不到對應的Dtno"
+                },
+                "Error": {
+                    "Code": 2,
+                    "Message": "找不到對應的Dtno"
+                }
+            }
+        """.trimIndent()
+        val errorResponseBody = gson.fromJson(errorResponseBodyJson, TickInfoSetWithError::class.java)
+        coEvery {
+            chipKService.getInternationalKData(
+                authorization = any(),
+                action = any(),
+                productType = any(),
+                productKey = any(),
+                appId = any()
+            )
+        } returns Response.success(errorResponseBody)
+
+        val result = chipKWeb.getInternationalKChart("#N225", ProductType.InternationalIndex)
+        Truth.assertThat(result.isSuccess).isFalse()
+        val exception = result.exceptionOrNull()
+        Truth.assertThat(exception).isInstanceOf(ServerException::class.java)
+        require(exception is ServerException)
+        Truth.assertThat(exception.code).isEqualTo(2)
     }
 
     @Test
