@@ -2,6 +2,8 @@ package com.cmoney.backend2.chipk.service
 
 import com.cmoney.backend2.base.model.response.dtno.DtnoData
 import com.cmoney.backend2.chipk.service.api.getOfficialStockPickData.OfficialStockInfo
+import com.cmoney.backend2.chipk.service.api.internationalkchart.ProductType
+import com.cmoney.backend2.chipk.service.api.internationalkchart.TickInfoSet
 
 interface ChipKWeb {
 
@@ -42,6 +44,17 @@ interface ChipKWeb {
     suspend fun getIndexFunded(
         tickCount: Int
     ): Result<DtnoData>
+
+    /**
+     * 服務6-9. 要求國際盤後資料
+     *
+     * @param id 商品代號
+     * @param productType 商品類型
+     */
+    suspend fun getInternationalKChart(
+        id: String,
+        productType: ProductType
+    ): Result<TickInfoSet>
 
     /**
      * 服務6-10. 取得加權指數融資維持率

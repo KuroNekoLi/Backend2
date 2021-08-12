@@ -9,6 +9,8 @@ import com.cmoney.backend2.base.model.response.dtno.DtnoData
 import com.cmoney.backend2.base.model.response.error.CMoneyError
 import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.chipk.service.api.getOfficialStockPickData.OfficialStockInfo
+import com.cmoney.backend2.chipk.service.api.internationalkchart.ProductType
+import com.cmoney.backend2.chipk.service.api.internationalkchart.TickInfoSet
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.JsonSyntaxException
@@ -75,6 +77,23 @@ class ChipKWebImpl(
                 )
                 response.checkResponseBody(gson).checkIWithError().toRealResponse()
             }
+        }
+    }
+
+    override suspend fun getInternationalKChart(
+        id: String,
+        productType: ProductType
+    ): Result<TickInfoSet> = withContext(dispatcher.io()){
+        kotlin.runCatching {
+            val response = service.getInternationalKData(
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                productType = productType.value,
+                productKey = id,
+                appId = setting.appId
+            )
+            response.checkResponseBody(gson)
+                .checkIWithError()
+                .toRealResponse()
         }
     }
 
