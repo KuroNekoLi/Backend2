@@ -14,9 +14,9 @@ import com.cmoney.backend2.base.model.setting.Setting
 import kotlinx.coroutines.withContext
 
 class AdditionalInformationRevisitWebImpl(
-    private val setting: Setting,
+    override val setting: Setting,
     private val service: AdditionalInformationRevisitService,
-    private val servicePath: ServicePath = ServicePath(),
+    override val servicePath: ServicePath = ServicePath(),
     private val dispatcher: DispatcherProvider = DefaultDispatcherProvider()
 ) : AdditionalInformationRevisitWeb {
 
@@ -31,12 +31,20 @@ class AdditionalInformationRevisitWebImpl(
         columns: List<String>,
         typeName: String,
         processSteps: List<ProcessStep>
+    ): Result<List<List<String>>> =
+        getAll(setting.domainUrl, servicePath.all, columns, typeName, processSteps)
+
+    override suspend fun getAll(
+        domain: String,
+        serviceParam: String,
+        columns: List<String>,
+        typeName: String,
+        processSteps: List<ProcessStep>
     ): Result<List<List<String>>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getAll(
+                url = "$domain$serviceParam/api/GetAll/$typeName",
                 authorization = setting.accessToken.createAuthorizationBearer(),
-                service = servicePath.all,
-                typeName = typeName,
                 columns = columns.joinComma(),
                 param = GetRequestParam(
                     appId = setting.appId,
@@ -69,12 +77,29 @@ class AdditionalInformationRevisitWebImpl(
         keyNamePath: List<String>,
         value: String,
         processSteps: List<ProcessStep>
+    ): Result<List<List<String>>> = getTarget(
+        setting.domainUrl,
+        servicePath.target,
+        typeName,
+        columns,
+        keyNamePath,
+        value,
+        processSteps
+    )
+
+    override suspend fun getTarget(
+        domain: String,
+        serviceParam: String,
+        typeName: String,
+        columns: List<String>,
+        keyNamePath: List<String>,
+        value: String,
+        processSteps: List<ProcessStep>
     ): Result<List<List<String>>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getTarget(
+                url = "$domain$serviceParam/api/GetTarget/$typeName",
                 authorization = setting.accessToken.createAuthorizationBearer(),
-                service = servicePath.target,
-                typeName = typeName,
                 columns = columns.joinComma(),
                 keyNamePath = keyNamePath.joinComma(),
                 param = GetRequestParam(
@@ -99,21 +124,26 @@ class AdditionalInformationRevisitWebImpl(
     ): Result<List<List<String>>> = getSignal(channels)
 
     override suspend fun getSignal(channels: List<String>): Result<List<List<String>>> =
-        withContext(dispatcher.io()) {
-            kotlin.runCatching {
-                service.getSignal(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    service = servicePath.signal,
-                    channels = channels.joinComma(),
-                    param = RequestIds(
-                        appId = setting.appId,
-                        guid = setting.identityToken.getMemberGuid()
-                    )
-                ).checkIsSuccessful()
-                    .requireBody()
-                    .map { row -> row.map { it.orEmpty() } }
-            }
+        getSignal(setting.domainUrl, servicePath.signal, channels)
+
+    override suspend fun getSignal(
+        domain: String,
+        serviceParam: String,
+        channels: List<String>
+    ): Result<List<List<String>>> = withContext(dispatcher.io()) {
+        kotlin.runCatching {
+            service.getSignal(
+                url = "$domain$serviceParam/api/Signal/Get/${channels.joinComma()}",
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                param = RequestIds(
+                    appId = setting.appId,
+                    guid = setting.identityToken.getMemberGuid()
+                )
+            ).checkIsSuccessful()
+                .requireBody()
+                .map { row -> row.map { it.orEmpty() } }
         }
+    }
 
     override suspend fun getMultiple(
         apiParam: MemberApiParam,
@@ -130,12 +160,29 @@ class AdditionalInformationRevisitWebImpl(
         keyNamePath: List<String>,
         value: String,
         processSteps: List<ProcessStep>
+    ): Result<List<List<String>>> = getMultiple(
+        setting.domainUrl,
+        servicePath.multiple,
+        typeName,
+        columns,
+        keyNamePath,
+        value,
+        processSteps
+    )
+
+    override suspend fun getMultiple(
+        domain: String,
+        serviceParam: String,
+        typeName: String,
+        columns: List<String>,
+        keyNamePath: List<String>,
+        value: String,
+        processSteps: List<ProcessStep>
     ): Result<List<List<String>>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             val response = service.getMultiple(
+                url = "$domain$serviceParam/api/GetMultiple/$typeName",
                 authorization = setting.accessToken.createAuthorizationBearer(),
-                service = servicePath.multiple,
-                typeName = typeName,
                 columns = columns.joinComma(),
                 keyNamePath = keyNamePath.joinComma(),
                 param = GetRequestParam(
@@ -171,13 +218,29 @@ class AdditionalInformationRevisitWebImpl(
         columns: List<String>,
         value: String,
         processSteps: List<ProcessStep>
+    ): Result<List<List<String>>> = getOtherQuery(
+        setting.domainUrl,
+        servicePath.otherQuery,
+        requestType,
+        responseType,
+        columns,
+        value,
+        processSteps
+    )
+
+    override suspend fun getOtherQuery(
+        domain: String,
+        serviceParam: String,
+        requestType: String,
+        responseType: String,
+        columns: List<String>,
+        value: String,
+        processSteps: List<ProcessStep>
     ): Result<List<List<String>>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getOtherQuery(
+                url = "$domain$serviceParam/api/GetOtherQuery/$requestType/$responseType",
                 authorization = setting.accessToken.createAuthorizationBearer(),
-                service = servicePath.otherQuery,
-                requestType = requestType,
-                responseType = responseType,
                 columns = columns.joinComma(),
                 param = GetRequestParam(
                     appId = setting.appId,

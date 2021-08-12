@@ -1,3 +1,26 @@
+#  (2021-08-12)
+
+
+
+# [4.3.0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/4.3.0-alpha07...4.3.0) (2021-08-12)
+
+
+### Bug Fixes
+
+* createComment createTime ms -> s ([635b097](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/635b09795c52700a05e35317d252cbf3ad5ce522))
+* 修正發文時股票Tag的猜多空狀態使用String傳出 應該要以Int形式傳出 ([155ee80](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/155ee803cf3de2ea3abc0da2af3b64a9fd9c3e25))
+* 修正文章狀態欄位放錯位置問題 ([04affbc](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/04affbcac3c2d4d6b88d53f2b8813a5c2a0e5762))
+
+
+### Features
+
+* 新增Google登入 ([ca1127f](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/ca1127fd52370f5b5c9c3cd0bc824094feef3568))
+* 調整附加資訊Service可以呼叫不同的domain ([b0f09fa](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/b0f09fac21a1d05f2d0d6d16fa588805bfa1934f))
+* 新增可取得他人的自我介紹欄位 ([d0f32e7](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/d0f32e7ff65e72d88ce749abdc0ebf727a715354))
+* 新增ChipKWeb 服務6-9. 要求國際盤後資料 ([88581b4](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/88581b44e8163e8be54f26b9860a7ddb926d2864))
+
+
+
 #  (2021-07-30)
 
 

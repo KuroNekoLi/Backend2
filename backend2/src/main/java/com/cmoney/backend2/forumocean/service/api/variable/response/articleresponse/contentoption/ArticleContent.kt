@@ -1,5 +1,6 @@
 package com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.contentoption
 
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.articlestate.ArticleState
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.commoditytag.CommodityTagInfo
 import com.cmoney.backend2.forumocean.service.api.variable.response.mediatype.MediaTypeInfo
 import com.google.gson.annotations.SerializedName
@@ -36,6 +37,7 @@ sealed class ArticleContent(
      * @property voteMinutes 發文起算投票截止分鐘數
      * @property askPoint 問答支付P幣
      * @property bestAnswerCommentId 最佳解答回文Id
+     * @property articleState 文章狀態
      */
     data class UnknownContent(
         @SerializedName("text")
@@ -73,7 +75,9 @@ sealed class ArticleContent(
         @SerializedName("askPoint")
         override val askPoint: Int?,
         @SerializedName("bestAnswerCommentId")
-        override val bestAnswerCommentId: Long?
+        override val bestAnswerCommentId: Long?,
+        @SerializedName("articleState")
+        override val articleState: ArticleState?
     ) : ArticleContent(text),
         MultiMediaInfo,
         TagInfo,
@@ -84,7 +88,8 @@ sealed class ArticleContent(
         ShareArticleInfo,
         SignalInfo,
         VoteOptionInfo,
-        QuestionInfo
+        QuestionInfo,
+        ArticleStateInfo
 
     /**
      * 一般文章
@@ -96,6 +101,7 @@ sealed class ArticleContent(
      * @property commodityTags 股票Tag資訊
      * @property voteOptions 投票選項
      * @property voteMinutes 發文起算投票截止分鐘數
+     * @property articleState 文章狀態
      */
     data class General(
         @SerializedName("text")
@@ -111,8 +117,15 @@ sealed class ArticleContent(
         @SerializedName("voteOptions")
         override val voteOptions: List<String>?,
         @SerializedName("voteMinutes")
-        override val voteMinutes: Int?
-    ) : ArticleContent(text), CreatorInfo, MultiMediaInfo, TagInfo, VoteOptionInfo
+        override val voteMinutes: Int?,
+        @SerializedName("articleState")
+        override val articleState: ArticleState?
+    ) : ArticleContent(text),
+        CreatorInfo,
+        MultiMediaInfo,
+        TagInfo,
+        VoteOptionInfo,
+        ArticleStateInfo
 
     /**
      * 社團文章
@@ -126,6 +139,7 @@ sealed class ArticleContent(
      * @property position 有帶此參數，代表以社團名義發文
      * @property voteOptions 投票選項
      * @property voteMinutes 發文起算投票截止分鐘數
+     * @property articleState 文章狀態
      */
     data class Group(
         @SerializedName("text")
@@ -145,8 +159,16 @@ sealed class ArticleContent(
         @SerializedName("voteOptions")
         override val voteOptions: List<String>?,
         @SerializedName("voteMinutes")
-        override val voteMinutes: Int?
-    ) : ArticleContent(text), CreatorInfo, MultiMediaInfo, TagInfo, GroupInfo, VoteOptionInfo
+        override val voteMinutes: Int?,
+        @SerializedName("articleState")
+        override val articleState: ArticleState?
+    ) : ArticleContent(text),
+        CreatorInfo,
+        MultiMediaInfo,
+        TagInfo,
+        GroupInfo,
+        VoteOptionInfo,
+        ArticleStateInfo
 
     /**
      * 轉推文章
@@ -159,6 +181,7 @@ sealed class ArticleContent(
      * @property commodityTags 股票Tag資訊
      * @property voteOptions 投票選項
      * @property voteMinutes 發文起算投票截止分鐘數
+     * @property articleState 文章狀態
      */
     data class Shared(
         @SerializedName("text")
@@ -176,8 +199,16 @@ sealed class ArticleContent(
         @SerializedName("voteOptions")
         override val voteOptions: List<String>?,
         @SerializedName("voteMinutes")
-        override val voteMinutes: Int?
-    ) : ArticleContent(text), CreatorInfo, ShareArticleInfo, MultiMediaInfo, TagInfo, VoteOptionInfo
+        override val voteMinutes: Int?,
+        @SerializedName("articleState")
+        override val articleState: ArticleState?
+    ) : ArticleContent(text),
+        CreatorInfo,
+        ShareArticleInfo,
+        MultiMediaInfo,
+        TagInfo,
+        VoteOptionInfo,
+        ArticleStateInfo
 
     /**
      * 新聞文章
@@ -189,6 +220,7 @@ sealed class ArticleContent(
      * @property publishTime 新聞發布時間
      * @property multiMedia 多媒體資訊
      * @property commodityTags 股票Tag資訊
+     * @property articleState 文章狀態
      */
     data class News(
         @SerializedName("text")
@@ -204,8 +236,14 @@ sealed class ArticleContent(
         @SerializedName("multiMedia")
         override val multiMedia: List<MediaTypeInfo>?,
         @SerializedName("commodityTags")
-        override val commodityTags: List<CommodityTagInfo>?
-    ) : ArticleContent(text), NewsInfo, MultiMediaInfo, TagInfo
+        override val commodityTags: List<CommodityTagInfo>?,
+        @SerializedName("articleState")
+        override val articleState: ArticleState?
+    ) : ArticleContent(text),
+        NewsInfo,
+        MultiMediaInfo,
+        TagInfo,
+        ArticleStateInfo
 
     /**
      * 訊號文章
@@ -214,6 +252,7 @@ sealed class ArticleContent(
      * @property botId 訊號來源Id
      * @property multiMedia 多媒體資訊
      * @property commodityTags 股票Tag資訊
+     * @property articleState 文章狀態
      */
     data class Signal(
         @SerializedName("text")
@@ -223,8 +262,14 @@ sealed class ArticleContent(
         @SerializedName("multiMedia")
         override val multiMedia: List<MediaTypeInfo>?,
         @SerializedName("commodityTags")
-        override val commodityTags: List<CommodityTagInfo>?
-    ) : ArticleContent(text), SignalInfo, MultiMediaInfo, TagInfo
+        override val commodityTags: List<CommodityTagInfo>?,
+        @SerializedName("articleState")
+        override val articleState: ArticleState?
+    ) : ArticleContent(text),
+        SignalInfo,
+        MultiMediaInfo,
+        TagInfo,
+        ArticleStateInfo
 
     /**
      * 問答文章
@@ -237,6 +282,7 @@ sealed class ArticleContent(
      * @property commodityTags 股票Tag資訊
      * @property askPoint 問答支付P幣
      * @property bestAnswerCommentId 最佳解答回文Id
+     * @property articleState 文章狀態
      */
     data class Question(
         @SerializedName("text")
@@ -254,6 +300,14 @@ sealed class ArticleContent(
         @SerializedName("askPoint")
         override val askPoint: Int?,
         @SerializedName("bestAnswerCommentId")
-        override val bestAnswerCommentId: Long?
-    ) : ArticleContent(text), CreatorInfo, MultiMediaInfo, TagInfo, AnonymousInfo, QuestionInfo
+        override val bestAnswerCommentId: Long?,
+        @SerializedName("articleState")
+        override val articleState: ArticleState?
+    ) : ArticleContent(text),
+        CreatorInfo,
+        MultiMediaInfo,
+        TagInfo,
+        AnonymousInfo,
+        QuestionInfo,
+        ArticleStateInfo
 }

@@ -26,6 +26,7 @@ class MutationData private constructor(
     private val gender: String?,
     private val birthday: String?,
     private val address: String?,
+    private val bio : String?,
     private val image: String?,
     private val city: String?,
     private val education: String?,
@@ -40,27 +41,29 @@ class MutationData private constructor(
         private var gender: String? = null,
         private var birthday: String? = null,
         private var address: String? = null,
+        private val bio : String? = null,
         private var image: String? = null,
-        private var city: String? = null,
-        private var education: String? = null,
+        private var city: City? = null,
+        private var education: Education? = null,
         private var profession: String? = null,
         private var investmentExperience: String? = null,
         private var investmentProperty: String? = null,
         private var investmentTools: List<String>? = null
     ) {
         fun build() = MutationData(
-            name,
-            nickname,
-            gender,
-            birthday,
-            address,
-            image,
-            city,
-            education,
-            profession,
-            investmentExperience,
-            investmentProperty,
-            investmentTools
+                name = name,
+                nickname = nickname,
+                gender = gender,
+                birthday = birthday,
+                address = address,
+                bio = bio,
+                image = image,
+                city = city?.text,
+                education = education?.text,
+                profession = profession,
+                investmentExperience = investmentExperience,
+                investmentProperty = investmentProperty,
+                investmentTools = investmentTools
         )
     }
 
@@ -88,6 +91,9 @@ class MutationData private constructor(
         }
         if (image != null) {
             jsonObject.put(GraphQLFieldDefinition.Image.value, image)
+        }
+        if (bio != null){
+            jsonObject.put(GraphQLFieldDefinition.Bio.value, bio)
         }
         if (city != null) {
             jsonObject.put(GraphQLFieldDefinition.City.value, city)
@@ -134,6 +140,9 @@ class MutationData private constructor(
         }
         if (image != null) {
             setOfGraphQLFieldDefinition.add(GraphQLFieldDefinition.Image)
+        }
+        if (bio != null){
+            setOfGraphQLFieldDefinition.add(GraphQLFieldDefinition.Bio)
         }
         if (city != null) {
             setOfGraphQLFieldDefinition.add(GraphQLFieldDefinition.City)

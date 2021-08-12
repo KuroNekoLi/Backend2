@@ -12,6 +12,7 @@ import com.cmoney.backend2.forumocean.service.api.comment.update.UpdateCommentRe
 import com.cmoney.backend2.forumocean.service.api.group.create.CreateGroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.getapprovals.GroupPendingApproval
 import com.cmoney.backend2.forumocean.service.api.group.getmember.GroupMember
+import com.cmoney.backend2.forumocean.service.api.group.getmemberjoinanygroups.GetMemberJoinAnyGroupsResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.update.UpdateGroupRequestBody
 import com.cmoney.backend2.forumocean.service.api.official.get.OfficialChannelInfo
 import com.cmoney.backend2.forumocean.service.api.officialsubscriber.getofficialsubscribedcount.GetOfficialSubscribedCountResponseBody
@@ -169,11 +170,11 @@ interface ForumOceanService {
     ): Response<Void>
 
     @RecordApi
-    @GET("ForumOcean/api/Channel/GetMemberStatistics/{memberId}")
+    @GET("ForumOcean/api/Channel/GetMemberStatistics")
     suspend fun getMemberStatistics(
         @Header("Authorization") authorization: String,
-        @Path("memberId") memberId: Long
-    ) : Response<GetMemberStatisticsResponseBody>
+        @Query("memberIds") memberIds: String
+    ) : Response<List<GetMemberStatisticsResponseBody>>
 
     @RecordApi
     @GET("ForumOcean/api/Channel/GetChannelsArticleByWeight")
@@ -337,11 +338,25 @@ interface ForumOceanService {
     ): Response<List<GroupResponseBody>>
 
     @RecordApi
+    @GET("ForumOcean/api/Group/GetMemberManagedGroups")
+    suspend fun getMemberManagedGroups(
+        @Header("Authorization") authorization: String,
+        @Query("managerId") managerId: Long
+    ): Response<List<GroupResponseBody>>
+
+    @RecordApi
     @GET("ForumOcean/api/Group/GetMemberBelongGroups")
     suspend fun getMemberBelongGroups(
         @Header("Authorization") authorization: String,
         @Query("memberId") memberId: Long
     ): Response<List<GroupResponseBody>>
+
+    @RecordApi
+    @GET("ForumOcean/api/Group/GetMemberJoinAnyGroups")
+    suspend fun getMemberJoinAnyGroups(
+        @Header("Authorization") authorization: String,
+        @Query("memberId") memberId: Long
+    ): Response<GetMemberJoinAnyGroupsResponseBody>
 
     @RecordApi
     @POST("ForumOcean/api/Group/Create")
@@ -567,7 +582,8 @@ interface ForumOceanService {
     @DELETE("ForumOcean/api/Report/Delete/{articleId}")
     suspend fun deleteReport(
         @Header("Authorization") authorization: String,
-        @Path("articleId") articleId: Long
+        @Path("articleId") articleId: Long,
+        @Query("commentId") commentId :Long?
     ): Response<Void>
 
     @RecordApi

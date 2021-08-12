@@ -1,6 +1,7 @@
 package com.cmoney.backend2.sample.servicecase
 
 import com.cmoney.backend2.chipk.service.ChipKWeb
+import com.cmoney.backend2.chipk.service.api.internationalkchart.ProductType
 import com.cmoney.backend2.sample.extension.logResponse
 import org.koin.core.inject
 
@@ -23,6 +24,9 @@ class ChipKServiceCase : ServiceCase {
 
             //服務6-8. 要求大盤資券資料(TWA00)
             getIndexFunded(20).logResponse("TAG_6-8")
+
+            // 服務6-9. 要求國際盤後資料
+            getInternationalKChart("#N225", ProductType.InternationalIndex).logResponse("TAG_6-9")
 
             //服務6-10. 取得加權指數融資維持率
             getCreditRate().logResponse("TAG_6-10")

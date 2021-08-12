@@ -13,6 +13,7 @@ import com.cmoney.backend2.forumocean.service.api.comment.update.UpdateCommentHe
 import com.cmoney.backend2.forumocean.service.api.group.create.CreateGroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.getapprovals.GroupPendingApproval
 import com.cmoney.backend2.forumocean.service.api.group.getmember.GroupMember
+import com.cmoney.backend2.forumocean.service.api.group.getmemberjoinanygroups.GetMemberJoinAnyGroupsResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.update.UpdateGroupRequestBody
 import com.cmoney.backend2.forumocean.service.api.official.get.OfficialChannelInfo
 import com.cmoney.backend2.forumocean.service.api.officialsubscriber.getofficialsubscribedcount.GetOfficialSubscribedCountResponseBody
@@ -36,6 +37,7 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
+import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -43,6 +45,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+import retrofit2.HttpException
 import retrofit2.Response
 
 @RunWith(RobolectricTestRunner::class)
@@ -146,6 +149,23 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
+    fun `getArticle_取得一般文章_遇到文章不存在的情況`() = mainCoroutineRule.runBlockingTest {
+
+        coEvery {
+            forumOceanService.getArticle(
+                    authorization = any(),
+                    articleId = any()
+            )
+        } returns Response.error(404,"".toResponseBody())
+        val result = service.getArticle(132434)
+
+        assertThat(result.isSuccess).isFalse()
+        assertThat(result.exceptionOrNull()).isInstanceOf(HttpException::class.java)
+        assertThat((result.exceptionOrNull() as? HttpException)?.code()).isEqualTo(404)
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
     fun `createQuestion_發問答文章成功測試`() = mainCoroutineRule.runBlockingTest {
         val responseBody = CreateQuestionResponseBody(articleId = 1)
         val createContent = Content.Question(
@@ -186,7 +206,9 @@ class ForumOceanWebImplTest {
             donateCount = null,
             voteCount = null,
             voteStatus = null,
-            weight = null
+            weight = null,
+            totalReportCount = null,
+            report = null
         )
         coEvery {
             forumOceanService.getArticle(
@@ -218,7 +240,9 @@ class ForumOceanWebImplTest {
             interested = null,
             interestCount = null,
             rewardPoints = null,
-            weight = null
+            weight = null,
+            totalReportCount = null,
+            report = null
         )
         coEvery {
             forumOceanService.getQuestionArticle(
@@ -250,7 +274,10 @@ class ForumOceanWebImplTest {
             donateCount = null,
             voteCount = null,
             voteStatus = null,
-            weight = null
+            weight = null,
+            totalReportCount = null,
+            report = null
+
         )
         coEvery {
             forumOceanService.getGroupArticle(
@@ -283,7 +310,9 @@ class ForumOceanWebImplTest {
             donateCount = null,
             voteCount = null,
             voteStatus = null,
-            weight = null
+            weight = null,
+            totalReportCount = null,
+            report = null
         )
         coEvery {
             forumOceanService.getSharedArticle(
@@ -312,7 +341,9 @@ class ForumOceanWebImplTest {
             collectCount = null,
             myCommentIndex = listOf(),
             commentCount = null,
-            weight = null
+            weight = null,
+            totalReportCount = null,
+            report = null
         )
         coEvery {
             forumOceanService.getSignalArticle(
@@ -341,7 +372,9 @@ class ForumOceanWebImplTest {
             collectCount = null,
             myCommentIndex = listOf(),
             commentCount = null,
-            weight = null
+            weight = null,
+            totalReportCount = null,
+            report = null
         )
         coEvery {
             forumOceanService.getNewsArticle(
@@ -377,7 +410,9 @@ class ForumOceanWebImplTest {
             donateCount = null,
             voteCount = null,
             voteStatus = null,
-            weight = null
+            weight = null,
+            totalReportCount = null,
+            report = null
         )
         coEvery {
             forumOceanService.getUnknownArticle(
@@ -409,6 +444,24 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
+    fun `updateArticle_修改文章_遇到文章不存在的情況`() = mainCoroutineRule.runBlockingTest {
+
+        coEvery {
+            forumOceanService.updateArticle(
+                    authorization = any(),
+                    articleId = any(),
+                    body = any()
+            )
+        } returns Response.error(404,"".toResponseBody())
+        val result = service.updateArticle(132434, UpdateArticleHelper())
+
+        assertThat(result.isSuccess).isFalse()
+        assertThat(result.exceptionOrNull()).isInstanceOf(HttpException::class.java)
+        assertThat((result.exceptionOrNull() as? HttpException)?.code()).isEqualTo(404)
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
     fun `deleteArticle_刪除文章成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.deleteArticle(
@@ -423,23 +476,39 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
+    fun `deleteArticle_刪除文章_遇到文章不存在的情況`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.deleteArticle(
+                    authorization = any(),
+                    articleId = any()
+            )
+        } returns Response.error(404,"".toResponseBody())
+        val result = service.deleteArticle(132434)
+
+        assertThat(result.isSuccess).isFalse()
+        assertThat(result.exceptionOrNull()).isInstanceOf(HttpException::class.java)
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
     fun `getMemberStatistics_取得指定使用者的統計資訊成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.getMemberStatistics(
                 authorization = any(),
-                memberId = any()
+                memberIds = any()
             )
         } returns Response.success(
-            GetMemberStatisticsResponseBody(
+            listOf(GetMemberStatisticsResponseBody(
                 totalCountArticle = 6,
                 totalCountReaction = 3
-            )
+            ))
         )
-        val result = service.getMemberStatistics(100)
+        val result = service.getMemberStatistics(listOf(100))
 
         assertThat(result.isSuccess).isTrue()
-        assertThat(result.getOrThrow().totalCountArticle).isEqualTo(6)
-        assertThat(result.getOrThrow().totalCountReaction).isEqualTo(3)
+        assertThat(result.getOrThrow().size).isEqualTo(1)
+        assertThat(result.getOrThrow().first().totalCountArticle).isEqualTo(6)
+        assertThat(result.getOrThrow().first().totalCountReaction).isEqualTo(3)
     }
 
     @ExperimentalCoroutinesApi
@@ -473,7 +542,9 @@ class ForumOceanWebImplTest {
                     donateCount = null,
                     voteCount = null,
                     voteStatus = null,
-                    weight = null
+                    weight = null,
+                    totalReportCount = null,
+                    report = null
                 )
             )
         )
@@ -558,7 +629,8 @@ class ForumOceanWebImplTest {
                         reactionState = null,
                         reaction = mapOf(),
                         createTime = null,
-                        modifyTime = null
+                        modifyTime = null,
+                        report = null
                     )
                 )
             )
@@ -589,7 +661,8 @@ class ForumOceanWebImplTest {
                         reactionState = null,
                         reaction = mapOf(),
                         createTime = null,
-                        modifyTime = null
+                        modifyTime = null,
+                        report = null
                     )
                 ),
                 CommentResponseBody(
@@ -602,7 +675,8 @@ class ForumOceanWebImplTest {
                         reactionState = null,
                         reaction = mapOf(),
                         createTime = null,
-                        modifyTime = null
+                        modifyTime = null,
+                        report = null
                     )
                 )
             )
@@ -632,7 +706,8 @@ class ForumOceanWebImplTest {
                         reactionState = null,
                         reaction = mapOf(),
                         createTime = null,
-                        modifyTime = null
+                        modifyTime = null,
+                        report = null
                     )
                 ),
                 CommentResponseBody(
@@ -645,7 +720,8 @@ class ForumOceanWebImplTest {
                         reactionState = null,
                         reaction = mapOf(),
                         createTime = null,
-                        modifyTime = null
+                        modifyTime = null,
+                        report = null
                     )
                 )
             )
@@ -861,7 +937,8 @@ class ForumOceanWebImplTest {
                 joinType = null,
                 name = "社團名稱",
                 ownerId = null,
-                searchable = null
+                searchable = null,
+                memberCount = null
             )
         )
         val result = service.getGroup(groupId)
@@ -887,7 +964,8 @@ class ForumOceanWebImplTest {
                     joinType = null,
                     name = null,
                     ownerId = null,
-                    searchable = null
+                    searchable = null,
+                    memberCount = null
                 ),
                 GroupResponseBody(
                     description = null,
@@ -897,13 +975,42 @@ class ForumOceanWebImplTest {
                     joinType = null,
                     name = null,
                     ownerId = null,
-                    searchable = null
+                    searchable = null,
+                    memberCount = null
                 )
             )
         )
         val result = service.getUserOwnGroup(1321321)
         assertThat(result.isSuccess)
         assertThat(result.getOrThrow()).hasSize(2)
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `readMemberManagedGroups_取得指定使用者管理的所有社團成功測試`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getMemberManagedGroups(
+                    authorization = any(),
+                    managerId = any()
+            )
+        } returns Response.success(
+                listOf(
+                        GroupResponseBody(
+                                description = null,
+                                id = 1,
+                                imageUrl = null,
+                                isPublic = null,
+                                joinType = null,
+                                name = null,
+                                ownerId = null,
+                                searchable = null,
+                                memberCount = null
+                        )
+                )
+        )
+        val result = service.getMemberManagedGroups(1)
+        assertThat(result.isSuccess).isTrue()
+        assertThat(result.getOrThrow().first().id).isEqualTo(1)
     }
 
     @ExperimentalCoroutinesApi
@@ -924,13 +1031,32 @@ class ForumOceanWebImplTest {
                     joinType = null,
                     name = null,
                     ownerId = null,
-                    searchable = null
+                    searchable = null,
+                    memberCount = null
                 )
             )
         )
         val result = service.getMemberBelongGroups(1231321)
         assertThat(result.isSuccess)
         assertThat(result.getOrThrow()).hasSize(1)
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `getMemberJoinAnyGroups_取得指定使用者是否加入或擁有任何社團成功測試`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getMemberJoinAnyGroups(
+                    authorization = any(),
+                    memberId = any()
+            )
+        } returns Response.success(
+                GetMemberJoinAnyGroupsResponseBody(
+                        isJoin = true
+                )
+        )
+        val result = service.getMemberJoinAnyGroups(23454734)
+        assertThat(result.isSuccess)
+        assertThat(result.getOrThrow().isJoin).isTrue()
     }
 
     @ExperimentalCoroutinesApi
@@ -1402,10 +1528,11 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.deleteReport(
                 authorization = any(),
-                articleId = any()
+                articleId = any(),
+                commentId = any()
             )
         } returns Response.success<Void>(204, null)
-        val result = service.deleteReport(2136541)
+        val result = service.deleteReport(2136541, commentId = null)
         assertThat(result.isSuccess)
     }
 

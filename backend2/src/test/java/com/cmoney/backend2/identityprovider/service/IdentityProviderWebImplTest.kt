@@ -391,6 +391,70 @@ class IdentityProviderWebImplTest {
     }
 
     @Test
+    fun `loginByGoogle_status is 200_成功`() = mainCoroutineRule.runBlockingTest {
+        val responseBody = GetTokenResponseBodyWithError(
+            accessToken = "",
+            expiresIn = 0,
+            idToken = "",
+            refreshToken = "",
+            tokenType = ""
+        )
+        coEvery {
+            service.getIdentityToken(
+                xApiLog = any(),
+                grantType = any(),
+                clientId = any(),
+                scope = any(),
+                clientSecret = any(),
+                account = any(),
+                hashedPassword = any(),
+                providerToken = any(),
+                provider = any(),
+                loginMethod = any(),
+                code = any(),
+                redirectUri = any(),
+                refreshToken = any()
+            )
+        } returns Response.success(responseBody)
+        val result = web.loginByGoogle("")
+        val resultValue = result.getOrThrow()
+        assertThat(result.isSuccess).isTrue()
+        assertThat(resultValue).isEqualTo(responseBody.toRealResponse())
+    }
+
+
+    @Test(expected = ServerException::class)
+    fun `loginByGoogle_status is 400_ServerException`() = mainCoroutineRule.runBlockingTest {
+        val errorBody = gson.toJson(
+            CMoneyError(
+                detail = CMoneyError.Detail(
+                    code = 101
+                )
+            )
+        ).toResponseBody()
+        coEvery {
+            service.getIdentityToken(
+                xApiLog = any(),
+                grantType = any(),
+                clientId = any(),
+                scope = any(),
+                clientSecret = any(),
+                account = any(),
+                hashedPassword = any(),
+                providerToken = any(),
+                provider = any(),
+                loginMethod = any(),
+                code = any(),
+                redirectUri = any(),
+                refreshToken = any()
+            )
+        } returns Response.error(400, errorBody)
+        val result = web.loginByGoogle("")
+        assertThat(result.isSuccess).isFalse()
+        result.getOrThrow()
+    }
+
+    @Test
     fun `loginByFirebaseAnonymousToken_status is 200_成功`() = mainCoroutineRule.runBlockingTest {
         val responseBody = GetTokenResponseBodyWithError(
             accessToken = "",

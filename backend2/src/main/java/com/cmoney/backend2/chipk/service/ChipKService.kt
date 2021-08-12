@@ -3,6 +3,7 @@ package com.cmoney.backend2.chipk.service
 import com.cmoney.backend2.base.model.calladapter.RecordApi
 import com.cmoney.backend2.base.model.response.dtno.DtnoWithError
 import com.cmoney.backend2.chipk.service.api.getOfficialStockPickData.OfficialStockInfoWithError
+import com.cmoney.backend2.chipk.service.api.internationalkchart.TickInfoSetWithError
 import com.google.gson.JsonElement
 import retrofit2.Response
 import retrofit2.http.Field
@@ -20,67 +21,94 @@ interface ChipKService {
     @POST("chipk/ashx/GetDtnoData.ashx")
     suspend fun getData(
         @Header("Authorization") authorization: String,
-        @Field("Action") action: String = "getdata",
+        @Field("Action") action: String = "GetData",
         @Field("stockId") stockId: String,
         @Field("appId") appId: Int,
         @Field("guid") guid: String,
         @Field("type") type: Int
     ): Response<DtnoWithError>
 
-    //服務6-6. 要求大盤外資的資料(TWA00)
+    /**
+     * 服務6-6. 要求大盤外資的資料(TWA00)
+     */
     @RecordApi(cmoneyAction = "indexforeigninvestment")
     @FormUrlEncoded
     @POST("chipk/ashx/GetDtnoData.ashx")
     suspend fun getIndexForeignInvestment(
         @Header("Authorization") authorization: String,
-        @Field("Action") action: String = "indexforeigninvestment",
+        @Field("Action") action: String = "IndexForeignInvestment",
         @Field("appId") appId: Int,
         @Field("guid") guid: String,
         @Field("tickCount") tickCount: Int
     ): Response<DtnoWithError>
 
-    //服務6-7. 要求大盤主力的資料(TWA00)
+    /**
+     * 服務6-7. 要求大盤主力的資料(TWA00)
+     */
     @RecordApi(cmoneyAction = "indexmain")
     @FormUrlEncoded
     @POST("chipk/ashx/GetDtnoData.ashx")
     suspend fun getIndexMain(
         @Header("Authorization") authorization: String,
-        @Field("Action") action: String = "indexmain",
+        @Field("Action") action: String = "IndexMain",
         @Field("appId") appId: Int,
         @Field("guid") guid: String,
         @Field("tickCount") tickCount: Int
     ): Response<DtnoWithError>
 
-    //服務6-8. 要求大盤資券資料(TWA00)
+    /**
+     * 服務6-8. 要求大盤資券資料(TWA00)
+     */
     @RecordApi(cmoneyAction = "indexfunded")
     @FormUrlEncoded
     @POST("chipk/ashx/GetDtnoData.ashx")
     suspend fun getIndexFunded(
         @Header("Authorization") authorization: String,
-        @Field("Action") action: String = "indexfunded",
+        @Field("Action") action: String = "IndexFunded",
         @Field("appId") appId: Int,
         @Field("guid") guid: String,
         @Field("tickCount") tickCount: Int
     ): Response<DtnoWithError>
 
-    //服務6-10. 取得加權指數融資維持率
+    /**
+     * 服務6-9. 要求國際盤後資料
+     *
+     * @param productType 商品類別( 1: 國際指數 2:全球期貨)
+     * @return
+     */
+    @RecordApi(cmoneyAction = "internationalkchart")
+    @FormUrlEncoded
+    @POST("chipk/ashx/GetDtnoData.ashx")
+    suspend fun getInternationalKData(
+        @Header("Authorization") authorization: String,
+        @Field("Action") action: String = "InternationalKChart",
+        @Field("ProductType") productType: Int,
+        @Field("ProductKey") productKey: String,
+        @Field("appId") appId: Int
+    ): Response<TickInfoSetWithError>
+
+    /**
+     * 服務6-10. 取得加權指數融資維持率
+     */
     @RecordApi(cmoneyAction = "getcreditrate")
     @FormUrlEncoded
     @POST("chipk/ashx/GetDtnoData.ashx")
     suspend fun getCreditRate(
         @Header("Authorization") authorization: String,
-        @Field("Action") action: String = "getcreditrate",
+        @Field("Action") action: String = "GetCreditRate",
         @Field("appId") appId: Int,
         @Field("guid") guid: String
     ): Response<DtnoWithError>
 
-    //服務6-11. 取得指數技術圖
+    /**
+     * 服務6-11. 取得指數技術圖
+     */
     @RecordApi(cmoneyAction = "getindexcalculaterate")
     @FormUrlEncoded
     @POST("chipk/ashx/GetDtnoData.ashx")
     suspend fun getIndexCalculateRate(
         @Header("Authorization") authorization: String,
-        @Field("Action") action: String = "getindexcalculaterate",
+        @Field("Action") action: String = "GetIndexCalculateRate",
         @Field("appId") appId: Int,
         @Field("guid") guid: String,
         @Field("CommKey") commKey: String,
@@ -89,26 +117,28 @@ interface ChipKService {
 
     /**
      * 服務6-12. 取得K圖資料
-     *
      */
     @RecordApi(cmoneyAction = "getindexkdata")
     @FormUrlEncoded
     @POST("chipk/ashx/GetDtnoData.ashx")
     suspend fun getIndexKData(
         @Header("Authorization") authorization: String,
-        @Field("Action") action: String = "getindexkdata",
+        @Field("Action") action: String = "GetIndexKData",
         @Field("CommKey") commKey: String,
         @Field("TimeRange") timeRange: Int,
         @Field("appId") appId: Int,
         @Field("guid") guid: String
     ): Response<DtnoWithError>
 
+    /**
+     * 服務4-1. 向國鳴用封包要服務(已無使用)
+     */
     @RecordApi(cmoneyAction = "getchipkdata")
     @FormUrlEncoded
     @POST("chipk/ashx/ChipK.ashx")
     suspend fun getChipKData(
         @Header("Authorization") authorization: String,
-        @Field("action") action: String = "getchipkdata",
+        @Field("action") action: String = "GetChipKData",
         @Field("fundId") fundId: Int,
         @Field("params") params: String,
         @Field("guid") guid: String,
@@ -123,7 +153,7 @@ interface ChipKService {
     @POST("chipk/Ashx/GetDtnoData.ashx")
     suspend fun getOfficialStockPickData(
         @Header("Authorization") authorization: String,
-        @Field("action") action: String = "getofficialstockpick",
+        @Field("action") action: String = "GetOfficialStockPick",
         @Field("appId") appId: Int,
         @Field("guid") guid: String,
         @Field("index") index: Int,
@@ -138,7 +168,7 @@ interface ChipKService {
     @POST("chipk/Ashx/GetDtnoData.ashx")
     suspend fun getOfficialStockPickTitle(
         @Header("Authorization") authorization: String,
-        @Field("action") action: String = "getofficialstockpicktitle",
+        @Field("action") action: String = "GetOfficialStockPickTitle",
         @Field("appId") appId: Int,
         @Field("guid") guid: String,
         @Field("type") type: Int
