@@ -10,8 +10,8 @@ import com.cmoney.backend2.forumocean.service.api.article.create.CreateArticleRe
 import com.cmoney.backend2.forumocean.service.api.article.create.variable.Content
 import com.cmoney.backend2.forumocean.service.api.article.createquestion.CreateQuestionResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.update.UpdateArticleHelper
-import com.cmoney.backend2.forumocean.service.api.channel.channelname.ChannelNameBuilder
-import com.cmoney.backend2.forumocean.service.api.channel.channelname.ChannelNameBuilder.Companion.createChannelNameList
+import com.cmoney.backend2.forumocean.service.api.channel.channelname.IChannelNameBuilder.Companion.createChannelNameList
+import com.cmoney.backend2.forumocean.service.api.channel.channelname.IChannelNameBuilder
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentRequestBody
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.comment.update.UpdateCommentHelper
@@ -182,7 +182,7 @@ class ForumOceanWebImpl(
     }
 
     override suspend fun getChannelsArticleByWeight(
-        channelNameBuilderList: List<ChannelNameBuilder>,
+        channelNameBuilderList: List<IChannelNameBuilder>,
         weight: Long,
         count: Int
     ): Result<List<ArticleResponseBody.UnknownArticleResponseBody>> = withContext(dispatcher.io()) {

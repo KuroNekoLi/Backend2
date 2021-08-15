@@ -1,18 +1,9 @@
 package com.cmoney.backend2.forumocean.service.api.channel.channelname
 
-class ChannelNameBuilder {
+class ChannelNameBuilder : IChannelNameBuilder{
 
     companion object{
         private const val CONNECT_STRING = "-"
-
-        /**
-         * 頻道名稱清單轉成request body字串的方法 用逗點分隔  但不確定為何單用 "," 會導致500 使用", " 就沒問題
-         *
-         * @return
-         */
-        fun List<ChannelNameBuilder>.createChannelNameList() : String{
-            return joinToString() { it.create() }
-        }
     }
 
     /**
@@ -46,7 +37,7 @@ class ChannelNameBuilder {
      *
      * @return
      */
-    fun create() : String{
+    override fun create() : String{
         return buildString {
 
             orderType.getChannelName()?.let {
