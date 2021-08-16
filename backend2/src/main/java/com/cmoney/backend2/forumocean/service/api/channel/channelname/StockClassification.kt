@@ -1,6 +1,17 @@
 package com.cmoney.backend2.forumocean.service.api.channel.channelname
 
 sealed class StockClassification : ConvertChannelName{
+
+    class USStock(private val stockId : String?) : StockClassification() {
+        override fun getChannelName(): String? {
+            return if (stockId != null){
+                "USStock.$stockId"
+            }else{
+                "USStock"
+            }
+        }
+    }
+
     class Stock(private val stockId : String?) : StockClassification() {
         override fun getChannelName(): String? {
             return if (stockId != null){
