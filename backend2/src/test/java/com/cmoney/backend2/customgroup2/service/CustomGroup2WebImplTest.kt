@@ -55,7 +55,7 @@ class CustomGroup2WebImplTest {
             Stock(
                 id = "2330",
                 name = "台積電",
-                marketType = MarketType.TSE
+                marketType = MarketType.Tse()
             )
         )
 
@@ -63,7 +63,7 @@ class CustomGroup2WebImplTest {
             RawStock(
                 id = "2330",
                 name = "台積電",
-                marketType = "上市"
+                marketType = MarketType.Tse().value
             )
         )
         coEvery {
@@ -98,7 +98,7 @@ class CustomGroup2WebImplTest {
             Stock(
                 id = "2330",
                 name = "台積電",
-                marketType = MarketType.TSE
+                marketType = MarketType.Tse()
             )
         )
 
@@ -106,7 +106,7 @@ class CustomGroup2WebImplTest {
             RawStock(
                 id = "2330",
                 name = "台積電",
-                marketType = "上市"
+                marketType = MarketType.Tse().value
             )
         )
         coEvery {
@@ -116,7 +116,7 @@ class CustomGroup2WebImplTest {
         val result = web.searchStocksByMarketTypes(
             keyword = "2330",
             language = Language.TRADITIONAL_CHINESE,
-            marketTypes = listOf(MarketType.TSE)
+            marketTypes = listOf(MarketType.Tse())
         )
         Truth.assertThat(result.isSuccess).isTrue()
         val data = result.getOrThrow()
@@ -132,7 +132,7 @@ class CustomGroup2WebImplTest {
         val result = web.searchStocksByMarketTypes(
             keyword = "2330",
             language = Language.TRADITIONAL_CHINESE,
-            marketTypes = listOf(MarketType.TSE)
+            marketTypes = listOf(MarketType.Tse())
         )
         Truth.assertThat(result.isSuccess).isFalse()
         val exception = result.exceptionOrNull()

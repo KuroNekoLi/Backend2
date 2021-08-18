@@ -13,7 +13,7 @@ class CustomGroup2ServiceCase: ServiceCase {
     override suspend fun testAll() {
         customGroup2Web.searchStocks("11", Language.TRADITIONAL_CHINESE)
             .logResponse(TAG)
-        customGroup2Web.searchStocksByMarketTypes("c", Language.ENGLISH, marketTypes = listOf(MarketType.USA))
+        customGroup2Web.searchStocksByMarketTypes("c", Language.ENGLISH, marketTypes = listOf(MarketType.UsaStock()))
             .logResponse(TAG)
     }
 

@@ -7,6 +7,7 @@ import com.cmoney.backend2.base.model.dispatcher.DispatcherProvider
 import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.customgroup2.service.api.data.Language
 import com.cmoney.backend2.customgroup2.service.api.data.MarketType
+import com.cmoney.backend2.customgroup2.service.api.data.RequestMarketType
 import com.cmoney.backend2.customgroup2.service.api.data.Stock
 import com.cmoney.backend2.customgroup2.service.api.searchstocks.SearchStocksRequestBody
 import com.cmoney.backend2.customgroup2.service.api.searchstocksbymarkettype.SearchStocksByMarketTypeRequestBody
@@ -37,7 +38,9 @@ class CustomGroup2WebImpl(
                         Stock(
                             id = raw.id,
                             name = raw.name,
-                            marketType = MarketType.fromValue(raw.marketType)
+                            marketType = raw.marketType?.let { marketType ->
+                                MarketType.fromInt(marketType)
+                            }
                         )
                     }
             }
@@ -53,7 +56,12 @@ class CustomGroup2WebImpl(
                 keyword = keyword,
                 language = language.value,
                 marketTypes = marketTypes.map { type ->
-                    type.value
+                    RequestMarketType(
+                        marketType = type.value,
+                        types = type.types.map { subType ->
+                            subType.value
+                        }
+                    )
                 }
             )
             service.searchStocksByMarketType(
@@ -66,7 +74,9 @@ class CustomGroup2WebImpl(
                     Stock(
                         id = raw.id,
                         name = raw.name,
-                        marketType = MarketType.fromValue(raw.marketType)
+                        marketType = raw.marketType?.let { marketType ->
+                            MarketType.fromInt(marketType)
+                        }
                     )
                 }
         }

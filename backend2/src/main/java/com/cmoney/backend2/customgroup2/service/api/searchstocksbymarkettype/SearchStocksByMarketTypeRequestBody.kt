@@ -1,5 +1,6 @@
 package com.cmoney.backend2.customgroup2.service.api.searchstocksbymarkettype
 
+import com.cmoney.backend2.customgroup2.service.api.data.RequestMarketType
 import com.google.gson.annotations.SerializedName
 
 data class SearchStocksByMarketTypeRequestBody(
@@ -7,6 +8,6 @@ data class SearchStocksByMarketTypeRequestBody(
     val keyword: String,
     @SerializedName("language")
     val language: String,
-    @SerializedName("marketTypes")
-    val marketTypes: List<String>
+    @SerializedName("commodityTypes")
+    val marketTypes: List<RequestMarketType>
 )

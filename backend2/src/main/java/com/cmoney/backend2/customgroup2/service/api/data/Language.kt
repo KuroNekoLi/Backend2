@@ -7,10 +7,10 @@ enum class Language(val value: String) {
     /**
      * 英文
      */
-    ENGLISH("eng"),
+    ENGLISH("en-US"),
 
     /**
      * 繁體中文
      */
-    TRADITIONAL_CHINESE("tw")
+    TRADITIONAL_CHINESE("zh-TW")
 }
