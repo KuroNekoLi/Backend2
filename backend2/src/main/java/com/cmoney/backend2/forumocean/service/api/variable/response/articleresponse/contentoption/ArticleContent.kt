@@ -38,6 +38,7 @@ sealed class ArticleContent(
      * @property askPoint 問答支付P幣
      * @property bestAnswerCommentId 最佳解答回文Id
      * @property articleState 文章狀態
+     * @property topics 標籤名稱
      */
     data class UnknownContent(
         @SerializedName("text")
@@ -50,6 +51,8 @@ sealed class ArticleContent(
         override val anonymous: Any?,
         @SerializedName("appId")
         override val appId: Int?,
+        @SerializedName("topics")
+        override val topics: List<String>?,
         @SerializedName("creatorId")
         override val creatorId: Long?,
         @SerializedName("groupId")
@@ -89,7 +92,8 @@ sealed class ArticleContent(
         SignalInfo,
         VoteOptionInfo,
         QuestionInfo,
-        ArticleStateInfo
+        ArticleStateInfo,
+        TopicInfo
 
     /**
      * 一般文章
