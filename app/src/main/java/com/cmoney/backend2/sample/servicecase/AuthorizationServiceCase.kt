@@ -1,6 +1,7 @@
 package com.cmoney.backend2.sample.servicecase
 
 import com.cmoney.backend2.authorization.service.AuthorizationWeb
+import com.cmoney.backend2.authorization.service.api.getexpiredtime.Type
 import com.cmoney.backend2.base.di.BACKEND2_SETTING
 import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.sample.extension.logResponse
@@ -13,7 +14,7 @@ class AuthorizationServiceCase : ServiceCase {
 
     override suspend fun testAll() {
         webImpl.apply {
-            getExpiredTime("MobilePaid", setting.appId).logResponse(TAG)
+            getExpiredTime(Type.MOBILE_PAID, setting.appId.toLong()).logResponse(TAG)
         }
     }
 

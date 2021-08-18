@@ -5,7 +5,8 @@ import androidx.test.core.app.ApplicationProvider
 import com.cmoney.backend2.MainCoroutineRule
 import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
-import com.cmoney.backend2.authorization.service.api.ExpiredTime
+import com.cmoney.backend2.authorization.service.api.getexpiredtime.ExpiredTime
+import com.cmoney.backend2.authorization.service.api.getexpiredtime.Type
 import com.cmoney.backend2.base.model.exception.EmptyBodyException
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.response.error.CMoneyError
@@ -75,7 +76,7 @@ class AuthorizationWebImplTest {
             )
         } returns Response.success(responseBody)
 
-        val result = authorizationWeb.getExpiredTime(type = "MobilePaid", subjectId = 0)
+        val result = authorizationWeb.getExpiredTime(type = Type.MOBILE_PAID, subjectId = 0L)
 
         Truth.assertThat(result.isSuccess).isTrue()
         val data = result.getOrThrow()
@@ -108,7 +109,7 @@ class AuthorizationWebImplTest {
             )
         } returns Response.success(responseBody)
 
-        val result = authorizationWeb.getExpiredTime(type = "MobilePaid", subjectId = 0)
+        val result = authorizationWeb.getExpiredTime(type = Type.MOBILE_PAID, subjectId = 0)
 
         Truth.assertThat(result.isSuccess).isTrue()
         val data = result.getOrThrow()
@@ -133,7 +134,7 @@ class AuthorizationWebImplTest {
             )
         } returns Response.success<ExpiredTime>(200, null)
 
-        val result = authorizationWeb.getExpiredTime(type = "MobilePaid", subjectId = 0)
+        val result = authorizationWeb.getExpiredTime(type = Type.MOBILE_PAID, subjectId = 0)
         Truth.assertThat(result.isSuccess).isFalse()
         Truth.assertThat(result.exceptionOrNull()).isNotNull()
         val exception = requireNotNull(result.exceptionOrNull())
@@ -158,7 +159,7 @@ class AuthorizationWebImplTest {
             )
         } returns Response.error<ExpiredTime>(400, errorBody)
 
-        val result = authorizationWeb.getExpiredTime(type = "MobilePaid", subjectId = 0)
+        val result = authorizationWeb.getExpiredTime(type = Type.MOBILE_PAID, subjectId = 0)
 
         Truth.assertThat(result.isSuccess).isFalse()
         Truth.assertThat(result.exceptionOrNull()).isNotNull()
@@ -186,7 +187,7 @@ class AuthorizationWebImplTest {
             )
         } returns Response.error<ExpiredTime>(401, errorBody)
 
-        val result = authorizationWeb.getExpiredTime(type = "MobilePaid", subjectId = 0)
+        val result = authorizationWeb.getExpiredTime(type = Type.MOBILE_PAID, subjectId = 0)
 
         Truth.assertThat(result.isSuccess).isFalse()
         Truth.assertThat(result.exceptionOrNull()).isNotNull()
@@ -214,7 +215,7 @@ class AuthorizationWebImplTest {
             )
         } returns Response.error<ExpiredTime>(500, errorBody)
 
-        val result = authorizationWeb.getExpiredTime(type = "MobilePaid", subjectId = 0)
+        val result = authorizationWeb.getExpiredTime(type = Type.MOBILE_PAID, subjectId = 0)
 
         Truth.assertThat(result.isSuccess).isFalse()
         Truth.assertThat(result.exceptionOrNull()).isNotNull()

@@ -1,4 +1,4 @@
-package com.cmoney.backend2.authorization.service.api
+package com.cmoney.backend2.authorization.service.api.getexpiredtime
 
 import com.google.gson.annotations.SerializedName
 
