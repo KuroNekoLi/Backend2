@@ -1,6 +1,6 @@
 package com.cmoney.backend2.customgroup2.service
 
-import com.cmoney.backend2.customgroup2.service.api.data.Language
+import com.cmoney.backend2.base.model.request.Language
 import com.cmoney.backend2.customgroup2.service.api.data.MarketType
 import com.cmoney.backend2.customgroup2.service.api.data.Stock
 
@@ -13,7 +13,16 @@ interface CustomGroup2Web {
      * @param language 回傳語系
      * @return 搜尋到的股市標的
      */
-    suspend fun searchStocks(keyword: String, language: Language): Result<List<Stock>>
+    suspend fun searchStocks(keyword: String, language: Language): Result<List<Stock>> = searchStocks(keyword, listOf(language))
+
+    /**
+     * 根據關鍵字、回傳語系[Language]搜尋股市標的
+     *
+     * @param keyword 關鍵字
+     * @param languages 回傳語系
+     * @return 搜尋到的股市標的
+     */
+    suspend fun searchStocks(keyword: String, languages: List<Language>): Result<List<Stock>>
 
     /**
      * 根據關鍵字、回傳語系[Language]、市場類別[MarketType]搜尋股市標的
@@ -26,6 +35,20 @@ interface CustomGroup2Web {
     suspend fun searchStocksByMarketTypes(
         keyword: String,
         language: Language,
+        marketTypes: List<MarketType>
+    ): Result<List<Stock>> = searchStocksByMarketTypes(keyword, listOf(language), marketTypes)
+
+    /**
+     * 根據關鍵字、回傳語系[Language]、市場類別[MarketType]搜尋股市標的
+     *
+     * @param keyword 關鍵字
+     * @param languages 回傳語系
+     * @param marketTypes 預期的市場類別集合
+     * @return 搜尋到的股市標的
+     */
+    suspend fun searchStocksByMarketTypes(
+        keyword: String,
+        languages: List<Language>,
         marketTypes: List<MarketType>
     ): Result<List<Stock>>
 }

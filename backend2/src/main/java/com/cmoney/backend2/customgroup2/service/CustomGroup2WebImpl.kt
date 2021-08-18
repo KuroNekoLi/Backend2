@@ -1,11 +1,12 @@
 package com.cmoney.backend2.customgroup2.service
 
+import com.cmoney.backend2.base.extension.asRequestHeader
 import com.cmoney.backend2.base.extension.checkResponseBody
 import com.cmoney.backend2.base.extension.createAuthorizationBearer
 import com.cmoney.backend2.base.model.dispatcher.DefaultDispatcherProvider
 import com.cmoney.backend2.base.model.dispatcher.DispatcherProvider
+import com.cmoney.backend2.base.model.request.Language
 import com.cmoney.backend2.base.model.setting.Setting
-import com.cmoney.backend2.customgroup2.service.api.data.Language
 import com.cmoney.backend2.customgroup2.service.api.data.MarketType
 import com.cmoney.backend2.customgroup2.service.api.data.RequestMarketType
 import com.cmoney.backend2.customgroup2.service.api.data.Stock
@@ -21,15 +22,13 @@ class CustomGroup2WebImpl(
     private val dispatcher: DispatcherProvider = DefaultDispatcherProvider()
 ) : CustomGroup2Web {
 
-    override suspend fun searchStocks(keyword: String, language: Language): Result<List<Stock>> =
+    override suspend fun searchStocks(keyword: String, languages: List<Language>): Result<List<Stock>> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
-                val requestBody = SearchStocksRequestBody(
-                    keyword = keyword,
-                    language = language.value
-                )
+                val requestBody = SearchStocksRequestBody(keyword = keyword)
                 service.searchStocks(
                     authorization = setting.accessToken.createAuthorizationBearer(),
+                    language = languages.asRequestHeader(),
                     requestBody = requestBody
                 )
                     .checkResponseBody(gson)
@@ -48,13 +47,12 @@ class CustomGroup2WebImpl(
 
     override suspend fun searchStocksByMarketTypes(
         keyword: String,
-        language: Language,
+        languages: List<Language>,
         marketTypes: List<MarketType>
     ): Result<List<Stock>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             val requestBody = SearchStocksByMarketTypeRequestBody(
                 keyword = keyword,
-                language = language.value,
                 marketTypes = marketTypes.map { type ->
                     RequestMarketType(
                         marketType = type.value,
@@ -66,6 +64,7 @@ class CustomGroup2WebImpl(
             )
             service.searchStocksByMarketType(
                 authorization = setting.accessToken.createAuthorizationBearer(),
+                language = languages.asRequestHeader(),
                 requestBody = requestBody
             )
                 .checkResponseBody(gson)

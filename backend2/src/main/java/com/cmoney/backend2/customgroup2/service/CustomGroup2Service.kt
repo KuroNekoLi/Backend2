@@ -18,6 +18,7 @@ interface CustomGroup2Service {
     @POST("CustomGroupService/api/searchstocksbyappid")
     suspend fun searchStocks(
         @Header("Authorization") authorization: String,
+        @Header("Accept-Language") language: String,
         @Body requestBody: SearchStocksRequestBody
     ): Response<List<RawStock?>>
 
@@ -28,6 +29,7 @@ interface CustomGroup2Service {
     @POST("CustomGroupService/api/searchstocksbycommoditytype")
     suspend fun searchStocksByMarketType(
         @Header("Authorization") authorization: String,
+        @Header("Accept-Language") language: String,
         @Body requestBody: SearchStocksByMarketTypeRequestBody
     ): Response<List<RawStock?>>
 }

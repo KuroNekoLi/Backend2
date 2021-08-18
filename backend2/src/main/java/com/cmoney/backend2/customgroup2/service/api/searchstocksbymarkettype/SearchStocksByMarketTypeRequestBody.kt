@@ -6,8 +6,6 @@ import com.google.gson.annotations.SerializedName
 data class SearchStocksByMarketTypeRequestBody(
     @SerializedName("keyword")
     val keyword: String,
-    @SerializedName("language")
-    val language: String,
     @SerializedName("commodityTypes")
     val marketTypes: List<RequestMarketType>
 )
