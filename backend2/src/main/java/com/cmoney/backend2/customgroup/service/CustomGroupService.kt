@@ -39,7 +39,7 @@ interface CustomGroupService {
     ): Response<CustomGroupWithError>
 
     /**
-     * 服務1-2. 取得使用者自訂群組含順序清單(如果使用者沒有會幫建5個清單)
+     * 服務1-2. 取得使用者自訂群組含順序清單(如果使用者沒有會幫建5個清單)
      *
      * @param docType 群組類別，all: 全部，stock: 個股，broker: 券商，warrant: 權證，ustock: 美股，bond: 債券。
      *
