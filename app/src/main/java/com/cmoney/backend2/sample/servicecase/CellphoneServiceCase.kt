@@ -1,6 +1,7 @@
 package com.cmoney.backend2.sample.servicecase
 
 import com.cmoney.backend2.cellphone.service.CellphoneWeb
+import com.cmoney.backend2.cellphone.service.api.CellphoneParam
 import com.cmoney.backend2.sample.extension.logResponse
 import org.koin.core.inject
 
@@ -16,6 +17,8 @@ class CellphoneServiceCase : ServiceCase {
 //        web.registerByCellphone(CellphoneParam("886", ""), "1234")
 //            .logResponse(TAG)
 //        web.forgotPasswordForCellphone(CellphoneParam("886", ""))
+//            .logResponse(TAG)
+//        web.updatePassword("", true, "")
 //            .logResponse(TAG)
         web.getAccountInfo()
             .logResponse(TAG)
