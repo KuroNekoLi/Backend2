@@ -18,7 +18,7 @@ class BillingServiceCase : ServiceCase {
         billingImpl.getTargetAppAuthStatus(2)
             .logResponse(TAG)
         billingImpl.getAuthByCMoney(2)
-            .logResponse("TAG_888")
+            .logResponse(TAG)
     }
 
     companion object {

@@ -168,6 +168,7 @@ interface BillingService {
     /**
      * 用戶是否有CMoney正在續約中的手機商品
      */
+    @RecordApi
     @GET("PurchaseService/Order/AutorenewalingByCM/{appId}")
     suspend fun getAuthByCMoney(
         @Header("Authorization") authorization: String,
