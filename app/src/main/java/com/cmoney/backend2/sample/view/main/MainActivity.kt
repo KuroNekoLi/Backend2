@@ -101,7 +101,7 @@ class MainActivity : AppCompatActivity() {
 //                ActivityServiceCase(),
 //                AuthorizationServiceCase(),
 //                AdditionalInformationRevisitTestCase(hasSignal = true),
-//                BillingServiceCase(),
+//                BillingServiceCase()
 //                CellphoneServiceCase(),
 //                ChatRoomServiceCase(),
 //                ChipKServiceCase(),
@@ -113,7 +113,7 @@ class MainActivity : AppCompatActivity() {
 //                ForumOceanServiceCase(),
 //                CentralizedImageServiceCase(),
 //                MediaServiceCase(),
-                MobileOceanServiceCase()
+//                MobileOceanServiceCase()
 //                NotesServiceCase(),
 //                NotificationServiceCase(),
 //                Notification2ServiceCase(),

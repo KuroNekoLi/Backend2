@@ -118,4 +118,9 @@ interface BillingWeb {
      *
      */
     suspend fun recoveryGoogleSubReceipt(receipts: List<SubGoogleReceipt>): Result<Unit>
+
+    /**
+     * 用戶是否有CMoney正在續約中的手機商品
+     */
+    suspend fun getAuthByCMoney(appId: Int): Result<Boolean>
 }
