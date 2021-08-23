@@ -16,5 +16,5 @@ data class RawStock(
     @SerializedName("name")
     val name: String?,
     @SerializedName("marketType")
-    val marketType: String?
+    val marketType: Int?
 )
