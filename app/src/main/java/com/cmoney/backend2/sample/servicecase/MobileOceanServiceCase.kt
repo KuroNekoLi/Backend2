@@ -188,11 +188,11 @@ class MobileOceanServiceCase : ServiceCase {
 //            "我是敘述"
 //        ).logResponse(TAG)
 //
-//        val articleId = 6411802L
+        val articleId = 6411802L
 //        mobileOceanWeb.giveArticleTip(articleId, 1).logResponse(TAG)
-//
-//        mobileOceanWeb.addInterestedInArticleInfo(articleId, 1).logResponse(TAG)
-//
+
+        mobileOceanWeb.addInterestedInArticleInfo(articleId, 1).logResponse(TAG)
+
 //        mobileOceanWeb.dislikeArticle(articleId).logResponse(TAG)
 //
 //        testGuest()
