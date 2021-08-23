@@ -113,7 +113,7 @@ class MainActivity : AppCompatActivity() {
 //                ForumOceanServiceCase(),
 //                CentralizedImageServiceCase(),
 //                MediaServiceCase(),
-//                MobileOceanServiceCase()
+//                MobileOceanServiceCase(),
 //                NotesServiceCase(),
 //                NotificationServiceCase(),
 //                Notification2ServiceCase(),

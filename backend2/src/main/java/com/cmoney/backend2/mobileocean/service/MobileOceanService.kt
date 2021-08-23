@@ -418,12 +418,12 @@ interface MobileOceanService {
     /**
      *  服務3-4. 我也想知道回答
      */
-    @RecordApi(cmoneyAction = "addinterestedinarticleInfo")
+    @RecordApi(cmoneyAction = "addinterestedinarticleinfo")
     @FormUrlEncoded
     @POST("MobileService/ashx/MobileCode.ashx")
     suspend fun addInterestedInArticleInfo(
         @Header("Authorization") authorization: String,
-        @Field("action") action: String = "addinterestedinarticleInfo",
+        @Field("action") action: String = "addinterestedinarticleinfo",
         @Field("AppId") appId: Int,
         @Field("Guid") guid: String,
         @Field("articleId") articleId: Long,
