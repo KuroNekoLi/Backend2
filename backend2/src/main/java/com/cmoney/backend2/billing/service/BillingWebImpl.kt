@@ -251,4 +251,15 @@ class BillingWebImpl(
             response.handleNoContent(gson)
         }
     }
+
+    override suspend fun getAuthByCMoney(appId: Int): Result<Boolean> = withContext(dispatcher.io()) {
+        runCatching {
+            val response = service.getAuthByCMoney(
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                appId = appId
+            )
+            val responseBody = response.checkResponseBody(gson)
+            responseBody.isAuth ?: false
+        }
+    }
 }

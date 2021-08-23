@@ -11,7 +11,7 @@ import com.cmoney.backend2.sample.databinding.ActivityMainBinding
 import com.cmoney.backend2.sample.extension.lockWindows
 import com.cmoney.backend2.sample.extension.toast
 import com.cmoney.backend2.sample.extension.unlockWindows
-import com.cmoney.backend2.sample.servicecase.ServiceCase
+import com.cmoney.backend2.sample.servicecase.*
 import com.cmoney.backend2.sample.view.main.data.LoginEvent
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -101,19 +101,19 @@ class MainActivity : AppCompatActivity() {
 //                ActivityServiceCase(),
 //                AuthorizationServiceCase(),
 //                AdditionalInformationRevisitTestCase(hasSignal = true),
-//                BillingServiceCase(),
+//                BillingServiceCase()
 //                CellphoneServiceCase(),
 //                ChatRoomServiceCase(),
 //                ChipKServiceCase(),
 //                CMTalkServiceCase(),
-//                CommonServiceCase(),
+//                CommonServiceCase(this@MainActivity),
 //                CustomGroupServiceCase(),
 //                DtnoServiceCase(),
 //                EmilyServiceCase(),
 //                ForumOceanServiceCase(),
 //                CentralizedImageServiceCase(),
 //                MediaServiceCase(),
-//                MobileOceanServiceCase(),
+//                MobileOceanServiceCase()
 //                NotesServiceCase(),
 //                NotificationServiceCase(),
 //                Notification2ServiceCase(),
