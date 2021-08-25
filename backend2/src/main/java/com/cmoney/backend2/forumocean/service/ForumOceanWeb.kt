@@ -308,16 +308,6 @@ interface ForumOceanWeb {
      */
     suspend fun unpinArticle(articleId: Long): Result<Unit>
 
-    /**
-     * 管理者刪文
-     *
-     * @param articleId 文章ID
-     * @return
-     */
-    suspend fun deleteGroupArticle(
-        articleId: Long
-    ): Result<Unit>
-
     //endregion
 
     //region Group 社團

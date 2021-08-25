@@ -462,13 +462,6 @@ interface ForumOceanService {
     ): Response<Void>
 
     @RecordApi
-    @DELETE("ForumOcean/api/GroupArticle/Delete/{articleId}")
-    suspend fun deleteGroupArticle(
-        @Header("Authorization") authorization: String,
-        @Path("articleId") articleId: Long
-    ): Response<Void>
-
-    @RecordApi
     @GET("ForumOcean/api/Official/GetOfficials")
     suspend fun getOfficials(
         @Header("Authorization") authorization: String,

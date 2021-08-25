@@ -614,16 +614,6 @@ class ForumOceanWebImpl(
         }
     }
 
-    override suspend fun deleteGroupArticle(articleId: Long): Result<Unit> =
-        withContext(dispatcher.io()) {
-            kotlin.runCatching {
-                service.deleteGroupArticle(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    articleId = articleId
-                ).handleNoContent(jsonParser)
-            }
-        }
-
     override suspend fun getOfficials(officialIds: List<Long>): Result<List<OfficialChannelInfo>> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
