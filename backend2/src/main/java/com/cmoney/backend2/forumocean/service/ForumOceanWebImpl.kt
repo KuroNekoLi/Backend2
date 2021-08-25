@@ -23,6 +23,7 @@ import com.cmoney.backend2.forumocean.service.api.group.update.UpdateGroupReques
 import com.cmoney.backend2.forumocean.service.api.official.get.OfficialChannelInfo
 import com.cmoney.backend2.forumocean.service.api.officialsubscriber.getofficialsubscribedcount.GetOfficialSubscribedCountResponseBody
 import com.cmoney.backend2.forumocean.service.api.officialsubscriber.getsubscribedcount.GetSubscribedCountResponseBody
+import com.cmoney.backend2.forumocean.service.api.relationship.getrelationshipwithme.RelationshipWithMe
 import com.cmoney.backend2.forumocean.service.api.report.create.ReasonType
 import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
 import com.cmoney.backend2.forumocean.service.api.variable.request.GroupPosition
@@ -767,6 +768,15 @@ class ForumOceanWebImpl(
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 offset = offset,
                 fetch = fetch
+            ).checkResponseBody(jsonParser)
+        }
+    }
+
+    override suspend fun getRelationshipWithMe(memberIdList: List<Long>) = withContext(dispatcher.io()){
+        kotlin.runCatching {
+            service.getRelationshipWithMe(
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                memberIds = memberIdList.joinToString()
             ).checkResponseBody(jsonParser)
         }
     }

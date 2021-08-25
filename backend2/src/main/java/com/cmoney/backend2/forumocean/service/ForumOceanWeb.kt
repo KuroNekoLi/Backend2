@@ -17,6 +17,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.
 import com.cmoney.backend2.forumocean.service.api.official.get.OfficialChannelInfo
 import com.cmoney.backend2.forumocean.service.api.officialsubscriber.getofficialsubscribedcount.GetOfficialSubscribedCountResponseBody
 import com.cmoney.backend2.forumocean.service.api.officialsubscriber.getsubscribedcount.GetSubscribedCountResponseBody
+import com.cmoney.backend2.forumocean.service.api.relationship.getrelationshipwithme.RelationshipWithMe
 import com.cmoney.backend2.forumocean.service.api.report.create.ReasonType
 import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
 import com.cmoney.backend2.forumocean.service.api.variable.request.GroupPosition
@@ -711,6 +712,14 @@ interface ForumOceanWeb {
      * @return
      */
     suspend fun getBlockers(offset : Int,fetch : Int): Result<List<Long>>
+
+    /**
+     * 取得指定的會員清單與我目前的關係
+     *
+     * @param memberIdList 會員清單
+     * @return
+     */
+    suspend fun getRelationshipWithMe(memberIdList : List<Long>) : Result<List<RelationshipWithMe>>
 
     //endregion
 

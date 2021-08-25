@@ -17,6 +17,7 @@ import com.cmoney.backend2.forumocean.service.api.group.update.UpdateGroupReques
 import com.cmoney.backend2.forumocean.service.api.official.get.OfficialChannelInfo
 import com.cmoney.backend2.forumocean.service.api.officialsubscriber.getofficialsubscribedcount.GetOfficialSubscribedCountResponseBody
 import com.cmoney.backend2.forumocean.service.api.officialsubscriber.getsubscribedcount.GetSubscribedCountResponseBody
+import com.cmoney.backend2.forumocean.service.api.relationship.getrelationshipwithme.RelationshipWithMe
 import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBody
@@ -576,6 +577,13 @@ interface ForumOceanService {
         @Query("offset") offset : Int,
         @Query("fetch") fetch : Int
     ): Response<List<Long>>
+
+    @RecordApi
+    @GET("ForumOcean//api/Relationship/GetRelationshipWithMe")
+    suspend fun getRelationshipWithMe(
+        @Header("Authorization") authorization: String,
+        @Query("memberIds") memberIds : String
+    ): Response<List<RelationshipWithMe>>
 
     @RecordApi
     @POST("ForumOcean/api/Report/Create/{articleId}")
