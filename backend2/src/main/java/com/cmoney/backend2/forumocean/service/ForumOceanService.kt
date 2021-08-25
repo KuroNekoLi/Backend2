@@ -572,7 +572,7 @@ interface ForumOceanService {
     ): Response<List<Long>>
 
     @RecordApi
-    @GET("ForumOcean//api/Relationship/GetRelationshipWithMe")
+    @GET("ForumOcean/api/Relationship/GetRelationshipWithMe")
     suspend fun getRelationshipWithMe(
         @Header("Authorization") authorization: String,
         @Query("memberIds") memberIds : String
