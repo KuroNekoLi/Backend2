@@ -78,6 +78,8 @@ sealed class ArticleResponseBody(
         override val rewardPoints: Int?,
         @SerializedName("@vhash-donate")
         override val donateCount: Int?,
+        @SerializedName("donate")
+        override val donate : Int?,
         @SerializedName("@list-vote")
         override val voteCount : Int?,
         @SerializedName("voteStatus")
@@ -143,6 +145,8 @@ sealed class ArticleResponseBody(
         override val commentCount: Int?,
         @SerializedName("@vhash-donate")
         override val donateCount: Int?,
+        @SerializedName("donate")
+        override val donate : Int?,
         @SerializedName("@list-vote")
         override val voteCount : Int?,
         @SerializedName("voteStatus")
@@ -312,6 +316,8 @@ sealed class ArticleResponseBody(
         override val commentCount: Int?,
         @SerializedName("@vhash-donate")
         override val donateCount: Int?,
+        @SerializedName("donate")
+        override val donate : Int?,
         @SerializedName("@list-vote")
         override val voteCount : Int?,
         @SerializedName("voteStatus")
@@ -378,6 +384,8 @@ sealed class ArticleResponseBody(
         override val shareCount: Int?,
         @SerializedName("@vhash-donate")
         override val donateCount: Int?,
+        @SerializedName("donate")
+        override val donate : Int?,
         @SerializedName("@list-vote")
         override val voteCount : Int?,
         @SerializedName("voteStatus")
