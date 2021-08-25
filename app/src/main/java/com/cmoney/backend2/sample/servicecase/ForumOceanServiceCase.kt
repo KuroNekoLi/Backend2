@@ -9,9 +9,8 @@ import com.cmoney.backend2.forumocean.service.api.article.create.variable.commod
 import com.cmoney.backend2.forumocean.service.api.article.create.variable.commoditytag.CommodityTag
 import com.cmoney.backend2.forumocean.service.api.article.create.variable.commoditytag.StockTypeInfo
 import com.cmoney.backend2.forumocean.service.api.article.update.UpdateArticleHelper
-import com.cmoney.backend2.forumocean.service.api.channel.channelname.ChannelNameBuilder
-import com.cmoney.backend2.forumocean.service.api.channel.channelname.StockClassification
-import com.cmoney.backend2.forumocean.service.api.channel.channelname.SystemClassification
+import com.cmoney.backend2.forumocean.service.api.channel.channelname.definechannelnamebuilder.CommodityType
+import com.cmoney.backend2.forumocean.service.api.channel.channelname.definechannelnamebuilder.DefineChannelName
 import com.cmoney.backend2.forumocean.service.api.comment.update.UpdateCommentHelper
 import com.cmoney.backend2.forumocean.service.api.group.update.UpdateGroupRequestBody
 import com.cmoney.backend2.forumocean.service.api.report.create.ReasonType
@@ -96,12 +95,11 @@ class ForumOceanServiceCase : ServiceCase {
                         }
                 )
 
-                getChannelsArticleByWeight(listOf(
-                        ChannelNameBuilder().also {
-                            it.systemClassification = SystemClassification.Member(null)
-                            it.stockClassification = StockClassification.Stock("1234")
-                        }
-                ),Long.MAX_VALUE,20).logResponse(TAG)
+                getChannelsArticleByWeight(
+                        listOf(DefineChannelName.Commodity(CommodityType.Stock.text,"1234")),
+                        Long.MAX_VALUE,
+                        20
+                ).logResponse(TAG)
             }
 
             testGroup()
@@ -262,11 +260,7 @@ class ForumOceanServiceCase : ServiceCase {
         createCollection(articleId).logResponse(TAG)
 
         getChannelsArticleByWeight(
-            listOf(ChannelNameBuilder().apply {
-                systemClassification = SystemClassification.MemberCollection(
-                    setting.identityToken.getMemberId().toLongOrNull()
-                )
-            }),
+            listOf(DefineChannelName.Collection(setting.identityToken.getMemberId().toLong())),
             Long.MAX_VALUE,
             50
         ).logResponse(TAG)
@@ -275,19 +269,7 @@ class ForumOceanServiceCase : ServiceCase {
     }
 
     private suspend fun ForumOceanWeb.testChannel() {
-        val listBuilder = mutableListOf<ChannelNameBuilder>()
-        listBuilder.add(
-            ChannelNameBuilder().apply {
-                stockClassification = StockClassification.Stock("2330")
-            }
-        )
-        listBuilder.add(
-            ChannelNameBuilder().apply {
-                stockClassification = StockClassification.Stock("1234")
-            }
-        )
-
-        getChannelsArticleByWeight(listBuilder, Long.MAX_VALUE, 50).logResponse(TAG)
+        getChannelsArticleByWeight(listOf(DefineChannelName.Commodity(CommodityType.Stock.text,"2330")), Long.MAX_VALUE, 50).logResponse(TAG)
     }
 
     private suspend fun ForumOceanWeb.testArticle(articleId: Long) {
@@ -338,8 +320,7 @@ class ForumOceanServiceCase : ServiceCase {
     }
 
     private suspend fun ForumOceanWeb.testOfficials() {
-        val builder = ChannelNameBuilder()
-        builder.systemClassification = SystemClassification.Bot(null)
+        val builder = DefineChannelName.BotCommodity(CommodityType.Stock.text,"2330")
         val botIdList = getChannelsArticleByWeight(listOf(builder), Long.MAX_VALUE, 50).getOrNull()
             ?.mapNotNull { it.articleContent?.botId }?.distinct()
         if (botIdList != null && botIdList.size >= 2) {
