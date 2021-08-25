@@ -646,17 +646,21 @@ interface ForumOceanWeb {
      * 取得指定使用者追蹤的對象清單
      *
      * @param memberId 使用者Id
+     * @param offset 跳過的數量
+     * @param fetch 拿取數量
      * @return 使用者追蹤的對象清單
      */
-    suspend fun getFollowingList(memberId: Long): Result<List<Long>>
+    suspend fun getFollowingList(memberId: Long,offset : Int,fetch : Int): Result<List<Long>>
 
     /**
      * 取得指定使用者被對象追蹤的清單
      *
+     * @param offset 跳過的數量
+     * @param fetch 拿取數量
      * @param memberId 使用者Id
      * @return 使用者被對象追蹤的清單
      */
-    suspend fun getFollowers(memberId: Long): Result<List<Long>>
+    suspend fun getFollowers(memberId: Long,offset : Int,fetch : Int): Result<List<Long>>
 
     /**
      * 追蹤
@@ -693,16 +697,20 @@ interface ForumOceanWeb {
     /**
      * 取得指定使用者封鎖的對象清單
      *
+     * @param offset 跳過的數量
+     * @param fetch 拿取數量
      * @return
      */
-    suspend fun getBlockingList(): Result<List<Long>>
+    suspend fun getBlockingList(offset : Int,fetch : Int): Result<List<Long>>
 
     /**
      * 取得指定使用者被對象封鎖的清單
      *
+     * @param offset 跳過的數量
+     * @param fetch 拿取數量
      * @return
      */
-    suspend fun getBlockers(): Result<List<Long>>
+    suspend fun getBlockers(offset : Int,fetch : Int): Result<List<Long>>
 
     //endregion
 

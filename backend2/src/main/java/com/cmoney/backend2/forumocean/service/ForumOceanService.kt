@@ -519,14 +519,18 @@ interface ForumOceanService {
     @GET("ForumOcean/api/Relationship/GetFollowingList/{memberId}")
     suspend fun getFollowingList(
         @Header("Authorization") authorization: String,
-        @Path("memberId") memberId: Long
+        @Path("memberId") memberId: Long,
+        @Query("offset") offset : Int,
+        @Query("fetch") fetch : Int
     ): Response<List<Long>>
 
     @RecordApi
     @GET("ForumOcean/api/Relationship/GetFollowers/{memberId}")
     suspend fun getFollowers(
         @Header("Authorization") authorization: String,
-        @Path("memberId") memberId: Long
+        @Path("memberId") memberId: Long,
+        @Query("offset") offset : Int,
+        @Query("fetch") fetch : Int
     ): Response<List<Long>>
 
     @RecordApi
@@ -560,13 +564,17 @@ interface ForumOceanService {
     @RecordApi
     @GET("ForumOcean/api/Relationship/GetBlockingList")
     suspend fun getBlockingList(
-        @Header("Authorization") authorization: String
+        @Header("Authorization") authorization: String,
+        @Query("offset") offset : Int,
+        @Query("fetch") fetch : Int
     ): Response<List<Long>>
 
     @RecordApi
     @GET("ForumOcean/api/Relationship/GetBlockers")
     suspend fun getBlockers(
-        @Header("Authorization") authorization: String
+        @Header("Authorization") authorization: String,
+        @Query("offset") offset : Int,
+        @Query("fetch") fetch : Int
     ): Response<List<Long>>
 
     @RecordApi

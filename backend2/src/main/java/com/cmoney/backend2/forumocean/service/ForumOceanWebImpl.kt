@@ -690,22 +690,26 @@ class ForumOceanWebImpl(
         }
     }
 
-    override suspend fun getFollowingList(memberId: Long): Result<List<Long>> =
+    override suspend fun getFollowingList(memberId: Long,offset : Int,fetch : Int): Result<List<Long>> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getFollowingList(
                     authorization = setting.accessToken.createAuthorizationBearer(),
-                    memberId = memberId
+                    memberId = memberId,
+                    offset = offset,
+                    fetch = fetch
                 ).checkResponseBody(jsonParser)
             }
         }
 
-    override suspend fun getFollowers(memberId: Long): Result<List<Long>> =
+    override suspend fun getFollowers(memberId: Long,offset : Int,fetch : Int): Result<List<Long>> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getFollowers(
                     authorization = setting.accessToken.createAuthorizationBearer(),
-                    memberId = memberId
+                    memberId = memberId,
+                    offset = offset,
+                    fetch = fetch
                 ).checkResponseBody(jsonParser)
             }
         }
@@ -746,18 +750,23 @@ class ForumOceanWebImpl(
         }
     }
 
-    override suspend fun getBlockingList() = withContext(dispatcher.io()) {
+    override suspend fun getBlockingList(offset : Int,fetch : Int) = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getBlockingList(
-                authorization = setting.accessToken.createAuthorizationBearer()
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                offset = offset,
+                fetch = fetch
+
             ).checkResponseBody(jsonParser)
         }
     }
 
-    override suspend fun getBlockers() = withContext(dispatcher.io()) {
+    override suspend fun getBlockers(offset : Int,fetch : Int) = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getBlockers(
-                authorization = setting.accessToken.createAuthorizationBearer()
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                offset = offset,
+                fetch = fetch
             ).checkResponseBody(jsonParser)
         }
     }
