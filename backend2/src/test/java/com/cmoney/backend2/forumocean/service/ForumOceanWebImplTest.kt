@@ -208,7 +208,8 @@ class ForumOceanWebImplTest {
             voteStatus = null,
             weight = null,
             totalReportCount = null,
-            report = null
+            report = null,
+            donate = null
         )
         coEvery {
             forumOceanService.getArticle(
@@ -276,8 +277,8 @@ class ForumOceanWebImplTest {
             voteStatus = null,
             weight = null,
             totalReportCount = null,
-            report = null
-
+            report = null,
+            donate = null
         )
         coEvery {
             forumOceanService.getGroupArticle(
@@ -312,7 +313,8 @@ class ForumOceanWebImplTest {
             voteStatus = null,
             weight = null,
             totalReportCount = null,
-            report = null
+            report = null,
+            donate = null
         )
         coEvery {
             forumOceanService.getSharedArticle(
@@ -412,7 +414,8 @@ class ForumOceanWebImplTest {
             voteStatus = null,
             weight = null,
             totalReportCount = null,
-            report = null
+            report = null,
+            donate = null
         )
         coEvery {
             forumOceanService.getUnknownArticle(
@@ -500,15 +503,21 @@ class ForumOceanWebImplTest {
         } returns Response.success(
             listOf(GetMemberStatisticsResponseBody(
                 totalCountArticle = 6,
-                totalCountReaction = 3
+                totalCountReaction = 3,
+                memberId = 100,
+                totalCountFollowing = 16,
+                totalCountFollower = 10
             ))
         )
         val result = service.getMemberStatistics(listOf(100))
 
         assertThat(result.isSuccess).isTrue()
         assertThat(result.getOrThrow().size).isEqualTo(1)
+        assertThat(result.getOrThrow().first().memberId).isEqualTo(100)
         assertThat(result.getOrThrow().first().totalCountArticle).isEqualTo(6)
         assertThat(result.getOrThrow().first().totalCountReaction).isEqualTo(3)
+        assertThat(result.getOrThrow().first().totalCountFollowing).isEqualTo(16)
+        assertThat(result.getOrThrow().first().totalCountFollower).isEqualTo(10)
     }
 
     @ExperimentalCoroutinesApi
@@ -544,7 +553,8 @@ class ForumOceanWebImplTest {
                     voteStatus = null,
                     weight = null,
                     totalReportCount = null,
-                    report = null
+                    report = null,
+                    donate = null
                 )
             )
         )
@@ -1272,19 +1282,6 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `deleteGroupArticle_管理員刪除社團文章成功測試`() = mainCoroutineRule.runBlockingTest {
-        coEvery {
-            forumOceanService.deleteGroupArticle(
-                authorization = any(),
-                articleId = any()
-            )
-        } returns Response.success<Void>(204, null)
-        val result = service.deleteGroupArticle(1321342)
-        assertThat(result.isSuccess)
-    }
-
-    @ExperimentalCoroutinesApi
-    @Test
     fun `getOfficials_取得官方頻道成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.getOfficials(
@@ -1404,12 +1401,14 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.getFollowingList(
                 authorization = any(),
-                memberId = any()
+                memberId = any(),
+                offset = any(),
+                fetch = any()
             )
         } returns Response.success(
             listOf<Long>(1, 2, 3, 4)
         )
-        val result = service.getFollowingList(4564)
+        val result = service.getFollowingList(4564,0,10)
         assertThat(result.isSuccess)
         assertThat(result.getOrThrow()).hasSize(4)
     }
@@ -1420,10 +1419,12 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.getFollowers(
                 authorization = any(),
-                memberId = any()
+                memberId = any(),
+                offset = any(),
+                fetch = any()
             )
         } returns Response.success(listOf<Long>(1, 2, 3, 4))
-        val result = service.getFollowers(43241321)
+        val result = service.getFollowers(43241321,0,10)
         assertThat(result.isSuccess)
         assertThat(result.getOrThrow()).hasSize(4)
     }
@@ -1485,10 +1486,12 @@ class ForumOceanWebImplTest {
     fun `getBlockingList_取得封鎖用戶清單成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.getBlockingList(
-                authorization = any()
+                authorization = any(),
+                offset = any(),
+                fetch = any()
             )
         } returns Response.success(listOf<Long>(1, 2, 3, 4, 5))
-        val result = service.getBlockingList()
+        val result = service.getBlockingList(0,10)
         assertThat(result.isSuccess)
         assertThat(result.getOrThrow()).hasSize(5)
     }
@@ -1498,10 +1501,12 @@ class ForumOceanWebImplTest {
     fun `getBlockers_取得被用戶封鎖清單成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.getBlockers(
-                authorization = any()
+                authorization = any(),
+                offset = any(),
+                fetch = any()
             )
         } returns Response.success(listOf<Long>(1, 3, 5, 7, 9))
-        val result = service.getBlockers()
+        val result = service.getBlockers(0,10)
         assertThat(result.isSuccess)
         assertThat(result.getOrThrow()).hasSize(5)
     }
