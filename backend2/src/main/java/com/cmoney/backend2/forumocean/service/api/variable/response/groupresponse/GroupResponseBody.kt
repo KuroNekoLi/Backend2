@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 /**
  * 社團資訊
+ * @see GroupPosition 社團職位可參考 如果為null就代表不是社團成員
  *
  * @property description 社團描述
  * @property id 社團Id
@@ -14,6 +15,7 @@ import com.google.gson.annotations.SerializedName
  * @property ownerId 社團創始人
  * @property searchable 是否可搜尋
  * @property memberCount 社團成員數
+ * @property groupPosition 在社團職位
  */
 data class GroupResponseBody(
     @SerializedName("description")
@@ -33,5 +35,7 @@ data class GroupResponseBody(
     @SerializedName("searchable")
     val searchable: Boolean?,
     @SerializedName("memberCount")
-    val memberCount : Int?
+    val memberCount : Int?,
+    @SerializedName("position")
+    val groupPosition : Int?
 )
