@@ -338,21 +338,27 @@ interface ForumOceanService {
     @GET("ForumOcean/api/Group/GetOwnerHaveGroups")
     suspend fun getUserOwnGroup(
         @Header("Authorization") authorization: String,
-        @Query("ownerId") ownerId: Long
+        @Query("ownerId") ownerId: Long,
+        @Query("offset") offset: Int,
+        @Query("fetch") fetch: Int
     ): Response<List<GroupResponseBody>>
 
     @RecordApi
     @GET("ForumOcean/api/Group/GetMemberManagedGroups")
     suspend fun getMemberManagedGroups(
         @Header("Authorization") authorization: String,
-        @Query("managerId") managerId: Long
+        @Query("managerId") managerId: Long,
+        @Query("offset") offset: Int,
+        @Query("fetch") fetch: Int
     ): Response<List<GroupResponseBody>>
 
     @RecordApi
     @GET("ForumOcean/api/Group/GetMemberBelongGroups")
     suspend fun getMemberBelongGroups(
         @Header("Authorization") authorization: String,
-        @Query("memberId") memberId: Long
+        @Query("memberId") memberId: Long,
+        @Query("offset") offset: Int,
+        @Query("fetch") fetch: Int
     ): Response<List<GroupResponseBody>>
 
     @RecordApi
