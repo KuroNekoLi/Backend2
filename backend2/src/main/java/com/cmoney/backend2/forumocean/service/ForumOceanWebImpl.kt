@@ -23,7 +23,7 @@ import com.cmoney.backend2.forumocean.service.api.group.update.UpdateGroupReques
 import com.cmoney.backend2.forumocean.service.api.official.get.OfficialChannelInfo
 import com.cmoney.backend2.forumocean.service.api.officialsubscriber.getofficialsubscribedcount.GetOfficialSubscribedCountResponseBody
 import com.cmoney.backend2.forumocean.service.api.officialsubscriber.getsubscribedcount.GetSubscribedCountResponseBody
-import com.cmoney.backend2.forumocean.service.api.relationship.getrelationshipwithme.RelationshipWithMe
+import com.cmoney.backend2.forumocean.service.api.relationship.getdonate.DonateInfo
 import com.cmoney.backend2.forumocean.service.api.report.create.ReasonType
 import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
 import com.cmoney.backend2.forumocean.service.api.variable.request.GroupPosition
@@ -410,12 +410,14 @@ class ForumOceanWebImpl(
             }
         }
 
-    override suspend fun getArticleDonate(articleId: Long): Result<Map<Long?, Int?>> =
+    override suspend fun getArticleDonate(articleId: Long,offset: Int,fetch: Int): Result<List<DonateInfo>> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getArticleDonate(
                     authorization = setting.accessToken.createAuthorizationBearer(),
-                    articleId = articleId
+                    articleId = articleId,
+                    offset = offset,
+                    fetch = fetch
                 ).checkResponseBody(jsonParser)
             }
         }

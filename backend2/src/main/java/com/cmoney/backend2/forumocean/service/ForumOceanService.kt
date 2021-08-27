@@ -17,6 +17,7 @@ import com.cmoney.backend2.forumocean.service.api.group.update.UpdateGroupReques
 import com.cmoney.backend2.forumocean.service.api.official.get.OfficialChannelInfo
 import com.cmoney.backend2.forumocean.service.api.officialsubscriber.getofficialsubscribedcount.GetOfficialSubscribedCountResponseBody
 import com.cmoney.backend2.forumocean.service.api.officialsubscriber.getsubscribedcount.GetSubscribedCountResponseBody
+import com.cmoney.backend2.forumocean.service.api.relationship.getdonate.DonateInfo
 import com.cmoney.backend2.forumocean.service.api.relationship.getrelationshipwithme.RelationshipWithMe
 import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
@@ -321,8 +322,10 @@ interface ForumOceanService {
     @GET("ForumOcean/api/Interactive/GetDonate/{articleId}")
     suspend fun getArticleDonate(
         @Header("Authorization") authorization: String,
-        @Path("articleId") articleId: Long
-    ): Response<Map<Long?, Int?>>
+        @Path("articleId") articleId: Long,
+        @Query("offset") offset : Int,
+        @Query("fetch") fetch : Int
+    ): Response<List<DonateInfo>>
 
     @RecordApi
     @GET("ForumOcean/api/Group/GetGroup/{groupId}")

@@ -17,6 +17,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.
 import com.cmoney.backend2.forumocean.service.api.official.get.OfficialChannelInfo
 import com.cmoney.backend2.forumocean.service.api.officialsubscriber.getofficialsubscribedcount.GetOfficialSubscribedCountResponseBody
 import com.cmoney.backend2.forumocean.service.api.officialsubscriber.getsubscribedcount.GetSubscribedCountResponseBody
+import com.cmoney.backend2.forumocean.service.api.relationship.getdonate.DonateInfo
 import com.cmoney.backend2.forumocean.service.api.relationship.getrelationshipwithme.RelationshipWithMe
 import com.cmoney.backend2.forumocean.service.api.report.create.ReasonType
 import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
@@ -544,11 +545,15 @@ interface ForumOceanWeb {
      * 取得文章打賞清單
      *
      * @param articleId 文章Id
+     * @param offset 偏移數量
+     * @param fetch 查詢數量
      * @return
      */
     suspend fun getArticleDonate(
-        articleId: Long
-    ): Result<Map<Long?, Int?>>
+        articleId: Long,
+        offset: Int,
+        fetch: Int
+    ): Result<List<DonateInfo>>
 
     //endregion
 
