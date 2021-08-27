@@ -597,10 +597,14 @@ interface ForumOceanWeb {
      * 取得使用者訂閱的官方頻道清單
      *
      * @param memberId 使用者Id
+     * @param offset 偏移數量
+     * @param fetch 查詢數量
      * @return
      */
     suspend fun getSubscribed(
-        memberId: Long
+        memberId: Long,
+        offset: Int,
+        fetch: Int
     ): Result<List<Int>>
 
     /**

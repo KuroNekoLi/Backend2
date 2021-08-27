@@ -489,7 +489,9 @@ interface ForumOceanService {
     @GET("ForumOcean/api/OfficialSubscriber/GetSubscribeds")
     suspend fun getSubscribed(
         @Header("Authorization") authorization: String,
-        @Query("memberId") memberId: Long
+        @Query("memberId") memberId: Long,
+        @Query("offset") offset : Int,
+        @Query("fetch") fetch: Int
     ): Response<List<Int>>
 
     @RecordApi

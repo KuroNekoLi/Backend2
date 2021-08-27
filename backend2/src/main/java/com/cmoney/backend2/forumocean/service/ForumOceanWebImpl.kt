@@ -646,12 +646,14 @@ class ForumOceanWebImpl(
             }
         }
 
-    override suspend fun getSubscribed(memberId: Long): Result<List<Int>> =
+    override suspend fun getSubscribed(memberId: Long,offset: Int,fetch: Int): Result<List<Int>> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getSubscribed(
                     authorization = setting.accessToken.createAuthorizationBearer(),
-                    memberId = memberId
+                    memberId = memberId,
+                    offset = offset,
+                    fetch = fetch
                 ).checkResponseBody(jsonParser)
             }
         }
