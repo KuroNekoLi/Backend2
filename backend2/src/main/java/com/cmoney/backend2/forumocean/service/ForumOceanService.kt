@@ -414,7 +414,9 @@ interface ForumOceanService {
     @GET("ForumOcean/api/GroupMember/GetApprovals/{groupId}")
     suspend fun getApprovals(
         @Header("Authorization") authorization: String,
-        @Path("groupId") groupId: Long
+        @Path("groupId") groupId: Long,
+        @Query("offset") offset: Int,
+        @Query("fetch") fetch: Int
     ): Response<List<GroupPendingApproval>>
 
     @RecordApi

@@ -421,10 +421,14 @@ interface ForumOceanWeb {
      * 取得申請加入社團待審核清單
      *
      * @param groupId 社團Id
+     * @param offset 偏移數量
+     * @param fetch 查詢數量
      * @return 加入社團待審核清單
      */
     suspend fun getApprovals(
-        groupId: Long
+        groupId: Long,
+        offset: Int,
+        fetch: Int
     ): Result<List<GroupPendingApproval>>
 
     /**

@@ -541,12 +541,14 @@ class ForumOceanWebImpl(
         }
     }
 
-    override suspend fun getApprovals(groupId: Long): Result<List<GroupPendingApproval>> =
+    override suspend fun getApprovals(groupId: Long,offset: Int,fetch: Int): Result<List<GroupPendingApproval>> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getApprovals(
                     authorization = setting.accessToken.createAuthorizationBearer(),
-                    groupId = groupId
+                    groupId = groupId,
+                    offset = offset,
+                    fetch = fetch
                 ).checkResponseBody(jsonParser)
             }
         }
