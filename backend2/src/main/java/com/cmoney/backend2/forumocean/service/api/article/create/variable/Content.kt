@@ -17,6 +17,7 @@ sealed class Content(
          * @property commodityTags 股票tag資訊
          * @property voteOptions 投票選項
          * @property voteMinutes 發文起算投票截止分鐘數
+         * @property topics 標籤
          */
         data class General(
             @SerializedName("text")
@@ -60,9 +61,7 @@ sealed class Content(
             val voteOptions : List<String>?,
             @IntRange(from = 5,to = 10080)
             @SerializedName("voteMinutes")
-            val voteMinutes : Int?,
-            @SerializedName("topics")
-            val topics : List<String>?
+            val voteMinutes : Int?
         ) : Article(text)
 
         /**
@@ -74,6 +73,7 @@ sealed class Content(
          * @property commodityTags 股票tag資訊
          * @property voteOptions 投票選項
          * @property voteMinutes 發文起算投票截止分鐘數
+         * @property topics 標籤
          */
         data class Shared(
             @SerializedName("text")
@@ -101,6 +101,7 @@ sealed class Content(
      * @property multiMedia 多媒體資訊
      * @property anonymous 是否匿名
      * @property commodityTags 股票tag資訊
+     * @property topics 標籤
      */
     data class Question(
         @SerializedName("text")
