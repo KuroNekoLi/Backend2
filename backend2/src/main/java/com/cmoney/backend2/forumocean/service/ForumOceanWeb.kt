@@ -275,8 +275,8 @@ interface ForumOceanWeb {
         articleId: Long,
         commentIndex: Long,
         reactions: List<ReactionType>,
-        skipCount: Int = 0,
-        takeCount: Int = Int.MAX_VALUE
+        skipCount: Int,
+        takeCount: Int
     ): Result<List<ReactionInfo>>
 
     /**
@@ -414,8 +414,8 @@ interface ForumOceanWeb {
      */
     suspend fun getMembers(
         groupId: Long,
-        offset: Int = 0,
-        fetch: Int = Int.MAX_VALUE,
+        offset: Int,
+        fetch: Int,
         includeManagerInfo: Boolean = false
     ): Result<List<GroupMember>>
 
@@ -511,8 +511,8 @@ interface ForumOceanWeb {
     suspend fun getArticleReactionDetail(
         articleId: Long,
         reactionTypeList: List<ReactionType>,
-        skipCount: Int = 0,
-        count: Int = Int.MAX_VALUE
+        skipCount: Int,
+        count: Int
     ): Result<List<ReactionInfo>>
 
     /**
