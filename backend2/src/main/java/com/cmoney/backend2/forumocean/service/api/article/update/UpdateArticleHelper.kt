@@ -1,9 +1,10 @@
 package com.cmoney.backend2.forumocean.service.api.article.update
 
+import com.cmoney.backend2.forumocean.service.api.variable.request.commoditytag.CommodityTag
 import com.cmoney.backend2.forumocean.service.api.variable.request.mediatype.MediaType
 import com.google.gson.annotations.SerializedName
 
-class UpdateArticleHelper {
+class UpdateArticleHelper : IUpdateArticleHelper {
 
     private var editArticle : EditArticle = EditArticle()
 
@@ -44,7 +45,7 @@ class UpdateArticleHelper {
      *
      * @return
      */
-    fun create() : UpdateArticleRequestBody{
+    override fun create() : UpdateArticleRequestBody{
         return UpdateArticleRequestBody(editArticle, deletePropertyList.map { it.value })
     }
 

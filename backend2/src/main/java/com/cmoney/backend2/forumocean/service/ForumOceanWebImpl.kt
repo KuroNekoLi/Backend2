@@ -9,11 +9,12 @@ import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.forumocean.service.api.article.create.CreateArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.create.variable.Content
 import com.cmoney.backend2.forumocean.service.api.article.createquestion.CreateQuestionResponseBody
-import com.cmoney.backend2.forumocean.service.api.article.update.UpdateArticleHelper
-import com.cmoney.backend2.forumocean.service.api.channel.channelname.IChannelNameBuilder.Companion.createChannelNameList
+import com.cmoney.backend2.forumocean.service.api.article.update.IUpdateArticleHelper
 import com.cmoney.backend2.forumocean.service.api.channel.channelname.IChannelNameBuilder
+import com.cmoney.backend2.forumocean.service.api.channel.channelname.IChannelNameBuilder.Companion.createChannelNameList
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentRequestBody
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBody
+import com.cmoney.backend2.forumocean.service.api.comment.update.IUpdateCommentHelper
 import com.cmoney.backend2.forumocean.service.api.comment.update.UpdateCommentHelper
 import com.cmoney.backend2.forumocean.service.api.group.create.CreateGroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.getapprovals.GroupPendingApproval
@@ -149,7 +150,7 @@ class ForumOceanWebImpl(
 
     override suspend fun updateArticle(
         articleId: Long,
-        updateHelper: UpdateArticleHelper
+        updateHelper: IUpdateArticleHelper
     ): Result<Unit> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
@@ -277,7 +278,7 @@ class ForumOceanWebImpl(
     override suspend fun updateComment(
         articleId: Long,
         commentId: Long,
-        helper: UpdateCommentHelper
+        helper: IUpdateCommentHelper
     ): Result<Unit> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {

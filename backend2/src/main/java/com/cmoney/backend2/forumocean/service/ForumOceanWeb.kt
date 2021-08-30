@@ -3,10 +3,12 @@ package com.cmoney.backend2.forumocean.service
 import com.cmoney.backend2.forumocean.service.api.article.create.CreateArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.create.variable.Content
 import com.cmoney.backend2.forumocean.service.api.article.createquestion.CreateQuestionResponseBody
+import com.cmoney.backend2.forumocean.service.api.article.update.IUpdateArticleHelper
 import com.cmoney.backend2.forumocean.service.api.article.update.UpdateArticleHelper
 import com.cmoney.backend2.forumocean.service.api.channel.channelname.IChannelNameBuilder
 import com.cmoney.backend2.forumocean.service.api.channel.getmemberstatistics.GetMemberStatisticsResponseBody
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBody
+import com.cmoney.backend2.forumocean.service.api.comment.update.IUpdateCommentHelper
 import com.cmoney.backend2.forumocean.service.api.comment.update.UpdateCommentHelper
 import com.cmoney.backend2.forumocean.service.api.group.create.CreateGroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.getapprovals.GroupPendingApproval
@@ -111,7 +113,7 @@ interface ForumOceanWeb {
      * @param articleId 文章Id
      * @return 成功不回傳任何資訊
      */
-    suspend fun updateArticle(articleId: Long, updateHelper: UpdateArticleHelper): Result<Unit>
+    suspend fun updateArticle(articleId: Long, updateHelper: IUpdateArticleHelper): Result<Unit>
 
 
     /**
@@ -229,7 +231,7 @@ interface ForumOceanWeb {
     suspend fun updateComment(
         articleId: Long,
         commentId: Long,
-        helper: UpdateCommentHelper
+        helper: IUpdateCommentHelper
     ): Result<Unit>
 
     /**
