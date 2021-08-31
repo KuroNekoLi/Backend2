@@ -5,9 +5,9 @@ import com.cmoney.backend2.base.di.BACKEND2_SETTING
 import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.forumocean.service.ForumOceanWeb
 import com.cmoney.backend2.forumocean.service.api.article.create.variable.Content
-import com.cmoney.backend2.forumocean.service.api.article.create.variable.commoditytag.BullOrBear
-import com.cmoney.backend2.forumocean.service.api.article.create.variable.commoditytag.CommodityTag
-import com.cmoney.backend2.forumocean.service.api.article.create.variable.commoditytag.StockTypeInfo
+import com.cmoney.backend2.forumocean.service.api.variable.request.commoditytag.BullOrBear
+import com.cmoney.backend2.forumocean.service.api.variable.request.commoditytag.CommodityTag
+import com.cmoney.backend2.forumocean.service.api.variable.request.commoditytag.StockTypeInfo
 import com.cmoney.backend2.forumocean.service.api.article.update.UpdateArticleHelper
 import com.cmoney.backend2.forumocean.service.api.channel.channelname.definechannelnamebuilder.CommodityType
 import com.cmoney.backend2.forumocean.service.api.channel.channelname.definechannelnamebuilder.DefineChannelName
@@ -50,9 +50,15 @@ class ForumOceanServiceCase : ServiceCase {
                             "https://zh.wikipedia.org/wiki/Google_Chrome#/media/File:Google_Chrome_icon_(September_2014).svg"
                         )
                     ),
-                    commodityTags = listOf(CommodityTag("1234", BullOrBear.Bear,StockTypeInfo.Stock)),
+                    commodityTags = listOf(
+                        CommodityTag("1234", BullOrBear.Bear,
+                            StockTypeInfo.Stock)
+                    ),
                     voteOptions = null,
-                    voteMinutes = null
+                    voteMinutes = null,
+                    topics = listOf(
+                        "測測測測測測"
+                    )
                 )
             ).getOrNull()?.articleId
 
@@ -80,9 +86,13 @@ class ForumOceanServiceCase : ServiceCase {
                                                 "https://zh.wikipedia.org/wiki/Google_Chrome#/media/File:Google_Chrome_icon_(September_2014).svg"
                                         )
                                 ),
-                                commodityTags = listOf(CommodityTag("1234", BullOrBear.Bear,StockTypeInfo.Stock)),
+                                commodityTags = listOf(
+                                    CommodityTag("1234", BullOrBear.Bear,
+                                        StockTypeInfo.Stock)
+                                ),
                                 voteOptions = null,
-                                voteMinutes = null
+                                voteMinutes = null,
+                                topics = null
                         )
                 ).logResponse(TAG)
                 deleteArticle(this)
@@ -137,7 +147,8 @@ class ForumOceanServiceCase : ServiceCase {
                 sharedPostsArticleId = articleId,
                 commodityTags = null,
                 voteOptions = null,
-                voteMinutes = null
+                voteMinutes = null,
+                topics = null
             )
         ).getOrNull()?.articleId
 
@@ -186,14 +197,15 @@ class ForumOceanServiceCase : ServiceCase {
             getComment(articleId, this, null).logResponse(TAG)
             val updateCommentHelper = UpdateCommentHelper()
             updateCommentHelper.setText("我修改回復了")
+            updateCommentHelper.deleteMultiMedia()
             updateComment(articleId, this, updateCommentHelper).logResponse(TAG)
-            getComment(articleId, this, null).logResponse(TAG)
+            getComment(articleId, this, 20).logResponse(TAG)
             reactionComment(articleId, 1, ReactionType.LIKE).logResponse(TAG)
             reactionComment(articleId, 1, ReactionType.DISLIKE).logResponse(TAG)
             getReactionDetail(articleId, 1,ReactionType.values().toList(),0,20).logResponse(TAG)
             removeReactionComment(articleId, 1).logResponse(TAG)
             deleteComment(articleId, 1).logResponse(TAG)
-            getComment(articleId, this, null).logResponse(TAG)
+            getComment(articleId, this, 20).logResponse(TAG)
         }
 
         val commentIdList = mutableListOf<Long>()
@@ -289,7 +301,7 @@ class ForumOceanServiceCase : ServiceCase {
     private suspend fun ForumOceanWeb.testQuestion() {
         val questionId = createQuestion(
             Content.Question(
-                text = "問答", multiMedia = listOf(), anonymous = Any(), commodityTags = null
+                text = "問答", multiMedia = listOf(), anonymous = Any(), commodityTags = null, topics = null
             )
         ).getOrNull()?.articleId
 
@@ -306,9 +318,9 @@ class ForumOceanServiceCase : ServiceCase {
         val groupId = createGroup("測試用社團名稱").getOrNull()?.groupId
         groupId?.apply {
             getGroup(this).logResponse(TAG)
-            getUserOwnGroup(setting.identityToken.getMemberId().toLong()).logResponse(TAG)
-            getMemberManagedGroups(setting.identityToken.getMemberId().toLong()).logResponse(TAG)
-            getMemberBelongGroups(setting.identityToken.getMemberId().toLong()).logResponse(TAG)
+            getUserOwnGroup(setting.identityToken.getMemberId().toLong(),0,20).logResponse(TAG)
+            getMemberManagedGroups(setting.identityToken.getMemberId().toLong(),0,20).logResponse(TAG)
+            getMemberBelongGroups(setting.identityToken.getMemberId().toLong(),0,20).logResponse(TAG)
             getMemberJoinAnyGroups(setting.identityToken.getMemberId().toLong()).logResponse(TAG)
             updateGroup(
                 this,
@@ -334,7 +346,7 @@ class ForumOceanServiceCase : ServiceCase {
 
             getOfficialSubscribedCount(firstBotId).logResponse(TAG)
             getSubscribedCount(memberId).logResponse(TAG)
-            getSubscribed(memberId).logResponse(TAG)
+            getSubscribed(memberId,0,20).logResponse(TAG)
 
             unsubscribe(firstBotId).logResponse(TAG)
             unsubscribeAll().logResponse(TAG)
@@ -370,7 +382,7 @@ class ForumOceanServiceCase : ServiceCase {
             user1.changeUser(setting)
 
             if (groupArticleId != null) {
-                deleteGroupArticle(groupArticleId).logResponse(TAG)
+                deleteArticle(groupArticleId).logResponse(TAG)
             }
 
             updateGroup(
@@ -383,7 +395,7 @@ class ForumOceanServiceCase : ServiceCase {
 
             user1.changeUser(setting)
             getMembers(this,0,200,true).logResponse(TAG)
-            val needApprovalId = getApprovals(this).getOrNull()?.firstOrNull()?.memberId
+            val needApprovalId = getApprovals(this,0,20).getOrNull()?.firstOrNull()?.memberId
             needApprovalId?.let {
                 approval(this, needApprovalId, true).logResponse(TAG)
                 changeGroupMemberPosition(
@@ -434,7 +446,8 @@ class ForumOceanServiceCase : ServiceCase {
                 multiMedia = null,
                 commodityTags = null,
                 voteOptions = null,
-                voteMinutes = null
+                voteMinutes = null,
+                topics = null
             )
         ).getOrNull()?.articleId
 
@@ -458,7 +471,8 @@ class ForumOceanServiceCase : ServiceCase {
                 multiMedia = null,
                 commodityTags = null,
                 voteOptions = listOf("A選項", "B選項"),
-                voteMinutes = 5
+                voteMinutes = 5,
+                topics = null
             )
         ).getOrNull()?.articleId
 
@@ -531,7 +545,7 @@ class ForumOceanServiceCase : ServiceCase {
 
             user1.changeUser(setting)
 
-            getApprovals(groupId).logResponse(TAG)
+            getApprovals(groupId,0,20).logResponse(TAG)
             approval(groupId, user2MemberId, true).logResponse(TAG)
 
             changeGroupMemberPosition(
@@ -594,7 +608,8 @@ class ForumOceanServiceCase : ServiceCase {
             multiMedia = listOf(),
             commodityTags = listOf(),
             voteOptions = listOf(),
-            voteMinutes = null
+            voteMinutes = null,
+            topics = null
         )).logResponse(TAG){
             articleId = it.articleId
         }

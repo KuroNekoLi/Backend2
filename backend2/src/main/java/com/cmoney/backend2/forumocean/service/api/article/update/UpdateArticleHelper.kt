@@ -1,6 +1,5 @@
 package com.cmoney.backend2.forumocean.service.api.article.update
 
-import com.cmoney.backend2.forumocean.service.api.variable.request.commoditytag.CommodityTag
 import com.cmoney.backend2.forumocean.service.api.variable.request.mediatype.MediaType
 import com.google.gson.annotations.SerializedName
 
@@ -41,6 +40,14 @@ class UpdateArticleHelper : IUpdateArticleHelper {
     }
 
     /**
+     * 刪除標籤
+     *
+     */
+    fun deleteTopics(){
+        deletePropertyList.add(DeleteArticleProperty.Topics)
+    }
+
+    /**
      * 建立修改文章的requestBody
      *
      * @return
@@ -52,8 +59,8 @@ class UpdateArticleHelper : IUpdateArticleHelper {
     /**
      * 可編輯文章 為了做為修改文章的output
      *
-     * @property text
-     * @property multiMedia
+     * @property text 內文
+     * @property multiMedia 多媒體
      */
     private inner class EditArticle(
         @SerializedName("text")
