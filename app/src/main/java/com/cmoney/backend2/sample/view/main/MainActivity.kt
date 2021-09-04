@@ -125,7 +125,8 @@ class MainActivity : AppCompatActivity() {
 //                TrialServiceCase(),
 //                VirtualAssetsServiceCase(),
 //                CrmServiceCase(),
-//                CustomGroup2ServiceCase()
+//                CustomGroup2ServiceCase(),
+//                    UserBehaviorServiceCase()
             ).map { serviceCase ->
                 async {
                     serviceCase.testAll()
