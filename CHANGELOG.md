@@ -1,4 +1,13 @@
-#  (2021-08-23)
+#  (2021-09-04)
+
+
+
+# [4.5.0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/4.4.0...4.5.0) (2021-09-04)
+
+
+### Features
+
+* 新增使用者分析API ([45661cc](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/45661ccaab4eee60f2fc6682ddf848885ed41551))
 
 
 
