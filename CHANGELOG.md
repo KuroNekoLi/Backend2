@@ -2,6 +2,15 @@
 
 
 
+## [4.5.1](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/4.5.0...4.5.1) (2021-09-04)
+
+
+### Bug Fixes
+
+* 修正UserBehavior沒加入Proguard ([0239681](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/0239681ef32fd4c22863e3251067f60a538523fa))
+
+
+
 # [4.5.0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/4.4.0...4.5.0) (2021-09-04)
 
 
