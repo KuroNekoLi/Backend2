@@ -19,5 +19,14 @@ data class Note(
     @SerializedName("Title")
     val title: String?,
     @SerializedName("ViewCount")
-    val viewCount: Int?
-)
+    val viewCount: Int?,
+    @SerializedName("Tags")
+    val tags: List<Tag>
+) {
+    data class Tag(
+        @SerializedName("Id")
+        val id: Long?,
+        @SerializedName("Name")
+        val name: String?
+    )
+}
