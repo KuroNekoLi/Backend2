@@ -5,6 +5,7 @@ import com.cmoney.backend2.forumocean.service.api.article.create.CreateArticleRe
 import com.cmoney.backend2.forumocean.service.api.article.create.variable.Content
 import com.cmoney.backend2.forumocean.service.api.article.createquestion.CreateQuestionResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.update.UpdateArticleRequestBody
+import com.cmoney.backend2.forumocean.service.api.channel.getchannelsarticlebyweight.GetChannelsArticleByWeightRequestBody
 import com.cmoney.backend2.forumocean.service.api.channel.getmemberstatistics.GetMemberStatisticsResponseBody
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentRequestBody
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBody
@@ -179,10 +180,10 @@ interface ForumOceanService {
     ) : Response<List<GetMemberStatisticsResponseBody>>
 
     @RecordApi
-    @GET("ForumOcean/api/Channel/GetChannelsArticleByWeight")
+    @POST("ForumOcean/api/Channel/GetChannelsArticleByWeight")
     suspend fun getChannelsArticleByWeight(
         @Header("Authorization") authorization: String,
-        @Query("channelNames") channelNameList: String,
+        @Body channelNameList: GetChannelsArticleByWeightRequestBody,
         @Query("startScore") startScore: Long,
         @Query("count") count: Int
     ): Response<List<ArticleResponseBody.UnknownArticleResponseBody>>

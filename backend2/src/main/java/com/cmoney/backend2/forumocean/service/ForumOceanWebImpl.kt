@@ -11,11 +11,10 @@ import com.cmoney.backend2.forumocean.service.api.article.create.variable.Conten
 import com.cmoney.backend2.forumocean.service.api.article.createquestion.CreateQuestionResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.update.IUpdateArticleHelper
 import com.cmoney.backend2.forumocean.service.api.channel.channelname.IChannelNameBuilder
-import com.cmoney.backend2.forumocean.service.api.channel.channelname.IChannelNameBuilder.Companion.createChannelNameList
+import com.cmoney.backend2.forumocean.service.api.channel.getchannelsarticlebyweight.GetChannelsArticleByWeightRequestBody
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentRequestBody
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.comment.update.IUpdateCommentHelper
-import com.cmoney.backend2.forumocean.service.api.comment.update.UpdateCommentHelper
 import com.cmoney.backend2.forumocean.service.api.group.create.CreateGroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.getapprovals.GroupPendingApproval
 import com.cmoney.backend2.forumocean.service.api.group.getmember.GroupMember
@@ -191,7 +190,7 @@ class ForumOceanWebImpl(
         kotlin.runCatching {
             service.getChannelsArticleByWeight(
                 authorization = setting.accessToken.createAuthorizationBearer(),
-                channelNameList = channelNameBuilderList.createChannelNameList(),
+                channelNameList = GetChannelsArticleByWeightRequestBody(channelNameBuilderList.map { it.create() }),
                 startScore = weight,
                 count = count
             ).checkResponseBody(jsonParser)
