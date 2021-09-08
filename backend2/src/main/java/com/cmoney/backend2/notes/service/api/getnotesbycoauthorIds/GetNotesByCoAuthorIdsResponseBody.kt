@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 class GetNotesByCoAuthorIdsResponseBody(
     @SerializedName("Notes")
     val notes: List<Note?>?
-){
+) {
     data class Note(
         @SerializedName("NoteId")
         val noteId: Long?,
@@ -20,6 +20,15 @@ class GetNotesByCoAuthorIdsResponseBody(
         @SerializedName("Price")
         val price: Int?,
         @SerializedName("CoAuthorName")
-        val coAuthorName: String?
-    )
+        val coAuthorName: String?,
+        @SerializedName("Tags")
+        val tags: List<Tag>
+    ) {
+        data class Tag(
+            @SerializedName("Id")
+            val id: Long?,
+            @SerializedName("Name")
+            val name: String?
+        )
+    }
 }

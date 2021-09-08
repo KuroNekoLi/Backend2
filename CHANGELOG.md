@@ -1,3 +1,15 @@
+#  (2021-09-08)
+
+
+
+# [4.6.0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/4.5.1...4.6.0) (2021-09-08)
+
+
+### Features
+
+* 新增 Note 服務回應的 tag 欄位([fa1835bb](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commit/fa1835bbe92a3d7354e251c9f3e8b6ed186fcfaa))
+
+
 #  (2021-09-04)
 
 
