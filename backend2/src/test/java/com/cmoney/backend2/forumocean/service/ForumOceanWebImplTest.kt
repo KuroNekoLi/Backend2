@@ -18,6 +18,7 @@ import com.cmoney.backend2.forumocean.service.api.group.update.UpdateGroupReques
 import com.cmoney.backend2.forumocean.service.api.official.get.OfficialChannelInfo
 import com.cmoney.backend2.forumocean.service.api.officialsubscriber.getofficialsubscribedcount.GetOfficialSubscribedCountResponseBody
 import com.cmoney.backend2.forumocean.service.api.officialsubscriber.getsubscribedcount.GetSubscribedCountResponseBody
+import com.cmoney.backend2.forumocean.service.api.relationship.getdonate.DonateInfo
 import com.cmoney.backend2.forumocean.service.api.report.create.ReasonType
 import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
 import com.cmoney.backend2.forumocean.service.api.variable.request.GroupPosition
@@ -81,7 +82,8 @@ class ForumOceanWebImplTest {
             multiMedia = null,
             commodityTags = null,
             voteOptions = null,
-            voteMinutes = null
+            voteMinutes = null,
+            topics = null
         )
         coEvery {
             forumOceanService.createArticle(
@@ -132,7 +134,8 @@ class ForumOceanWebImplTest {
             commodityTags = null,
             voteOptions = null,
             voteMinutes = null,
-            sharedPostsArticleId = 13243543
+            sharedPostsArticleId = 13243543,
+            topics = null
         )
         coEvery {
             forumOceanService.createArticle(
@@ -172,7 +175,8 @@ class ForumOceanWebImplTest {
             text = "發表問答",
             multiMedia = null,
             commodityTags = null,
-            anonymous = null
+            anonymous = null,
+            topics = null
         )
         coEvery {
             forumOceanService.createQuestion(
@@ -914,19 +918,21 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.getArticleDonate(
                 authorization = any(),
-                articleId = any()
+                articleId = any(),
+                offset = any(),
+                fetch = any()
             )
         } returns Response.success(
-            mapOf(
-                Pair<Long?, Int?>(67, 66),
-                Pair<Long?, Int?>(68, 1),
-                Pair<Long?, Int?>(69, 13)
+            listOf(
+                DonateInfo(memberId = 1000, donateValue = 10),
+                DonateInfo(memberId = 1001, donateValue = 1),
+                DonateInfo(memberId = 1002, donateValue = 100)
             )
         )
-        val result = service.getArticleDonate(10101)
+        val result = service.getArticleDonate(10101,0,20)
         assertThat(result.isSuccess)
         assertThat(result.getOrThrow()).hasSize(3)
-        assertThat(result.getOrThrow()[67]).isEqualTo(66)
+        assertThat(result.getOrThrow()[2].donateValue).isEqualTo(100)
     }
 
     @ExperimentalCoroutinesApi
@@ -948,7 +954,8 @@ class ForumOceanWebImplTest {
                 name = "社團名稱",
                 ownerId = null,
                 searchable = null,
-                memberCount = null
+                memberCount = null,
+                groupPosition = null
             )
         )
         val result = service.getGroup(groupId)
@@ -962,7 +969,9 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.getUserOwnGroup(
                 authorization = any(),
-                ownerId = any()
+                ownerId = any(),
+                offset = any(),
+                fetch = any()
             )
         } returns Response.success(
             listOf(
@@ -975,7 +984,8 @@ class ForumOceanWebImplTest {
                     name = null,
                     ownerId = null,
                     searchable = null,
-                    memberCount = null
+                    memberCount = null,
+                    groupPosition = null
                 ),
                 GroupResponseBody(
                     description = null,
@@ -986,11 +996,12 @@ class ForumOceanWebImplTest {
                     name = null,
                     ownerId = null,
                     searchable = null,
-                    memberCount = null
+                    memberCount = null,
+                    groupPosition = null
                 )
             )
         )
-        val result = service.getUserOwnGroup(1321321)
+        val result = service.getUserOwnGroup(1321321,0,20)
         assertThat(result.isSuccess)
         assertThat(result.getOrThrow()).hasSize(2)
     }
@@ -1001,7 +1012,9 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.getMemberManagedGroups(
                     authorization = any(),
-                    managerId = any()
+                    managerId = any(),
+                    offset = any(),
+                    fetch = any()
             )
         } returns Response.success(
                 listOf(
@@ -1014,11 +1027,12 @@ class ForumOceanWebImplTest {
                                 name = null,
                                 ownerId = null,
                                 searchable = null,
-                                memberCount = null
+                                memberCount = null,
+                                groupPosition = null
                         )
                 )
         )
-        val result = service.getMemberManagedGroups(1)
+        val result = service.getMemberManagedGroups(1,0,20)
         assertThat(result.isSuccess).isTrue()
         assertThat(result.getOrThrow().first().id).isEqualTo(1)
     }
@@ -1029,7 +1043,9 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.getMemberBelongGroups(
                 authorization = any(),
-                memberId = any()
+                memberId = any(),
+                offset = any(),
+                fetch = any()
             )
         } returns Response.success(
             listOf(
@@ -1042,11 +1058,12 @@ class ForumOceanWebImplTest {
                     name = null,
                     ownerId = null,
                     searchable = null,
-                    memberCount = null
+                    memberCount = null,
+                    groupPosition = null
                 )
             )
         )
-        val result = service.getMemberBelongGroups(1231321)
+        val result = service.getMemberBelongGroups(1231321,0,20)
         assertThat(result.isSuccess)
         assertThat(result.getOrThrow()).hasSize(1)
     }
@@ -1180,7 +1197,9 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.getApprovals(
                 authorization = any(),
-                groupId = any()
+                groupId = any(),
+                offset = any(),
+                fetch = any()
             )
         } returns Response.success(
             listOf(
@@ -1192,7 +1211,7 @@ class ForumOceanWebImplTest {
                 )
             )
         )
-        val result = service.getApprovals(1321684)
+        val result = service.getApprovals(1321684,0,20)
         assertThat(result.isSuccess)
         assertThat(result.getOrThrow()).hasSize(2)
     }
@@ -1347,12 +1366,14 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.getSubscribed(
                 authorization = any(),
-                memberId = any()
+                memberId = any(),
+                offset = any()
+                , fetch = any()
             )
         } returns Response.success(
             listOf(1, 2, 3, 4, 5, 6)
         )
-        val result = service.getSubscribed(21321)
+        val result = service.getSubscribed(21321,0,20)
         assertThat(result.isSuccess)
         assertThat(result.getOrThrow()).hasSize(6)
     }
