@@ -67,7 +67,8 @@ class NotesWebImplTest {
                         0,
                         0,
                         0,
-                        ""
+                        "",
+                        emptyList()
                     )
                 )
             )
