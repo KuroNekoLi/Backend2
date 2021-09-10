@@ -18,6 +18,10 @@ import com.cmoney.backend2.forumocean.service.api.group.update.UpdateGroupReques
 import com.cmoney.backend2.forumocean.service.api.official.get.OfficialChannelInfo
 import com.cmoney.backend2.forumocean.service.api.officialsubscriber.getofficialsubscribedcount.GetOfficialSubscribedCountResponseBody
 import com.cmoney.backend2.forumocean.service.api.officialsubscriber.getsubscribedcount.GetSubscribedCountResponseBody
+import com.cmoney.backend2.forumocean.service.api.rank.getcommodityrank.GetCommodityRankResponseBody
+import com.cmoney.backend2.forumocean.service.api.rank.getexpertmemberrank.GetExpertMemberRankResponseBody
+import com.cmoney.backend2.forumocean.service.api.rank.getfansmemberrank.FansMemberRankResponseBody
+import com.cmoney.backend2.forumocean.service.api.rank.getsolutionexpertrank.SolutionExpertRankResponseBody
 import com.cmoney.backend2.forumocean.service.api.relationship.getdonate.DonateInfo
 import com.cmoney.backend2.forumocean.service.api.relationship.getrelationshipwithme.RelationshipWithMe
 import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
@@ -637,4 +641,91 @@ interface ForumOceanService {
         @Header("Authorization") authorization: String,
         @Path("articleId") articleId: Long
     ): Response<List<VoteInfo>>
+
+    /**
+     * 取得個股排行(不含美股)
+     */
+    @RecordApi
+    @GET("ForumOcean/api/Rank/Commodity")
+    suspend fun getCommodityRank(
+        @Header("Authorization") authorization: String,
+        @Query("offset") offset : Int,
+        @Query("fetch") fetch : Int
+    ): Response<List<GetCommodityRankResponseBody>>
+
+    /**
+     * 取得美股排行
+     */
+    @RecordApi
+    @GET("ForumOcean/api/Rank/USCommodity")
+    suspend fun getUSCommodityRank(
+        @Header("Authorization") authorization: String,
+        @Query("offset") offset : Int,
+        @Query("fetch") fetch : Int
+    ): Response<List<GetCommodityRankResponseBody>>
+
+    /**
+     * 取得達人排行
+     */
+    @RecordApi
+    @GET("ForumOcean/api/Rank/ExpertMember")
+    suspend fun getExpertMemberRank(
+        @Header("Authorization") authorization: String,
+        @Query("offset") offset : Int,
+        @Query("fetch") fetch : Int
+    ): Response<List<GetExpertMemberRankResponseBody>>
+
+    /**
+     * 取得指定達人排行
+     */
+    @RecordApi
+    @GET("ForumOcean/api/Rank/SpecificExpertMemberRanks")
+    suspend fun getSpecificExpertMemberRank(
+        @Query("Authorization") authorization: String,
+        @Query("creatorIds")creatorIds:String
+    ): Response<List<GetExpertMemberRankResponseBody>>
+
+
+    /**
+     * 取得粉絲成長達人排行
+     */
+    @RecordApi
+    @GET("ForumOcean/api/Rank/MemberFansRank")
+    suspend fun getMemberFansRank(
+        @Header("Authorization") authorization: String,
+        @Query("offset") offset : Int,
+        @Query("fetch") fetch : Int
+    ): Response<List<FansMemberRankResponseBody>>
+
+    /**
+     * 取得指定粉絲成長達人排行
+     */
+    @RecordApi
+    @GET("ForumOcean/api/Rank/SpecificMemberFansRank")
+    suspend fun getSpecificMemberFansRank(
+        @Header("Authorization") authorization: String,
+        @Query("creatorIds")creatorIds:String
+    ): Response<List<FansMemberRankResponseBody>>
+
+
+    /**
+     * 取得解題達人排行
+     */
+    @RecordApi
+    @GET("ForumOcean/api/Rank/SolutionExpert")
+    suspend fun getSolutionExpertRank(
+        @Header("Authorization") authorization: String,
+        @Query("offset") offset : Int,
+        @Query("fetch") fetch : Int
+    ): Response<List<SolutionExpertRankResponseBody>>
+
+    /**
+     * 取得指定解題達人排行
+     */
+    @RecordApi
+    @GET("ForumOcean/api/Rank/SpecificSolutionExpert")
+    suspend fun getSpecificSolutionExpertRank(
+        @Header("Authorization") authorization: String,
+        @Query("creatorIds")creatorIds:String
+    ): Response<List<SolutionExpertRankResponseBody>>
 }

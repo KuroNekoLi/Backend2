@@ -18,6 +18,10 @@ import com.cmoney.backend2.forumocean.service.api.group.update.UpdateGroupReques
 import com.cmoney.backend2.forumocean.service.api.official.get.OfficialChannelInfo
 import com.cmoney.backend2.forumocean.service.api.officialsubscriber.getofficialsubscribedcount.GetOfficialSubscribedCountResponseBody
 import com.cmoney.backend2.forumocean.service.api.officialsubscriber.getsubscribedcount.GetSubscribedCountResponseBody
+import com.cmoney.backend2.forumocean.service.api.rank.getcommodityrank.GetCommodityRankResponseBody
+import com.cmoney.backend2.forumocean.service.api.rank.getexpertmemberrank.GetExpertMemberRankResponseBody
+import com.cmoney.backend2.forumocean.service.api.rank.getfansmemberrank.FansMemberRankResponseBody
+import com.cmoney.backend2.forumocean.service.api.rank.getsolutionexpertrank.SolutionExpertRankResponseBody
 import com.cmoney.backend2.forumocean.service.api.relationship.getdonate.DonateInfo
 import com.cmoney.backend2.forumocean.service.api.report.create.ReasonType
 import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
@@ -1651,6 +1655,235 @@ class ForumOceanWebImplTest {
             )
         )
         val result = service.getCurrentVote(1324324)
+        assertThat(result.isSuccess)
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `getCommodityRank_取得個股排行結果成功測試`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getCommodityRank(
+                authorization = any(),
+                offset = any(),
+                fetch = any()
+            )
+        } returns Response.success(
+            listOf(
+                GetCommodityRankResponseBody(
+                    commodityKey = "7777",
+                    score = 777,
+                    ranking = 1,
+                    lastRanking = 10
+                ),
+                GetCommodityRankResponseBody(
+                    commodityKey = "8888",
+                    score = 888,
+                    ranking = 2,
+                    lastRanking = 20
+                )
+            )
+        )
+        val result = service.getCommodityRank(0,10)
+        assertThat(result.isSuccess)
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `getUSCommodityRank_取得美股排行結果成功測試`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getUSCommodityRank(
+                authorization = any(),
+                offset = any(),
+                fetch = any()
+            )
+        } returns Response.success(
+            listOf(
+                GetCommodityRankResponseBody(
+                    commodityKey = "7777",
+                    score = 777,
+                    ranking = 1,
+                    lastRanking = 10
+                ),
+                GetCommodityRankResponseBody(
+                    commodityKey = "8888",
+                    score = 888,
+                    ranking = 2,
+                    lastRanking = 20
+                )
+            )
+        )
+        val result = service.getUSCommodityRank(0,10)
+        assertThat(result.isSuccess)
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `getExpertMemberRank_取得達人排行結果成功測試`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getExpertMemberRank(
+                authorization = any(),
+                offset = any(),
+                fetch = any()
+            )
+        } returns Response.success(
+            listOf(
+                GetExpertMemberRankResponseBody(
+                    creatorId = 7777,
+                    score = 777,
+                    ranking = 1,
+                    lastRanking = 10
+                ),
+                GetExpertMemberRankResponseBody(
+                    creatorId = 8888,
+                    score = 888,
+                    ranking = 2,
+                    lastRanking = 20
+                )
+            )
+        )
+        val result = service.getExpertMemberRank(0, 10)
+        assertThat(result.isSuccess)
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `getSpecificExpertMemberRank_取得指定達人排行結果成功測試`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getSpecificExpertMemberRank(
+                authorization = any(),
+                creatorIds = any()
+            )
+        } returns Response.success(
+            listOf(
+                GetExpertMemberRankResponseBody(
+                    creatorId = 7777,
+                    score = 777,
+                    ranking = 1,
+                    lastRanking = 10
+                ),
+                GetExpertMemberRankResponseBody(
+                    creatorId = 8888,
+                    score = 888,
+                    ranking = 2,
+                    lastRanking = 20
+                )
+            )
+        )
+        val result = service.getSpecificExpertMemberRank("7777,8888")
+        assertThat(result.isSuccess)
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `getMemberFansRank_取得粉絲成長達人排行結果成功測試`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getMemberFansRank(
+                authorization = any(),
+                offset = any(),
+                fetch = any()
+            )
+        } returns Response.success(
+            listOf(
+                FansMemberRankResponseBody(
+                    followMemberId = 7777,
+                    fansIncreaseCount = 777,
+                    ranking = 1,
+                    lastRanking = 10
+                ),
+                FansMemberRankResponseBody(
+                    followMemberId = 8888,
+                    fansIncreaseCount = 888,
+                    ranking = 2,
+                    lastRanking = 20
+                )
+            )
+        )
+        val result = service.getMemberFansRank(0, 10)
+        assertThat(result.isSuccess)
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `getSpecificMemberFansRank_取得指定粉絲成長達人排行結果成功測試`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getSpecificMemberFansRank(
+                authorization = any(),
+                creatorIds = any()
+            )
+        } returns Response.success(
+            listOf(
+                FansMemberRankResponseBody(
+                    followMemberId = 7777,
+                    fansIncreaseCount = 777,
+                    ranking = 1,
+                    lastRanking = 10
+                ),
+                FansMemberRankResponseBody(
+                    followMemberId = 8888,
+                    fansIncreaseCount = 888,
+                    ranking = 2,
+                    lastRanking = 20
+                )
+            )
+        )
+        val result = service.getSpecificMemberFansRank("7777,8888")
+        assertThat(result.isSuccess)
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `getSolutionExpertRank_取得解題達人排行結果成功測試`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getSolutionExpertRank(
+                authorization = any(),
+                offset = any(),
+                fetch = any()
+            )
+        } returns Response.success(
+            listOf(
+                SolutionExpertRankResponseBody(
+                    followMemberId = 7777,
+                    bestSolutionScore = 777,
+                    ranking = 1,
+                    lastRanking = 10
+                ),
+                SolutionExpertRankResponseBody(
+                    followMemberId = 8888,
+                    bestSolutionScore = 888,
+                    ranking = 2,
+                    lastRanking = 20
+                )
+            )
+        )
+        val result = service.getSolutionExpertRank(0, 10)
+        assertThat(result.isSuccess)
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `getSpecificMemberFansRank_取得指定解題達人排行結果成功測試`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getSpecificSolutionExpertRank(
+                authorization = any(),
+                creatorIds = any()
+            )
+        } returns Response.success(
+            listOf(
+                SolutionExpertRankResponseBody(
+                    followMemberId = 7777,
+                    bestSolutionScore = 777,
+                    ranking = 1,
+                    lastRanking = 10
+                ),
+                SolutionExpertRankResponseBody(
+                    followMemberId = 8888,
+                    bestSolutionScore = 888,
+                    ranking = 2,
+                    lastRanking = 20
+                )
+            )
+        )
+        val result = service.getSpecificSolutionExpertRank("7777,8888")
         assertThat(result.isSuccess)
     }
 }

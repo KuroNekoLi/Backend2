@@ -19,6 +19,10 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.
 import com.cmoney.backend2.forumocean.service.api.official.get.OfficialChannelInfo
 import com.cmoney.backend2.forumocean.service.api.officialsubscriber.getofficialsubscribedcount.GetOfficialSubscribedCountResponseBody
 import com.cmoney.backend2.forumocean.service.api.officialsubscriber.getsubscribedcount.GetSubscribedCountResponseBody
+import com.cmoney.backend2.forumocean.service.api.rank.getcommodityrank.GetCommodityRankResponseBody
+import com.cmoney.backend2.forumocean.service.api.rank.getexpertmemberrank.GetExpertMemberRankResponseBody
+import com.cmoney.backend2.forumocean.service.api.rank.getfansmemberrank.FansMemberRankResponseBody
+import com.cmoney.backend2.forumocean.service.api.rank.getsolutionexpertrank.SolutionExpertRankResponseBody
 import com.cmoney.backend2.forumocean.service.api.relationship.getdonate.DonateInfo
 import com.cmoney.backend2.forumocean.service.api.relationship.getrelationshipwithme.RelationshipWithMe
 import com.cmoney.backend2.forumocean.service.api.report.create.ReasonType
@@ -643,6 +647,59 @@ interface ForumOceanWeb {
     //endregion
 
     //region Rank 排行榜
+
+    /**
+     * 取得個股排行(不含美股)
+     * @param offset 跳過的數量
+     * @param fetch 拿取數量
+     */
+    suspend fun getCommodityRank(offset : Int,fetch : Int):Result<List<GetCommodityRankResponseBody>>
+
+    /**
+     * 取得美股排行
+     * @param offset 跳過的數量
+     * @param fetch 拿取數量
+     */
+    suspend fun getUSCommodityRank(offset : Int,fetch : Int):Result<List<GetCommodityRankResponseBody>>
+
+    /**
+     * 取得達人排行
+     * @param offset 跳過的數量
+     * @param fetch 拿取數量
+     */
+    suspend fun getExpertMemberRank(offset : Int,fetch : Int):Result<List<GetExpertMemberRankResponseBody>>
+
+    /**
+     * 取得指定達人排行
+     * @param creatorIds memberIds(用逗號分隔)
+     */
+    suspend fun getSpecificExpertMemberRank(creatorIds:String):Result<List<GetExpertMemberRankResponseBody>>
+
+    /**
+     * 取得粉絲成長達人排行
+     * @param offset 跳過的數量
+     * @param fetch 拿取數量
+     */
+    suspend fun getMemberFansRank(offset : Int,fetch : Int):Result<List<FansMemberRankResponseBody>>
+
+    /**
+     * 取得指定粉絲成長達人排行
+     * @param creatorIds memberIds(用逗號分隔)
+     */
+    suspend fun getSpecificMemberFansRank(creatorIds:String):Result<List<FansMemberRankResponseBody>>
+
+    /**
+     * 取得解題達人排行
+     * @param offset 跳過的數量
+     * @param fetch 拿取數量
+     */
+    suspend fun getSolutionExpertRank(offset : Int,fetch : Int):Result<List<SolutionExpertRankResponseBody>>
+
+    /**
+     * 取得指定解題達人排行
+     * @param creatorIds memberIds(用逗號分隔)
+     */
+    suspend fun getSpecificSolutionExpertRank(creatorIds:String):Result<List<SolutionExpertRankResponseBody>>
 
     //endregion
 

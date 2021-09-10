@@ -23,6 +23,10 @@ import com.cmoney.backend2.forumocean.service.api.group.update.UpdateGroupReques
 import com.cmoney.backend2.forumocean.service.api.official.get.OfficialChannelInfo
 import com.cmoney.backend2.forumocean.service.api.officialsubscriber.getofficialsubscribedcount.GetOfficialSubscribedCountResponseBody
 import com.cmoney.backend2.forumocean.service.api.officialsubscriber.getsubscribedcount.GetSubscribedCountResponseBody
+import com.cmoney.backend2.forumocean.service.api.rank.getcommodityrank.GetCommodityRankResponseBody
+import com.cmoney.backend2.forumocean.service.api.rank.getexpertmemberrank.GetExpertMemberRankResponseBody
+import com.cmoney.backend2.forumocean.service.api.rank.getfansmemberrank.FansMemberRankResponseBody
+import com.cmoney.backend2.forumocean.service.api.rank.getsolutionexpertrank.SolutionExpertRankResponseBody
 import com.cmoney.backend2.forumocean.service.api.relationship.getdonate.DonateInfo
 import com.cmoney.backend2.forumocean.service.api.report.create.ReasonType
 import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
@@ -690,6 +694,84 @@ class ForumOceanWebImpl(
             service.unsubscribeAll(
                 authorization = setting.accessToken.createAuthorizationBearer()
             ).handleNoContent(jsonParser)
+        }
+    }
+
+    override suspend fun getCommodityRank(offset : Int,fetch : Int): Result<List<GetCommodityRankResponseBody>>  = withContext(dispatcher.io()) {
+        kotlin.runCatching {
+            service.getCommodityRank(
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                offset= offset,
+                fetch=fetch
+            ).checkResponseBody(jsonParser)
+        }
+    }
+
+    override suspend fun getUSCommodityRank(offset : Int,fetch : Int): Result<List<GetCommodityRankResponseBody>>  = withContext(dispatcher.io()) {
+        kotlin.runCatching {
+            service.getUSCommodityRank(
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                offset= offset,
+                fetch=fetch
+            ).checkResponseBody(jsonParser)
+        }
+    }
+
+    override suspend fun getExpertMemberRank(offset : Int,fetch : Int): Result<List<GetExpertMemberRankResponseBody>>  = withContext(dispatcher.io()){
+        kotlin.runCatching {
+            service.getExpertMemberRank(
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                offset= offset,
+                fetch=fetch
+            ).checkResponseBody(jsonParser)
+        }
+    }
+
+
+    override suspend fun getSpecificExpertMemberRank(creatorIds:String): Result<List<GetExpertMemberRankResponseBody>>  = withContext(dispatcher.io()){
+        kotlin.runCatching {
+            service.getSpecificExpertMemberRank(
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                creatorIds=creatorIds
+            ).checkResponseBody(jsonParser)
+        }
+    }
+
+    override suspend fun getMemberFansRank(offset : Int,fetch : Int): Result<List<FansMemberRankResponseBody>>  = withContext(dispatcher.io()){
+        kotlin.runCatching {
+            service.getMemberFansRank(
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                offset= offset,
+                fetch=fetch
+            ).checkResponseBody(jsonParser)
+        }
+    }
+
+    override suspend fun getSpecificMemberFansRank(creatorIds:String): Result<List<FansMemberRankResponseBody>>  = withContext(dispatcher.io()){
+        kotlin.runCatching {
+            service.getSpecificMemberFansRank(
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                creatorIds=creatorIds
+            ).checkResponseBody(jsonParser)
+        }
+    }
+
+    override suspend fun getSolutionExpertRank(offset : Int,fetch : Int): Result<List<SolutionExpertRankResponseBody>>  = withContext(dispatcher.io()){
+        kotlin.runCatching {
+            service.getSolutionExpertRank(
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                offset= offset,
+                fetch=fetch
+            ).checkResponseBody(jsonParser)
+        }
+    }
+
+    override suspend fun getSpecificSolutionExpertRank(creatorIds:String): Result<List<SolutionExpertRankResponseBody>>  = withContext(dispatcher.io()){
+        kotlin.runCatching {
+            service.getSpecificSolutionExpertRank(
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                creatorIds=creatorIds
+            ).checkResponseBody(jsonParser)
         }
     }
 
