@@ -728,11 +728,11 @@ class ForumOceanWebImpl(
     }
 
 
-    override suspend fun getSpecificExpertMemberRank(creatorIds:String): Result<List<GetExpertMemberRankResponseBody>>  = withContext(dispatcher.io()){
+    override suspend fun getSpecificExpertMemberRank(memeberIds:String): Result<List<GetExpertMemberRankResponseBody>>  = withContext(dispatcher.io()){
         kotlin.runCatching {
             service.getSpecificExpertMemberRank(
                 authorization = setting.accessToken.createAuthorizationBearer(),
-                creatorIds=creatorIds
+                memeberIds=memeberIds
             ).checkResponseBody(jsonParser)
         }
     }
@@ -747,11 +747,11 @@ class ForumOceanWebImpl(
         }
     }
 
-    override suspend fun getSpecificMemberFansRank(creatorIds:String): Result<List<FansMemberRankResponseBody>>  = withContext(dispatcher.io()){
+    override suspend fun getSpecificMemberFansRank(memeberIds:String): Result<List<FansMemberRankResponseBody>>  = withContext(dispatcher.io()){
         kotlin.runCatching {
             service.getSpecificMemberFansRank(
                 authorization = setting.accessToken.createAuthorizationBearer(),
-                creatorIds=creatorIds
+                memeberIds=memeberIds
             ).checkResponseBody(jsonParser)
         }
     }
@@ -766,11 +766,11 @@ class ForumOceanWebImpl(
         }
     }
 
-    override suspend fun getSpecificSolutionExpertRank(creatorIds:String): Result<List<SolutionExpertRankResponseBody>>  = withContext(dispatcher.io()){
+    override suspend fun getSpecificSolutionExpertRank(memeberIds:String): Result<List<SolutionExpertRankResponseBody>>  = withContext(dispatcher.io()){
         kotlin.runCatching {
             service.getSpecificSolutionExpertRank(
                 authorization = setting.accessToken.createAuthorizationBearer(),
-                creatorIds=creatorIds
+                memeberIds=memeberIds
             ).checkResponseBody(jsonParser)
         }
     }

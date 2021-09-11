@@ -1751,7 +1751,7 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.getSpecificExpertMemberRank(
                 authorization = any(),
-                creatorIds = any()
+                memeberIds = any()
             )
         } returns Response.success(
             listOf(
@@ -1808,7 +1808,7 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.getSpecificMemberFansRank(
                 authorization = any(),
-                creatorIds = any()
+                memeberIds = any()
             )
         } returns Response.success(
             listOf(
@@ -1865,7 +1865,7 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.getSpecificSolutionExpertRank(
                 authorization = any(),
-                creatorIds = any()
+                memeberIds = any()
             )
         } returns Response.success(
             listOf(

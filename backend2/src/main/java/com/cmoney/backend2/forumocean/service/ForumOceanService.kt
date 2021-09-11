@@ -681,8 +681,8 @@ interface ForumOceanService {
     @RecordApi
     @GET("ForumOcean/api/Rank/SpecificExpertMemberRanks")
     suspend fun getSpecificExpertMemberRank(
-        @Query("Authorization") authorization: String,
-        @Query("creatorIds")creatorIds:String
+        @Header("Authorization") authorization: String,
+        @Query("memeberIds")memeberIds:String
     ): Response<List<GetExpertMemberRankResponseBody>>
 
 
@@ -704,7 +704,7 @@ interface ForumOceanService {
     @GET("ForumOcean/api/Rank/SpecificMemberFansRank")
     suspend fun getSpecificMemberFansRank(
         @Header("Authorization") authorization: String,
-        @Query("creatorIds")creatorIds:String
+        @Query("memeberIds")memeberIds:String
     ): Response<List<FansMemberRankResponseBody>>
 
 
@@ -726,6 +726,6 @@ interface ForumOceanService {
     @GET("ForumOcean/api/Rank/SpecificSolutionExpert")
     suspend fun getSpecificSolutionExpertRank(
         @Header("Authorization") authorization: String,
-        @Query("creatorIds")creatorIds:String
+        @Query("memeberIds")memeberIds:String
     ): Response<List<SolutionExpertRankResponseBody>>
 }
