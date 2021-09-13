@@ -1842,13 +1842,13 @@ class ForumOceanWebImplTest {
         } returns Response.success(
             listOf(
                 SolutionExpertRankResponseBody(
-                    followMemberId = 7777,
+                    creatorId = 7777,
                     bestSolutionScore = 777,
                     ranking = 1,
                     lastRanking = 10
                 ),
                 SolutionExpertRankResponseBody(
-                    followMemberId = 8888,
+                    creatorId = 8888,
                     bestSolutionScore = 888,
                     ranking = 2,
                     lastRanking = 20
@@ -1870,13 +1870,13 @@ class ForumOceanWebImplTest {
         } returns Response.success(
             listOf(
                 SolutionExpertRankResponseBody(
-                    followMemberId = 7777,
+                    creatorId = 7777,
                     bestSolutionScore = 777,
                     ranking = 1,
                     lastRanking = 10
                 ),
                 SolutionExpertRankResponseBody(
-                    followMemberId = 8888,
+                    creatorId = 8888,
                     bestSolutionScore = 888,
                     ranking = 2,
                     lastRanking = 20
