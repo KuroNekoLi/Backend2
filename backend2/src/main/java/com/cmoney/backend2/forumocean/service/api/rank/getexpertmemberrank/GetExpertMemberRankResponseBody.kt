@@ -14,7 +14,7 @@ data class GetExpertMemberRankResponseBody(
     @SerializedName("creatorId")
     val creatorId :Long?,
     @SerializedName("score")
-    val score : Int?,
+    val score : Double?,
     @SerializedName("ranking")
     val ranking :Int?,
     @SerializedName("lastRanking")

@@ -1729,13 +1729,13 @@ class ForumOceanWebImplTest {
             listOf(
                 GetExpertMemberRankResponseBody(
                     creatorId = 7777,
-                    score = 777,
+                    score = 777.7,
                     ranking = 1,
                     lastRanking = 10
                 ),
                 GetExpertMemberRankResponseBody(
                     creatorId = 8888,
-                    score = 888,
+                    score = 888.8,
                     ranking = 2,
                     lastRanking = 20
                 )
@@ -1757,13 +1757,13 @@ class ForumOceanWebImplTest {
             listOf(
                 GetExpertMemberRankResponseBody(
                     creatorId = 7777,
-                    score = 777,
+                    score = 77.7,
                     ranking = 1,
                     lastRanking = 10
                 ),
                 GetExpertMemberRankResponseBody(
                     creatorId = 8888,
-                    score = 888,
+                    score = 88.8,
                     ranking = 2,
                     lastRanking = 20
                 )
