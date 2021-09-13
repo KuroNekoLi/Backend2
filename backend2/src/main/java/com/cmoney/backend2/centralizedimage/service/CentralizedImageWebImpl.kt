@@ -14,31 +14,29 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 
 class CentralizedImageWebImpl(
-        private val service: CentralizedImageService,
-        private val setting: Setting,
-        private val jsonParser: Gson,
-        private val dispatcher: DispatcherProvider = DefaultDispatcherProvider()
+    private val service: CentralizedImageService,
+    private val setting: Setting,
+    private val jsonParser: Gson,
+    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider()
 ) : CentralizedImageWeb {
-
-    override suspend fun upload(genre: String, subGenre: String, file: File): Result<UploadResponseBody> =
-            withContext(dispatcher.io()) {
-                kotlin.runCatching {
-                    val kb = file.length() / 1024
-                    if (kb > 1024) {
-                        //圖片限制1MB
-                        error("圖片大小限制1MB")
-                    }
-
-                    val requestBody = file.asRequestBody("image/*".toMediaType())
-                    val part = MultipartBody.Part.createFormData("image", file.name, requestBody)
-                    service.upload(
-                            setting.accessToken.createAuthorizationBearer(),
-                            genre,
-                            subGenre,
-                            part
-                    ).checkResponseBody(jsonParser)
+    override suspend fun upload(
+        destination: CentralizedImageWeb.Destination,
+        file: File
+    ): Result<UploadResponseBody> =
+        withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                val kb = file.length() / 1024
+                if (kb > 1024) {
+                    //圖片限制1MB
+                    error("圖片大小限制1MB")
                 }
+                val requestBody = file.asRequestBody("image/*".toMediaType())
+                val part = MultipartBody.Part.createFormData("image", file.name, requestBody)
+                service.upload(
+                    setting.accessToken.createAuthorizationBearer(),
+                    destination.value,
+                    part
+                ).checkResponseBody(jsonParser)
             }
-
-
+        }
 }

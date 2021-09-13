@@ -48,13 +48,14 @@ class CentralizedImageWebImplTest {
         coEvery {
             service.upload(
                     authorization = any(),
-                    genre = any(),
-                    subGenre = any(),
+                    destination = any(),
                     file = any()
             )
         } returns Response.success(UploadResponseBody("publicImageUrl"))
-        val result =
-                webImpl.upload("servicetest", "swagger", getTestFile("src/test/resources/image/maple-leaf-1510431-639x761.jpeg"))
+        val result = webImpl.upload(
+            CentralizedImageWeb.Destination.SERVICETEST_SWAGGER,
+            getTestFile("src/test/resources/image/maple-leaf-1510431-639x761.jpeg")
+        )
         Truth.assertThat(result.isSuccess).isTrue()
         val data = result.getOrThrow()
         Truth.assertThat(data.url).isEqualTo("publicImageUrl")
@@ -65,13 +66,15 @@ class CentralizedImageWebImplTest {
         coEvery {
             service.upload(
                     authorization = any(),
-                    genre = any(),
-                    subGenre = any(),
+                    destination = any(),
                     file = any()
             )
         } returns Response.success(UploadResponseBody("publicImageUrl"))
         val file = getTestFile("src/test/resources/image/maple-leaf-1510431-1279x1523.jpeg")
-        val exception = webImpl.upload("servicetest", "swagger", file).exceptionOrNull()
+        val exception = webImpl.upload(
+            CentralizedImageWeb.Destination.SERVICETEST_SWAGGER,
+            file
+        ).exceptionOrNull()
         Truth.assertThat(exception?.message).isEqualTo("圖片大小限制1MB")
     }
 

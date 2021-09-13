@@ -22,7 +22,10 @@ class CentralizedImageServiceCase() : ServiceCase {
                 }
             }
         }
-        imageWebImpl.upload("servicetest","swagger",mapleFile).logResponse(TAG)
+        imageWebImpl.upload(
+            CentralizedImageWeb.Destination.ATTACHMENT_POST,
+            mapleFile
+        ).logResponse(TAG)
         mapleFile.delete()
         Unit
     }
