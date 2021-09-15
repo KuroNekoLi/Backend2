@@ -436,38 +436,56 @@ class ForumOceanWebImpl(
             }
         }
 
-    override suspend fun getUserOwnGroup(ownId: Long,offset: Int,fetch: Int): Result<List<GroupResponseBody>> =
+    override suspend fun getUserOwnGroup(
+        ownId: Long,
+        offset: Int,
+        fetch: Int,
+        includeAppGroup: Boolean
+    ): Result<List<GroupResponseBody>> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getUserOwnGroup(
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     ownerId = ownId,
                     offset = offset,
-                    fetch = fetch
+                    fetch = fetch,
+                    includeAppGroup = includeAppGroup
                 ).checkResponseBody(jsonParser)
             }
         }
 
-    override suspend fun getMemberManagedGroups(managerId: Long,offset: Int,fetch: Int): Result<List<GroupResponseBody>> =
-            withContext(dispatcher.io()){
-                kotlin.runCatching {
-                    service.getMemberManagedGroups(
-                            authorization = setting.accessToken.createAuthorizationBearer(),
-                            managerId = managerId,
-                            offset = offset,
-                            fetch = fetch
-                    ).checkResponseBody(jsonParser)
-                }
+    override suspend fun getMemberManagedGroups(
+        managerId: Long,
+        offset: Int,
+        fetch: Int,
+        includeAppGroup: Boolean
+    ): Result<List<GroupResponseBody>> =
+        withContext(dispatcher.io()){
+            kotlin.runCatching {
+                service.getMemberManagedGroups(
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    managerId = managerId,
+                    offset = offset,
+                    fetch = fetch,
+                    includeAppGroup = includeAppGroup
+                ).checkResponseBody(jsonParser)
             }
+        }
 
-    override suspend fun getMemberBelongGroups(memberId: Long,offset: Int,fetch: Int): Result<List<GroupResponseBody>> =
+    override suspend fun getMemberBelongGroups(
+        memberId: Long,
+        offset: Int,
+        fetch: Int,
+        includeAppGroup: Boolean
+    ): Result<List<GroupResponseBody>> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getMemberBelongGroups(
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     memberId = memberId,
                     offset = offset,
-                    fetch = fetch
+                    fetch = fetch,
+                    includeAppGroup = includeAppGroup
                 ).checkResponseBody(jsonParser)
             }
         }

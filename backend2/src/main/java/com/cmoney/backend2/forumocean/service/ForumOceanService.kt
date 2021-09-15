@@ -345,7 +345,8 @@ interface ForumOceanService {
         @Header("Authorization") authorization: String,
         @Query("ownerId") ownerId: Long,
         @Query("offset") offset: Int,
-        @Query("fetch") fetch: Int
+        @Query("fetch") fetch: Int,
+        @Query("includeAppGroup") includeAppGroup: Boolean
     ): Response<List<GroupResponseBody>>
 
     @RecordApi
@@ -354,7 +355,8 @@ interface ForumOceanService {
         @Header("Authorization") authorization: String,
         @Query("managerId") managerId: Long,
         @Query("offset") offset: Int,
-        @Query("fetch") fetch: Int
+        @Query("fetch") fetch: Int,
+        @Query("includeAppGroup") includeAppGroup: Boolean
     ): Response<List<GroupResponseBody>>
 
     @RecordApi
@@ -363,7 +365,8 @@ interface ForumOceanService {
         @Header("Authorization") authorization: String,
         @Query("memberId") memberId: Long,
         @Query("offset") offset: Int,
-        @Query("fetch") fetch: Int
+        @Query("fetch") fetch: Int,
+        @Query("includeAppGroup") includeAppGroup: Boolean
     ): Response<List<GroupResponseBody>>
 
     @RecordApi

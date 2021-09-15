@@ -333,7 +333,12 @@ interface ForumOceanWeb {
      * @param ownId 使用者Id
      * @return
      */
-    suspend fun getUserOwnGroup(ownId: Long,offset: Int,fetch: Int): Result<List<GroupResponseBody>>
+    suspend fun getUserOwnGroup(
+        ownId: Long,
+        offset: Int,
+        fetch: Int,
+        includeAppGroup : Boolean = false
+    ): Result<List<GroupResponseBody>>
 
     /**
      * 取得指定使用者管理的所有社團
@@ -341,7 +346,12 @@ interface ForumOceanWeb {
      * @param managerId
      * @return
      */
-    suspend fun getMemberManagedGroups(managerId : Long,offset: Int,fetch: Int) : Result<List<GroupResponseBody>>
+    suspend fun getMemberManagedGroups(
+        managerId : Long,
+        offset: Int,
+        fetch: Int,
+        includeAppGroup : Boolean = false
+    ) : Result<List<GroupResponseBody>>
 
     /**
      * 取得指定使用者加入的所有社團
@@ -349,7 +359,12 @@ interface ForumOceanWeb {
      * @param memberId 使用者Id
      * @return
      */
-    suspend fun getMemberBelongGroups(memberId: Long,offset: Int,fetch: Int): Result<List<GroupResponseBody>>
+    suspend fun getMemberBelongGroups(
+        memberId: Long,
+        offset: Int,
+        fetch: Int,
+        includeAppGroup : Boolean = false
+    ): Result<List<GroupResponseBody>>
 
     /**
      * 取得指定使用者是否加入或擁有任何社團
