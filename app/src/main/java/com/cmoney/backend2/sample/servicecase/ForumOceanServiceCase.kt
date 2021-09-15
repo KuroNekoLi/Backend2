@@ -339,7 +339,7 @@ class ForumOceanServiceCase : ServiceCase {
             val firstBotId = botIdList[0]
             val secondBotId = botIdList[1]
             val memberId = setting.identityToken.getMemberId().toLong()
-            getOfficials(botIdList).logResponse(TAG)
+            getOfficialsByIds(botIdList).logResponse(TAG)
 
             subscribe(firstBotId).logResponse(TAG)
             subscribe(secondBotId).logResponse(TAG)
