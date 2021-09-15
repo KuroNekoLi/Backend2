@@ -16,6 +16,9 @@ import com.cmoney.backend2.forumocean.service.api.group.getapprovals.GroupPendin
 import com.cmoney.backend2.forumocean.service.api.group.getmember.GroupMember
 import com.cmoney.backend2.forumocean.service.api.group.getmemberjoinanygroups.GetMemberJoinAnyGroupsResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.update.UpdateGroupRequestBody
+import com.cmoney.backend2.forumocean.service.api.notify.get.GetNotifyResponseBody
+import com.cmoney.backend2.forumocean.service.api.notify.getcount.GetNotifyCountResponseBody
+import com.cmoney.backend2.forumocean.service.api.notifysetting.NotifyPushSetting
 import com.cmoney.backend2.forumocean.service.api.official.get.OfficialChannelInfo
 import com.cmoney.backend2.forumocean.service.api.officialsubscriber.getofficialsubscribedcount.GetOfficialSubscribedCountResponseBody
 import com.cmoney.backend2.forumocean.service.api.officialsubscriber.getsubscribedcount.GetSubscribedCountResponseBody
@@ -488,6 +491,27 @@ interface ForumOceanService {
     ): Response<Void>
 
     @RecordApi
+    @GET("ForumOcean/api/NotifySetting/GetPushDefaultSetting")
+    suspend fun getPushDefaultSetting(
+        @Header("Authorization") authorization: String
+    ) : Response<List<NotifyPushSetting>>
+
+    @RecordApi
+    @GET("ForumOcean/api/NotifySetting/Get")
+    suspend fun getUserNotifySetting(
+        @Header("Authorization") authorization: String
+    ) : Response<List<NotifyPushSetting>>
+
+    @RecordApi
+    @POST("ForumOcean/api/NotifySetting/Set")
+    suspend fun setNotifySetting(
+        @Header("Authorization") authorization: String,
+        @Query("notifyType") notifyType: String,
+        @Query("subType") subType: String = "",
+        @Query("enable") enable: Boolean
+    ) : Response<Void>
+
+    @RecordApi
     @GET("ForumOcean/api/Official/GetOfficials")
     suspend fun getOfficials(
         @Header("Authorization") authorization: String,
@@ -764,4 +788,25 @@ interface ForumOceanService {
         @Header("Authorization") authorization: String,
         @Query("memeberIds")memeberIds:String
     ): Response<List<SolutionExpertRankResponseBody>>
+
+    @RecordApi
+    @GET("ForumOcean/api/Notify/Get")
+    suspend fun getNotify(
+        @Header("Authorization") authorization: String
+    ) : Response<List<GetNotifyResponseBody>>
+
+    @RecordApi
+    @GET("ForumOcean/api/Notify/GetCount")
+    suspend fun getCount(
+        @Header("Authorization") authorization: String
+    ) : Response<GetNotifyCountResponseBody>
+
+    @RecordApi
+    @POST("ForumOcean/api/Notify/SetRead")
+    suspend fun setRead(
+        @Header("Authorization") authorization: String,
+        @Query("notifyType") notifyType: String,
+        @Query("mergeKey") mergeKey: String,
+        @Query("isNew") isNew: Boolean
+    ) : Response<Void>
 }

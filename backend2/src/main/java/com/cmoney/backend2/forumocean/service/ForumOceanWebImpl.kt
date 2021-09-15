@@ -21,6 +21,9 @@ import com.cmoney.backend2.forumocean.service.api.group.getapprovals.GroupPendin
 import com.cmoney.backend2.forumocean.service.api.group.getmember.GroupMember
 import com.cmoney.backend2.forumocean.service.api.group.getmemberjoinanygroups.GetMemberJoinAnyGroupsResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.update.UpdateGroupRequestBody
+import com.cmoney.backend2.forumocean.service.api.notify.get.GetNotifyResponseBody
+import com.cmoney.backend2.forumocean.service.api.notify.getcount.GetNotifyCountResponseBody
+import com.cmoney.backend2.forumocean.service.api.notifysetting.NotifyPushSetting
 import com.cmoney.backend2.forumocean.service.api.official.get.OfficialChannelInfo
 import com.cmoney.backend2.forumocean.service.api.officialsubscriber.getofficialsubscribedcount.GetOfficialSubscribedCountResponseBody
 import com.cmoney.backend2.forumocean.service.api.officialsubscriber.getsubscribedcount.GetSubscribedCountResponseBody
@@ -433,6 +436,74 @@ class ForumOceanWebImpl(
                     offset = offset,
                     fetch = fetch
                 ).checkResponseBody(jsonParser)
+            }
+        }
+
+    override suspend fun getNotify(): Result<List<GetNotifyResponseBody>> =
+        withContext(dispatcher.io()){
+            kotlin.runCatching {
+                service.getNotify(
+                    authorization = setting.accessToken.createAuthorizationBearer()
+                ).checkResponseBody(jsonParser)
+            }
+        }
+
+    override suspend fun getNotifyCount(): Result<GetNotifyCountResponseBody> =
+        withContext(dispatcher.io()){
+            kotlin.runCatching {
+                service.getCount(
+                    authorization = setting.accessToken.createAuthorizationBearer()
+                ).checkResponseBody(jsonParser)
+            }
+        }
+
+    override suspend fun setNotifyRead(
+        notifyType: String,
+        mergeKey: String,
+        isNew: Boolean
+    ): Result<Unit> =
+        withContext(dispatcher.io()){
+            kotlin.runCatching {
+                service.setRead(
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    notifyType = notifyType,
+                    mergeKey = mergeKey,
+                    isNew = isNew
+                ).handleNoContent(jsonParser)
+            }
+        }
+
+    override suspend fun getPushDefaultSetting(): Result<List<NotifyPushSetting>> =
+        withContext(dispatcher.io()){
+            kotlin.runCatching {
+                service.getPushDefaultSetting(
+                    authorization = setting.accessToken.createAuthorizationBearer()
+                ).checkResponseBody(jsonParser)
+            }
+        }
+
+    override suspend fun getUserNotifySetting(): Result<List<NotifyPushSetting>> =
+        withContext(dispatcher.io()){
+            kotlin.runCatching {
+                service.getUserNotifySetting(
+                    authorization = setting.accessToken.createAuthorizationBearer()
+                ).checkResponseBody(jsonParser)
+            }
+        }
+
+    override suspend fun setNotifySetting(
+        notifyType: String,
+        subType: String,
+        enable: Boolean
+    ): Result<Unit> =
+        withContext(dispatcher.io()){
+            kotlin.runCatching {
+                service.setNotifySetting(
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    notifyType = notifyType,
+                    subType = subType,
+                    enable = enable
+                ).handleNoContent(jsonParser)
             }
         }
 

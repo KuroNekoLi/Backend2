@@ -5,17 +5,18 @@ import com.cmoney.backend2.forumocean.service.api.article.create.variable.Conten
 import com.cmoney.backend2.forumocean.service.api.article.createquestion.CreateQuestionResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.getbanstate.GetBanStateResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.update.IUpdateArticleHelper
-import com.cmoney.backend2.forumocean.service.api.article.update.UpdateArticleHelper
 import com.cmoney.backend2.forumocean.service.api.channel.channelname.IChannelNameBuilder
 import com.cmoney.backend2.forumocean.service.api.channel.getmemberstatistics.GetMemberStatisticsResponseBody
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.comment.update.IUpdateCommentHelper
-import com.cmoney.backend2.forumocean.service.api.comment.update.UpdateCommentHelper
 import com.cmoney.backend2.forumocean.service.api.group.create.CreateGroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.getapprovals.GroupPendingApproval
 import com.cmoney.backend2.forumocean.service.api.group.getmember.GroupMember
 import com.cmoney.backend2.forumocean.service.api.group.getmemberjoinanygroups.GetMemberJoinAnyGroupsResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.update.UpdateGroupRequestBody
+import com.cmoney.backend2.forumocean.service.api.notify.get.GetNotifyResponseBody
+import com.cmoney.backend2.forumocean.service.api.notify.getcount.GetNotifyCountResponseBody
+import com.cmoney.backend2.forumocean.service.api.notifysetting.NotifyPushSetting
 import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.ReactionInfo
 import com.cmoney.backend2.forumocean.service.api.official.get.OfficialChannelInfo
 import com.cmoney.backend2.forumocean.service.api.officialsubscriber.getofficialsubscribedcount.GetOfficialSubscribedCountResponseBody
@@ -597,6 +598,68 @@ interface ForumOceanWeb {
         offset: Int,
         fetch: Int
     ): Result<List<DonateInfo>>
+
+    //endregion
+
+    //region Notify 通知API
+
+    /**
+     * 取得使用者通知
+     *
+     */
+    suspend fun getNotify() : Result<List<GetNotifyResponseBody>>
+
+    /**
+     * 取得使用者通知數量
+     *
+     */
+    suspend fun getNotifyCount() : Result<GetNotifyCountResponseBody>
+
+    /**
+     * 設定通知為已讀
+     *
+     * @param notifyType 通知類型
+     * @param mergeKey 合併主鍵
+     * @param isNew 是否為新通知
+     * @return
+     */
+    suspend fun setNotifyRead(
+        notifyType : String,
+        mergeKey : String,
+        isNew : Boolean
+    ) : Result<Unit>
+
+    //endregion
+
+    //region NotifySetting 通知設定API
+
+    /**
+     * 取得預設通知設定
+     *
+     * @return
+     */
+    suspend fun getPushDefaultSetting() : Result<List<NotifyPushSetting>>
+
+    /**
+     * 取得使用者通知設定
+     *
+     * @return
+     */
+    suspend fun getUserNotifySetting() : Result<List<NotifyPushSetting>>
+
+    /**
+     * 設定通知開關
+     *
+     * @param notifyType 通知類型
+     * @param subType 通知子類型
+     * @param enable 通知是否啟用
+     * @return
+     */
+    suspend fun setNotifySetting(
+        notifyType: String,
+        subType : String = "",
+        enable : Boolean
+    ) : Result<Unit>
 
     //endregion
 
