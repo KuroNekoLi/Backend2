@@ -491,8 +491,34 @@ interface ForumOceanService {
     @GET("ForumOcean/api/Official/GetOfficials")
     suspend fun getOfficials(
         @Header("Authorization") authorization: String,
+        @Query("offset") offset: Int,
+        @Query("fetch") fetch: Int
+    ) : Response<List<OfficialChannelInfo>>
+
+    @RecordApi
+    @GET("ForumOcean/api/Official/GetOfficialsByIds")
+    suspend fun getOfficialsByIds(
+        @Header("Authorization") authorization: String,
         @Query("officialIds") officialIds: String
     ): Response<List<OfficialChannelInfo>>
+
+    @RecordApi
+    @GET("ForumOcean/api/Official/GetOfficialsByKeyword")
+    suspend fun getOfficialsByKeyword(
+        @Header("Authorization") authorization: String,
+        @Query("keyword") keyword : String,
+        @Query("offset") offset: Int,
+        @Query("fetch") fetch: Int
+    ) : Response<List<OfficialChannelInfo>>
+
+    @RecordApi
+    @GET("ForumOcean/api/Group/GetGroupsByKeyword")
+    suspend fun getGroupsByKeyword(
+        @Header("Authorization") authorization: String,
+        @Query("keyword") keyword: String,
+        @Query("offset") offset: Int,
+        @Query("fetch") fetch: Int
+    ) : Response<List<GroupResponseBody>>
 
     @RecordApi
     @GET("ForumOcean/api/OfficialSubscriber/GetOfficialSubscribedCount/{officialId}")

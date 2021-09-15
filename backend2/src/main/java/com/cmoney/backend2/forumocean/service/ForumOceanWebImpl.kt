@@ -446,6 +446,22 @@ class ForumOceanWebImpl(
             }
         }
 
+    override suspend fun getGroupsByKeyword(
+        keyword: String,
+        offset: Int,
+        fetch: Int
+    ): Result<List<GroupResponseBody>> =
+        withContext(dispatcher.io()){
+            kotlin.runCatching {
+                service.getGroupsByKeyword(
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    keyword = keyword,
+                    offset = offset,
+                    fetch = fetch
+                ).checkResponseBody(jsonParser)
+            }
+        }
+
     override suspend fun getUserOwnGroup(
         ownId: Long,
         offset: Int,
@@ -656,12 +672,35 @@ class ForumOceanWebImpl(
         }
     }
 
-    override suspend fun getOfficials(officialIds: List<Long>): Result<List<OfficialChannelInfo>> =
+    override suspend fun getOfficials(offset: Int, fetch: Int): Result<List<OfficialChannelInfo>> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getOfficials(
                     authorization = setting.accessToken.createAuthorizationBearer(),
+                    offset = offset,
+                    fetch = fetch
+                ).checkResponseBody(jsonParser)
+            }
+        }
+
+    override suspend fun getOfficialsByIds(officialIds: List<Long>): Result<List<OfficialChannelInfo>> =
+        withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.getOfficialsByIds(
+                    authorization = setting.accessToken.createAuthorizationBearer(),
                     officialIds = officialIds.joinToString(",")
+                ).checkResponseBody(jsonParser)
+            }
+        }
+
+    override suspend fun getOfficialsByKeyWord(keyword : String,offset: Int, fetch: Int): Result<List<OfficialChannelInfo>> =
+        withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.getOfficialsByKeyword(
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    keyword = keyword,
+                    offset = offset,
+                    fetch = fetch
                 ).checkResponseBody(jsonParser)
             }
         }

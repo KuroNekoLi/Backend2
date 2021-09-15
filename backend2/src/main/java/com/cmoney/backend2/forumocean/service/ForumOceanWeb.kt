@@ -336,6 +336,16 @@ interface ForumOceanWeb {
     suspend fun getGroup(groupId: Long): Result<GroupResponseBody>
 
     /**
+     * 關鍵字搜尋社團(沒有處理查詢使用者社團身份 故position欄位固定為null)
+     *
+     * @param keyword 關鍵字
+     * @param offset 偏移數量
+     * @param fetch 查詢數量
+     * @return
+     */
+    suspend fun getGroupsByKeyword(keyword : String,offset: Int,fetch: Int) : Result<List<GroupResponseBody>>
+
+    /**
      * 取得指定使用者持有的所有社團
      *
      * @param ownId 使用者Id
@@ -593,14 +603,40 @@ interface ForumOceanWeb {
     //region Official 官方頻道查詢
 
     /**
+     * 取得官方頻道資訊
+     *
+     * @param offset 偏移數量
+     * @param fetch 拿取數量
+     * @return
+     */
+    suspend fun getOfficials(
+        offset: Int,
+        fetch: Int
+    ): Result<List<OfficialChannelInfo>>
+
+    /**
      * 取得多筆官方頻道資訊
      *
      * @param officialIds 官方頻道ID清單
      * @return
      */
-    suspend fun getOfficials(
+    suspend fun getOfficialsByIds(
         officialIds: List<Long>
     ): Result<List<OfficialChannelInfo>>
+
+    /**
+     * 搜尋官方頻道
+     *
+     * @param keyword 關鍵字
+     * @param offset 偏移數量
+     * @param fetch 拿取數量
+     * @return
+     */
+    suspend fun getOfficialsByKeyWord(
+        keyword: String,
+        offset: Int,
+        fetch: Int
+    ) : Result<List<OfficialChannelInfo>>
 
     //endregion
 
