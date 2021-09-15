@@ -4,6 +4,7 @@ import com.cmoney.backend2.base.model.calladapter.RecordApi
 import com.cmoney.backend2.forumocean.service.api.article.create.CreateArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.create.variable.Content
 import com.cmoney.backend2.forumocean.service.api.article.createquestion.CreateQuestionResponseBody
+import com.cmoney.backend2.forumocean.service.api.article.getbanstate.GetBanStateResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.update.UpdateArticleRequestBody
 import com.cmoney.backend2.forumocean.service.api.channel.getchannelsarticlebyweight.GetChannelsArticleByWeightRequestBody
 import com.cmoney.backend2.forumocean.service.api.channel.getmemberstatistics.GetMemberStatisticsResponseBody
@@ -34,6 +35,12 @@ import retrofit2.Response
 import retrofit2.http.*
 
 interface ForumOceanService {
+
+    @RecordApi
+    @GET("ForumOcean/api/Article/GetBanState")
+    suspend fun getBanState(
+        @Header("Authorization") authorization: String
+    ) : Response<GetBanStateResponseBody>
 
     /**
      * 發一般文

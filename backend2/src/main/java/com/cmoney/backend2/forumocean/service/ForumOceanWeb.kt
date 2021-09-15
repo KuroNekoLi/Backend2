@@ -3,6 +3,7 @@ package com.cmoney.backend2.forumocean.service
 import com.cmoney.backend2.forumocean.service.api.article.create.CreateArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.create.variable.Content
 import com.cmoney.backend2.forumocean.service.api.article.createquestion.CreateQuestionResponseBody
+import com.cmoney.backend2.forumocean.service.api.article.getbanstate.GetBanStateResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.update.IUpdateArticleHelper
 import com.cmoney.backend2.forumocean.service.api.article.update.UpdateArticleHelper
 import com.cmoney.backend2.forumocean.service.api.channel.channelname.IChannelNameBuilder
@@ -38,6 +39,13 @@ import com.cmoney.backend2.forumocean.service.api.vote.get.VoteInfo
 interface ForumOceanWeb {
 
     //region Article 文章
+
+    /**
+     * 查詢是否被禁言
+     *
+     * @return 是否被禁言
+     */
+    suspend fun getBanState() : Result<GetBanStateResponseBody>
 
     /**
      * 發文

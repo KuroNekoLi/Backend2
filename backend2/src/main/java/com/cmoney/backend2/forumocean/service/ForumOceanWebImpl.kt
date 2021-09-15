@@ -9,6 +9,7 @@ import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.forumocean.service.api.article.create.CreateArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.create.variable.Content
 import com.cmoney.backend2.forumocean.service.api.article.createquestion.CreateQuestionResponseBody
+import com.cmoney.backend2.forumocean.service.api.article.getbanstate.GetBanStateResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.update.IUpdateArticleHelper
 import com.cmoney.backend2.forumocean.service.api.channel.channelname.IChannelNameBuilder
 import com.cmoney.backend2.forumocean.service.api.channel.getchannelsarticlebyweight.GetChannelsArticleByWeightRequestBody
@@ -47,6 +48,15 @@ class ForumOceanWebImpl(
     private val jsonParser: Gson,
     private val dispatcher: DispatcherProvider = DefaultDispatcherProvider()
 ) : ForumOceanWeb {
+
+    override suspend fun getBanState(): Result<GetBanStateResponseBody> =
+        withContext(dispatcher.io()){
+            kotlin.runCatching {
+                service.getBanState(
+                    authorization = setting.accessToken.createAuthorizationBearer()
+                ).checkResponseBody(jsonParser)
+            }
+        }
 
     //region article
 
