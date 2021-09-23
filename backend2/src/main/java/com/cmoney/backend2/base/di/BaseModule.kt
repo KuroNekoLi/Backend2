@@ -4,6 +4,7 @@ import android.content.Context
 import com.cmoney.backend2.BuildConfig
 import com.cmoney.backend2.base.model.calladapter.RecordApiLogCallAdapterFactory
 import com.cmoney.backend2.base.model.log.ApiLog
+import com.cmoney.backend2.base.model.log.ApiLogParser
 import com.cmoney.backend2.base.model.setting.BackendSettingSharedPreference
 import com.cmoney.backend2.base.model.setting.DefaultSetting
 import com.cmoney.backend2.base.model.setting.Setting
@@ -97,6 +98,7 @@ private fun OkHttpClient.Builder.addLogInterceptor() = apply {
 private fun OkHttpClient.Builder.addUrlInterceptor() = apply {
     val setting = getKoin().get<Setting>(BACKEND2_SETTING)
     val gson = getKoin().get<Gson>(BACKEND2_GSON)
+    val parser = ApiLogParser(gson = gson)
     addInterceptor { chain ->
         val request: Request = chain.request()
         val domainUrl = setting.domainUrl
@@ -112,7 +114,7 @@ private fun OkHttpClient.Builder.addUrlInterceptor() = apply {
             manufacturer = setting.manufacturer,
             model = setting.model,
             osVersion = setting.osVersion
-        ).let { gson.toJson(it) }
+        ).let { parser.parse(it) }
         val newRequest = request.newBuilder()
             .addHeader("cmoneyapi-trace-context", apiLogJson)
             .url(newUrl)
