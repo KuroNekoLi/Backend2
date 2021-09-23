@@ -1,3 +1,22 @@
+#  (2021-09-23)
+
+
+
+# [4.7.0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/4.6.0...4.7.0) (2021-09-23)
+
+
+### Bug Fixes
+
+* 修正ApiLog欄位 Encode的方式 ([22377dc](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/22377dcbe8fa5fb70c18dccbe7db6c4b0ffc1afa))
+* 修正Header ApiLog字串經過URL Encode ([b413e18](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/b413e18da19c1097ccf946299c69603304054fe1))
+
+
+### Features
+
+* 圖片上傳服務新增GenreAndSubGenre參數物件，新增401測試，修正其餘測試 ([ad4bee3](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/ad4bee323f6774e8f592bbcacc3be8196bb74537))
+
+
+
 #  (2021-09-08)
 
 
