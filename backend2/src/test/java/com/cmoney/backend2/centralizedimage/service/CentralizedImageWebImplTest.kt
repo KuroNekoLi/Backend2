@@ -4,6 +4,7 @@ import com.cmoney.backend2.MainCoroutineRule
 import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.ServerException
+import com.cmoney.backend2.centralizedimage.service.api.upload.GenreAndSubGenre
 import com.cmoney.backend2.centralizedimage.service.api.upload.UploadResponseBody
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
@@ -12,11 +13,13 @@ import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
+import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import retrofit2.HttpException
 import retrofit2.Response
 import java.io.*
 
@@ -36,10 +39,10 @@ class CentralizedImageWebImplTest {
     fun setUp() {
         MockKAnnotations.init(this)
         webImpl = CentralizedImageWebImpl(
-                service = service,
-                setting = TestSetting(),
-                jsonParser = gson,
-                dispatcher = TestDispatcher()
+            service = service,
+            setting = TestSetting(),
+            jsonParser = gson,
+            dispatcher = TestDispatcher()
         )
     }
 
@@ -47,14 +50,17 @@ class CentralizedImageWebImplTest {
     fun `upload_成功`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             service.upload(
-                    authorization = any(),
-                    genre = any(),
-                    subGenre = any(),
-                    file = any()
+                authorization = any(),
+                genre = any(),
+                subGenre = any(),
+                file = any()
             )
         } returns Response.success(UploadResponseBody("publicImageUrl"))
         val result =
-                webImpl.upload("servicetest", "swagger", getTestFile("src/test/resources/image/maple-leaf-1510431-639x761.jpeg"))
+            webImpl.upload(
+                GenreAndSubGenre.ServiceTestSwagger,
+                getTestFile("src/test/resources/image/maple-leaf-1510431-639x761.jpeg")
+            )
         Truth.assertThat(result.isSuccess).isTrue()
         val data = result.getOrThrow()
         Truth.assertThat(data.url).isEqualTo("publicImageUrl")
@@ -64,15 +70,37 @@ class CentralizedImageWebImplTest {
     fun `upload_檔案太大失敗`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             service.upload(
-                    authorization = any(),
-                    genre = any(),
-                    subGenre = any(),
-                    file = any()
+                authorization = any(),
+                genre = any(),
+                subGenre = any(),
+                file = any()
             )
         } returns Response.success(UploadResponseBody("publicImageUrl"))
         val file = getTestFile("src/test/resources/image/maple-leaf-1510431-1279x1523.jpeg")
-        val exception = webImpl.upload("servicetest", "swagger", file).exceptionOrNull()
+        val result = webImpl.upload(GenreAndSubGenre.ServiceTestSwagger, file)
+        Truth.assertThat(result.isFailure).isTrue()
+        val exception = result.exceptionOrNull()
+        Truth.assertThat(exception).isInstanceOf(IllegalArgumentException::class.java)
         Truth.assertThat(exception?.message).isEqualTo("圖片大小限制1MB")
+    }
+
+    @Test
+    fun `upload_401_UNAUTHORIZATION`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.upload(
+                authorization = any(),
+                genre = any(),
+                subGenre = any(),
+                file = any()
+            )
+        } returns Response.error(401, "".toResponseBody())
+        val file = getTestFile("src/test/resources/image/maple-leaf-1510431-639x761.jpeg")
+        val result = webImpl.upload(GenreAndSubGenre.ServiceTestSwagger, file)
+        Truth.assertThat(result.isFailure).isTrue()
+        val exception = result.exceptionOrNull()
+        Truth.assertThat(exception).isInstanceOf(HttpException::class.java)
+        require(exception is HttpException)
+        Truth.assertThat(exception.code()).isEqualTo(401)
     }
 
     private fun <T> checkServerException(result: Result<T>) {
@@ -82,8 +110,8 @@ class CentralizedImageWebImplTest {
     }
 
     private fun getTestFile(
-            srcPath: String,
-            outputPath: String = "src/test/resources/image/targetFile.tmp"
+        srcPath: String,
+        outputPath: String = "src/test/resources/image/targetFile.tmp"
     ): File {
         val initialStream: InputStream = FileInputStream(File(srcPath))
         val buffer = ByteArray(initialStream.available())

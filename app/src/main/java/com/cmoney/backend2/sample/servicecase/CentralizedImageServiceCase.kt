@@ -2,6 +2,7 @@ package com.cmoney.backend2.sample.servicecase
 
 import android.content.Context
 import com.cmoney.backend2.centralizedimage.service.CentralizedImageWeb
+import com.cmoney.backend2.centralizedimage.service.api.upload.GenreAndSubGenre
 import com.cmoney.backend2.sample.extension.logResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -9,6 +10,9 @@ import org.koin.core.get
 import org.koin.core.inject
 import java.io.File
 
+/**
+ * 圖片上傳服務測試案例
+ */
 class CentralizedImageServiceCase() : ServiceCase {
 
     private val imageWebImpl by inject<CentralizedImageWeb>()
@@ -22,12 +26,13 @@ class CentralizedImageServiceCase() : ServiceCase {
                 }
             }
         }
-        imageWebImpl.upload("servicetest","swagger",mapleFile).logResponse(TAG)
+        // 往測試資料夾上傳
+        imageWebImpl.upload(GenreAndSubGenre.ServiceTestSwagger, mapleFile).logResponse(TAG)
         mapleFile.delete()
         Unit
     }
 
     companion object {
-        private const val TAG = "RealTime"
+        private const val TAG = "CentralizedImage"
     }
 }
