@@ -105,14 +105,16 @@ private fun OkHttpClient.Builder.addUrlInterceptor() = apply {
             .scheme(httpUrl.scheme)
             .host(httpUrl.host)
             .build()
-        val apiLogJson = ApiLog(
+        val apiLogJson = ApiLog.create(
             appId = setting.appId,
             platform = setting.platform.code,
             appVersion = setting.appVersion,
             manufacturer = setting.manufacturer,
             model = setting.model,
             osVersion = setting.osVersion
-        ).let { gson.toJson(it) }
+        ).let { apiLog ->
+            gson.toJson(apiLog)
+        }
         val newRequest = request.newBuilder()
             .addHeader("cmoneyapi-trace-context", apiLogJson)
             .url(newUrl)
