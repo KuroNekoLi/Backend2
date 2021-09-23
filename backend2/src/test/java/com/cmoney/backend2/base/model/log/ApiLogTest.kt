@@ -8,9 +8,8 @@ import org.junit.Before
 import org.junit.Test
 import java.util.regex.Pattern
 
-class ApiLogBuilderTest {
+class ApiLogTest {
 
-    private lateinit var logBuilder: ApiLogBuilder
     private lateinit var gson: Gson
 
     @Before
@@ -19,12 +18,11 @@ class ApiLogBuilderTest {
             .serializeNulls()
             .setLenient()
             .create()
-        logBuilder = ApiLogBuilder()
     }
 
     @Test
     fun parse_the_json_char_is_all_in_ASCII() {
-        val log = logBuilder.create(
+        val log = ApiLog.create(
             appId = 99,
             platform = Platform.Android.code,
             appVersion = "1.0.0",
