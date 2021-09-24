@@ -10,6 +10,7 @@ import com.cmoney.backend2.forumocean.service.api.article.update.UpdateArticleHe
 import com.cmoney.backend2.forumocean.service.api.channel.getmemberstatistics.GetMemberStatisticsResponseBody
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.comment.update.UpdateCommentHelper
+import com.cmoney.backend2.forumocean.service.api.group.Positions
 import com.cmoney.backend2.forumocean.service.api.group.create.CreateGroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.getapprovals.GroupPendingApproval
 import com.cmoney.backend2.forumocean.service.api.group.getmember.GroupMember
@@ -971,11 +972,13 @@ class ForumOceanWebImplTest {
     @Test
     fun `getUserOwnGroup_取得用戶所擁有社團成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
-            forumOceanService.getUserOwnGroup(
+            forumOceanService.getGroupsWithPosition(
                 authorization = any(),
-                ownerId = any(),
+                memberId = any(),
                 offset = any(),
-                fetch = any()
+                fetch = any(),
+                position = any(),
+                includeAppGroup = any()
             )
         } returns Response.success(
             listOf(
@@ -1005,7 +1008,12 @@ class ForumOceanWebImplTest {
                 )
             )
         )
-        val result = service.getUserOwnGroup(1321321,0,20)
+        val result = service.getGroupsByPosition(
+            1321321,
+            0,
+            20,
+            listOf(Positions.NORMAL, Positions.MANAGEMENT, Positions.PRESIDENT)
+        )
         assertThat(result.isSuccess)
         assertThat(result.getOrThrow()).hasSize(2)
     }
@@ -1014,11 +1022,13 @@ class ForumOceanWebImplTest {
     @Test
     fun `readMemberManagedGroups_取得指定使用者管理的所有社團成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
-            forumOceanService.getMemberManagedGroups(
-                    authorization = any(),
-                    managerId = any(),
-                    offset = any(),
-                    fetch = any()
+            forumOceanService.getGroupsWithPosition(
+                authorization = any(),
+                memberId = any(),
+                offset = any(),
+                fetch = any(),
+                position = any(),
+                includeAppGroup = any()
             )
         } returns Response.success(
                 listOf(
@@ -1045,11 +1055,17 @@ class ForumOceanWebImplTest {
     @Test
     fun `getMemberBelongGroups_取得用戶所屬社團成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
-            forumOceanService.getMemberBelongGroups(
+            forumOceanService.getGroupsWithPosition(
                 authorization = any(),
                 memberId = any(),
                 offset = any(),
-                fetch = any()
+                fetch = any(),
+                position = listOf(
+                    Positions.NORMAL,
+                    Positions.MANAGEMENT,
+                    Positions.PRESIDENT
+                ).map { it.position },
+                includeAppGroup = any()
             )
         } returns Response.success(
             listOf(
@@ -1309,7 +1325,8 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.getOfficials(
                 authorization = any(),
-                officialIds = listOf(213213, 1321321).joinToString(",")
+                offset = 0,
+                fetch = 20
             )
         } returns Response.success(
             listOf(
@@ -1318,18 +1335,20 @@ class ForumOceanWebImplTest {
                     name = "",
                     description = "",
                     imageUrl = "",
-                    typeName = ""
+                    typeName = "",
+                    subscribeCount = 0
                 ),
                 OfficialChannelInfo(
                     id = 1321321,
                     name = "",
                     description = "",
                     imageUrl = "",
-                    typeName = ""
+                    typeName = "",
+                    subscribeCount = 0
                 )
             )
         )
-        val result = service.getOfficials(listOf(213213, 1321321))
+        val result = service.getOfficials(0, 20)
         assertThat(result.isSuccess)
         assertThat(result.getOrThrow()).hasSize(2)
     }

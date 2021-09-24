@@ -350,30 +350,11 @@ interface ForumOceanService {
     ): Response<GroupResponseBody>
 
     @RecordApi
-    @GET("ForumOcean/api/Group/GetOwnerHaveGroups")
-    suspend fun getUserOwnGroup(
-        @Header("Authorization") authorization: String,
-        @Query("ownerId") ownerId: Long,
-        @Query("offset") offset: Int,
-        @Query("fetch") fetch: Int,
-        @Query("includeAppGroup") includeAppGroup: Boolean
-    ): Response<List<GroupResponseBody>>
-
-    @RecordApi
-    @GET("ForumOcean/api/Group/GetMemberManagedGroups")
-    suspend fun getMemberManagedGroups(
-        @Header("Authorization") authorization: String,
-        @Query("managerId") managerId: Long,
-        @Query("offset") offset: Int,
-        @Query("fetch") fetch: Int,
-        @Query("includeAppGroup") includeAppGroup: Boolean
-    ): Response<List<GroupResponseBody>>
-
-    @RecordApi
-    @GET("ForumOcean/api/Group/GetMemberBelongGroups")
-    suspend fun getMemberBelongGroups(
+    @GET("ForumOcean/api/Group/GetGroupsWithPosition")
+    suspend fun getGroupsWithPosition(
         @Header("Authorization") authorization: String,
         @Query("memberId") memberId: Long,
+        @Query("positions") position: List<Int>,
         @Query("offset") offset: Int,
         @Query("fetch") fetch: Int,
         @Query("includeAppGroup") includeAppGroup: Boolean

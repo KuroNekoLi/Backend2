@@ -16,6 +16,7 @@ import com.cmoney.backend2.forumocean.service.api.channel.getchannelsarticlebywe
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentRequestBody
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.comment.update.IUpdateCommentHelper
+import com.cmoney.backend2.forumocean.service.api.group.Positions
 import com.cmoney.backend2.forumocean.service.api.group.create.CreateGroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.getapprovals.GroupPendingApproval
 import com.cmoney.backend2.forumocean.service.api.group.getmember.GroupMember
@@ -533,59 +534,51 @@ class ForumOceanWebImpl(
             }
         }
 
-    override suspend fun getUserOwnGroup(
+    override suspend fun getGroupsByPosition(
         ownId: Long,
         offset: Int,
         fetch: Int,
+        positions: List<Positions>,
         includeAppGroup: Boolean
     ): Result<List<GroupResponseBody>> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
-                service.getUserOwnGroup(
+                service.getGroupsWithPosition(
                     authorization = setting.accessToken.createAuthorizationBearer(),
-                    ownerId = ownId,
+                    memberId = ownId,
                     offset = offset,
                     fetch = fetch,
-                    includeAppGroup = includeAppGroup
+                    includeAppGroup = includeAppGroup,
+                    position = positions.map { it.position }
                 ).checkResponseBody(jsonParser)
             }
         }
 
     override suspend fun getMemberManagedGroups(
-        managerId: Long,
+        memberId: Long,
         offset: Int,
         fetch: Int,
         includeAppGroup: Boolean
-    ): Result<List<GroupResponseBody>> =
-        withContext(dispatcher.io()){
-            kotlin.runCatching {
-                service.getMemberManagedGroups(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    managerId = managerId,
-                    offset = offset,
-                    fetch = fetch,
-                    includeAppGroup = includeAppGroup
-                ).checkResponseBody(jsonParser)
-            }
-        }
+    ): Result<List<GroupResponseBody>> = getGroupsByPosition(
+        memberId,
+        offset,
+        fetch,
+        listOf(Positions.MANAGEMENT),
+        includeAppGroup
+    )
 
     override suspend fun getMemberBelongGroups(
         memberId: Long,
         offset: Int,
         fetch: Int,
         includeAppGroup: Boolean
-    ): Result<List<GroupResponseBody>> =
-        withContext(dispatcher.io()) {
-            kotlin.runCatching {
-                service.getMemberBelongGroups(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    memberId = memberId,
-                    offset = offset,
-                    fetch = fetch,
-                    includeAppGroup = includeAppGroup
-                ).checkResponseBody(jsonParser)
-            }
-        }
+    ): Result<List<GroupResponseBody>> = getGroupsByPosition(
+        memberId,
+        offset,
+        fetch,
+        listOf(Positions.NORMAL, Positions.MANAGEMENT, Positions.PRESIDENT),
+        includeAppGroup
+    )
 
     override suspend fun getMemberJoinAnyGroups(memberId: Long): Result<GetMemberJoinAnyGroupsResponseBody> =
             withContext(dispatcher.io()) {

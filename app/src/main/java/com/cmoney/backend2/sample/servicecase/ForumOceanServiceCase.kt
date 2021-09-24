@@ -12,6 +12,7 @@ import com.cmoney.backend2.forumocean.service.api.article.update.UpdateArticleHe
 import com.cmoney.backend2.forumocean.service.api.channel.channelname.definechannelnamebuilder.CommodityType
 import com.cmoney.backend2.forumocean.service.api.channel.channelname.definechannelnamebuilder.DefineChannelName
 import com.cmoney.backend2.forumocean.service.api.comment.update.UpdateCommentHelper
+import com.cmoney.backend2.forumocean.service.api.group.Positions
 import com.cmoney.backend2.forumocean.service.api.group.update.UpdateGroupRequestBody
 import com.cmoney.backend2.forumocean.service.api.report.create.ReasonType
 import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
@@ -318,7 +319,12 @@ class ForumOceanServiceCase : ServiceCase {
         val groupId = createGroup("測試用社團名稱").getOrNull()?.groupId
         groupId?.apply {
             getGroup(this).logResponse(TAG)
-            getUserOwnGroup(setting.identityToken.getMemberId().toLong(),0,20).logResponse(TAG)
+            getGroupsByPosition(
+                setting.identityToken.getMemberId().toLong(),
+                0,
+                20,
+                listOf(Positions.NORMAL, Positions.MANAGEMENT, Positions.PRESIDENT)
+            ).logResponse(TAG)
             getMemberManagedGroups(setting.identityToken.getMemberId().toLong(),0,20).logResponse(TAG)
             getMemberBelongGroups(setting.identityToken.getMemberId().toLong(),0,20).logResponse(TAG)
             getMemberJoinAnyGroups(setting.identityToken.getMemberId().toLong()).logResponse(TAG)

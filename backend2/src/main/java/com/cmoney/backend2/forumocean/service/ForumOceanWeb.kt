@@ -9,6 +9,7 @@ import com.cmoney.backend2.forumocean.service.api.channel.channelname.IChannelNa
 import com.cmoney.backend2.forumocean.service.api.channel.getmemberstatistics.GetMemberStatisticsResponseBody
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.comment.update.IUpdateCommentHelper
+import com.cmoney.backend2.forumocean.service.api.group.Positions
 import com.cmoney.backend2.forumocean.service.api.group.create.CreateGroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.getapprovals.GroupPendingApproval
 import com.cmoney.backend2.forumocean.service.api.group.getmember.GroupMember
@@ -352,21 +353,19 @@ interface ForumOceanWeb {
      * @param ownId 使用者Id
      * @return
      */
-    suspend fun getUserOwnGroup(
+    suspend fun getGroupsByPosition(
         ownId: Long,
         offset: Int,
         fetch: Int,
-        includeAppGroup : Boolean = false
+        positions: List<Positions>,
+        includeAppGroup: Boolean = false
     ): Result<List<GroupResponseBody>>
 
     /**
      * 取得指定使用者管理的所有社團
-     *
-     * @param managerId
-     * @return
      */
     suspend fun getMemberManagedGroups(
-        managerId : Long,
+        memberId : Long,
         offset: Int,
         fetch: Int,
         includeAppGroup : Boolean = false
