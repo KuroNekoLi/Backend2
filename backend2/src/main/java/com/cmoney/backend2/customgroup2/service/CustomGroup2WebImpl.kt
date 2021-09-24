@@ -10,7 +10,6 @@ import com.cmoney.backend2.customgroup2.service.api.searchstocks.SearchStocksReq
 import com.cmoney.backend2.customgroup2.service.api.searchstocksbymarkettype.SearchStocksByMarketTypeRequestBody
 import com.google.gson.Gson
 import kotlinx.coroutines.withContext
-import retrofit2.Response
 
 class CustomGroup2WebImpl(
     private val setting: Setting,
@@ -134,12 +133,12 @@ class CustomGroup2WebImpl(
                     marketType = newGroup.marketType?.value,
                     stocks = newGroup.stocks
                 )
-                val response = service.updateCustomGroup(
+                service.updateCustomGroup(
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     id = newGroup.id,
                     newGroup = newDocument
                 )
-                response.handleCustomGroupNoContent()
+                    .handleNoContent(gson)
             }
         }
 
@@ -158,9 +157,8 @@ class CustomGroup2WebImpl(
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     baseDocument = baseDocument
                 )
-                    .handleHttpStatusCode(gson) { _, responseBody ->
-                        responseBody?.string()
-                    } ?: throw IllegalStateException("id return is null")
+                    .checkResponseBody(gson)
+                    .id ?: throw IllegalStateException("id return is null")
                 CustomGroup(
                     id = groupId,
                     name = displayName,
@@ -177,7 +175,7 @@ class CustomGroup2WebImpl(
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     id = id
                 )
-                    .handleCustomGroupNoContent()
+                    .handleNoContent(gson)
             }
         }
 
@@ -206,19 +204,9 @@ class CustomGroup2WebImpl(
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     newUserConfigurationDocument = newConfiguration
                 )
-                    .handleCustomGroupNoContent()
+                    .handleNoContent(gson)
             }
         }
-
-    private fun Response<Void>.handleCustomGroupNoContent() {
-        return when (this.code()) {
-            200 -> {
-            }
-            else -> {
-                this.handleNoContent(gson)
-            }
-        }
-    }
 
     companion object {
         private const val FILTERS_KEY = "filters"

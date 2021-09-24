@@ -5,6 +5,7 @@ import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.request.Language
 import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.backend2.customgroup2.service.api.createcustomgroup.CreateCustomGroupResponseBody
 import com.cmoney.backend2.customgroup2.service.api.data.*
 import com.cmoney.backend2.customgroup2.service.api.getcustomgroup.Documents
 import com.google.common.truth.Truth
@@ -319,7 +320,9 @@ class CustomGroup2WebImplTest {
                 authorization = any(),
                 baseDocument = any()
             )
-        } returns Response.success("1".toResponseBody())
+        } returns Response.success(
+            CreateCustomGroupResponseBody("1")
+        )
         val displayName = "自選股清單"
         val marketType = DocMarketType.Stock
         val result = web.createCustomGroup(displayName = displayName, marketType = marketType)

@@ -1,13 +1,13 @@
 package com.cmoney.backend2.customgroup2.service
 
 import com.cmoney.backend2.base.model.calladapter.RecordApi
+import com.cmoney.backend2.customgroup2.service.api.createcustomgroup.CreateCustomGroupResponseBody
 import com.cmoney.backend2.customgroup2.service.api.data.Document
 import com.cmoney.backend2.customgroup2.service.api.data.RawStock
 import com.cmoney.backend2.customgroup2.service.api.data.UserConfigurationDocument
 import com.cmoney.backend2.customgroup2.service.api.getcustomgroup.Documents
 import com.cmoney.backend2.customgroup2.service.api.searchstocks.SearchStocksRequestBody
 import com.cmoney.backend2.customgroup2.service.api.searchstocksbymarkettype.SearchStocksByMarketTypeRequestBody
-import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -74,7 +74,7 @@ interface CustomGroup2Service {
     suspend fun createCustomGroup(
         @Header("Authorization") authorization: String,
         @Body baseDocument: Document
-    ): Response<ResponseBody>
+    ): Response<CreateCustomGroupResponseBody>
 
     /**
      * 更新自選股文件
