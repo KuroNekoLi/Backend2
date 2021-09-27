@@ -42,7 +42,7 @@ data class GetNotifyResponseBody(
     @SerializedName("title")
     val title: String?,
     @SerializedName("updateTime")
-    val updateTime: Int?,
+    val updateTime: Long?,
     @SerializedName("new")
     val new : Any?
 )
