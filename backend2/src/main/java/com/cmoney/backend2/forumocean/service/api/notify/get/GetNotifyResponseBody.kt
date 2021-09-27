@@ -7,9 +7,7 @@ import com.google.gson.annotations.SerializedName
  * 通知資訊的所有欄位的 ResponseBody
  *
  *
- * @property memberIds 會員Id 的StringArray 只存在特定通知類型
- * @property commodityKeys 股票代號 的StringArray 只存在特定通知類型
- * @property groupId 社團Id 的 StringArray 只存在特定通知類型
+ * @property mapping 特定通知類型額外提供的資料
  * @property body 通知內文
  * @property mergeKey 合併主鍵
  * @property notifyType 通知類型
@@ -23,12 +21,8 @@ import com.google.gson.annotations.SerializedName
  * @see NotifyRedirectInfoParser 轉導資訊工具
  */
 data class GetNotifyResponseBody(
-    @SerializedName("memberIds")
-    val memberIds : List<String>?,
-    @SerializedName("commodityKeys")
-    val commodityKeys : List<String>?,
-    @SerializedName("groupId")
-    val groupId : List<String>?,
+    @SerializedName("mapping")
+    val mapping : List<NotifyResponseBodyMappingDetail>?,
     @SerializedName("body")
     val body: String?,
     @SerializedName("mergeKey")
@@ -44,5 +38,16 @@ data class GetNotifyResponseBody(
     @SerializedName("updateTime")
     val updateTime: Long?,
     @SerializedName("new")
-    val new : Any?
+    val new : Boolean?
+)
+
+/**
+ * @property key 供辨識的額外提供資訊 目前有memberIds commodityKeys groupId 三種
+ * @property value key對應的值
+ */
+data class NotifyResponseBodyMappingDetail(
+    @SerializedName("key")
+    val key : String?,
+    @SerializedName("value")
+    val value : String?
 )
