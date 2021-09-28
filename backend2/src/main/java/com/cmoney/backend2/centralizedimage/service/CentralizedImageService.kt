@@ -26,7 +26,8 @@ interface CentralizedImageService {
     @POST("centralizedImage/v1/upload/{destination}")
     suspend fun upload(
         @Header("Authorization") authorization: String,
-        @Path(value = "destination", encoded = true) destination: String,
+        @Path("genre") genre : String,
+        @Path("subgenre") subGenre : String,
         @Part file: MultipartBody.Part
     ): Response<UploadResponseBody>
 }
