@@ -5,6 +5,7 @@ import com.cmoney.backend2.base.extension.createAuthorizationBearer
 import com.cmoney.backend2.base.model.dispatcher.DefaultDispatcherProvider
 import com.cmoney.backend2.base.model.dispatcher.DispatcherProvider
 import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.backend2.centralizedimage.service.api.upload.GenreAndSubGenre
 import com.cmoney.backend2.centralizedimage.service.api.upload.UploadResponseBody
 import com.google.gson.Gson
 import kotlinx.coroutines.withContext
@@ -19,24 +20,28 @@ class CentralizedImageWebImpl(
     private val jsonParser: Gson,
     private val dispatcher: DispatcherProvider = DefaultDispatcherProvider()
 ) : CentralizedImageWeb {
+
     override suspend fun upload(
-        destination: CentralizedImageWeb.Destination,
+        genreAndSubGenre: GenreAndSubGenre,
         file: File
     ): Result<UploadResponseBody> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 val kb = file.length() / 1024
-                if (kb > 1024) {
-                    //圖片限制1MB
-                    error("圖片大小限制1MB")
+                require(kb <= 1024L) {
+                    "圖片大小限制1MB"
                 }
+
                 val requestBody = file.asRequestBody("image/*".toMediaType())
                 val part = MultipartBody.Part.createFormData("image", file.name, requestBody)
                 service.upload(
                     setting.accessToken.createAuthorizationBearer(),
-                    destination.value,
+                    genreAndSubGenre.genre,
+                    genreAndSubGenre.subgenre,
                     part
                 ).checkResponseBody(jsonParser)
             }
         }
+
+
 }

@@ -1,6 +1,7 @@
 package com.cmoney.backend2.billing.service
 
 import com.cmoney.backend2.base.model.calladapter.RecordApi
+import com.cmoney.backend2.billing.service.api.authbycmoney.AuthByCMoneyResponseBody
 import com.cmoney.backend2.billing.service.api.getappauth.GetAppAuthResponseBody
 import com.cmoney.backend2.billing.service.api.getauth.GetAuthResponseBody
 import com.cmoney.backend2.billing.service.api.getdevelpoerpayload.GetDeveloperPayloadRequestBody
@@ -163,5 +164,15 @@ interface BillingService {
         @Field("AppId") appId: Int,
         @Field("QueryAppId") queryAppId: Int
     ): Response<GetAppAuthResponseBody>
+
+    /**
+     * 用戶是否有CMoney正在續約中的手機商品
+     */
+    @RecordApi
+    @GET("PurchaseService/Order/AutorenewalingByCM/{appId}")
+    suspend fun getAuthByCMoney(
+        @Header("Authorization") authorization: String,
+        @Path("appId") appId: Int
+    ): Response<AuthByCMoneyResponseBody>
 
 }

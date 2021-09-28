@@ -15,9 +15,10 @@ interface CustomGroup2Service {
      * 根據關鍵字、回傳語系搜尋股市標的
      */
     @RecordApi
-    @POST("CustomGroupService/api/searchstocks")
+    @POST("CustomGroupService/api/searchstocksbyappid")
     suspend fun searchStocks(
         @Header("Authorization") authorization: String,
+        @Header("Accept-Language") language: String,
         @Body requestBody: SearchStocksRequestBody
     ): Response<List<RawStock?>>
 
@@ -25,9 +26,10 @@ interface CustomGroup2Service {
      * 根據關鍵字、回傳語系、市場類別搜尋股市標的
      */
     @RecordApi
-    @POST("CustomGroupService/api/searchstocksbymarkettype")
+    @POST("CustomGroupService/api/searchstocksbycommoditytype")
     suspend fun searchStocksByMarketType(
         @Header("Authorization") authorization: String,
+        @Header("Accept-Language") language: String,
         @Body requestBody: SearchStocksByMarketTypeRequestBody
     ): Response<List<RawStock?>>
 }

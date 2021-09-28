@@ -6,12 +6,7 @@ package com.cmoney.backend2.centralizedimage.extension
  * @return
  */
 fun String?.to60pxUrl() : String?{
-    val original = this
-    return if (original == null){
-        original
-    } else {
-        original + "_xs"
-    }
+    return this?.plus("_xs")
 }
 
 /**
@@ -20,12 +15,7 @@ fun String?.to60pxUrl() : String?{
  * @return
  */
 fun String?.to180pxUrl() : String?{
-    val original = this
-    return if (original == null){
-        original
-    } else {
-        original + "_s"
-    }
+    return this?.plus("_s")
 }
 
 /**
@@ -34,12 +24,7 @@ fun String?.to180pxUrl() : String?{
  * @return
  */
 fun String?.to360pxUrl() : String?{
-    val original = this
-    return if (original == null){
-        original
-    } else {
-        original + "_m"
-    }
+    return this?.plus("_m")
 }
 
 /**
@@ -48,12 +33,7 @@ fun String?.to360pxUrl() : String?{
  * @return
  */
 fun String?.to480pxUrl() : String?{
-    val original = this
-    return if (original == null){
-        original
-    } else {
-        original + "_l"
-    }
+    return this?.plus("_l")
 }
 
 /**
@@ -62,10 +42,5 @@ fun String?.to480pxUrl() : String?{
  * @return
  */
 fun String?.to720pxUrl() : String?{
-    val original = this
-    return if (original == null){
-        original
-    } else {
-        original + "_xl"
-    }
+    return this?.plus("_xl")
 }

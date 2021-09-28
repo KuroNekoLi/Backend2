@@ -9,6 +9,7 @@ import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.response.error.CMoneyError
 import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.billing.TestApplication
+import com.cmoney.backend2.billing.service.api.authbycmoney.AuthByCMoneyResponseBody
 import com.cmoney.backend2.billing.service.api.getappauth.GetAppAuthResponseBody
 import com.cmoney.backend2.billing.service.api.getauth.GetAuthResponseBody
 import com.cmoney.backend2.billing.service.api.getdevelpoerpayload.GetDeveloperPayloadResponseBody
@@ -909,6 +910,44 @@ class BillingWebImplTest {
             receipts = emptyList()
         )
         coVerify { service.recoveryGoogleSubReceipt(any(), any()) }
+        checkServerException(result, 10001)
+    }
+
+    @Test
+    fun `getAuthByCMoney_成功`() = mainCoroutineRule.runBlockingTest {
+        val responseBody = AuthByCMoneyResponseBody(
+            isAuth = false
+        )
+        coEvery {
+            service.getAuthByCMoney(
+                authorization = any(),
+                appId = any()
+            )
+        } returns Response.success(responseBody)
+        val result = billingWeb.getAuthByCMoney(2)
+        coVerify { service.getAuthByCMoney(any(), any()) }
+        assertThat(result.isSuccess).isTrue()
+        assertThat(result.getOrThrow()).isEqualTo(false)
+    }
+
+    @Test
+    fun `getAuthByCMoney_錯誤_ServerException`() = mainCoroutineRule.runBlockingTest {
+        val errorBody = gson.toJson(
+            CMoneyError(
+                detail = CMoneyError.Detail(
+                    code = 10001
+                )
+            )
+        ).toResponseBody()
+        coEvery {
+            service.getAuthByCMoney(
+                authorization = any(),
+                appId = any()
+            )
+        } returns Response.error(400, errorBody)
+
+        val result = billingWeb.getAuthByCMoney(2)
+        assertThat(result.isSuccess).isFalse()
         checkServerException(result, 10001)
     }
 

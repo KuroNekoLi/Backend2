@@ -16,5 +16,14 @@ data class Note(
     @SerializedName("Price")
     val price: Int?,
     @SerializedName("CoAuthorName")
-    val coAuthorName: String?
-)
+    val coAuthorName: String?,
+    @SerializedName("Tags")
+    val tags: List<Tag>?
+) {
+    data class Tag(
+        @SerializedName("Id")
+        val id: Long?,
+        @SerializedName("Name")
+        val name: String?
+    )
+}

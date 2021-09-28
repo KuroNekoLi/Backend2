@@ -36,6 +36,7 @@ import com.cmoney.backend2.sample.di.viewModule
 import com.cmoney.backend2.sample.model.logger.ApplicationLoggerAdapter
 import com.cmoney.backend2.tickdata.di.tickDataServiceModule
 import com.cmoney.backend2.trial.di.trialServiceModule
+import com.cmoney.backend2.userbehavior.di.userBehaviorServiceModule
 import com.cmoney.backend2.virtualassets.di.virtualAssetsServiceModule
 import com.cmoney.data_logdatarecorder.logger.LogDataRecorderLoggerAdapter
 import com.cmoney.data_logdatarecorder.recorder.LogDataRecorder
@@ -95,7 +96,8 @@ class SampleApplication : Application() {
                     tickDataServiceModule,
                     trialServiceModule,
                     virtualAssetsServiceModule,
-                    crmServiceModule
+                    crmServiceModule,
+                    userBehaviorServiceModule
                 )
             )
         }
