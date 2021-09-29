@@ -23,7 +23,7 @@ interface CentralizedImageService {
      */
     @RecordApi
     @Multipart
-    @POST("centralizedImage/v1/upload/{destination}")
+    @POST("centralizedImage/v1/upload/{genre}/{subgenre}")
     suspend fun upload(
         @Header("Authorization") authorization: String,
         @Path("genre") genre : String,
