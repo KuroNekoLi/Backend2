@@ -412,7 +412,7 @@ interface ForumOceanService {
         @Path("groupId") groupId: Long,
         @Query("offset") offset: Int,
         @Query("fetch") fetch: Int,
-        @Query("position") position: List<Int>
+        @Query("position") position: Int
     ): Response<List<GroupMember>>
 
     @RecordApi

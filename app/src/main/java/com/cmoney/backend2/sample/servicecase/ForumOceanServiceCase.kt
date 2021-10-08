@@ -400,7 +400,12 @@ class ForumOceanServiceCase : ServiceCase {
             join(this, "測試api用").logResponse(TAG)
 
             user1.changeUser(setting)
-            getMembers(this,0,200,true).logResponse(TAG)
+            getMembers(
+                this,
+                0,
+                200,
+                listOf(Positions.PRESIDENT, Positions.MANAGEMENT, Positions.NORMAL)
+            ).logResponse(TAG)
             val needApprovalId = getApprovals(this,0,20).getOrNull()?.firstOrNull()?.memberId
             needApprovalId?.let {
                 approval(this, needApprovalId, true).logResponse(TAG)
