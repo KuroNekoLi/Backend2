@@ -7,6 +7,7 @@ import com.cmoney.backend2.base.model.log.ApiLog
 import com.cmoney.backend2.base.model.setting.BackendSettingSharedPreference
 import com.cmoney.backend2.base.model.setting.DefaultSetting
 import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.backend2.base.model.typeadapter.ULongTypeAdapter
 import com.cmoney.data_logdatarecorder.recorder.LogDataRecorder
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -48,6 +49,7 @@ val backendBaseModule = module {
         GsonBuilder()
             .serializeNulls()
             .setLenient()
+            .registerTypeAdapter(ULong::class.java, ULongTypeAdapter())
             .create()
     }
     single<Retrofit>(BACKEND2_RETROFIT) {

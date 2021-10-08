@@ -43,7 +43,7 @@ android {
     }
 }
 dependecies {
-	implementation 'com.cmoney.backend2:backend2:4.7.0'
+	implementation 'com.cmoney.backend2:backend2:4.8.0'
 	implementation("com.cmoney.logdatarecorder:logdatarecorder-data:1.1.0")
 	implementation("com.cmoney.logdatarecorder:logdatarecorder-domain:1.1.0")
 }
@@ -53,8 +53,8 @@ dependecies {
 
 ```groovy
 dependecies {
-	releaseImplementation 'com.cmoney.backend2:backend2:4.7.0'
-	debugImplementation 'com.cmoney.backend2:backend2-debug:4.7.0'
+	releaseImplementation 'com.cmoney.backend2:backend2:4.8.0'
+	debugImplementation 'com.cmoney.backend2:backend2-debug:4.8.0'
 	implementation("com.cmoney.logdatarecorder:logdatarecorder-data:1.1.0")
 	implementation("com.cmoney.logdatarecorder:logdatarecorder-domain:1.1.0")
 }
@@ -569,6 +569,16 @@ suspend fun getAccountInfo(
     @Field("AppId") appId: Int
 ): Response<AccountInfoWithError>
 ```
+
+## Unsigned Data Type 支援
+
+某些服務回傳可能會遇到 Unsigned 的型別，目前模組預設提供的`Gson`有包含`ULong`轉換的支援。如果需要客製化的 Gson，註冊`ULongTypeAdapter`即可支援`ULong`。
+
+```kotlin
+GsonBuilder().registerTypeAdapter(ULong::class.java, ULongTypeAdapter())
+```
+
+
 
 [BaseModule]:http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/Base/blob/master/base/src/main/java/com/cmoney/backend2/base/di/BaseModule.kt
 
