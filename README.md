@@ -570,6 +570,16 @@ suspend fun getAccountInfo(
 ): Response<AccountInfoWithError>
 ```
 
+## Unsigned Data Type 支援
+
+某些服務回傳可能會遇到 Unsigned 的型別，目前模組預設提供的`Gson`有包含`ULong`轉換的支援。如果需要客製化的 Gson，註冊`ULongTypeAdapter`即可支援`ULong`。
+
+```kotlin
+GsonBuilder().registerTypeAdapter(ULong::class.java, ULongTypeAdapter())
+```
+
+
+
 [BaseModule]:http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/Base/blob/master/base/src/main/java/com/cmoney/backend2/base/di/BaseModule.kt
 
 [ApiLog]:http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/Base/blob/master/base/src/main/java/com/cmoney/backend2/base/model/log/ApiLog.kt
