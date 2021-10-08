@@ -1195,7 +1195,7 @@ class ForumOceanWebImplTest {
             forumOceanService.getMembers(
                 authorization = any(),
                 groupId = any(),
-                includeManagerInfo = any(),
+                position = any(),
                 offset = any(),
                 fetch = any()
             )
@@ -1206,7 +1206,7 @@ class ForumOceanWebImplTest {
                 GroupMember(memberId = 3, position = GroupPositionInfo.Cadre)
             )
         )
-        val result = service.getMembers(132132, 0,20,true)
+        val result = service.getMembers(132132, 0, 20, Positions.values().toList())
         assertThat(result.isSuccess)
         assertThat(result.getOrThrow().find { it.position == GroupPositionInfo.Cadre }).isNotNull()
     }

@@ -446,14 +446,14 @@ interface ForumOceanWeb {
      * @param groupId 社團Id
      * @param offset 偏移筆數
      * @param fetch 指定筆數
-     * @param includeManagerInfo 是否包含管理者成員
+     * @param position 身份
      * @return 社團成員清單
      */
     suspend fun getMembers(
         groupId: Long,
         offset: Int,
         fetch: Int,
-        includeManagerInfo: Boolean = false
+        position: List<Positions>
     ): Result<List<GroupMember>>
 
     /**

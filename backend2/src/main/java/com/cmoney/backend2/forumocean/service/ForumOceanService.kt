@@ -410,9 +410,9 @@ interface ForumOceanService {
     suspend fun getMembers(
         @Header("Authorization") authorization: String,
         @Path("groupId") groupId: Long,
-        @Query("offset") offset : Int,
-        @Query("fetch") fetch : Int,
-        @Query("includeManagerInfo") includeManagerInfo: Boolean
+        @Query("offset") offset: Int,
+        @Query("fetch") fetch: Int,
+        @Query("position") position: List<Int>
     ): Response<List<GroupMember>>
 
     @RecordApi

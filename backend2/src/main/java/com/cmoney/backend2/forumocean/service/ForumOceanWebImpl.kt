@@ -646,7 +646,7 @@ class ForumOceanWebImpl(
         groupId: Long,
         offset: Int,
         fetch: Int,
-        includeManagerInfo: Boolean
+        position: List<Positions>
     ): Result<List<GroupMember>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getMembers(
@@ -654,7 +654,7 @@ class ForumOceanWebImpl(
                 groupId = groupId,
                 offset = offset,
                 fetch = fetch,
-                includeManagerInfo = includeManagerInfo
+                position = position.map { it.position }
             ).checkResponseBody(jsonParser)
         }
     }
