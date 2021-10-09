@@ -2,7 +2,7 @@ package com.cmoney.backend2.sample.servicecase
 
 import com.cmoney.backend2.sample.extension.logResponse
 import com.cmoney.backend2.tickdata.service.TickDataWeb
-import org.koin.core.inject
+import org.koin.core.component.inject
 
 class TickDataServiceCase : ServiceCase {
 

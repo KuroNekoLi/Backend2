@@ -3,7 +3,7 @@ package com.cmoney.backend2.sample.servicecase
 import com.cmoney.backend2.cellphone.service.CellphoneWeb
 import com.cmoney.backend2.cellphone.service.api.CellphoneParam
 import com.cmoney.backend2.sample.extension.logResponse
-import org.koin.core.inject
+import org.koin.core.component.inject
 
 class CellphoneServiceCase : ServiceCase {
 

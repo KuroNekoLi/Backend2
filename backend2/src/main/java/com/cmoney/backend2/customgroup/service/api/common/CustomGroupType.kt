@@ -1,7 +1,7 @@
 package com.cmoney.backend2.customgroup.service.api.common
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 /**
  * 自選股類型
