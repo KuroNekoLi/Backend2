@@ -354,7 +354,7 @@ interface ForumOceanService {
     suspend fun getGroupsWithPosition(
         @Header("Authorization") authorization: String,
         @Query("memberId") memberId: Long,
-        @Query("positions") position: List<Int>,
+        @Query("position") position: Int,
         @Query("offset") offset: Int,
         @Query("fetch") fetch: Int,
         @Query("includeAppGroup") includeAppGroup: Boolean

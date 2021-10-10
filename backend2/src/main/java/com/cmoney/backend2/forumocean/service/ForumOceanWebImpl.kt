@@ -549,7 +549,7 @@ class ForumOceanWebImpl(
                     offset = offset,
                     fetch = fetch,
                     includeAppGroup = includeAppGroup,
-                    position = positions.map { it.position }
+                    position = positions.map { it.position }.sum()
                 ).checkResponseBody(jsonParser)
             }
         }
