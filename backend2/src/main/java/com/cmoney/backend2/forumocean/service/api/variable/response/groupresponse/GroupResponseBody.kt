@@ -16,6 +16,9 @@ import com.google.gson.annotations.SerializedName
  * @property searchable 是否可搜尋
  * @property memberCount 社團成員數
  * @property groupPosition 在社團職位
+ * @property articleCount 社團文章數
+ * @property unreadCount 使用者對社團的文章未讀數
+ * @property lastViewTime 使用者最後一次取社團文章時間 ( getChannel 時會刷新 )
  */
 data class GroupResponseBody(
     @SerializedName("description")
@@ -37,5 +40,11 @@ data class GroupResponseBody(
     @SerializedName("memberCount")
     val memberCount : Int?,
     @SerializedName("position")
-    val groupPosition : Int?
+    val groupPosition : Int?,
+    @SerializedName("articleCount")
+    val articleCount : Int?,
+    @SerializedName("unreadCount")
+    val unreadCount : Int?,
+    @SerializedName("lastViewTime")
+    val lastViewTime : Long?
 )
