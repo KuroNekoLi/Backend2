@@ -1064,7 +1064,7 @@ class ForumOceanWebImplTest {
                     Positions.NORMAL,
                     Positions.MANAGEMENT,
                     Positions.PRESIDENT
-                ).map { it.position },
+                ).map { it.position }.sum(),
                 includeAppGroup = any()
             )
         } returns Response.success(
