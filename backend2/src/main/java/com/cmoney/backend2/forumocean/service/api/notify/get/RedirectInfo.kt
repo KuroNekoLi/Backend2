@@ -8,28 +8,28 @@ import com.google.gson.annotations.SerializedName
  */
 sealed class RedirectInfo{
     data class RedirectComment(
-        @SerializedName("ArticleId")
+        @SerializedName("articleId")
         val articleId : Long?,
-        @SerializedName("CommentIndex")
+        @SerializedName("commentIndex")
         val commentIndex : Int?
     ) : RedirectInfo()
     data class RedirectArticle(
-        @SerializedName("ArticleId")
+        @SerializedName("articleId")
         val articleId: Long?
     ) : RedirectInfo()
     data class RedirectMember(
-        @SerializedName("MemberId")
+        @SerializedName("memberId")
         val memberId : Long?
     ) : RedirectInfo()
     data class RedirectGroupArticle(
-        @SerializedName("GroupId")
+        @SerializedName("groupId")
         val groupId : Long?,
-        @SerializedName("ArticleId")
+        @SerializedName("articleId")
         val articleId: Long?
     ) : RedirectInfo()
 
     data class RedirectGroup(
-        @SerializedName("GroupId")
+        @SerializedName("groupId")
         val groupId : Long?
     ) : RedirectInfo()
 }
