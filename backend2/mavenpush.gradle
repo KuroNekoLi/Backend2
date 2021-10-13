@@ -102,6 +102,7 @@ project.afterEvaluate {
                 name 'release'
 //                url "$buildDir/repository"//上傳之前可以先在Local的build看是否正確
                 url RELEASE_URL
+                setAllowInsecureProtocol(true)
                 credentials {
                     username USER_NAME
                     password USER_PASSWORD
