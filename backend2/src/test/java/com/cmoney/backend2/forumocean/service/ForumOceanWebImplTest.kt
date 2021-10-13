@@ -649,7 +649,8 @@ class ForumOceanWebImplTest {
                         reaction = mapOf(),
                         createTime = null,
                         modifyTime = null,
-                        report = null
+                        report = null,
+                        hasAuthToReadReply = null
                     )
                 )
             )
@@ -681,7 +682,8 @@ class ForumOceanWebImplTest {
                         reaction = mapOf(),
                         createTime = null,
                         modifyTime = null,
-                        report = null
+                        report = null,
+                        hasAuthToReadReply = null
                     )
                 ),
                 CommentResponseBody(
@@ -695,7 +697,8 @@ class ForumOceanWebImplTest {
                         reaction = mapOf(),
                         createTime = null,
                         modifyTime = null,
-                        report = null
+                        report = null,
+                        hasAuthToReadReply = null
                     )
                 )
             )
@@ -726,7 +729,8 @@ class ForumOceanWebImplTest {
                         reaction = mapOf(),
                         createTime = null,
                         modifyTime = null,
-                        report = null
+                        report = null,
+                        hasAuthToReadReply = null
                     )
                 ),
                 CommentResponseBody(
@@ -740,7 +744,8 @@ class ForumOceanWebImplTest {
                         reaction = mapOf(),
                         createTime = null,
                         modifyTime = null,
-                        report = null
+                        report = null,
+                        hasAuthToReadReply = null
                     )
                 )
             )
@@ -960,7 +965,10 @@ class ForumOceanWebImplTest {
                 ownerId = null,
                 searchable = null,
                 memberCount = null,
-                groupPosition = null
+                groupPosition = null,
+                articleCount = null,
+                unreadCount = null,
+                lastViewTime = null
             )
         )
         val result = service.getGroup(groupId)
@@ -992,7 +1000,10 @@ class ForumOceanWebImplTest {
                     ownerId = null,
                     searchable = null,
                     memberCount = null,
-                    groupPosition = null
+                    groupPosition = null,
+                    articleCount = null,
+                    unreadCount = null,
+                    lastViewTime = null
                 ),
                 GroupResponseBody(
                     description = null,
@@ -1004,7 +1015,10 @@ class ForumOceanWebImplTest {
                     ownerId = null,
                     searchable = null,
                     memberCount = null,
-                    groupPosition = null
+                    groupPosition = null,
+                    articleCount = null,
+                    unreadCount = null,
+                    lastViewTime = null
                 )
             )
         )
@@ -1042,7 +1056,10 @@ class ForumOceanWebImplTest {
                                 ownerId = null,
                                 searchable = null,
                                 memberCount = null,
-                                groupPosition = null
+                                groupPosition = null,
+                                articleCount = null,
+                                unreadCount = null,
+                                lastViewTime = null
                         )
                 )
         )
@@ -1079,7 +1096,10 @@ class ForumOceanWebImplTest {
                     ownerId = null,
                     searchable = null,
                     memberCount = null,
-                    groupPosition = null
+                    groupPosition = null,
+                    articleCount = null,
+                    unreadCount = null,
+                    lastViewTime = null
                 )
             )
         )
