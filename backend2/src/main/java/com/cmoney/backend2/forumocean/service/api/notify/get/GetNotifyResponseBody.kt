@@ -17,8 +17,6 @@ import com.google.gson.annotations.SerializedName
  * @property updateTime 更新時間
  * @property new 是否為新
  *
- * @see RedirectInfo 轉導資訊類別
- * @see NotifyRedirectInfoParser 轉導資訊工具
  */
 data class GetNotifyResponseBody(
     @SerializedName("mapping")
