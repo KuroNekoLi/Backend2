@@ -12,7 +12,7 @@ import com.google.gson.annotations.SerializedName
  * @property mergeKey 合併主鍵
  * @property notifyType 通知類型
  * @property read 是否已看過
- * @property redirectInfo 轉導資訊 jsonString 根據不同通知類型會有不同的轉導資訊
+ * @property deepLink 轉導資訊url
  * @property title 通知標題
  * @property updateTime 更新時間
  * @property new 是否為新
@@ -31,8 +31,8 @@ data class GetNotifyResponseBody(
     val notifyType: String?,
     @SerializedName("read")
     val read: Boolean?,
-    @SerializedName("redirectInfo")
-    val redirectInfo: String?,
+    @SerializedName("deepLink")
+    val deepLink: String?,
     @SerializedName("title")
     val title: String?,
     @SerializedName("updateTime")
