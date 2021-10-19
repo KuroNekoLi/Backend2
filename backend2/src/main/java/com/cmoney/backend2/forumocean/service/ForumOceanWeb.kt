@@ -615,6 +615,11 @@ interface ForumOceanWeb {
     suspend fun getNotifyCount() : Result<GetNotifyCountResponseBody>
 
     /**
+     * 重設使用者通知數量
+     */
+    suspend fun resetNotifyCount():Result<Unit>
+
+    /**
      * 設定通知為已讀
      *
      * @param notifyType 通知類型

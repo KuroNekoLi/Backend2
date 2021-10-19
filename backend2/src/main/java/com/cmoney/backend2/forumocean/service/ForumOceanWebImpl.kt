@@ -458,6 +458,15 @@ class ForumOceanWebImpl(
             }
         }
 
+    override suspend fun resetNotifyCount(): Result<Unit> =
+        withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.resetCount(
+                    authorization = setting.accessToken.createAuthorizationBearer()
+                ).handleNoContent(jsonParser)
+            }
+        }
+
     override suspend fun setNotifyRead(
         notifyType: String,
         mergeKey: String,

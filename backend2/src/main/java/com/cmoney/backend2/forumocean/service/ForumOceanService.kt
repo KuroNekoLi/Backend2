@@ -783,6 +783,12 @@ interface ForumOceanService {
     ) : Response<GetNotifyCountResponseBody>
 
     @RecordApi
+    @POST("ForumOcean/api/Notify/ResetCount")
+    suspend fun resetCount(
+        @Header("Authorization") authorization: String
+    ) : Response<Void>
+
+    @RecordApi
     @POST("ForumOcean/api/Notify/SetRead")
     suspend fun setRead(
         @Header("Authorization") authorization: String,
