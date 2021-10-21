@@ -63,8 +63,6 @@ sealed class ArticleContent(
         override val newsId: Long?,
         @SerializedName("title")
         override val title: String?,
-        @SerializedName("newsUrl")
-        override val newsUrl: String?,
         @SerializedName("publishTime")
         override val publishTime: Long?,
         @SerializedName("sharedPostsArticleId")
@@ -241,8 +239,6 @@ sealed class ArticleContent(
         override val newsId: Long?,
         @SerializedName("title")
         override val title: String?,
-        @SerializedName("newsUrl")
-        override val newsUrl: String?,
         @SerializedName("publishTime")
         override val publishTime: Long?,
         @SerializedName("multiMedia")
