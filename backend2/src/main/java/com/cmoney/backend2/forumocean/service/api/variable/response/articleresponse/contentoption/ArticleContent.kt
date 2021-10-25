@@ -29,7 +29,6 @@ sealed class ArticleContent(
      * @property position 有帶此參數，代表以社團名義發文
      * @property newsId 新聞Id
      * @property title 新聞標題
-     * @property newsUrl 新聞連結
      * @property publishTime 新聞發佈時間
      * @property sharedPostsArticleId 轉推文章Id
      * @property botId 訊號Id
@@ -226,7 +225,6 @@ sealed class ArticleContent(
      * @property text 文章內容
      * @property newsId 新聞Id
      * @property title 新聞標題
-     * @property newsUrl 新聞網址
      * @property publishTime 新聞發布時間
      * @property multiMedia 多媒體資訊
      * @property commodityTags 股票Tag資訊
