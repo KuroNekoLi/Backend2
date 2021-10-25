@@ -11,6 +11,6 @@ enum class Type(val typeString : String) {
     YOUTUBE("video/youtube"),
     @SerializedName("audio")
     AUDIO("audio"),
-    @SerializedName("link")
-    LINK("link");
+    @SerializedName("source")
+    Source("source");
 }
