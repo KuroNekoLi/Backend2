@@ -27,11 +27,4 @@ class ClientConfigurationWebImpl(
             }
         }
 
-
-    override suspend fun resetConfig(): Result<Unit> =
-        withContext(dispatcher.io()) {
-            kotlin.runCatching {
-                service.resetConfig().handleNoContent(jsonParser)
-            }
-        }
 }

@@ -18,9 +18,4 @@ interface ClientConfigurationService {
         @Body keys: List<String>
     ): Response<ClientConfigResponseBody>
 
-    /**
-     * 重設設定檔
-     */
-    @POST("ClientConfiguration/api/config/reset")
-    suspend fun resetConfig(): Response<Void>
 }

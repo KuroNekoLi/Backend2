@@ -48,14 +48,4 @@ class ClientConfigurationWebImplTest {
         Truth.assertThat(result.isSuccess)
     }
 
-    @ExperimentalCoroutinesApi
-    @Test
-    fun `resetConfig_重設設定檔成功測試`() = mainCoroutineRule.runBlockingTest {
-        coEvery {
-            clientConfigurationService.resetConfig()
-        }returns Response.success<Void>(204,null)
-
-        val result=clientConfigurationWeb.resetConfig()
-        Truth.assertThat(result.isSuccess)
-    }
 }
