@@ -12,11 +12,13 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
+import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import retrofit2.HttpException
 import retrofit2.Response
 
 @ExperimentalCoroutinesApi
@@ -42,10 +44,23 @@ class ClientConfigurationWebImplTest {
     fun `getConfig_取得設定檔成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             clientConfigurationService.getConfig(keys = any())
-        }returns Response.success(ClientConfigResponseBody(listOf()))
+        } returns Response.success(ClientConfigResponseBody(listOf()))
 
-        val result=clientConfigurationWeb.getConfig(listOf(ConfigKey.KOL))
+        val result = clientConfigurationWeb.getConfig(listOf(ConfigKey.KOL))
         Truth.assertThat(result.isSuccess)
     }
 
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `getConfig_取得設定檔失敗測試`() = mainCoroutineRule.runBlockingTest {
+        val json = ""
+        coEvery {
+            clientConfigurationService.getConfig(keys = any())
+        } returns Response.error(401, json.toResponseBody())
+
+        val result = clientConfigurationWeb.getConfig(listOf(ConfigKey.KOL))
+        Truth.assertThat(result.isSuccess).isFalse()
+        val exception = result.exceptionOrNull() as HttpException
+        Truth.assertThat(exception).isNotNull()
+    }
 }
