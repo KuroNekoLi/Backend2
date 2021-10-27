@@ -43,7 +43,7 @@ android {
     }
 }
 dependecies {
-	implementation 'com.cmoney.backend2:backend2:4.8.0'
+	implementation 'com.cmoney.backend2:backend2:4.9.0'
 	implementation("com.cmoney.logdatarecorder:logdatarecorder-data:1.1.0")
 	implementation("com.cmoney.logdatarecorder:logdatarecorder-domain:1.1.0")
 }
@@ -53,8 +53,8 @@ dependecies {
 
 ```groovy
 dependecies {
-	releaseImplementation 'com.cmoney.backend2:backend2:4.8.0'
-	debugImplementation 'com.cmoney.backend2:backend2-debug:4.8.0'
+	releaseImplementation 'com.cmoney.backend2:backend2:4.9.0'
+	debugImplementation 'com.cmoney.backend2:backend2-debug:4.9.0'
 	implementation("com.cmoney.logdatarecorder:logdatarecorder-data:1.1.0")
 	implementation("com.cmoney.logdatarecorder:logdatarecorder-domain:1.1.0")
 }
@@ -175,6 +175,7 @@ class SampleApplication : Application() {
 | virtualAssetsServiceModule                | virtualassets              |
 | crmServiceModule                          | crm              |
 | userBehaviorServiceModule                 | userbehavior              |
+| clientConfigurationModule                 | clientconfiguration              |
 #### 選擇使用Module的步驟
 
 - 確認目前需要使用的服務的host之後的path，以下舉例說明
