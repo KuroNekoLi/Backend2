@@ -1,8 +1,6 @@
 package com.cmoney.backend2.clientconfiguration.service
 
-import android.util.Log
 import com.cmoney.backend2.base.extension.checkResponseBody
-import com.cmoney.backend2.base.extension.handleNoContent
 import com.cmoney.backend2.base.model.dispatcher.DefaultDispatcherProvider
 import com.cmoney.backend2.base.model.dispatcher.DispatcherProvider
 import com.cmoney.backend2.clientconfiguration.service.api.ClientConfigInfoParser
@@ -21,10 +19,8 @@ class ClientConfigurationWebImpl(
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 val keyList = list.map { it.stringValue }
-                val response=service.getConfig(keyList)
+                val response = service.getConfig(keyList)
                 val responseBody = response.checkResponseBody(jsonParser)
-                Log.d("ConfigurationResponse",response.toString())
-                Log.d("ConfigurationBody",responseBody.toString())
                 responseBody.configs.mapNotNull {
                     ClientConfigInfoParser.getClientConfigType(it, jsonParser)
                 }

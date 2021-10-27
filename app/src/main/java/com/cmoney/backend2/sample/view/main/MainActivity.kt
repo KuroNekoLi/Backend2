@@ -99,7 +99,7 @@ class MainActivity : AppCompatActivity() {
             val deferredList = listOf<ServiceCase>(
                 // 要測試記得取消註解
 //                ActivityServiceCase(),
-                AuthorizationServiceCase(),
+//                AuthorizationServiceCase(),
 //                AdditionalInformationRevisitTestCase(hasSignal = true),
 //                BillingServiceCase()
 //                CellphoneServiceCase(),

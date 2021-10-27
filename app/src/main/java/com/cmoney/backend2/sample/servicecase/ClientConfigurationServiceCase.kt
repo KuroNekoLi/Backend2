@@ -1,6 +1,5 @@
 package com.cmoney.backend2.sample.servicecase
 
-import android.util.Log
 import com.cmoney.backend2.clientconfiguration.service.ClientConfigurationWeb
 import com.cmoney.backend2.clientconfiguration.service.api.ConfigKey
 import com.cmoney.backend2.sample.extension.logResponse
@@ -12,8 +11,7 @@ class ClientConfigurationServiceCase : ServiceCase {
 
     override suspend fun testAll() {
         webImpl.apply {
-          val a=  getConfig(listOf(ConfigKey.KOL)).getOrNull()
-            Log.d("aaaa",a.toString())
+            getConfig(listOf(ConfigKey.KOL)).logResponse(TAG)
         }
     }
 
