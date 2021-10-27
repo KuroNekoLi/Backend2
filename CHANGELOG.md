@@ -1,3 +1,16 @@
+#  (2021-10-27)
+
+
+
+# [4.9.0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/4.8.0...4.9.0) (2021-10-27)
+
+
+### Features
+
+* 新增ClientConfiguration API ([83a9c1c](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/83a9c1c5e3d4c62e0df0e68126e6523015e5ea74))
+
+
+
 #  (2021-10-08)
 
 
