@@ -35,9 +35,9 @@ unitTest:
 publish_upload_githhub:
   stage: upload
   script:
-    - ./gradlew backend2:assembleRelease
+#    - ./gradlew backend2:assembleRelease
     - ./gradlew backend2:publish
-    - sh ~/2swift/CMoney/MobilePlugin/Android/CICD/AarToGithub.sh AndroidBackend2Backend2 . backend2 "upload backend2 $CI_COMMIT_REF_SLUG"
+#    - sh ~/2swift/CMoney/MobilePlugin/Android/CICD/AarToGithub.sh AndroidBackend2Backend2 . backend2 "upload backend2 $CI_COMMIT_REF_SLUG"
   when: on_success
   only:
     - tags
