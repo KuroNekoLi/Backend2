@@ -105,6 +105,8 @@ import com.cmoney.backend2.ocean.service.api.invite.InviteRequestBody
 import com.cmoney.backend2.ocean.service.api.invite.InviteResponseBody
 import com.cmoney.backend2.ocean.service.api.isinwhitelist.IsInCreateArticleWhiteListRequestBody
 import com.cmoney.backend2.ocean.service.api.isinwhitelist.IsInCreateArticleWhiteListResponseBody
+import com.cmoney.backend2.ocean.service.api.isphoneauthentication.IsPhoneAuthenticationRequestBody
+import com.cmoney.backend2.ocean.service.api.isphoneauthentication.IsPhoneAuthenticationResponseBody
 import com.cmoney.backend2.ocean.service.api.joinclub.JoinClubRequestBody
 import com.cmoney.backend2.ocean.service.api.joinclub.JoinClubResponseBody
 import com.cmoney.backend2.ocean.service.api.leaveclub.LeaveClubRequestBody
@@ -128,6 +130,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -2305,6 +2308,20 @@ class OceanWebImpl(
                     appId = setting.appId,
                     guid = setting.identityToken.getMemberGuid()
                 )
+            ).checkIsSuccessful()
+                .requireBody()
+                .checkIWithError()
+                .toRealResponse()
+        }
+    }
+
+    override suspend fun isPhoneAuthentication(
+        memberIds: List<Long>
+    ): Result<IsPhoneAuthenticationResponseBody> = withContext(dispatcher.io()){
+        kotlin.runCatching {
+            oceanService.isPhoneAuthentication(
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                isPhoneAuthenticationRequestBody = IsPhoneAuthenticationRequestBody(memberIds)
             ).checkIsSuccessful()
                 .requireBody()
                 .checkIWithError()

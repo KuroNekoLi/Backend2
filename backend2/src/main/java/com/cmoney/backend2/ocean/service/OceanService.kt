@@ -86,6 +86,9 @@ import com.cmoney.backend2.ocean.service.api.invite.InviteRequestBody
 import com.cmoney.backend2.ocean.service.api.invite.InviteResponseBodyWithError
 import com.cmoney.backend2.ocean.service.api.isinwhitelist.IsInCreateArticleWhiteListRequestBody
 import com.cmoney.backend2.ocean.service.api.isinwhitelist.IsInCreateArticleWhiteListResponseBody
+import com.cmoney.backend2.ocean.service.api.isphoneauthentication.IsPhoneAuthenticationRequestBody
+import com.cmoney.backend2.ocean.service.api.isphoneauthentication.IsPhoneAuthenticationResponseBody
+import com.cmoney.backend2.ocean.service.api.isphoneauthentication.IsPhoneAuthenticationResponseBodyWithError
 import com.cmoney.backend2.ocean.service.api.joinclub.JoinClubRequestBody
 import com.cmoney.backend2.ocean.service.api.joinclub.JoinClubResponseBodyWithError
 import com.cmoney.backend2.ocean.service.api.leaveclub.LeaveClubRequestBody
@@ -894,4 +897,18 @@ interface OceanService {
         @Path("channelId") channelId: Long,
         @Body requestBody : RemoveAnnouncementRequestBody
     ) : Response<IsRemoveAnnouncementSuccessWithError>
+
+    /**
+     * 查詢是否認證手機 清單請勿太大(約50筆)
+     *
+     * @param authorization
+     * @param isPhoneAuthenticationRequestBody
+     * @return
+     */
+    @RecordApi
+    @POST("OceanService/api/MemberBadge/IsPhoneAuthentication")
+    suspend fun isPhoneAuthentication(
+        @Header("Authorization") authorization: String,
+        @Body isPhoneAuthenticationRequestBody: IsPhoneAuthenticationRequestBody
+    ): Response<IsPhoneAuthenticationResponseBodyWithError>
 }
