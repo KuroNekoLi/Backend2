@@ -9,6 +9,7 @@
         <item>http://192.168.99.148/</item>
         <item>http://192.168.10.187/</item>
         <item>http://192.168.10.151</item>
+        <item>http://192.168.99.164/</item>
     </string-array>
 
     <string-array name="app_list">
