@@ -1,8 +1,8 @@
 object ModuleConfig {
-    const val PROJECT_VERSION = "5.0.0-alpha01"
+    const val PROJECT_VERSION = "5.0.0-alpha02"
     //SDK
-    const val COMPILE_SDK = 31
-    const val BUILD_TOOLS_VERSION = "31.0.0"
+    const val COMPILE_SDK = 30
+    const val BUILD_TOOLS_VERSION = "30.0.3"
     const val MIN_SDK = 21
-    const val TARGET_SDK = 31
+    const val TARGET_SDK = 30
 }
