@@ -233,7 +233,7 @@ class CustomGroup2WebImplTest {
     @Test
     fun getCustomGroup_by_id_成功() = mainCoroutineRule.runBlockingTest {
         coEvery {
-            service.getCustomGroup(
+            service.getCustomGroupBy(
                 authorization = any(),
                 id = any()
             )
@@ -257,7 +257,7 @@ class CustomGroup2WebImplTest {
     @Test
     fun getCustomGroup_by_id_401_失敗() = mainCoroutineRule.runBlockingTest {
         coEvery {
-            service.getCustomGroup(
+            service.getCustomGroupBy(
                 authorization = any(),
                 id = any()
             )

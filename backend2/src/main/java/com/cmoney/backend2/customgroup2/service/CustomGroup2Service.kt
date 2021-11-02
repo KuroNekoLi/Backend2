@@ -39,13 +39,13 @@ interface CustomGroup2Service {
      * 取得自選股文件
      *
      * @param authorization 權限JWT Token
-     * @param filters 篩選條件
+     * @param filters 篩選條件，以逗號區隔，條件格式為{欄位名稱:欄位數值}
      */
     @RecordApi
     @GET("custom-group/api")
     suspend fun getCustomGroup(
         @Header("Authorization") authorization: String,
-        @QueryMap filters: Map<String, String>
+        @Query(value = "filters") filters: String
     ): Response<Documents>
 
     /**
@@ -57,7 +57,7 @@ interface CustomGroup2Service {
      */
     @RecordApi
     @GET("custom-group/api/{id}")
-    suspend fun getCustomGroup(
+    suspend fun getCustomGroupBy(
         @Header("Authorization") authorization: String,
         @Path("id") id: String
     ): Response<Document>

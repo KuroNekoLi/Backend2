@@ -1,3 +1,16 @@
+#  (2021-11-02)
+
+
+
+# [4.10.0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/4.9.0...4.10.0) (2021-11-02)
+
+
+### Features
+
+* 調整CustomGroupService2的GetCustomGroup參數 ([77e10e2](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/77e10e28fdc42a6c2f6b6afd0d87928c969dabed))
+
+
+
 #  (2021-10-27)
 
 

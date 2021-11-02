@@ -52,7 +52,7 @@ interface CustomGroup2Web {
     ): Result<List<Stock>>
 
     /**
-     * 取得自選股群組
+     * 取得自選股群組，預設群組類型為StockGroup
      *
      * @param marketType 市場類型
      * @return 自選股群組集合
