@@ -83,9 +83,12 @@ class CustomGroup2WebImpl(
     override suspend fun getCustomGroup(marketType: DocMarketType): Result<List<CustomGroup>> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
+                val docTypeCondition = "type:StockGroup"
+                val marketTypeCondition = "${DocMarketType.KEY}:${marketType.value}"
+                val filters = listOf(docTypeCondition, marketTypeCondition)
                 service.getCustomGroup(
                     authorization = setting.accessToken.createAuthorizationBearer(),
-                    filters = mapOf(FILTERS_KEY to "${DocMarketType.KEY}:${marketType.value}")
+                    filters = filters.joinToString(",")
                 )
                     .checkResponseBody(gson)
                     .documents?.mapNotNull { document ->
@@ -107,7 +110,7 @@ class CustomGroup2WebImpl(
     override suspend fun getCustomGroup(id: String): Result<CustomGroup> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
-                val document = service.getCustomGroup(
+                val document = service.getCustomGroupBy(
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     id = id
                 )
@@ -207,8 +210,4 @@ class CustomGroup2WebImpl(
                     .handleNoContent(gson)
             }
         }
-
-    companion object {
-        private const val FILTERS_KEY = "filters"
-    }
 }
