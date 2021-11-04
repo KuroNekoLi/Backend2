@@ -2,7 +2,7 @@ package com.cmoney.backend2.sample.servicecase
 
 import com.cmoney.backend2.emilystock.service.EmilyWeb
 import com.cmoney.backend2.sample.extension.logResponse
-import org.koin.core.inject
+import org.koin.core.component.inject
 
 class EmilyServiceCase : ServiceCase {
 

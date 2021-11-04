@@ -5,7 +5,7 @@ import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.portal.service.PortalWeb
 import com.cmoney.backend2.portal.service.api.ForecastValue
 import com.cmoney.backend2.sample.extension.logResponse
-import org.koin.core.inject
+import org.koin.core.component.inject
 
 class PortalServiceCase : ServiceCase {
 
