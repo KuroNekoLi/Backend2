@@ -273,10 +273,6 @@ class OceanServiceCase : ServiceCase {
                 articleId = 102029966
             ).logResponse("TEST_CREATE_ANNOUNCEMENT")
 //            testAnnouncement()
-            isPhoneAuthentication(
-                listOf(
-                )
-            ).logResponse(TAG)
         }
     }
     /**

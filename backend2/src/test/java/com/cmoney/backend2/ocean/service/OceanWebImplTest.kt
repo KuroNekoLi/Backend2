@@ -45,9 +45,6 @@ import com.cmoney.backend2.ocean.service.api.gettopicarticles.GetTopicArticlesRe
 import com.cmoney.backend2.ocean.service.api.getunreadcount.GetUnreadCountResponseBody
 import com.cmoney.backend2.ocean.service.api.invite.InviteResponseBodyWithError
 import com.cmoney.backend2.ocean.service.api.isinwhitelist.IsInCreateArticleWhiteListResponseBody
-import com.cmoney.backend2.ocean.service.api.isphoneauthentication.IsPhoneAuthenticationRequestBody
-import com.cmoney.backend2.ocean.service.api.isphoneauthentication.IsPhoneAuthenticationResponseBodyWithError
-import com.cmoney.backend2.ocean.service.api.isphoneauthentication.PhoneAuthInfo
 import com.cmoney.backend2.ocean.service.api.joinclub.JoinClubResponseBodyWithError
 import com.cmoney.backend2.ocean.service.api.leaveclub.LeaveClubResponseBodyWithError
 import com.cmoney.backend2.ocean.service.api.removeannouncement.RemoveAnnouncementResponseWithError
@@ -2311,52 +2308,6 @@ class OceanWebImplTest {
         )
         Truth.assertThat(result.getOrNull()?.isSuccess).isEqualTo(true)
         Truth.assertThat(result.exceptionOrNull()).isNull()
-    }
-
-    @Test
-    fun `is_Phone_Authentication_成功`() = mainCoroutineRule.runBlockingTest {
-        val queryResult = listOf(
-            PhoneAuthInfo(true,1),
-            PhoneAuthInfo(true,2),
-            PhoneAuthInfo(true,3)
-        )
-        val responseBody = IsPhoneAuthenticationResponseBodyWithError(
-            queryResult
-        )
-        coEvery {
-            oceanService.isPhoneAuthentication(
-                authorization = any(),
-                isPhoneAuthenticationRequestBody = IsPhoneAuthenticationRequestBody(listOf(1,2,3))
-            )
-        } returns Response.success(responseBody)
-
-        val result = service.isPhoneAuthentication(listOf(1,2,3))
-        Truth.assertThat(result.isSuccess).isEqualTo(true)
-        Truth.assertThat(result.getOrNull()?.data).isEqualTo(queryResult)
-    }
-
-    @Test
-    fun `is_Phone_Authentication_錯誤`() = mainCoroutineRule.runBlockingTest {
-        val json = """{
-          "Error": {
-            "Code": 100,
-            "Message": "參數錯誤"
-          }
-        }""".trimIndent()
-
-        val responseBody =
-            gson.fromJson(json, IsPhoneAuthenticationResponseBodyWithError::class.java)
-        coEvery {
-            oceanService.isPhoneAuthentication(
-                authorization = any(),
-                isPhoneAuthenticationRequestBody = any()
-            )
-        } returns Response.success(200,responseBody)
-
-        val result = service.isPhoneAuthentication(listOf())
-        Truth.assertThat(result.isSuccess).isEqualTo(false)
-        Truth.assertThat((result.exceptionOrNull() as? ServerException)?.code).isEqualTo(100)
-        Truth.assertThat((result.exceptionOrNull() as? ServerException)?.message).isEqualTo("參數錯誤")
     }
 
 }

@@ -52,7 +52,6 @@ import com.cmoney.backend2.ocean.service.api.getunreadcount.GetUnreadCountRespon
 import com.cmoney.backend2.ocean.service.api.hadphoneauthentication.HadPhoneAuthResponse
 import com.cmoney.backend2.ocean.service.api.invite.InviteResponseBody
 import com.cmoney.backend2.ocean.service.api.isinwhitelist.IsInCreateArticleWhiteListResponseBody
-import com.cmoney.backend2.ocean.service.api.isphoneauthentication.IsPhoneAuthenticationResponseBody
 import com.cmoney.backend2.ocean.service.api.joinclub.JoinClubResponseBody
 import com.cmoney.backend2.ocean.service.api.leaveclub.LeaveClubResponseBody
 import com.cmoney.backend2.ocean.service.api.removeannouncement.RemoveAnnouncementResponse
@@ -1476,15 +1475,5 @@ interface OceanWeb {
         articleId : Long,
         isPinned : Boolean
     ) : Result<IsRemoveAnnouncementSuccessResponse>
-
-    /**
-     * 查詢會員是否有手機綁定 清單請勿太大(約50筆)
-     *
-     * @param memberIds 要查詢的會員id清單
-     * @return
-     */
-    suspend fun isPhoneAuthentication(
-        memberIds: List<Long>
-    ) : Result<IsPhoneAuthenticationResponseBody>
 
 }
