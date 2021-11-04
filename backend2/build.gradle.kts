@@ -1,7 +1,7 @@
 plugins {
     id("com.android.library")
     id("kotlin-android")
-    id("kotlin-android-extensions")
+    id("kotlin-parcelize")
 }
 
 apply {
@@ -9,21 +9,19 @@ apply {
 }
 
 android {
-    compileSdkVersion(ModuleConfig.COMPILE_SDK)
-    buildToolsVersion(ModuleConfig.BUILD_TOOLS)
+    compileSdk = ModuleConfig.COMPILE_SDK
+    buildToolsVersion = ModuleConfig.BUILD_TOOLS_VERSION
 
     defaultConfig {
-        minSdkVersion(ModuleConfig.MIN_SDK)
-        targetSdkVersion(ModuleConfig.TARGET_SDK)
-        versionCode = 1
-        versionName(ModuleConfig.PROJECT_VERSION)
+        minSdk = ModuleConfig.MIN_SDK
+        targetSdk = ModuleConfig.TARGET_SDK
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        setConsumerProguardFiles(listOf("consumer-rules.pro"))
+        consumerProguardFile("consumer-rules.pro")
     }
 
     buildTypes {
         getByName("release") {
-            minifyEnabled(false)
+            isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -36,28 +34,25 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = "1.8"
-        freeCompilerArgs = listOf("-Xallow-result-return-type")
+        jvmTarget = "11"
         freeCompilerArgs = freeCompilerArgs + listOf("-module-name", "backend2")
     }
 }
 
 dependencies {
-    implementation(Dependencies.KOTLIN_STDLIB_JDK7)
+    implementation(Dependencies.KOTLIN_STDLIB)
     implementation(Dependencies.ANDROID_KTX_CORE)
-    implementation(Dependencies.ANDROID_APP_COMPAT)
+    implementation(Dependencies.ANDROID_APPCOMPAT)
 
     // coroutine
     implementation(Dependencies.COROUTINES_CORE)
     implementation(Dependencies.COROUTINES_ANDROID)
 
     //koin
-    implementation(Dependencies.KOIN_CORE)
-    implementation(Dependencies.KOIN_CORE_EXT)
     implementation(Dependencies.KOIN_ANDROID)
     //gson
     implementation(Dependencies.GSON)
@@ -75,14 +70,14 @@ dependencies {
     testImplementation(Dependencies.ANDROID_TEST_ESPRESSO_CORE)
     //Optional -- Robolectric environment
     testImplementation(Dependencies.ANDROID_TEST_CORE)
-    testImplementation(Dependencies.ANDROID_ARCH_CORE_TESTING)
+    testImplementation(Dependencies.ANDROID_TEST_ARCH_CORE_TESTING)
     testImplementation(Dependencies.ROBOLECTRIC)
     // kointest
     testImplementation(Dependencies.KOIN_TEST)
     //coroutine
     testImplementation(Dependencies.COROUTINES_TEST)
     // okhttp
-    testImplementation(Dependencies.OKHTTP_MOCK_SERVER)
+    testImplementation(Dependencies.OKHTTP_MOCKWEBSERVER)
     //Mock
     testImplementation(Dependencies.MOCKK)
     testImplementation(Dependencies.MOCKK_ANDROID)

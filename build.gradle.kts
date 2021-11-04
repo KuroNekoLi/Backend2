@@ -3,10 +3,9 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-        jcenter()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:4.1.3")
+        classpath("com.android.tools.build:gradle:7.0.2")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.KOTLIN}")
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -18,8 +17,9 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        maven(url = "http://192.168.99.70:8081/repository/maven-public/")
-        jcenter()
+        maven(url = "http://192.168.99.70:8081/repository/maven-public/") {
+            isAllowInsecureProtocol = true
+        }
     }
 }
 

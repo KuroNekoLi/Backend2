@@ -10,7 +10,7 @@ import com.cmoney.backend2.profile.service.api.variable.GraphQLFieldDefinition
 import com.cmoney.backend2.sample.extension.logResponse
 import com.cmoney.backend2.sample.servicecase.data.GetNicknameAndAvatarResponse
 import com.google.gson.reflect.TypeToken
-import org.koin.core.inject
+import org.koin.core.component.inject
 
 
 class ProfileServiceCase : ServiceCase {

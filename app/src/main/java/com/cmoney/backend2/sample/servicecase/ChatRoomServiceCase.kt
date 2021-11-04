@@ -5,7 +5,7 @@ import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.chat.service.ChatRoomWeb
 import com.cmoney.backend2.chat.service.api.variable.Subject
 import com.cmoney.backend2.sample.extension.logResponse
-import org.koin.core.inject
+import org.koin.core.component.inject
 
 class ChatRoomServiceCase(
     private val roomId: Long = 1,

@@ -2,7 +2,7 @@ package com.cmoney.backend2.sample.servicecase
 
 import com.cmoney.backend2.notes.service.NotesWeb
 import com.cmoney.backend2.sample.extension.logResponse
-import org.koin.core.inject
+import org.koin.core.component.inject
 
 class NotesServiceCase : ServiceCase {
     private val notesWeb by inject<NotesWeb>()

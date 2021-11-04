@@ -9,8 +9,8 @@ import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.sample.extension.logResponse
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
-import org.koin.core.get
-import org.koin.core.inject
+import org.koin.core.component.get
+import org.koin.core.component.inject
 
 /**
  * Additional information revisit test case

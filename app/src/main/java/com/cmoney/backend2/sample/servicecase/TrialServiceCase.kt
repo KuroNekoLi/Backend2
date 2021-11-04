@@ -2,7 +2,7 @@ package com.cmoney.backend2.sample.servicecase
 
 import com.cmoney.backend2.sample.extension.logResponse
 import com.cmoney.backend2.trial.service.TrialWeb
-import org.koin.core.inject
+import org.koin.core.component.inject
 
 /**
  * 推播開關服務測試

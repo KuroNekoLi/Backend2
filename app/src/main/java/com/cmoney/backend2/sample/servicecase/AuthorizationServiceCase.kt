@@ -5,7 +5,7 @@ import com.cmoney.backend2.authorization.service.api.getexpiredtime.Type
 import com.cmoney.backend2.base.di.BACKEND2_SETTING
 import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.sample.extension.logResponse
-import org.koin.core.inject
+import org.koin.core.component.inject
 
 class AuthorizationServiceCase : ServiceCase {
 
