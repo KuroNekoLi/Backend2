@@ -3,7 +3,7 @@ package com.cmoney.backend2.sample.servicecase
 import com.cmoney.backend2.chipk.service.ChipKWeb
 import com.cmoney.backend2.chipk.service.api.internationalkchart.ProductType
 import com.cmoney.backend2.sample.extension.logResponse
-import org.koin.core.inject
+import org.koin.core.component.inject
 
 class ChipKServiceCase : ServiceCase {
     private val chipKWeb by inject<ChipKWeb>()

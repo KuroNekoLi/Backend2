@@ -6,7 +6,7 @@ import com.cmoney.backend2.notification2.service.api.updatemroptionlist.UpdateMr
 import com.cmoney.backend2.sample.extension.logResponse
 import com.cmoney.backend2.sample.servicecase.data.Notification2TestParameter
 import kotlinx.coroutines.delay
-import org.koin.core.inject
+import org.koin.core.component.inject
 
 /**
  * 推播開關服務測試

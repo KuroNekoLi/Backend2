@@ -3,7 +3,7 @@ package com.cmoney.backend2.sample.servicecase
 import android.util.Log
 import com.cmoney.backend2.sample.extension.logResponse
 import com.cmoney.backend2.virtualassets.service.VirtualAssetsWeb
-import org.koin.core.inject
+import org.koin.core.component.inject
 
 class VirtualAssetsServiceCase : ServiceCase {
 

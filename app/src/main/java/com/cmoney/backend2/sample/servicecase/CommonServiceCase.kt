@@ -7,7 +7,7 @@ import android.util.Log
 import com.cmoney.backend2.common.service.CommonWeb
 import com.cmoney.backend2.sample.R
 import com.cmoney.backend2.sample.extension.logResponse
-import org.koin.core.inject
+import org.koin.core.component.inject
 import java.io.File
 import java.io.FileOutputStream
 
