@@ -11,5 +11,6 @@ enum class UserGraphQLInfo(val value : String) {
     Level("level"),
     Image("image"),
     Badge("badges"),
-    Bio("bio")
+    Bio("bio"),
+    IsBindingCellphone("isBindingCellphone")
 }
