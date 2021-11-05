@@ -74,13 +74,13 @@ data class TickInfoSet(
      * 本次單量
      */
     @SerializedName("SingleVolume")
-    val singleVolume: Int?,
+    val singleVolume: ULong?,
 
     /**
      * 今日總交易量
      */
     @SerializedName("TotalVolume")
-    val totalVolume: Int?,
+    val totalVolume: ULong?,
 
     /**
      * 交易時間(UnixTime)

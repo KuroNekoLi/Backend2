@@ -13,6 +13,7 @@ import com.cmoney.backend2.cellphone.di.cellphoneServiceModule
 import com.cmoney.backend2.centralizedimage.di.centralizedImageServiceModule
 import com.cmoney.backend2.chat.di.chatServiceModule
 import com.cmoney.backend2.chipk.di.chipkServiceModule
+import com.cmoney.backend2.clientconfiguration.di.clientConfigurationModule
 import com.cmoney.backend2.cmtalk.di.cmtalkServiceModule
 import com.cmoney.backend2.common.di.commonServiceModule
 import com.cmoney.backend2.crm.di.crmServiceModule
@@ -97,7 +98,8 @@ class SampleApplication : Application() {
                     trialServiceModule,
                     virtualAssetsServiceModule,
                     crmServiceModule,
-                    userBehaviorServiceModule
+                    userBehaviorServiceModule,
+                    clientConfigurationModule
                 )
             )
         }

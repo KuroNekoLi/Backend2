@@ -14,6 +14,7 @@ import com.cmoney.backend2.emilystock.service.EmilyService
 import com.cmoney.backend2.forumocean.service.ForumOceanService
 import com.cmoney.backend2.identityprovider.service.IdentityProviderService
 import com.cmoney.backend2.centralizedimage.service.CentralizedImageService
+import com.cmoney.backend2.clientconfiguration.service.ClientConfigurationService
 import com.cmoney.backend2.media.service.MediaService
 import com.cmoney.backend2.mobileocean.service.MobileOceanService
 import com.cmoney.backend2.note_extension.service.NoteExtensionService
@@ -84,7 +85,8 @@ class RecordApiTest(
                 arrayOf<Any?>(RealTimeAfterMarketService::class),
                 arrayOf<Any?>(TickDataService::class),
                 arrayOf<Any?>(TrialService::class),
-                arrayOf<Any?>(VirtualAssetsService::class)
+                arrayOf<Any?>(VirtualAssetsService::class),
+                arrayOf<Any?>(ClientConfigurationService::class)
             )
         }
     }

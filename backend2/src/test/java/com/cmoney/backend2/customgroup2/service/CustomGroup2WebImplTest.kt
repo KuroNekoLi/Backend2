@@ -5,9 +5,9 @@ import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.request.Language
 import com.cmoney.backend2.base.model.setting.Setting
-import com.cmoney.backend2.customgroup2.service.api.data.MarketType
-import com.cmoney.backend2.customgroup2.service.api.data.RawStock
-import com.cmoney.backend2.customgroup2.service.api.data.Stock
+import com.cmoney.backend2.customgroup2.service.api.createcustomgroup.CreateCustomGroupResponseBody
+import com.cmoney.backend2.customgroup2.service.api.data.*
+import com.cmoney.backend2.customgroup2.service.api.getcustomgroup.Documents
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
@@ -95,18 +95,19 @@ class CustomGroup2WebImplTest {
     }
 
     @Test
-    fun `searchStocks_one_language_param_will_invoke_list_param_default`() = mainCoroutineRule.runBlockingTest {
-        coEvery {
-            service.searchStocks(any(), any(), any())
-        } returns Response.success(emptyList())
+    fun `searchStocks_one_language_param_will_invoke_list_param_default`() =
+        mainCoroutineRule.runBlockingTest {
+            coEvery {
+                service.searchStocks(any(), any(), any())
+            } returns Response.success(emptyList())
 
-        val spyWeb = spyk(web)
-        spyWeb.searchStocks("2330", Language.zhTw())
-        coVerify(exactly = 1) {
-            spyWeb.searchStocks(any(), Language.zhTw())
-            spyWeb.searchStocks(any(), listOf(Language.zhTw()))
+            val spyWeb = spyk(web)
+            spyWeb.searchStocks("2330", Language.zhTw())
+            coVerify(exactly = 1) {
+                spyWeb.searchStocks(any(), Language.zhTw())
+                spyWeb.searchStocks(any(), listOf(Language.zhTw()))
+            }
         }
-    }
 
     @Test
     fun `searchStocksByMarketTypes_成功`() = mainCoroutineRule.runBlockingTest {
@@ -160,21 +161,290 @@ class CustomGroup2WebImplTest {
     }
 
     @Test
-    fun `searchStocksByMarketTypes_one_language_param_will_invoke_list_param_default`() = runBlockingTest {
-        coEvery {
-            service.searchStocksByMarketType(any(), any(), any())
-        } returns Response.success(emptyList())
+    fun `searchStocksByMarketTypes_one_language_param_will_invoke_list_param_default`() =
+        runBlockingTest {
+            coEvery {
+                service.searchStocksByMarketType(any(), any(), any())
+            } returns Response.success(emptyList())
 
-        val spyWeb = spyk(web)
-        spyWeb.searchStocksByMarketTypes(
-            keyword = "2330",
-            language = Language.zhTw(),
-            marketTypes = listOf(MarketType.Tse())
-        )
+            val spyWeb = spyk(web)
+            spyWeb.searchStocksByMarketTypes(
+                keyword = "2330",
+                language = Language.zhTw(),
+                marketTypes = listOf(MarketType.Tse())
+            )
 
-        coVerify(exactly = 1) {
-            spyWeb.searchStocksByMarketTypes(any(), Language.zhTw(), listOf(MarketType.Tse()))
-            spyWeb.searchStocksByMarketTypes(any(), listOf(Language.zhTw()), listOf(MarketType.Tse()))
+            coVerify(exactly = 1) {
+                spyWeb.searchStocksByMarketTypes(any(), Language.zhTw(), listOf(MarketType.Tse()))
+                spyWeb.searchStocksByMarketTypes(
+                    any(),
+                    listOf(Language.zhTw()),
+                    listOf(MarketType.Tse())
+                )
+            }
         }
+
+    @Test
+    fun getCustomGroup_成功() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.getCustomGroup(
+                authorization = any(),
+                filters = any()
+            )
+        } returns Response.success(
+            Documents(
+                documents = listOf(
+                    Document(
+                        id = "1",
+                        displayName = "測試用群組",
+                        marketType = DocMarketType.Stock.value,
+                        stocks = listOf("2330")
+                    )
+                )
+            )
+        )
+        val result = web.getCustomGroup(DocMarketType.Stock)
+        Truth.assertThat(result.isSuccess).isTrue()
+        val customGroupDataList = result.getOrThrow()
+        Truth.assertThat(customGroupDataList).hasSize(1)
+        val customGroup = customGroupDataList.first()
+        Truth.assertThat(customGroup.id).isEqualTo("1")
+        Truth.assertThat(customGroup.name).isEqualTo("測試用群組")
+        Truth.assertThat(customGroup.marketType).isEqualTo(DocMarketType.Stock)
+        Truth.assertThat(customGroup.stocks).isEqualTo(listOf("2330"))
+    }
+
+    @Test
+    fun getCustomGroup_401_失敗() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.getCustomGroup(
+                authorization = any(),
+                filters = any()
+            )
+        } returns Response.error(401, "".toResponseBody())
+        val result = web.getCustomGroup(DocMarketType.Stock)
+        Truth.assertThat(result.isFailure).isTrue()
+        val exception = result.exceptionOrNull()
+        Truth.assertThat(exception).isInstanceOf(HttpException::class.java)
+        require(exception is HttpException)
+        Truth.assertThat(exception.code()).isEqualTo(401)
+    }
+
+    @Test
+    fun getCustomGroup_by_id_成功() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.getCustomGroupBy(
+                authorization = any(),
+                id = any()
+            )
+        } returns Response.success(
+            Document(
+                id = "1",
+                displayName = "測試用群組",
+                marketType = DocMarketType.Stock.value,
+                stocks = listOf("2330")
+            )
+        )
+        val result = web.getCustomGroup("1")
+        Truth.assertThat(result.isSuccess).isTrue()
+        val customGroup = result.getOrThrow()
+        Truth.assertThat(customGroup.id).isEqualTo("1")
+        Truth.assertThat(customGroup.name).isEqualTo("測試用群組")
+        Truth.assertThat(customGroup.marketType).isEqualTo(DocMarketType.Stock)
+        Truth.assertThat(customGroup.stocks).isEqualTo(listOf("2330"))
+    }
+
+    @Test
+    fun getCustomGroup_by_id_401_失敗() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.getCustomGroupBy(
+                authorization = any(),
+                id = any()
+            )
+        } returns Response.error(401, "".toResponseBody())
+        val result = web.getCustomGroup("1")
+        Truth.assertThat(result.isFailure).isTrue()
+        val exception = result.exceptionOrNull()
+        Truth.assertThat(exception).isInstanceOf(HttpException::class.java)
+        require(exception is HttpException)
+        Truth.assertThat(exception.code()).isEqualTo(401)
+    }
+
+    @Test
+    fun updateCustomGroup_成功() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.updateCustomGroup(
+                authorization = any(),
+                id = any(),
+                newGroup = any()
+            )
+        } returns Response.success<Void>(204, null)
+        val newGroup = CustomGroup(
+            id = "1",
+            name = "測試群組",
+            marketType = DocMarketType.Stock,
+            stocks = listOf("2330", "0050")
+        )
+        val result = web.updateCustomGroup(newGroup)
+        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.getOrThrow()).isEqualTo(Unit)
+    }
+
+    @Test
+    fun updateCustomGroup_401_失敗() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.updateCustomGroup(
+                authorization = any(),
+                id = any(),
+                newGroup = any()
+            )
+        } returns Response.error(401, "".toResponseBody())
+        val newGroup = CustomGroup(
+            id = "1",
+            name = "測試群組",
+            marketType = DocMarketType.Stock,
+            stocks = listOf("2330", "0050")
+        )
+        val result = web.updateCustomGroup(newGroup)
+        Truth.assertThat(result.isFailure).isTrue()
+        val exception = result.exceptionOrNull()
+        Truth.assertThat(exception).isInstanceOf(HttpException::class.java)
+        require(exception is HttpException)
+        Truth.assertThat(exception.code()).isEqualTo(401)
+    }
+
+    @Test
+    fun createCustomGroup_成功() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.createCustomGroup(
+                authorization = any(),
+                baseDocument = any()
+            )
+        } returns Response.success(
+            CreateCustomGroupResponseBody("1")
+        )
+        val displayName = "自選股清單"
+        val marketType = DocMarketType.Stock
+        val result = web.createCustomGroup(displayName = displayName, marketType = marketType)
+        Truth.assertThat(result.isSuccess).isTrue()
+        val customGroup = result.getOrThrow()
+        Truth.assertThat(customGroup.id).isEqualTo("1")
+        Truth.assertThat(customGroup.marketType).isEqualTo(marketType)
+        Truth.assertThat(customGroup.name).isEqualTo(displayName)
+        Truth.assertThat(customGroup.stocks).isEmpty()
+    }
+
+    @Test
+    fun createCustomGroup_401_失敗() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.createCustomGroup(
+                authorization = any(),
+                baseDocument = any()
+            )
+        } returns Response.error(401, "".toResponseBody())
+        val result = web.createCustomGroup(displayName = "", marketType = DocMarketType.Stock)
+        Truth.assertThat(result.isFailure).isTrue()
+        val exception = result.exceptionOrNull()
+        Truth.assertThat(exception).isInstanceOf(HttpException::class.java)
+        require(exception is HttpException)
+        Truth.assertThat(exception.code()).isEqualTo(401)
+    }
+
+    @Test
+    fun deleteCustomGroup_成功() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.deleteCustomGroup(
+                authorization = any(),
+                id = any()
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.deleteCustomGroup("1")
+        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.getOrThrow()).isEqualTo(Unit)
+    }
+
+    @Test
+    fun deleteCustomGroup_401_失敗() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.deleteCustomGroup(
+                authorization = any(),
+                id = any()
+            )
+        } returns Response.error(401, "".toResponseBody())
+        val result = web.deleteCustomGroup("1")
+        Truth.assertThat(result.isFailure).isTrue()
+        val exception = result.exceptionOrNull()
+        Truth.assertThat(exception).isInstanceOf(HttpException::class.java)
+        require(exception is HttpException)
+        Truth.assertThat(exception.code()).isEqualTo(401)
+    }
+
+    @Test
+    fun getUserConfiguration_成功() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.getUserConfiguration(authorization = any())
+        } returns Response.success(
+            UserConfigurationDocument(
+                documentOrders = mapOf(
+                    "10000" to 1,
+                    "10001" to 2
+                )
+            )
+        )
+        val result = web.getUserConfiguration()
+        Truth.assertThat(result.isSuccess).isTrue()
+        val userConfiguration = result.getOrThrow()
+        Truth.assertThat(userConfiguration.customGroupOrders).hasSize(2)
+        userConfiguration.customGroupOrders?.entries?.forEachIndexed { index, entry ->
+            val (id, order) = entry
+            Truth.assertThat(id).isEqualTo("1000$index")
+            Truth.assertThat(order).isEqualTo(index + 1)
+        }
+    }
+
+    @Test
+    fun getUserConfiguration_401_失敗() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.getUserConfiguration(authorization = any())
+        } returns Response.error(401, "".toResponseBody())
+        val result = web.getUserConfiguration()
+        Truth.assertThat(result.isFailure).isTrue()
+        val exception = result.exceptionOrNull()
+        Truth.assertThat(exception).isInstanceOf(HttpException::class.java)
+        require(exception is HttpException)
+        Truth.assertThat(exception.code()).isEqualTo(401)
+    }
+
+    @Test
+    fun updateUserConfiguration_成功() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.updateUserConfiguration(
+                authorization = any(),
+                newUserConfigurationDocument = any()
+            )
+        } returns Response.success<Void>(204, null)
+        val newCustomGroups = listOf(
+            CustomGroup(id = "10000", name = null, marketType = null, stocks = listOf()),
+            CustomGroup(id = "10001", name = null, marketType = null, stocks = listOf())
+        )
+        val result = web.updateConfiguration(newCustomGroups)
+        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.getOrThrow()).isEqualTo(Unit)
+    }
+
+    @Test
+    fun updateUserConfiguration_401_失敗() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.updateUserConfiguration(
+                authorization = any(),
+                newUserConfigurationDocument = any()
+            )
+        } returns Response.error(401, "".toResponseBody())
+        val result = web.updateConfiguration(emptyList())
+        Truth.assertThat(result.isFailure).isTrue()
+        val exception = result.exceptionOrNull()
+        Truth.assertThat(exception).isInstanceOf(HttpException::class.java)
+        require(exception is HttpException)
+        Truth.assertThat(exception.code()).isEqualTo(401)
     }
 }

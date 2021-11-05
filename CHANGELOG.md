@@ -1,3 +1,46 @@
+#  (2021-11-02)
+
+
+
+# [4.10.0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/4.9.0...4.10.0) (2021-11-02)
+
+
+### Features
+
+* 調整CustomGroupService2的GetCustomGroup參數 ([77e10e2](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/77e10e28fdc42a6c2f6b6afd0d87928c969dabed))
+
+
+
+#  (2021-10-27)
+
+
+
+# [4.9.0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/4.8.0...4.9.0) (2021-10-27)
+
+
+### Features
+
+* 新增ClientConfiguration API ([83a9c1c](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/83a9c1c5e3d4c62e0df0e68126e6523015e5ea74))
+
+
+
+#  (2021-10-08)
+
+
+
+# [4.8.0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/4.7.0...4.8.0) (2021-10-08)
+
+
+### Features
+
+* backend gson 加入 ULongTypeAdapter ([9eca072](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/9eca07273b5475d1052f61cef7103790a2a7e4fe))
+* 新增自選股服務 ([e6b961c](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/e6b961c3b778b5488a8fa48a9e96c5004546c586))
+* 更新 README 說明 unsigned data type 相關支援 ([ddd8525](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/ddd8525fa418ecb6c7eb6ed4265e93d85f1ad01b))
+* 根據服務變動調整 getNewTickInfo 的回傳成交量欄位型別並加入單元測試 並新增對應的 Gson ULongTypeAdapter ([b51087d](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/b51087d9c89391b19bdd90ea12f31cac7d9f0492))
+* 根據服務變動調整自選股介面 ([d8dcb45](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/d8dcb4500102b8ea3448cf1c85245b0cab12fb86))
+
+
+
 #  (2021-09-23)
 
 
