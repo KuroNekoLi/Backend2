@@ -33,19 +33,18 @@ allprojects {
 ```groovy
 android {
 	compileOptions {
-        sourceCompatibility = '1.8'
-        targetCompatibility = '1.8'
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
 
     kotlinOptions {
-        jvmTarget = '1.8'
-        freeCompilerArgs = ["-Xallow-result-return-type"]
+        jvmTarget = '11'
     }
 }
 dependecies {
-	implementation 'com.cmoney.backend2:backend2:4.10.0'
-	implementation("com.cmoney.logdatarecorder:logdatarecorder-data:1.1.0")
-	implementation("com.cmoney.logdatarecorder:logdatarecorder-domain:1.1.0")
+	implementation 'com.cmoney.backend2:backend2:5.0.0'
+	implementation("com.cmoney.logdatarecorder:logdatarecorder-data:5.0.0")
+	implementation("com.cmoney.logdatarecorder:logdatarecorder-domain:5.0.0")
 }
 ```
 
@@ -53,10 +52,10 @@ dependecies {
 
 ```groovy
 dependecies {
-	releaseImplementation 'com.cmoney.backend2:backend2:4.10.0'
-	debugImplementation 'com.cmoney.backend2:backend2-debug:4.10.0'
-	implementation("com.cmoney.logdatarecorder:logdatarecorder-data:1.1.0")
-	implementation("com.cmoney.logdatarecorder:logdatarecorder-domain:1.1.0")
+	releaseImplementation 'com.cmoney.backend2:backend2:5.0.0'
+	debugImplementation 'com.cmoney.backend2:backend2-debug:5.0.0'
+	implementation("com.cmoney.logdatarecorder:logdatarecorder-data:5.0.0")
+	implementation("com.cmoney.logdatarecorder:logdatarecorder-domain:5.0.0")
 }
 ```
 

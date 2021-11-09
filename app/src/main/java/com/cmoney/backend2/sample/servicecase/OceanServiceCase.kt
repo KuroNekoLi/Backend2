@@ -15,8 +15,8 @@ import com.cmoney.backend2.ocean.service.api.getrecommendclubs.RecommendClubsNee
 import com.cmoney.backend2.ocean.service.api.setreaded.NotifyIdAndIsSpecificPair
 import com.cmoney.backend2.ocean.service.api.variable.*
 import com.cmoney.backend2.sample.extension.logResponse
-import org.koin.core.get
-import org.koin.core.inject
+import org.koin.core.component.get
+import org.koin.core.component.inject
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException

@@ -5,7 +5,7 @@ import com.cmoney.backend2.customgroup2.service.CustomGroup2Web
 import com.cmoney.backend2.customgroup2.service.api.data.DocMarketType
 import com.cmoney.backend2.customgroup2.service.api.data.MarketType
 import com.cmoney.backend2.sample.extension.logResponse
-import org.koin.core.inject
+import org.koin.core.component.inject
 
 class CustomGroup2ServiceCase : ServiceCase {
 

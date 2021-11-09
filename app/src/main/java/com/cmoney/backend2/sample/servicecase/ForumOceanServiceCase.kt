@@ -24,7 +24,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.request.mediatype.Typ
 import com.cmoney.backend2.sample.extension.logResponse
 import com.cmoney.backend2.sample.servicecase.data.AccountSettingInfo.Companion.changeUser
 import com.cmoney.backend2.sample.servicecase.data.MultiAccountLoginManager
-import org.koin.core.inject
+import org.koin.core.component.inject
 import retrofit2.HttpException
 
 class ForumOceanServiceCase : ServiceCase {

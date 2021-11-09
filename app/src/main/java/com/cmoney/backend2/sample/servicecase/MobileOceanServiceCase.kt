@@ -14,7 +14,7 @@ import com.cmoney.backend2.mobileocean.service.api.getpopularstocks.requestbody.
 import com.cmoney.backend2.mobileocean.service.api.getstockpicture.PictureType
 import com.cmoney.backend2.sample.BuildConfig
 import com.cmoney.backend2.sample.extension.logResponse
-import org.koin.core.inject
+import org.koin.core.component.inject
 import java.io.File
 
 class MobileOceanServiceCase : ServiceCase {

@@ -4,13 +4,13 @@ plugins {
 }
 
 android {
-    compileSdkVersion(ModuleConfig.COMPILE_SDK)
-    buildToolsVersion(ModuleConfig.BUILD_TOOLS)
+    compileSdk = ModuleConfig.COMPILE_SDK
+    buildToolsVersion = ModuleConfig.BUILD_TOOLS_VERSION
 
     defaultConfig {
         applicationId = "com.cmoney.backend.sample"
-        minSdkVersion(ModuleConfig.MIN_SDK)
-        targetSdkVersion(ModuleConfig.TARGET_SDK)
+        minSdk = ModuleConfig.MIN_SDK
+        targetSdk = ModuleConfig.TARGET_SDK
         versionCode = 1
         versionName = ModuleConfig.PROJECT_VERSION
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -18,12 +18,12 @@ android {
 
     buildTypes {
         getByName("release") {
-            minifyEnabled(true)
+            isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             signingConfig = signingConfigs.getByName("debug")
         }
         getByName("debug") {
-            minifyEnabled(true)
+            isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
@@ -33,29 +33,30 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "11"
         freeCompilerArgs = listOf("-Xallow-result-return-type")
     }
 }
 
 dependencies {
-    implementation(Dependencies.KOTLIN_STDLIB_JDK7)
+    implementation(Dependencies.KOTLIN_STDLIB)
     implementation(Dependencies.ANDROID_KTX_CORE)
-    implementation(Dependencies.ANDROID_APP_COMPAT)
+    implementation(Dependencies.ANDROID_APPCOMPAT)
     implementation(Dependencies.ANDROID_MATERIAL)
     implementation(Dependencies.ANDROID_CONSTRAINT_LAYOUT)
     implementation(Dependencies.ANDROID_LIFECYCLE_LIVE_DATA_KTX)
     implementation(Dependencies.ANDROID_LIFECYCLE_RUNTIME_KTX)
     implementation(Dependencies.ANDROID_LIFECYCLE_VIEWMODEL_KTX)
-    implementation(Dependencies.KOIN_ANDROIDX_VIEW_MODEL)
+    implementation(Dependencies.KOIN_ANDROID_EXT)
+    implementation(Dependencies.KOIN_ANDROIDX_VIEWMODEL)
     implementation(Dependencies.GSON)
     implementation(Dependencies.COROUTINES_ANDROID)
 
-    implementation(project(ModuleConfig.PROJECT_PATH))
+    implementation(project(":backend2"))
     implementation(Dependencies.LOG_DATA_RECORDER_DATA)
     implementation(Dependencies.LOG_DATA_RECORDER_DOMAIN)
 
