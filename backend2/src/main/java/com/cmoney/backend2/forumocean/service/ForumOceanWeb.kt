@@ -9,7 +9,6 @@ import com.cmoney.backend2.forumocean.service.api.channel.channelname.IChannelNa
 import com.cmoney.backend2.forumocean.service.api.channel.getmemberstatistics.GetMemberStatisticsResponseBody
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.comment.update.IUpdateCommentHelper
-import com.cmoney.backend2.forumocean.service.api.group.Positions
 import com.cmoney.backend2.forumocean.service.api.group.create.CreateGroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.getapprovals.GroupPendingApproval
 import com.cmoney.backend2.forumocean.service.api.group.getmember.GroupMember
@@ -357,7 +356,7 @@ interface ForumOceanWeb {
         ownId: Long,
         offset: Int,
         fetch: Int,
-        positions: List<Positions>,
+        positions: List<GroupPosition>,
         includeAppGroup: Boolean = false
     ): Result<List<GroupResponseBody>>
 
@@ -453,7 +452,7 @@ interface ForumOceanWeb {
         groupId: Long,
         offset: Int,
         fetch: Int,
-        position: List<Positions>
+        position: List<GroupPosition>
     ): Result<List<GroupMember>>
 
     /**

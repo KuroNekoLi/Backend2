@@ -16,7 +16,6 @@ import com.cmoney.backend2.forumocean.service.api.channel.getchannelsarticlebywe
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentRequestBody
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.comment.update.IUpdateCommentHelper
-import com.cmoney.backend2.forumocean.service.api.group.Positions
 import com.cmoney.backend2.forumocean.service.api.group.create.CreateGroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.getapprovals.GroupPendingApproval
 import com.cmoney.backend2.forumocean.service.api.group.getmember.GroupMember
@@ -547,7 +546,7 @@ class ForumOceanWebImpl(
         ownId: Long,
         offset: Int,
         fetch: Int,
-        positions: List<Positions>,
+        positions: List<GroupPosition>,
         includeAppGroup: Boolean
     ): Result<List<GroupResponseBody>> =
         withContext(dispatcher.io()) {
@@ -572,7 +571,7 @@ class ForumOceanWebImpl(
         memberId,
         offset,
         fetch,
-        listOf(Positions.MANAGEMENT),
+        listOf(GroupPosition.MANAGEMENT),
         includeAppGroup
     )
 
@@ -585,7 +584,7 @@ class ForumOceanWebImpl(
         memberId,
         offset,
         fetch,
-        listOf(Positions.NORMAL, Positions.MANAGEMENT, Positions.PRESIDENT),
+        listOf(GroupPosition.NORMAL, GroupPosition.MANAGEMENT, GroupPosition.PRESIDENT),
         includeAppGroup
     )
 
@@ -655,7 +654,7 @@ class ForumOceanWebImpl(
         groupId: Long,
         offset: Int,
         fetch: Int,
-        position: List<Positions>
+        position: List<GroupPosition>
     ): Result<List<GroupMember>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getMembers(
@@ -702,7 +701,7 @@ class ForumOceanWebImpl(
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 groupId = groupId,
                 memberId = memberId,
-                position = position.value
+                position = position.position
             ).handleNoContent(jsonParser)
         }
     }

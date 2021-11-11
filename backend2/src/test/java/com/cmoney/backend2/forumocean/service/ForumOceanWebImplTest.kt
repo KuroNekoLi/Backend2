@@ -10,7 +10,6 @@ import com.cmoney.backend2.forumocean.service.api.article.update.UpdateArticleHe
 import com.cmoney.backend2.forumocean.service.api.channel.getmemberstatistics.GetMemberStatisticsResponseBody
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.comment.update.UpdateCommentHelper
-import com.cmoney.backend2.forumocean.service.api.group.Positions
 import com.cmoney.backend2.forumocean.service.api.group.create.CreateGroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.getapprovals.GroupPendingApproval
 import com.cmoney.backend2.forumocean.service.api.group.getmember.GroupMember
@@ -1026,7 +1025,7 @@ class ForumOceanWebImplTest {
             1321321,
             0,
             20,
-            listOf(Positions.NORMAL, Positions.MANAGEMENT, Positions.PRESIDENT)
+            listOf(GroupPosition.NORMAL, GroupPosition.MANAGEMENT, GroupPosition.PRESIDENT)
         )
         assertThat(result.isSuccess)
         assertThat(result.getOrThrow()).hasSize(2)
@@ -1078,9 +1077,9 @@ class ForumOceanWebImplTest {
                 offset = any(),
                 fetch = any(),
                 position = listOf(
-                    Positions.NORMAL,
-                    Positions.MANAGEMENT,
-                    Positions.PRESIDENT
+                    GroupPosition.NORMAL,
+                    GroupPosition.MANAGEMENT,
+                    GroupPosition.PRESIDENT
                 ).map { it.position }.sum(),
                 includeAppGroup = any()
             )
@@ -1221,14 +1220,14 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(
             listOf(
-                GroupMember(memberId = 1, position = GroupPositionInfo.General),
-                GroupMember(memberId = 2, position = GroupPositionInfo.General),
-                GroupMember(memberId = 3, position = GroupPositionInfo.Cadre)
+                GroupMember(memberId = 1, position = GroupPositionInfo.NORMAL),
+                GroupMember(memberId = 2, position = GroupPositionInfo.NORMAL),
+                GroupMember(memberId = 3, position = GroupPositionInfo.PRESIDENT)
             )
         )
-        val result = service.getMembers(132132, 0, 20, Positions.values().toList())
+        val result = service.getMembers(132132, 0, 20, GroupPosition.values().toList())
         assertThat(result.isSuccess)
-        assertThat(result.getOrThrow().find { it.position == GroupPositionInfo.Cadre }).isNotNull()
+        assertThat(result.getOrThrow().find { it.position == GroupPositionInfo.PRESIDENT }).isNotNull()
     }
 
     @ExperimentalCoroutinesApi
@@ -1282,7 +1281,7 @@ class ForumOceanWebImplTest {
                 position = any()
             )
         } returns Response.success<Void>(204, null)
-        val result = service.changeGroupMemberPosition(1321321, 1231, GroupPosition.Cadre)
+        val result = service.changeGroupMemberPosition(1321321, 1231, GroupPosition.PRESIDENT)
         assertThat(result.isSuccess)
     }
 

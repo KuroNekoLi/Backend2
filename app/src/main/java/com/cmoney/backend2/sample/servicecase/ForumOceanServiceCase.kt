@@ -5,20 +5,19 @@ import com.cmoney.backend2.base.di.BACKEND2_SETTING
 import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.forumocean.service.ForumOceanWeb
 import com.cmoney.backend2.forumocean.service.api.article.create.variable.Content
-import com.cmoney.backend2.forumocean.service.api.variable.request.commoditytag.BullOrBear
-import com.cmoney.backend2.forumocean.service.api.variable.request.commoditytag.CommodityTag
-import com.cmoney.backend2.forumocean.service.api.variable.request.commoditytag.StockTypeInfo
 import com.cmoney.backend2.forumocean.service.api.article.update.UpdateArticleHelper
 import com.cmoney.backend2.forumocean.service.api.channel.channelname.definechannelnamebuilder.CommodityType
 import com.cmoney.backend2.forumocean.service.api.channel.channelname.definechannelnamebuilder.DefineChannelName
 import com.cmoney.backend2.forumocean.service.api.comment.update.UpdateCommentHelper
-import com.cmoney.backend2.forumocean.service.api.group.Positions
 import com.cmoney.backend2.forumocean.service.api.group.update.UpdateGroupRequestBody
 import com.cmoney.backend2.forumocean.service.api.report.create.ReasonType
 import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
 import com.cmoney.backend2.forumocean.service.api.variable.request.GroupJoinType
 import com.cmoney.backend2.forumocean.service.api.variable.request.GroupPosition
 import com.cmoney.backend2.forumocean.service.api.variable.request.ReactionType
+import com.cmoney.backend2.forumocean.service.api.variable.request.commoditytag.BullOrBear
+import com.cmoney.backend2.forumocean.service.api.variable.request.commoditytag.CommodityTag
+import com.cmoney.backend2.forumocean.service.api.variable.request.commoditytag.StockTypeInfo
 import com.cmoney.backend2.forumocean.service.api.variable.request.mediatype.MediaType
 import com.cmoney.backend2.forumocean.service.api.variable.request.mediatype.Type
 import com.cmoney.backend2.sample.extension.logResponse
@@ -323,7 +322,7 @@ class ForumOceanServiceCase : ServiceCase {
                 setting.identityToken.getMemberId().toLong(),
                 0,
                 20,
-                listOf(Positions.NORMAL, Positions.MANAGEMENT, Positions.PRESIDENT)
+                listOf(GroupPosition.NORMAL, GroupPosition.MANAGEMENT, GroupPosition.PRESIDENT)
             ).logResponse(TAG)
             getMemberManagedGroups(setting.identityToken.getMemberId().toLong(),0,20).logResponse(TAG)
             getMemberBelongGroups(setting.identityToken.getMemberId().toLong(),0,20).logResponse(TAG)
@@ -404,7 +403,7 @@ class ForumOceanServiceCase : ServiceCase {
                 this,
                 0,
                 200,
-                listOf(Positions.PRESIDENT, Positions.MANAGEMENT, Positions.NORMAL)
+                listOf(GroupPosition.PRESIDENT, GroupPosition.MANAGEMENT, GroupPosition.NORMAL)
             ).logResponse(TAG)
             val needApprovalId = getApprovals(this,0,20).getOrNull()?.firstOrNull()?.memberId
             needApprovalId?.let {
@@ -412,7 +411,7 @@ class ForumOceanServiceCase : ServiceCase {
                 changeGroupMemberPosition(
                     this,
                     needApprovalId,
-                    GroupPosition.Cadre
+                    GroupPosition.PRESIDENT
                 ).logResponse(TAG)
                 kick(this, needApprovalId).logResponse(TAG)
 
@@ -562,7 +561,7 @@ class ForumOceanServiceCase : ServiceCase {
             changeGroupMemberPosition(
                 groupId,
                 user2MemberId,
-                GroupPosition.Cadre
+                GroupPosition.PRESIDENT
             ).logResponse(TAG)
 
             user2.changeUser(setting)
