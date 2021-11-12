@@ -487,7 +487,7 @@ interface ForumOceanService {
     @POST("ForumOcean/api/NotifySetting/Set")
     suspend fun setNotifySetting(
         @Header("Authorization") authorization: String,
-        @Query("notifyType") notifyType: String,
+        @Query("type") notifyType: String,
         @Query("subType") subType: String = "",
         @Query("enable") enable: Boolean
     ) : Response<Void>
@@ -792,7 +792,7 @@ interface ForumOceanService {
     @POST("ForumOcean/api/Notify/SetRead")
     suspend fun setRead(
         @Header("Authorization") authorization: String,
-        @Query("notifyType") notifyType: String,
+        @Query("type") notifyType: String,
         @Query("mergeKey") mergeKey: String,
         @Query("isNew") isNew: Boolean
     ) : Response<Void>

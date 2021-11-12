@@ -25,7 +25,7 @@ data class GetNotifyResponseBody(
     val body: String?,
     @SerializedName("mergeKey")
     val mergeKey: String?,
-    @SerializedName("notifyType")
+    @SerializedName("type")
     val notifyType: String?,
     @SerializedName("read")
     val read: Boolean?,
