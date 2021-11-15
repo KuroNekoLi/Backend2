@@ -604,8 +604,11 @@ interface ForumOceanWeb {
     /**
      * 取得使用者通知
      *
+     * @param updateTime  指定通知的時間(不包含) (unixTime 單位:毫秒)
+     * @param offsetCount 取得通知筆數
+     * @return
      */
-    suspend fun getNotify() : Result<List<GetNotifyResponseBody>>
+    suspend fun getNotify(updateTime : Long,offsetCount : Int = 5) : Result<List<GetNotifyResponseBody>>
 
     /**
      * 取得使用者通知數量

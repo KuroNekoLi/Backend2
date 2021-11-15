@@ -439,11 +439,13 @@ class ForumOceanWebImpl(
             }
         }
 
-    override suspend fun getNotify(): Result<List<GetNotifyResponseBody>> =
+    override suspend fun getNotify(updateTime : Long,offsetCount : Int): Result<List<GetNotifyResponseBody>> =
         withContext(dispatcher.io()){
             kotlin.runCatching {
                 service.getNotify(
-                    authorization = setting.accessToken.createAuthorizationBearer()
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    updateTime = updateTime,
+                    offsetCount = offsetCount
                 ).checkResponseBody(jsonParser)
             }
         }

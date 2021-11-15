@@ -773,7 +773,9 @@ interface ForumOceanService {
     @RecordApi
     @GET("ForumOcean/api/Notify/Get")
     suspend fun getNotify(
-        @Header("Authorization") authorization: String
+        @Header("Authorization") authorization: String,
+        @Query("updateTime") updateTime : Long,
+        @Query("offsetCount") offsetCount : Int
     ) : Response<List<GetNotifyResponseBody>>
 
     @RecordApi
