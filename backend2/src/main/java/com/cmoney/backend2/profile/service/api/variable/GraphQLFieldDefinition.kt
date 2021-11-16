@@ -2,6 +2,8 @@ package com.cmoney.backend2.profile.service.api.variable
 
 enum class GraphQLFieldDefinition(val value: String) {
     Email("email"),
+    IsBindingCellphone("isBindingCellphone"),
+    PCoin("pCoin"),
     Name("name"),
     NickName("nickname"),
     Gender("gender"),
