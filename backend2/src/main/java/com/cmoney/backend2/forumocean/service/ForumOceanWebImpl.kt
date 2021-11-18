@@ -1,5 +1,6 @@
 package com.cmoney.backend2.forumocean.service
 
+import android.util.Log
 import com.cmoney.backend2.base.extension.checkResponseBody
 import com.cmoney.backend2.base.extension.createAuthorizationBearer
 import com.cmoney.backend2.base.extension.handleNoContent
@@ -49,6 +50,7 @@ class ForumOceanWebImpl(
     private val service: ForumOceanService,
     private val setting: Setting,
     private val jsonParser: Gson,
+    private val serverName : String = "",
     private val dispatcher: DispatcherProvider = DefaultDispatcherProvider()
 ) : ForumOceanWeb {
 
@@ -56,6 +58,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()){
             kotlin.runCatching {
                 service.getBanState(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer()
                 ).checkResponseBody(jsonParser)
             }
@@ -68,14 +71,17 @@ class ForumOceanWebImpl(
             kotlin.runCatching {
                 val response = when (body) {
                     is Content.Article.General -> service.createArticle(
+                        path = serverName,
                         authorization = setting.accessToken.createAuthorizationBearer(),
                         requestBody = body
                     )
                     is Content.Article.Group -> service.createArticle(
+                        path = serverName,
                         authorization = setting.accessToken.createAuthorizationBearer(),
                         requestBody = body
                     )
                     is Content.Article.Shared -> service.createArticle(
+                        path = serverName,
                         authorization = setting.accessToken.createAuthorizationBearer(),
                         requestBody = body
                     )
@@ -88,6 +94,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.createQuestion(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     requestBody = body
                 ).checkResponseBody(jsonParser)
@@ -98,6 +105,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getArticle(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     articleId = articleId
                 ).checkResponseBody(jsonParser)
@@ -108,6 +116,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getQuestionArticle(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     articleId = articleId
                 ).checkResponseBody(jsonParser)
@@ -118,6 +127,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getGroupArticle(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     articleId = articleId
                 ).checkResponseBody(jsonParser)
@@ -128,6 +138,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getSharedArticle(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     articleId = articleId
                 ).checkResponseBody(jsonParser)
@@ -138,6 +149,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getSignalArticle(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     articleId = articleId
                 ).checkResponseBody(jsonParser)
@@ -148,6 +160,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getNewsArticle(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     articleId = articleId
                 ).checkResponseBody(jsonParser)
@@ -158,6 +171,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getUnknownArticle(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     articleId = articleId
                 ).checkResponseBody(jsonParser)
@@ -171,6 +185,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.updateArticle(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     articleId = articleId,
                     body = updateHelper.create()
@@ -182,6 +197,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.deleteArticle(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     articleId = articleId
                 ).handleNoContent(jsonParser)
@@ -193,6 +209,7 @@ class ForumOceanWebImpl(
     override suspend fun getMemberStatistics(memberIdList: List<Long>) = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getMemberStatistics(
+                path = serverName,
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 memberIds = memberIdList.joinToString(",")
             ).checkResponseBody(jsonParser)
@@ -206,6 +223,7 @@ class ForumOceanWebImpl(
     ): Result<List<ArticleResponseBody.UnknownArticleResponseBody>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getChannelsArticleByWeight(
+                path = serverName,
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 channelNameList = GetChannelsArticleByWeightRequestBody(channelNameBuilderList.map { it.create() }),
                 startScore = weight,
@@ -218,6 +236,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.createCollection(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     articleId = articleId
                 ).handleNoContent(jsonParser)
@@ -228,6 +247,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.deleteCollection(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     articleId = articleId
                 ).handleNoContent(jsonParser)
@@ -242,6 +262,7 @@ class ForumOceanWebImpl(
     ): Result<CreateCommentResponseBody> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.createComment(
+                path = serverName,
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 articleId = articleId, body = CreateCommentRequestBody(
                     text = text,
@@ -259,6 +280,7 @@ class ForumOceanWebImpl(
     ): Result<List<CommentResponseBody>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getComment(
+                path = serverName,
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 articleId = articleId,
                 commentId = commentId,
@@ -273,6 +295,7 @@ class ForumOceanWebImpl(
     ): Result<List<CommentResponseBody>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getCommentWithId(
+                path = serverName,
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 articleId = articleId,
                 commentIds = commentIds.joinToString(",")
@@ -285,6 +308,7 @@ class ForumOceanWebImpl(
     ): Result<List<CommentResponseBody>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getGroupManagerComments(
+                path = serverName,
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 articleId = articleId
             ).checkResponseBody(jsonParser)
@@ -299,6 +323,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.updateComment(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     articleId = articleId,
                     commentId = commentId,
@@ -312,6 +337,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.deleteComment(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     articleId = articleId,
                     commentIndex = commentIndex
@@ -326,6 +352,7 @@ class ForumOceanWebImpl(
     ): Result<Unit> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.reactComment(
+                path = serverName,
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 articleId = articleId,
                 commentIndex = commentIndex,
@@ -344,6 +371,7 @@ class ForumOceanWebImpl(
     ): Result<List<ReactionInfo>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getReactionDetail(
+                path = serverName,
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 articleId = articleId,
                 commentIndex = commentIndex,
@@ -361,6 +389,7 @@ class ForumOceanWebImpl(
     ): Result<Unit> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.removeCommentReaction(
+                path = serverName,
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 articleId = articleId,
                 commentIndex = commentIndex
@@ -372,6 +401,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.createArticleReaction(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     articleId = articleId,
                     reactionType = type.value
@@ -387,6 +417,7 @@ class ForumOceanWebImpl(
     ): Result<List<ReactionInfo>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getArticleReactionDetail(
+                path = serverName,
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 articleId = articleId,
                 reactions = reactionTypeList.joinToString { it.value.toString() },
@@ -400,6 +431,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.deleteArticleReaction(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     articleId = articleId
                 ).handleNoContent(jsonParser)
@@ -410,6 +442,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.createArticleInterest(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     articleId = articleId
                 ).handleNoContent(jsonParser)
@@ -420,6 +453,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.createArticleDonate(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     articleId = articleId,
                     donateValue = donateValue
@@ -431,6 +465,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getArticleDonate(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     articleId = articleId,
                     offset = offset,
@@ -443,6 +478,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()){
             kotlin.runCatching {
                 service.getNotify(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     updateTime = updateTime,
                     offsetCount = offsetCount
@@ -454,6 +490,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()){
             kotlin.runCatching {
                 service.getCount(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer()
                 ).checkResponseBody(jsonParser)
             }
@@ -463,6 +500,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.resetCount(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer()
                 ).handleNoContent(jsonParser)
             }
@@ -476,6 +514,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()){
             kotlin.runCatching {
                 service.setRead(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     notifyType = notifyType,
                     mergeKey = mergeKey,
@@ -488,6 +527,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()){
             kotlin.runCatching {
                 service.getPushDefaultSetting(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer()
                 ).checkResponseBody(jsonParser)
             }
@@ -497,6 +537,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()){
             kotlin.runCatching {
                 service.getUserNotifySetting(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer()
                 ).checkResponseBody(jsonParser)
             }
@@ -510,6 +551,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()){
             kotlin.runCatching {
                 service.setNotifySetting(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     notifyType = notifyType,
                     subType = subType,
@@ -522,6 +564,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getGroup(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     groupId = groupId
                 ).checkResponseBody(jsonParser)
@@ -536,6 +579,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()){
             kotlin.runCatching {
                 service.getGroupsByKeyword(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     keyword = keyword,
                     offset = offset,
@@ -554,6 +598,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getGroupsWithPosition(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     memberId = ownId,
                     offset = offset,
@@ -594,7 +639,8 @@ class ForumOceanWebImpl(
             withContext(dispatcher.io()) {
                 kotlin.runCatching {
                     service.getMemberJoinAnyGroups(
-                            authorization = setting.accessToken.createAuthorizationBearer(),
+                            path = serverName,
+                        authorization = setting.accessToken.createAuthorizationBearer(),
                             memberId = memberId
                     ).checkResponseBody(jsonParser)
                 }
@@ -604,6 +650,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.createGroup(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     groupName = groupName
                 ).checkResponseBody(jsonParser)
@@ -614,6 +661,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.updateGroup(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     groupId = groupId,
                     body = body
@@ -625,6 +673,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.transferGroup(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     groupId = groupId,
                     memberId = memberId
@@ -635,6 +684,7 @@ class ForumOceanWebImpl(
     override suspend fun deleteGroup(groupId: Long): Result<Unit> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.deleteGroup(
+                path = serverName,
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 groupId = groupId
             ).handleNoContent(jsonParser)
@@ -645,6 +695,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.join(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     groupId = groupId,
                     reason = reason
@@ -660,6 +711,7 @@ class ForumOceanWebImpl(
     ): Result<List<GroupMember>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getMembers(
+                path = serverName,
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 groupId = groupId,
                 offset = offset,
@@ -673,6 +725,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getApprovals(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     groupId = groupId,
                     offset = offset,
@@ -685,6 +738,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.approval(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     groupId = groupId,
                     memberId = memberId,
@@ -700,6 +754,7 @@ class ForumOceanWebImpl(
     ): Result<Unit> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.changeGroupMemberPosition(
+                path = serverName,
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 groupId = groupId,
                 memberId = memberId,
@@ -712,6 +767,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.kick(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     groupId = groupId,
                     memberId = memberId
@@ -722,6 +778,7 @@ class ForumOceanWebImpl(
     override suspend fun leave(groupId: Long): Result<Unit> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.leave(
+                path = serverName,
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 groupId = groupId
             ).handleNoContent(jsonParser)
@@ -731,6 +788,7 @@ class ForumOceanWebImpl(
     override suspend fun pinArticle(articleId: Long) = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.pinArticle(
+                path = serverName,
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 articleId = articleId
             ).handleNoContent(jsonParser)
@@ -740,6 +798,7 @@ class ForumOceanWebImpl(
     override suspend fun unpinArticle(articleId: Long) = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.unpinArticle(
+                path = serverName,
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 articleId = articleId
             ).handleNoContent(jsonParser)
@@ -750,6 +809,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getOfficials(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     offset = offset,
                     fetch = fetch
@@ -761,6 +821,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getOfficialsByIds(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     officialIds = officialIds.joinToString(",")
                 ).checkResponseBody(jsonParser)
@@ -771,6 +832,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getOfficialsByKeyword(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     keyword = keyword,
                     offset = offset,
@@ -783,6 +845,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getOfficialSubscribedCount(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     officialId = officialId
                 ).checkResponseBody(jsonParser)
@@ -793,6 +856,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getSubscribedCount(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     memberId = memberId
                 ).checkResponseBody(jsonParser)
@@ -803,6 +867,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getSubscribed(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     memberId = memberId,
                     offset = offset,
@@ -814,6 +879,7 @@ class ForumOceanWebImpl(
     override suspend fun subscribe(officialId: Long): Result<Unit> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.subscribe(
+                path = serverName,
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 officialId = officialId
             ).handleNoContent(jsonParser)
@@ -824,6 +890,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.unsubscribe(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     officialId = officialId
                 ).handleNoContent(jsonParser)
@@ -833,6 +900,7 @@ class ForumOceanWebImpl(
     override suspend fun unsubscribeAll(): Result<Unit> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.unsubscribeAll(
+                path = serverName,
                 authorization = setting.accessToken.createAuthorizationBearer()
             ).handleNoContent(jsonParser)
         }
@@ -841,6 +909,7 @@ class ForumOceanWebImpl(
     override suspend fun getCommodityRank(offset : Int,fetch : Int): Result<List<GetCommodityRankResponseBody>>  = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getCommodityRank(
+                path = serverName,
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 offset= offset,
                 fetch=fetch
@@ -851,6 +920,7 @@ class ForumOceanWebImpl(
     override suspend fun getUSCommodityRank(offset : Int,fetch : Int): Result<List<GetCommodityRankResponseBody>>  = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getUSCommodityRank(
+                path = serverName,
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 offset= offset,
                 fetch=fetch
@@ -861,6 +931,7 @@ class ForumOceanWebImpl(
     override suspend fun getExpertMemberRank(offset : Int,fetch : Int): Result<List<GetExpertMemberRankResponseBody>>  = withContext(dispatcher.io()){
         kotlin.runCatching {
             service.getExpertMemberRank(
+                path = serverName,
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 offset= offset,
                 fetch=fetch
@@ -872,6 +943,7 @@ class ForumOceanWebImpl(
     override suspend fun getSpecificExpertMemberRank(memeberIds:String): Result<List<GetExpertMemberRankResponseBody>>  = withContext(dispatcher.io()){
         kotlin.runCatching {
             service.getSpecificExpertMemberRank(
+                path = serverName,
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 memeberIds=memeberIds
             ).checkResponseBody(jsonParser)
@@ -881,6 +953,7 @@ class ForumOceanWebImpl(
     override suspend fun getMemberFansRank(offset : Int,fetch : Int): Result<List<FansMemberRankResponseBody>>  = withContext(dispatcher.io()){
         kotlin.runCatching {
             service.getMemberFansRank(
+                path = serverName,
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 offset= offset,
                 fetch=fetch
@@ -891,6 +964,7 @@ class ForumOceanWebImpl(
     override suspend fun getSpecificMemberFansRank(memeberIds:String): Result<List<FansMemberRankResponseBody>>  = withContext(dispatcher.io()){
         kotlin.runCatching {
             service.getSpecificMemberFansRank(
+                path = serverName,
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 memeberIds=memeberIds
             ).checkResponseBody(jsonParser)
@@ -900,6 +974,7 @@ class ForumOceanWebImpl(
     override suspend fun getSolutionExpertRank(offset : Int,fetch : Int): Result<List<SolutionExpertRankResponseBody>>  = withContext(dispatcher.io()){
         kotlin.runCatching {
             service.getSolutionExpertRank(
+                path = serverName,
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 offset= offset,
                 fetch=fetch
@@ -910,6 +985,7 @@ class ForumOceanWebImpl(
     override suspend fun getSpecificSolutionExpertRank(memeberIds:String): Result<List<SolutionExpertRankResponseBody>>  = withContext(dispatcher.io()){
         kotlin.runCatching {
             service.getSpecificSolutionExpertRank(
+                path = serverName,
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 memeberIds=memeberIds
             ).checkResponseBody(jsonParser)
@@ -920,6 +996,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getFollowingList(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     memberId = memberId,
                     offset = offset,
@@ -932,6 +1009,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getFollowers(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     memberId = memberId,
                     offset = offset,
@@ -943,6 +1021,7 @@ class ForumOceanWebImpl(
     override suspend fun follow(memberId: Long): Result<Unit> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.follow(
+                path = serverName,
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 memberId = memberId
             ).handleNoContent(jsonParser)
@@ -952,6 +1031,7 @@ class ForumOceanWebImpl(
     override suspend fun unfollow(memberId: Long): Result<Unit> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.unfollow(
+                path = serverName,
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 memberId = memberId
             ).handleNoContent(jsonParser)
@@ -961,6 +1041,7 @@ class ForumOceanWebImpl(
     override suspend fun block(memberId: Long): Result<Unit> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.block(
+                path = serverName,
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 memberId = memberId
             ).handleNoContent(jsonParser)
@@ -970,6 +1051,7 @@ class ForumOceanWebImpl(
     override suspend fun unblock(memberId: Long): Result<Unit> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.unblock(
+                path = serverName,
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 memberId = memberId
             ).handleNoContent(jsonParser)
@@ -979,6 +1061,7 @@ class ForumOceanWebImpl(
     override suspend fun getBlockingList(offset : Int,fetch : Int) = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getBlockingList(
+                path = serverName,
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 offset = offset,
                 fetch = fetch
@@ -990,6 +1073,7 @@ class ForumOceanWebImpl(
     override suspend fun getBlockers(offset : Int,fetch : Int) = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getBlockers(
+                path = serverName,
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 offset = offset,
                 fetch = fetch
@@ -1000,6 +1084,7 @@ class ForumOceanWebImpl(
     override suspend fun getRelationshipWithMe(memberIdList: List<Long>) = withContext(dispatcher.io()){
         kotlin.runCatching {
             service.getRelationshipWithMe(
+                path = serverName,
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 memberIds = memberIdList.joinToString()
             ).checkResponseBody(jsonParser)
@@ -1014,6 +1099,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.createReport(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     articleId = articleId,
                     reasonType = reason.value,
@@ -1026,6 +1112,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.deleteReport(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     articleId = articleId,
                     commentId = commentId
@@ -1037,6 +1124,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getMemberIds(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     channelIds = channelIdList.joinToString(",")
                 ).checkResponseBody(jsonParser)
@@ -1047,6 +1135,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getChannelIds(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     memberIds = memberIdList.joinToString(",")
                 ).checkResponseBody(jsonParser)
@@ -1057,6 +1146,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.createVote(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     articleId = articleId,
                     optionIndex = optionIndex
@@ -1068,6 +1158,7 @@ class ForumOceanWebImpl(
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getCurrentVote(
+                    path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     articleId = articleId
                 ).checkResponseBody(jsonParser)
