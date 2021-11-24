@@ -140,7 +140,7 @@ class SampleApplication : Application() {
 
 ##### 目前定義好的Module
 
-| 定義名稱                                  | 對應PackageName            |
+| 定義名稱                                   | 對應PackageName             |
 |-------------------------------------------|----------------------------|
 | activityServiceModule                     | activity                   |
 | additionalInformationRevisitServiceModule | additionInformationReviist |
@@ -153,7 +153,8 @@ class SampleApplication : Application() {
 | cmtalkServiceModule,                      | cmtalk                     |
 | commonServiceModule,                      | common                     |
 | customGroupServiceModule,                 | customgroup                |
-| customGroup2ServiceModule,                | customgroup2                |
+| customGroup2ServiceModule,                | customgroup2               |
+| dataServiceModule                         | data                       |
 | dtnoServiceModule,                        | dtno                       |
 | emilyServiceModule,                       | emilystock                 |
 | forumOceanServiceModule,                  | forumocean                 |
@@ -172,9 +173,9 @@ class SampleApplication : Application() {
 | tickDataServiceModule,                    | tickdata                   |
 | trialServiceModule,                       | trial                      |
 | virtualAssetsServiceModule                | virtualassets              |
-| crmServiceModule                          | crm              |
-| userBehaviorServiceModule                 | userbehavior              |
-| clientConfigurationModule                 | clientconfiguration              |
+| crmServiceModule                          | crm                        |
+| userBehaviorServiceModule                 | userbehavior               |
+| clientConfigurationModule                 | clientconfiguration        |
 #### 選擇使用Module的步驟
 
 - 確認目前需要使用的服務的host之後的path，以下舉例說明
@@ -569,6 +570,8 @@ suspend fun getAccountInfo(
     @Field("AppId") appId: Int
 ): Response<AccountInfoWithError>
 ```
+
+請新創建的service要在[RecordApiTest](./backend2/src/test/java/com/cmoney/backend2/base/model/calladapter/RecordApiTest.kt)中加入集合中成為測試案例
 
 ## Unsigned Data Type 支援
 
