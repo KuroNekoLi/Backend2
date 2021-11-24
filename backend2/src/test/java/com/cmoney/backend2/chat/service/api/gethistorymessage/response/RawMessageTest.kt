@@ -1,22 +1,24 @@
 package com.cmoney.backend2.chat.service.api.gethistorymessage.response
 
 import com.google.common.truth.Truth
-import org.json.JSONObject
+import com.google.gson.GsonBuilder
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.ParameterizedRobolectricTestRunner
 import kotlin.reflect.KClass
 
 @RunWith(ParameterizedRobolectricTestRunner::class)
-class MessageTest(
+class RawMessageTest(
     private val jsonString: String,
     private val expectClass: KClass<*>
 ) {
 
+    private val gson = GsonBuilder().serializeNulls().setLenient().setPrettyPrinting().create()
+
     @Test
     fun parseMessage() {
-        val json = JSONObject(jsonString)
-        val message = Message.fromJson(json)
+        val rawMessage = gson.fromJson(jsonString, RawMessage::class.java)
+        val message = rawMessage.asReal()
         Truth.assertThat(message).isNotNull()
         requireNotNull(message)
         Truth.assertThat(message::class).isEqualTo(expectClass)

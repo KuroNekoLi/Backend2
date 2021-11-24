@@ -3,6 +3,7 @@ package com.cmoney.backend2.chat.service
 import com.cmoney.backend2.base.model.calladapter.RecordApi
 import com.cmoney.backend2.chat.service.api.chatroomsetting.response.ChatRoomSettingResponseBody
 import com.cmoney.backend2.chat.service.api.getallreport.request.ReportInfo
+import com.cmoney.backend2.chat.service.api.gethistorymessage.response.RawMessage
 import com.cmoney.backend2.chat.service.api.getsubjectallrequests.response.AuthorizationRequestResponseBody
 import com.cmoney.backend2.chat.service.api.getuserprofile.response.UserProfileResponseBody
 import com.cmoney.backend2.chat.service.api.reportsomeone.request.ReportSomeone
@@ -216,7 +217,7 @@ interface ChatRoomService {
     suspend fun getMessageById(
         @Header("Authorization") authorization: String,
         @Path("messageId") messageId: Long
-    ): Response<ResponseBody>
+    ): Response<RawMessage>
 
     /**
      * 取得歷史訊息, 新訊息優先
@@ -232,7 +233,7 @@ interface ChatRoomService {
         @Header("Authorization") authorization: String,
         @Path("chatroomId") roomId: Long,
         @QueryMap map: Map<String, String>
-    ): Response<ResponseBody>
+    ): Response<List<RawMessage?>>
 
     /**
      * 取得歷史訊息, 舊訊息優先
@@ -248,7 +249,7 @@ interface ChatRoomService {
         @Header("Authorization") authorization: String,
         @Path("chatroomId") roomId: Long,
         @QueryMap map: Map<String, String>
-    ): Response<ResponseBody>
+    ): Response<List<RawMessage?>>
 
     /**
      * 刪除訊息
