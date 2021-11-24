@@ -8,7 +8,7 @@ import com.cmoney.backend2.base.model.dispatcher.DefaultDispatcherProvider
 import com.cmoney.backend2.base.model.dispatcher.DispatcherProvider
 import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.data.service.api.FundIdData
-import com.cmoney.backend2.data.service.api.checkApiError
+import com.cmoney.backend2.data.extension.checkApiError
 import kotlinx.coroutines.withContext
 
 class DataWebImpl(

@@ -4,7 +4,7 @@ import com.cmoney.backend2.base.di.BACKEND2_GSON
 import com.cmoney.backend2.data.di.RetrofitProvider
 import com.cmoney.backend2.data.di.dataServiceModule
 import com.cmoney.backend2.data.service.DataWeb
-import com.cmoney.backend2.data.service.api.toListOfSomething
+import com.cmoney.backend2.data.extension.toListOfSomething
 import com.cmoney.backend2.sample.extension.logResponse
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
