@@ -1,3 +1,22 @@
+#  (2021-11-24)
+
+
+
+# [5.1.0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.0.0...5.1.0) (2021-11-24)
+
+
+### Bug Fixes
+
+* 修正聊天室顯示訊息Parse機制 ([363c40b](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/363c40b890f0ec7afbb6b11956c519bb2084f4da))
+
+
+### Features
+
+* add identityProviderWeb new login method - loginByPkce and its unitTest ([516f669](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/516f66938362499d7d75dbd6bdeedb4a2b26a910))
+* 新增 DataService 及取得 FundId 相關服務及測試 ([d3abb83](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/d3abb838bb803c08a7ae8639222b9a21bb504e29))
+
+
+
 #  (2021-11-04)
 
 

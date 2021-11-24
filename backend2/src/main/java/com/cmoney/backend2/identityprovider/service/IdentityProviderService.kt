@@ -34,6 +34,7 @@ interface IdentityProviderService {
      * @param code 從Authorization endpoint得到的code
      * @param redirectUri 登入結束後要返回的網址
      * @param refreshToken 用來取得新的access token
+     * @param codeVerifier PKCE要求時帶的隨機驗證字串，[CodeVerifier](https://datatracker.ietf.org/doc/html/rfc7636#page-8)
      *
      */
     @RecordApi
@@ -65,7 +66,9 @@ interface IdentityProviderService {
         @Field(value = "redirect_uri")
         redirectUri: String? = null,
         @Field(value = "refresh_token")
-        refreshToken: String? = null
+        refreshToken: String? = null,
+        @Field(value = "code_verifier")
+        codeVerifier: String? = null
     ): Response<GetTokenResponseBodyWithError>
 
     /**

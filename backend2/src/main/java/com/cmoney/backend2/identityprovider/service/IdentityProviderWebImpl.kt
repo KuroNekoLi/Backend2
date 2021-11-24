@@ -137,6 +137,31 @@ class IdentityProviderWebImpl(
             }
         }
 
+    override suspend fun loginByPkce(
+        redirectUri: String,
+        codeVerifier: String,
+        code: String
+    ): Result<GetTokenResponseBody> = withContext(dispatcherProvider.io()) {
+        kotlin.runCatching {
+            val xApiLog = XApiLog(
+                appId = setting.appId,
+                platform = setting.platform.code,
+                mode = 9
+            ).let { gson.toJson(it) }
+
+            service.getIdentityToken(
+                xApiLog = xApiLog,
+                grantType = "authorization_code",
+                clientId = setting.clientId,
+                redirectUri = redirectUri,
+                code = code,
+                codeVerifier = codeVerifier
+            )
+                .checkResponseBody(gson)
+                .toRealResponse()
+        }
+    }
+
     override suspend fun refreshToken(refreshToken: String): Result<GetTokenResponseBody> =
         withContext(dispatcherProvider.io()) {
             kotlin.runCatching {
