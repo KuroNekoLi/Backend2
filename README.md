@@ -22,7 +22,10 @@ allprojects {
     repositories {
 		google()
 		mavenCentral()
-		maven { url "http://192.168.99.70:8081/repository/maven-public/" }
+		maven { 
+          url "http://192.168.99.70:8081/repository/maven-public/"
+          setIsAllowInsecureProtocol(true)
+        }
         jcenter()
     }
 }
@@ -42,7 +45,7 @@ android {
     }
 }
 dependecies {
-	implementation 'com.cmoney.backend2:backend2:5.0.0'
+	implementation 'com.cmoney.backend2:backend2:5.1.0'
 	implementation("com.cmoney.logdatarecorder:logdatarecorder-data:5.0.0")
 	implementation("com.cmoney.logdatarecorder:logdatarecorder-domain:5.0.0")
 }
@@ -52,8 +55,8 @@ dependecies {
 
 ```groovy
 dependecies {
-	releaseImplementation 'com.cmoney.backend2:backend2:5.0.0'
-	debugImplementation 'com.cmoney.backend2:backend2-debug:5.0.0'
+	releaseImplementation 'com.cmoney.backend2:backend2:5.1.0'
+	debugImplementation 'com.cmoney.backend2:backend2-debug:5.1.0'
 	implementation("com.cmoney.logdatarecorder:logdatarecorder-data:5.0.0")
 	implementation("com.cmoney.logdatarecorder:logdatarecorder-domain:5.0.0")
 }
