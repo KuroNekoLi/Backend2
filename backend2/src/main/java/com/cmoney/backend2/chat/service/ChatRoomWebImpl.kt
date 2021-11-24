@@ -1,6 +1,7 @@
 package com.cmoney.backend2.chat.service
 
 import com.cmoney.backend2.base.extension.checkIsSuccessful
+import com.cmoney.backend2.base.extension.checkResponseBody
 import com.cmoney.backend2.base.extension.createAuthorizationBearer
 import com.cmoney.backend2.base.extension.requireBody
 import com.cmoney.backend2.base.model.dispatcher.DefaultDispatcherProvider
@@ -17,16 +18,20 @@ import com.cmoney.backend2.chat.service.api.updateuserprofile.response.UpdateUse
 import com.cmoney.backend2.chat.service.api.variable.Role
 import com.cmoney.backend2.chat.service.api.variable.RuleSet
 import com.cmoney.backend2.chat.service.api.variable.Subject
+import com.google.gson.Gson
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.ResponseBody
+import org.json.JSONArray
+import org.json.JSONObject
 import java.io.File
 
 class ChatRoomWebImpl(
     private val chatRoomService: ChatRoomService,
     private val setting: Setting,
+    private val gson: Gson,
     private val dispatcher: DispatcherProvider = DefaultDispatcherProvider()
 ) : ChatRoomWeb {
 
@@ -209,16 +214,18 @@ class ChatRoomWebImpl(
         fetchCount: Int
     ): Result<List<Message>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
-            chatRoomService.getHistoryMessageLatest(
+            val response = chatRoomService.getHistoryMessageLatest(
                 setting.accessToken.createAuthorizationBearer(),
                 roomId,
                 HistroyMessageRequestParam(count = fetchCount).putQueryMap(mutableMapOf())
             )
-                .checkIsSuccessful()
-                .requireBody()
-                .mapNotNull {
-                    it
-                }
+            val jsonString = response.checkResponseBody(gson)
+                .string()
+            val jsonArray = JSONArray(jsonString)
+            (0 until jsonArray.length()).mapNotNull { index ->
+                val json = jsonArray.getJSONObject(index)
+                Message.fromJson(json)
+            }
         }
     }
 
@@ -246,11 +253,13 @@ class ChatRoomWebImpl(
                     )
                 )
             }
-            response.checkIsSuccessful()
-                .requireBody()
-                .mapNotNull {
-                    it
-                }
+            val jsonString = response.checkResponseBody(gson)
+                .string()
+            val jsonArray = JSONArray(jsonString)
+            (0 until jsonArray.length()).mapNotNull { index ->
+                val json = jsonArray.getJSONObject(index)
+                Message.fromJson(json)
+            }
         }
     }
 
@@ -266,16 +275,18 @@ class ChatRoomWebImpl(
                 startTime = startTime,
                 endTime = endTime
             )
-            chatRoomService.getHistoryMessageLatest(
+            val response = chatRoomService.getHistoryMessageLatest(
                 setting.accessToken.createAuthorizationBearer(),
                 roomId,
                 param.putQueryMap(mutableMapOf())
             )
-                .checkIsSuccessful()
-                .requireBody()
-                .mapNotNull {
-                    it
-                }
+            val jsonString = response.checkResponseBody(gson)
+                .string()
+            val jsonArray = JSONArray(jsonString)
+            (0 until jsonArray.length()).mapNotNull { index ->
+                val json = jsonArray.getJSONObject(index)
+                Message.fromJson(json)
+            }
         }
     }
 
@@ -284,16 +295,18 @@ class ChatRoomWebImpl(
         fetchCount: Int
     ): Result<List<Message>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
-            chatRoomService.getHistoryMessageOldest(
+            val response = chatRoomService.getHistoryMessageOldest(
                 setting.accessToken.createAuthorizationBearer(),
                 roomId,
                 HistroyMessageRequestParam(count = fetchCount).putQueryMap(mutableMapOf())
             )
-                .checkIsSuccessful()
-                .requireBody()
-                .mapNotNull {
-                    it
-                }
+            val jsonString = response.checkResponseBody(gson)
+                .string()
+            val jsonArray = JSONArray(jsonString)
+            (0 until jsonArray.length()).mapNotNull { index ->
+                val json = jsonArray.getJSONObject(index)
+                Message.fromJson(json)
+            }
         }
     }
 
@@ -321,11 +334,13 @@ class ChatRoomWebImpl(
                     )
                 )
             }
-            response.checkIsSuccessful()
-                .requireBody()
-                .mapNotNull {
-                    it
-                }
+            val jsonString = response.checkResponseBody(gson)
+                .string()
+            val jsonArray = JSONArray(jsonString)
+            (0 until jsonArray.length()).mapNotNull { index ->
+                val json = jsonArray.getJSONObject(index)
+                Message.fromJson(json)
+            }
         }
     }
 
@@ -341,27 +356,31 @@ class ChatRoomWebImpl(
                 startTime = startTime,
                 endTime = endTime
             )
-            chatRoomService.getHistoryMessageOldest(
+            val jsonString = chatRoomService.getHistoryMessageOldest(
                 setting.accessToken.createAuthorizationBearer(),
                 roomId,
                 param.putQueryMap(mutableMapOf())
             )
-                .checkIsSuccessful()
-                .requireBody()
-                .mapNotNull {
-                    it
-                }
+                .checkResponseBody(gson)
+                .string()
+            val jsonArray = JSONArray(jsonString)
+            (0 until jsonArray.length()).mapNotNull { index ->
+                val json = jsonArray.getJSONObject(index)
+                Message.fromJson(json)
+            }
         }
     }
 
     override suspend fun getMessageById(id: Long) = withContext(dispatcher.io()) {
         kotlin.runCatching {
-            chatRoomService.getMessageById(
+            val jsonString = chatRoomService.getMessageById(
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 messageId = id
             )
-                .checkIsSuccessful()
-                .requireBody()
+                .checkResponseBody(gson)
+                .string()
+            val json = JSONObject(jsonString)
+            requireNotNull(Message.fromJson(json = json))
         }
     }
 
