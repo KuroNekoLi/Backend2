@@ -1,3 +1,16 @@
+#  (2021-11-25)
+
+
+
+# [5.2.0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.1.1...5.2.0) (2021-11-25)
+
+
+### Features
+
+* 新增聊天室回覆訊息物件及解析 ([33b6bac](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/33b6bac1562bfc272d35ab815336677b69ccc27b))
+
+
+
 #  (2021-11-24)
 
 
