@@ -29,6 +29,7 @@
 -keep class com.cmoney.backend2.crm.service.api.** { *; }
 -keep class com.cmoney.backend2.customgroup.service.api.** { *; }
 -keep class com.cmoney.backend2.customgroup2.service.api.** { *; }
+-keep class com.cmoney.backend2.data.service.api.** { *; }
 -keep class com.cmoney.backend2.dtno.service.api.** { *; }
 -keep class com.cmoney.backend2.emilystock.service.api.** { *; }
 -keep class com.cmoney.backend2.forumocean.service.api.** { *; }
