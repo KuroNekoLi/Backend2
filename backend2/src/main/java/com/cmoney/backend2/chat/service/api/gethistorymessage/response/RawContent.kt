@@ -16,6 +16,9 @@ import com.google.gson.annotations.SerializedName
  * @property messageId
  * @property exception
  * @property originalMessage
+ * @property destination
+ * @property type
+ * @property content
  */
 data class RawContent(
     @SerializedName(Content.Image.PROPERTY_ORIGINAL_CONTENT_URL)
@@ -39,7 +42,13 @@ data class RawContent(
     @SerializedName(Content.Exception.PROPERTY_EXCEPTION)
     val exception: String?,
     @SerializedName(Content.Exception.PROPERTY_ORIGINAL_MESSAGE)
-    val originalMessage: String?
+    val originalMessage: String?,
+    @SerializedName(Content.Reply.PROPERTY_DESTINATION)
+    val destination: Long?,
+    @SerializedName(Content.Reply.PROPERTY_TYPE)
+    val type: String?,
+    @SerializedName(Content.Reply.PROPERTY_CONTENT)
+    val content: ReplyRawContent?
 ) {
     fun asReal(type: String?): Content? {
         return when (type) {
@@ -56,6 +65,13 @@ data class RawContent(
             }
             Content.Sticker.TYPE_NAME -> {
                 Content.Sticker(packageId = packageId, stickerId = stickerId)
+            }
+            Content.Reply.TYPE_NAME -> {
+                Content.Reply.Text(
+                    destination = destination,
+                    type = this.type,
+                    content = content?.asReal(this.type) as? Content.Text
+                )
             }
             Content.Empty.TYPE_NAME -> {
                 Content.Empty

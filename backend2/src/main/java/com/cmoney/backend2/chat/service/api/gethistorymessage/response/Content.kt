@@ -73,6 +73,41 @@ sealed class Content {
     }
 
     /**
+     * 回覆訊息
+     *
+     * @property destination 回覆對象
+     * @property type 訊息類型
+     * @property content 內容
+     */
+    sealed class Reply(
+        open val destination: Long?,
+        open val type: String?,
+        open val content: Content?
+    ) : Content() {
+
+        override val typeName: String = TYPE_NAME
+
+        /**
+         * 文字回覆訊息
+         */
+        data class Text(
+            @SerializedName(PROPERTY_DESTINATION)
+            override val destination: Long?,
+            @SerializedName(PROPERTY_TYPE)
+            override val type: String?,
+            @SerializedName(PROPERTY_CONTENT)
+            override val content: Content.Text?
+        ): Reply(destination, type, content)
+
+        companion object {
+            const val PROPERTY_DESTINATION = "destination"
+            const val PROPERTY_TYPE = "type"
+            const val PROPERTY_CONTENT = "content"
+            const val TYPE_NAME = "Reply"
+        }
+    }
+
+    /**
      * 空白訊息
      */
     object Empty : Content() {

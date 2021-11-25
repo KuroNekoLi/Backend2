@@ -91,6 +91,16 @@ data class RawMessage(
                     timestamp = timestamp
                 )
             }
+            is Content.Reply.Text -> {
+                ReplyTextMessage(
+                    chatroomId = chatroomId,
+                    content = content,
+                    id = id,
+                    senderId = senderId,
+                    timestamp = timestamp,
+                    type = type
+                )
+            }
             null -> {
                 null
             }
