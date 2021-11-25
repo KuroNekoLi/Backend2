@@ -57,6 +57,22 @@ data class ImageMessage(
     type = type
 )
 
+data class ReplyTextMessage(
+    override val chatroomId: Long?,
+    override val content: Content.Reply.Text?,
+    override val id: Long?,
+    override val senderId: Long?,
+    override val timestamp: Long?,
+    override val type: String?
+): Message(
+    chatroomId = chatroomId,
+    content = content,
+    id = id,
+    senderId = senderId,
+    timestamp = timestamp,
+    type = type
+)
+
 data class EmptyMessage(
     override val chatroomId: Long?,
     override val content: Content.Empty?,
