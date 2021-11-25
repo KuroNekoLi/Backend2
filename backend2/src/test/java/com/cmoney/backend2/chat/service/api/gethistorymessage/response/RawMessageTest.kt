@@ -80,6 +80,26 @@ class RawMessageTest(
                     }
                     """.trimIndent(),
                     StickerMessage::class
+                ),
+                arrayOf<Any?>(
+                    """
+                    {
+                      "id": 899210,
+                      "senderId": 15695,
+                      "chatroomId": 2,
+                      "type": "Reply",
+                      "content": {
+                          "destination": 1111,
+                          "type": "Text",
+                          "content": {
+                              "text": "test3"
+                          }
+                      },
+                      "timestamp": 1637726262974,
+                      "state": 0
+                    }    
+                    """.trimIndent(),
+                    ReplyTextMessage::class
                 )
             )
         }
