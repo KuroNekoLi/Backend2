@@ -4,10 +4,10 @@ import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.robolectric.ParameterizedRobolectricTestRunner
+import org.junit.runners.Parameterized
 import kotlin.reflect.KClass
 
-@RunWith(ParameterizedRobolectricTestRunner::class)
+@RunWith(Parameterized::class)
 class RawMessageTest(
     private val jsonString: String,
     private val expectClass: KClass<*>
@@ -16,7 +16,7 @@ class RawMessageTest(
     private val gson = GsonBuilder().serializeNulls().setLenient().setPrettyPrinting().create()
 
     @Test
-    fun parseMessage() {
+    fun parseMessageFromJson() {
         val rawMessage = gson.fromJson(jsonString, RawMessage::class.java)
         val message = rawMessage.asReal()
         Truth.assertThat(message).isNotNull()
@@ -24,11 +24,39 @@ class RawMessageTest(
         Truth.assertThat(message::class).isEqualTo(expectClass)
     }
 
+    @Test
+    fun parseContentToJson() {
+        val rawMessage = gson.fromJson(jsonString, RawMessage::class.java)
+        Truth.assertThat(rawMessage).isNotNull()
+        requireNotNull(rawMessage)
+        val rawContent = rawMessage.content
+        Truth.assertThat(rawContent).isNotNull()
+        requireNotNull(rawContent)
+        val content = rawContent.asReal(rawMessage.type)
+        gson.toJson(content)
+    }
+
     companion object {
-        @ParameterizedRobolectricTestRunner.Parameters(name = "Check Parse {1}")
+        @Parameterized.Parameters(name = "Check Parse {1}")
         @JvmStatic
         fun getData(): Iterable<Array<Any?>> {
             return listOf(
+                arrayOf<Any?>(
+                    """
+                    {
+                      "id": 899210,
+                      "senderId": 15695,
+                      "chatroomId": 2,
+                      "type": "Text",
+                      "content": {
+                        "text": "測試"
+                      },
+                      "timestamp": 1637726262974,
+                      "state": 0
+                    }   
+                    """.trimIndent(),
+                    TextMessage::class
+                ),
                 arrayOf<Any?>(
                     """
                     {
@@ -47,22 +75,6 @@ class RawMessageTest(
                     }
                     """.trimIndent(),
                     ImageMessage::class
-                ),
-                arrayOf<Any?>(
-                    """
-                    {
-                      "id": 899210,
-                      "senderId": 15695,
-                      "chatroomId": 2,
-                      "type": "Text",
-                      "content": {
-                        "text": "test3"
-                      },
-                      "timestamp": 1637726262974,
-                      "state": 0
-                    }
-                    """.trimIndent(),
-                    TextMessage::class
                 ),
                 arrayOf<Any?>(
                     """
