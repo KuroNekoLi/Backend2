@@ -1,3 +1,16 @@
+#  (2021-11-26)
+
+
+
+## [5.2.1](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.2.0...5.2.1) (2021-11-26)
+
+
+### Bug Fixes
+
+* RawMessage, Content json parse config ([578156e](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/578156eb8a829afbd75b183d9dbc79fb0c57f94e))
+
+
+
 #  (2021-11-25)
 
 
