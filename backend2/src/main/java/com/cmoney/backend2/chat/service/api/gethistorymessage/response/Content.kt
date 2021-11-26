@@ -20,6 +20,7 @@ sealed class Content {
         val text: String?
     ) : Content() {
 
+        @Transient
         override val typeName: String = TYPE_NAME
 
         companion object {
@@ -42,6 +43,7 @@ sealed class Content {
         val height: Int?
     ) : Content() {
 
+        @Transient
         override val typeName: String = TYPE_NAME
 
         companion object {
@@ -63,6 +65,7 @@ sealed class Content {
         val stickerId: Int?
     ) : Content() {
 
+        @Transient
         override val typeName: String = TYPE_NAME
 
         companion object {
@@ -80,11 +83,15 @@ sealed class Content {
      * @property content 內容
      */
     sealed class Reply(
+        @Transient
         open val destination: Long?,
+        @Transient
         open val type: String?,
+        @Transient
         open val content: Content?
     ) : Content() {
 
+        @Transient
         override val typeName: String = TYPE_NAME
 
         /**
@@ -112,6 +119,7 @@ sealed class Content {
      */
     object Empty : Content() {
         const val TYPE_NAME: String = "Empty"
+        @Transient
         override val typeName: String = TYPE_NAME
     }
 
@@ -123,6 +131,7 @@ sealed class Content {
         val originalReason: String?
     ) : Content() {
 
+        @Transient
         override val typeName: String = TYPE_NAME
 
         fun getReason(): Reason? {
@@ -171,6 +180,7 @@ sealed class Content {
         val messageId: Long?
     ) : Content() {
 
+        @Transient
         override val typeName: String = TYPE_NAME
 
         companion object {
@@ -189,6 +199,7 @@ sealed class Content {
         val originalMessage: String?
     ) : Content() {
 
+        @Transient
         override val typeName: String = TYPE_NAME
 
         companion object {
