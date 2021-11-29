@@ -70,7 +70,7 @@ val backendBaseModule = module {
 /**
  * 創建預設的OkHttpClient
  */
-private fun createOkHttpClient(): OkHttpClient {
+internal fun createOkHttpClient(): OkHttpClient {
     return OkHttpClient.Builder()
         .connectionSpecs(listOf(COMPATIBLE_TLS, ConnectionSpec.CLEARTEXT))
         .addUrlInterceptor()
@@ -85,7 +85,7 @@ private fun createOkHttpClient(): OkHttpClient {
 /**
  * 加入Http Body Log
  */
-private fun OkHttpClient.Builder.addLogInterceptor() = apply {
+internal fun OkHttpClient.Builder.addLogInterceptor() = apply {
     if (BuildConfig.DEBUG) {
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
@@ -96,7 +96,7 @@ private fun OkHttpClient.Builder.addLogInterceptor() = apply {
 /**
  * 替換URL並加上Header的Log參數
  */
-private fun OkHttpClient.Builder.addUrlInterceptor() = apply {
+internal fun OkHttpClient.Builder.addUrlInterceptor() = apply {
     val setting = getKoin().get<Setting>(BACKEND2_SETTING)
     val gson = getKoin().get<Gson>(BACKEND2_GSON)
     addInterceptor { chain ->

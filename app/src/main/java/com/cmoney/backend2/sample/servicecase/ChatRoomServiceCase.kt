@@ -3,6 +3,7 @@ package com.cmoney.backend2.sample.servicecase
 import com.cmoney.backend2.base.di.BACKEND2_SETTING
 import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.chat.service.ChatRoomWeb
+import com.cmoney.backend2.chat.service.api.chatroomsetting.request.ChatRoomSettingUpdateProperties
 import com.cmoney.backend2.chat.service.api.variable.Subject
 import com.cmoney.backend2.sample.extension.logResponse
 import org.koin.core.component.inject
@@ -20,6 +21,8 @@ class ChatRoomServiceCase(
     override suspend fun testAll() {
         setDomain(chatUrl)
         chatRoomWebImpl.getAvailableRooms().logResponse(TAG)
+        chatRoomWebImpl.updateTargetRoom(roomId, ChatRoomSettingUpdateProperties(description = "", announcement = listOf()))
+        chatRoomWebImpl.getTargetRoom(roomId).logResponse(TAG)
         chatRoomWebImpl.getAllUser(roomId).logResponse(TAG)
         chatRoomWebImpl.getOnlineUserCount(roomId).logResponse(TAG)
         val userProfileResponseBody = chatRoomWebImpl.getUserProfile().getOrElse {
