@@ -30,6 +30,7 @@ import java.util.concurrent.TimeUnit
  */
 private const val DEFAULT_URL = "https://www.cmoney.tw/"
 val BACKEND2_GSON = named("backend2_gson")
+val BACKEND2_GSON_NON_SERIALIZE_NULLS = named("backend2_gson_non_serialize_nulls")
 val BACKEND2_RETROFIT = named("backend2_retrofit")
 val BACKEND2_SETTING = named("backend2_setting")
 
@@ -52,6 +53,12 @@ val backendBaseModule = module {
             .registerTypeAdapter(ULong::class.java, ULongTypeAdapter())
             .create()
     }
+    single<Gson>(BACKEND2_GSON_NON_SERIALIZE_NULLS) {
+        GsonBuilder()
+            .setLenient()
+            .registerTypeAdapter(ULong::class.java, ULongTypeAdapter())
+            .create()
+    }
     single<Retrofit>(BACKEND2_RETROFIT) {
         Retrofit.Builder()
             .baseUrl(DEFAULT_URL)
@@ -70,7 +77,7 @@ val backendBaseModule = module {
 /**
  * 創建預設的OkHttpClient
  */
-internal fun createOkHttpClient(): OkHttpClient {
+private fun createOkHttpClient(): OkHttpClient {
     return OkHttpClient.Builder()
         .connectionSpecs(listOf(COMPATIBLE_TLS, ConnectionSpec.CLEARTEXT))
         .addUrlInterceptor()
@@ -96,7 +103,7 @@ internal fun OkHttpClient.Builder.addLogInterceptor() = apply {
 /**
  * 替換URL並加上Header的Log參數
  */
-internal fun OkHttpClient.Builder.addUrlInterceptor() = apply {
+private fun OkHttpClient.Builder.addUrlInterceptor() = apply {
     val setting = getKoin().get<Setting>(BACKEND2_SETTING)
     val gson = getKoin().get<Gson>(BACKEND2_GSON)
     addInterceptor { chain ->
