@@ -16,7 +16,7 @@ data class ChatRoomSettingProperties(
     @SerializedName("description")
     val description: String?,
     @SerializedName("announcements")
-    val announcements: List<Long>?,
+    val announcements: List<Announcement?>?,
     @SerializedName("@Roles")
     val roles: List<String>?
 )
