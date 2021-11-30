@@ -30,6 +30,7 @@ import java.util.concurrent.TimeUnit
  */
 private const val DEFAULT_URL = "https://www.cmoney.tw/"
 val BACKEND2_GSON = named("backend2_gson")
+val BACKEND2_GSON_NON_SERIALIZE_NULLS = named("backend2_gson_non_serialize_nulls")
 val BACKEND2_RETROFIT = named("backend2_retrofit")
 val BACKEND2_SETTING = named("backend2_setting")
 
@@ -48,6 +49,12 @@ val backendBaseModule = module {
     single<Gson>(BACKEND2_GSON) {
         GsonBuilder()
             .serializeNulls()
+            .setLenient()
+            .registerTypeAdapter(ULong::class.java, ULongTypeAdapter())
+            .create()
+    }
+    single<Gson>(BACKEND2_GSON_NON_SERIALIZE_NULLS) {
+        GsonBuilder()
             .setLenient()
             .registerTypeAdapter(ULong::class.java, ULongTypeAdapter())
             .create()
@@ -85,7 +92,7 @@ private fun createOkHttpClient(): OkHttpClient {
 /**
  * 加入Http Body Log
  */
-private fun OkHttpClient.Builder.addLogInterceptor() = apply {
+internal fun OkHttpClient.Builder.addLogInterceptor() = apply {
     if (BuildConfig.DEBUG) {
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY

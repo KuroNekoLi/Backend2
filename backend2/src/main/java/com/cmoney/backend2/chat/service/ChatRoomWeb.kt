@@ -1,5 +1,6 @@
 package com.cmoney.backend2.chat.service
 
+import com.cmoney.backend2.chat.service.api.chatroomsetting.request.ChatRoomSettingUpdateProperties
 import com.cmoney.backend2.chat.service.api.chatroomsetting.response.ChatRoomSettingResponseBody
 import com.cmoney.backend2.chat.service.api.getallreport.request.ReportInfo
 import com.cmoney.backend2.chat.service.api.gethistorymessage.response.Message
@@ -10,6 +11,7 @@ import com.cmoney.backend2.chat.service.api.variable.Role
 import com.cmoney.backend2.chat.service.api.variable.RuleSet
 import com.cmoney.backend2.chat.service.api.variable.Subject
 import okhttp3.ResponseBody
+import retrofit2.Converter
 import java.io.File
 
 interface ChatRoomWeb {
@@ -116,6 +118,23 @@ interface ChatRoomWeb {
      * 取得可用的聊天室
      */
     suspend fun getAvailableRooms(): Result<List<ChatRoomSettingResponseBody>>
+
+    /**
+     * 取得指定的聊天室
+     *
+     * @param id 聊天室ID
+     */
+    suspend fun getTargetRoom(id: Long): Result<ChatRoomSettingResponseBody>
+
+    /**
+     * 更新聊天室設定
+     *
+     * ※[Converter]其Gson需要避免serialized null避免傳送null properties給server更新
+     *
+     * @param id 聊天室ID
+     * @param updateProperties 要更新的欄位※
+     */
+    suspend fun updateTargetRoom(id: Long, updateProperties: ChatRoomSettingUpdateProperties): Result<Unit>
 
     /**
      * 加入聊天室
