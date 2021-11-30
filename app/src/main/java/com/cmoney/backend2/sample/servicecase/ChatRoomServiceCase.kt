@@ -2,32 +2,33 @@ package com.cmoney.backend2.sample.servicecase
 
 import com.cmoney.backend2.base.di.BACKEND2_SETTING
 import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.backend2.chat.di.BACKEND2_CHAT_DEBUG
 import com.cmoney.backend2.chat.service.ChatRoomWeb
+import com.cmoney.backend2.chat.service.api.chatroomsetting.request.ChatRoomSettingUpdateProperties
 import com.cmoney.backend2.chat.service.api.variable.Subject
 import com.cmoney.backend2.sample.extension.logResponse
 import org.koin.core.component.inject
+import org.koin.core.qualifier.StringQualifier
 
 class ChatRoomServiceCase(
     private val roomId: Long = 1,
-    private val chatUrl: String = "http://192.168.10.103/",
-    private val serverUrl: String = "http://192.168.10.187/"
+    chatQualifier: StringQualifier = BACKEND2_CHAT_DEBUG
 ) : ServiceCase {
 
-    private val chatRoomWebImpl by inject<ChatRoomWeb>()
+    private val chatRoomWebImpl by inject<ChatRoomWeb>(chatQualifier)
     private val setting by inject<Setting>(BACKEND2_SETTING)
 
     @Suppress("BlockingMethodInNonBlockingContext")
     override suspend fun testAll() {
-        setDomain(chatUrl)
         chatRoomWebImpl.getAvailableRooms().logResponse(TAG)
+        chatRoomWebImpl.updateTargetRoom(roomId, ChatRoomSettingUpdateProperties(description = "", announcement = listOf()))
+        chatRoomWebImpl.getTargetRoom(roomId).logResponse(TAG)
         chatRoomWebImpl.getAllUser(roomId).logResponse(TAG)
         chatRoomWebImpl.getOnlineUserCount(roomId).logResponse(TAG)
         val userProfileResponseBody = chatRoomWebImpl.getUserProfile().getOrElse {
             it.printStackTrace()
             return
         }
-        setDomain(serverUrl)
-        setDomain(chatUrl)
         chatRoomWebImpl.updateProfile(
             "New nick name", "New image path"
         )

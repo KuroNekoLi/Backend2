@@ -7,6 +7,7 @@ import com.cmoney.backend2.base.extension.requireBody
 import com.cmoney.backend2.base.model.dispatcher.DefaultDispatcherProvider
 import com.cmoney.backend2.base.model.dispatcher.DispatcherProvider
 import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.backend2.chat.service.api.chatroomsetting.request.ChatRoomSettingUpdateProperties
 import com.cmoney.backend2.chat.service.api.chatroomsetting.response.ChatRoomSettingResponseBody
 import com.cmoney.backend2.chat.service.api.getallreport.request.ReportInfo
 import com.cmoney.backend2.chat.service.api.gethistorymessage.request.HistroyMessageRequestParam
@@ -206,6 +207,32 @@ class ChatRoomWebImpl(
                     .mapNotNull { it }
             }
         }
+
+    override suspend fun getTargetRoom(id: Long): Result<ChatRoomSettingResponseBody>
+        = withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                chatRoomService.getTargetRoomSetting(
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    chatRoomId = id
+                ).checkResponseBody(gson)
+            }
+        }
+
+    override suspend fun updateTargetRoom(
+        id: Long,
+        updateProperties: ChatRoomSettingUpdateProperties
+    ): Result<Unit> = withContext(dispatcher.io()) {
+        kotlin.runCatching {
+            chatRoomService.updateChatRoomSetting(
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                chatRoomId = id,
+                updateProperties = updateProperties
+            )
+                .checkResponseBody(gson)
+        }
+            .map {
+            }
+    }
 
     override suspend fun getHistoryMessageFromLatest(
         roomId: Long,
