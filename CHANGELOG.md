@@ -2,6 +2,19 @@
 
 
 
+## [5.3.1](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.3.0...5.3.1) (2021-11-30)
+
+
+### Bug Fixes
+
+* change ChatRoomSettingProperties announcements return type ([7f17c67](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/7f17c673c7afc4fcf2bf9f251db2bcaece23146b))
+
+
+
+#  (2021-11-30)
+
+
+
 # [5.3.0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.2.1...5.3.0) (2021-11-30)
 
 
