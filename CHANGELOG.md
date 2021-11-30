@@ -1,3 +1,16 @@
+#  (2021-11-30)
+
+
+
+# [5.3.0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.2.1...5.3.0) (2021-11-30)
+
+
+### Features
+
+* add chat getTargetRoom, updateTargetRoom function ([10f33a0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/10f33a081ab164d1be1c29c5bf575bee514de2f1))
+
+
+
 #  (2021-11-26)
 
 
