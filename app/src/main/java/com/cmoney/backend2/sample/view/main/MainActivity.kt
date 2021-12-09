@@ -119,6 +119,7 @@ class MainActivity : AppCompatActivity() {
 //                NotificationServiceCase(),
 //                Notification2ServiceCase(),
 //                OceanServiceCase(),
+//                VideoChannelServiceCase(),
 //                PortalServiceCase(),
 //                ProfileServiceCase(),
 //                RealTimeAfterMarketServiceCase(),
