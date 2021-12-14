@@ -1,9 +1,10 @@
 package com.cmoney.backend2.chat.service
 
 import com.cmoney.backend2.base.model.calladapter.RecordApi
+import com.cmoney.backend2.chat.service.api.chatroomsetting.request.ChatRoomSettingUpdateProperties
 import com.cmoney.backend2.chat.service.api.chatroomsetting.response.ChatRoomSettingResponseBody
 import com.cmoney.backend2.chat.service.api.getallreport.request.ReportInfo
-import com.cmoney.backend2.chat.service.api.gethistorymessage.response.Message
+import com.cmoney.backend2.chat.service.api.gethistorymessage.response.RawMessage
 import com.cmoney.backend2.chat.service.api.getsubjectallrequests.response.AuthorizationRequestResponseBody
 import com.cmoney.backend2.chat.service.api.getuserprofile.response.UserProfileResponseBody
 import com.cmoney.backend2.chat.service.api.reportsomeone.request.ReportSomeone
@@ -173,7 +174,9 @@ interface ChatRoomService {
      */
     @RecordApi
     @GET("api/Chatroom")
-    suspend fun getAvailableRoom(@Header("Authorization") authorization: String): Response<List<ChatRoomSettingResponseBody?>>
+    suspend fun getAvailableRoom(
+        @Header("Authorization") authorization: String
+    ): Response<List<ChatRoomSettingResponseBody?>>
 
     /**
      * 取得指定聊天室相關設定檔
@@ -187,14 +190,14 @@ interface ChatRoomService {
     suspend fun getTargetRoomSetting(
         @Header("Authorization") authorization: String,
         @Path("chatroomId") chatRoomId: Long
-    ): Result<ChatRoomSettingResponseBody>
+    ): Response<ChatRoomSettingResponseBody>
 
     /**
      * 更新聊天室設定檔
      *
      * @param authorization JWT Token
      * @param chatRoomId 聊天室ID
-     * @param settingMap 更新設定
+     * @param updateProperties 更新設定
      * @return 更新後的設定檔
      */
     @RecordApi
@@ -202,8 +205,8 @@ interface ChatRoomService {
     suspend fun updateChatRoomSetting(
         @Header("Authorization") authorization: String,
         @Path("chatroomId") chatRoomId: Long,
-        @Body settingMap: Map<String, Any>
-    ): Result<ChatRoomSettingResponseBody>
+        @Body updateProperties: ChatRoomSettingUpdateProperties
+    ): Response<ChatRoomSettingResponseBody>
 
     /**
      * 取得目標訊息 by Id
@@ -217,7 +220,7 @@ interface ChatRoomService {
     suspend fun getMessageById(
         @Header("Authorization") authorization: String,
         @Path("messageId") messageId: Long
-    ): Response<Message>
+    ): Response<RawMessage>
 
     /**
      * 取得歷史訊息, 新訊息優先
@@ -233,7 +236,7 @@ interface ChatRoomService {
         @Header("Authorization") authorization: String,
         @Path("chatroomId") roomId: Long,
         @QueryMap map: Map<String, String>
-    ): Response<List<Message?>>
+    ): Response<List<RawMessage?>>
 
     /**
      * 取得歷史訊息, 舊訊息優先
@@ -249,7 +252,7 @@ interface ChatRoomService {
         @Header("Authorization") authorization: String,
         @Path("chatroomId") roomId: Long,
         @QueryMap map: Map<String, String>
-    ): Response<List<Message?>>
+    ): Response<List<RawMessage?>>
 
     /**
      * 刪除訊息

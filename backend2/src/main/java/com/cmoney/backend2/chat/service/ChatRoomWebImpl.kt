@@ -1,11 +1,13 @@
 package com.cmoney.backend2.chat.service
 
 import com.cmoney.backend2.base.extension.checkIsSuccessful
+import com.cmoney.backend2.base.extension.checkResponseBody
 import com.cmoney.backend2.base.extension.createAuthorizationBearer
 import com.cmoney.backend2.base.extension.requireBody
 import com.cmoney.backend2.base.model.dispatcher.DefaultDispatcherProvider
 import com.cmoney.backend2.base.model.dispatcher.DispatcherProvider
 import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.backend2.chat.service.api.chatroomsetting.request.ChatRoomSettingUpdateProperties
 import com.cmoney.backend2.chat.service.api.chatroomsetting.response.ChatRoomSettingResponseBody
 import com.cmoney.backend2.chat.service.api.getallreport.request.ReportInfo
 import com.cmoney.backend2.chat.service.api.gethistorymessage.request.HistroyMessageRequestParam
@@ -17,6 +19,7 @@ import com.cmoney.backend2.chat.service.api.updateuserprofile.response.UpdateUse
 import com.cmoney.backend2.chat.service.api.variable.Role
 import com.cmoney.backend2.chat.service.api.variable.RuleSet
 import com.cmoney.backend2.chat.service.api.variable.Subject
+import com.google.gson.Gson
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
@@ -27,6 +30,7 @@ import java.io.File
 class ChatRoomWebImpl(
     private val chatRoomService: ChatRoomService,
     private val setting: Setting,
+    private val gson: Gson,
     private val dispatcher: DispatcherProvider = DefaultDispatcherProvider()
 ) : ChatRoomWeb {
 
@@ -204,6 +208,32 @@ class ChatRoomWebImpl(
             }
         }
 
+    override suspend fun getTargetRoom(id: Long): Result<ChatRoomSettingResponseBody>
+        = withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                chatRoomService.getTargetRoomSetting(
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    chatRoomId = id
+                ).checkResponseBody(gson)
+            }
+        }
+
+    override suspend fun updateTargetRoom(
+        id: Long,
+        updateProperties: ChatRoomSettingUpdateProperties
+    ): Result<Unit> = withContext(dispatcher.io()) {
+        kotlin.runCatching {
+            chatRoomService.updateChatRoomSetting(
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                chatRoomId = id,
+                updateProperties = updateProperties
+            )
+                .checkResponseBody(gson)
+        }
+            .map {
+            }
+    }
+
     override suspend fun getHistoryMessageFromLatest(
         roomId: Long,
         fetchCount: Int
@@ -214,10 +244,9 @@ class ChatRoomWebImpl(
                 roomId,
                 HistroyMessageRequestParam(count = fetchCount).putQueryMap(mutableMapOf())
             )
-                .checkIsSuccessful()
-                .requireBody()
-                .mapNotNull {
-                    it
+                .checkResponseBody(gson)
+                .mapNotNull { rawMessage ->
+                    rawMessage?.asReal()
                 }
         }
     }
@@ -246,10 +275,9 @@ class ChatRoomWebImpl(
                     )
                 )
             }
-            response.checkIsSuccessful()
-                .requireBody()
-                .mapNotNull {
-                    it
+            response.checkResponseBody(gson)
+                .mapNotNull { rawMessage ->
+                    rawMessage?.asReal()
                 }
         }
     }
@@ -266,15 +294,14 @@ class ChatRoomWebImpl(
                 startTime = startTime,
                 endTime = endTime
             )
-            chatRoomService.getHistoryMessageLatest(
+            val response = chatRoomService.getHistoryMessageLatest(
                 setting.accessToken.createAuthorizationBearer(),
                 roomId,
                 param.putQueryMap(mutableMapOf())
             )
-                .checkIsSuccessful()
-                .requireBody()
-                .mapNotNull {
-                    it
+            response.checkResponseBody(gson)
+                .mapNotNull { rawMessage ->
+                    rawMessage?.asReal()
                 }
         }
     }
@@ -284,15 +311,14 @@ class ChatRoomWebImpl(
         fetchCount: Int
     ): Result<List<Message>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
-            chatRoomService.getHistoryMessageOldest(
+            val response = chatRoomService.getHistoryMessageOldest(
                 setting.accessToken.createAuthorizationBearer(),
                 roomId,
                 HistroyMessageRequestParam(count = fetchCount).putQueryMap(mutableMapOf())
             )
-                .checkIsSuccessful()
-                .requireBody()
-                .mapNotNull {
-                    it
+            response.checkResponseBody(gson)
+                .mapNotNull { rawMessage ->
+                    rawMessage?.asReal()
                 }
         }
     }
@@ -321,10 +347,9 @@ class ChatRoomWebImpl(
                     )
                 )
             }
-            response.checkIsSuccessful()
-                .requireBody()
-                .mapNotNull {
-                    it
+            response.checkResponseBody(gson)
+                .mapNotNull { rawMessage ->
+                    rawMessage?.asReal()
                 }
         }
     }
@@ -346,22 +371,22 @@ class ChatRoomWebImpl(
                 roomId,
                 param.putQueryMap(mutableMapOf())
             )
-                .checkIsSuccessful()
-                .requireBody()
-                .mapNotNull {
-                    it
+                .checkResponseBody(gson)
+                .mapNotNull { rawMessage ->
+                    rawMessage?.asReal()
                 }
         }
     }
 
-    override suspend fun getMessageById(id: Long) = withContext(dispatcher.io()) {
+    override suspend fun getMessageById(id: Long): Result<Message> = withContext(dispatcher.io()) {
         kotlin.runCatching {
-            chatRoomService.getMessageById(
+            val message = chatRoomService.getMessageById(
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 messageId = id
             )
-                .checkIsSuccessful()
-                .requireBody()
+                .checkResponseBody(gson)
+                .asReal()
+            requireNotNull(message)
         }
     }
 

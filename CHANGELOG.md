@@ -1,3 +1,82 @@
+#  (2021-11-30)
+
+
+
+## [5.3.1](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.3.0...5.3.1) (2021-11-30)
+
+
+### Bug Fixes
+
+* change ChatRoomSettingProperties announcements return type ([7f17c67](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/7f17c673c7afc4fcf2bf9f251db2bcaece23146b))
+
+
+
+#  (2021-11-30)
+
+
+
+# [5.3.0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.2.1...5.3.0) (2021-11-30)
+
+
+### Features
+
+* add chat getTargetRoom, updateTargetRoom function ([10f33a0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/10f33a081ab164d1be1c29c5bf575bee514de2f1))
+
+
+
+#  (2021-11-26)
+
+
+
+## [5.2.1](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.2.0...5.2.1) (2021-11-26)
+
+
+### Bug Fixes
+
+* RawMessage, Content json parse config ([578156e](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/578156eb8a829afbd75b183d9dbc79fb0c57f94e))
+
+
+
+#  (2021-11-25)
+
+
+
+# [5.2.0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.1.1...5.2.0) (2021-11-25)
+
+
+### Features
+
+* 新增聊天室回覆訊息物件及解析 ([33b6bac](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/33b6bac1562bfc272d35ab815336677b69ccc27b))
+
+
+
+#  (2021-11-24)
+
+
+
+## [5.1.1](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.1.0...5.1.1) (2021-11-24)
+
+
+
+#  (2021-11-24)
+
+
+
+# [5.1.0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.0.0...5.1.0) (2021-11-24)
+
+
+### Bug Fixes
+
+* 修正聊天室顯示訊息Parse機制 ([363c40b](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/363c40b890f0ec7afbb6b11956c519bb2084f4da))
+
+
+### Features
+
+* add identityProviderWeb new login method - loginByPkce and its unitTest ([516f669](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/516f66938362499d7d75dbd6bdeedb4a2b26a910))
+* 新增 DataService 及取得 FundId 相關服務及測試 ([d3abb83](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/d3abb838bb803c08a7ae8639222b9a21bb504e29))
+
+
+
 #  (2021-11-04)
 
 

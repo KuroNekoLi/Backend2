@@ -5,16 +5,17 @@ import com.cmoney.backend2.additioninformationrevisit.service.AdditionalInformat
 import com.cmoney.backend2.authorization.service.AuthorizationService
 import com.cmoney.backend2.billing.service.BillingService
 import com.cmoney.backend2.cellphone.service.CellphoneService
+import com.cmoney.backend2.centralizedimage.service.CentralizedImageService
 import com.cmoney.backend2.chipk.service.ChipKService
+import com.cmoney.backend2.clientconfiguration.service.ClientConfigurationService
 import com.cmoney.backend2.cmtalk.service.CMTalkService
 import com.cmoney.backend2.common.service.CommonService
 import com.cmoney.backend2.customgroup.service.CustomGroupService
+import com.cmoney.backend2.data.service.DataService
 import com.cmoney.backend2.dtno.service.DtnoService
 import com.cmoney.backend2.emilystock.service.EmilyService
 import com.cmoney.backend2.forumocean.service.ForumOceanService
 import com.cmoney.backend2.identityprovider.service.IdentityProviderService
-import com.cmoney.backend2.centralizedimage.service.CentralizedImageService
-import com.cmoney.backend2.clientconfiguration.service.ClientConfigurationService
 import com.cmoney.backend2.media.service.MediaService
 import com.cmoney.backend2.mobileocean.service.MobileOceanService
 import com.cmoney.backend2.note_extension.service.NoteExtensionService
@@ -68,6 +69,7 @@ class RecordApiTest(
                 arrayOf<Any?>(CMTalkService::class),
                 arrayOf<Any?>(CommonService::class),
                 arrayOf<Any?>(CustomGroupService::class),
+                arrayOf<Any?>(DataService::class),
                 arrayOf<Any?>(DtnoService::class),
                 arrayOf<Any?>(EmilyService::class),
                 arrayOf<Any?>(ForumOceanService::class),

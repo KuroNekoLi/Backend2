@@ -108,6 +108,7 @@ class MainActivity : AppCompatActivity() {
 //                CMTalkServiceCase(),
 //                CommonServiceCase(this@MainActivity),
 //                CustomGroupServiceCase(),
+//                DataServiceCase(),
 //                DtnoServiceCase(),
 //                EmilyServiceCase(),
 //                ForumOceanServiceCase(),

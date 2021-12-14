@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName
  *
  * @property appId App的Id
  * @property platform 平台
- * @property mode App版本，登入或註冊方式, 1.Email 2.FB 3.手機 4.AppleId 5.Firebase匿名 6. Refresh Token。
+ * @property mode App版本，登入或註冊方式, 1.Email 2.FB 3.手機 4.AppleId 5.Firebase匿名 6. Refresh Token 7. Google 8. CMoneyThirdParty 9. authorize_code
  */
 data class XApiLog(
     @SerializedName("AppId")

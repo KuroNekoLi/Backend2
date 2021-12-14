@@ -4,6 +4,7 @@ import android.app.Application
 import com.cmoney.backend2.activity.di.activityServiceModule
 import com.cmoney.backend2.additioninformationrevisit.di.additionalInformationRevisitServiceModule
 import com.cmoney.backend2.authorization.di.authorizationServiceModule
+import com.cmoney.backend2.base.di.BACKEND2_RETROFIT
 import com.cmoney.backend2.base.di.BACKEND2_SETTING
 import com.cmoney.backend2.base.di.backendBaseModule
 import com.cmoney.backend2.base.model.setting.Platform
@@ -35,6 +36,7 @@ import com.cmoney.backend2.profile.di.profileServiceModule
 import com.cmoney.backend2.realtimeaftermarket.di.realtimeAfterMarketServiceModule
 import com.cmoney.backend2.sample.di.viewModule
 import com.cmoney.backend2.sample.model.logger.ApplicationLoggerAdapter
+import com.cmoney.backend2.sample.servicecase.DataServiceCase
 import com.cmoney.backend2.tickdata.di.tickDataServiceModule
 import com.cmoney.backend2.trial.di.trialServiceModule
 import com.cmoney.backend2.userbehavior.di.userBehaviorServiceModule
@@ -79,6 +81,9 @@ class SampleApplication : Application() {
                     commonServiceModule,
                     customGroupServiceModule,
                     customGroup2ServiceModule,
+                    DataServiceCase.getDataWebModule("https://datasv.cmoney.tw:5001/") {
+                        get(BACKEND2_RETROFIT)
+                    },
                     dtnoServiceModule,
                     emilyServiceModule,
                     forumOceanServiceModule,
