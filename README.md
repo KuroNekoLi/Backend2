@@ -179,6 +179,7 @@ class SampleApplication : Application() {
 | crmServiceModule                          | crm                        |
 | userBehaviorServiceModule                 | userbehavior               |
 | clientConfigurationModule                 | clientconfiguration        |
+| imageRecognitionServiceModule             | imageRecognition           |
 #### 選擇使用Module的步驟
 
 - 確認目前需要使用的服務的host之後的path，以下舉例說明

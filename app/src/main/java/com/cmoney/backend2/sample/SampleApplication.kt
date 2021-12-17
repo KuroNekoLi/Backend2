@@ -24,6 +24,7 @@ import com.cmoney.backend2.dtno.di.dtnoServiceModule
 import com.cmoney.backend2.emilystock.di.emilyServiceModule
 import com.cmoney.backend2.forumocean.di.forumOceanServiceModule
 import com.cmoney.backend2.identityprovider.di.identityProviderServiceModule
+import com.cmoney.backend2.imagerecognition.di.imageRecognitionServiceModule
 import com.cmoney.backend2.media.di.mediaServiceModule
 import com.cmoney.backend2.mobileocean.di.mobileOceanServiceModule
 import com.cmoney.backend2.note_extension.di.noteExtensionServiceModule
@@ -104,7 +105,8 @@ class SampleApplication : Application() {
                     virtualAssetsServiceModule,
                     crmServiceModule,
                     userBehaviorServiceModule,
-                    clientConfigurationModule
+                    clientConfigurationModule,
+                    imageRecognitionServiceModule
                 )
             )
         }
