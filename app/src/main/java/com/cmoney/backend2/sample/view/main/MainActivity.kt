@@ -128,7 +128,8 @@ class MainActivity : AppCompatActivity() {
 //                CrmServiceCase(),
 //                CustomGroup2ServiceCase(),
 //                UserBehaviorServiceCase(),
-//                ClientConfigurationServiceCase()
+//                ClientConfigurationServiceCase(),
+//                ImageRecognitionServiceCase()
             ).map { serviceCase ->
                 async {
                     serviceCase.testAll()

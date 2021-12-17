@@ -72,6 +72,7 @@ object Dependencies {
     const val TINK_ANDROID = "com.google.crypto.tink:tink-android:${Versions.TINK_ANDROID}"
     const val ANDROID_BROWSER_HELPER = "com.google.androidbrowserhelper:androidbrowserhelper:${Versions.ANDROID_BROWSER_HELPER}"
     const val OKHTTP = "com.squareup.okhttp3:okhttp:${Versions.OKHTTP}"
+    const val OKHTTP_URL_CONNECTION = "com.squareup.okhttp3:okhttp-urlconnection:${Versions.OKHTTP}"
     const val OKHTTP_LOGGIN_INTERCEPTOR = "com.squareup.okhttp3:logging-interceptor:${Versions.OKHTTP}"
     const val OKHTTP_MOCKWEBSERVER = "com.squareup.okhttp3:mockwebserver:${Versions.OKHTTP}"
     const val OKHTTP_TESTING_SUPPORT = "com.squareup.okhttp3:okhttp-testing-support:${Versions.OKHTTP_TESTING_SUPPORT}"
