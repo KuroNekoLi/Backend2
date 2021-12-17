@@ -1,3 +1,22 @@
+#  (2021-12-17)
+
+
+
+# [5.4.0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.3.1...5.4.0) (2021-12-17)
+
+
+### Bug Fixes
+
+* 修正 OceanWeb 的 SetReaded 成功時因為 No Content 而被判斷為失敗的問題 ([502403b](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/502403bb4f6dc5ce791f9800b7645259e13dffc5))
+
+
+### Features
+
+* add image recognition service ([ae332d2](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/ae332d2279af7932add1982bcd04ff57aa4d7465))
+* 新增三方的合作廠商登入方式 ([860d33b](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/860d33bd8d6c28abeaa9585ebba7fc9f8bf161aa))
+
+
+
 #  (2021-11-30)
 
 
