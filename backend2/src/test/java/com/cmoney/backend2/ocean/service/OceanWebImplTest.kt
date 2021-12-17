@@ -23,7 +23,6 @@ import com.cmoney.backend2.ocean.service.api.getblocklist.GetBlockListResponseBo
 import com.cmoney.backend2.ocean.service.api.getcomments.GetCommentsResponseBody
 import com.cmoney.backend2.ocean.service.api.getevaluationlist.GetEvaluationListResponseBodyWithError
 import com.cmoney.backend2.ocean.service.api.getevaluationlist.SortType
-import com.cmoney.backend2.ocean.service.api.getfanlistexcludejoinedclub.GetFansListExcludeJoinedClubRequestBody
 import com.cmoney.backend2.ocean.service.api.getfanlistexcludejoinedclub.GetFansListExcludeJoinedClubResponseBody
 import com.cmoney.backend2.ocean.service.api.getmanagerlist.GetManagerListResponseWithError
 import com.cmoney.backend2.ocean.service.api.getmasters.GetMastersResponseBodyWithError
@@ -35,7 +34,6 @@ import com.cmoney.backend2.ocean.service.api.getnotify.Notify
 import com.cmoney.backend2.ocean.service.api.getrecommendclubs.GetRecommendClubsResponseBodyWithError
 import com.cmoney.backend2.ocean.service.api.getrecommendclubs.RecommendClubsNeedInfo
 import com.cmoney.backend2.ocean.service.api.getrelevantcomments.GetRelevantCommentsResponseWithError
-import com.cmoney.backend2.ocean.service.api.getsimplechannelinfo.GetSimpleChannelInfoRequestBody
 import com.cmoney.backend2.ocean.service.api.getsimplechannelinfo.GetSimpleChannelInfoResponseBody
 import com.cmoney.backend2.ocean.service.api.getsinglearticle.GetSingleArticleResponseBody
 import com.cmoney.backend2.ocean.service.api.getstockandtopicarticles.GetStockAndTopicArticlesResponseBodyWithError
@@ -61,6 +59,7 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
+import okhttp3.ResponseBody
 import okhttp3.ResponseBody.Companion.toResponseBody
 import okhttp3.internal.http.RealResponseBody
 import okio.Buffer
@@ -354,26 +353,18 @@ class OceanWebImplTest {
 
     @Test
     fun `setReaded設定已讀通知`() = mainCoroutineRule.runBlockingTest {
-        val responseBody =
-            RealResponseBody(contentTypeString = null, contentLength = 0, source = Buffer())
-
         coEvery {
             oceanService.setReaded(
                 authorization = any(),
                 body = any()
             )
-        } returns Response.success(responseBody)
+        } returns Response.success<Void>(204, null)
 
-        //確認api是否成功
+        // 確認api是否成功
         val result = service.setReaded(
-
             notifyIdAndIsSpecificPair = listOf()
         )
         Truth.assertThat(result.isSuccess).isTrue()
-
-        //確認api回傳是否如預期
-        val data = result.getOrThrow()
-        Truth.assertThat(data.contentLength()).isEqualTo(0)
     }
 
     @Test

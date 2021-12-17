@@ -58,6 +58,7 @@ dependencies {
     implementation(Dependencies.GSON)
     //web
     implementation(Dependencies.OKHTTP)
+    implementation(Dependencies.OKHTTP_URL_CONNECTION)
     implementation(Dependencies.OKHTTP_LOGGIN_INTERCEPTOR)
     implementation(Dependencies.RETROFIT)
     implementation(Dependencies.RETROFIT_CONVERTER_GSON)

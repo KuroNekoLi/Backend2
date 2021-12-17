@@ -638,6 +638,64 @@ class IdentityProviderWebImplTest {
     }
 
     @Test
+    fun `logByCMoneyThirdParty_status is 200_成功`() = mainCoroutineRule.runBlockingTest {
+        val responseBody = GetTokenResponseBodyWithError(
+            accessToken = "",
+            expiresIn = 0,
+            idToken = "",
+            refreshToken = "",
+            tokenType = ""
+        )
+        coEvery {
+            service.getIdentityToken(
+                xApiLog = any(),
+                grantType = any(),
+                clientId = any(),
+                scope = any(),
+                clientSecret = any(),
+                account = any(),
+                hashedPassword = any(),
+                providerToken = any(),
+                provider = any(),
+                loginMethod = any(),
+                code = any(),
+                redirectUri = any(),
+                refreshToken = any(),
+                codeVerifier = any()
+            )
+        } returns Response.success(responseBody)
+        val result = web.loginByCMoneyThirdParty("")
+        val resultValue = result.getOrThrow()
+        assertThat(result.isSuccess).isTrue()
+        assertThat(resultValue).isEqualTo(responseBody.toRealResponse())
+    }
+
+    @Test(expected = HttpException::class)
+    fun `logByCMoneyThirdParty is 401_HttpException`() = mainCoroutineRule.runBlockingTest {
+        val errorBody = "".toResponseBody()
+        coEvery {
+            service.getIdentityToken(
+                xApiLog = any(),
+                grantType = any(),
+                clientId = any(),
+                scope = any(),
+                clientSecret = any(),
+                account = any(),
+                hashedPassword = any(),
+                providerToken = any(),
+                provider = any(),
+                loginMethod = any(),
+                code = any(),
+                redirectUri = any(),
+                refreshToken = any(),
+                codeVerifier = any()
+            )
+        } returns Response.error(401, errorBody)
+        val result = web.loginByCMoneyThirdParty( "")
+        result.getOrThrow()
+    }
+
+    @Test
     fun `revokeToken_http is 200_success是true`() = mainCoroutineRule.runBlockingTest {
         val responseBody = RevokeResponseBodyWithError(tokenType = "", success = true)
         coEvery {
