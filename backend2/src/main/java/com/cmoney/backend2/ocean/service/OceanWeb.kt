@@ -61,7 +61,6 @@ import com.cmoney.backend2.ocean.service.api.updateclubdescription.UpdateClubDes
 import com.cmoney.backend2.ocean.service.api.uploadchannelimage.UploadChannelImageResponseBody
 import com.cmoney.backend2.ocean.service.api.variable.*
 import com.cmoney.backend2.ocean.service.api.variable.channelinfo.ChannelInfo
-import okhttp3.ResponseBody
 import java.io.File
 
 interface OceanWeb {
@@ -651,7 +650,7 @@ interface OceanWeb {
     suspend fun setReaded(
         apiParam: MemberApiParam,
         notifyIdAndIsSpecificPair: List<NotifyIdAndIsSpecificPair>
-    ): Result<ResponseBody>
+    ): Result<Unit>
 
     /**
      * 設定通知已讀
@@ -661,7 +660,7 @@ interface OceanWeb {
      */
     suspend fun setReaded(
         notifyIdAndIsSpecificPair: List<NotifyIdAndIsSpecificPair>
-    ): Result<ResponseBody>
+    ): Result<Unit>
 
     /**
      * 取得指定文章
@@ -778,7 +777,7 @@ interface OceanWeb {
     suspend fun getOtherChannelInfo(
         channelId: Long,
         needInfo: ChannelNeedInfo<ChannelInfoOption.Other>
-    ):Result<ChannelInfo.ChannelBaseInfo>
+    ): Result<ChannelInfo.ChannelBaseInfo>
 
     /**
      * 取得指定頻道資訊(RSS、訊號頻道資訊)
@@ -805,7 +804,7 @@ interface OceanWeb {
     suspend fun getRssSignalChannelInfo(
         channelId: Long,
         needInfo: ChannelNeedInfo<ChannelInfoOption.RssSignal>
-    ):Result<ChannelInfo.RssSignalChannelInfo>
+    ): Result<ChannelInfo.RssSignalChannelInfo>
 
     /**
      * 取得指定頻道資訊(會員頻道資訊)
@@ -832,7 +831,7 @@ interface OceanWeb {
     suspend fun getMemberChannelInfo(
         channelId: Long,
         needInfo: ChannelNeedInfo<ChannelInfoOption.Member>
-    ):Result<ChannelInfo.MemberChannelInfo>
+    ): Result<ChannelInfo.MemberChannelInfo>
 
 
     /**
@@ -860,7 +859,7 @@ interface OceanWeb {
     suspend fun getClubChannelInfo(
         channelId: Long,
         needInfo: ChannelNeedInfo<ChannelInfoOption.Club>
-    ):Result<ChannelInfo.ClubChannelInfo>
+    ): Result<ChannelInfo.ClubChannelInfo>
 
     /**
      * 搜尋社團 ( 搜尋頻道 )
@@ -891,7 +890,7 @@ interface OceanWeb {
         channelTypes: ChannelTypes,
         fetchCount: Int,
         keyword: String
-    ):Result<SearchChannelResponseBody>
+    ): Result<SearchChannelResponseBody>
 
     /**
      * 取得排除加入社團的粉絲清單(已邀請或審核中或黑名單的粉絲也會排除)
@@ -926,7 +925,7 @@ interface OceanWeb {
         excludeClubChannelId: Long,
         fetchCount: Int,
         skipCount: Int
-    ):Result<GetFansListExcludeJoinedClubResponseBody>
+    ): Result<GetFansListExcludeJoinedClubResponseBody>
 
     /**
      * 取得頻道基本資訊(多筆)
@@ -949,7 +948,7 @@ interface OceanWeb {
      */
     suspend fun getSimpleChannelInfo(
         channelIds: List<Long>
-    ):Result<GetSimpleChannelInfoResponseBody>
+    ): Result<GetSimpleChannelInfoResponseBody>
 
 
     /**
@@ -981,7 +980,7 @@ interface OceanWeb {
         channelId: Long,
         content: String,
         score: Int
-    ):Result<SuccessResult>
+    ): Result<SuccessResult>
 
     /**
      * 是否給過評價
@@ -1004,7 +1003,7 @@ interface OceanWeb {
      */
     suspend fun checkHasEvaluated(
         channelId: Long
-    ):Result<CheckHasEvaluatedResponseBody>
+    ): Result<CheckHasEvaluatedResponseBody>
 
     /**
      * 取得指定用戶的評價清單
@@ -1023,7 +1022,7 @@ interface OceanWeb {
         fetchCount: Int,
         skipCount: Int,
         sortType: SortType
-    ):Result<GetEvaluationListResponseBody>
+    ): Result<GetEvaluationListResponseBody>
 
     /**
      * 取得指定用戶的評價清單
@@ -1039,7 +1038,7 @@ interface OceanWeb {
         fetchCount: Int,
         skipCount: Int,
         sortType: SortType
-    ):Result<GetEvaluationListResponseBody>
+    ): Result<GetEvaluationListResponseBody>
 
     @Deprecated("ApiParam no longer required")
     suspend fun changeCollectArticleState(
@@ -1192,7 +1191,7 @@ interface OceanWeb {
         clubName: String,
         description: String,
         joinMethod: JoinMethod
-    ):Result<CreateClubResponseBody>
+    ): Result<CreateClubResponseBody>
 
     /**
      * 創建社團
@@ -1205,7 +1204,7 @@ interface OceanWeb {
         clubName: String,
         description: String,
         joinMethod: JoinMethod
-    ):Result<CreateClubResponseBody>
+    ): Result<CreateClubResponseBody>
 
     @Deprecated("ApiParam no longer required")
     suspend fun deleteClub(
@@ -1393,7 +1392,7 @@ interface OceanWeb {
         needInfo: ChannelNeedInfo<ChannelInfoOption.Member>
     ): Result<GetManagerList>
 
-    suspend fun getAnnouncements(channelId:Long): Result<GetAnnouncementsResponse>
+    suspend fun getAnnouncements(channelId: Long): Result<GetAnnouncementsResponse>
 
     suspend fun removeAnnouncements(
         channelId: Long,
@@ -1420,10 +1419,10 @@ interface OceanWeb {
      * @param articleNeedInfo 需要那些文章資訊
      */
     suspend fun getTopicArticles(
-       topic: String,
-       baseArticleId: Long,
-       fetchCount: Int,
-       articleNeedInfo: ArticleNeedInfo
+        topic: String,
+        baseArticleId: Long,
+        fetchCount: Int,
+        articleNeedInfo: ArticleNeedInfo
     ): Result<GetTopicArticlesResponseBody>
 
     /**
@@ -1440,7 +1439,7 @@ interface OceanWeb {
         fetchCount: Int,
         articleNeedInfo: ArticleNeedInfo
     ): Result<GetStockAndTopicArticlesResponseBody>
-    
+
     /**
      * 新增或更新公告(從已發出去的文章)
      * @param apiParam MemberApiParam
@@ -1450,10 +1449,10 @@ interface OceanWeb {
      */
     suspend fun createOrUpdateAnnouncement(
         clubChannelId: Long,
-        articleId : Long,
-        isPinned : Boolean
+        articleId: Long,
+        isPinned: Boolean
     ): Result<IsCreateOrUpdateSuccessResponse>
-    
+
     /**
      * 拿到該社團全部公告
      * @param apiParam MemberApiParam
@@ -1461,8 +1460,8 @@ interface OceanWeb {
      */
     suspend fun getAllAnnouncements(
         clubChannelId: Long
-    ) : Result<AnnouncementListResponse>
-    
+    ): Result<AnnouncementListResponse>
+
     /**
      * 刪除特定公告
      * @param apiParam MemberApiParam
@@ -1471,9 +1470,9 @@ interface OceanWeb {
      * @param isPinned Boolean 是否置頂
      */
     suspend fun removeAnnouncements(
-        clubChannelId : Long,
-        articleId : Long,
-        isPinned : Boolean
-    ) : Result<IsRemoveAnnouncementSuccessResponse>
+        clubChannelId: Long,
+        articleId: Long,
+        isPinned: Boolean
+    ): Result<IsRemoveAnnouncementSuccessResponse>
 
 }
