@@ -73,7 +73,7 @@ class ImageRecognitionWebImplTest {
         coEvery {
             service.getPictureWords(
                 url = any(),
-                authorization = "",
+                authorization = any(),
                 body = any()
             )
         } returns Response.error(401, "".toResponseBody())
