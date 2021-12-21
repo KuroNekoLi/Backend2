@@ -7,6 +7,7 @@ import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.authorization.service.api.getexpiredtime.ExpiredTime
 import com.cmoney.backend2.authorization.service.api.getexpiredtime.Type
+import com.cmoney.backend2.authorization.service.api.hasauth.Auth
 import com.cmoney.backend2.base.model.exception.EmptyBodyException
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.response.error.CMoneyError
@@ -223,5 +224,44 @@ class AuthorizationWebImplTest {
         Truth.assertThat(exception).isInstanceOf(HttpException::class.java)
         require(exception is HttpException)
         Truth.assertThat(exception.code()).isEqualTo(500)
+    }
+
+    @Test
+    fun `hasAuth_200_成功`() = mainCoroutineRule.runBlockingTest {
+        val auth = Auth(hasAuthorization = true, serverTime = null)
+        coEvery {
+            service.hasAuth(authorization = any(), url = any())
+        } returns Response.success(auth)
+        val result = authorizationWeb.hasAuth(type = Type.MOBILE_PAID, subjectId = 0)
+        Truth.assertThat(result.isSuccess).isTrue()
+        val data = result.getOrNull()
+        requireNotNull(data)
+        Truth.assertThat(data.hasAuthorization).isTrue()
+        Truth.assertThat(data.serverTime).isNull()
+    }
+
+    @Test
+    fun hasAuth_401_失敗() = mainCoroutineRule.runBlockingTest {
+        val errorBody = gson.toJson(
+            CMoneyError(
+                detail = CMoneyError.Detail(
+                    code = 401
+                )
+            )
+        ).toResponseBody()
+
+        coEvery {
+            service.hasAuth(
+                authorization = any(),
+                url = any()
+            )
+        } returns Response.error<Auth>(401, errorBody)
+        val result = authorizationWeb.hasAuth(type = Type.MOBILE_PAID, subjectId = 99)
+        Truth.assertThat(result.isSuccess).isFalse()
+        Truth.assertThat(result.exceptionOrNull()).isNotNull()
+        val exception = requireNotNull(result.exceptionOrNull())
+        Truth.assertThat(exception).isInstanceOf(HttpException::class.java)
+        require(exception is HttpException)
+        Truth.assertThat(exception.code()).isEqualTo(401)
     }
 }
