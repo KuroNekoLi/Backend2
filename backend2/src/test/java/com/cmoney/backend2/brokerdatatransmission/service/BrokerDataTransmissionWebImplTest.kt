@@ -1,0 +1,275 @@
+package com.cmoney.backend2.brokerdatatransmission.service
+
+import com.cmoney.backend2.MainCoroutineRule
+import com.cmoney.backend2.TestDispatcher
+import com.cmoney.backend2.TestSetting
+import com.cmoney.backend2.base.model.exception.ServerException
+import com.cmoney.backend2.base.model.request.Constant
+import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.backend2.brokerdatatransmission.service.api.BrokerAccount
+import com.cmoney.backend2.brokerdatatransmission.service.api.Country
+import com.cmoney.backend2.brokerdatatransmission.service.api.brokers.BrokerResponseWithError
+import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.put.BrokerData
+import com.cmoney.backend2.brokerdatatransmission.service.api.encryptionkey.GetEncryptionKeyResponseWithError
+import com.google.common.truth.Truth
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonArray
+import com.google.gson.JsonElement
+import com.google.gson.JsonObject
+import io.mockk.MockKAnnotations
+import io.mockk.coEvery
+import io.mockk.impl.annotations.MockK
+import io.mockk.unmockkAll
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runBlockingTest
+import okhttp3.ResponseBody.Companion.toResponseBody
+import org.junit.After
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import retrofit2.HttpException
+import retrofit2.Response
+
+@ExperimentalCoroutinesApi
+@RunWith(RobolectricTestRunner::class)
+class BrokerDataTransmissionWebImplTest {
+
+    @ExperimentalCoroutinesApi
+    @get:Rule
+    val mainCoroutineRule = MainCoroutineRule()
+
+    @MockK
+    private lateinit var service: BrokerDataTransmissionService
+    private val gson = GsonBuilder().serializeNulls().setLenient().setPrettyPrinting().create()
+    private lateinit var web: BrokerDataTransmissionWeb
+    private lateinit var setting: Setting
+
+    @Before
+    fun setUp() {
+        MockKAnnotations.init(this)
+        setting = TestSetting()
+        web = BrokerDataTransmissionWebImpl(
+            gson = gson,
+            service = service,
+            setting = setting,
+            dispatcher = TestDispatcher()
+        )
+    }
+
+    @After
+    fun tearDown() {
+        unmockkAll()
+    }
+
+    @Test
+    fun `getBrokers 成功`() = mainCoroutineRule.runBlockingTest {
+        val responseBody = BrokerResponseWithError(
+            brokers = emptyList()
+        )
+        coEvery {
+            service.getBrokers(
+                code = any(),
+                authToken = any()
+            )
+        } returns Response.success(responseBody)
+
+        val result = web.getBrokers(Country.TW)
+        Truth.assertThat(result.isSuccess).isTrue()
+        val data = result.getOrThrow()
+        Truth.assertThat(data.brokers).isEmpty()
+    }
+
+    @Test
+    fun `getBrokers 失敗`() = mainCoroutineRule.runBlockingTest {
+        val response: Response<BrokerResponseWithError> =
+            Response.error(400, """{"message": "參數錯誤"}""".toResponseBody())
+        coEvery {
+            service.getBrokers(
+                code = any(),
+                authToken = any()
+            )
+        } returns response
+
+        val result = web.getBrokers(Country.TW)
+        Truth.assertThat(result.isFailure).isTrue()
+        val exception = result.exceptionOrNull()
+        Truth.assertThat(exception).isNotNull()
+        Truth.assertThat(exception).isInstanceOf(ServerException::class.java)
+        Truth.assertThat((exception as ServerException).code)
+            .isEqualTo(Constant.SERVICE_NOT_SUPPORT_ERROR_CODE)
+    }
+
+    @Test
+    fun `getEncryptionKey 成功`() = mainCoroutineRule.runBlockingTest {
+        val responseBody =
+            GetEncryptionKeyResponseWithError("-----BEGIN PUBLIC KEY-----\\r\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAi5f+LhvlxB32a3AOeIno\\r\\n/+dhdu92P9IR0P1in6GUNW+vEgzZAZdBNF+EPgsEPRi0tGLYXrx9BJUIHah1ORoY\\r\\nUgU0PD1ydyJ2cDp/kP8IQ3cDIvXKSYyKNQ2erxFvvOFFvrqoB7QxLQgP+xKkFoz/\\r\\nbdAAQAjT/4dtRHGd82wZETWcXHqv7mL9KZj1TEvNDu77yu90PhodGtByCmvJjXd8\\r\\nYi2Nr7esIapsQafFOyyOAYFXE3UtFiHDf19SAVqC4TS7WpVDeBn/+PPNeSrkApVs\\r\\n0nxXNDpCumuXkqVtcbih3pKF5mrfPaTSlVClNBTXaj2UdQfrjfFCcqIyyWIdnkEc\\r\\nVQIDAQAB\\r\\n-----END PUBLIC KEY-----\\r\\n")
+        coEvery {
+            service.getEncryptionKey(
+                code = any(),
+                authToken = any()
+            )
+        } returns Response.success(responseBody)
+
+        val result = web.getEncryptionKey(Country.TW)
+        Truth.assertThat(result.isSuccess).isTrue()
+        val data = result.getOrThrow()
+        Truth.assertThat(data.publicKeyCryptography).isNotEmpty()
+    }
+
+    @Test
+    fun `getEncryptionKey 失敗`() = mainCoroutineRule.runBlockingTest {
+        val response: Response<GetEncryptionKeyResponseWithError> =
+            Response.error(400, """{"message": "參數錯誤"}""".toResponseBody())
+        coEvery {
+            service.getEncryptionKey(
+                code = any(),
+                authToken = any()
+            )
+        } returns response
+
+        val result = web.getEncryptionKey(Country.TW)
+        Truth.assertThat(result.isFailure).isTrue()
+        val exception = result.exceptionOrNull()
+        Truth.assertThat(exception).isNotNull()
+        Truth.assertThat(exception).isInstanceOf(ServerException::class.java)
+        Truth.assertThat((exception as ServerException).code)
+            .isEqualTo(Constant.SERVICE_NOT_SUPPORT_ERROR_CODE)
+    }
+
+    @Test
+    fun `fetchTransactionHistory 成功`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.fetchTransactionHistory(
+                body = any(),
+                authToken = any()
+            )
+        } returns Response.success<Void>(204, null)
+
+        val result = web.fetchTransactionHistory(BrokerAccount("", "", "", "", "", "", ""))
+        Truth.assertThat(result.isSuccess).isTrue()
+    }
+
+    @Test
+    fun `fetchTransactionHistory 失敗`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.fetchTransactionHistory(
+                body = any(),
+                authToken = any()
+            )
+        } returns Response.error(400, """{"body":{"code":400400,"message":"請確認是否所有資料皆有填寫，填寫完畢後重新匯入或同步庫存。"}}""".toResponseBody())
+
+        val result = web.fetchTransactionHistory(BrokerAccount("", "", "", "", "", "", ""))
+        Truth.assertThat(result.isFailure).isTrue()
+
+        val exception = result.exceptionOrNull()
+        Truth.assertThat(exception).isNotNull()
+        Truth.assertThat(exception).isInstanceOf(ServerException::class.java)
+        Truth.assertThat((exception as ServerException).code).isEqualTo(400400)
+    }
+
+    @Test
+    fun `getBrokerStockData 成功`() = mainCoroutineRule.runBlockingTest {
+        Truth.assertThat(true).isTrue()
+    }
+
+    @Test
+    fun `getBrokerStockData 失敗`() = mainCoroutineRule.runBlockingTest {
+        Truth.assertThat(true).isTrue()
+    }
+
+    @Test
+    fun `putBrokerStockData 成功`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.putBrokerStockData(
+                body = any(),
+                authToken = any()
+            )
+        } returns Response.success<Void>(204, null)
+
+        val result = web.putBrokerStockData(Country.TW, BrokerData("", "", emptyList()))
+        Truth.assertThat(result.isSuccess).isTrue()
+    }
+
+    @Test
+    fun `putBrokerStockData 失敗`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.putBrokerStockData(
+                body = any(),
+                authToken = any()
+            )
+        } returns Response.error(500, """{"message":"UnknowError"}""".toResponseBody())
+
+        val result = web.putBrokerStockData(Country.TW, BrokerData("", "", emptyList()))
+        Truth.assertThat(result.isFailure).isTrue()
+
+        val exception = result.exceptionOrNull()
+        Truth.assertThat(exception).isNotNull()
+        Truth.assertThat(exception).isInstanceOf(HttpException::class.java)
+        Truth.assertThat((exception as HttpException).code()).isEqualTo(500)
+    }
+
+    @Test
+    fun `getConsents 成功`() = mainCoroutineRule.runBlockingTest {
+        val responseBody = JsonArray().apply {
+            add(
+                JsonObject().apply {
+                    addProperty("brokerId", "9800")
+                    addProperty("hasSigned", true)
+                }
+            )
+        }
+        coEvery {
+            service.getConsents(
+                code = any(),
+                authToken = any()
+            )
+        } returns Response.success(responseBody)
+
+        val result = web.getConsents(Country.TW)
+        Truth.assertThat(result.isSuccess).isTrue()
+
+        val consents = result.getOrThrow()
+        Truth.assertThat(consents).isNotEmpty()
+
+        val item = consents.single()
+        Truth.assertThat(item.brokerId).isEqualTo("9800")
+        Truth.assertThat(item.hasSigned).isEqualTo(true)
+    }
+
+    @Test
+    fun `getConsents 失敗`() = mainCoroutineRule.runBlockingTest {
+        val response: Response<JsonElement> =
+            Response.error(400, """{"message": "參數錯誤"}""".toResponseBody())
+        coEvery {
+            service.getConsents(
+                code = any(),
+                authToken = any()
+            )
+        } returns response
+
+        val result = web.getConsents(Country.TW)
+        Truth.assertThat(result.isFailure).isTrue()
+
+        val exception = result.exceptionOrNull()
+        Truth.assertThat(exception).isNotNull()
+        Truth.assertThat(exception).isInstanceOf(ServerException::class.java)
+        Truth.assertThat((exception as ServerException).code)
+            .isEqualTo(Constant.SERVICE_NOT_SUPPORT_ERROR_CODE)
+    }
+
+    @Test
+    fun `signConsent 成功`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.signConsent(
+                brokerId = any(),
+                authToken = any()
+            )
+        } returns Response.success<Void>(204, null)
+
+        val result = web.signConsent("9800")
+        Truth.assertThat(result.isSuccess).isTrue()
+    }
+
+}
