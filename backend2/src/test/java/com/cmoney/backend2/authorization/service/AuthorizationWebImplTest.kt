@@ -228,7 +228,7 @@ class AuthorizationWebImplTest {
 
     @Test
     fun `hasAuth_200_成功`() = mainCoroutineRule.runBlockingTest {
-        val auth = Auth(hasAuthorization = true, serverTime = null)
+        val auth = Auth(hasAuthorization = true)
         coEvery {
             service.hasAuth(authorization = any(), url = any())
         } returns Response.success(auth)
@@ -237,7 +237,6 @@ class AuthorizationWebImplTest {
         val data = result.getOrNull()
         requireNotNull(data)
         Truth.assertThat(data.hasAuthorization).isTrue()
-        Truth.assertThat(data.serverTime).isNull()
     }
 
     @Test
