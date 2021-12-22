@@ -14,7 +14,14 @@ class AuthorizationServiceCase : ServiceCase {
 
     override suspend fun testAll() {
         webImpl.apply {
-            getExpiredTime(Type.MOBILE_PAID, setting.appId.toLong()).logResponse(TAG)
+            getExpiredTime(
+                type = Type.MOBILE_PAID,
+                subjectId = setting.appId.toLong()
+            ).logResponse(TAG)
+            hasAuth(
+                type = Type.MOBILE_PAID,
+                subjectId = 2
+            ).logResponse(TAG)
         }
     }
 
