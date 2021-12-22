@@ -1,3 +1,16 @@
+#  (2021-12-22)
+
+
+
+# [5.5.0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.4.0...5.5.0) (2021-12-22)
+
+
+### Features
+
+* add authorization hasAuth ([be834c3](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/be834c32509e639470cfd2af05aca15e27c53d2d))
+
+
+
 #  (2021-12-17)
 
 
