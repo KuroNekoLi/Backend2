@@ -26,9 +26,14 @@ interface BrokerDataTransmissionWeb {
     suspend fun fetchTransactionHistory(brokerAccount: BrokerAccount): Result<Unit>
 
     /**
+     * 取得用戶是否有同意上傳庫存的紀錄
+     */
+    suspend fun getUserAgreesImportRecord(): Result<Boolean>
+
+    /**
      * 取得用戶在 [country] 下的庫存資料
      */
-    suspend fun getBrokerStockData(country: Country): Result<BrokerStockDataResponse>
+    suspend fun getBrokerStockData(country: Country): Result<List<BrokerStockDataResponse>>
 
     /**
      * 以 [brokerData] 更新用戶在 [country] 下的庫存資料

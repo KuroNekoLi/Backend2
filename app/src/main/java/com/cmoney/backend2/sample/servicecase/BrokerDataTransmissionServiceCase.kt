@@ -3,11 +3,14 @@ package com.cmoney.backend2.sample.servicecase
 import com.cmoney.backend2.brokerdatatransmission.service.BrokerDataTransmissionWeb
 import com.cmoney.backend2.brokerdatatransmission.service.api.BrokerAccount
 import com.cmoney.backend2.brokerdatatransmission.service.api.Country
+import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.TradeType
 import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.put.BrokerData
+import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.put.StockData
+import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.put.StockInfo
 import com.cmoney.backend2.sample.extension.logResponse
 import org.koin.core.component.inject
 
-class BrokerDataTransmissionServiceCase: ServiceCase {
+class BrokerDataTransmissionServiceCase : ServiceCase {
 
     private val web by inject<BrokerDataTransmissionWeb>()
 
@@ -17,20 +20,23 @@ class BrokerDataTransmissionServiceCase: ServiceCase {
         web.getEncryptionKey(Country.TW)
             .logResponse(TAG)
         web.fetchTransactionHistory(
-            BrokerAccount(
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                ""
-            )
+            BrokerAccount("", "", "", "", "", "", "")
         )
+            .logResponse(TAG)
+        web.getUserAgreesImportRecord()
             .logResponse(TAG)
         web.getBrokerStockData(Country.TW)
             .logResponse(TAG)
-        web.putBrokerStockData(Country.TW, BrokerData("", "", emptyList()))
+        web.putBrokerStockData(
+            country = Country.TW,
+            brokerData = BrokerData(
+                brokerId = "9800",
+                subBrokerId = "",
+                inStockData = listOf(
+                    StockData("2330", listOf(StockInfo(TradeType.Spot, 1000, 600000.0)))
+                )
+            )
+        )
             .logResponse(TAG)
         web.getConsents(Country.TW)
             .logResponse(TAG)

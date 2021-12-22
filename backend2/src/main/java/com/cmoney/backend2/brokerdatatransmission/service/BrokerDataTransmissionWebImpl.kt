@@ -1,6 +1,8 @@
 package com.cmoney.backend2.brokerdatatransmission.service
 
-import com.cmoney.backend2.base.extension.*
+import com.cmoney.backend2.base.extension.checkResponseBody
+import com.cmoney.backend2.base.extension.createAuthorizationBearer
+import com.cmoney.backend2.base.extension.handleNoContent
 import com.cmoney.backend2.base.model.dispatcher.DefaultDispatcherProvider
 import com.cmoney.backend2.base.model.dispatcher.DispatcherProvider
 import com.cmoney.backend2.base.model.exception.ServerException
@@ -81,20 +83,27 @@ class BrokerDataTransmissionWebImpl(
             }
         }
 
-    override suspend fun getBrokerStockData(country: Country): Result<BrokerStockDataResponse> =
+    override suspend fun getUserAgreesImportRecord(): Result<Boolean> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
-                TODO()
+                service.getUserAgreesImportRecord(
+                    authToken = setting.accessToken.createAuthorizationBearer()
+                )
+                    .checkResponseBody(gson)
+            }
+        }
+
+    override suspend fun getBrokerStockData(country: Country): Result<List<BrokerStockDataResponse>> =
+        withContext(dispatcher.io()) {
+            kotlin.runCatching {
                 service.getBrokerStockData(
                     body = GetBrokerStockDataRequest(
-                        code = country.isoCode,
-                        brokerId = null,
-                        subBrokerId = null
+                        code = country.isoCode
                     ),
                     authToken = setting.accessToken.createAuthorizationBearer()
                 )
                     .checkResponseBody(gson)
-                    .toRealResponse()
+                    .toJsonArrayWithErrorResponse()
             }
         }
 
@@ -172,7 +181,8 @@ class BrokerDataTransmissionWebImpl(
         return URLEncoder.encode(this, Charsets.UTF_8.name())
     }
 
-    private fun <T: Response<Void>> T.handleCustomNoContent(gson: Gson) {
+    @Throws(ServerException::class, HttpException::class)
+    private fun <T : Response<Void>> T.handleCustomNoContent(gson: Gson) {
         return when {
             code() == 204 -> {
                 //不處理任何Body
@@ -186,7 +196,7 @@ class BrokerDataTransmissionWebImpl(
         }
     }
 
-    private fun <T: Response<Void>> T.parseCustomServerException(gson: Gson): ServerException {
+    private fun <T : Response<Void>> T.parseCustomServerException(gson: Gson): ServerException {
         val errorBody = errorBody()?.string()
 
         val json = gson.fromJson(errorBody, JsonObject::class.java)

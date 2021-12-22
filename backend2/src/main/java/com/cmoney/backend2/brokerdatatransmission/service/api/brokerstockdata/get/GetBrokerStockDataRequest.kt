@@ -2,11 +2,7 @@ package com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.g
 
 import com.google.gson.annotations.SerializedName
 
-data class GetBrokerStockDataRequest(
+class GetBrokerStockDataRequest(
     @SerializedName("CountryISOCode")
-    val code: Int,
-    @SerializedName("BrokerId")
-    val brokerId: String?,
-    @SerializedName("SubBrokerId")
-    val subBrokerId: String?
+    val code: Int
 )

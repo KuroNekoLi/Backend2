@@ -2,7 +2,7 @@ package com.cmoney.backend2.brokerdatatransmission.service.api.transactionhistor
 
 import com.google.gson.annotations.SerializedName
 
-data class FetchTransactionHistoryRequest(
+class FetchTransactionHistoryRequest(
     @SerializedName("Guid")
     val guid: String,
     @SerializedName("Content")

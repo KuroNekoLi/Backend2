@@ -9,6 +9,7 @@ import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.brokerdatatransmission.service.api.BrokerAccount
 import com.cmoney.backend2.brokerdatatransmission.service.api.Country
 import com.cmoney.backend2.brokerdatatransmission.service.api.brokers.BrokerResponseWithError
+import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.TradeType
 import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.put.BrokerData
 import com.cmoney.backend2.brokerdatatransmission.service.api.encryptionkey.GetEncryptionKeyResponseWithError
 import com.google.common.truth.Truth
@@ -158,7 +159,10 @@ class BrokerDataTransmissionWebImplTest {
                 body = any(),
                 authToken = any()
             )
-        } returns Response.error(400, """{"body":{"code":400400,"message":"請確認是否所有資料皆有填寫，填寫完畢後重新匯入或同步庫存。"}}""".toResponseBody())
+        } returns Response.error(
+            400,
+            """{"body":{"code":400400,"message":"請確認是否所有資料皆有填寫，填寫完畢後重新匯入或同步庫存。"}}""".toResponseBody()
+        )
 
         val result = web.fetchTransactionHistory(BrokerAccount("", "", "", "", "", "", ""))
         Truth.assertThat(result.isFailure).isTrue()
@@ -170,13 +174,109 @@ class BrokerDataTransmissionWebImplTest {
     }
 
     @Test
+    fun `getUserAgreesImportRecord 成功`() = mainCoroutineRule.runBlockingTest {
+        val expect = true
+
+        coEvery {
+            service.getUserAgreesImportRecord(
+                authToken = any()
+            )
+        } returns Response.success(expect)
+
+        val result = web.getUserAgreesImportRecord()
+        Truth.assertThat(result.isSuccess).isTrue()
+
+        val actual = result.getOrThrow()
+        Truth.assertThat(actual).isEqualTo(expect)
+    }
+
+    @Test
     fun `getBrokerStockData 成功`() = mainCoroutineRule.runBlockingTest {
-        Truth.assertThat(true).isTrue()
+        val body = JsonArray().apply {
+            add(
+                JsonObject().apply {
+                    addProperty("brokerId", "9800")
+                    addProperty("brokerShortName", "元大")
+                    addProperty("subBrokerId", "")
+                    addProperty("updateTimeOfUnixTimeSeconds", 123456789)
+                    add(
+                        "inStockData",
+                        JsonArray().apply {
+                            add(
+                                JsonObject().apply {
+                                    addProperty("stockID", "2330")
+                                    add(
+                                        "stockInfos",
+                                        JsonArray().apply {
+                                            add(
+                                                JsonObject().apply {
+                                                    addProperty("tradeType", 0)
+                                                    addProperty("amount", "1000")
+                                                    addProperty("tradeTotalCost", "600000")
+                                                }
+                                            )
+                                        }
+                                    )
+                                }
+                            )
+                        }
+                    )
+                }
+            )
+        }
+
+        coEvery {
+            service.getBrokerStockData(
+                body = any(),
+                authToken = any()
+            )
+        } returns Response.success(body)
+
+        val result = web.getBrokerStockData(Country.TW)
+        Truth.assertThat(result.isSuccess).isTrue()
+
+        val responses = result.getOrThrow()
+        Truth.assertThat(responses).hasSize(1)
+
+        val response = responses.single()
+        Truth.assertThat(response.brokerId).isEqualTo("9800")
+        Truth.assertThat(response.subBrokerId).isEmpty()
+        Truth.assertThat(response.brokerShortName).isEqualTo("元大")
+        Truth.assertThat(response.updateTimeOfUnixTimeSeconds).isEqualTo(123456789)
+
+        val inStockData = response.inStockData
+        Truth.assertThat(inStockData).isNotNull()
+        Truth.assertThat(inStockData).hasSize(1)
+
+        val stockData = inStockData!!.single()
+        Truth.assertThat(stockData.stockId).isEqualTo("2330")
+
+        val stockInfos = stockData.stockInfos
+        Truth.assertThat(stockInfos).isNotNull()
+        Truth.assertThat(stockInfos).hasSize(1)
+
+        val stockInfo = stockInfos!!.single()
+        Truth.assertThat(stockInfo.tradeType).isEqualTo(TradeType.Spot)
+        Truth.assertThat(stockInfo.amount).isEqualTo(1000)
+        Truth.assertThat(stockInfo.tradeTotalCost).isWithin(0.00001).of(600000.0)
     }
 
     @Test
     fun `getBrokerStockData 失敗`() = mainCoroutineRule.runBlockingTest {
-        Truth.assertThat(true).isTrue()
+        coEvery {
+            service.getBrokerStockData(
+                body = any(),
+                authToken = any()
+            )
+        } returns Response.error(500, """{"message":"UnknowError"}""".toResponseBody())
+
+        val result = web.getBrokerStockData(Country.TW)
+        Truth.assertThat(result.isFailure).isTrue()
+
+        val exception = result.exceptionOrNull()
+        Truth.assertThat(exception).isNotNull()
+        Truth.assertThat(exception).isInstanceOf(HttpException::class.java)
+        Truth.assertThat((exception as HttpException).code()).isEqualTo(500)
     }
 
     @Test

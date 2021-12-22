@@ -2,7 +2,6 @@ package com.cmoney.backend2.brokerdatatransmission.service
 
 import com.cmoney.backend2.base.model.calladapter.RecordApi
 import com.cmoney.backend2.brokerdatatransmission.service.api.brokers.BrokerResponseWithError
-import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.get.BrokerStockDataResponseWithError
 import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.get.GetBrokerStockDataRequest
 import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.put.PutBrokerStockDataRequest
 import com.cmoney.backend2.brokerdatatransmission.service.api.encryptionkey.GetEncryptionKeyResponseWithError
@@ -43,11 +42,17 @@ interface BrokerDataTransmissionService {
     ): Response<Void>
 
     @RecordApi
+    @GET("BrokerDataTransmission/api/useragreesimportrecord")
+    suspend fun getUserAgreesImportRecord(
+        @Header("Authorization") authToken: String
+    ): Response<Boolean>
+
+    @RecordApi
     @POST("BrokerDataTransmission/api/brokerstockdata")
     suspend fun getBrokerStockData(
         @Body body: GetBrokerStockDataRequest,
         @Header("Authorization") authToken: String
-    ): Response<BrokerStockDataResponseWithError>
+    ): Response<JsonElement>
 
     @RecordApi
     @PUT("BrokerDataTransmission/api/brokerstockdata")
