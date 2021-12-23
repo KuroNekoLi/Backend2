@@ -179,6 +179,7 @@ class SampleApplication : Application() {
 | crmServiceModule                          | crm                        |
 | userBehaviorServiceModule                 | userbehavior               |
 | clientConfigurationModule                 | clientconfiguration        |
+| videoChannelServiceModule                 | videochannel               |
 | imageRecognitionServiceModule             | imageRecognition           |
 | brokerDataTransmissionServiceModule       | brokerdatatransmission     |
 #### 選擇使用Module的步驟
