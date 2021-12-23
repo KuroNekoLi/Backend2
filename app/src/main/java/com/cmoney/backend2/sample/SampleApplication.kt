@@ -10,6 +10,7 @@ import com.cmoney.backend2.base.di.backendBaseModule
 import com.cmoney.backend2.base.model.setting.Platform
 import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.billing.di.billingServiceModule
+import com.cmoney.backend2.brokerdatatransmission.di.brokerDataTransmissionServiceModule
 import com.cmoney.backend2.cellphone.di.cellphoneServiceModule
 import com.cmoney.backend2.centralizedimage.di.centralizedImageServiceModule
 import com.cmoney.backend2.chat.di.chatServiceModule
@@ -75,6 +76,7 @@ class SampleApplication : Application() {
                     authorizationServiceModule,
                     backendBaseModule,
                     billingServiceModule,
+                    brokerDataTransmissionServiceModule,
                     cellphoneServiceModule,
                     chatServiceModule,
                     chipkServiceModule,

@@ -1,3 +1,19 @@
+#  (2021-12-23)
+
+
+
+# [5.6.0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.5.0...5.6.0) (2021-12-23)
+
+
+### Features
+
+* 新增 baseHost 至 BrokerDataTransmissionWeb ([6e10b60](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/6e10b608101333852d58746999a11fe28ac58dd7))
+* 新增 BrokerDataTransmission 服務 ([0da2555](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/0da2555d4be64c664d96d26380bb6d972251d66d))
+* 新增 BrokerDataTransmission 服務 - wip ([413e0ed](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/413e0ed330e54c8626da9e75db903187e98a9208))
+* 新增 deleteBrokerStockData 方法、調整 getBrokers 回應欄位 ([e4a0815](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/e4a0815e22601193a8de05ed189214b494f45ebb))
+
+
+
 #  (2021-12-22)
 
 
