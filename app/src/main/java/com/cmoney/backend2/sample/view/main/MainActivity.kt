@@ -125,6 +125,7 @@ class MainActivity : AppCompatActivity() {
 //                RealTimeAfterMarketServiceCase(),
 //                TickDataServiceCase(),
 //                TrialServiceCase(),
+//                VideoChannelServiceCase(),
 //                VirtualAssetsServiceCase(),
 //                CrmServiceCase(),
 //                CustomGroup2ServiceCase(),

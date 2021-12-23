@@ -49,6 +49,7 @@
 -keep class com.cmoney.backend2.virtualassets.service.api.** { *; }
 -keep class com.cmoney.backend2.userbehavior.service.api.** { *; }
 -keep class com.cmoney.backend2.clientconfiguration.service.api.** { *; }
+-keep class com.cmoney.backend2.videochannel.service.api.** { *; }
 -keep class com.cmoney.backend2.imagerecognition.service.api.** { *; }
 -keep class com.cmoney.backend2.brokerdatatransmission.service.api.** { *; }
 

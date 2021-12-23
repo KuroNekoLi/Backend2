@@ -2,6 +2,19 @@
 
 
 
+# [5.7.0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.6.0...5.7.0) (2021-12-23)
+
+
+### Features
+
+* 新增取得Youtube頻道影音api ([b8dfa47](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/b8dfa47e5ce57391bcdffe838163fc3f31462565))
+
+
+
+#  (2021-12-23)
+
+
+
 # [5.6.0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.5.0...5.6.0) (2021-12-23)
 
 

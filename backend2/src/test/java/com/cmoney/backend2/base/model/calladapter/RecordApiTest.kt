@@ -30,6 +30,7 @@ import com.cmoney.backend2.profile.service.ProfileService
 import com.cmoney.backend2.realtimeaftermarket.service.RealTimeAfterMarketService
 import com.cmoney.backend2.tickdata.service.TickDataService
 import com.cmoney.backend2.trial.service.TrialService
+import com.cmoney.backend2.videochannel.service.VideoChannelService
 import com.cmoney.backend2.virtualassets.service.VirtualAssetsService
 import com.google.common.truth.Truth
 import org.junit.Test
@@ -89,6 +90,7 @@ class RecordApiTest(
                 arrayOf<Any?>(RealTimeAfterMarketService::class),
                 arrayOf<Any?>(TickDataService::class),
                 arrayOf<Any?>(TrialService::class),
+                arrayOf<Any?>(VideoChannelService::class),
                 arrayOf<Any?>(VirtualAssetsService::class),
                 arrayOf<Any?>(ClientConfigurationService::class),
                 arrayOf<Any?>(ImageRecognitionService::class),
