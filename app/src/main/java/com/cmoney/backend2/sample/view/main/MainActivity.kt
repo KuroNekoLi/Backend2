@@ -102,6 +102,7 @@ class MainActivity : AppCompatActivity() {
 //                AuthorizationServiceCase(),
 //                AdditionalInformationRevisitTestCase(hasSignal = true),
 //                BillingServiceCase()
+//                BrokerDataTransmissionServiceCase(),
 //                CellphoneServiceCase(),
 //                ChatRoomServiceCase(),
 //                ChipKServiceCase(),
@@ -129,7 +130,8 @@ class MainActivity : AppCompatActivity() {
 //                CrmServiceCase(),
 //                CustomGroup2ServiceCase(),
 //                UserBehaviorServiceCase(),
-//                ClientConfigurationServiceCase()
+//                ClientConfigurationServiceCase(),
+//                ImageRecognitionServiceCase()
             ).map { serviceCase ->
                 async {
                     serviceCase.testAll()

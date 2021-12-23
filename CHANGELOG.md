@@ -1,3 +1,51 @@
+#  (2021-12-23)
+
+
+
+# [5.6.0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.5.0...5.6.0) (2021-12-23)
+
+
+### Features
+
+* 新增 baseHost 至 BrokerDataTransmissionWeb ([6e10b60](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/6e10b608101333852d58746999a11fe28ac58dd7))
+* 新增 BrokerDataTransmission 服務 ([0da2555](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/0da2555d4be64c664d96d26380bb6d972251d66d))
+* 新增 BrokerDataTransmission 服務 - wip ([413e0ed](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/413e0ed330e54c8626da9e75db903187e98a9208))
+* 新增 deleteBrokerStockData 方法、調整 getBrokers 回應欄位 ([e4a0815](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/e4a0815e22601193a8de05ed189214b494f45ebb))
+
+
+
+#  (2021-12-22)
+
+
+
+# [5.5.0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.4.0...5.5.0) (2021-12-22)
+
+
+### Features
+
+* add authorization hasAuth ([be834c3](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/be834c32509e639470cfd2af05aca15e27c53d2d))
+
+
+
+#  (2021-12-17)
+
+
+
+# [5.4.0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.3.1...5.4.0) (2021-12-17)
+
+
+### Bug Fixes
+
+* 修正 OceanWeb 的 SetReaded 成功時因為 No Content 而被判斷為失敗的問題 ([502403b](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/502403bb4f6dc5ce791f9800b7645259e13dffc5))
+
+
+### Features
+
+* add image recognition service ([ae332d2](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/ae332d2279af7932add1982bcd04ff57aa4d7465))
+* 新增三方的合作廠商登入方式 ([860d33b](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/860d33bd8d6c28abeaa9585ebba7fc9f8bf161aa))
+
+
+
 #  (2021-11-30)
 
 

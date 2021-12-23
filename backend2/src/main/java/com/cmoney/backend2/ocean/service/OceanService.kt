@@ -106,7 +106,6 @@ import com.cmoney.backend2.ocean.service.api.variable.SuccessResultWithError
 import com.cmoney.backend2.ocean.service.api.variable.channelinfo.ChannelInfo
 import com.google.gson.JsonElement
 import okhttp3.MultipartBody
-import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -434,7 +433,7 @@ interface OceanService {
     suspend fun setReaded(
         @Header("Authorization") authorization: String,
         @Body body: SetReadedRequestBody
-    ): Response<ResponseBody>
+    ): Response<Void>
 
     /**
      * 取得指定文章
@@ -855,7 +854,7 @@ interface OceanService {
         @Header("Authorization") authorization: String,
         @Body body: GetStockAndTopicArticlesRequestBody
     ): Response<GetStockAndTopicArticlesResponseBodyWithError>
-    
+
     /**
      * 新增或更新公告
      * @param channelId String
@@ -865,10 +864,10 @@ interface OceanService {
     @POST("OceanService/api/club/{channelId}/createorupdateannouncement")
     suspend fun createOrUpdateAnnouncement(
         @Header("Authorization") authorization: String,
-        @Path("channelId") channelId : Long,
-        @Body requestBody : CreateOrUpdateAnnouncementRequestBody
+        @Path("channelId") channelId: Long,
+        @Body requestBody: CreateOrUpdateAnnouncementRequestBody
     ): Response<IsCreateOrUpdateSuccessResponseWithError>
-    
+
     /**
      * 拿到該Channel所有公告
      * @param channelId String
@@ -878,10 +877,10 @@ interface OceanService {
     @POST("OceanService/api/club/{channelId}/readannouncements")
     suspend fun readAnnouncement(
         @Header("Authorization") authorization: String,
-        @Path("channelId") channelId : Long,
-        @Body requestBody : ReadAnnouncementsRequestBody
+        @Path("channelId") channelId: Long,
+        @Body requestBody: ReadAnnouncementsRequestBody
     ): Response<AnnouncementListResponseWithError>
-    
+
     /**
      * 刪除公告
      * @param channelId String
@@ -892,6 +891,6 @@ interface OceanService {
     suspend fun removeAnnouncement(
         @Header("Authorization") authorization: String,
         @Path("channelId") channelId: Long,
-        @Body requestBody : RemoveAnnouncementRequestBody
-    ) : Response<IsRemoveAnnouncementSuccessWithError>
+        @Body requestBody: RemoveAnnouncementRequestBody
+    ): Response<IsRemoveAnnouncementSuccessWithError>
 }

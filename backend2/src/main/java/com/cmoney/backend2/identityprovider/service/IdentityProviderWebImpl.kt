@@ -162,6 +162,26 @@ class IdentityProviderWebImpl(
         }
     }
 
+    override suspend fun loginByCMoneyThirdParty(providerToken: String): Result<GetTokenResponseBody> = withContext(dispatcherProvider.io()) {
+        runCatching {
+            val xApiLog = XApiLog(
+                appId = setting.appId,
+                platform = setting.platform.code,
+                mode = 8
+            ).let { gson.toJson(it) }
+
+            service.getIdentityToken(
+                xApiLog = xApiLog,
+                grantType = "token-exchange",
+                clientId = setting.clientId,
+                providerToken = providerToken,
+                provider = "cmoneythirdparty"
+            )
+                .checkResponseBody(gson)
+                .toRealResponse()
+        }
+    }
+
     override suspend fun refreshToken(refreshToken: String): Result<GetTokenResponseBody> =
         withContext(dispatcherProvider.io()) {
             kotlin.runCatching {

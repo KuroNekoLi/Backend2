@@ -131,7 +131,6 @@ import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.withContext
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
-import okhttp3.ResponseBody
 import retrofit2.Response
 import java.io.File
 import java.lang.reflect.Type
@@ -924,11 +923,11 @@ class OceanWebImpl(
     override suspend fun setReaded(
         apiParam: MemberApiParam,
         notifyIdAndIsSpecificPair: List<NotifyIdAndIsSpecificPair>
-    ): Result<ResponseBody> = setReaded(notifyIdAndIsSpecificPair)
+    ): Result<Unit> = setReaded(notifyIdAndIsSpecificPair)
 
     override suspend fun setReaded(
         notifyIdAndIsSpecificPair: List<NotifyIdAndIsSpecificPair>
-    ): Result<ResponseBody> = withContext(dispatcher.io()) {
+    ): Result<Unit> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             oceanService.setReaded(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -937,7 +936,8 @@ class OceanWebImpl(
                     guid = setting.identityToken.getMemberGuid(),
                     notifyIdAndIsSpecificPair = notifyIdAndIsSpecificPair
                 )
-            ).checkResponseBody(gson)
+            )
+                .handleNoContent(gson)
         }
     }
 

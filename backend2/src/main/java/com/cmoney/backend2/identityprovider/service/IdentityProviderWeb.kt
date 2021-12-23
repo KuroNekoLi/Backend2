@@ -63,6 +63,15 @@ interface IdentityProviderWeb {
     suspend fun loginByPkce(redirectUri: String, codeVerifier: String, code: String): Result<GetTokenResponseBody>
 
     /**
+     * 合作的三方廠商的登入
+     *
+     * @param providerToken 合作廠商的Token
+     *
+     */
+    suspend fun loginByCMoneyThirdParty(providerToken: String): Result<GetTokenResponseBody>
+
+
+    /**
      * Refresh token
      *
      * @param refreshToken 前一次登入取得的RefreshToken

@@ -4,6 +4,7 @@ import com.cmoney.backend2.activity.service.ActivityService
 import com.cmoney.backend2.additioninformationrevisit.service.AdditionalInformationRevisitService
 import com.cmoney.backend2.authorization.service.AuthorizationService
 import com.cmoney.backend2.billing.service.BillingService
+import com.cmoney.backend2.brokerdatatransmission.service.BrokerDataTransmissionService
 import com.cmoney.backend2.cellphone.service.CellphoneService
 import com.cmoney.backend2.centralizedimage.service.CentralizedImageService
 import com.cmoney.backend2.chipk.service.ChipKService
@@ -16,6 +17,7 @@ import com.cmoney.backend2.dtno.service.DtnoService
 import com.cmoney.backend2.emilystock.service.EmilyService
 import com.cmoney.backend2.forumocean.service.ForumOceanService
 import com.cmoney.backend2.identityprovider.service.IdentityProviderService
+import com.cmoney.backend2.imagerecognition.service.ImageRecognitionService
 import com.cmoney.backend2.media.service.MediaService
 import com.cmoney.backend2.mobileocean.service.MobileOceanService
 import com.cmoney.backend2.note_extension.service.NoteExtensionService
@@ -90,7 +92,9 @@ class RecordApiTest(
                 arrayOf<Any?>(TrialService::class),
                 arrayOf<Any?>(VideoChannelService::class),
                 arrayOf<Any?>(VirtualAssetsService::class),
-                arrayOf<Any?>(ClientConfigurationService::class)
+                arrayOf<Any?>(ClientConfigurationService::class),
+                arrayOf<Any?>(ImageRecognitionService::class),
+                arrayOf<Any?>(BrokerDataTransmissionService::class)
             )
         }
     }

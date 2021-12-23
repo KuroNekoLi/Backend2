@@ -10,6 +10,7 @@ import com.cmoney.backend2.base.di.backendBaseModule
 import com.cmoney.backend2.base.model.setting.Platform
 import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.billing.di.billingServiceModule
+import com.cmoney.backend2.brokerdatatransmission.di.brokerDataTransmissionServiceModule
 import com.cmoney.backend2.cellphone.di.cellphoneServiceModule
 import com.cmoney.backend2.centralizedimage.di.centralizedImageServiceModule
 import com.cmoney.backend2.chat.di.chatServiceModule
@@ -25,6 +26,7 @@ import com.cmoney.backend2.emilystock.di.emilyServiceModule
 import com.cmoney.backend2.forumocean.di.forumOceanServiceModule
 import com.cmoney.backend2.videochannel.di.videoChannelServiceModule
 import com.cmoney.backend2.identityprovider.di.identityProviderServiceModule
+import com.cmoney.backend2.imagerecognition.di.imageRecognitionServiceModule
 import com.cmoney.backend2.media.di.mediaServiceModule
 import com.cmoney.backend2.mobileocean.di.mobileOceanServiceModule
 import com.cmoney.backend2.note_extension.di.noteExtensionServiceModule
@@ -75,6 +77,7 @@ class SampleApplication : Application() {
                     authorizationServiceModule,
                     backendBaseModule,
                     billingServiceModule,
+                    brokerDataTransmissionServiceModule,
                     cellphoneServiceModule,
                     chatServiceModule,
                     chipkServiceModule,
@@ -106,7 +109,8 @@ class SampleApplication : Application() {
                     virtualAssetsServiceModule,
                     crmServiceModule,
                     userBehaviorServiceModule,
-                    clientConfigurationModule
+                    clientConfigurationModule,
+                    imageRecognitionServiceModule
                 )
             )
         }
