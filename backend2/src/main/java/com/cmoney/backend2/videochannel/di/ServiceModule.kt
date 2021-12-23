@@ -1,41 +1,33 @@
 package com.cmoney.backend2.videochannel.di
 
 import com.cmoney.backend2.base.di.*
-import com.cmoney.backend2.BuildConfig
-import com.cmoney.backend2.base.model.calladapter.RecordApiLogCallAdapterFactory
-import com.cmoney.backend2.base.model.log.ApiLog
-import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.videochannel.service.VideoChannelService
 import com.cmoney.backend2.videochannel.service.VideoChannelWeb
 import com.cmoney.backend2.videochannel.service.VideoChannelWebImpl
-import com.cmoney.data_logdatarecorder.recorder.LogDataRecorder
-import com.google.gson.Gson
+import okhttp3.Call
 import okhttp3.ConnectionSpec
-import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import org.koin.java.KoinJavaComponent
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 private const val ICHECKAPP_BASE_URL = "https://www.icheckapp.com.tw/podcast/"
-val ICHECKAPP_RETROFIT = named("icheckapp_retrofit")
+val BACKEND2_ICHECKAPP_RETROFIT = named("backend2_icheckapp_retrofit")
 
 val videoChannelServiceModule = module {
-    single<Retrofit>(ICHECKAPP_RETROFIT) {
-        Retrofit.Builder()
-            .baseUrl(ICHECKAPP_BASE_URL)
-            .client(createOkHttpClient())
-            .addConverterFactory(GsonConverterFactory.create(get(BACKEND2_GSON)))
-            .build()
+    factory<Retrofit>(BACKEND2_ICHECKAPP_RETROFIT) {
+        val backend2Retrofit = get<Retrofit>(BACKEND2_RETROFIT)
+        val backend2RetrofitBuilder = backend2Retrofit.newBuilder()
+        with(backend2RetrofitBuilder) {
+            baseUrl(ICHECKAPP_BASE_URL)
+            callFactory(createOkHttpClient(backend2Retrofit.callFactory()))
+        }
+        backend2RetrofitBuilder.build()
     }
 
     single<VideoChannelService> {
-        get<Retrofit>(ICHECKAPP_RETROFIT).create(VideoChannelService::class.java)
+        get<Retrofit>(BACKEND2_ICHECKAPP_RETROFIT).create(VideoChannelService::class.java)
     }
 
     single<VideoChannelWeb> {
@@ -46,27 +38,19 @@ val videoChannelServiceModule = module {
     }
 }
 
-/**
- * 創建預設的OkHttpClient
- */
-private fun createOkHttpClient(): OkHttpClient {
-    return OkHttpClient.Builder()
-        .connectionSpecs(listOf(ConnectionSpec.COMPATIBLE_TLS, ConnectionSpec.CLEARTEXT))
-        .addLogInterceptor()
-        .connectTimeout(30L, TimeUnit.SECONDS)
-        .callTimeout(30L, TimeUnit.SECONDS)
-        .readTimeout(30L, TimeUnit.SECONDS)
-        .writeTimeout(30L, TimeUnit.SECONDS)
-        .build()
-}
-
-/**
- * 加入Http Body Log
- */
-internal fun OkHttpClient.Builder.addLogInterceptor() = apply {
-    if (BuildConfig.DEBUG) {
-        val interceptor = HttpLoggingInterceptor()
-        interceptor.level = HttpLoggingInterceptor.Level.BODY
-        addInterceptor(interceptor)
+private fun createOkHttpClient(baseCallFactory: Call.Factory): OkHttpClient {
+    val okHttpClientBuilder = if (baseCallFactory is OkHttpClient) {
+        with(baseCallFactory.newBuilder()) {
+            interceptors().clear()
+            addLogInterceptor()
+        }
+    } else {
+        OkHttpClient.Builder()
+            .connectionSpecs(listOf(ConnectionSpec.COMPATIBLE_TLS, ConnectionSpec.CLEARTEXT))
+            .connectTimeout(30L, TimeUnit.SECONDS)
+            .callTimeout(30L, TimeUnit.SECONDS)
+            .readTimeout(30L, TimeUnit.SECONDS)
+            .writeTimeout(30L, TimeUnit.SECONDS)
     }
+    return okHttpClientBuilder.build()
 }
