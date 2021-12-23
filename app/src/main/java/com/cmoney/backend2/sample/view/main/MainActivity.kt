@@ -102,6 +102,7 @@ class MainActivity : AppCompatActivity() {
 //                AuthorizationServiceCase(),
 //                AdditionalInformationRevisitTestCase(hasSignal = true),
 //                BillingServiceCase()
+//                BrokerDataTransmissionServiceCase(),
 //                CellphoneServiceCase(),
 //                ChatRoomServiceCase(),
 //                ChipKServiceCase(),
