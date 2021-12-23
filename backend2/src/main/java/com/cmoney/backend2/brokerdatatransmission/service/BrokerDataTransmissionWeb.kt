@@ -41,6 +41,11 @@ interface BrokerDataTransmissionWeb {
     suspend fun putBrokerStockData(country: Country, brokerData: BrokerData): Result<Unit>
 
     /**
+     * 刪除用戶在 [country] 下對應券商ID列表 [brokerIds] 下的庫存資料
+     */
+    suspend fun deleteBrokerStockData(country: Country, brokerIds: List<String>): Result<Unit>
+
+    /**
      * 取得用戶在 [country] 下的券商同意書
      */
     suspend fun getConsents(country: Country): Result<List<Consent>>

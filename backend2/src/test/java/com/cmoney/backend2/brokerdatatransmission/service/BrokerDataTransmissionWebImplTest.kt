@@ -105,7 +105,7 @@ class BrokerDataTransmissionWebImplTest {
     @Test
     fun `getEncryptionKey 成功`() = mainCoroutineRule.runBlockingTest {
         val responseBody =
-            GetEncryptionKeyResponseWithError("-----BEGIN PUBLIC KEY-----\\r\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAi5f+LhvlxB32a3AOeIno\\r\\n/+dhdu92P9IR0P1in6GUNW+vEgzZAZdBNF+EPgsEPRi0tGLYXrx9BJUIHah1ORoY\\r\\nUgU0PD1ydyJ2cDp/kP8IQ3cDIvXKSYyKNQ2erxFvvOFFvrqoB7QxLQgP+xKkFoz/\\r\\nbdAAQAjT/4dtRHGd82wZETWcXHqv7mL9KZj1TEvNDu77yu90PhodGtByCmvJjXd8\\r\\nYi2Nr7esIapsQafFOyyOAYFXE3UtFiHDf19SAVqC4TS7WpVDeBn/+PPNeSrkApVs\\r\\n0nxXNDpCumuXkqVtcbih3pKF5mrfPaTSlVClNBTXaj2UdQfrjfFCcqIyyWIdnkEc\\r\\nVQIDAQAB\\r\\n-----END PUBLIC KEY-----\\r\\n")
+            GetEncryptionKeyResponseWithError("""-----BEGIN PUBLIC KEY-----\r\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAi5f+LhvlxB32a3AOeIno\r\n/+dhdu92P9IR0P1in6GUNW+vEgzZAZdBNF+EPgsEPRi0tGLYXrx9BJUIHah1ORoY\r\nUgU0PD1ydyJ2cDp/kP8IQ3cDIvXKSYyKNQ2erxFvvOFFvrqoB7QxLQgP+xKkFoz/\r\nbdAAQAjT/4dtRHGd82wZETWcXHqv7mL9KZj1TEvNDu77yu90PhodGtByCmvJjXd8\r\nYi2Nr7esIapsQafFOyyOAYFXE3UtFiHDf19SAVqC4TS7WpVDeBn/+PPNeSrkApVs\r\n0nxXNDpCumuXkqVtcbih3pKF5mrfPaTSlVClNBTXaj2UdQfrjfFCcqIyyWIdnkEc\r\nVQIDAQAB\r\n-----END PUBLIC KEY-----\r\n""")
         coEvery {
             service.getEncryptionKey(
                 code = any(),
@@ -192,38 +192,10 @@ class BrokerDataTransmissionWebImplTest {
 
     @Test
     fun `getBrokerStockData 成功`() = mainCoroutineRule.runBlockingTest {
-        val body = JsonArray().apply {
-            add(
-                JsonObject().apply {
-                    addProperty("brokerId", "9800")
-                    addProperty("brokerShortName", "元大")
-                    addProperty("subBrokerId", "")
-                    addProperty("updateTimeOfUnixTimeSeconds", 123456789)
-                    add(
-                        "inStockData",
-                        JsonArray().apply {
-                            add(
-                                JsonObject().apply {
-                                    addProperty("stockID", "2330")
-                                    add(
-                                        "stockInfos",
-                                        JsonArray().apply {
-                                            add(
-                                                JsonObject().apply {
-                                                    addProperty("tradeType", 0)
-                                                    addProperty("amount", "1000")
-                                                    addProperty("tradeTotalCost", "600000")
-                                                }
-                                            )
-                                        }
-                                    )
-                                }
-                            )
-                        }
-                    )
-                }
-            )
-        }
+        val body = gson.fromJson(
+            """[{"brokerId":"9800","brokerShortName":"元大","subBrokerId":"","updateTimeOfUnixTimeSeconds":1640167278,"inStockData":[{"stockID":"2330","stockInfos":[{"tradeType":0,"amount":1000,"tradeTotalCost":600000.0000}]}]}]""",
+            JsonElement::class.java
+        )
 
         coEvery {
             service.getBrokerStockData(
@@ -242,7 +214,7 @@ class BrokerDataTransmissionWebImplTest {
         Truth.assertThat(response.brokerId).isEqualTo("9800")
         Truth.assertThat(response.subBrokerId).isEmpty()
         Truth.assertThat(response.brokerShortName).isEqualTo("元大")
-        Truth.assertThat(response.updateTimeOfUnixTimeSeconds).isEqualTo(123456789)
+        Truth.assertThat(response.updateTimeOfUnixTimeSeconds).isEqualTo(1640167278)
 
         val inStockData = response.inStockData
         Truth.assertThat(inStockData).isNotNull()
@@ -311,21 +283,48 @@ class BrokerDataTransmissionWebImplTest {
     }
 
     @Test
-    fun `getConsents 成功`() = mainCoroutineRule.runBlockingTest {
-        val responseBody = JsonArray().apply {
-            add(
-                JsonObject().apply {
-                    addProperty("brokerId", "9800")
-                    addProperty("hasSigned", true)
-                }
+    fun `deleteBrokerStockData 成功`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.deleteBrokerStockData(
+                body = any(),
+                authToken = any()
             )
-        }
+        } returns Response.success<Void>(204, null)
+
+        val result = web.deleteBrokerStockData(Country.TW, emptyList())
+        Truth.assertThat(result.isSuccess).isTrue()
+    }
+
+    @Test
+    fun `deleteBrokerStockData 失敗`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.deleteBrokerStockData(
+                body = any(),
+                authToken = any()
+            )
+        } returns Response.error(500, """{"message":"未知的錯誤"}""".toResponseBody())
+
+        val result = web.deleteBrokerStockData(Country.TW, emptyList())
+        Truth.assertThat(result.isFailure).isTrue()
+
+        val exception = result.exceptionOrNull()
+        Truth.assertThat(exception).isNotNull()
+        Truth.assertThat(exception).isInstanceOf(HttpException::class.java)
+        Truth.assertThat((exception as HttpException).code()).isEqualTo(500)
+    }
+
+    @Test
+    fun `getConsents 成功`() = mainCoroutineRule.runBlockingTest {
+        val body = gson.fromJson(
+            """[{"brokerId":"9800","hasSigned":true}]""",
+            JsonElement::class.java
+        )
         coEvery {
             service.getConsents(
                 code = any(),
                 authToken = any()
             )
-        } returns Response.success(responseBody)
+        } returns Response.success(body)
 
         val result = web.getConsents(Country.TW)
         Truth.assertThat(result.isSuccess).isTrue()

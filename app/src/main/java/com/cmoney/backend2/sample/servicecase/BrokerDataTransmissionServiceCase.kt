@@ -38,6 +38,11 @@ class BrokerDataTransmissionServiceCase : ServiceCase {
             )
         )
             .logResponse(TAG)
+        web.deleteBrokerStockData(
+            Country.TW,
+            listOf("9800")
+        )
+            .logResponse(TAG)
         web.getConsents(Country.TW)
             .logResponse(TAG)
         web.signConsent("9800")

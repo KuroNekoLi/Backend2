@@ -12,6 +12,7 @@ import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.brokerdatatransmission.service.api.BrokerAccount
 import com.cmoney.backend2.brokerdatatransmission.service.api.Country
 import com.cmoney.backend2.brokerdatatransmission.service.api.brokers.BrokerResponse
+import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.delete.DeleteBrokerStockDataRequest
 import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.get.BrokerStockDataResponse
 import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.get.GetBrokerStockDataRequest
 import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.put.BrokerData
@@ -118,6 +119,23 @@ class BrokerDataTransmissionWebImpl(
                         country.isoCode,
                         setting.identityToken.getMemberGuid(),
                         brokerData
+                    ),
+                    authToken = setting.accessToken.createAuthorizationBearer()
+                )
+                    .handleNoContent(gson)
+            }
+        }
+
+    override suspend fun deleteBrokerStockData(
+        country: Country,
+        brokerIds: List<String>
+    ): Result<Unit> =
+        withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.deleteBrokerStockData(
+                    body = DeleteBrokerStockDataRequest(
+                        country.isoCode,
+                        brokerIds
                     ),
                     authToken = setting.accessToken.createAuthorizationBearer()
                 )

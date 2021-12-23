@@ -7,7 +7,7 @@ class StockInfo(
     @SerializedName("tradeType")
     val tradeType: TradeType?,
     @SerializedName("amount")
-    val amount: Int?,
+    val amount: Long?,
     @SerializedName("tradeTotalCost")
     val tradeTotalCost: Double?
 )

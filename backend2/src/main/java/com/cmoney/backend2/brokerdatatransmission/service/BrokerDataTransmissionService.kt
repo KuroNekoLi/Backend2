@@ -2,6 +2,7 @@ package com.cmoney.backend2.brokerdatatransmission.service
 
 import com.cmoney.backend2.base.model.calladapter.RecordApi
 import com.cmoney.backend2.brokerdatatransmission.service.api.brokers.BrokerResponseWithError
+import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.delete.DeleteBrokerStockDataRequest
 import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.get.GetBrokerStockDataRequest
 import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.put.PutBrokerStockDataRequest
 import com.cmoney.backend2.brokerdatatransmission.service.api.encryptionkey.GetEncryptionKeyResponseWithError
@@ -58,6 +59,13 @@ interface BrokerDataTransmissionService {
     @PUT("BrokerDataTransmission/api/brokerstockdata")
     suspend fun putBrokerStockData(
         @Body body: PutBrokerStockDataRequest,
+        @Header("Authorization") authToken: String
+    ): Response<Void>
+
+    @RecordApi
+    @HTTP(method = "DELETE", path = "BrokerDataTransmission/api/brokerstockdata", hasBody = true)
+    suspend fun deleteBrokerStockData(
+        @Body body: DeleteBrokerStockDataRequest,
         @Header("Authorization") authToken: String
     ): Response<Void>
 
