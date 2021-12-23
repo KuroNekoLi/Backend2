@@ -14,9 +14,7 @@ import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.pu
 import com.cmoney.backend2.brokerdatatransmission.service.api.encryptionkey.GetEncryptionKeyResponseWithError
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
-import com.google.gson.JsonArray
 import com.google.gson.JsonElement
-import com.google.gson.JsonObject
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
@@ -52,6 +50,7 @@ class BrokerDataTransmissionWebImplTest {
         MockKAnnotations.init(this)
         setting = TestSetting()
         web = BrokerDataTransmissionWebImpl(
+            baseHost = "",
             gson = gson,
             service = service,
             setting = setting,
@@ -71,6 +70,7 @@ class BrokerDataTransmissionWebImplTest {
         )
         coEvery {
             service.getBrokers(
+                url = any(),
                 code = any(),
                 authToken = any()
             )
@@ -88,6 +88,7 @@ class BrokerDataTransmissionWebImplTest {
             Response.error(400, """{"message": "參數錯誤"}""".toResponseBody())
         coEvery {
             service.getBrokers(
+                url = any(),
                 code = any(),
                 authToken = any()
             )
@@ -108,6 +109,7 @@ class BrokerDataTransmissionWebImplTest {
             GetEncryptionKeyResponseWithError("""-----BEGIN PUBLIC KEY-----\r\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAi5f+LhvlxB32a3AOeIno\r\n/+dhdu92P9IR0P1in6GUNW+vEgzZAZdBNF+EPgsEPRi0tGLYXrx9BJUIHah1ORoY\r\nUgU0PD1ydyJ2cDp/kP8IQ3cDIvXKSYyKNQ2erxFvvOFFvrqoB7QxLQgP+xKkFoz/\r\nbdAAQAjT/4dtRHGd82wZETWcXHqv7mL9KZj1TEvNDu77yu90PhodGtByCmvJjXd8\r\nYi2Nr7esIapsQafFOyyOAYFXE3UtFiHDf19SAVqC4TS7WpVDeBn/+PPNeSrkApVs\r\n0nxXNDpCumuXkqVtcbih3pKF5mrfPaTSlVClNBTXaj2UdQfrjfFCcqIyyWIdnkEc\r\nVQIDAQAB\r\n-----END PUBLIC KEY-----\r\n""")
         coEvery {
             service.getEncryptionKey(
+                url = any(),
                 code = any(),
                 authToken = any()
             )
@@ -125,6 +127,7 @@ class BrokerDataTransmissionWebImplTest {
             Response.error(400, """{"message": "參數錯誤"}""".toResponseBody())
         coEvery {
             service.getEncryptionKey(
+                url = any(),
                 code = any(),
                 authToken = any()
             )
@@ -143,6 +146,7 @@ class BrokerDataTransmissionWebImplTest {
     fun `fetchTransactionHistory 成功`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             service.fetchTransactionHistory(
+                url = any(),
                 body = any(),
                 authToken = any()
             )
@@ -156,6 +160,7 @@ class BrokerDataTransmissionWebImplTest {
     fun `fetchTransactionHistory 失敗`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             service.fetchTransactionHistory(
+                url = any(),
                 body = any(),
                 authToken = any()
             )
@@ -179,6 +184,7 @@ class BrokerDataTransmissionWebImplTest {
 
         coEvery {
             service.getUserAgreesImportRecord(
+                url = any(),
                 authToken = any()
             )
         } returns Response.success(expect)
@@ -199,6 +205,7 @@ class BrokerDataTransmissionWebImplTest {
 
         coEvery {
             service.getBrokerStockData(
+                url = any(),
                 body = any(),
                 authToken = any()
             )
@@ -237,6 +244,7 @@ class BrokerDataTransmissionWebImplTest {
     fun `getBrokerStockData 失敗`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             service.getBrokerStockData(
+                url = any(),
                 body = any(),
                 authToken = any()
             )
@@ -255,6 +263,7 @@ class BrokerDataTransmissionWebImplTest {
     fun `putBrokerStockData 成功`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             service.putBrokerStockData(
+                url = any(),
                 body = any(),
                 authToken = any()
             )
@@ -268,6 +277,7 @@ class BrokerDataTransmissionWebImplTest {
     fun `putBrokerStockData 失敗`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             service.putBrokerStockData(
+                url = any(),
                 body = any(),
                 authToken = any()
             )
@@ -286,6 +296,7 @@ class BrokerDataTransmissionWebImplTest {
     fun `deleteBrokerStockData 成功`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             service.deleteBrokerStockData(
+                url = any(),
                 body = any(),
                 authToken = any()
             )
@@ -299,6 +310,7 @@ class BrokerDataTransmissionWebImplTest {
     fun `deleteBrokerStockData 失敗`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             service.deleteBrokerStockData(
+                url = any(),
                 body = any(),
                 authToken = any()
             )
@@ -321,6 +333,7 @@ class BrokerDataTransmissionWebImplTest {
         )
         coEvery {
             service.getConsents(
+                url = any(),
                 code = any(),
                 authToken = any()
             )
@@ -343,6 +356,7 @@ class BrokerDataTransmissionWebImplTest {
             Response.error(400, """{"message": "參數錯誤"}""".toResponseBody())
         coEvery {
             service.getConsents(
+                url = any(),
                 code = any(),
                 authToken = any()
             )
@@ -362,7 +376,7 @@ class BrokerDataTransmissionWebImplTest {
     fun `signConsent 成功`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             service.signConsent(
-                brokerId = any(),
+                url = any(),
                 authToken = any()
             )
         } returns Response.success<Void>(204, null)

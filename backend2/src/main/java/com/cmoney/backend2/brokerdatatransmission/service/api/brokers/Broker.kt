@@ -2,7 +2,7 @@ package com.cmoney.backend2.brokerdatatransmission.service.api.brokers
 
 import com.google.gson.annotations.SerializedName
 
-class Broker(
+data class Broker(
 
     @SerializedName("displayOrder")
     val displayOrder: Int?,

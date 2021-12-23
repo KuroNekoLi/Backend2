@@ -22,64 +22,72 @@ import retrofit2.http.*
 interface BrokerDataTransmissionService {
 
     @RecordApi
-    @POST("BrokerDataTransmission/api/brokers")
+    @POST
     suspend fun getBrokers(
+        @Url url: String,
         @Query("code") code: Int,
         @Header("Authorization") authToken: String
     ): Response<BrokerResponseWithError>
 
     @RecordApi
-    @POST("BrokerDataTransmission/api/encryptionkey")
+    @POST
     suspend fun getEncryptionKey(
+        @Url url: String,
         @Query("code") code: Int,
         @Header("Authorization") authToken: String
     ): Response<GetEncryptionKeyResponseWithError>
 
     @RecordApi
-    @POST("BrokerDataTransmission/api/fetch/transactionhistory")
+    @POST
     suspend fun fetchTransactionHistory(
+        @Url url: String,
         @Body body: FetchTransactionHistoryRequest,
         @Header("Authorization") authToken: String
     ): Response<Void>
 
     @RecordApi
-    @GET("BrokerDataTransmission/api/useragreesimportrecord")
+    @GET
     suspend fun getUserAgreesImportRecord(
+        @Url url: String,
         @Header("Authorization") authToken: String
     ): Response<Boolean>
 
     @RecordApi
-    @POST("BrokerDataTransmission/api/brokerstockdata")
+    @POST
     suspend fun getBrokerStockData(
+        @Url url: String,
         @Body body: GetBrokerStockDataRequest,
         @Header("Authorization") authToken: String
     ): Response<JsonElement>
 
     @RecordApi
-    @PUT("BrokerDataTransmission/api/brokerstockdata")
+    @PUT
     suspend fun putBrokerStockData(
+        @Url url: String,
         @Body body: PutBrokerStockDataRequest,
         @Header("Authorization") authToken: String
     ): Response<Void>
 
     @RecordApi
-    @HTTP(method = "DELETE", path = "BrokerDataTransmission/api/brokerstockdata", hasBody = true)
+    @HTTP(method = "DELETE", hasBody = true)
     suspend fun deleteBrokerStockData(
+        @Url url: String,
         @Body body: DeleteBrokerStockDataRequest,
         @Header("Authorization") authToken: String
     ): Response<Void>
 
     @RecordApi
-    @GET("BrokerDataTransmission/Consent")
+    @GET
     suspend fun getConsents(
+        @Url url: String,
         @Query("code") code: Int,
         @Header("Authorization") authToken: String
     ): Response<JsonElement>
 
     @RecordApi
-    @PUT("BrokerDataTransmission/Consent/{brokerId}")
+    @PUT
     suspend fun signConsent(
-        @Path("brokerId") brokerId: String,
+        @Url url: String,
         @Header("Authorization") authToken: String
     ): Response<Void>
 

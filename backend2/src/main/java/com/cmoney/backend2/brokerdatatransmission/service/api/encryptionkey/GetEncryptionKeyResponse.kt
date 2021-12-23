@@ -1,5 +1,5 @@
 package com.cmoney.backend2.brokerdatatransmission.service.api.encryptionkey
 
-class GetEncryptionKeyResponse(
+data class GetEncryptionKeyResponse(
     val publicKeyCryptography: String?
 )

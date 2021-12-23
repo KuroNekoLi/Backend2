@@ -31,16 +31,19 @@ import retrofit2.Response
 import java.net.URLEncoder
 
 class BrokerDataTransmissionWebImpl(
+    override val baseHost: String,
     private val service: BrokerDataTransmissionService,
     private val setting: Setting,
     private val gson: Gson,
     private val dispatcher: DispatcherProvider = DefaultDispatcherProvider()
 ) : BrokerDataTransmissionWeb {
 
-    override suspend fun getBrokers(country: Country): Result<BrokerResponse> =
+    override suspend fun getBrokers(country: Country, host: String): Result<BrokerResponse> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
+                val requestUrl = "${host}BrokerDataTransmission/api/brokers"
                 service.getBrokers(
+                    url = requestUrl,
                     code = country.isoCode,
                     authToken = setting.accessToken.createAuthorizationBearer()
                 )
@@ -49,10 +52,15 @@ class BrokerDataTransmissionWebImpl(
             }
         }
 
-    override suspend fun getEncryptionKey(country: Country): Result<GetEncryptionKeyResponse> =
+    override suspend fun getEncryptionKey(
+        country: Country,
+        host: String
+    ): Result<GetEncryptionKeyResponse> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
+                val requestUrl = "${host}BrokerDataTransmission/api/encryptionkey"
                 service.getEncryptionKey(
+                    url = requestUrl,
                     code = country.isoCode,
                     authToken = setting.accessToken.createAuthorizationBearer()
                 )
@@ -61,9 +69,13 @@ class BrokerDataTransmissionWebImpl(
             }
         }
 
-    override suspend fun fetchTransactionHistory(brokerAccount: BrokerAccount): Result<Unit> =
+    override suspend fun fetchTransactionHistory(
+        brokerAccount: BrokerAccount,
+        host: String
+    ): Result<Unit> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
+                val requestUrl = "${host}BrokerDataTransmission/api/fetch/transactionhistory"
                 val encodedBrokerAccount = BrokerAccount(
                     brokerId = brokerAccount.brokerId.urlEncode(),
                     subBrokerId = brokerAccount.subBrokerId.urlEncode(),
@@ -74,6 +86,7 @@ class BrokerDataTransmissionWebImpl(
                     encryptedAesIv = brokerAccount.encryptedAesIv.urlEncode(),
                 )
                 service.fetchTransactionHistory(
+                    url = requestUrl,
                     body = FetchTransactionHistoryRequest(
                         guid = setting.identityToken.getMemberGuid(),
                         content = gson.toJson(encodedBrokerAccount)
@@ -84,20 +97,27 @@ class BrokerDataTransmissionWebImpl(
             }
         }
 
-    override suspend fun getUserAgreesImportRecord(): Result<Boolean> =
+    override suspend fun getUserAgreesImportRecord(host: String): Result<Boolean> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
+                val requestUrl = "${host}BrokerDataTransmission/api/useragreesimportrecord"
                 service.getUserAgreesImportRecord(
+                    url = requestUrl,
                     authToken = setting.accessToken.createAuthorizationBearer()
                 )
                     .checkResponseBody(gson)
             }
         }
 
-    override suspend fun getBrokerStockData(country: Country): Result<List<BrokerStockDataResponse>> =
+    override suspend fun getBrokerStockData(
+        country: Country,
+        host: String
+    ): Result<List<BrokerStockDataResponse>> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
+                val requestUrl = "${host}BrokerDataTransmission/api/brokerstockdata"
                 service.getBrokerStockData(
+                    url = requestUrl,
                     body = GetBrokerStockDataRequest(
                         code = country.isoCode
                     ),
@@ -110,11 +130,14 @@ class BrokerDataTransmissionWebImpl(
 
     override suspend fun putBrokerStockData(
         country: Country,
-        brokerData: BrokerData
+        brokerData: BrokerData,
+        host: String
     ): Result<Unit> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
+                val requestUrl = "${host}BrokerDataTransmission/api/brokerstockdata"
                 service.putBrokerStockData(
+                    url = requestUrl,
                     body = PutBrokerStockDataRequest(
                         country.isoCode,
                         setting.identityToken.getMemberGuid(),
@@ -128,11 +151,14 @@ class BrokerDataTransmissionWebImpl(
 
     override suspend fun deleteBrokerStockData(
         country: Country,
-        brokerIds: List<String>
+        brokerIds: List<String>,
+        host: String
     ): Result<Unit> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
+                val requestUrl = "${host}BrokerDataTransmission/api/brokerstockdata"
                 service.deleteBrokerStockData(
+                    url = requestUrl,
                     body = DeleteBrokerStockDataRequest(
                         country.isoCode,
                         brokerIds
@@ -143,10 +169,12 @@ class BrokerDataTransmissionWebImpl(
             }
         }
 
-    override suspend fun getConsents(country: Country): Result<List<Consent>> =
+    override suspend fun getConsents(country: Country, host: String): Result<List<Consent>> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
+                val requestUrl = "${host}BrokerDataTransmission/Consent"
                 service.getConsents(
+                    url = requestUrl,
                     code = country.isoCode,
                     authToken = setting.accessToken.createAuthorizationBearer()
                 )
@@ -155,11 +183,12 @@ class BrokerDataTransmissionWebImpl(
             }
         }
 
-    override suspend fun signConsent(brokerId: String): Result<Unit> =
+    override suspend fun signConsent(brokerId: String, host: String): Result<Unit> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
+                val requestUrl = "${host}BrokerDataTransmission/Consent/$brokerId"
                 service.signConsent(
-                    brokerId = brokerId,
+                    url = requestUrl,
                     authToken = setting.accessToken.createAuthorizationBearer()
                 )
                     .handleNoContent(gson)

@@ -2,7 +2,7 @@ package com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.g
 
 import com.google.gson.annotations.SerializedName
 
-class BrokerStockDataResponse(
+data class BrokerStockDataResponse(
     @SerializedName("brokerId")
     val brokerId: String?,
     @SerializedName("brokerShortName")
