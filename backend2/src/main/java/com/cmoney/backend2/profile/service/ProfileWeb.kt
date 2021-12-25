@@ -5,10 +5,13 @@ import com.cmoney.backend2.profile.service.api.checkregistrationcodebyphone.GetR
 import com.cmoney.backend2.profile.service.api.getaccount.GetAccountResponseBody
 import com.cmoney.backend2.profile.service.api.getusergraphqlinfo.UserGraphQLInfo
 import com.cmoney.backend2.profile.service.api.mutationmyusergraphqlinfo.MutationData
+import com.cmoney.backend2.profile.service.api.queryprofile.MemberProfileQueryBuilder
+import com.cmoney.backend2.profile.service.api.queryprofile.RawMemberProfile
 import com.cmoney.backend2.profile.service.api.signupcompletebyemail.SignUpCompleteByEmailResponseBody
 import com.cmoney.backend2.profile.service.api.signupcompletebyphone.SignUpCompleteByPhoneResponseBody
 import com.cmoney.backend2.profile.service.api.variable.GraphQLFieldDefinition
 import java.lang.reflect.Type
+
 /**
  * Profile web
  */
@@ -204,10 +207,15 @@ interface ProfileWeb {
     /**
      * 取得自己的使用者資料
      */
+    @Deprecated("")
     suspend fun <T> getMyUserGraphQlInfo(
         fields: Set<GraphQLFieldDefinition>,
         type: Type
     ): Result<T>
+
+    suspend fun getSelfMemberProfile(
+        block: MemberProfileQueryBuilder.() -> MemberProfileQueryBuilder
+    ): Result<RawMemberProfile>
 
     /**
      * 更新自己的使用者資料

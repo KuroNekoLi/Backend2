@@ -1,5 +1,6 @@
 package com.cmoney.backend2.profile.service.api.variable
 
+@Deprecated("Change to use new function for queryMethod")
 enum class GraphQLFieldDefinition(val value: String) {
     Email("email"),
     Name("name"),

@@ -1,10 +1,7 @@
 package com.cmoney.backend2.sample.servicecase
 
-import android.util.Log
 import com.cmoney.backend2.profile.service.ProfileWeb
 import com.cmoney.backend2.profile.service.api.getusergraphqlinfo.UserGraphQLInfo
-import com.cmoney.backend2.profile.service.api.mutationmyusergraphqlinfo.City
-import com.cmoney.backend2.profile.service.api.mutationmyusergraphqlinfo.Education
 import com.cmoney.backend2.profile.service.api.mutationmyusergraphqlinfo.MutationData
 import com.cmoney.backend2.profile.service.api.variable.GraphQLFieldDefinition
 import com.cmoney.backend2.sample.extension.logResponse
@@ -55,17 +52,52 @@ class ProfileServiceCase : ServiceCase {
             CODE_FOR_TESTING
         ).logResponse(TAG)
 
-        profileWeb.getMyUserGraphQlInfo<GetNicknameAndAvatarResponse>(
-            fields = setOf(
-                    GraphQLFieldDefinition.NickName,
-                    GraphQLFieldDefinition.Image,
-                    GraphQLFieldDefinition.Level,
-                    GraphQLFieldDefinition.Badge,
-                    GraphQLFieldDefinition.Bio
-            ),
-            type = object : TypeToken<GetNicknameAndAvatarResponse>(){}.type
+        profileWeb.getSelfMemberProfile {
+            pCoin
+            name
+            nickname
+            gender
+            birthday
+            address
+            signupDate
+            bio
+            contactEmail
+            image
+            city
+            education
+            profession
+            investmentExperience
+            investmentProperty
+            investmentTools
+            customerId
+            account {
+                email
+                cellphone {
+                    code
+                    number
+                }
+                facebook {
+                    fbId
+                    email
+                    name
+                }
+                appleId
+                guestId
+            }
+            levelInfo {
+                exp
+                level
+                levelExp
+                levelExpToNext
+            }
+            badges {
+                badgeId
+                isEquipped
+                hasRead
+            }
+        }
+            .logResponse(TAG)
 
-        ).logResponse(TAG)
         profileWeb.mutationMyUserGraphQlInfo<GetNicknameAndAvatarResponse>(
             type = object : TypeToken<GetNicknameAndAvatarResponse>(){}.type,
             variable = MutationData.Builder(
@@ -82,8 +114,8 @@ class ProfileServiceCase : ServiceCase {
                         GraphQLFieldDefinition.Badge
                 ),
                 type = object : TypeToken<GetNicknameAndAvatarResponse>(){}.type
-
         ).logResponse(TAG)
+
         profileWeb.getUserGraphQLInfo<GetNicknameAndAvatarResponse>(
             memberIds = listOf(
                 1, 2, 3, 4, 5
