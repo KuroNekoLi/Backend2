@@ -5,11 +5,11 @@ import com.google.gson.annotations.SerializedName
 
 data class RawMemberProfile(
     @SerializedName("account")
-    val account: Account?,
+    val account: RawAccount?,
     @SerializedName("address")
     val address: String?,
     @SerializedName("badges")
-    val badges: List<Badges>?,
+    val badges: List<RawBadges>?,
     @SerializedName("bio")
     val bio: String?,
     @SerializedName("birthday")
@@ -19,7 +19,7 @@ data class RawMemberProfile(
     @SerializedName("contactEmail")
     val contactEmail: String?,
     @SerializedName("customerId")
-    val customerId: Int?,
+    val customerId: Long?,
     @SerializedName("education")
     val education: String?,
     @SerializedName("gender")
@@ -33,13 +33,13 @@ data class RawMemberProfile(
     @SerializedName("investmentTools")
     val investmentTools: List<String>?,
     @SerializedName("levelInfo")
-    val levelInfo: LevelInfo?,
+    val levelInfo: RawLevelInfo?,
     @SerializedName("name")
     val name: String?,
     @SerializedName("nickname")
     val nickname: String?,
     @SerializedName("pCoin")
-    val pCoin: Int?,
+    val pCoin: Long?,
     @SerializedName("profession")
     val profession: String?,
     @SerializedName("signupDate")

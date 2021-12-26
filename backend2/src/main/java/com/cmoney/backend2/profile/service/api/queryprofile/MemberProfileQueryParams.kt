@@ -8,7 +8,7 @@ import com.cmoney.backend2.profile.service.api.profilefield.MemberProfileField
 internal class MemberProfileQueryParams internal constructor() {
     var signupDate: MemberProfileField? = null
     var name: MemberProfileField? = null
-    var nickName: MemberProfileField? = null
+    var nickname: MemberProfileField? = null
     var gender: MemberProfileField? = null
     var birthday: MemberProfileField? = null
     var address: MemberProfileField? = null
@@ -30,7 +30,7 @@ internal class MemberProfileQueryParams internal constructor() {
     fun isDefault(): Boolean {
         return pCoin == null &&
             name == null &&
-            nickName == null &&
+            nickname == null &&
             gender == null &&
             birthday == null &&
             address == null &&

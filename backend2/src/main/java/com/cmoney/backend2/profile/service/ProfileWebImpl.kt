@@ -22,6 +22,7 @@ import com.cmoney.backend2.profile.service.api.linkemail.LinkEmailRequestBody
 import com.cmoney.backend2.profile.service.api.linkfacebook.LinkFacebookRequestBody
 import com.cmoney.backend2.profile.service.api.linkphone.LinkPhoneRequestBody
 import com.cmoney.backend2.profile.service.api.mutationmyusergraphqlinfo.MutationData
+import com.cmoney.backend2.profile.service.api.queryprofile.MemberProfile
 import com.cmoney.backend2.profile.service.api.queryprofile.MemberProfileGraphQLRequestFieldsBuilder
 import com.cmoney.backend2.profile.service.api.queryprofile.MemberProfileQueryBuilder
 import com.cmoney.backend2.profile.service.api.queryprofile.RawMemberProfile
@@ -302,7 +303,7 @@ class ProfileWebImpl(
 
     override suspend fun getSelfMemberProfile(
         block: MemberProfileQueryBuilder.() -> MemberProfileQueryBuilder
-    ): Result<RawMemberProfile> =
+    ): Result<MemberProfile> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 val params = MemberProfileQueryBuilder()
@@ -316,7 +317,12 @@ class ProfileWebImpl(
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     body = GetMyUserGraphQLInfoRequestBody(fields = requestFields)
                 ).checkResponseBody(gson)
-                gson.fromJson(responseBody.string(), RawMemberProfile::class.java)
+                val rawMemberProfile = gson.fromJson(responseBody.string(), RawMemberProfile::class.java)
+                MemberProfile(
+                    params = params,
+                    id = setting.identityToken.getMemberId(),
+                    raw = rawMemberProfile,
+                )
             }
         }
 

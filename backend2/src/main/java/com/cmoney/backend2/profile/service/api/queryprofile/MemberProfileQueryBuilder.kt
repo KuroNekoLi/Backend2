@@ -40,12 +40,12 @@ class MemberProfileQueryBuilder internal constructor() {
 
     val nickname: MemberProfileQueryBuilder
         get() {
-            queryParams.nickName = MemberProfileField.NICKNAME
+            queryParams.nickname = MemberProfileField.NICKNAME
             return this
         }
 
     fun isNeedNickName(value: Boolean): MemberProfileQueryBuilder {
-        queryParams.nickName = if (value) {
+        queryParams.nickname = if (value) {
             MemberProfileField.NICKNAME
         } else {
             null
@@ -287,20 +287,16 @@ class MemberProfileQueryBuilder internal constructor() {
             }
         }
 
-    internal fun build(): MemberProfileQueryParams? {
+    internal fun build(): MemberProfileQueryParams {
         queryParams.apply {
             account = accountQueryBuilder.build()
             levelInfo = levelInfoQueryBuilder.build()
             badges = badgesQueryBuilder.build()
         }
-        return if (isParamsDefault()) {
-            null
-        } else {
-            queryParams
-        }
+        return queryParams
     }
 
-    private fun isParamsDefault(): Boolean {
+    internal fun isParamsDefault(): Boolean {
         return queryParams.isDefault()
     }
 }
