@@ -29,27 +29,28 @@ internal class MemberProfileGraphQLRequestFieldsBuilder(
             appendField(account.email)
             appendParent(account.cellphone, account.cellphone?.parentField) { cellphone ->
                 appendField(cellphone.code)
-                appendField(cellphone.number, true)
+                appendField(cellphone.number)
             }
             appendParent(account.facebook, account.facebook?.parentField) { facebook ->
                 appendField(facebook.fbId)
                 appendField(facebook.email)
-                appendField(facebook.name, true)
+                appendField(facebook.name)
             }
             appendField(account.appleId)
-            appendField(account.guestId, true)
+            appendField(account.guestId)
         }
         sb.appendParent(queryParams.levelInfo, queryParams.levelInfo?.parentField) { levelInfo ->
             appendField(levelInfo.exp)
             appendField(levelInfo.level)
             appendField(levelInfo.levelExp)
-            appendField(levelInfo.levelExpToNext, true)
+            appendField(levelInfo.levelExpToNext)
         }
-        sb.appendParent(queryParams.badges, queryParams.badges?.parentField, true) { badges ->
+        sb.appendParent(queryParams.badges, queryParams.badges?.parentField) { badges ->
             appendField(badges.badgeId)
             appendField(badges.isEquipped)
-            appendField(badges.hasRead, true)
+            appendField(badges.hasRead)
         }
+        sb.append(" ")
         sb.append("}")
         return sb.toString()
     }
@@ -57,25 +58,21 @@ internal class MemberProfileGraphQLRequestFieldsBuilder(
     private inline fun <reified T>StringBuilder.appendParent(
         params: T?,
         parentField: MemberProfileField?,
-        isLast: Boolean = false,
         block: StringBuilder.(T) -> Unit
     ) {
         params ?: return
         parentField ?: return
+        this.append(" ")
         this.append(parentField.value)
         this.append("{")
         this.block(params)
+        this.append(" ")
         this.append("}")
-        if (!isLast) {
-            this.append(" ")
-        }
     }
 
-    private fun StringBuilder.appendField(field: MemberProfileField?, isLast: Boolean = false) {
+    private fun StringBuilder.appendField(field: MemberProfileField?) {
         field ?: return
+        this.append(" ")
         this.append(field.value)
-        if (!isLast) {
-            this.append(" ")
-        }
     }
 }
