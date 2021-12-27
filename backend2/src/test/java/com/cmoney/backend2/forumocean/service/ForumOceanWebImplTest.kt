@@ -65,7 +65,7 @@ class ForumOceanWebImplTest {
     private val jsonParser =
         GsonBuilder().serializeNulls().setLenient().setPrettyPrinting().create()
     private val service: ForumOceanWeb =
-        ForumOceanWebImpl(forumOceanService, TestSetting(), jsonParser, TestDispatcher())
+        ForumOceanWebImpl(forumOceanService, TestSetting(), jsonParser, "", TestDispatcher())
 
     @Before
     fun setUp() {
@@ -92,7 +92,8 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.createArticle(
                 authorization = any(),
-                requestBody = createContent
+                requestBody = createContent,
+                path = ""
             )
         } returns Response.success(responseBody)
         val result = service.createArticle(
@@ -118,7 +119,8 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.createArticle(
                 authorization = any(),
-                requestBody = createContent
+                requestBody = createContent,
+                path = ""
             )
         } returns Response.success(responseBody)
         val result = service.createArticle(
@@ -144,7 +146,8 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.createArticle(
                 authorization = any(),
-                requestBody = createContent
+                requestBody = createContent,
+                path = ""
             )
         } returns Response.success(responseBody)
         val result = service.createArticle(
@@ -160,10 +163,11 @@ class ForumOceanWebImplTest {
 
         coEvery {
             forumOceanService.getArticle(
-                    authorization = any(),
-                    articleId = any()
+                authorization = any(),
+                articleId = any(),
+                path = ""
             )
-        } returns Response.error(404,"".toResponseBody())
+        } returns Response.error(404, "".toResponseBody())
         val result = service.getArticle(132434)
 
         assertThat(result.isSuccess).isFalse()
@@ -185,7 +189,8 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.createQuestion(
                 authorization = any(),
-                requestBody = createContent
+                requestBody = createContent,
+                path = ""
             )
         } returns Response.success(responseBody)
         val result = service.createQuestion(
@@ -217,12 +222,14 @@ class ForumOceanWebImplTest {
             weight = null,
             totalReportCount = null,
             report = null,
-            donate = null
+            donate = null,
+            commentDeletedCount = null
         )
         coEvery {
             forumOceanService.getArticle(
                 authorization = any(),
-                articleId = articleId
+                articleId = articleId,
+                path = ""
             )
         } returns Response.success(successResponse)
         val result = service.getArticle(articleId)
@@ -251,12 +258,14 @@ class ForumOceanWebImplTest {
             rewardPoints = null,
             weight = null,
             totalReportCount = null,
-            report = null
+            report = null,
+            commentDeletedCount = null
         )
         coEvery {
             forumOceanService.getQuestionArticle(
                 authorization = any(),
-                articleId = articleId
+                articleId = articleId,
+                path = ""
             )
         } returns Response.success(successResponse)
         val result = service.getQuestionArticle(articleId)
@@ -286,12 +295,14 @@ class ForumOceanWebImplTest {
             weight = null,
             totalReportCount = null,
             report = null,
-            donate = null
+            donate = null,
+            commentDeletedCount = null
         )
         coEvery {
             forumOceanService.getGroupArticle(
                 authorization = any(),
-                articleId = articleId
+                articleId = articleId,
+                path = ""
             )
         } returns Response.success(successResponse)
         val result = service.getGroupArticle(articleId)
@@ -322,12 +333,14 @@ class ForumOceanWebImplTest {
             weight = null,
             totalReportCount = null,
             report = null,
-            donate = null
+            donate = null,
+            commentDeletedCount = null
         )
         coEvery {
             forumOceanService.getSharedArticle(
                 authorization = any(),
-                articleId = articleId
+                articleId = articleId,
+                path = ""
             )
         } returns Response.success(successResponse)
         val result = service.getSharedArticle(articleId)
@@ -353,12 +366,14 @@ class ForumOceanWebImplTest {
             commentCount = null,
             weight = null,
             totalReportCount = null,
-            report = null
+            report = null,
+            commentDeletedCount = null
         )
         coEvery {
             forumOceanService.getSignalArticle(
                 authorization = any(),
-                articleId = articleId
+                articleId = articleId,
+                path = ""
             )
         } returns Response.success(successResponse)
         val result = service.getSignalArticle(articleId)
@@ -384,12 +399,14 @@ class ForumOceanWebImplTest {
             commentCount = null,
             weight = null,
             totalReportCount = null,
-            report = null
+            report = null,
+            commentDeletedCount = null
         )
         coEvery {
             forumOceanService.getNewsArticle(
                 authorization = any(),
-                articleId = articleId
+                articleId = articleId,
+                path = ""
             )
         } returns Response.success(successResponse)
         val result = service.getNewsArticle(articleId)
@@ -423,12 +440,14 @@ class ForumOceanWebImplTest {
             weight = null,
             totalReportCount = null,
             report = null,
-            donate = null
+            donate = null,
+            commentDeletedCount = null
         )
         coEvery {
             forumOceanService.getUnknownArticle(
                 authorization = any(),
-                articleId = articleId
+                articleId = articleId,
+                path = ""
             )
         } returns Response.success(successResponse)
         val result = service.getUnknownArticle(articleId)
@@ -445,7 +464,8 @@ class ForumOceanWebImplTest {
             forumOceanService.updateArticle(
                 authorization = any(),
                 articleId = any(),
-                body = helper.create()
+                body = helper.create(),
+                path = ""
             )
         } returns Response.success<Void>(204, null)
         val result = service.updateArticle(100, helper)
@@ -459,9 +479,10 @@ class ForumOceanWebImplTest {
 
         coEvery {
             forumOceanService.updateArticle(
-                    authorization = any(),
-                    articleId = any(),
-                    body = any()
+                authorization = any(),
+                articleId = any(),
+                body = any(),
+                path = ""
             )
         } returns Response.error(404,"".toResponseBody())
         val result = service.updateArticle(132434, UpdateArticleHelper())
@@ -477,7 +498,8 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.deleteArticle(
                 authorization = any(),
-                articleId = any()
+                articleId = any(),
+                path = ""
             )
         } returns Response.success<Void>(204, null)
         val result = service.deleteArticle(100)
@@ -490,8 +512,9 @@ class ForumOceanWebImplTest {
     fun `deleteArticle_刪除文章_遇到文章不存在的情況`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.deleteArticle(
-                    authorization = any(),
-                    articleId = any()
+                authorization = any(),
+                articleId = any(),
+                path = ""
             )
         } returns Response.error(404,"".toResponseBody())
         val result = service.deleteArticle(132434)
@@ -506,7 +529,8 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.getMemberStatistics(
                 authorization = any(),
-                memberIds = any()
+                memberIds = any(),
+                path = ""
             )
         } returns Response.success(
             listOf(GetMemberStatisticsResponseBody(
@@ -536,7 +560,8 @@ class ForumOceanWebImplTest {
                 authorization = any(),
                 channelNameList = any(),
                 startScore = any(),
-                count = any()
+                count = any(),
+                path = ""
             )
         } returns Response.success(
             listOf(
@@ -562,7 +587,8 @@ class ForumOceanWebImplTest {
                     weight = null,
                     totalReportCount = null,
                     report = null,
-                    donate = null
+                    donate = null,
+                    commentDeletedCount = null
                 )
             )
         )
@@ -581,7 +607,8 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.createCollection(
                 authorization = any(),
-                articleId = any()
+                articleId = any(),
+                path = ""
             )
         } returns Response.success<Void>(204, null)
         val result = service.createCollection(1000)
@@ -594,7 +621,8 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.deleteCollection(
                 authorization = any(),
-                articleId = any()
+                articleId = any(),
+                path = ""
             )
         } returns Response.success<Void>(204, null)
         val result = service.deleteCollection(1000)
@@ -609,7 +637,8 @@ class ForumOceanWebImplTest {
             forumOceanService.createComment(
                 authorization = any(),
                 articleId = any(),
-                body = any()
+                body = any(),
+                path = ""
             )
         } returns Response.success<CreateCommentResponseBody>(
             200,
@@ -633,7 +662,8 @@ class ForumOceanWebImplTest {
                 authorization = any(),
                 articleId = any(),
                 commentId = any(),
-                offsetCount = any()
+                offsetCount = any(),
+                path = ""
             )
         } returns Response.success(
             listOf(
@@ -666,7 +696,8 @@ class ForumOceanWebImplTest {
             forumOceanService.getCommentWithId(
                 authorization = any(),
                 articleId = any(),
-                commentIds = any()
+                commentIds = any(),
+                path = ""
             )
         } returns Response.success(
             listOf(
@@ -713,7 +744,8 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.getGroupManagerComments(
                 authorization = any(),
-                articleId = any()
+                articleId = any(),
+                path = ""
             )
         } returns Response.success(
             listOf(
@@ -762,7 +794,8 @@ class ForumOceanWebImplTest {
                 authorization = any(),
                 articleId = any(),
                 commentId = any(),
-                body = any()
+                body = any(),
+                path = ""
             )
         } returns Response.success<Void>(204, null)
         val result = service.updateComment(1000, 2000, UpdateCommentHelper())
@@ -776,7 +809,8 @@ class ForumOceanWebImplTest {
             forumOceanService.deleteComment(
                 authorization = any(),
                 articleId = any(),
-                commentIndex = any()
+                commentIndex = any(),
+                path = ""
             )
         } returns Response.success<Void>(204, null)
         val result = service.deleteComment(1000, 2000)
@@ -791,7 +825,8 @@ class ForumOceanWebImplTest {
                 authorization = any(),
                 articleId = any(),
                 commentIndex = any(),
-                reactionType = ReactionType.LIKE.value
+                reactionType = ReactionType.LIKE.value,
+                path = ""
             )
         } returns Response.success<Void>(204, null)
         val result = service.reactionComment(1010, 10, ReactionType.LIKE)
@@ -809,7 +844,8 @@ class ForumOceanWebImplTest {
                 commentIndex = any(),
                 reactions = reactionTypeList.joinToString { it.value.toString() },
                 skipCount = any(),
-                takeCount = any()
+                takeCount = any(),
+                path = ""
             )
         } returns Response.success(
             listOf(
@@ -835,7 +871,8 @@ class ForumOceanWebImplTest {
             forumOceanService.removeCommentReaction(
                 authorization = any(),
                 articleId = any(),
-                commentIndex = any()
+                commentIndex = any(),
+                path = ""
             )
         } returns Response.success<Void>(204, null)
         val result = service.removeReactionComment(1010, 2020)
@@ -849,7 +886,8 @@ class ForumOceanWebImplTest {
             forumOceanService.createArticleReaction(
                 authorization = any(),
                 articleId = any(),
-                reactionType = any()
+                reactionType = any(),
+                path = ""
             )
         } returns Response.success<Void>(204, null)
         val result = service.createArticleReaction(10101, ReactionType.DISLIKE)
@@ -866,7 +904,8 @@ class ForumOceanWebImplTest {
                 articleId = any(),
                 reactions = any(),
                 count = any(),
-                skipCount = any()
+                skipCount = any(),
+                path = ""
             )
         } returns Response.success(
             listOf(
@@ -887,7 +926,8 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.deleteArticleReaction(
                 authorization = any(),
-                articleId = any()
+                articleId = any(),
+                path = ""
             )
         } returns Response.success<Void>(204, null)
         val result = service.deleteArticleReaction(10101)
@@ -900,7 +940,8 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.createArticleInterest(
                 authorization = any(),
-                articleId = any()
+                articleId = any(),
+                path = ""
             )
         } returns Response.success<Void>(204, null)
         val result = service.createArticleInterest(10101)
@@ -914,7 +955,8 @@ class ForumOceanWebImplTest {
             forumOceanService.createArticleDonate(
                 authorization = any(),
                 articleId = any(),
-                donateValue = any()
+                donateValue = any(),
+                path = ""
             )
         } returns Response.success<Void>(204, null)
         val result = service.createArticleDonate(10101, 1)
@@ -929,7 +971,8 @@ class ForumOceanWebImplTest {
                 authorization = any(),
                 articleId = any(),
                 offset = any(),
-                fetch = any()
+                fetch = any(),
+                path = ""
             )
         } returns Response.success(
             listOf(
@@ -951,7 +994,8 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.getGroup(
                 authorization = any(),
-                groupId = groupId
+                groupId = groupId,
+                path = ""
             )
         } returns Response.success(
             GroupResponseBody(
@@ -985,7 +1029,8 @@ class ForumOceanWebImplTest {
                 offset = any(),
                 fetch = any(),
                 position = any(),
-                includeAppGroup = any()
+                includeAppGroup = any(),
+                path = ""
             )
         } returns Response.success(
             listOf(
@@ -1041,7 +1086,8 @@ class ForumOceanWebImplTest {
                 offset = any(),
                 fetch = any(),
                 position = any(),
-                includeAppGroup = any()
+                includeAppGroup = any(),
+                path = ""
             )
         } returns Response.success(
                 listOf(
@@ -1081,7 +1127,8 @@ class ForumOceanWebImplTest {
                     GroupPosition.MANAGEMENT,
                     GroupPosition.PRESIDENT
                 ).map { it.position }.sum(),
-                includeAppGroup = any()
+                includeAppGroup = any(),
+                path = ""
             )
         } returns Response.success(
             listOf(
@@ -1112,8 +1159,9 @@ class ForumOceanWebImplTest {
     fun `getMemberJoinAnyGroups_取得指定使用者是否加入或擁有任何社團成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.getMemberJoinAnyGroups(
-                    authorization = any(),
-                    memberId = any()
+                authorization = any(),
+                memberId = any(),
+                path = ""
             )
         } returns Response.success(
                 GetMemberJoinAnyGroupsResponseBody(
@@ -1131,7 +1179,8 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.createGroup(
                 authorization = any(),
-                groupName = any()
+                groupName = any(),
+                path = ""
             )
         } returns Response.success(
             CreateGroupResponseBody(100321)
@@ -1156,7 +1205,8 @@ class ForumOceanWebImplTest {
             forumOceanService.updateGroup(
                 authorization = any(),
                 groupId = any(),
-                body = updateRequestBody
+                body = updateRequestBody,
+                path = ""
             )
         } returns Response.success<Void>(204, null)
         val result = service.updateGroup(
@@ -1173,7 +1223,8 @@ class ForumOceanWebImplTest {
             forumOceanService.transferGroup(
                 authorization = any(),
                 groupId = any(),
-                memberId = any()
+                memberId = any(),
+                path = ""
             )
         } returns Response.success<Void>(204, null)
         val result = service.transferGroup(2032032, 20320)
@@ -1186,7 +1237,8 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.deleteGroup(
                 authorization = any(),
-                groupId = any()
+                groupId = any(),
+                path = ""
             )
         } returns Response.success<Void>(204, null)
         val result = service.deleteGroup(2020)
@@ -1200,7 +1252,8 @@ class ForumOceanWebImplTest {
             forumOceanService.join(
                 authorization = any(),
                 groupId = any(),
-                reason = any()
+                reason = any(),
+                path = ""
             )
         } returns Response.success<Void>(204, null)
         val result = service.join(1202020, "入社理由")
@@ -1216,7 +1269,8 @@ class ForumOceanWebImplTest {
                 groupId = any(),
                 position = any(),
                 offset = any(),
-                fetch = any()
+                fetch = any(),
+                path = ""
             )
         } returns Response.success(
             listOf(
@@ -1238,7 +1292,8 @@ class ForumOceanWebImplTest {
                 authorization = any(),
                 groupId = any(),
                 offset = any(),
-                fetch = any()
+                fetch = any(),
+                path = ""
             )
         } returns Response.success(
             listOf(
@@ -1263,7 +1318,8 @@ class ForumOceanWebImplTest {
                 authorization = any(),
                 groupId = any(),
                 memberId = any(),
-                isAgree = any()
+                isAgree = any(),
+                path = ""
             )
         } returns Response.success<Void>(204, null)
         val result = service.approval(132112, 213213, true)
@@ -1278,7 +1334,8 @@ class ForumOceanWebImplTest {
                 authorization = any(),
                 groupId = any(),
                 memberId = any(),
-                position = any()
+                position = any(),
+                path = ""
             )
         } returns Response.success<Void>(204, null)
         val result = service.changeGroupMemberPosition(1321321, 1231, GroupPosition.PRESIDENT)
@@ -1292,7 +1349,8 @@ class ForumOceanWebImplTest {
             forumOceanService.kick(
                 authorization = any(),
                 groupId = any(),
-                memberId = any()
+                memberId = any(),
+                path = ""
             )
         } returns Response.success<Void>(204, null)
         val result = service.kick(13213, 1321)
@@ -1305,7 +1363,8 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.leave(
                 authorization = any(),
-                groupId = any()
+                groupId = any(),
+                path = ""
             )
         } returns Response.success<Void>(204, null)
         val result = service.leave(5050)
@@ -1318,7 +1377,8 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.pinArticle(
                 authorization = any(),
-                articleId = any()
+                articleId = any(),
+                path = ""
             )
         } returns Response.success<Void>(204, null)
         val result = service.pinArticle(1321342)
@@ -1331,7 +1391,8 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.unpinArticle(
                 authorization = any(),
-                articleId = any()
+                articleId = any(),
+                path = ""
             )
         } returns Response.success<Void>(204, null)
         val result = service.unpinArticle(1321342)
@@ -1345,7 +1406,8 @@ class ForumOceanWebImplTest {
             forumOceanService.getOfficials(
                 authorization = any(),
                 offset = 0,
-                fetch = 20
+                fetch = 20,
+                path = ""
             )
         } returns Response.success(
             listOf(
@@ -1378,7 +1440,8 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.getOfficialSubscribedCount(
                 authorization = any(),
-                officialId = any()
+                officialId = any(),
+                path = ""
             )
         } returns Response.success(
             GetOfficialSubscribedCountResponseBody(132132)
@@ -1394,7 +1457,8 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.getSubscribedCount(
                 authorization = any(),
-                memberId = any()
+                memberId = any(),
+                path = ""
             )
         } returns Response.success(GetSubscribedCountResponseBody(2134979))
         val result = service.getSubscribedCount(1465)
@@ -1409,8 +1473,9 @@ class ForumOceanWebImplTest {
             forumOceanService.getSubscribed(
                 authorization = any(),
                 memberId = any(),
-                offset = any()
-                , fetch = any()
+                offset = any(),
+                fetch = any(),
+                path = ""
             )
         } returns Response.success(
             listOf(1, 2, 3, 4, 5, 6)
@@ -1426,7 +1491,8 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.subscribe(
                 authorization = any(),
-                officialId = any()
+                officialId = any(),
+                path = ""
             )
         } returns Response.success<Void>(204, null)
         val result = service.subscribe(21321)
@@ -1439,7 +1505,8 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.unsubscribe(
                 authorization = any(),
-                officialId = any()
+                officialId = any(),
+                path = ""
             )
         }
         val result = service.unsubscribe(3213489)
@@ -1451,7 +1518,8 @@ class ForumOceanWebImplTest {
     fun `unsubscribeAll_解除訂閱所有官方成功測試`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.unsubscribeAll(
-                authorization = any()
+                authorization = any(),
+                path = ""
             )
         } returns Response.success<Void>(204, null)
         val result = service.unsubscribeAll()
@@ -1466,7 +1534,8 @@ class ForumOceanWebImplTest {
                 authorization = any(),
                 memberId = any(),
                 offset = any(),
-                fetch = any()
+                fetch = any(),
+                path = ""
             )
         } returns Response.success(
             listOf<Long>(1, 2, 3, 4)
@@ -1484,7 +1553,8 @@ class ForumOceanWebImplTest {
                 authorization = any(),
                 memberId = any(),
                 offset = any(),
-                fetch = any()
+                fetch = any(),
+                path = ""
             )
         } returns Response.success(listOf<Long>(1, 2, 3, 4))
         val result = service.getFollowers(43241321,0,10)
@@ -1498,7 +1568,8 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.follow(
                 authorization = any(),
-                memberId = any()
+                memberId = any(),
+                path = ""
             )
         } returns Response.success<Void>(204, null)
         val result = service.follow(1324324)
@@ -1511,7 +1582,8 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.unfollow(
                 authorization = any(),
-                memberId = any()
+                memberId = any(),
+                path = ""
             )
         } returns Response.success<Void>(204, null)
         val result = service.unfollow(21324324)
@@ -1524,7 +1596,8 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.block(
                 authorization = any(),
-                memberId = any()
+                memberId = any(),
+                path = ""
             )
         } returns Response.success<Void>(204, null)
         val result = service.block(2344654)
@@ -1537,7 +1610,8 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.unblock(
                 authorization = any(),
-                memberId = any()
+                memberId = any(),
+                path = ""
             )
         } returns Response.success<Void>(204, null)
         val result = service.unblock(342321)
@@ -1551,7 +1625,8 @@ class ForumOceanWebImplTest {
             forumOceanService.getBlockingList(
                 authorization = any(),
                 offset = any(),
-                fetch = any()
+                fetch = any(),
+                path = ""
             )
         } returns Response.success(listOf<Long>(1, 2, 3, 4, 5))
         val result = service.getBlockingList(0,10)
@@ -1566,7 +1641,8 @@ class ForumOceanWebImplTest {
             forumOceanService.getBlockers(
                 authorization = any(),
                 offset = any(),
-                fetch = any()
+                fetch = any(),
+                path = ""
             )
         } returns Response.success(listOf<Long>(1, 3, 5, 7, 9))
         val result = service.getBlockers(0,10)
@@ -1582,8 +1658,8 @@ class ForumOceanWebImplTest {
                 authorization = any(),
                 articleId = any(),
                 reasonType = any(),
-                commentId = any()
-
+                commentId = any(),
+                path = ""
             )
         } returns Response.success<Void>(204,null)
         val result = service.createReport(231321,ReasonType.AD,null)
@@ -1597,7 +1673,8 @@ class ForumOceanWebImplTest {
             forumOceanService.deleteReport(
                 authorization = any(),
                 articleId = any(),
-                commentId = any()
+                commentId = any(),
+                path = ""
             )
         } returns Response.success<Void>(204, null)
         val result = service.deleteReport(2136541, commentId = null)
@@ -1612,7 +1689,8 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.getMemberIds(
                 authorization = any(),
-                channelIds = memberIds.joinToString(",")
+                channelIds = memberIds.joinToString(","),
+                path = ""
             )
         } returns Response.success(
             listOf(
@@ -1641,7 +1719,8 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.getChannelIds(
                 authorization = any(),
-                memberIds = channelIds.joinToString(",")
+                memberIds = channelIds.joinToString(","),
+                path = ""
             )
         } returns Response.success(
             listOf(
@@ -1669,7 +1748,8 @@ class ForumOceanWebImplTest {
             forumOceanService.createVote(
                 authorization = any(),
                 articleId = any(),
-                optionIndex = any()
+                optionIndex = any(),
+                path = ""
             )
         } returns Response.success<Void>(204, null)
         val result = service.createVote(132434, 4)
@@ -1682,7 +1762,8 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.getCurrentVote(
                 authorization = any(),
-                articleId = any()
+                articleId = any(),
+                path = ""
             )
         } returns Response.success(
             listOf(
@@ -1703,7 +1784,8 @@ class ForumOceanWebImplTest {
             forumOceanService.getCommodityRank(
                 authorization = any(),
                 offset = any(),
-                fetch = any()
+                fetch = any(),
+                path = ""
             )
         } returns Response.success(
             listOf(
@@ -1732,7 +1814,8 @@ class ForumOceanWebImplTest {
             forumOceanService.getUSCommodityRank(
                 authorization = any(),
                 offset = any(),
-                fetch = any()
+                fetch = any(),
+                path = ""
             )
         } returns Response.success(
             listOf(
@@ -1761,7 +1844,8 @@ class ForumOceanWebImplTest {
             forumOceanService.getExpertMemberRank(
                 authorization = any(),
                 offset = any(),
-                fetch = any()
+                fetch = any(),
+                path = ""
             )
         } returns Response.success(
             listOf(
@@ -1789,7 +1873,8 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.getSpecificExpertMemberRank(
                 authorization = any(),
-                memeberIds = any()
+                memeberIds = any(),
+                path = ""
             )
         } returns Response.success(
             listOf(
@@ -1818,7 +1903,8 @@ class ForumOceanWebImplTest {
             forumOceanService.getMemberFansRank(
                 authorization = any(),
                 offset = any(),
-                fetch = any()
+                fetch = any(),
+                path = ""
             )
         } returns Response.success(
             listOf(
@@ -1846,7 +1932,8 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.getSpecificMemberFansRank(
                 authorization = any(),
-                memeberIds = any()
+                memeberIds = any(),
+                path = ""
             )
         } returns Response.success(
             listOf(
@@ -1875,7 +1962,8 @@ class ForumOceanWebImplTest {
             forumOceanService.getSolutionExpertRank(
                 authorization = any(),
                 offset = any(),
-                fetch = any()
+                fetch = any(),
+                path = ""
             )
         } returns Response.success(
             listOf(
@@ -1903,7 +1991,8 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.getSpecificSolutionExpertRank(
                 authorization = any(),
-                memeberIds = any()
+                memeberIds = any(),
+                path = ""
             )
         } returns Response.success(
             listOf(
