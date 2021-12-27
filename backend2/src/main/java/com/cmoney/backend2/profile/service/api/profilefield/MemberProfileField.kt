@@ -1,5 +1,10 @@
 package com.cmoney.backend2.profile.service.api.profilefield
 
+/**
+ * 會員資訊欄位定義
+ *
+ * @property value 要求欄位名稱
+ */
 enum class MemberProfileField(val value: String) {
     EMAIL("email"),
     NAME("name"),
