@@ -11,7 +11,7 @@ class BadgesQueryBuilder internal constructor(){
             return this
         }
 
-    fun isNeedBadgesId(value: Boolean): BadgesQueryBuilder {
+    fun isNeedId(value: Boolean): BadgesQueryBuilder {
         queryParams.badgeId = if (value) {
             MemberProfileField.BADGE_ID
         } else {
@@ -26,7 +26,7 @@ class BadgesQueryBuilder internal constructor(){
             return this
         }
 
-    fun isNeedBadgesIsEquipped(value: Boolean): BadgesQueryBuilder {
+    fun isNeedIsEquipped(value: Boolean): BadgesQueryBuilder {
         queryParams.isEquipped = if (value) {
             MemberProfileField.IS_EQUIPPED
         } else {
@@ -41,7 +41,7 @@ class BadgesQueryBuilder internal constructor(){
             return this
         }
 
-    fun isNeedBadgesHasRead(value: Boolean): BadgesQueryBuilder {
+    fun isNeedHasRead(value: Boolean): BadgesQueryBuilder {
         queryParams.hasRead = if (value) {
             MemberProfileField.HAS_READ
         } else {
