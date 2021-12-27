@@ -345,6 +345,20 @@ class ProfileWebImpl(
         }
     }
 
+    override suspend fun mutateMemberProfile(mutationData: MutationData): Result<Unit> =
+        withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.mutationMyUserGraphQlInfo(
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    body = ("{\n" +
+                        "  \"operationName\": \"updateMember\",\n" +
+                        "  \"fields\": \"{ ${mutationData.getFieldsString()} }\",\n" +
+                        "  \"variables\": " + mutationData.toJsonString() +
+                        "\n}").toRequestBody("application/json".toMediaType())
+                ).checkResponseBody(gson)
+                Unit
+            }
+        }
 
     override suspend fun <T> getUserGraphQLInfo(
         memberIds: List<Long>,

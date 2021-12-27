@@ -231,10 +231,15 @@ interface ProfileWeb {
      * @param type 回傳解析的type
      * @return
      */
+    @Deprecated("Can use mutateMemberProfile to avoid type alias")
     suspend fun <T> mutationMyUserGraphQlInfo(
         variable : MutationData,
         type: Type
     ): Result<T>
+
+    suspend fun mutateMemberProfile(
+        mutationData: MutationData
+    ): Result<Unit>
 
     /**
      * 取得使用者的GraphQLInfo

@@ -97,6 +97,13 @@ class ProfileServiceCase : ServiceCase {
             }
         }
             .logResponse(TAG)
+        profileWeb.mutateMemberProfile(
+            mutationData = MutationData.Builder(
+                nickname = "Tester_X",
+                image = "https://storage.googleapis.com/cmoney-image/1378ceeb-2f10-4ef5-8d38-cb63f8f97422",
+                bio = "我的自我介紹"
+            ).build()
+        ).logResponse(TAG)
 
         profileWeb.mutationMyUserGraphQlInfo<GetNicknameAndAvatarResponse>(
             type = object : TypeToken<GetNicknameAndAvatarResponse>(){}.type,
