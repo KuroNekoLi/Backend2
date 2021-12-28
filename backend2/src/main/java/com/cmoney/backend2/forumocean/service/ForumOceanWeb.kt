@@ -124,6 +124,7 @@ interface ForumOceanWeb {
      * 更新文章資訊
      *
      * @param articleId 文章Id
+     * @param updateHelper 建立修改文章的requestBody
      * @return 成功不回傳任何資訊
      */
     suspend fun updateArticle(articleId: Long, updateHelper: IUpdateArticleHelper): Result<Unit>
@@ -152,7 +153,7 @@ interface ForumOceanWeb {
     /**
      * 取得頻道文章清單(by weight) 適用於常變動的清單
      *
-     * @param channelNameBuilderList
+     * @param channelNameBuilderList 文章的ChannelName
      * @param weight 權重
      * @param count 取得筆數(正數往舊的取N筆，負數往新的取N筆)
      */
@@ -188,6 +189,9 @@ interface ForumOceanWeb {
     /**
      * 對指定主文發一篇回文
      * @param articleId 指定主文Id
+     * @param text content
+     * @param multiMedia ContentType
+     * @param position
      * @return 回文Id
      */
     suspend fun createComment(
@@ -350,6 +354,10 @@ interface ForumOceanWeb {
      * 取得指定使用者持有的所有社團
      *
      * @param ownId 使用者Id
+     * @param offset 起始index
+     * @param fetch 取得數量
+     * @param positions 取得的社團職位
+     * @param includeAppGroup 是否包含app的社團
      * @return
      */
     suspend fun getGroupsByPosition(
@@ -362,6 +370,11 @@ interface ForumOceanWeb {
 
     /**
      * 取得指定使用者管理的所有社團
+     *
+     * @param memberId 使用者Id
+     * @param offset 起始index
+     * @param fetch 取得數量
+     * @param includeAppGroup 是否包含app的社團
      */
     suspend fun getMemberManagedGroups(
         memberId : Long,
@@ -374,6 +387,9 @@ interface ForumOceanWeb {
      * 取得指定使用者加入的所有社團
      *
      * @param memberId 使用者Id
+     * @param offset 起始index
+     * @param fetch 取得數量
+     * @param includeAppGroup 是否包含app的社團
      * @return
      */
     suspend fun getMemberBelongGroups(
@@ -402,6 +418,8 @@ interface ForumOceanWeb {
     /**
      * 更新社團資訊
      *
+     * @param groupId 社團id
+     * @param body 社團body
      * @return
      */
     suspend fun updateGroup(groupId: Long, body: UpdateGroupRequestBody): Result<Unit>
