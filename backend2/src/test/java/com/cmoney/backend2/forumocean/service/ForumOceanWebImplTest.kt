@@ -64,7 +64,7 @@ class ForumOceanWebImplTest {
     private val forumOceanService = mockk<ForumOceanService>()
     private val jsonParser =
         GsonBuilder().serializeNulls().setLenient().setPrettyPrinting().create()
-    private val service: ForumOceanWeb =
+    private val web: ForumOceanWeb =
         ForumOceanWebImpl(forumOceanService, TestSetting(), jsonParser, "", TestDispatcher())
 
     @Before
@@ -96,7 +96,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success(responseBody)
-        val result = service.createArticle(
+        val result = web.createArticle(
             body = createContent
         )
         assertThat(result.isSuccess).isTrue()
@@ -123,7 +123,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success(responseBody)
-        val result = service.createArticle(
+        val result = web.createArticle(
             body = createContent
         )
         assertThat(result.isSuccess).isTrue()
@@ -150,7 +150,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success(responseBody)
-        val result = service.createArticle(
+        val result = web.createArticle(
             body = createContent
         )
         assertThat(result.isSuccess).isTrue()
@@ -168,7 +168,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.error(404, "".toResponseBody())
-        val result = service.getArticle(132434)
+        val result = web.getArticle(132434)
 
         assertThat(result.isSuccess).isFalse()
         assertThat(result.exceptionOrNull()).isInstanceOf(HttpException::class.java)
@@ -193,7 +193,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success(responseBody)
-        val result = service.createQuestion(
+        val result = web.createQuestion(
             body = createContent
         )
         assertThat(result.isSuccess).isTrue()
@@ -232,7 +232,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success(successResponse)
-        val result = service.getArticle(articleId)
+        val result = web.getArticle(articleId)
         assertThat(result.isSuccess).isTrue()
         assertThat(result.getOrThrow().id).isEqualTo(articleId)
     }
@@ -268,7 +268,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success(successResponse)
-        val result = service.getQuestionArticle(articleId)
+        val result = web.getQuestionArticle(articleId)
         assertThat(result.isSuccess).isTrue()
         assertThat(result.getOrThrow().id).isEqualTo(articleId)
     }
@@ -305,7 +305,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success(successResponse)
-        val result = service.getGroupArticle(articleId)
+        val result = web.getGroupArticle(articleId)
         assertThat(result.isSuccess).isTrue()
         assertThat(result.getOrThrow().id).isEqualTo(articleId)
     }
@@ -343,7 +343,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success(successResponse)
-        val result = service.getSharedArticle(articleId)
+        val result = web.getSharedArticle(articleId)
         assertThat(result.isSuccess).isTrue()
         assertThat(result.getOrThrow().id).isEqualTo(articleId)
     }
@@ -376,7 +376,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success(successResponse)
-        val result = service.getSignalArticle(articleId)
+        val result = web.getSignalArticle(articleId)
         assertThat(result.isSuccess).isTrue()
         assertThat(result.getOrThrow().id).isEqualTo(articleId)
     }
@@ -409,7 +409,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success(successResponse)
-        val result = service.getNewsArticle(articleId)
+        val result = web.getNewsArticle(articleId)
         assertThat(result.isSuccess).isTrue()
         assertThat(result.getOrThrow().id).isEqualTo(articleId)
     }
@@ -450,7 +450,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success(successResponse)
-        val result = service.getUnknownArticle(articleId)
+        val result = web.getUnknownArticle(articleId)
         assertThat(result.isSuccess).isTrue()
         assertThat(result.getOrThrow().id).isEqualTo(articleId)
     }
@@ -468,7 +468,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success<Void>(204, null)
-        val result = service.updateArticle(100, helper)
+        val result = web.updateArticle(100, helper)
 
         assertThat(result.isSuccess).isTrue()
     }
@@ -485,7 +485,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.error(404,"".toResponseBody())
-        val result = service.updateArticle(132434, UpdateArticleHelper())
+        val result = web.updateArticle(132434, UpdateArticleHelper())
 
         assertThat(result.isSuccess).isFalse()
         assertThat(result.exceptionOrNull()).isInstanceOf(HttpException::class.java)
@@ -502,7 +502,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success<Void>(204, null)
-        val result = service.deleteArticle(100)
+        val result = web.deleteArticle(100)
 
         assertThat(result.isSuccess).isTrue()
     }
@@ -517,7 +517,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.error(404,"".toResponseBody())
-        val result = service.deleteArticle(132434)
+        val result = web.deleteArticle(132434)
 
         assertThat(result.isSuccess).isFalse()
         assertThat(result.exceptionOrNull()).isInstanceOf(HttpException::class.java)
@@ -541,7 +541,7 @@ class ForumOceanWebImplTest {
                 totalCountFollower = 10
             ))
         )
-        val result = service.getMemberStatistics(listOf(100))
+        val result = web.getMemberStatistics(listOf(100))
 
         assertThat(result.isSuccess).isTrue()
         assertThat(result.getOrThrow().size).isEqualTo(1)
@@ -592,7 +592,7 @@ class ForumOceanWebImplTest {
                 )
             )
         )
-        val result = service.getChannelsArticleByWeight(
+        val result = web.getChannelsArticleByWeight(
             listOf(),
             0,
             0
@@ -611,7 +611,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success<Void>(204, null)
-        val result = service.createCollection(1000)
+        val result = web.createCollection(1000)
         assertThat(result.isSuccess).isTrue()
     }
 
@@ -625,7 +625,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success<Void>(204, null)
-        val result = service.deleteCollection(1000)
+        val result = web.deleteCollection(1000)
         assertThat(result.isSuccess).isTrue()
     }
 
@@ -644,7 +644,7 @@ class ForumOceanWebImplTest {
             200,
             CreateCommentResponseBody(commentId)
         )
-        val result = service.createComment(
+        val result = web.createComment(
             articleId = 0,
             text = null,
             multiMedia = listOf(),
@@ -684,7 +684,7 @@ class ForumOceanWebImplTest {
                 )
             )
         )
-        val result = service.getComment(10101, null, null)
+        val result = web.getComment(10101, null, null)
         assertThat(result.isSuccess).isTrue()
         assertThat(result.getOrThrow()).hasSize(1)
     }
@@ -733,7 +733,7 @@ class ForumOceanWebImplTest {
                 )
             )
         )
-        val result = service.getCommentWithId(10101, listOf(2, 3))
+        val result = web.getCommentWithId(10101, listOf(2, 3))
         assertThat(result.isSuccess).isTrue()
         assertThat(result.getOrThrow()).hasSize(2)
     }
@@ -781,7 +781,7 @@ class ForumOceanWebImplTest {
                 )
             )
         )
-        val result = service.getGroupManagerComments(10101)
+        val result = web.getGroupManagerComments(10101)
         assertThat(result.isSuccess).isTrue()
         assertThat(result.getOrThrow()).hasSize(2)
     }
@@ -798,7 +798,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success<Void>(204, null)
-        val result = service.updateComment(1000, 2000, UpdateCommentHelper())
+        val result = web.updateComment(1000, 2000, UpdateCommentHelper())
         assertThat(result.isSuccess).isTrue()
     }
 
@@ -813,7 +813,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success<Void>(204, null)
-        val result = service.deleteComment(1000, 2000)
+        val result = web.deleteComment(1000, 2000)
         assertThat(result.isSuccess).isTrue()
     }
 
@@ -829,7 +829,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success<Void>(204, null)
-        val result = service.reactionComment(1010, 10, ReactionType.LIKE)
+        val result = web.reactionComment(1010, 10, ReactionType.LIKE)
         assertThat(result.isSuccess).isTrue()
     }
 
@@ -859,7 +859,7 @@ class ForumOceanWebImplTest {
                 )
             )
         )
-        val result = service.getReactionDetail(1010, 2000,reactionTypeList,0,20)
+        val result = web.getReactionDetail(1010, 2000,reactionTypeList,0,20)
         assertThat(result.isSuccess).isTrue()
         assertThat(result.getOrThrow()).hasSize(2)
     }
@@ -875,7 +875,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success<Void>(204, null)
-        val result = service.removeReactionComment(1010, 2020)
+        val result = web.removeReactionComment(1010, 2020)
         assertThat(result.isSuccess).isTrue()
     }
 
@@ -890,7 +890,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success<Void>(204, null)
-        val result = service.createArticleReaction(10101, ReactionType.DISLIKE)
+        val result = web.createArticleReaction(10101, ReactionType.DISLIKE)
         assertThat(result.isSuccess)
     }
 
@@ -914,7 +914,7 @@ class ForumOceanWebImplTest {
                 )
             )
         )
-        val result = service.getArticleReactionDetail(1010, reactionTypeList, 0,20)
+        val result = web.getArticleReactionDetail(1010, reactionTypeList, 0,20)
         assertThat(result.isSuccess).isTrue()
         assertThat(result.getOrThrow()).hasSize(1)
         assertThat(result.getOrThrow().first()).isNotNull()
@@ -930,7 +930,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success<Void>(204, null)
-        val result = service.deleteArticleReaction(10101)
+        val result = web.deleteArticleReaction(10101)
         assertThat(result.isSuccess)
     }
 
@@ -944,7 +944,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success<Void>(204, null)
-        val result = service.createArticleInterest(10101)
+        val result = web.createArticleInterest(10101)
         assertThat(result.isSuccess)
     }
 
@@ -959,7 +959,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success<Void>(204, null)
-        val result = service.createArticleDonate(10101, 1)
+        val result = web.createArticleDonate(10101, 1)
         assertThat(result.isSuccess)
     }
 
@@ -981,7 +981,7 @@ class ForumOceanWebImplTest {
                 DonateInfo(memberId = 1002, donateValue = 100)
             )
         )
-        val result = service.getArticleDonate(10101,0,20)
+        val result = web.getArticleDonate(10101,0,20)
         assertThat(result.isSuccess)
         assertThat(result.getOrThrow()).hasSize(3)
         assertThat(result.getOrThrow()[2].donateValue).isEqualTo(100)
@@ -1014,7 +1014,7 @@ class ForumOceanWebImplTest {
                 lastViewTime = null
             )
         )
-        val result = service.getGroup(groupId)
+        val result = web.getGroup(groupId)
         assertThat(result.isSuccess)
         assertThat(result.getOrThrow().id).isEqualTo(groupId)
     }
@@ -1066,7 +1066,7 @@ class ForumOceanWebImplTest {
                 )
             )
         )
-        val result = service.getGroupsByPosition(
+        val result = web.getGroupsByPosition(
             1321321,
             0,
             20,
@@ -1108,7 +1108,7 @@ class ForumOceanWebImplTest {
                         )
                 )
         )
-        val result = service.getMemberManagedGroups(1,0,20)
+        val result = web.getMemberManagedGroups(1,0,20)
         assertThat(result.isSuccess).isTrue()
         assertThat(result.getOrThrow().first().id).isEqualTo(1)
     }
@@ -1149,7 +1149,7 @@ class ForumOceanWebImplTest {
                 )
             )
         )
-        val result = service.getMemberBelongGroups(1231321,0,20)
+        val result = web.getMemberBelongGroups(1231321,0,20)
         assertThat(result.isSuccess)
         assertThat(result.getOrThrow()).hasSize(1)
     }
@@ -1168,7 +1168,7 @@ class ForumOceanWebImplTest {
                         isJoin = true
                 )
         )
-        val result = service.getMemberJoinAnyGroups(23454734)
+        val result = web.getMemberJoinAnyGroups(23454734)
         assertThat(result.isSuccess)
         assertThat(result.getOrThrow().isJoin).isTrue()
     }
@@ -1185,7 +1185,7 @@ class ForumOceanWebImplTest {
         } returns Response.success(
             CreateGroupResponseBody(100321)
         )
-        val result = service.createGroup("社團名稱")
+        val result = web.createGroup("社團名稱")
         assertThat(result.isSuccess)
         assertThat(result.getOrThrow().groupId).isEqualTo(100321)
     }
@@ -1209,7 +1209,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success<Void>(204, null)
-        val result = service.updateGroup(
+        val result = web.updateGroup(
             10220,
             updateRequestBody
         )
@@ -1227,7 +1227,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success<Void>(204, null)
-        val result = service.transferGroup(2032032, 20320)
+        val result = web.transferGroup(2032032, 20320)
         assertThat(result.isSuccess)
     }
 
@@ -1241,7 +1241,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success<Void>(204, null)
-        val result = service.deleteGroup(2020)
+        val result = web.deleteGroup(2020)
         assertThat(result.isSuccess)
     }
 
@@ -1256,7 +1256,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success<Void>(204, null)
-        val result = service.join(1202020, "入社理由")
+        val result = web.join(1202020, "入社理由")
         assertThat(result.isSuccess)
     }
 
@@ -1279,7 +1279,7 @@ class ForumOceanWebImplTest {
                 GroupMember(memberId = 3, position = GroupPositionInfo.PRESIDENT)
             )
         )
-        val result = service.getMembers(132132, 0, 20, GroupPosition.values().toList())
+        val result = web.getMembers(132132, 0, 20, GroupPosition.values().toList())
         assertThat(result.isSuccess)
         assertThat(result.getOrThrow().find { it.position == GroupPositionInfo.PRESIDENT }).isNotNull()
     }
@@ -1305,7 +1305,7 @@ class ForumOceanWebImplTest {
                 )
             )
         )
-        val result = service.getApprovals(1321684,0,20)
+        val result = web.getApprovals(1321684,0,20)
         assertThat(result.isSuccess)
         assertThat(result.getOrThrow()).hasSize(2)
     }
@@ -1322,7 +1322,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success<Void>(204, null)
-        val result = service.approval(132112, 213213, true)
+        val result = web.approval(132112, 213213, true)
         assertThat(result.isSuccess)
     }
 
@@ -1338,7 +1338,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success<Void>(204, null)
-        val result = service.changeGroupMemberPosition(1321321, 1231, GroupPosition.PRESIDENT)
+        val result = web.changeGroupMemberPosition(1321321, 1231, GroupPosition.PRESIDENT)
         assertThat(result.isSuccess)
     }
 
@@ -1353,7 +1353,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success<Void>(204, null)
-        val result = service.kick(13213, 1321)
+        val result = web.kick(13213, 1321)
         assertThat(result.isSuccess)
     }
 
@@ -1367,7 +1367,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success<Void>(204, null)
-        val result = service.leave(5050)
+        val result = web.leave(5050)
         assertThat(result.isSuccess)
     }
 
@@ -1381,7 +1381,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success<Void>(204, null)
-        val result = service.pinArticle(1321342)
+        val result = web.pinArticle(1321342)
         assertThat(result.isSuccess)
     }
 
@@ -1395,7 +1395,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success<Void>(204, null)
-        val result = service.unpinArticle(1321342)
+        val result = web.unpinArticle(1321342)
         assertThat(result.isSuccess)
     }
 
@@ -1429,7 +1429,7 @@ class ForumOceanWebImplTest {
                 )
             )
         )
-        val result = service.getOfficials(0, 20)
+        val result = web.getOfficials(0, 20)
         assertThat(result.isSuccess)
         assertThat(result.getOrThrow()).hasSize(2)
     }
@@ -1446,7 +1446,7 @@ class ForumOceanWebImplTest {
         } returns Response.success(
             GetOfficialSubscribedCountResponseBody(132132)
         )
-        val result = service.getOfficialSubscribedCount(21321)
+        val result = web.getOfficialSubscribedCount(21321)
         assertThat(result.isSuccess)
         assertThat(result.getOrThrow().count).isEqualTo(132132)
     }
@@ -1461,7 +1461,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success(GetSubscribedCountResponseBody(2134979))
-        val result = service.getSubscribedCount(1465)
+        val result = web.getSubscribedCount(1465)
         assertThat(result.isSuccess)
         assertThat(result.getOrThrow().count).isEqualTo(2134979)
     }
@@ -1480,7 +1480,7 @@ class ForumOceanWebImplTest {
         } returns Response.success(
             listOf(1, 2, 3, 4, 5, 6)
         )
-        val result = service.getSubscribed(21321,0,20)
+        val result = web.getSubscribed(21321,0,20)
         assertThat(result.isSuccess)
         assertThat(result.getOrThrow()).hasSize(6)
     }
@@ -1495,7 +1495,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success<Void>(204, null)
-        val result = service.subscribe(21321)
+        val result = web.subscribe(21321)
         assertThat(result.isSuccess)
     }
 
@@ -1509,7 +1509,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         }
-        val result = service.unsubscribe(3213489)
+        val result = web.unsubscribe(3213489)
         assertThat(result.isSuccess)
     }
 
@@ -1522,7 +1522,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success<Void>(204, null)
-        val result = service.unsubscribeAll()
+        val result = web.unsubscribeAll()
         assertThat(result.isSuccess)
     }
 
@@ -1540,7 +1540,7 @@ class ForumOceanWebImplTest {
         } returns Response.success(
             listOf<Long>(1, 2, 3, 4)
         )
-        val result = service.getFollowingList(4564,0,10)
+        val result = web.getFollowingList(4564,0,10)
         assertThat(result.isSuccess)
         assertThat(result.getOrThrow()).hasSize(4)
     }
@@ -1557,7 +1557,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success(listOf<Long>(1, 2, 3, 4))
-        val result = service.getFollowers(43241321,0,10)
+        val result = web.getFollowers(43241321,0,10)
         assertThat(result.isSuccess)
         assertThat(result.getOrThrow()).hasSize(4)
     }
@@ -1572,7 +1572,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success<Void>(204, null)
-        val result = service.follow(1324324)
+        val result = web.follow(1324324)
         assertThat(result.isSuccess)
     }
 
@@ -1586,7 +1586,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success<Void>(204, null)
-        val result = service.unfollow(21324324)
+        val result = web.unfollow(21324324)
         assertThat(result.isSuccess)
     }
 
@@ -1600,7 +1600,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success<Void>(204, null)
-        val result = service.block(2344654)
+        val result = web.block(2344654)
         assertThat(result.isSuccess)
     }
 
@@ -1614,7 +1614,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success<Void>(204, null)
-        val result = service.unblock(342321)
+        val result = web.unblock(342321)
         assertThat(result.isSuccess)
     }
 
@@ -1629,7 +1629,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success(listOf<Long>(1, 2, 3, 4, 5))
-        val result = service.getBlockingList(0,10)
+        val result = web.getBlockingList(0,10)
         assertThat(result.isSuccess)
         assertThat(result.getOrThrow()).hasSize(5)
     }
@@ -1645,7 +1645,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success(listOf<Long>(1, 3, 5, 7, 9))
-        val result = service.getBlockers(0,10)
+        val result = web.getBlockers(0,10)
         assertThat(result.isSuccess)
         assertThat(result.getOrThrow()).hasSize(5)
     }
@@ -1662,7 +1662,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success<Void>(204,null)
-        val result = service.createReport(231321,ReasonType.AD,null)
+        val result = web.createReport(231321,ReasonType.AD,null)
         assertThat(result.isSuccess)
     }
 
@@ -1677,7 +1677,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success<Void>(204, null)
-        val result = service.deleteReport(2136541, commentId = null)
+        val result = web.deleteReport(2136541, commentId = null)
         assertThat(result.isSuccess)
     }
 
@@ -1704,7 +1704,7 @@ class ForumOceanWebImplTest {
                 )
             )
         )
-        val result = service.getMemberIds(memberIds)
+        val result = web.getMemberIds(memberIds)
         assertThat(result.isSuccess)
         val mappingList = result.getOrThrow().associateBy { it.memberId }
         assertThat(mappingList[67]?.channelId).isEqualTo(1979787)
@@ -1734,7 +1734,7 @@ class ForumOceanWebImplTest {
                 )
             )
         )
-        val result = service.getChannelIds(channelIds)
+        val result = web.getChannelIds(channelIds)
         assertThat(result.isSuccess)
         val mappingList = result.getOrThrow().associateBy { it.channelId }
         assertThat(mappingList[1979787]?.memberId).isEqualTo(67)
@@ -1752,7 +1752,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success<Void>(204, null)
-        val result = service.createVote(132434, 4)
+        val result = web.createVote(132434, 4)
         assertThat(result.isSuccess)
     }
 
@@ -1773,7 +1773,7 @@ class ForumOceanWebImplTest {
                 VoteInfo(option = 4, count = 16)
             )
         )
-        val result = service.getCurrentVote(1324324)
+        val result = web.getCurrentVote(1324324)
         assertThat(result.isSuccess)
     }
 
@@ -1803,7 +1803,7 @@ class ForumOceanWebImplTest {
                 )
             )
         )
-        val result = service.getCommodityRank(0,10)
+        val result = web.getCommodityRank(0,10)
         assertThat(result.isSuccess)
     }
 
@@ -1833,7 +1833,7 @@ class ForumOceanWebImplTest {
                 )
             )
         )
-        val result = service.getUSCommodityRank(0,10)
+        val result = web.getUSCommodityRank(0,10)
         assertThat(result.isSuccess)
     }
 
@@ -1863,7 +1863,7 @@ class ForumOceanWebImplTest {
                 )
             )
         )
-        val result = service.getExpertMemberRank(0, 10)
+        val result = web.getExpertMemberRank(0, 10)
         assertThat(result.isSuccess)
     }
 
@@ -1892,7 +1892,7 @@ class ForumOceanWebImplTest {
                 )
             )
         )
-        val result = service.getSpecificExpertMemberRank("7777,8888")
+        val result = web.getSpecificExpertMemberRank("7777,8888")
         assertThat(result.isSuccess)
     }
 
@@ -1922,7 +1922,7 @@ class ForumOceanWebImplTest {
                 )
             )
         )
-        val result = service.getMemberFansRank(0, 10)
+        val result = web.getMemberFansRank(0, 10)
         assertThat(result.isSuccess)
     }
 
@@ -1951,7 +1951,7 @@ class ForumOceanWebImplTest {
                 )
             )
         )
-        val result = service.getSpecificMemberFansRank("7777,8888")
+        val result = web.getSpecificMemberFansRank("7777,8888")
         assertThat(result.isSuccess)
     }
 
@@ -1981,7 +1981,7 @@ class ForumOceanWebImplTest {
                 )
             )
         )
-        val result = service.getSolutionExpertRank(0, 10)
+        val result = web.getSolutionExpertRank(0, 10)
         assertThat(result.isSuccess)
     }
 
@@ -2010,7 +2010,7 @@ class ForumOceanWebImplTest {
                 )
             )
         )
-        val result = service.getSpecificSolutionExpertRank("7777,8888")
+        val result = web.getSpecificSolutionExpertRank("7777,8888")
         assertThat(result.isSuccess)
     }
 }
