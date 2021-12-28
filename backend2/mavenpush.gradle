@@ -101,7 +101,7 @@ project.afterEvaluate {
             maven {
                 name 'release'
 //                url "$buildDir/repository"//上傳之前可以先在Local的build看是否正確
-                url ModuleConfig.PROJECT_VERSION.endsWith('SNAPSHOT') ? SNAPSHOT_URL : RELEASE_URL
+                url RELEASE_URL
                 setAllowInsecureProtocol(true)
                 credentials {
                     username USER_NAME
