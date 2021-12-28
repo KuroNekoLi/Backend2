@@ -59,7 +59,7 @@ class AccountQueryBuilder internal constructor() {
             return this
         }
 
-    fun isNeedAccountGuestId(value: Boolean): AccountQueryBuilder {
+    fun isNeedGuestId(value: Boolean): AccountQueryBuilder {
         queryParams.guestId = if (value) {
             MemberProfileField.GUEST_ID
         } else {
