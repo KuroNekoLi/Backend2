@@ -3221,7 +3221,45 @@ class ForumOceanWebImplTest {
             )
         )
         val result = web.getSolutionExpertRank(0, 10)
-        assertThat(result.isSuccess)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `getSolutionExpertRank_取得解題達人排行結果失敗測試`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getSolutionExpertRank(
+                authorization = any(),
+                offset = any(),
+                fetch = any(),
+                path = ""
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getSolutionExpertRank(0, 10)
+        assertThat(result.isSuccess).isFalse()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `getSpecificMemberFansRank_取得指定解題達人排行結果成功測試`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getSpecificSolutionExpertRank(
+                authorization = any(),
+                memeberIds = any(),
+                path = ""
+            )
+        } returns Response.success(
+            listOf(
+                SolutionExpertRankResponseBody(
+                    creatorId = null,
+                    bestSolutionScore = null,
+                    ranking = null,
+                    lastRanking = null
+                )
+            )
+        )
+        val result = web.getSpecificSolutionExpertRank("7777,8888")
+        assertThat(result.isSuccess).isTrue()
     }
 
     @ExperimentalCoroutinesApi
