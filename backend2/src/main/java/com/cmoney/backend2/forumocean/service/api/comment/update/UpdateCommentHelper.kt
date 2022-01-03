@@ -3,7 +3,7 @@ package com.cmoney.backend2.forumocean.service.api.comment.update
 import com.cmoney.backend2.forumocean.service.api.variable.request.mediatype.MediaType
 import com.google.gson.annotations.SerializedName
 
-class UpdateCommentHelper {
+class UpdateCommentHelper : IUpdateCommentHelper {
 
     private val  editComment = EditComment()
 
@@ -44,7 +44,7 @@ class UpdateCommentHelper {
      *
      * @return
      */
-    fun create() : UpdateCommentRequestBody{
+    override fun create() : UpdateCommentRequestBody{
         return UpdateCommentRequestBody(editComment,deletePropertyList.map { it.value })
     }
 

@@ -5,13 +5,9 @@ import com.cmoney.backend2.base.di.BACKEND2_SETTING
 import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.forumocean.service.ForumOceanWeb
 import com.cmoney.backend2.forumocean.service.api.article.create.variable.Content
-import com.cmoney.backend2.forumocean.service.api.article.create.variable.commoditytag.BullOrBear
-import com.cmoney.backend2.forumocean.service.api.article.create.variable.commoditytag.CommodityTag
-import com.cmoney.backend2.forumocean.service.api.article.create.variable.commoditytag.StockTypeInfo
 import com.cmoney.backend2.forumocean.service.api.article.update.UpdateArticleHelper
-import com.cmoney.backend2.forumocean.service.api.channel.channelname.ChannelNameBuilder
-import com.cmoney.backend2.forumocean.service.api.channel.channelname.StockClassification
-import com.cmoney.backend2.forumocean.service.api.channel.channelname.SystemClassification
+import com.cmoney.backend2.forumocean.service.api.channel.channelname.definechannelnamebuilder.CommodityType
+import com.cmoney.backend2.forumocean.service.api.channel.channelname.definechannelnamebuilder.DefineChannelName
 import com.cmoney.backend2.forumocean.service.api.comment.update.UpdateCommentHelper
 import com.cmoney.backend2.forumocean.service.api.group.update.UpdateGroupRequestBody
 import com.cmoney.backend2.forumocean.service.api.report.create.ReasonType
@@ -19,6 +15,9 @@ import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
 import com.cmoney.backend2.forumocean.service.api.variable.request.GroupJoinType
 import com.cmoney.backend2.forumocean.service.api.variable.request.GroupPosition
 import com.cmoney.backend2.forumocean.service.api.variable.request.ReactionType
+import com.cmoney.backend2.forumocean.service.api.variable.request.commoditytag.BullOrBear
+import com.cmoney.backend2.forumocean.service.api.variable.request.commoditytag.CommodityTag
+import com.cmoney.backend2.forumocean.service.api.variable.request.commoditytag.StockTypeInfo
 import com.cmoney.backend2.forumocean.service.api.variable.request.mediatype.MediaType
 import com.cmoney.backend2.forumocean.service.api.variable.request.mediatype.Type
 import com.cmoney.backend2.sample.extension.logResponse
@@ -51,9 +50,15 @@ class ForumOceanServiceCase : ServiceCase {
                             "https://zh.wikipedia.org/wiki/Google_Chrome#/media/File:Google_Chrome_icon_(September_2014).svg"
                         )
                     ),
-                    commodityTags = listOf(CommodityTag("1234", BullOrBear.Bear,StockTypeInfo.Stock)),
+                    commodityTags = listOf(
+                        CommodityTag("1234", BullOrBear.Bear,
+                            StockTypeInfo.Stock)
+                    ),
                     voteOptions = null,
-                    voteMinutes = null
+                    voteMinutes = null,
+                    topics = listOf(
+                        "測測測測測測"
+                    )
                 )
             ).getOrNull()?.articleId
 
@@ -81,9 +86,13 @@ class ForumOceanServiceCase : ServiceCase {
                                                 "https://zh.wikipedia.org/wiki/Google_Chrome#/media/File:Google_Chrome_icon_(September_2014).svg"
                                         )
                                 ),
-                                commodityTags = listOf(CommodityTag("1234", BullOrBear.Bear,StockTypeInfo.Stock)),
+                                commodityTags = listOf(
+                                    CommodityTag("1234", BullOrBear.Bear,
+                                        StockTypeInfo.Stock)
+                                ),
                                 voteOptions = null,
-                                voteMinutes = null
+                                voteMinutes = null,
+                                topics = null
                         )
                 ).logResponse(TAG)
                 deleteArticle(this)
@@ -96,12 +105,11 @@ class ForumOceanServiceCase : ServiceCase {
                         }
                 )
 
-                getChannelsArticleByWeight(listOf(
-                        ChannelNameBuilder().also {
-                            it.systemClassification = SystemClassification.Member(null)
-                            it.stockClassification = StockClassification.Stock("1234")
-                        }
-                ),Long.MAX_VALUE,20).logResponse(TAG)
+                getChannelsArticleByWeight(
+                        listOf(DefineChannelName.Commodity(CommodityType.Stock.text,"1234")),
+                        Long.MAX_VALUE,
+                        20
+                ).logResponse(TAG)
             }
 
             testGroup()
@@ -139,7 +147,8 @@ class ForumOceanServiceCase : ServiceCase {
                 sharedPostsArticleId = articleId,
                 commodityTags = null,
                 voteOptions = null,
-                voteMinutes = null
+                voteMinutes = null,
+                topics = null
             )
         ).getOrNull()?.articleId
 
@@ -188,14 +197,15 @@ class ForumOceanServiceCase : ServiceCase {
             getComment(articleId, this, null).logResponse(TAG)
             val updateCommentHelper = UpdateCommentHelper()
             updateCommentHelper.setText("我修改回復了")
+            updateCommentHelper.deleteMultiMedia()
             updateComment(articleId, this, updateCommentHelper).logResponse(TAG)
-            getComment(articleId, this, null).logResponse(TAG)
+            getComment(articleId, this, 20).logResponse(TAG)
             reactionComment(articleId, 1, ReactionType.LIKE).logResponse(TAG)
             reactionComment(articleId, 1, ReactionType.DISLIKE).logResponse(TAG)
             getReactionDetail(articleId, 1,ReactionType.values().toList(),0,20).logResponse(TAG)
             removeReactionComment(articleId, 1).logResponse(TAG)
             deleteComment(articleId, 1).logResponse(TAG)
-            getComment(articleId, this, null).logResponse(TAG)
+            getComment(articleId, this, 20).logResponse(TAG)
         }
 
         val commentIdList = mutableListOf<Long>()
@@ -262,11 +272,7 @@ class ForumOceanServiceCase : ServiceCase {
         createCollection(articleId).logResponse(TAG)
 
         getChannelsArticleByWeight(
-            listOf(ChannelNameBuilder().apply {
-                systemClassification = SystemClassification.MemberCollection(
-                    setting.identityToken.getMemberId().toLongOrNull()
-                )
-            }),
+            listOf(DefineChannelName.Collection(setting.identityToken.getMemberId().toLong())),
             Long.MAX_VALUE,
             50
         ).logResponse(TAG)
@@ -275,19 +281,7 @@ class ForumOceanServiceCase : ServiceCase {
     }
 
     private suspend fun ForumOceanWeb.testChannel() {
-        val listBuilder = mutableListOf<ChannelNameBuilder>()
-        listBuilder.add(
-            ChannelNameBuilder().apply {
-                stockClassification = StockClassification.Stock("2330")
-            }
-        )
-        listBuilder.add(
-            ChannelNameBuilder().apply {
-                stockClassification = StockClassification.Stock("1234")
-            }
-        )
-
-        getChannelsArticleByWeight(listBuilder, Long.MAX_VALUE, 50).logResponse(TAG)
+        getChannelsArticleByWeight(listOf(DefineChannelName.Commodity(CommodityType.Stock.text,"2330")), Long.MAX_VALUE, 50).logResponse(TAG)
     }
 
     private suspend fun ForumOceanWeb.testArticle(articleId: Long) {
@@ -307,7 +301,7 @@ class ForumOceanServiceCase : ServiceCase {
     private suspend fun ForumOceanWeb.testQuestion() {
         val questionId = createQuestion(
             Content.Question(
-                text = "問答", multiMedia = listOf(), anonymous = Any(), commodityTags = null
+                text = "問答", multiMedia = listOf(), anonymous = Any(), commodityTags = null, topics = null
             )
         ).getOrNull()?.articleId
 
@@ -324,9 +318,14 @@ class ForumOceanServiceCase : ServiceCase {
         val groupId = createGroup("測試用社團名稱").getOrNull()?.groupId
         groupId?.apply {
             getGroup(this).logResponse(TAG)
-            getUserOwnGroup(setting.identityToken.getMemberId().toLong()).logResponse(TAG)
-            getMemberManagedGroups(setting.identityToken.getMemberId().toLong()).logResponse(TAG)
-            getMemberBelongGroups(setting.identityToken.getMemberId().toLong()).logResponse(TAG)
+            getGroupsByPosition(
+                setting.identityToken.getMemberId().toLong(),
+                0,
+                20,
+                listOf(GroupPosition.NORMAL, GroupPosition.MANAGEMENT, GroupPosition.PRESIDENT)
+            ).logResponse(TAG)
+            getMemberManagedGroups(setting.identityToken.getMemberId().toLong(),0,20).logResponse(TAG)
+            getMemberBelongGroups(setting.identityToken.getMemberId().toLong(),0,20).logResponse(TAG)
             getMemberJoinAnyGroups(setting.identityToken.getMemberId().toLong()).logResponse(TAG)
             updateGroup(
                 this,
@@ -338,22 +337,21 @@ class ForumOceanServiceCase : ServiceCase {
     }
 
     private suspend fun ForumOceanWeb.testOfficials() {
-        val builder = ChannelNameBuilder()
-        builder.systemClassification = SystemClassification.Bot(null)
+        val builder = DefineChannelName.BotCommodity(CommodityType.Stock.text,"2330")
         val botIdList = getChannelsArticleByWeight(listOf(builder), Long.MAX_VALUE, 50).getOrNull()
             ?.mapNotNull { it.articleContent?.botId }?.distinct()
         if (botIdList != null && botIdList.size >= 2) {
             val firstBotId = botIdList[0]
             val secondBotId = botIdList[1]
             val memberId = setting.identityToken.getMemberId().toLong()
-            getOfficials(botIdList).logResponse(TAG)
+            getOfficialsByIds(botIdList).logResponse(TAG)
 
             subscribe(firstBotId).logResponse(TAG)
             subscribe(secondBotId).logResponse(TAG)
 
             getOfficialSubscribedCount(firstBotId).logResponse(TAG)
             getSubscribedCount(memberId).logResponse(TAG)
-            getSubscribed(memberId).logResponse(TAG)
+            getSubscribed(memberId,0,20).logResponse(TAG)
 
             unsubscribe(firstBotId).logResponse(TAG)
             unsubscribeAll().logResponse(TAG)
@@ -389,7 +387,7 @@ class ForumOceanServiceCase : ServiceCase {
             user1.changeUser(setting)
 
             if (groupArticleId != null) {
-                deleteGroupArticle(groupArticleId).logResponse(TAG)
+                deleteArticle(groupArticleId).logResponse(TAG)
             }
 
             updateGroup(
@@ -401,14 +399,19 @@ class ForumOceanServiceCase : ServiceCase {
             join(this, "測試api用").logResponse(TAG)
 
             user1.changeUser(setting)
-            getMembers(this,0,200,true).logResponse(TAG)
-            val needApprovalId = getApprovals(this).getOrNull()?.firstOrNull()?.memberId
+            getMembers(
+                this,
+                0,
+                200,
+                listOf(GroupPosition.PRESIDENT, GroupPosition.MANAGEMENT, GroupPosition.NORMAL)
+            ).logResponse(TAG)
+            val needApprovalId = getApprovals(this,0,20).getOrNull()?.firstOrNull()?.memberId
             needApprovalId?.let {
                 approval(this, needApprovalId, true).logResponse(TAG)
                 changeGroupMemberPosition(
                     this,
                     needApprovalId,
-                    GroupPosition.Cadre
+                    GroupPosition.PRESIDENT
                 ).logResponse(TAG)
                 kick(this, needApprovalId).logResponse(TAG)
 
@@ -431,16 +434,16 @@ class ForumOceanServiceCase : ServiceCase {
         val user2MemberId = setting.identityToken.getMemberId().toLong()
 
         follow(user1MemberId).logResponse(TAG)
-        getFollowingList(user2MemberId).logResponse(TAG)
-        getFollowers(user2MemberId).logResponse(TAG)
+        getFollowingList(user2MemberId,0,10).logResponse(TAG)
+        getFollowers(user2MemberId,0,10).logResponse(TAG)
         unfollow(user1MemberId).logResponse(TAG)
-        getFollowingList(user2MemberId).logResponse(TAG)
+        getFollowingList(user2MemberId,0,10).logResponse(TAG)
 
         block(user1MemberId).logResponse(TAG)
         user1.changeUser(setting)
         block(user2MemberId).logResponse(TAG)
-        getBlockers().logResponse(TAG)
-        getBlockingList().logResponse(TAG)
+        getBlockers(0,10).logResponse(TAG)
+        getBlockingList(0,10).logResponse(TAG)
         unblock(user2MemberId).logResponse(TAG)
         user2.changeUser(setting)
         unblock(user1MemberId).logResponse(TAG)
@@ -453,7 +456,8 @@ class ForumOceanServiceCase : ServiceCase {
                 multiMedia = null,
                 commodityTags = null,
                 voteOptions = null,
-                voteMinutes = null
+                voteMinutes = null,
+                topics = null
             )
         ).getOrNull()?.articleId
 
@@ -477,7 +481,8 @@ class ForumOceanServiceCase : ServiceCase {
                 multiMedia = null,
                 commodityTags = null,
                 voteOptions = listOf("A選項", "B選項"),
-                voteMinutes = 5
+                voteMinutes = 5,
+                topics = null
             )
         ).getOrNull()?.articleId
 
@@ -550,13 +555,13 @@ class ForumOceanServiceCase : ServiceCase {
 
             user1.changeUser(setting)
 
-            getApprovals(groupId).logResponse(TAG)
+            getApprovals(groupId,0,20).logResponse(TAG)
             approval(groupId, user2MemberId, true).logResponse(TAG)
 
             changeGroupMemberPosition(
                 groupId,
                 user2MemberId,
-                GroupPosition.Cadre
+                GroupPosition.PRESIDENT
             ).logResponse(TAG)
 
             user2.changeUser(setting)
@@ -613,7 +618,8 @@ class ForumOceanServiceCase : ServiceCase {
             multiMedia = listOf(),
             commodityTags = listOf(),
             voteOptions = listOf(),
-            voteMinutes = null
+            voteMinutes = null,
+            topics = null
         )).logResponse(TAG){
             articleId = it.articleId
         }

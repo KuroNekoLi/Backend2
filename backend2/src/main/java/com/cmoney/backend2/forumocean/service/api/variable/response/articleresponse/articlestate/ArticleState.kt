@@ -6,5 +6,7 @@ enum class ArticleState {
     @SerializedName("blocked")
     Block,
     @SerializedName("deleted")
-    Delete
+    Delete,
+    @SerializedName("unreadableNote")
+    UnreadableNote
 }

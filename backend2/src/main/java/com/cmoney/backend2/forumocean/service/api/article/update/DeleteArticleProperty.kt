@@ -10,5 +10,11 @@ enum class DeleteArticleProperty(val value : String) {
      * 多媒體資訊
      *
      */
-    MultiMedia("multiMedia")
+    MultiMedia("multiMedia"),
+
+    /**
+     * 標籤
+     *
+     */
+    Topics("topics")
 }

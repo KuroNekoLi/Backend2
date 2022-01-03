@@ -29,7 +29,6 @@ sealed class ArticleContent(
      * @property position 有帶此參數，代表以社團名義發文
      * @property newsId 新聞Id
      * @property title 新聞標題
-     * @property newsUrl 新聞連結
      * @property publishTime 新聞發佈時間
      * @property sharedPostsArticleId 轉推文章Id
      * @property botId 訊號Id
@@ -38,6 +37,7 @@ sealed class ArticleContent(
      * @property askPoint 問答支付P幣
      * @property bestAnswerCommentId 最佳解答回文Id
      * @property articleState 文章狀態
+     * @property topics 標籤名稱
      */
     data class UnknownContent(
         @SerializedName("text")
@@ -50,6 +50,8 @@ sealed class ArticleContent(
         override val anonymous: Any?,
         @SerializedName("appId")
         override val appId: Int?,
+        @SerializedName("topics")
+        override val topics: List<String>?,
         @SerializedName("creatorId")
         override val creatorId: Long?,
         @SerializedName("groupId")
@@ -60,8 +62,6 @@ sealed class ArticleContent(
         override val newsId: Long?,
         @SerializedName("title")
         override val title: String?,
-        @SerializedName("newsUrl")
-        override val newsUrl: String?,
         @SerializedName("publishTime")
         override val publishTime: Long?,
         @SerializedName("sharedPostsArticleId")
@@ -89,7 +89,8 @@ sealed class ArticleContent(
         SignalInfo,
         VoteOptionInfo,
         QuestionInfo,
-        ArticleStateInfo
+        ArticleStateInfo,
+        TopicInfo
 
     /**
      * 一般文章
@@ -102,6 +103,7 @@ sealed class ArticleContent(
      * @property voteOptions 投票選項
      * @property voteMinutes 發文起算投票截止分鐘數
      * @property articleState 文章狀態
+     * @property topics 標籤名稱
      */
     data class General(
         @SerializedName("text")
@@ -114,6 +116,8 @@ sealed class ArticleContent(
         override val multiMedia: List<MediaTypeInfo>?,
         @SerializedName("commodityTags")
         override val commodityTags: List<CommodityTagInfo>?,
+        @SerializedName("topics")
+        override val topics: List<String>?,
         @SerializedName("voteOptions")
         override val voteOptions: List<String>?,
         @SerializedName("voteMinutes")
@@ -125,7 +129,8 @@ sealed class ArticleContent(
         MultiMediaInfo,
         TagInfo,
         VoteOptionInfo,
-        ArticleStateInfo
+        ArticleStateInfo,
+        TopicInfo
 
     /**
      * 社團文章
@@ -182,6 +187,7 @@ sealed class ArticleContent(
      * @property voteOptions 投票選項
      * @property voteMinutes 發文起算投票截止分鐘數
      * @property articleState 文章狀態
+     * @property topics 標籤名稱
      */
     data class Shared(
         @SerializedName("text")
@@ -196,6 +202,8 @@ sealed class ArticleContent(
         override val multiMedia: List<MediaTypeInfo>?,
         @SerializedName("commodityTags")
         override val commodityTags: List<CommodityTagInfo>?,
+        @SerializedName("topics")
+        override val topics: List<String>?,
         @SerializedName("voteOptions")
         override val voteOptions: List<String>?,
         @SerializedName("voteMinutes")
@@ -208,7 +216,8 @@ sealed class ArticleContent(
         MultiMediaInfo,
         TagInfo,
         VoteOptionInfo,
-        ArticleStateInfo
+        ArticleStateInfo,
+        TopicInfo
 
     /**
      * 新聞文章
@@ -216,7 +225,6 @@ sealed class ArticleContent(
      * @property text 文章內容
      * @property newsId 新聞Id
      * @property title 新聞標題
-     * @property newsUrl 新聞網址
      * @property publishTime 新聞發布時間
      * @property multiMedia 多媒體資訊
      * @property commodityTags 股票Tag資訊
@@ -229,8 +237,6 @@ sealed class ArticleContent(
         override val newsId: Long?,
         @SerializedName("title")
         override val title: String?,
-        @SerializedName("newsUrl")
-        override val newsUrl: String?,
         @SerializedName("publishTime")
         override val publishTime: Long?,
         @SerializedName("multiMedia")
@@ -283,6 +289,7 @@ sealed class ArticleContent(
      * @property askPoint 問答支付P幣
      * @property bestAnswerCommentId 最佳解答回文Id
      * @property articleState 文章狀態
+     * @property topics 標籤名稱
      */
     data class Question(
         @SerializedName("text")
@@ -297,6 +304,8 @@ sealed class ArticleContent(
         override val multiMedia: List<MediaTypeInfo>?,
         @SerializedName("commodityTags")
         override val commodityTags: List<CommodityTagInfo>?,
+        @SerializedName("topics")
+        override val topics: List<String>?,
         @SerializedName("askPoint")
         override val askPoint: Int?,
         @SerializedName("bestAnswerCommentId")
@@ -309,5 +318,6 @@ sealed class ArticleContent(
         TagInfo,
         AnonymousInfo,
         QuestionInfo,
-        ArticleStateInfo
+        ArticleStateInfo,
+        TopicInfo
 }
