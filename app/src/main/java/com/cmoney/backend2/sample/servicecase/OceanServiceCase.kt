@@ -266,7 +266,7 @@ class OceanServiceCase : ServiceCase {
                 articleNeedInfo,
                 FilterType.ALL
             ).logResponse(TAG)
-            
+
             createAnnouncement(
                 channelId = publicClubChannelId,
                 isPinned = false,

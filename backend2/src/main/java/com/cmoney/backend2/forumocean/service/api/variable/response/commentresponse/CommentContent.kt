@@ -15,7 +15,8 @@ import com.google.gson.annotations.SerializedName
  * @property reaction 反應類別 對應 反應總數
  * @property createTime 發回文時間
  * @property modifyTime 修改回文時間
- * @property report 是否有檢舉
+ * @property report 是否有檢舉(檢舉相關參數)
+ * @property hasAuthToReadReply 是否有權限觀看回文(問答相關參數)
  */
 data class CommentContent(
     @SerializedName("creatorId")
@@ -37,5 +38,7 @@ data class CommentContent(
     @SerializedName("modifyTime")
     val modifyTime : Long?,
     @SerializedName("report")
-    val report: Any?
+    val report: Any?,
+    @SerializedName("hasAuthToReadReply")
+    val hasAuthToReadReply : Boolean?
 )

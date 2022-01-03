@@ -1,4 +1,4 @@
-package com.cmoney.backend2.forumocean.service.api.article.create.variable.commoditytag
+package com.cmoney.backend2.forumocean.service.api.variable.request.commoditytag
 
 import com.google.gson.annotations.SerializedName
 
