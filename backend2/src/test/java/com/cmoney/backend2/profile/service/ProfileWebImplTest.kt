@@ -10,6 +10,7 @@ import com.cmoney.backend2.profile.service.api.checkregistrationcodebyphone.GetR
 import com.cmoney.backend2.profile.service.api.getaccount.GetAccountResponseBody
 import com.cmoney.backend2.profile.service.api.getusergraphqlinfo.UserGraphQLInfo
 import com.cmoney.backend2.profile.service.api.mutationmyusergraphqlinfo.MutationData
+import com.cmoney.backend2.profile.service.api.queryotherprofile.RawOtherMemberProfile
 import com.cmoney.backend2.profile.service.api.signupcompletebyemail.SignUpCompleteByEmailResponseBody
 import com.cmoney.backend2.profile.service.api.signupcompletebyphone.SignUpCompleteByPhoneResponseBody
 import com.cmoney.backend2.profile.service.api.variable.GraphQLFieldDefinition
@@ -28,6 +29,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import retrofit2.HttpException
 import retrofit2.Response
 
 @ExperimentalCoroutinesApi
@@ -1007,6 +1009,67 @@ class ProfileWebImplTest {
         )
         Truth.assertThat(result.isSuccess).isFalse()
         Truth.assertThat(result.exceptionOrNull()).isNotNull()
+    }
+
+    @Test
+    fun `getOtherMemberProfiles_取得成功`() = mainCoroutineRule.runBlockingTest {
+        val memberId = 1L
+        val testNickName = "測試帳號"
+        val rawOtherMemberProfile = RawOtherMemberProfile(
+            badges = listOf(),
+            bio = null,
+            communityRoles = listOf(),
+            id = memberId,
+            image = null,
+            isBindingCellphone = null,
+            level = null,
+            nickname = testNickName
+        )
+        val rawOtherMemberProfiles = listOf(rawOtherMemberProfile)
+        val responseBody = gson.toJson(rawOtherMemberProfiles).toResponseBody()
+        coEvery {
+            service.getUserGraphQLInfo(
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success(responseBody)
+
+        val result = webImpl.getOtherMemberProfiles(
+            memberIds = listOf(memberId)
+        ) {
+            nickname
+        }
+        Truth.assertThat(result.isSuccess).isTrue()
+        val otherMemberProfiles = result.getOrNull()
+        Truth.assertThat(otherMemberProfiles).isNotNull()
+        requireNotNull(otherMemberProfiles)
+        Truth.assertThat(otherMemberProfiles).hasSize(1)
+        val otherMemberProfile = otherMemberProfiles.first()
+        Truth.assertThat(otherMemberProfile.id).isEqualTo(memberId)
+        Truth.assertThat(otherMemberProfile.nickname).isEqualTo(testNickName)
+    }
+
+    @Test
+    fun `getOtherMemberProfiles_取得失敗_401`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.getUserGraphQLInfo(
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.error(401, "".toResponseBody())
+
+        val result = webImpl.getOtherMemberProfiles(
+            memberIds = listOf(1)
+        ) {
+            nickname
+        }
+        Truth.assertThat(result.isSuccess).isFalse()
+        val exception = result.exceptionOrNull()
+        Truth.assertThat(exception).isNotNull()
+        requireNotNull(exception)
+        Truth.assertThat(exception).isInstanceOf(HttpException::class.java)
+        require(exception is HttpException)
+        Truth.assertThat(exception.code()).isEqualTo(401)
     }
 
     @After
