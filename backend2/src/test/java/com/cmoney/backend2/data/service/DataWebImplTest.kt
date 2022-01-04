@@ -54,14 +54,11 @@ class DataWebImplTest {
         coEvery {
             service.getFundIdData(
                 authToken = any(),
-                fundId = any(),
-                params = any(),
-                guid = any(),
-                appId = any()
+                url = any()
             )
         } returns Response.success(response)
 
-        val result = dataWeb.getFundIdData(190, "1")
+        val result = dataWeb.getFundIdData(fundId = 190, params = "1")
         Truth.assertThat(result.isSuccess).isTrue()
         val data = result.getOrThrow()
         Truth.assertThat(data.title?.size).isEqualTo(1)
@@ -78,14 +75,11 @@ class DataWebImplTest {
         coEvery {
             service.getFundIdData(
                 authToken = any(),
-                fundId = any(),
-                params = any(),
-                guid = any(),
-                appId = any()
+                url = any()
             )
         } returns Response.success(response)
 
-        val result = dataWeb.getFundIdData(190, "")
+        val result = dataWeb.getFundIdData(fundId = 190, params = "1")
         Truth.assertThat(result.isSuccess).isTrue()
         val data = result.getOrThrow()
         Truth.assertThat(data.title?.size).isEqualTo(0)
@@ -102,14 +96,11 @@ class DataWebImplTest {
         coEvery {
             service.getFundIdData(
                 authToken = any(),
-                fundId = any(),
-                params = any(),
-                guid = any(),
-                appId = any()
+                url = any()
             )
         } returns Response.success(response)
 
-        val result = dataWeb.getFundIdData(190, "")
+        val result = dataWeb.getFundIdData(fundId = 190, params = "1")
         Truth.assertThat(result.isSuccess).isFalse()
         val exception = result.exceptionOrNull()
         Truth.assertThat(exception).isInstanceOf(ServerException::class.java)
@@ -126,14 +117,11 @@ class DataWebImplTest {
         coEvery {
             service.getFundIdData(
                 authToken = any(),
-                fundId = any(),
-                params = any(),
-                guid = any(),
-                appId = any()
+                url = any()
             )
         } returns Response.success(response)
 
-        val result = dataWeb.getFundIdData(190, "")
+        val result = dataWeb.getFundIdData(fundId = 190, params = "1")
         Truth.assertThat(result.isSuccess).isFalse()
         val exception = result.exceptionOrNull()
         Truth.assertThat(exception).isInstanceOf(ServerException::class.java)

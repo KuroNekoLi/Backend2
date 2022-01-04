@@ -5,7 +5,7 @@ import com.cmoney.backend2.data.service.api.FundIdWithError
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Header
-import retrofit2.http.Query
+import retrofit2.http.Url
 
 /**
  * DataService
@@ -15,13 +15,10 @@ import retrofit2.http.Query
 interface DataService {
 
     @RecordApi
-    @GET("api/ChipK")
+    @GET
     suspend fun getFundIdData(
         @Header("Authorization") authToken: String,
-        @Query("fundId") fundId: Int,
-        @Query("params") params: String,
-        @Query("guid") guid: String,
-        @Query("appId") appId: Int
+        @Url url: String
     ): Response<FundIdWithError>
 
 }

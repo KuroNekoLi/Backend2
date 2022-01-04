@@ -4,7 +4,6 @@ import android.app.Application
 import com.cmoney.backend2.activity.di.activityServiceModule
 import com.cmoney.backend2.additioninformationrevisit.di.additionalInformationRevisitServiceModule
 import com.cmoney.backend2.authorization.di.authorizationServiceModule
-import com.cmoney.backend2.base.di.BACKEND2_RETROFIT
 import com.cmoney.backend2.base.di.BACKEND2_SETTING
 import com.cmoney.backend2.base.di.backendBaseModule
 import com.cmoney.backend2.base.model.setting.Platform
@@ -21,10 +20,10 @@ import com.cmoney.backend2.common.di.commonServiceModule
 import com.cmoney.backend2.crm.di.crmServiceModule
 import com.cmoney.backend2.customgroup.di.customGroupServiceModule
 import com.cmoney.backend2.customgroup2.di.customGroup2ServiceModule
+import com.cmoney.backend2.data.di.dataServiceModule
 import com.cmoney.backend2.dtno.di.dtnoServiceModule
 import com.cmoney.backend2.emilystock.di.emilyServiceModule
 import com.cmoney.backend2.forumocean.di.forumOceanServiceModule
-import com.cmoney.backend2.videochannel.di.videoChannelServiceModule
 import com.cmoney.backend2.identityprovider.di.identityProviderServiceModule
 import com.cmoney.backend2.imagerecognition.di.imageRecognitionServiceModule
 import com.cmoney.backend2.media.di.mediaServiceModule
@@ -39,10 +38,10 @@ import com.cmoney.backend2.profile.di.profileServiceModule
 import com.cmoney.backend2.realtimeaftermarket.di.realtimeAfterMarketServiceModule
 import com.cmoney.backend2.sample.di.viewModule
 import com.cmoney.backend2.sample.model.logger.ApplicationLoggerAdapter
-import com.cmoney.backend2.sample.servicecase.DataServiceCase
 import com.cmoney.backend2.tickdata.di.tickDataServiceModule
 import com.cmoney.backend2.trial.di.trialServiceModule
 import com.cmoney.backend2.userbehavior.di.userBehaviorServiceModule
+import com.cmoney.backend2.videochannel.di.videoChannelServiceModule
 import com.cmoney.backend2.virtualassets.di.virtualAssetsServiceModule
 import com.cmoney.data_logdatarecorder.logger.LogDataRecorderLoggerAdapter
 import com.cmoney.data_logdatarecorder.recorder.LogDataRecorder
@@ -85,9 +84,7 @@ class SampleApplication : Application() {
                     commonServiceModule,
                     customGroupServiceModule,
                     customGroup2ServiceModule,
-                    DataServiceCase.getDataWebModule("https://datasv.cmoney.tw:5001/") {
-                        get(BACKEND2_RETROFIT)
-                    },
+                    dataServiceModule,
                     dtnoServiceModule,
                     emilyServiceModule,
                     forumOceanServiceModule,
