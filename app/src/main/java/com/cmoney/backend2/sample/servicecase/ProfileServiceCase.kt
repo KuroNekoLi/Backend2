@@ -106,7 +106,7 @@ class ProfileServiceCase : ServiceCase {
         ).logResponse(TAG)
 
         profileWeb.mutationMyUserGraphQlInfo<GetNicknameAndAvatarResponse>(
-            type = object : TypeToken<GetNicknameAndAvatarResponse>(){}.type,
+            type = object : TypeToken<GetNicknameAndAvatarResponse>() {}.type,
             variable = MutationData.Builder(
                 nickname = "Tester_X",
                 image = "https://storage.googleapis.com/cmoney-image/1378ceeb-2f10-4ef5-8d38-cb63f8f97422",
@@ -114,13 +114,13 @@ class ProfileServiceCase : ServiceCase {
             ).build()
         ).logResponse(TAG)
         profileWeb.getMyUserGraphQlInfo<GetNicknameAndAvatarResponse>(
-                fields = setOf(
-                        GraphQLFieldDefinition.NickName,
-                        GraphQLFieldDefinition.Image,
-                        GraphQLFieldDefinition.Level,
-                        GraphQLFieldDefinition.Badge
-                ),
-                type = object : TypeToken<GetNicknameAndAvatarResponse>(){}.type
+            fields = setOf(
+                GraphQLFieldDefinition.NickName,
+                GraphQLFieldDefinition.Image,
+                GraphQLFieldDefinition.Level,
+                GraphQLFieldDefinition.Badge
+            ),
+            type = object : TypeToken<GetNicknameAndAvatarResponse>() {}.type
         ).logResponse(TAG)
 
         profileWeb.getUserGraphQLInfo<GetNicknameAndAvatarResponse>(
@@ -134,8 +134,24 @@ class ProfileServiceCase : ServiceCase {
                 UserGraphQLInfo.Bio
             ),
             //注意，因為回傳會是List，記得在型別要先加上List -> TypeToken<List<T>>(){}.type
-            type = object : TypeToken<List<GetNicknameAndAvatarResponse>>(){}.type
+            type = object : TypeToken<List<GetNicknameAndAvatarResponse>>() {}.type
         ).logResponse(TAG)
+
+        val result = profileWeb.getOtherMemberProfiles(
+            memberIds = listOf(1, 2, 3, 4, 5)
+        ) {
+            nickname
+            id
+            image
+            bio
+        }
+        result.fold({
+            it.forEach { otherMemberProfile ->
+                println("id: ${otherMemberProfile.id}, nickname: ${otherMemberProfile.nickname}, image: ${otherMemberProfile.image}, bio: ${otherMemberProfile.bio}")
+            }
+        }, {
+            println("failed: $it")
+        })
     }
 
     companion object {

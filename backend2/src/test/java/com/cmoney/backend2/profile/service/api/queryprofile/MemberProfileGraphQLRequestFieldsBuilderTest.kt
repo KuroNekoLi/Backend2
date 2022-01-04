@@ -35,7 +35,6 @@ internal class MemberProfileGraphQLRequestFieldsBuilderTest(
         @JvmStatic
         fun getTestCases(): Iterable<Array<Any?>> {
             return listOf(
-                // empty
                 arrayOf<Any?>(
                     "empty",
                     MemberProfileQueryBuilder().build(),

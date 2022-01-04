@@ -1,6 +1,7 @@
 package com.cmoney.backend2.profile.service.api.queryprofile
 
-import com.cmoney.backend2.profile.service.api.profilefield.MemberProfileField
+import com.cmoney.backend2.profile.extension.appendField
+import com.cmoney.backend2.profile.extension.appendParent
 
 internal class MemberProfileGraphQLRequestFieldsBuilder(
     private val queryParams: MemberProfileQueryParams
@@ -53,26 +54,5 @@ internal class MemberProfileGraphQLRequestFieldsBuilder(
         sb.append(" ")
         sb.append("}")
         return sb.toString()
-    }
-
-    private inline fun <reified T>StringBuilder.appendParent(
-        params: T?,
-        parentField: MemberProfileField?,
-        block: StringBuilder.(T) -> Unit
-    ) {
-        params ?: return
-        parentField ?: return
-        this.append(" ")
-        this.append(parentField.value)
-        this.append("{")
-        this.block(params)
-        this.append(" ")
-        this.append("}")
-    }
-
-    private fun StringBuilder.appendField(field: MemberProfileField?) {
-        field ?: return
-        this.append(" ")
-        this.append(field.value)
     }
 }

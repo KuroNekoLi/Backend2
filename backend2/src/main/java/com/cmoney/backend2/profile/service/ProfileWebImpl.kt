@@ -22,6 +22,10 @@ import com.cmoney.backend2.profile.service.api.linkemail.LinkEmailRequestBody
 import com.cmoney.backend2.profile.service.api.linkfacebook.LinkFacebookRequestBody
 import com.cmoney.backend2.profile.service.api.linkphone.LinkPhoneRequestBody
 import com.cmoney.backend2.profile.service.api.mutationmyusergraphqlinfo.MutationData
+import com.cmoney.backend2.profile.service.api.queryotherprofile.OtherMemberProfile
+import com.cmoney.backend2.profile.service.api.queryotherprofile.OtherMemberProfileGraphQLRequestFieldsBuilder
+import com.cmoney.backend2.profile.service.api.queryotherprofile.OtherMemberProfileQueryBuilder
+import com.cmoney.backend2.profile.service.api.queryotherprofile.RawOtherMemberProfile
 import com.cmoney.backend2.profile.service.api.queryprofile.MemberProfile
 import com.cmoney.backend2.profile.service.api.queryprofile.MemberProfileGraphQLRequestFieldsBuilder
 import com.cmoney.backend2.profile.service.api.queryprofile.MemberProfileQueryBuilder
@@ -39,6 +43,7 @@ import com.cmoney.backend2.profile.service.api.signupcompletebyphone.SignupCompl
 import com.cmoney.backend2.profile.service.api.singupbyphone.SignUpByPhoneRequestBody
 import com.cmoney.backend2.profile.service.api.variable.GraphQLFieldDefinition
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -317,7 +322,8 @@ class ProfileWebImpl(
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     body = GetMyUserGraphQLInfoRequestBody(fields = requestFields)
                 ).checkResponseBody(gson)
-                val rawMemberProfile = gson.fromJson(responseBody.string(), RawMemberProfile::class.java)
+                val rawMemberProfile =
+                    gson.fromJson(responseBody.string(), RawMemberProfile::class.java)
                 MemberProfile(
                     params = params,
                     id = setting.identityToken.getMemberId(),
@@ -386,6 +392,37 @@ class ProfileWebImpl(
         type: Type
     ): List<T> {
         return gson.fromJson<List<T>>(this?.string(), type)
+    }
+
+    override suspend fun getOtherMemberProfiles(
+        memberIds: List<Long>,
+        block: OtherMemberProfileQueryBuilder.() -> OtherMemberProfileQueryBuilder
+    ): Result<List<OtherMemberProfile>> = withContext(dispatcher.io()) {
+        kotlin.runCatching {
+            val params = OtherMemberProfileQueryBuilder()
+                .block()
+                .build()
+            val requestFields = OtherMemberProfileGraphQLRequestFieldsBuilder(
+                queryParams = params
+            ).build()
+            val requestBody = GetUserGraphQLInfoRequestBody(
+                memberIds = memberIds,
+                fields = requestFields
+            )
+            val responseBody = service.getUserGraphQLInfo(
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                body = requestBody
+            ).checkResponseBody(gson)
+            val type = object : TypeToken<List<RawOtherMemberProfile>>() {}.type
+            val rawOtherProfiles =
+                gson.fromJson<List<RawOtherMemberProfile>>(responseBody.string(), type)
+            rawOtherProfiles.map { raw ->
+                OtherMemberProfile(
+                    params = params,
+                    raw = raw
+                )
+            }
+        }
     }
 
 }

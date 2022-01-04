@@ -5,6 +5,8 @@ import com.cmoney.backend2.profile.service.api.checkregistrationcodebyphone.GetR
 import com.cmoney.backend2.profile.service.api.getaccount.GetAccountResponseBody
 import com.cmoney.backend2.profile.service.api.getusergraphqlinfo.UserGraphQLInfo
 import com.cmoney.backend2.profile.service.api.mutationmyusergraphqlinfo.MutationData
+import com.cmoney.backend2.profile.service.api.queryotherprofile.OtherMemberProfile
+import com.cmoney.backend2.profile.service.api.queryotherprofile.OtherMemberProfileQueryBuilder
 import com.cmoney.backend2.profile.service.api.queryprofile.MemberProfile
 import com.cmoney.backend2.profile.service.api.queryprofile.MemberProfileQueryBuilder
 import com.cmoney.backend2.profile.service.api.signupcompletebyemail.SignUpCompleteByEmailResponseBody
@@ -250,9 +252,22 @@ interface ProfileWeb {
      *
      * @return 查詢結果的資料清單 (會依照查詢欄位對應相關的Class）
      */
+    @Deprecated("Use getOtherMemberProfile to avoid type alias")
     suspend fun <T> getUserGraphQLInfo(
         memberIds: List<Long>,
         fields: Set<UserGraphQLInfo>,
         type: Type
     ): Result<List<T>>
+
+    /**
+     * 取得其他使用者會員資訊
+     *
+     * @param memberIds 要查詢的使用者ID
+     * @param block 取得時的設定
+     * @return 會員資料
+     */
+    suspend fun getOtherMemberProfiles(
+        memberIds: List<Long>,
+        block: OtherMemberProfileQueryBuilder.() -> OtherMemberProfileQueryBuilder
+    ): Result<List<OtherMemberProfile>>
 }

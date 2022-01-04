@@ -6,7 +6,9 @@ package com.cmoney.backend2.profile.service.api.profilefield
  * @property value 要求欄位名稱
  */
 enum class MemberProfileField(val value: String) {
+    ID("id"),
     EMAIL("email"),
+    IS_BINDING_CELLPHONE("isBindingCellphone"),
     NAME("name"),
     P_COIN("pCoin"),
     NICKNAME("nickname"),
@@ -40,5 +42,6 @@ enum class MemberProfileField(val value: String) {
     BADGES("badges"),
     BADGE_ID("badgeId"),
     IS_EQUIPPED("isEquipped"),
-    HAS_READ("hasRead")
+    HAS_READ("hasRead"),
+    COMMUNITY_ROLES("communityRoles")
 }
