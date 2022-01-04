@@ -5,10 +5,13 @@ import com.cmoney.backend2.profile.service.api.checkregistrationcodebyphone.GetR
 import com.cmoney.backend2.profile.service.api.getaccount.GetAccountResponseBody
 import com.cmoney.backend2.profile.service.api.getusergraphqlinfo.UserGraphQLInfo
 import com.cmoney.backend2.profile.service.api.mutationmyusergraphqlinfo.MutationData
+import com.cmoney.backend2.profile.service.api.queryprofile.MemberProfile
+import com.cmoney.backend2.profile.service.api.queryprofile.MemberProfileQueryBuilder
 import com.cmoney.backend2.profile.service.api.signupcompletebyemail.SignUpCompleteByEmailResponseBody
 import com.cmoney.backend2.profile.service.api.signupcompletebyphone.SignUpCompleteByPhoneResponseBody
 import com.cmoney.backend2.profile.service.api.variable.GraphQLFieldDefinition
 import java.lang.reflect.Type
+
 /**
  * Profile web
  */
@@ -204,10 +207,21 @@ interface ProfileWeb {
     /**
      * 取得自己的使用者資料
      */
+    @Deprecated("Use getSelfMemberProfile to get MemberProfile")
     suspend fun <T> getMyUserGraphQlInfo(
         fields: Set<GraphQLFieldDefinition>,
         type: Type
     ): Result<T>
+
+    /**
+     * 取得自己的使用者資料
+     *
+     * @param block 取得時的設定
+     * @return 會員資料
+     */
+    suspend fun getSelfMemberProfile(
+        block: MemberProfileQueryBuilder.() -> MemberProfileQueryBuilder
+    ): Result<MemberProfile>
 
     /**
      * 更新自己的使用者資料
@@ -217,10 +231,15 @@ interface ProfileWeb {
      * @param type 回傳解析的type
      * @return
      */
+    @Deprecated("Can use mutateMemberProfile to avoid type alias")
     suspend fun <T> mutationMyUserGraphQlInfo(
         variable : MutationData,
         type: Type
     ): Result<T>
+
+    suspend fun mutateMemberProfile(
+        mutationData: MutationData
+    ): Result<Unit>
 
     /**
      * 取得使用者的GraphQLInfo

@@ -794,6 +794,58 @@ class ProfileWebImplTest {
     }
 
     @Test
+    fun `getSelfMemberProfile 取得暱稱及頭像`() = mainCoroutineRule.runBlockingTest {
+        val responseBody =
+            """{"nickname": "泰瑞瑞瑞瑞","image": "https://storage.googleapis.com/cmoney-image/1378ceeb-2f10-4ef5-8d38-cb63f8f97422"}""".toResponseBody()
+        coEvery {
+            service.getMyUserGraphQlInfo(
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success(
+            responseBody
+        )
+
+        val result = webImpl.getSelfMemberProfile {
+            nickname
+            image
+        }
+        Truth.assertThat(result.isSuccess).isTrue()
+        val data = result.getOrThrow()
+        Truth.assertThat(result.exceptionOrNull()).isNull()
+        Truth.assertThat(data.id).isEmpty()
+        Truth.assertThat(data.nickname).isEqualTo("泰瑞瑞瑞瑞")
+        Truth.assertThat(data.image)
+            .isEqualTo("https://storage.googleapis.com/cmoney-image/1378ceeb-2f10-4ef5-8d38-cb63f8f97422")
+    }
+
+    @Test
+    fun `getSelfMemberProfile 取得暱稱及頭像失敗`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.getMyUserGraphQlInfo(
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.error(
+            400,
+            // language=JSON
+            """{
+              "error": {
+                "Code": 400,
+                "Message": "參數錯誤"
+              }
+            }""".toResponseBody()
+        )
+
+        val result = webImpl.getSelfMemberProfile {
+            nickname
+            image
+        }
+        Truth.assertThat(result.isSuccess).isFalse()
+        Truth.assertThat(result.exceptionOrNull()).isNotNull()
+    }
+
+    @Test
     fun `mutationMyUserGraphQlInfo 更新暱稱及頭像`() = mainCoroutineRule.runBlockingTest {
         val responseBody =
             """{"nickname": "泰瑞瑞瑞瑞","image": "https://storage.googleapis.com/cmoney-image/1378ceeb-2f10-4ef5-8d38-cb63f8f97422"}""".toResponseBody()
@@ -843,6 +895,57 @@ class ProfileWebImplTest {
         val result = webImpl.mutationMyUserGraphQlInfo<GetNicknameAndAvatarResponse>(
             type = object : TypeToken<GetNicknameAndAvatarResponse>() {}.type,
             variable = MutationData.Builder(
+                nickname = "泰瑞瑞瑞瑞",
+                image = "https://storage.googleapis.com/cmoney-image/1378ceeb-2f10-4ef5-8d38-cb63f8f97422"
+            ).build()
+        )
+        Truth.assertThat(result.isSuccess).isFalse()
+        Truth.assertThat(result.exceptionOrNull()).isNotNull()
+    }
+
+    @Test
+    fun `mutateMemberProfile 更新暱稱及頭像`() = mainCoroutineRule.runBlockingTest {
+        val responseBody =
+            """{"nickname": "泰瑞瑞瑞瑞","image": "https://storage.googleapis.com/cmoney-image/1378ceeb-2f10-4ef5-8d38-cb63f8f97422"}""".toResponseBody()
+        coEvery {
+            service.mutationMyUserGraphQlInfo(
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success(
+            responseBody
+        )
+
+        val result = webImpl.mutateMemberProfile(
+            mutationData = MutationData.Builder(
+                nickname = "泰瑞瑞瑞瑞",
+                image = "https://storage.googleapis.com/cmoney-image/1378ceeb-2f10-4ef5-8d38-cb63f8f97422"
+            ).build()
+        )
+        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.exceptionOrNull()).isNull()
+    }
+
+    @Test
+    fun `mutateMemberProfile 更新暱稱及頭像失敗`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.mutationMyUserGraphQlInfo(
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.error(
+            400,
+            // language=JSON
+            """{
+              "error": {
+                "Code": 400,
+                "Message": "參數錯誤"
+              }
+            }""".toResponseBody()
+        )
+
+        val result = webImpl.mutateMemberProfile(
+            mutationData = MutationData.Builder(
                 nickname = "泰瑞瑞瑞瑞",
                 image = "https://storage.googleapis.com/cmoney-image/1378ceeb-2f10-4ef5-8d38-cb63f8f97422"
             ).build()

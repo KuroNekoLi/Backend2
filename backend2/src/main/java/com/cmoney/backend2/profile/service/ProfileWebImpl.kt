@@ -22,6 +22,10 @@ import com.cmoney.backend2.profile.service.api.linkemail.LinkEmailRequestBody
 import com.cmoney.backend2.profile.service.api.linkfacebook.LinkFacebookRequestBody
 import com.cmoney.backend2.profile.service.api.linkphone.LinkPhoneRequestBody
 import com.cmoney.backend2.profile.service.api.mutationmyusergraphqlinfo.MutationData
+import com.cmoney.backend2.profile.service.api.queryprofile.MemberProfile
+import com.cmoney.backend2.profile.service.api.queryprofile.MemberProfileGraphQLRequestFieldsBuilder
+import com.cmoney.backend2.profile.service.api.queryprofile.MemberProfileQueryBuilder
+import com.cmoney.backend2.profile.service.api.queryprofile.RawMemberProfile
 import com.cmoney.backend2.profile.service.api.resetpassword.ResetPasswordBySmsRequestBody
 import com.cmoney.backend2.profile.service.api.resetpasswordemail.ResetPasswordByEmailRequestBody
 import com.cmoney.backend2.profile.service.api.sendforgotpasswordemail.SendForgotPasswordEmailRequestBody
@@ -297,6 +301,31 @@ class ProfileWebImpl(
         }
     }
 
+    override suspend fun getSelfMemberProfile(
+        block: MemberProfileQueryBuilder.() -> MemberProfileQueryBuilder
+    ): Result<MemberProfile> =
+        withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                val params = MemberProfileQueryBuilder()
+                    .block()
+                    .build()
+                val requestFields = MemberProfileGraphQLRequestFieldsBuilder(
+                    queryParams = params
+                )
+                    .build()
+                val responseBody = service.getMyUserGraphQlInfo(
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    body = GetMyUserGraphQLInfoRequestBody(fields = requestFields)
+                ).checkResponseBody(gson)
+                val rawMemberProfile = gson.fromJson(responseBody.string(), RawMemberProfile::class.java)
+                MemberProfile(
+                    params = params,
+                    id = setting.identityToken.getMemberId(),
+                    raw = rawMemberProfile,
+                )
+            }
+        }
+
     override suspend fun <T> mutationMyUserGraphQlInfo(
         variable: MutationData,
         type: Type
@@ -306,16 +335,30 @@ class ProfileWebImpl(
             val responseBody = service.mutationMyUserGraphQlInfo(
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 body = ("{\n" +
-                        "  \"operationName\": \"updateMember\",\n" +
-                        "  \"fields\": \"{ ${variable.getFieldsString()} }\",\n" +
-                        "  \"variables\": " + variable.toJsonString() +
-                        "\n}").toRequestBody("application/json".toMediaType())
+                    "  \"operationName\": \"updateMember\",\n" +
+                    "  \"fields\": \"{ ${variable.getFieldsString()} }\",\n" +
+                    "  \"variables\": " + variable.toJsonString() +
+                    "\n}").toRequestBody("application/json".toMediaType())
             ).checkResponseBody(gson)
 
             return@runCatching gson.fromJson<T>(responseBody.string(), type)
         }
     }
 
+    override suspend fun mutateMemberProfile(mutationData: MutationData): Result<Unit> =
+        withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.mutationMyUserGraphQlInfo(
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    body = ("{\n" +
+                        "  \"operationName\": \"updateMember\",\n" +
+                        "  \"fields\": \"{ ${mutationData.getFieldsString()} }\",\n" +
+                        "  \"variables\": " + mutationData.toJsonString() +
+                        "\n}").toRequestBody("application/json".toMediaType())
+                ).checkResponseBody(gson)
+                Unit
+            }
+        }
 
     override suspend fun <T> getUserGraphQLInfo(
         memberIds: List<Long>,
