@@ -6,8 +6,6 @@ package com.cmoney.backend2.forumocean.service.api.variable.response.articleresp
  * val newsId : Long
  * @SerializedName("Title")
  * val title : String?
- * @SerializedName("NewsUrl")
- * val newsUrl : String?
  * @SerializedName("PublishTime")
  * val publishTime : Long?
  *
@@ -23,11 +21,6 @@ interface NewsInfo {
      * 新聞標題
      */
     val title : String?
-
-    /**
-     * 新聞連結
-     */
-    val newsUrl : String?
 
     /**
      * 新聞發佈時間

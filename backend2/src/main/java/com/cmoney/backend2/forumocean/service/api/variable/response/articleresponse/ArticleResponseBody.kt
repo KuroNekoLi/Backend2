@@ -35,7 +35,7 @@ sealed class ArticleResponseBody(
      * @property collected 是否收藏，有此屬性代表有收藏
      * @property collectCount 總收藏數
      * @property myCommentIndex 我的回文位置
-     * @property commentCount 總回文數
+     * @property commentCount 總回文數(包含被刪除的回文數)
      * @property shareCount 轉推數
      * @property interested 是否感興趣，有此屬性代表感興趣
      * @property interestCount 感興趣的人總數
@@ -44,6 +44,7 @@ sealed class ArticleResponseBody(
      * @property voteStatus 會員投票狀態(第幾個Index)
      * @property totalReportCount 總檢舉數
      * @property report 是否檢舉
+     * @property commentDeletedCount 被刪除的回文數
      */
     data class UnknownArticleResponseBody(
         @SerializedName("content")
@@ -78,6 +79,8 @@ sealed class ArticleResponseBody(
         override val rewardPoints: Int?,
         @SerializedName("@vhash-donate")
         override val donateCount: Int?,
+        @SerializedName("donate")
+        override val donate : Int?,
         @SerializedName("@list-vote")
         override val voteCount : Int?,
         @SerializedName("voteStatus")
@@ -87,7 +90,9 @@ sealed class ArticleResponseBody(
         @SerializedName("@value-reportCount")
         override val totalReportCount: Int?,
         @SerializedName("report")
-        override val report: Any?
+        override val report: Any?,
+        @SerializedName("@value-commentDeleted")
+        override val commentDeletedCount: Int?
     ) : ArticleResponseBody(createTime, id, modifyTime),
         ReactionInfo,
         CollectedInfo,
@@ -112,11 +117,12 @@ sealed class ArticleResponseBody(
      * @property collected 是否收藏，有此屬性代表有收藏
      * @property collectCount  總收藏數
      * @property myCommentIndex 我的回文位置
-     * @property commentCount 總回文數
+     * @property commentCount 總回文數(包含被刪除的回文數)
      * @property voteCount 投票人數
      * @property voteStatus 會員投票狀態(第幾個Index)
      * @property totalReportCount 總檢舉數
      * @property report 是否檢舉
+     * @property commentDeletedCount 被刪除的回文數
      */
     data class GeneralArticleResponseBody(
         @SerializedName("content")
@@ -143,6 +149,8 @@ sealed class ArticleResponseBody(
         override val commentCount: Int?,
         @SerializedName("@vhash-donate")
         override val donateCount: Int?,
+        @SerializedName("donate")
+        override val donate : Int?,
         @SerializedName("@list-vote")
         override val voteCount : Int?,
         @SerializedName("voteStatus")
@@ -152,7 +160,9 @@ sealed class ArticleResponseBody(
         @SerializedName("@value-reportCount")
         override val totalReportCount: Int?,
         @SerializedName("report")
-        override val report: Any?
+        override val report: Any?,
+        @SerializedName("@value-commentDeleted")
+        override val commentDeletedCount: Int?
     ) : ArticleResponseBody(createTime, id, modifyTime),
         ReactionInfo,
         CollectedInfo,
@@ -175,9 +185,10 @@ sealed class ArticleResponseBody(
      * @property collected 是否收藏，有此屬性代表有收藏
      * @property collectCount  總收藏數
      * @property myCommentIndex 我的回文位置
-     * @property commentCount 總回文數
+     * @property commentCount 總回文數(包含被刪除的回文數)
      * @property totalReportCount 總檢舉數
      * @property report 是否檢舉
+     * @property commentDeletedCount 被刪除的回文數
      */
     data class NewsArticleResponseBody(
         @SerializedName("content")
@@ -207,7 +218,9 @@ sealed class ArticleResponseBody(
         @SerializedName("@value-reportCount")
         override val totalReportCount: Int?,
         @SerializedName("report")
-        override val report: Any?
+        override val report: Any?,
+        @SerializedName("@value-commentDeleted")
+        override val commentDeletedCount: Int?
     ) : ArticleResponseBody(createTime, id, modifyTime),
         ReactionInfo,
         CollectedInfo,
@@ -228,9 +241,10 @@ sealed class ArticleResponseBody(
      * @property collected 是否收藏，有此屬性代表有收藏
      * @property collectCount  總收藏數
      * @property myCommentIndex 我的回文位置
-     * @property commentCount 總回文數
+     * @property commentCount 總回文數(包含被刪除的回文數)
      * @property totalReportCount 總檢舉數
      * @property report 是否檢舉
+     * @property commentDeletedCount 被刪除的回文數
      */
     data class SignalArticleResponseBody(
         @SerializedName("content")
@@ -260,7 +274,9 @@ sealed class ArticleResponseBody(
         @SerializedName("@value-reportCount")
         override val totalReportCount: Int?,
         @SerializedName("report")
-        override val report: Any?
+        override val report: Any?,
+        @SerializedName("@value-commentDeleted")
+        override val commentDeletedCount: Int?
     ) : ArticleResponseBody(createTime, id, modifyTime),
         ReactionInfo,
         CollectedInfo,
@@ -281,11 +297,12 @@ sealed class ArticleResponseBody(
      * @property collected 是否收藏，有此屬性代表有收藏
      * @property collectCount 總收藏數
      * @property myCommentIndex 我的回文位置
-     * @property commentCount 總回文數
+     * @property commentCount 總回文數(包含被刪除的回文數)
      * @property voteCount 投票人數
      * @property voteStatus 會員投票狀態(第幾個Index)
      * @property totalReportCount 總檢舉數
      * @property report 是否檢舉
+     * @property commentDeletedCount 被刪除的回文數
      */
     data class GroupArticleResponseBody(
         @SerializedName("content")
@@ -312,6 +329,8 @@ sealed class ArticleResponseBody(
         override val commentCount: Int?,
         @SerializedName("@vhash-donate")
         override val donateCount: Int?,
+        @SerializedName("donate")
+        override val donate : Int?,
         @SerializedName("@list-vote")
         override val voteCount : Int?,
         @SerializedName("voteStatus")
@@ -321,7 +340,9 @@ sealed class ArticleResponseBody(
         @SerializedName("@value-reportCount")
         override val totalReportCount: Int?,
         @SerializedName("report")
-        override val report: Any?
+        override val report: Any?,
+        @SerializedName("@value-commentDeleted")
+        override val commentDeletedCount: Int?
     ) : ArticleResponseBody(createTime, id, modifyTime),
         ReactionInfo,
         CollectedInfo,
@@ -344,12 +365,13 @@ sealed class ArticleResponseBody(
      * @property collected 是否收藏，有此屬性代表有收藏
      * @property collectCount 總收藏數
      * @property myCommentIndex 我的回文位置
-     * @property commentCount 總回文數
+     * @property commentCount 總回文數(包含被刪除的回文數)
      * @property shareCount 轉推數
      * @property voteCount 投票人數
      * @property voteStatus 會員投票狀態(第幾個Index)
      * @property totalReportCount 總檢舉數
      * @property report 是否檢舉
+     * @property commentDeletedCount 被刪除的回文數
      */
     data class SharedArticleResponseBody(
         @SerializedName("content")
@@ -378,6 +400,8 @@ sealed class ArticleResponseBody(
         override val shareCount: Int?,
         @SerializedName("@vhash-donate")
         override val donateCount: Int?,
+        @SerializedName("donate")
+        override val donate : Int?,
         @SerializedName("@list-vote")
         override val voteCount : Int?,
         @SerializedName("voteStatus")
@@ -387,7 +411,9 @@ sealed class ArticleResponseBody(
         @SerializedName("@value-reportCount")
         override val totalReportCount: Int?,
         @SerializedName("report")
-        override val report: Any?
+        override val report: Any?,
+        @SerializedName("@value-commentDeleted")
+        override val commentDeletedCount: Int?
     ) : ArticleResponseBody(createTime, id, modifyTime),
         ReactionInfo,
         CollectedInfo,
@@ -411,12 +437,13 @@ sealed class ArticleResponseBody(
      * @property collected 是否收藏，有此屬性代表有收藏
      * @property collectCount 總收藏數
      * @property myCommentIndex 我的回文位置
-     * @property commentCount 總回文數
+     * @property commentCount 總回文數(包含被刪除的回文數)
      * @property interested 是否感興趣，有此屬性代表感興趣
      * @property interestCount 感興趣的人總數
      * @property rewardPoints 問答獎金
      * @property totalReportCount 總檢舉數
      * @property report 是否檢舉
+     * @property commentDeletedCount 被刪除的回文數
      */
     data class QuestionArticleResponseBody(
         @SerializedName("content")
@@ -452,7 +479,9 @@ sealed class ArticleResponseBody(
         @SerializedName("@value-reportCount")
         override val totalReportCount: Int?,
         @SerializedName("report")
-        override val report: Any?
+        override val report: Any?,
+        @SerializedName("@value-commentDeleted")
+        override val commentDeletedCount: Int?
     ) : ArticleResponseBody(createTime, id, modifyTime),
         ReactionInfo,
         CollectedInfo,

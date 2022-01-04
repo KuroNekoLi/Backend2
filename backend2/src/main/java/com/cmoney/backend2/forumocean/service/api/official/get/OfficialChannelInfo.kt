@@ -8,18 +8,21 @@ import com.google.gson.annotations.SerializedName
  * @property id 官方頻道Id
  * @property name 官方頻道名稱
  * @property description 官方頻道描述
- * @property imageUrl
- * @property typeName
+ * @property imageUrl 頻道頭像網址
+ * @property typeName 頻道類型
+ * @property subscribeCount 官方頻道訂閱數
  */
 data class OfficialChannelInfo(
     @SerializedName("id")
-    val id : Long,
+    val id : Long?,
     @SerializedName("name")
-    val name : String,
+    val name : String?,
     @SerializedName("description")
-    val description : String,
+    val description : String?,
     @SerializedName("imageUrl")
-    val imageUrl : String,
+    val imageUrl : String?,
     @SerializedName("typeName")
-    val typeName : String
+    val typeName : String?,
+    @SerializedName("subscribeCount")
+    val subscribeCount : Int?
 )
