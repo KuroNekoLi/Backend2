@@ -10,6 +10,7 @@ import com.cmoney.backend2.profile.service.api.checkregistrationcodebyphone.GetR
 import com.cmoney.backend2.profile.service.api.getaccount.GetAccountResponseBody
 import com.cmoney.backend2.profile.service.api.getusergraphqlinfo.UserGraphQLInfo
 import com.cmoney.backend2.profile.service.api.mutationmyusergraphqlinfo.MutationData
+import com.cmoney.backend2.profile.service.api.queryotherprofile.RawOtherMemberProfile
 import com.cmoney.backend2.profile.service.api.signupcompletebyemail.SignUpCompleteByEmailResponseBody
 import com.cmoney.backend2.profile.service.api.signupcompletebyphone.SignUpCompleteByPhoneResponseBody
 import com.cmoney.backend2.profile.service.api.variable.GraphQLFieldDefinition
@@ -28,6 +29,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import retrofit2.HttpException
 import retrofit2.Response
 
 @ExperimentalCoroutinesApi
@@ -794,6 +796,58 @@ class ProfileWebImplTest {
     }
 
     @Test
+    fun `getSelfMemberProfile 取得暱稱及頭像`() = mainCoroutineRule.runBlockingTest {
+        val responseBody =
+            """{"nickname": "泰瑞瑞瑞瑞","image": "https://storage.googleapis.com/cmoney-image/1378ceeb-2f10-4ef5-8d38-cb63f8f97422"}""".toResponseBody()
+        coEvery {
+            service.getMyUserGraphQlInfo(
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success(
+            responseBody
+        )
+
+        val result = webImpl.getSelfMemberProfile {
+            nickname
+            image
+        }
+        Truth.assertThat(result.isSuccess).isTrue()
+        val data = result.getOrThrow()
+        Truth.assertThat(result.exceptionOrNull()).isNull()
+        Truth.assertThat(data.id).isEmpty()
+        Truth.assertThat(data.nickname).isEqualTo("泰瑞瑞瑞瑞")
+        Truth.assertThat(data.image)
+            .isEqualTo("https://storage.googleapis.com/cmoney-image/1378ceeb-2f10-4ef5-8d38-cb63f8f97422")
+    }
+
+    @Test
+    fun `getSelfMemberProfile 取得暱稱及頭像失敗`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.getMyUserGraphQlInfo(
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.error(
+            400,
+            // language=JSON
+            """{
+              "error": {
+                "Code": 400,
+                "Message": "參數錯誤"
+              }
+            }""".toResponseBody()
+        )
+
+        val result = webImpl.getSelfMemberProfile {
+            nickname
+            image
+        }
+        Truth.assertThat(result.isSuccess).isFalse()
+        Truth.assertThat(result.exceptionOrNull()).isNotNull()
+    }
+
+    @Test
     fun `mutationMyUserGraphQlInfo 更新暱稱及頭像`() = mainCoroutineRule.runBlockingTest {
         val responseBody =
             """{"nickname": "泰瑞瑞瑞瑞","image": "https://storage.googleapis.com/cmoney-image/1378ceeb-2f10-4ef5-8d38-cb63f8f97422"}""".toResponseBody()
@@ -843,6 +897,57 @@ class ProfileWebImplTest {
         val result = webImpl.mutationMyUserGraphQlInfo<GetNicknameAndAvatarResponse>(
             type = object : TypeToken<GetNicknameAndAvatarResponse>() {}.type,
             variable = MutationData.Builder(
+                nickname = "泰瑞瑞瑞瑞",
+                image = "https://storage.googleapis.com/cmoney-image/1378ceeb-2f10-4ef5-8d38-cb63f8f97422"
+            ).build()
+        )
+        Truth.assertThat(result.isSuccess).isFalse()
+        Truth.assertThat(result.exceptionOrNull()).isNotNull()
+    }
+
+    @Test
+    fun `mutateMemberProfile 更新暱稱及頭像`() = mainCoroutineRule.runBlockingTest {
+        val responseBody =
+            """{"nickname": "泰瑞瑞瑞瑞","image": "https://storage.googleapis.com/cmoney-image/1378ceeb-2f10-4ef5-8d38-cb63f8f97422"}""".toResponseBody()
+        coEvery {
+            service.mutationMyUserGraphQlInfo(
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success(
+            responseBody
+        )
+
+        val result = webImpl.mutateMemberProfile(
+            mutationData = MutationData.Builder(
+                nickname = "泰瑞瑞瑞瑞",
+                image = "https://storage.googleapis.com/cmoney-image/1378ceeb-2f10-4ef5-8d38-cb63f8f97422"
+            ).build()
+        )
+        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.exceptionOrNull()).isNull()
+    }
+
+    @Test
+    fun `mutateMemberProfile 更新暱稱及頭像失敗`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.mutationMyUserGraphQlInfo(
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.error(
+            400,
+            // language=JSON
+            """{
+              "error": {
+                "Code": 400,
+                "Message": "參數錯誤"
+              }
+            }""".toResponseBody()
+        )
+
+        val result = webImpl.mutateMemberProfile(
+            mutationData = MutationData.Builder(
                 nickname = "泰瑞瑞瑞瑞",
                 image = "https://storage.googleapis.com/cmoney-image/1378ceeb-2f10-4ef5-8d38-cb63f8f97422"
             ).build()
@@ -904,6 +1009,67 @@ class ProfileWebImplTest {
         )
         Truth.assertThat(result.isSuccess).isFalse()
         Truth.assertThat(result.exceptionOrNull()).isNotNull()
+    }
+
+    @Test
+    fun `getOtherMemberProfiles_取得成功`() = mainCoroutineRule.runBlockingTest {
+        val memberId = 1L
+        val testNickName = "測試帳號"
+        val rawOtherMemberProfile = RawOtherMemberProfile(
+            badges = listOf(),
+            bio = null,
+            communityRoles = listOf(),
+            id = memberId,
+            image = null,
+            isBindingCellphone = null,
+            level = null,
+            nickname = testNickName
+        )
+        val rawOtherMemberProfiles = listOf(rawOtherMemberProfile)
+        val responseBody = gson.toJson(rawOtherMemberProfiles).toResponseBody()
+        coEvery {
+            service.getUserGraphQLInfo(
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success(responseBody)
+
+        val result = webImpl.getOtherMemberProfiles(
+            memberIds = listOf(memberId)
+        ) {
+            nickname
+        }
+        Truth.assertThat(result.isSuccess).isTrue()
+        val otherMemberProfiles = result.getOrNull()
+        Truth.assertThat(otherMemberProfiles).isNotNull()
+        requireNotNull(otherMemberProfiles)
+        Truth.assertThat(otherMemberProfiles).hasSize(1)
+        val otherMemberProfile = otherMemberProfiles.first()
+        Truth.assertThat(otherMemberProfile.id).isEqualTo(memberId)
+        Truth.assertThat(otherMemberProfile.nickname).isEqualTo(testNickName)
+    }
+
+    @Test
+    fun `getOtherMemberProfiles_取得失敗_401`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.getUserGraphQLInfo(
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.error(401, "".toResponseBody())
+
+        val result = webImpl.getOtherMemberProfiles(
+            memberIds = listOf(1)
+        ) {
+            nickname
+        }
+        Truth.assertThat(result.isSuccess).isFalse()
+        val exception = result.exceptionOrNull()
+        Truth.assertThat(exception).isNotNull()
+        requireNotNull(exception)
+        Truth.assertThat(exception).isInstanceOf(HttpException::class.java)
+        require(exception is HttpException)
+        Truth.assertThat(exception.code()).isEqualTo(401)
     }
 
     @After

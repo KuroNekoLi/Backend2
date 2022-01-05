@@ -1,17 +1,14 @@
 package com.cmoney.backend2.forumocean.service.api.report.create
 
 /**
- * 1=騷擾或霸凌/人身攻擊
- * 2=垃圾廣告/這是垃圾廣告
- * 3=詐欺或誘導/根本詐騙集團
- * 4=與投資無關
- * -1=其他
- *
+ * 1 廣告、商業宣傳
+ * 2 歧視或謾罵他人
+ * 3 相同內容重複洗版
+ * 4 其他原因
  */
 enum class ReasonType(val value : Int) {
-    Other(-1),
-    Harass(1),
-    AD(2),
-    Fraud(3),
-    InvestmentIrrelevant(4)
+    AD(1),
+    Abuse(2),
+    Spamming(3),
+    Other(4)
 }

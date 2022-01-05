@@ -5,6 +5,7 @@ package com.cmoney.backend2.profile.service.api.getusergraphqlinfo
  *
  * @property value
  */
+@Deprecated("Change to use ProfileWeb.getOtherMemberProfiles")
 enum class UserGraphQLInfo(val value : String) {
     ID("id"),
     NickName("nickname"),

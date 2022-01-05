@@ -22,6 +22,14 @@ import com.cmoney.backend2.profile.service.api.linkemail.LinkEmailRequestBody
 import com.cmoney.backend2.profile.service.api.linkfacebook.LinkFacebookRequestBody
 import com.cmoney.backend2.profile.service.api.linkphone.LinkPhoneRequestBody
 import com.cmoney.backend2.profile.service.api.mutationmyusergraphqlinfo.MutationData
+import com.cmoney.backend2.profile.service.api.queryotherprofile.OtherMemberProfile
+import com.cmoney.backend2.profile.service.api.queryotherprofile.OtherMemberProfileGraphQLRequestFieldsBuilder
+import com.cmoney.backend2.profile.service.api.queryotherprofile.OtherMemberProfileQueryBuilder
+import com.cmoney.backend2.profile.service.api.queryotherprofile.RawOtherMemberProfile
+import com.cmoney.backend2.profile.service.api.queryprofile.MemberProfile
+import com.cmoney.backend2.profile.service.api.queryprofile.MemberProfileGraphQLRequestFieldsBuilder
+import com.cmoney.backend2.profile.service.api.queryprofile.MemberProfileQueryBuilder
+import com.cmoney.backend2.profile.service.api.queryprofile.RawMemberProfile
 import com.cmoney.backend2.profile.service.api.resetpassword.ResetPasswordBySmsRequestBody
 import com.cmoney.backend2.profile.service.api.resetpasswordemail.ResetPasswordByEmailRequestBody
 import com.cmoney.backend2.profile.service.api.sendforgotpasswordemail.SendForgotPasswordEmailRequestBody
@@ -35,6 +43,7 @@ import com.cmoney.backend2.profile.service.api.signupcompletebyphone.SignupCompl
 import com.cmoney.backend2.profile.service.api.singupbyphone.SignUpByPhoneRequestBody
 import com.cmoney.backend2.profile.service.api.variable.GraphQLFieldDefinition
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -297,6 +306,32 @@ class ProfileWebImpl(
         }
     }
 
+    override suspend fun getSelfMemberProfile(
+        block: MemberProfileQueryBuilder.() -> MemberProfileQueryBuilder
+    ): Result<MemberProfile> =
+        withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                val params = MemberProfileQueryBuilder()
+                    .block()
+                    .build()
+                val requestFields = MemberProfileGraphQLRequestFieldsBuilder(
+                    queryParams = params
+                )
+                    .build()
+                val responseBody = service.getMyUserGraphQlInfo(
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    body = GetMyUserGraphQLInfoRequestBody(fields = requestFields)
+                ).checkResponseBody(gson)
+                val rawMemberProfile =
+                    gson.fromJson(responseBody.string(), RawMemberProfile::class.java)
+                MemberProfile(
+                    params = params,
+                    id = setting.identityToken.getMemberId(),
+                    raw = rawMemberProfile,
+                )
+            }
+        }
+
     override suspend fun <T> mutationMyUserGraphQlInfo(
         variable: MutationData,
         type: Type
@@ -306,16 +341,30 @@ class ProfileWebImpl(
             val responseBody = service.mutationMyUserGraphQlInfo(
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 body = ("{\n" +
-                        "  \"operationName\": \"updateMember\",\n" +
-                        "  \"fields\": \"{ ${variable.getFieldsString()} }\",\n" +
-                        "  \"variables\": " + variable.toJsonString() +
-                        "\n}").toRequestBody("application/json".toMediaType())
+                    "  \"operationName\": \"updateMember\",\n" +
+                    "  \"fields\": \"{ ${variable.getFieldsString()} }\",\n" +
+                    "  \"variables\": " + variable.toJsonString() +
+                    "\n}").toRequestBody("application/json".toMediaType())
             ).checkResponseBody(gson)
 
             return@runCatching gson.fromJson<T>(responseBody.string(), type)
         }
     }
 
+    override suspend fun mutateMemberProfile(mutationData: MutationData): Result<Unit> =
+        withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.mutationMyUserGraphQlInfo(
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    body = ("{\n" +
+                        "  \"operationName\": \"updateMember\",\n" +
+                        "  \"fields\": \"{ ${mutationData.getFieldsString()} }\",\n" +
+                        "  \"variables\": " + mutationData.toJsonString() +
+                        "\n}").toRequestBody("application/json".toMediaType())
+                ).checkResponseBody(gson)
+                Unit
+            }
+        }
 
     override suspend fun <T> getUserGraphQLInfo(
         memberIds: List<Long>,
@@ -343,6 +392,37 @@ class ProfileWebImpl(
         type: Type
     ): List<T> {
         return gson.fromJson<List<T>>(this?.string(), type)
+    }
+
+    override suspend fun getOtherMemberProfiles(
+        memberIds: List<Long>,
+        block: OtherMemberProfileQueryBuilder.() -> OtherMemberProfileQueryBuilder
+    ): Result<List<OtherMemberProfile>> = withContext(dispatcher.io()) {
+        kotlin.runCatching {
+            val params = OtherMemberProfileQueryBuilder()
+                .block()
+                .build()
+            val requestFields = OtherMemberProfileGraphQLRequestFieldsBuilder(
+                queryParams = params
+            ).build()
+            val requestBody = GetUserGraphQLInfoRequestBody(
+                memberIds = memberIds,
+                fields = requestFields
+            )
+            val responseBody = service.getUserGraphQLInfo(
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                body = requestBody
+            ).checkResponseBody(gson)
+            val type = object : TypeToken<List<RawOtherMemberProfile>>() {}.type
+            val rawOtherProfiles =
+                gson.fromJson<List<RawOtherMemberProfile>>(responseBody.string(), type)
+            rawOtherProfiles.map { raw ->
+                OtherMemberProfile(
+                    params = params,
+                    raw = raw
+                )
+            }
+        }
     }
 
 }
