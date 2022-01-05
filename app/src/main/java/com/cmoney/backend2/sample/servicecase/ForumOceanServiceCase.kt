@@ -463,7 +463,7 @@ class ForumOceanServiceCase : ServiceCase {
 
         articleId?.also {
             val commentId = createComment(articleId = articleId, text = "需被檢舉的回文", multiMedia = null, position = null).getOrNull()
-            createReport(articleId,ReasonType.Fraud,commentId?.commentIndex).logResponse(TAG)
+            createReport(articleId,ReasonType.Abuse,commentId?.commentIndex).logResponse(TAG)
             getComment(articleId,null,null).logResponse(TAG)
         }
 
