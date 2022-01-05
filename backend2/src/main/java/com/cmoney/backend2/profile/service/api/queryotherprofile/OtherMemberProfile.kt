@@ -9,8 +9,8 @@ package com.cmoney.backend2.profile.service.api.queryotherprofile
  * @property id 會員編號
  * @property image 頭像(URL)
  * @property isBindingCellphone 是否已綁定手機
- * @property level
- * @property nickname
+ * @property level 等級
+ * @property nickname 暱稱
  */
 class OtherMemberProfile private constructor(
     private val params: OtherMemberProfileQueryParams,
