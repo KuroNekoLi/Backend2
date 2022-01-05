@@ -1,7 +1,7 @@
 package com.cmoney.backend2.profile.service.api.mutationmyusergraphqlinfo
 
 import com.cmoney.backend2.profile.service.api.mutationmyusergraphqlinfo.MutationData.Builder
-import com.cmoney.backend2.profile.service.api.variable.GraphQLFieldDefinition
+import com.cmoney.backend2.profile.service.api.profilefield.MemberProfileField
 import org.json.JSONObject
 
 /**
@@ -68,100 +68,104 @@ class MutationData private constructor(
     }
 
     /**
-     * 取得[GraphQLFieldDefinition]對應的更新欄位值，以Json格式
+     * 取得[MemberProfileField]對應的更新欄位值，以Json格式
      *
      * @return
      */
     fun toJsonString(): String {
         val jsonObject = JSONObject()
         if (name != null) {
-            jsonObject.put(GraphQLFieldDefinition.Name.value, name)
+            jsonObject.put(MemberProfileField.NAME.value, name)
         }
         if (nickname != null) {
-            jsonObject.put(GraphQLFieldDefinition.NickName.value, nickname)
+            jsonObject.put(MemberProfileField.NICKNAME.value, nickname)
         }
         if (gender != null) {
-            jsonObject.put(GraphQLFieldDefinition.Gender.value, gender)
+            jsonObject.put(MemberProfileField.GENDER.value, gender)
         }
         if (birthday != null) {
-            jsonObject.put(GraphQLFieldDefinition.Birthday.value, birthday)
+            jsonObject.put(MemberProfileField.BIRTHDAY.value, birthday)
         }
         if (address != null) {
-            jsonObject.put(GraphQLFieldDefinition.Address.value, address)
+            jsonObject.put(MemberProfileField.ADDRESS.value, address)
         }
         if (image != null) {
-            jsonObject.put(GraphQLFieldDefinition.Image.value, image)
+            jsonObject.put(MemberProfileField.IMAGE.value, image)
         }
         if (bio != null){
-            jsonObject.put(GraphQLFieldDefinition.Bio.value, bio)
+            jsonObject.put(MemberProfileField.BIO.value, bio)
         }
         if (city != null) {
-            jsonObject.put(GraphQLFieldDefinition.City.value, city)
+            jsonObject.put(MemberProfileField.CITY.value, city)
         }
         if (education != null) {
-            jsonObject.put(GraphQLFieldDefinition.Education.value, education)
+            jsonObject.put(MemberProfileField.EDUCATION.value, education)
         }
         if (profession != null) {
-            jsonObject.put(GraphQLFieldDefinition.Profession.value, profession)
+            jsonObject.put(MemberProfileField.PROFESSION.value, profession)
         }
         if (investmentExperience != null) {
-            jsonObject.put(GraphQLFieldDefinition.InvestmentExperience.value, investmentExperience)
+            jsonObject.put(MemberProfileField.INVESTMENT_EXPERIENCE.value, investmentExperience)
         }
         if (investmentProperty != null) {
-            jsonObject.put(GraphQLFieldDefinition.InvestmentProperty.value, investmentProperty)
+            jsonObject.put(MemberProfileField.INVESTMENT_PROPERTY.value, investmentProperty)
         }
         if (investmentTools != null) {
-            jsonObject.put(GraphQLFieldDefinition.InvestmentTools.value, investmentTools)
+            jsonObject.put(MemberProfileField.INVESTMENT_TOOLS.value, investmentTools)
         }
         return jsonObject.toString()
     }
 
     /**
-     * 取得API request需要的[GraphQLFieldDefinition]字串
+     * 取得API request需要的GraphQL-[MemberProfileField]字串，中間以空白間隔
+     *
+     * EX: name nickname gender...
      *
      * @return
      */
     fun getFieldsString(): String {
-        val setOfGraphQLFieldDefinition = mutableSetOf<GraphQLFieldDefinition>()
+        val fieldSet = mutableSetOf<MemberProfileField>()
         if (name != null) {
-            setOfGraphQLFieldDefinition.add(GraphQLFieldDefinition.Name)
+            fieldSet.add(MemberProfileField.NAME)
         }
         if (nickname != null) {
-            setOfGraphQLFieldDefinition.add(GraphQLFieldDefinition.NickName)
+            fieldSet.add(MemberProfileField.NICKNAME)
         }
         if (gender != null) {
-            setOfGraphQLFieldDefinition.add(GraphQLFieldDefinition.Gender)
+            fieldSet.add(MemberProfileField.NICKNAME)
         }
         if (birthday != null) {
-            setOfGraphQLFieldDefinition.add(GraphQLFieldDefinition.Birthday)
+            fieldSet.add(MemberProfileField.BIRTHDAY)
         }
         if (address != null) {
-            setOfGraphQLFieldDefinition.add(GraphQLFieldDefinition.Address)
+            fieldSet.add(MemberProfileField.ADDRESS)
         }
         if (image != null) {
-            setOfGraphQLFieldDefinition.add(GraphQLFieldDefinition.Image)
+            fieldSet.add(MemberProfileField.IMAGE)
         }
         if (bio != null){
-            setOfGraphQLFieldDefinition.add(GraphQLFieldDefinition.Bio)
+            fieldSet.add(MemberProfileField.BIO)
         }
         if (city != null) {
-            setOfGraphQLFieldDefinition.add(GraphQLFieldDefinition.City)
+            fieldSet.add(MemberProfileField.CITY)
         }
         if (education != null) {
-            setOfGraphQLFieldDefinition.add(GraphQLFieldDefinition.Education)
+            fieldSet.add(MemberProfileField.EDUCATION)
         }
         if (profession != null) {
-            setOfGraphQLFieldDefinition.add(GraphQLFieldDefinition.Profession)
+            fieldSet.add(MemberProfileField.PROFESSION)
         }
         if (investmentExperience != null) {
-            setOfGraphQLFieldDefinition.add(GraphQLFieldDefinition.InvestmentExperience)
+            fieldSet.add(MemberProfileField.INVESTMENT_EXPERIENCE)
         }
         if (investmentProperty != null) {
-            setOfGraphQLFieldDefinition.add(GraphQLFieldDefinition.InvestmentProperty)
+            fieldSet.add(MemberProfileField.INVESTMENT_PROPERTY)
         }
         if (investmentTools != null) {
-            setOfGraphQLFieldDefinition.add(GraphQLFieldDefinition.InvestmentTools)
+            fieldSet.add(MemberProfileField.INVESTMENT_TOOLS)
         }
-        return setOfGraphQLFieldDefinition.joinToString(" ") { it.value }
+        return fieldSet.joinToString(" ") { field ->
+            field.value
+        }
     }
 }

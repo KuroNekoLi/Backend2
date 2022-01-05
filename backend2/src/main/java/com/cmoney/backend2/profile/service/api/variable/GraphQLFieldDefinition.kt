@@ -1,5 +1,6 @@
 package com.cmoney.backend2.profile.service.api.variable
 
+@Deprecated("Change to use ProfileWeb.getSelfMemberProfile")
 enum class GraphQLFieldDefinition(val value: String) {
     Email("email"),
     IsBindingCellphone("isBindingCellphone"),
