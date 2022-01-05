@@ -21,6 +21,7 @@ internal class MemberProfileQueryParams internal constructor() {
     var investmentExperience: MemberProfileField? = null
     var investmentProperty: MemberProfileField? = null
     var investmentTools: MemberProfileField? = null
+    var isBindingCellphone: MemberProfileField? = null
     var customerId: MemberProfileField? = null
     var pCoin: MemberProfileField? = null
     var account: AccountQueryParams? = null
@@ -44,6 +45,7 @@ internal class MemberProfileQueryParams internal constructor() {
             investmentExperience == null &&
             investmentProperty == null &&
             investmentTools == null &&
+            isBindingCellphone == null &&
             customerId == null &&
             account == null &&
             levelInfo == null &&

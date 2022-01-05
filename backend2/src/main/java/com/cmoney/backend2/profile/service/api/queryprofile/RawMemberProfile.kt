@@ -32,6 +32,8 @@ data class RawMemberProfile(
     val investmentProperty: String?,
     @SerializedName("investmentTools")
     val investmentTools: List<String>?,
+    @SerializedName("isBindingCellphone")
+    val isBindingCellphone: Boolean?,
     @SerializedName("levelInfo")
     val levelInfo: RawLevelInfo?,
     @SerializedName("name")

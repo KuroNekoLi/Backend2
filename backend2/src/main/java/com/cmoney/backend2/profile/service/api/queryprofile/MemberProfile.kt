@@ -21,6 +21,7 @@ package com.cmoney.backend2.profile.service.api.queryprofile
  * @property investmentExperience 投資經驗  0~1、1~3、3~5、5~10、10~20、20~30、30~50)
  * @property investmentProperty 投資標的 (積極(短線交易)、穩健(波段操作)、保守(長期持有))
  * @property investmentTools 投資工具 (股票、基金、期貨、選擇權、外匯、黃金、定存、不動產)
+ * @property isBindingCellphone 是否已綁定手機
  * @property levelInfo 等級資訊
  * @property name 名稱
  * @property nickname 暱稱
@@ -45,6 +46,7 @@ class MemberProfile private constructor(
     private val _investmentExperience: String?,
     private val _investmentProperty: String?,
     private val _investmentTools: List<String>?,
+    private val _isBindingCellphone: Boolean?,
     private val _levelInfo: LevelInfo?,
     private val _name: String?,
     private val _nickname: String?,
@@ -87,6 +89,7 @@ class MemberProfile private constructor(
         _investmentExperience = raw.investmentExperience,
         _investmentProperty = raw.investmentProperty,
         _investmentTools = raw.investmentTools,
+        _isBindingCellphone = raw.isBindingCellphone,
         _levelInfo = params.levelInfo?.let { levelInfoQueryParams ->
             if (raw.levelInfo != null) {
                 LevelInfo(params = levelInfoQueryParams, raw = raw.levelInfo)
@@ -216,6 +219,14 @@ class MemberProfile private constructor(
                 "MemberProfileQueryBuilder.investmentTools not request"
             }
             return _investmentTools
+        }
+
+    val isBindingCellphone: Boolean?
+        get() {
+            requireNotNull(params.isBindingCellphone) {
+                "MemberProfileQueryBuilder.isBindingCellphone not request"
+            }
+            return _isBindingCellphone
         }
 
     val levelInfo: LevelInfo?

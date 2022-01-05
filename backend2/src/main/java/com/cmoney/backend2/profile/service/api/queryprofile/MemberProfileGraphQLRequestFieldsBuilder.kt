@@ -25,6 +25,7 @@ internal class MemberProfileGraphQLRequestFieldsBuilder(
         sb.appendField(queryParams.investmentExperience)
         sb.appendField(queryParams.investmentProperty)
         sb.appendField(queryParams.investmentTools)
+        sb.appendField(queryParams.isBindingCellphone)
         sb.appendField(queryParams.customerId)
         sb.appendParent(queryParams.account, queryParams.account?.parentField) { account ->
             appendField(account.email)

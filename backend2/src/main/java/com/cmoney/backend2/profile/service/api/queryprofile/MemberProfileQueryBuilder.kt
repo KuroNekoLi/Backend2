@@ -248,6 +248,21 @@ class MemberProfileQueryBuilder internal constructor() {
         return this
     }
 
+    val isBindingCellphone: MemberProfileQueryBuilder
+        get() {
+            queryParams.isBindingCellphone = MemberProfileField.IS_BINDING_CELLPHONE
+            return this
+        }
+
+    fun isNeedIsBindingCellphone(value: Boolean): MemberProfileQueryBuilder {
+        queryParams.isBindingCellphone = if (value) {
+            MemberProfileField.IS_BINDING_CELLPHONE
+        } else {
+            null
+        }
+        return this
+    }
+
     val customerId: MemberProfileQueryBuilder
         get() {
             queryParams.customerId = MemberProfileField.CUSTOMER_ID

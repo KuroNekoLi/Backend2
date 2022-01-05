@@ -69,6 +69,7 @@ class ProfileServiceCase : ServiceCase {
             investmentExperience
             investmentProperty
             investmentTools
+            isBindingCellphone
             customerId
             account {
                 email
