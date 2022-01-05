@@ -1,3 +1,24 @@
+#  (2022-01-05)
+
+
+
+# [5.9.0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.8.0...5.9.0) (2022-01-05)
+
+
+### Bug Fixes
+
+* Field change type->notifyType in GetNotifyResponseBody.kt ([9cafa55](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/9cafa550b95121344619c1a39d0b87b6bfc9936d))
+* 修正檢舉的列舉類型 ([4747919](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/474791909825ed08e2b264f90cf1f83ebb84bcf9))
+
+
+### Features
+
+* MemberProfileQueryBuilder 新增isBindingCellphone參數 ([a418aea](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/a418aeaf3996731bf782b4f54d8c112d8484a57e))
+* profileWeb add getOtherMemberProfile ([c67fce2](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/c67fce260bbca004e26a71500489798d578d2290))
+* 調整DataWeb使用baseHost及host作為API設定網域的機制 ([6ade97b](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/6ade97b6476139da3bd8fecc35070dd64f449474))
+
+
+
 #  (2022-01-03)
 
 
