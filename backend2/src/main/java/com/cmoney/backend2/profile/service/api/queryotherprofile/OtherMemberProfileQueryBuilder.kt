@@ -38,7 +38,11 @@ class OtherMemberProfileQueryBuilder internal constructor() {
         }
 
     fun isNeedNickName(value: Boolean): OtherMemberProfileQueryBuilder {
-        queryParams.nickname = MemberProfileField.NICKNAME
+        queryParams.nickname = if (value) {
+            MemberProfileField.NICKNAME
+        } else {
+            null
+        }
         return this
     }
 
