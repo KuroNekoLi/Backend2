@@ -1,6 +1,17 @@
 package com.cmoney.backend2.profile.service.api.queryotherprofile
 
-
+/**
+ * Other member profile
+ *
+ * @property badges 裝備的徽章集合
+ * @property bio 自我介紹
+ * @property communityRoles 官方認證的角色
+ * @property id 會員編號
+ * @property image 頭像(URL)
+ * @property isBindingCellphone 是否已綁定手機
+ * @property level
+ * @property nickname
+ */
 class OtherMemberProfile private constructor(
     private val params: OtherMemberProfileQueryParams,
     private val _badges: List<Int>?,
