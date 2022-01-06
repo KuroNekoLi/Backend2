@@ -85,6 +85,14 @@ sealed class MarketType(
             )
 
             /**
+             * ETN
+             */
+            object Etn : TseSubType(
+                211,
+                "ETN"
+            )
+
+            /**
              * 股票
              */
             object Stock : TseSubType(
@@ -110,6 +118,7 @@ sealed class MarketType(
                         FuturesIndexStockEtf,
                         BondIndexStockEtf,
                         AddOnBondIndexEtf,
+                        Etn,
                         Stock,
                         DepositoryReceipt
                     )
@@ -149,6 +158,14 @@ sealed class MarketType(
             )
 
             /**
+             * ETN
+             */
+            object Etn : OtcSubType(
+                211,
+                "ETN"
+            )
+
+            /**
              * 股票
              */
             object Stock : OtcSubType(
@@ -156,21 +173,122 @@ sealed class MarketType(
                 "股票"
             )
 
-            /**
-             * 存託憑證
-             */
-            object DepositoryReceipt : OtcSubType(
-                158,
-                "存託憑證"
-            )
-
             companion object {
                 fun values(): List<OtcSubType> {
                     return listOf(
                         DomesticAndForeignIndexStockEtf,
                         BondIndexStockEtf,
+                        Etn,
+                        Stock
+                    )
+                }
+            }
+        }
+    }
+
+    /**
+     * 期貨
+     */
+    data class Future(
+        override val value: Int = 4,
+        override val name: String = "期貨",
+        override val types: List<FutureSubType> = FutureSubType.values()
+    ) : MarketType(value, name, types) {
+
+        /**
+         * 期貨子類型
+         */
+        sealed class FutureSubType(override val value: Int, override val name: String) : SubType {
+
+            /**
+             * 商品期貨
+             */
+            object Commodity : FutureSubType(
+                67,
+                "商品期貨"
+            )
+
+            /**
+             * 股價指數期貨
+             */
+            object StockPriceIndex : FutureSubType(
+                73,
+                "股價指數期貨"
+            )
+
+            /**
+             * 股票期貨
+             */
+            object Stock : FutureSubType(
+                83,
+                "股票期貨"
+            )
+
+            companion object {
+                fun values(): List<FutureSubType> {
+                    return listOf(
+                        Commodity,
+                        StockPriceIndex,
+                        Stock
+                    )
+                }
+            }
+        }
+    }
+
+    /**
+     * 選擇權
+     */
+    data class Option(
+        override val value: Int = 5,
+        override val name: String = "選擇權",
+        override val types: List<OptionSubType> = OptionSubType.values()
+    ) : MarketType(value, name, types) {
+
+        /**
+         * 選擇權子類型
+         */
+        sealed class OptionSubType(override val value: Int, override val name: String) : SubType {
+
+            /**
+             * 股票選擇權
+             */
+            object Stock : OptionSubType(
+                83,
+                "股票選擇權"
+            )
+
+            /**
+             * 匯率選擇權
+             */
+            object ExchangeRate : OptionSubType(
+                69,
+                "匯率選擇權"
+            )
+
+            /**
+             * 商品選擇權
+             */
+            object Commodity : OptionSubType(
+                67,
+                "商品選擇權"
+            )
+
+            /**
+             * 股價指數選擇權
+             */
+            object StockPriceIndex : OptionSubType(
+                73,
+                "股價指數選擇權"
+            )
+
+            companion object {
+                fun values(): List<OptionSubType> {
+                    return listOf(
                         Stock,
-                        DepositoryReceipt
+                        ExchangeRate,
+                        Commodity,
+                        StockPriceIndex
                     )
                 }
             }
@@ -203,6 +321,194 @@ sealed class MarketType(
                 fun values(): List<EmergingSubType> {
                     return listOf(
                         Stock
+                    )
+                }
+            }
+        }
+    }
+
+    /**
+     * 期貨盤後
+     */
+    data class FutureAfterMarket(
+        override val value: Int = 7,
+        override val name: String = "選擇權",
+        override val types: List<FutureAfterMarketSubType> = FutureAfterMarketSubType.values()
+    ) : MarketType(value, name, types) {
+
+        /**
+         * 期貨盤後子類型
+         */
+        sealed class FutureAfterMarketSubType(override val value: Int, override val name: String) : SubType {
+
+            /**
+             * 商品期貨
+             */
+            object Commodity : FutureAfterMarketSubType(
+                67,
+                "商品期貨"
+            )
+
+            /**
+             * 匯率期貨
+             */
+            object ExchangeRate : FutureAfterMarketSubType(
+                69,
+                "匯率期貨"
+            )
+
+            /**
+             * 股價指數期貨
+             */
+            object StockPriceIndex : FutureAfterMarketSubType(
+                73,
+                "股價指數期貨"
+            )
+
+            companion object {
+                fun values(): List<FutureAfterMarketSubType> {
+                    return listOf(
+                        ExchangeRate,
+                        Commodity,
+                        StockPriceIndex
+                    )
+                }
+            }
+        }
+    }
+
+    /**
+     * 選擇權盤後
+     */
+    data class OptionAfterMarket(
+        override val value: Int = 8,
+        override val name: String = "選擇權盤後",
+        override val types: List<OptionAfterMarketSubType> = OptionAfterMarketSubType.values()
+    ) : MarketType(value, name, types) {
+
+        /**
+         * 選擇權盤後子類型
+         */
+        sealed class OptionAfterMarketSubType(override val value: Int, override val name: String) : SubType {
+
+            /**
+             * 商品選擇權
+             */
+            object Commodity : OptionAfterMarketSubType(
+                67,
+                "商品選擇權"
+            )
+
+            /**
+             * 匯率選擇權
+             */
+            object ExchangeRate : OptionAfterMarketSubType(
+                69,
+                "匯率選擇權"
+            )
+
+            /**
+             * 股價指數選擇權
+             */
+            object StockPriceIndex : OptionAfterMarketSubType(
+                73,
+                "股價指數選擇權"
+            )
+
+            companion object {
+                fun values(): List<OptionAfterMarketSubType> {
+                    return listOf(
+                        ExchangeRate,
+                        Commodity,
+                        StockPriceIndex
+                    )
+                }
+            }
+        }
+    }
+
+    /**
+     * 上市權證
+     */
+    data class TseWarrant(
+        override val value: Int = 21,
+        override val name: String = "上市權證",
+        override val types: List<TseWarrantSubType> = TseWarrantSubType.values()
+    ) : MarketType(value, name, types) {
+
+        /**
+         * 上市權證子類型
+         */
+        sealed class TseWarrantSubType(
+            override val value: Int,
+            override val name: String
+        ) : SubType {
+
+            /**
+             * 認購
+             */
+            object Call : TseWarrant.TseWarrantSubType(
+                161,
+                "認購"
+            )
+
+            /**
+             * 認售
+             */
+            object Put : TseWarrant.TseWarrantSubType(
+                162,
+                "認售"
+            )
+
+            companion object {
+                fun values(): List<TseWarrantSubType> {
+                    return listOf(
+                        Call,
+                        Put
+                    )
+                }
+            }
+        }
+    }
+
+    /**
+     * 上櫃權證
+     */
+    data class OtcWarrant(
+        override val value: Int = 31,
+        override val name: String = "上櫃權證",
+        override val types: List<OtcWarrantSubType> = OtcWarrantSubType.values()
+    ) : MarketType(value, name, types) {
+
+        /**
+         * 上櫃權證子類型
+         */
+        sealed class OtcWarrantSubType(
+            override val value: Int,
+            override val name: String
+        ) : SubType {
+
+            /**
+             * 認購
+             */
+            object Call : OtcWarrant.OtcWarrantSubType(
+                163,
+                "認購"
+            )
+
+            /**
+             * 認售
+             */
+            object Put : OtcWarrant.OtcWarrantSubType(
+                164,
+                "認售"
+            )
+
+            companion object {
+                fun values(): List<OtcWarrantSubType> {
+                    return listOf(
+                        Call,
+                        Put
                     )
                 }
             }
@@ -489,6 +795,12 @@ sealed class MarketType(
             return listOf(
                 Tse(),
                 Otc(),
+                Future(),
+                Option(),
+                FutureAfterMarket(),
+                OptionAfterMarket(),
+                TseWarrant(),
+                OtcWarrant(),
                 Emerging(),
                 UsaStock(),
                 InternationalIndex()
