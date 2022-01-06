@@ -29,7 +29,24 @@ class CustomGroup2ServiceCase : ServiceCase {
             listOf(MarketType.UsaStock())
         )
             .logResponse(TAG)
-
+        // 搜尋上市權證
+        customGroup2Web.searchStocksByMarketTypes(
+            "1269", Language.zhTw(), listOf(MarketType.TseWarrant())
+        ).logResponse(TAG)
+        // 搜尋上櫃權證
+        customGroup2Web.searchStocksByMarketTypes(
+            "12", Language.zhTw(), listOf(MarketType.OtcWarrant())
+        ).logResponse(TAG)
+        // 複數類型搜尋
+        customGroup2Web.searchStocksByMarketTypes(
+            "12", Language.zhTw(), listOf(
+                MarketType.Tse(),
+                MarketType.Otc(),
+                MarketType.Emerging(),
+                MarketType.TseWarrant(),
+                MarketType.OtcWarrant()
+            )
+        ).logResponse(TAG)
         val marketType = DocMarketType.Stock
         val nonOrderedCustomGroups = customGroup2Web.getCustomGroup(marketType).also { result ->
             result.logResponse(TAG)
