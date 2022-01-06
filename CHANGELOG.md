@@ -1,3 +1,17 @@
+#  (2022-01-06)
+
+
+
+# [5.10.0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.9.0...5.10.0) (2022-01-06)
+
+
+### Features
+
+* 新增上市、上櫃ENT類型 ([1ba8dd0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/1ba8dd031c8ac9e3758fb2d855da264e36cd7fd1))
+* 新增期貨、選擇權、期貨盤後、選擇權盤後、上市權證、上櫃權證 ([c7be593](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/c7be5930f62e3a4dec1255dfdb44c97ad26d16cf))
+
+
+
 #  (2022-01-05)
 
 
