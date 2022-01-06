@@ -85,6 +85,14 @@ sealed class MarketType(
             )
 
             /**
+             * ETN
+             */
+            object Etn : TseSubType(
+                211,
+                "ETN"
+            )
+
+            /**
              * 股票
              */
             object Stock : TseSubType(
@@ -110,6 +118,7 @@ sealed class MarketType(
                         FuturesIndexStockEtf,
                         BondIndexStockEtf,
                         AddOnBondIndexEtf,
+                        Etn,
                         Stock,
                         DepositoryReceipt
                     )
@@ -149,6 +158,14 @@ sealed class MarketType(
             )
 
             /**
+             * ETN
+             */
+            object Etn : OtcSubType(
+                211,
+                "ETN"
+            )
+
+            /**
              * 股票
              */
             object Stock : OtcSubType(
@@ -156,21 +173,13 @@ sealed class MarketType(
                 "股票"
             )
 
-            /**
-             * 存託憑證
-             */
-            object DepositoryReceipt : OtcSubType(
-                158,
-                "存託憑證"
-            )
-
             companion object {
                 fun values(): List<OtcSubType> {
                     return listOf(
                         DomesticAndForeignIndexStockEtf,
                         BondIndexStockEtf,
-                        Stock,
-                        DepositoryReceipt
+                        Etn,
+                        Stock
                     )
                 }
             }
@@ -786,6 +795,12 @@ sealed class MarketType(
             return listOf(
                 Tse(),
                 Otc(),
+                Future(),
+                Option(),
+                FutureAfterMarket(),
+                OptionAfterMarket(),
+                TseWarrant(),
+                OtcWarrant(),
                 Emerging(),
                 UsaStock(),
                 InternationalIndex()
