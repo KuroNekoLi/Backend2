@@ -52,6 +52,29 @@ class CustomGroup2WebImplTest {
     }
 
     @Test
+    fun `檢查所有的MarketTypeV2類型`() = mainCoroutineRule.runBlockingTest {
+        val except = MarketTypeV2::class.sealedSubclasses
+            .flatMap { market ->
+                market.sealedSubclasses.map { subType ->
+                    subType.objectInstance as MarketTypeV2
+                }
+            }
+        val result = MarketTypeV2.getAll().flatMap { entry ->
+            entry.value
+        }
+        result.forEach {
+            Truth.assertThat(it).isIn(except)
+        }
+    }
+
+    @Test
+    fun `MarketTypeV2的valueOf，尋找上市的台積電`() = mainCoroutineRule.runBlockingTest {
+        val except = MarketTypeV2.Tse.Stock
+        val result = MarketTypeV2.valueOf(2, 90)
+        Truth.assertThat(result).isEqualTo(except)
+    }
+
+    @Test
     fun `searchStocks_成功`() = mainCoroutineRule.runBlockingTest {
         val expect = listOf(
             Stock(
@@ -65,7 +88,8 @@ class CustomGroup2WebImplTest {
             RawStock(
                 id = "2330",
                 name = "台積電",
-                marketType = MarketType.Tse().value
+                marketType = 2,
+                type = 90
             )
         )
         coEvery {
@@ -95,6 +119,50 @@ class CustomGroup2WebImplTest {
     }
 
     @Test
+    fun `searchStocksV2_成功`() = mainCoroutineRule.runBlockingTest {
+        val expect = listOf(
+            StockV2(
+                id = "2330",
+                name = "台積電",
+                marketType = MarketTypeV2.Tse.Stock
+            )
+        )
+
+        val rawStocks = listOf(
+            RawStock(
+                id = "2330",
+                name = "台積電",
+                marketType = 2,
+                type = 90
+            )
+        )
+        coEvery {
+            service.searchStocks(any(), any(), any())
+        } returns Response.success(rawStocks)
+
+        val result = web.searchStocksV2(keyword = "2330", languages = listOf(Language.zhTw()))
+        Truth.assertThat(result.isSuccess).isTrue()
+        val data = result.getOrThrow()
+        Truth.assertThat(data).isEqualTo(expect)
+    }
+
+    @Test
+    fun `searchStocksV2_失敗`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.searchStocks(any(), any(), any())
+        } returns Response.error(401, "".toResponseBody())
+
+        val result = web.searchStocksV2(keyword = "2330", languages = listOf(Language.zhTw()))
+        Truth.assertThat(result.isSuccess).isFalse()
+        val exception = result.exceptionOrNull()
+        Truth.assertThat(exception).isNotNull()
+        requireNotNull(exception)
+        Truth.assertThat(exception).isInstanceOf(HttpException::class.java)
+        val httpException = exception as HttpException
+        Truth.assertThat(httpException.code()).isEqualTo(401)
+    }
+
+    @Test
     fun `searchStocks_one_language_param_will_invoke_list_param_default`() =
         mainCoroutineRule.runBlockingTest {
             coEvery {
@@ -106,6 +174,21 @@ class CustomGroup2WebImplTest {
             coVerify(exactly = 1) {
                 spyWeb.searchStocks(any(), Language.zhTw())
                 spyWeb.searchStocks(any(), listOf(Language.zhTw()))
+            }
+        }
+
+    @Test
+    fun `searchStocksV2_one_language_param_will_invoke_list_param_default`() =
+        mainCoroutineRule.runBlockingTest {
+            coEvery {
+                service.searchStocks(any(), any(), any())
+            } returns Response.success(emptyList())
+
+            val spyWeb = spyk(web)
+            spyWeb.searchStocksV2("2330", Language.zhTw())
+            coVerify(exactly = 1) {
+                spyWeb.searchStocksV2(any(), Language.zhTw())
+                spyWeb.searchStocksV2(any(), listOf(Language.zhTw()))
             }
         }
 
@@ -123,7 +206,8 @@ class CustomGroup2WebImplTest {
             RawStock(
                 id = "2330",
                 name = "台積電",
-                marketType = MarketType.Tse().value
+                marketType = 2,
+                type = 90
             )
         )
         coEvery {
@@ -161,6 +245,58 @@ class CustomGroup2WebImplTest {
     }
 
     @Test
+    fun `searchStocksByMarketTypesV2_成功`() = mainCoroutineRule.runBlockingTest {
+        val expect = listOf(
+            StockV2(
+                id = "2330",
+                name = "台積電",
+                marketType = MarketTypeV2.Tse.Stock
+            )
+        )
+
+        val rawStocks = listOf(
+            RawStock(
+                id = "2330",
+                name = "台積電",
+                marketType = 2,
+                type = 90
+            )
+        )
+        coEvery {
+            service.searchStocksByMarketType(any(), any(), any())
+        } returns Response.success(rawStocks)
+
+        val result = web.searchStocksByMarketTypesV2(
+            keyword = "2330",
+            languages = listOf(Language.zhTw()),
+            marketTypes = MarketTypeV2.Tse.getAll()
+        )
+        Truth.assertThat(result.isSuccess).isTrue()
+        val data = result.getOrThrow()
+        Truth.assertThat(data).isEqualTo(expect)
+    }
+
+    @Test
+    fun `searchStocksByMarketTypesV2_失敗`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.searchStocksByMarketType(any(), any(), any())
+        } returns Response.error(401, "".toResponseBody())
+
+        val result = web.searchStocksByMarketTypesV2(
+            keyword = "2330",
+            languages = listOf(Language.zhTw()),
+            marketTypes = MarketTypeV2.Tse.getAll()
+        )
+        Truth.assertThat(result.isSuccess).isFalse()
+        val exception = result.exceptionOrNull()
+        Truth.assertThat(exception).isNotNull()
+        requireNotNull(exception)
+        Truth.assertThat(exception).isInstanceOf(HttpException::class.java)
+        val httpException = exception as HttpException
+        Truth.assertThat(httpException.code()).isEqualTo(401)
+    }
+
+    @Test
     fun `searchStocksByMarketTypes_one_language_param_will_invoke_list_param_default`() =
         runBlockingTest {
             coEvery {
@@ -180,6 +316,34 @@ class CustomGroup2WebImplTest {
                     any(),
                     listOf(Language.zhTw()),
                     listOf(MarketType.Tse())
+                )
+            }
+        }
+
+    @Test
+    fun `searchStocksByMarketTypesV2_one_language_param_will_invoke_list_param_default`() =
+        runBlockingTest {
+            coEvery {
+                service.searchStocksByMarketType(any(), any(), any())
+            } returns Response.success(emptyList())
+
+            val spyWeb = spyk(web)
+            spyWeb.searchStocksByMarketTypesV2(
+                keyword = "2330",
+                language = Language.zhTw(),
+                marketTypes = MarketTypeV2.Tse.getAll()
+            )
+
+            coVerify(exactly = 1) {
+                spyWeb.searchStocksByMarketTypesV2(
+                    any(),
+                    Language.zhTw(),
+                    MarketTypeV2.Tse.getAll()
+                )
+                spyWeb.searchStocksByMarketTypesV2(
+                    any(),
+                    listOf(Language.zhTw()),
+                    MarketTypeV2.Tse.getAll()
                 )
             }
         }

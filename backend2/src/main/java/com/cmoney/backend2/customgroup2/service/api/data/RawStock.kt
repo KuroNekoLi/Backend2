@@ -9,6 +9,7 @@ import com.google.gson.annotations.SerializedName
  * @property id 編號
  * @property name 顯示名稱
  * @property marketType 市場類別
+ * @property type 子類別
  */
 data class RawStock(
     @SerializedName("key")
@@ -16,5 +17,7 @@ data class RawStock(
     @SerializedName("name")
     val name: String?,
     @SerializedName("marketType")
-    val marketType: Int?
+    val marketType: Int?,
+    @SerializedName("type")
+    val type: Int?
 )

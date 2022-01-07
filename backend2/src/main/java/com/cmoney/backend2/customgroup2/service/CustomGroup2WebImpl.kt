@@ -21,45 +21,98 @@ class CustomGroup2WebImpl(
     override suspend fun searchStocks(
         keyword: String,
         languages: List<Language>
-    ): Result<List<Stock>> =
-        withContext(dispatcher.io()) {
-            kotlin.runCatching {
-                val requestBody = SearchStocksRequestBody(keyword = keyword)
-                service.searchStocks(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    language = languages.asRequestHeader(),
-                    requestBody = requestBody
+    ): Result<List<Stock>> = searchStocksV2(keyword, languages)
+        .map { stocksV2 ->
+            stocksV2.map { stockV2 ->
+                val marketType = stockV2.marketType?.type?.let { type ->
+                    MarketType.fromInt(type)
+                }
+                Stock(
+                    id = stockV2.id,
+                    name = stockV2.name,
+                    marketType = marketType
                 )
-                    .checkResponseBody(gson)
-                    .filterNotNull()
-                    .map { raw ->
-                        Stock(
-                            id = raw.id,
-                            name = raw.name,
-                            marketType = raw.marketType?.let { marketType ->
-                                MarketType.fromInt(marketType)
-                            }
-                        )
-                    }
             }
         }
+
+    override suspend fun searchStocksV2(
+        keyword: String,
+        languages: List<Language>
+    ): Result<List<StockV2>> = withContext(dispatcher.io()) {
+        runCatching {
+            val requestBody = SearchStocksRequestBody(keyword = keyword)
+            service.searchStocks(
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                language = languages.asRequestHeader(),
+                requestBody = requestBody
+            )
+                .checkResponseBody(gson)
+                .filterNotNull()
+                .map { stock ->
+                    val type = stock.marketType
+                    val subType = stock.type
+                    var marketType: MarketTypeV2? = null
+                    if (type != null && subType != null) {
+                        marketType = MarketTypeV2.valueOf(type, subType)
+                    }
+                    StockV2(
+                        id = stock.id,
+                        name = stock.name,
+                        marketType = marketType
+                    )
+                }
+        }
+    }
 
     override suspend fun searchStocksByMarketTypes(
         keyword: String,
         languages: List<Language>,
         marketTypes: List<MarketType>
     ): Result<List<Stock>> = withContext(dispatcher.io()) {
-        kotlin.runCatching {
+        val marketTypeV2 = marketTypes.flatMap { marketType ->
+            val type = marketType.value
+            val subTypes = marketType.types
+            subTypes.map { subType ->
+                MarketTypeV2.valueOf(type, subType.value)
+            }
+        }.filterNotNull()
+        searchStocksByMarketTypesV2(
+            keyword = keyword,
+            languages = languages,
+            marketTypes = marketTypeV2
+        ).map { stocksV2 ->
+            stocksV2.map { stockV2 ->
+                val marketType = stockV2.marketType?.type?.let { type ->
+                    MarketType.fromInt(type)
+                }
+                Stock(
+                    id = stockV2.id,
+                    name = stockV2.name,
+                    marketType = marketType
+                )
+            }
+        }
+    }
+
+    override suspend fun searchStocksByMarketTypesV2(
+        keyword: String,
+        languages: List<Language>,
+        marketTypes: List<MarketTypeV2>
+    ): Result<List<StockV2>> = withContext(dispatcher.io()) {
+        runCatching {
+            val marketTypeMap = marketTypes.groupBy { marketType ->
+                marketType.type
+            }
+            val requestMarketTypes = marketTypeMap.map { entry ->
+                val type = entry.key
+                val subTypes = entry.value.map {
+                    it.subType
+                }
+                RequestMarketType(marketType = type, types = subTypes)
+            }
             val requestBody = SearchStocksByMarketTypeRequestBody(
                 keyword = keyword,
-                marketTypes = marketTypes.map { type ->
-                    RequestMarketType(
-                        marketType = type.value,
-                        types = type.types.map { subType ->
-                            subType.value
-                        }
-                    )
-                }
+                marketTypes = requestMarketTypes
             )
             service.searchStocksByMarketType(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -68,13 +121,17 @@ class CustomGroup2WebImpl(
             )
                 .checkResponseBody(gson)
                 .filterNotNull()
-                .map { raw ->
-                    Stock(
-                        id = raw.id,
-                        name = raw.name,
-                        marketType = raw.marketType?.let { marketType ->
-                            MarketType.fromInt(marketType)
-                        }
+                .map { stock ->
+                    val type = stock.marketType
+                    val subType = stock.type
+                    var marketType: MarketTypeV2? = null
+                    if (type != null && subType != null) {
+                        marketType = MarketTypeV2.valueOf(type, subType)
+                    }
+                    StockV2(
+                        id = stock.id,
+                        name = stock.name,
+                        marketType = marketType
                     )
                 }
         }
