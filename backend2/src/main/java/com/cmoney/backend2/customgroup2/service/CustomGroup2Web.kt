@@ -10,8 +10,11 @@ interface CustomGroup2Web {
      *
      * @param keyword 關鍵字
      * @param language 回傳語系
-     * @return 搜尋到的股市標的
      */
+    @Deprecated(
+        message = "請使用searchStocksV2，將於2022/06/30移除",
+        replaceWith = ReplaceWith("searchStocksV2(keyword, listOf(language))")
+    )
     suspend fun searchStocks(keyword: String, language: Language): Result<List<Stock>> = searchStocks(keyword, listOf(language))
 
     /**
@@ -19,9 +22,29 @@ interface CustomGroup2Web {
      *
      * @param keyword 關鍵字
      * @param languages 回傳語系
-     * @return 搜尋到的股市標的
      */
+    @Deprecated(
+        message = "請使用searchStocksV2，將於2022/06/30移除",
+        replaceWith = ReplaceWith("searchStocksV2(keyword, languages)")
+    )
     suspend fun searchStocks(keyword: String, languages: List<Language>): Result<List<Stock>>
+
+    /**
+     * 根據關鍵字、回傳語系[Language]搜尋股市標的
+     *
+     * @param keyword 關鍵字
+     * @param language 回傳語系
+     */
+    suspend fun searchStocksV2(keyword: String, language: Language): Result<List<StockV2>> = searchStocksV2(keyword, listOf(language))
+
+    /**
+     * 根據關鍵字、回傳語系[Language]搜尋股市標的
+     *
+     * @param keyword 關鍵字
+     * @param languages 回傳語系
+     */
+    suspend fun searchStocksV2(keyword: String, languages: List<Language>): Result<List<StockV2>>
+
 
     /**
      * 根據關鍵字、回傳語系[Language]、市場類別[MarketType]搜尋股市標的
@@ -29,8 +52,11 @@ interface CustomGroup2Web {
      * @param keyword 關鍵字
      * @param language 回傳語系
      * @param marketTypes 預期的市場類別集合
-     * @return 搜尋到的股市標的
      */
+    @Deprecated(
+        message = "請使用searchStocksByMarketTypesV2，將於2022/06/30移除",
+        replaceWith = ReplaceWith("searchStocksByMarketTypes(keyword, listOf(language), marketTypes)")
+    )
     suspend fun searchStocksByMarketTypes(
         keyword: String,
         language: Language,
@@ -45,11 +71,43 @@ interface CustomGroup2Web {
      * @param marketTypes 預期的市場類別集合
      * @return 搜尋到的股市標的
      */
+    @Deprecated(
+        message = "請使用searchStocksByMarketTypesV2，將於2022/06/30移除",
+        replaceWith = ReplaceWith("searchStocksByMarketTypesV2(keyword, language, marketTypes)")
+    )
     suspend fun searchStocksByMarketTypes(
         keyword: String,
         languages: List<Language>,
         marketTypes: List<MarketType>
     ): Result<List<Stock>>
+
+    /**
+     * 根據關鍵字、回傳語系[Language]、市場類別[MarketType]搜尋股市標的
+     *
+     * @param keyword 關鍵字
+     * @param language 回傳語系
+     * @param marketTypes 預期的市場類別集合
+     *
+     */
+    suspend fun searchStocksByMarketTypesV2(
+        keyword: String,
+        language: Language,
+        marketTypes: List<MarketTypeV2>
+    ): Result<List<StockV2>> = searchStocksByMarketTypesV2(keyword, listOf(language), marketTypes)
+
+    /**
+     * 根據關鍵字、回傳語系[Language]、市場類別[MarketType]搜尋股市標的
+     *
+     * @param keyword 關鍵字
+     * @param languages 回傳語系
+     * @param marketTypes 預期的市場類別集合
+     *
+     */
+    suspend fun searchStocksByMarketTypesV2(
+        keyword: String,
+        languages: List<Language>,
+        marketTypes: List<MarketTypeV2>
+    ): Result<List<StockV2>>
 
     /**
      * 取得自選股群組，預設群組類型為StockGroup
