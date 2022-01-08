@@ -3,7 +3,7 @@ package com.cmoney.backend2.sample.servicecase
 import com.cmoney.backend2.base.model.request.Language
 import com.cmoney.backend2.customgroup2.service.CustomGroup2Web
 import com.cmoney.backend2.customgroup2.service.api.data.DocMarketType
-import com.cmoney.backend2.customgroup2.service.api.data.MarketType
+import com.cmoney.backend2.customgroup2.service.api.data.MarketTypeV2
 import com.cmoney.backend2.sample.extension.logResponse
 import org.koin.core.component.inject
 
@@ -12,40 +12,28 @@ class CustomGroup2ServiceCase : ServiceCase {
     private val customGroup2Web by inject<CustomGroup2Web>()
 
     override suspend fun testAll() {
-        customGroup2Web.searchStocks("11", Language.zhTw())
+        customGroup2Web.searchStocksV2("11", Language.zhTw())
             .logResponse(TAG)
-        customGroup2Web.searchStocks("11", listOf(Language.zhTw()))
-            .logResponse(TAG)
-        customGroup2Web.searchStocksByMarketTypes(
-            "c", Language.enUs(1.0), listOf(MarketType.UsaStock())
-        )
-            .logResponse(TAG)
-        customGroup2Web.searchStocksByMarketTypes(
-            "c",
-            listOf(
-                Language.zhTw(0.9),
-                Language.enUs(1.0)
-            ),
-            listOf(MarketType.UsaStock())
-        )
+        customGroup2Web.searchStocksV2("11", listOf(Language.zhTw()))
             .logResponse(TAG)
         // 搜尋上市權證
-        customGroup2Web.searchStocksByMarketTypes(
-            "1269", Language.zhTw(), listOf(MarketType.TseWarrant())
+        customGroup2Web.searchStocksByMarketTypesV2(
+            "1269", Language.zhTw(), MarketTypeV2.TseWarrant.getAll()
         ).logResponse(TAG)
         // 搜尋上櫃權證
-        customGroup2Web.searchStocksByMarketTypes(
-            "12", Language.zhTw(), listOf(MarketType.OtcWarrant())
+        customGroup2Web.searchStocksByMarketTypesV2(
+            "12", Language.zhTw(), MarketTypeV2.OtcWarrant.getAll()
         ).logResponse(TAG)
         // 複數類型搜尋
-        customGroup2Web.searchStocksByMarketTypes(
-            "12", Language.zhTw(), listOf(
-                MarketType.Tse(),
-                MarketType.Otc(),
-                MarketType.Emerging(),
-                MarketType.TseWarrant(),
-                MarketType.OtcWarrant()
-            )
+        val marketTypes = mutableListOf<MarketTypeV2>().apply {
+            addAll(MarketTypeV2.Tse.getAll())
+            addAll(MarketTypeV2.Otc.getAll())
+            addAll(MarketTypeV2.Emerging.getAll())
+            addAll(MarketTypeV2.TseWarrant.getAll())
+            addAll(MarketTypeV2.OtcWarrant.getAll())
+        }
+        customGroup2Web.searchStocksByMarketTypesV2(
+            "12", Language.zhTw(), marketTypes
         ).logResponse(TAG)
         val marketType = DocMarketType.Stock
         val nonOrderedCustomGroups = customGroup2Web.getCustomGroup(marketType).also { result ->

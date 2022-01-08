@@ -6,8 +6,11 @@ package com.cmoney.backend2.customgroup2.service.api.data
  * @property value 識別值
  * @property name 市場名稱
  * @property types 子類型
- * @constructor Create empty Market type
  */
+@Deprecated(
+    message = "請使用MarketTypeV2，將於2022/06/30移除",
+    replaceWith = ReplaceWith("MarketTypeV2(type, subType)")
+)
 sealed class MarketType(
     open val value: Int,
     open val name: String,
