@@ -1,3 +1,16 @@
+#  (2022-01-10)
+
+
+
+## [5.10.2](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.10.1...5.10.2) (2022-01-10)
+
+
+### Bug Fixes
+
+* 修正response欄位型別錯誤 ([1b16a05](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/1b16a05c20afd6f792a64d42ead4cc254caec4bf))
+
+
+
 #  (2022-01-08)
 
 
