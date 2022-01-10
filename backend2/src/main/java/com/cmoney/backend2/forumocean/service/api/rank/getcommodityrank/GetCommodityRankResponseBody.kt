@@ -14,7 +14,7 @@ data class GetCommodityRankResponseBody(
     @SerializedName("commodityKey")
     val commodityKey :String?,
     @SerializedName("score")
-    val score : Int?,
+    val score : Long?,
     @SerializedName("ranking")
     val ranking :Int?,
     @SerializedName("lastRanking")
