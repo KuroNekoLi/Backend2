@@ -1,4 +1,13 @@
-#  (2022-01-06)
+#  (2022-01-08)
+
+
+
+## [5.10.1](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.10.0...5.10.1) (2022-01-08)
+
+
+### Features
+
+* 新增根據關鍵字、回傳語系[Language]搜尋股市標的、市場類別[MarketType]搜尋股市標的，V2版本 ([3c69648](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/3c69648f3284be66622d69f54384aa05bda013cd))
 
 
 
@@ -12,16 +21,13 @@
 
 
 
-#  (2022-01-05)
-
-
-
 # [5.9.0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.8.0...5.9.0) (2022-01-05)
 
 
 ### Bug Fixes
 
 * Field change type->notifyType in GetNotifyResponseBody.kt ([9cafa55](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/9cafa550b95121344619c1a39d0b87b6bfc9936d))
+* 修正其他會員資訊isNeedNickName實作 ([b948395](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/b948395617f1bf10026ef7ec2cfa58ae21d04c06))
 * 修正檢舉的列舉類型 ([4747919](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/474791909825ed08e2b264f90cf1f83ebb84bcf9))
 
 
@@ -33,84 +39,11 @@
 
 
 
-#  (2022-01-03)
-
-
-
 # [5.8.0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.7.0...5.8.0) (2022-01-03)
-
-
-### Bug Fixes
-
-* 修正CentralizedImage 的service 設定錯誤 ([3f445d8](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/3f445d8169729c13e7c28d90554ec42b1886ffee))
-* 修正CentralizedImageService界面不符問題 ([ae28d67](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/ae28d673e2928a9b657939e8fcf5863f882bb8bb))
-* 修正redirectInfo物件的SerializedName ([369bff8](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/369bff8bbc4dc11dc039e3feb0c5852bbabe9bb4))
-* 修正因官方Api修改介面而發生問題的測試 ([8cbfafd](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/8cbfafd59181999cdad6df09a73d2405e3e4dfd5))
-* 修正發文Content 社團文章不會有Topics欄位 ([0132ac1](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/0132ac15052eb8130f05b6f9ce3898a0523a1bcf))
-* 修正缺少 被刪除的回文數 的欄位問題 ([5cd9ff6](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/5cd9ff63fe78a138f1711dc487ade6746adfa707))
-* 修正錯誤的request字串 ([8c74f12](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/8c74f12f4ce2d91637a79cd68e7ed6ec0a6f5b9c))
-* 統一調整社團身份使用的類別 ([7f68384](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/7f683847ea7a4c4b6f642b148146ace5cc48b751))
-* 補上缺漏的文章狀態 ([a9af3cc](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/a9af3cc50b367eed94f4318a57fa0e5c35eaf38b))
-
-
-### Features
-
-* ForumOceanWebImpl 提供參數來修改url path ([0733435](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/0733435a3bed82679cf73f05f3443a8f7a65b889))
-* GetMemberStatistics 回傳物件新增資料欄位 ([9b9004b](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/9b9004b2fbeffae5d82147712fe0d9a7d3160406))
-* 修改取得使用者訂閱的官方頻道清單的api 改為分頁取得的方式 ([d9f7fad](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/d9f7fad1433bdb8e5a620c2f961f6d0d2c2df318))
-* 修改取得打賞清單的api 改為分頁取得的方式 ([32cdd99](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/32cdd99db776a6c8eaae26420f01df6314d3707b))
-* 修改取得申請加入社團待審核清單的api 改為分頁取得的方式 ([9f92a83](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/9f92a83a5ab64155e317fb42883ba4ccd45b8429))
-* 修改取得社團清單相關的api 改為分頁取得的方式 ([cb3f83e](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/cb3f83e656401eba65091932bb9c12922665ed5a))
-* 修改取文的api ([5fb16e2](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/5fb16e2808b8adab482a23f0776e92abf5a772c6))
-* 修改更新文章 與 回文的api ([cd1aca4](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/cd1aca4e4d605d0948e4337595be2be38f167e79))
-* 修改解題達人參數名稱 ([4a8b707](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/4a8b70779d638132f06ede0eca2228bae7b82115))
-* 取得回文物件新增欄位 ([839f840](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/839f840bc3f57abe9daf346772abfa1c6ec58392))
-* 取得多位使用者資訊Api 新增欄位 該用戶是否有綁定手機 ([dc712b1](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/dc712b1e141e7be456cdda9f7dae0d029bc3a5c5))
-* 取得正在追蹤 被追蹤 封鎖 被封鎖 清單的api改成分頁取資料的方式 ([650cab6](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/650cab6e0d46a884bfe420e3e69bc69fc0a4f73a))
-* 取得社團清單的三道Api新增是否包含App社團的參數 ([f9033af](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/f9033af95385e98cb7ecd334d2895fc658edfc04))
-* 取得通知清單api 介面更動 ([bea20ae](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/bea20ae61ff4228d1480db770796ed76ecc114da))
-* 因應服務格式變更修正通知參數格式 ([da0e9e1](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/da0e9e147fc3efb4372f42e61f185bccdcd909f2))
-* 因應服務格式變更修正通知轉導資訊格式 ([a1de7c4](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/a1de7c44e022ad0e333f6d31e60d5479bf3a7b94))
-* 官方頻道資訊新增 subscribeCount 欄位 。並將所有欄位設定為可nullable ([52e42c5](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/52e42c5ffbae5af460ba895b4cfeca5ce88672dc))
-* 將所有可以使用標籤的文章都實做TopicInfo ([4466a7c](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/4466a7c27d3612ec27617f8db9e2b100775cc192))
-* 打賞資訊新增用戶打賞的資料 ([2cf4f03](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/2cf4f039359e1199b3fe54ba9b0536672f74291e))
-* 拿掉在OceanService上 檢查是否手機綁定的api(IsPhoneAuthentication) 該功能交由其他站台負責 ([5ffe5e0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/5ffe5e001a601f013d226a2edad5e713078475b8))
-* 指定達人排行參數名稱修正 ([ef6ec31](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/ef6ec31639f486bc48847f66011114131baac865))
-* 新增 取得指定的會員清單與我目前的關係 的api ([53ea9de](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/53ea9def6463ee1a7a44f50d602344231d800c70))
-* 新增api  IsPhoneAuthentication ([d8e68c6](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/d8e68c67f08f4c7aac4329d19dee928220aa5e20))
-* 新增取得自己是否被禁言的Api ([f21c1e9](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/f21c1e90a0b44509792f33cec4197a7439249b84))
-* 新增官方頻道Api   GetOfficials ,GetOfficialsByIds,GetOfficialsByKeyword 修改掉之前官方頻道的Api ([847b168](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/847b168ab63f5a8030bfa13ac428d95a9f82d0bd))
-* 新增排行榜api ([150e069](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/150e0698bbf1f87d08cdb6e36c39831b400370f6))
-* 新增測試domain ([35f7c7e](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/35f7c7e1955bb08ffb49348d8ebd4f0c97338bdd))
-* 新增目前全部有實做的文章頻道類型定義 ([95ed4a1](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/95ed4a135fb0a7d070da776ddd450990538a7d84))
-* 新增美股文章頻道 ([6b91f13](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/6b91f13a97372cc0e159d9cc8c93b6728c26968f))
-* 新增美股股票文章的類別 ([256f8a8](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/256f8a86e3f62e80c49eaf6edb31067b6cce2401))
-* 新增通知三道api  通知設定三道api ([e5696c4](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/e5696c414c37ca7dc6f2729267e0a343b3907177))
-* 新增重設通知數量api ([8c680b2](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/8c680b208f79170431c2107ba211941214a4d3f3))
-* 新聞文章欄位調整 ([d8d2c58](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/d8d2c584c956692dbab9a6c3f661d4a065691505))
-* 社團資訊回傳新增在社團的職位資訊 ([7afc657](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/7afc6570698227078a4093d71744647ccd3e9213))
-* 社團資訊新增欄位 ([bbd3355](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/bbd3355b88e785559c7713ab323dc9377fee5bec))
-* 移除 GroupArticle/Delete 的方法 ([3d31963](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/3d31963a293154ff326f01e2f652d48e6de92a4a))
-* 調整成新版文章分類 ([324e7d6](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/324e7d699cb65345325b74e9e1479920a4b364b4))
-* 調整成新版文章分類的方式呼叫api ([49b988f](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/49b988f1f1c4457903a55b4902c795a73de3c6a4))
-* 達人排行熱門值改為Double ([7c92bc4](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/7c92bc401dd0fe649dd0c4fd13c821fb4a5dfea6))
-
-
-
-#  (2021-12-23)
 
 
 
 # [5.7.0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.6.0...5.7.0) (2021-12-23)
-
-
-### Features
-
-* 新增取得Youtube頻道影音api ([b8dfa47](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/b8dfa47e5ce57391bcdffe838163fc3f31462565))
-
-
-
-#  (2021-12-23)
 
 
 
@@ -126,10 +59,6 @@
 
 
 
-#  (2021-12-22)
-
-
-
 # [5.5.0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.4.0...5.5.0) (2021-12-22)
 
 
@@ -139,26 +68,20 @@
 
 
 
-#  (2021-12-17)
-
-
-
 # [5.4.0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.3.1...5.4.0) (2021-12-17)
 
 
 ### Bug Fixes
 
 * 修正 OceanWeb 的 SetReaded 成功時因為 No Content 而被判斷為失敗的問題 ([502403b](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/502403bb4f6dc5ce791f9800b7645259e13dffc5))
+* 修正缺少 被刪除的回文數 的欄位問題 ([5cd9ff6](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/5cd9ff63fe78a138f1711dc487ade6746adfa707))
 
 
 ### Features
 
 * add image recognition service ([ae332d2](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/ae332d2279af7932add1982bcd04ff57aa4d7465))
 * 新增三方的合作廠商登入方式 ([860d33b](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/860d33bd8d6c28abeaa9585ebba7fc9f8bf161aa))
-
-
-
-#  (2021-11-30)
+* 新增取得Youtube頻道影音api ([b8dfa47](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/b8dfa47e5ce57391bcdffe838163fc3f31462565))
 
 
 
@@ -171,20 +94,12 @@
 
 
 
-#  (2021-11-30)
-
-
-
 # [5.3.0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.2.1...5.3.0) (2021-11-30)
 
 
 ### Features
 
-* add chat getTargetRoom, updateTargetRoom function ([10f33a0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/10f33a081ab164d1be1c29c5bf575bee514de2f1))
-
-
-
-#  (2021-11-26)
+* add chat getTargetRoom, updateTargetRoom function, let baseModule okhttp method internal ([10f33a0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/10f33a081ab164d1be1c29c5bf575bee514de2f1))
 
 
 
@@ -197,10 +112,6 @@
 
 
 
-#  (2021-11-25)
-
-
-
 # [5.2.0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.1.1...5.2.0) (2021-11-25)
 
 
@@ -210,15 +121,7 @@
 
 
 
-#  (2021-11-24)
-
-
-
 ## [5.1.1](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.1.0...5.1.1) (2021-11-24)
-
-
-
-#  (2021-11-24)
 
 
 
@@ -228,24 +131,26 @@
 ### Bug Fixes
 
 * 修正聊天室顯示訊息Parse機制 ([363c40b](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/363c40b890f0ec7afbb6b11956c519bb2084f4da))
+* 統一調整社團身份使用的類別 ([7f68384](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/7f683847ea7a4c4b6f642b148146ace5cc48b751))
+* 補上缺漏的文章狀態 ([a9af3cc](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/a9af3cc50b367eed94f4318a57fa0e5c35eaf38b))
 
 
 ### Features
 
 * add identityProviderWeb new login method - loginByPkce and its unitTest ([516f669](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/516f66938362499d7d75dbd6bdeedb4a2b26a910))
+* ForumOceanWebImpl 提供參數來修改url path ([0733435](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/0733435a3bed82679cf73f05f3443a8f7a65b889))
+* 取得通知清單api 介面更動 ([bea20ae](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/bea20ae61ff4228d1480db770796ed76ecc114da))
 * 新增 DataService 及取得 FundId 相關服務及測試 ([d3abb83](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/d3abb838bb803c08a7ae8639222b9a21bb504e29))
-
-
-
-#  (2021-11-04)
 
 
 
 # [5.0.0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/4.10.0...5.0.0) (2021-11-04)
 
 
+### Features
 
-#  (2021-11-02)
+* 取得多位使用者資訊Api 新增欄位 該用戶是否有綁定手機 ([dc712b1](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/dc712b1e141e7be456cdda9f7dae0d029bc3a5c5))
+* 拿掉在OceanService上 檢查是否手機綁定的api(IsPhoneAuthentication) 該功能交由其他站台負責 ([5ffe5e0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/5ffe5e001a601f013d226a2edad5e713078475b8))
 
 
 
@@ -254,41 +159,54 @@
 
 ### Features
 
+* 新增api  IsPhoneAuthentication ([d8e68c6](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/d8e68c67f08f4c7aac4329d19dee928220aa5e20))
+* 新增測試domain ([35f7c7e](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/35f7c7e1955bb08ffb49348d8ebd4f0c97338bdd))
 * 調整CustomGroupService2的GetCustomGroup參數 ([77e10e2](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/77e10e28fdc42a6c2f6b6afd0d87928c969dabed))
-
-
-
-#  (2021-10-27)
 
 
 
 # [4.9.0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/4.8.0...4.9.0) (2021-10-27)
 
 
+### Bug Fixes
+
+* Proguard ([fcae639](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/fcae639ab52f844452d31b176c7548a5af12bf44))
+* 修正redirectInfo物件的SerializedName ([369bff8](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/369bff8bbc4dc11dc039e3feb0c5852bbabe9bb4))
+
+
 ### Features
 
+* add serviceCase ([c361f66](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/c361f66c735d3453b8bdc58ef0eb8f6596d1c696))
+* 取得回文物件新增欄位 ([839f840](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/839f840bc3f57abe9daf346772abfa1c6ec58392))
+* 因應服務格式變更修正通知轉導資訊格式 ([a1de7c4](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/a1de7c44e022ad0e333f6d31e60d5479bf3a7b94))
 * 新增ClientConfiguration API ([83a9c1c](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/83a9c1c5e3d4c62e0df0e68126e6523015e5ea74))
-
-
-
-#  (2021-10-08)
+* 新增取得設定檔失敗unitTest ([c66c2c4](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/c66c2c496c6ec35c92954c55b3d88bc4652d6d83))
+* 新增美股文章頻道 ([6b91f13](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/6b91f13a97372cc0e159d9cc8c93b6728c26968f))
+* 新增重設通知數量api ([8c680b2](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/8c680b208f79170431c2107ba211941214a4d3f3))
+* 新聞文章欄位調整 ([d8d2c58](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/d8d2c584c956692dbab9a6c3f661d4a065691505))
+* 添加LogDataRecorder的Annotation及測試 ([bc56232](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/bc562327e3159e2324533076f59832edd271e254))
+* 社團資訊新增欄位 ([bbd3355](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/bbd3355b88e785559c7713ab323dc9377fee5bec))
 
 
 
 # [4.8.0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/4.7.0...4.8.0) (2021-10-08)
 
 
+### Bug Fixes
+
+* 修正CentralizedImage 的service 設定錯誤 ([3f445d8](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/3f445d8169729c13e7c28d90554ec42b1886ffee))
+* 修正CentralizedImageService界面不符問題 ([ae28d67](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/ae28d673e2928a9b657939e8fcf5863f882bb8bb))
+
+
 ### Features
 
 * backend gson 加入 ULongTypeAdapter ([9eca072](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/9eca07273b5475d1052f61cef7103790a2a7e4fe))
+* 因應服務格式變更修正通知參數格式 ([da0e9e1](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/da0e9e147fc3efb4372f42e61f185bccdcd909f2))
 * 新增自選股服務 ([e6b961c](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/e6b961c3b778b5488a8fa48a9e96c5004546c586))
 * 更新 README 說明 unsigned data type 相關支援 ([ddd8525](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/ddd8525fa418ecb6c7eb6ed4265e93d85f1ad01b))
+* 根據服務變動調整 getNewTickInfo 的回傳成交量欄位型別並加入單元測試 ([ee0c443](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/ee0c443340f7550ed1dadd32b0f7e94c517b9616))
 * 根據服務變動調整 getNewTickInfo 的回傳成交量欄位型別並加入單元測試 並新增對應的 Gson ULongTypeAdapter ([b51087d](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/b51087d9c89391b19bdd90ea12f31cac7d9f0492))
-* 根據服務變動調整自選股介面 ([d8dcb45](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/d8dcb4500102b8ea3448cf1c85245b0cab12fb86))
-
-
-
-#  (2021-09-23)
+* 根據服務變動調整介面 ([d8dcb45](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/d8dcb4500102b8ea3448cf1c85245b0cab12fb86))
 
 
 
@@ -299,27 +217,26 @@
 
 * 修正ApiLog欄位 Encode的方式 ([22377dc](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/22377dcbe8fa5fb70c18dccbe7db6c4b0ffc1afa))
 * 修正Header ApiLog字串經過URL Encode ([b413e18](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/b413e18da19c1097ccf946299c69603304054fe1))
+* 修正因官方Api修改介面而發生問題的測試 ([8cbfafd](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/8cbfafd59181999cdad6df09a73d2405e3e4dfd5))
 
 
 ### Features
 
-* 圖片上傳服務新增GenreAndSubGenre參數物件，新增401測試，修正其餘測試 ([ad4bee3](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/ad4bee323f6774e8f592bbcacc3be8196bb74537))
-
-
-
-#  (2021-09-08)
+* 修改取文的api ([5fb16e2](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/5fb16e2808b8adab482a23f0776e92abf5a772c6))
+* 修改解題達人參數名稱 ([4a8b707](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/4a8b70779d638132f06ede0eca2228bae7b82115))
+* 取得社團清單的三道Api新增是否包含App社團的參數 ([f9033af](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/f9033af95385e98cb7ecd334d2895fc658edfc04))
+* 官方頻道資訊新增 subscribeCount 欄位 。並將所有欄位設定為可nullable ([52e42c5](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/52e42c5ffbae5af460ba895b4cfeca5ce88672dc))
+* 指定達人排行參數名稱修正 ([ef6ec31](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/ef6ec31639f486bc48847f66011114131baac865))
+* 新增GenreAndSubGenre參數物件，新增401測試，修正其餘測試 ([ad4bee3](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/ad4bee323f6774e8f592bbcacc3be8196bb74537))
+* 新增取得自己是否被禁言的Api ([f21c1e9](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/f21c1e90a0b44509792f33cec4197a7439249b84))
+* 新增官方頻道Api   GetOfficials ,GetOfficialsByIds,GetOfficialsByKeyword 修改掉之前官方頻道的Api ([847b168](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/847b168ab63f5a8030bfa13ac428d95a9f82d0bd))
+* 新增排行榜api ([150e069](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/150e0698bbf1f87d08cdb6e36c39831b400370f6))
+* 新增通知三道api  通知設定三道api ([e5696c4](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/e5696c414c37ca7dc6f2729267e0a343b3907177))
+* 達人排行熱門值改為Double ([7c92bc4](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/7c92bc401dd0fe649dd0c4fd13c821fb4a5dfea6))
 
 
 
 # [4.6.0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/4.5.1...4.6.0) (2021-09-08)
-
-
-### Features
-
-* 新增 Note 服務回應的 tag 欄位([fa1835bb](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commit/fa1835bbe92a3d7354e251c9f3e8b6ed186fcfaa))
-
-
-#  (2021-09-04)
 
 
 
@@ -335,9 +252,30 @@
 # [4.5.0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/4.4.0...4.5.0) (2021-09-04)
 
 
+### Bug Fixes
+
+* 修正發文Content 社團文章不會有Topics欄位 ([0132ac1](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/0132ac15052eb8130f05b6f9ce3898a0523a1bcf))
+* 修正錯誤的request字串 ([8c74f12](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/8c74f12f4ce2d91637a79cd68e7ed6ec0a6f5b9c))
+
+
 ### Features
 
+* GetMemberStatistics 回傳物件新增資料欄位 ([9b9004b](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/9b9004b2fbeffae5d82147712fe0d9a7d3160406))
+* 修改取得使用者訂閱的官方頻道清單的api 改為分頁取得的方式 ([d9f7fad](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/d9f7fad1433bdb8e5a620c2f961f6d0d2c2df318))
+* 修改取得打賞清單的api 改為分頁取得的方式 ([32cdd99](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/32cdd99db776a6c8eaae26420f01df6314d3707b))
+* 修改取得申請加入社團待審核清單的api 改為分頁取得的方式 ([9f92a83](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/9f92a83a5ab64155e317fb42883ba4ccd45b8429))
+* 修改取得社團清單相關的api 改為分頁取得的方式 ([cb3f83e](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/cb3f83e656401eba65091932bb9c12922665ed5a))
+* 修改更新文章 與 回文的api ([cd1aca4](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/cd1aca4e4d605d0948e4337595be2be38f167e79))
+* 取得正在追蹤 被追蹤 封鎖 被封鎖 清單的api改成分頁取資料的方式 ([650cab6](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/650cab6e0d46a884bfe420e3e69bc69fc0a4f73a))
+* 將所有可以使用標籤的文章都實做TopicInfo ([4466a7c](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/4466a7c27d3612ec27617f8db9e2b100775cc192))
+* 打賞資訊新增用戶打賞的資料 ([2cf4f03](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/2cf4f039359e1199b3fe54ba9b0536672f74291e))
+* 新增 取得指定的會員清單與我目前的關係 的api ([53ea9de](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/53ea9def6463ee1a7a44f50d602344231d800c70))
 * 新增使用者分析API ([45661cc](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/45661ccaab4eee60f2fc6682ddf848885ed41551))
+* 新增目前全部有實做的文章頻道類型定義 ([95ed4a1](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/95ed4a135fb0a7d070da776ddd450990538a7d84))
+* 社團資訊回傳新增在社團的職位資訊 ([7afc657](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/7afc6570698227078a4093d71744647ccd3e9213))
+* 移除 GroupArticle/Delete 的方法 ([3d31963](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/3d31963a293154ff326f01e2f652d48e6de92a4a))
+* 調整成新版文章分類 ([324e7d6](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/324e7d699cb65345325b74e9e1479920a4b364b4))
+* 調整成新版文章分類的方式呼叫api ([49b988f](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/49b988f1f1c4457903a55b4902c795a73de3c6a4))
 
 
 
@@ -362,6 +300,7 @@
 ### Features
 
 * 新增權限Type列舉 ([edfe47b](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/edfe47b85448ac68af50f6057904667ae13e8810))
+* 新增美股股票文章的類別 ([256f8a8](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/256f8a86e3f62e80c49eaf6edb31067b6cce2401))
 * 新增語系Header物件，新增自選股服務語系參數 ([9ce9868](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/9ce986842d1b1f307d1ecd3054ddf0065450213c))
 
 
