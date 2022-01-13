@@ -31,7 +31,7 @@ class MemberProfileQueryBuilder internal constructor() {
 
     fun isNeedName(value: Boolean): MemberProfileQueryBuilder {
         queryParams.name = if (value) {
-            MemberProfileField.NICKNAME
+            MemberProfileField.NAME
         } else {
             null
         }
