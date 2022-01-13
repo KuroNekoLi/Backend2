@@ -1,3 +1,16 @@
+#  (2022-01-13)
+
+
+
+## [5.10.3](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.10.2...5.10.3) (2022-01-13)
+
+
+### Bug Fixes
+
+* 修正MemberProfile name查詢欄位 ([001bcaa](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/001bcaa6b49413f3b4a1955c2e2d685c0fb4017d))
+
+
+
 #  (2022-01-10)
 
 
