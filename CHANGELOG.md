@@ -1,3 +1,12 @@
+#  (2022-01-25)
+
+
+
+## [5.10.4](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.10.3...5.10.4) (2022-01-25)
+
+
+* 調整ForumOcean GroupResponse.position enum value.
+
 #  (2022-01-13)
 
 
