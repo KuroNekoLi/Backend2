@@ -1,3 +1,16 @@
+#  (2022-01-28)
+
+
+
+# [5.11.0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.10.4...5.11.0) (2022-01-28)
+
+
+### Features
+
+* add FrontEndLogger service ([072b245](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/072b245b4019016794c46734f9bc1157ada83762))
+
+
+
 #  (2022-01-25)
 
 
