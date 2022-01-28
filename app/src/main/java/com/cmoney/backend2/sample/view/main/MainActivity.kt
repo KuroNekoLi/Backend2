@@ -113,6 +113,7 @@ class MainActivity : AppCompatActivity() {
 //                DtnoServiceCase(),
 //                EmilyServiceCase(),
 //                ForumOceanServiceCase(),
+//                FrontEndLoggerServiceCase(),
 //                CentralizedImageServiceCase(),
 //                MediaServiceCase(),
 //                MobileOceanServiceCase(),

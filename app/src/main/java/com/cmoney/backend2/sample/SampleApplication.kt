@@ -24,6 +24,7 @@ import com.cmoney.backend2.data.di.dataServiceModule
 import com.cmoney.backend2.dtno.di.dtnoServiceModule
 import com.cmoney.backend2.emilystock.di.emilyServiceModule
 import com.cmoney.backend2.forumocean.di.forumOceanServiceModule
+import com.cmoney.backend2.frontendlogger.di.frontEndLoggerServiceModule
 import com.cmoney.backend2.identityprovider.di.identityProviderServiceModule
 import com.cmoney.backend2.imagerecognition.di.imageRecognitionServiceModule
 import com.cmoney.backend2.media.di.mediaServiceModule
@@ -107,7 +108,8 @@ class SampleApplication : Application() {
                     crmServiceModule,
                     userBehaviorServiceModule,
                     clientConfigurationModule,
-                    imageRecognitionServiceModule
+                    imageRecognitionServiceModule,
+                    frontEndLoggerServiceModule
                 )
             )
         }
