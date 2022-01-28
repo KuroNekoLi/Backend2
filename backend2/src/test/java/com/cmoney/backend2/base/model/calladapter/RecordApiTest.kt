@@ -16,6 +16,7 @@ import com.cmoney.backend2.data.service.DataService
 import com.cmoney.backend2.dtno.service.DtnoService
 import com.cmoney.backend2.emilystock.service.EmilyService
 import com.cmoney.backend2.forumocean.service.ForumOceanService
+import com.cmoney.backend2.frontendlogger.service.FrontEndLoggerService
 import com.cmoney.backend2.identityprovider.service.IdentityProviderService
 import com.cmoney.backend2.imagerecognition.service.ImageRecognitionService
 import com.cmoney.backend2.media.service.MediaService
@@ -94,7 +95,8 @@ class RecordApiTest(
                 arrayOf<Any?>(VirtualAssetsService::class),
                 arrayOf<Any?>(ClientConfigurationService::class),
                 arrayOf<Any?>(ImageRecognitionService::class),
-                arrayOf<Any?>(BrokerDataTransmissionService::class)
+                arrayOf<Any?>(BrokerDataTransmissionService::class),
+                arrayOf<Any?>(FrontEndLoggerService::class),
             )
         }
     }
