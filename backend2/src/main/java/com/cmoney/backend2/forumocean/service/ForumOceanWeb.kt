@@ -1,5 +1,6 @@
 package com.cmoney.backend2.forumocean.service
 
+import androidx.annotation.ColorRes
 import com.cmoney.backend2.forumocean.service.api.article.create.CreateArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.create.variable.Content
 import com.cmoney.backend2.forumocean.service.api.article.createquestion.CreateQuestionResponseBody
@@ -449,12 +450,22 @@ interface ForumOceanWeb {
      * 申請加入社團
      *
      * @param groupId 社團Id
-     * @param reason 申請加入的理由
+     * @param reason 申請加入的理由(不能為空字串)
      * @return
      */
     suspend fun join(
         groupId: Long,
-        reason: String?
+        reason: String
+    ): Result<Unit>
+
+    /**
+     * 申請加入社團
+     *
+     * @param groupId 社團Id
+     * @return
+     */
+    suspend fun join(
+        groupId: Long
     ): Result<Unit>
 
     /**

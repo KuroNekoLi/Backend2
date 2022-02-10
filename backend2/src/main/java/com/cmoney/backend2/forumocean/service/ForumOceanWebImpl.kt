@@ -1,6 +1,5 @@
 package com.cmoney.backend2.forumocean.service
 
-import android.util.Log
 import com.cmoney.backend2.base.extension.checkResponseBody
 import com.cmoney.backend2.base.extension.createAuthorizationBearer
 import com.cmoney.backend2.base.extension.handleNoContent
@@ -691,14 +690,29 @@ class ForumOceanWebImpl(
         }
     }
 
-    override suspend fun join(groupId: Long, reason: String?): Result<Unit> =
+    override suspend fun join(groupId: Long, reason: String): Result<Unit> =
+        withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                if (reason.isEmpty()) {
+                    error("reason不能為空字串")
+                }
+                service.join(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    groupId = groupId,
+                    reason = reason
+                ).handleNoContent(jsonParser)
+            }
+        }
+
+    override suspend fun join(groupId: Long): Result<Unit> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.join(
                     path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     groupId = groupId,
-                    reason = reason
+                    reason = null
                 ).handleNoContent(jsonParser)
             }
         }
