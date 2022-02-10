@@ -443,7 +443,7 @@ interface ForumOceanService {
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Path("groupId") groupId: Long,
-        @Query("reason") reason: String
+        @Query("reason") reason: String?
     ): Response<Void>
 
     @RecordApi
