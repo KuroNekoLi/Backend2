@@ -454,7 +454,7 @@ interface ForumOceanWeb {
      */
     suspend fun join(
         groupId: Long,
-        reason: String
+        reason: String?
     ): Result<Unit>
 
     /**

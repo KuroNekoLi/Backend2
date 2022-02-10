@@ -691,7 +691,7 @@ class ForumOceanWebImpl(
         }
     }
 
-    override suspend fun join(groupId: Long, reason: String): Result<Unit> =
+    override suspend fun join(groupId: Long, reason: String?): Result<Unit> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.join(
