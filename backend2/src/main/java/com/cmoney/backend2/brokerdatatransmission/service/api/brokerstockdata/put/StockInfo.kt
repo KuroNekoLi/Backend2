@@ -3,11 +3,21 @@ package com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.p
 import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.TradeType
 import com.google.gson.annotations.SerializedName
 
-class StockInfo(
+class StockInfo internal constructor(
     @SerializedName("TradeType")
-    val tradeType: TradeType,
+    internal val tradeTypeValue: Byte,
     @SerializedName("Amount")
     val amount: Int,
     @SerializedName("TradeTotalCost")
     val tradeTotalCost: Double
-)
+) {
+
+    constructor(
+        tradeType: TradeType,
+        amount: Int,
+        tradeTotalCost: Double
+    ) : this(tradeType.value, amount, tradeTotalCost)
+
+    val tradeType get() = TradeType.fromValue(tradeTypeValue)
+
+}
