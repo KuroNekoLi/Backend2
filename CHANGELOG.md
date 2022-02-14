@@ -1,3 +1,16 @@
+#  (2022-02-14)
+
+
+
+## [5.11.2](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.11.1...5.11.2) (2022-02-14)
+
+
+### Bug Fixes
+
+* 修正 BrokerStockData 服務的 TradeType 型別在傳輸時與文件不符的問題 ([589f5b0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/589f5b05949a8099395d28972ef8878ba0301350))
+
+
+
 #  (2022-02-10)
 
 
