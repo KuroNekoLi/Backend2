@@ -1,34 +1,36 @@
 package com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata
 
-import com.google.gson.annotations.SerializedName
-
 /**
  * 股票類型
  */
-enum class TradeType {
+enum class TradeType(val value: Byte) {
 
     /**
      * 現股
      */
-    @SerializedName("0")
-    Spot,
+    Spot(0),
 
     /**
      * 融資
      */
-    @SerializedName("1")
-    MarginTrading,
+    MarginTrading(1),
 
     /**
      * 融券
      */
-    @SerializedName("2")
-    ShortSelling,
+    ShortSelling(2),
 
     /**
      * 興櫃
      */
-    @SerializedName("3")
-    Emerging,
+    Emerging(3);
+
+    companion object {
+        internal fun fromValue(value: Byte): TradeType? {
+            return values().find { tradeType ->
+                tradeType.value == value
+            }
+        }
+    }
 
 }
