@@ -5,9 +5,13 @@ import com.google.gson.annotations.SerializedName
 
 data class StockInfo(
     @SerializedName("tradeType")
-    val tradeType: TradeType?,
+    internal val tradeTypeValue: Byte?,
     @SerializedName("amount")
     val amount: Long?,
     @SerializedName("tradeTotalCost")
     val tradeTotalCost: Double?
-)
+) {
+
+    val tradeType get() = tradeTypeValue?.let { TradeType.fromValue(tradeTypeValue) }
+
+}

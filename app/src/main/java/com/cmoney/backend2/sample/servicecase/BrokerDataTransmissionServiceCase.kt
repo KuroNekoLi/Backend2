@@ -25,8 +25,6 @@ class BrokerDataTransmissionServiceCase : ServiceCase {
             .logResponse(TAG)
         web.getUserAgreesImportRecord()
             .logResponse(TAG)
-        web.getBrokerStockData(Country.TW)
-            .logResponse(TAG)
         web.putBrokerStockData(
             country = Country.TW,
             brokerData = BrokerData(
@@ -37,6 +35,8 @@ class BrokerDataTransmissionServiceCase : ServiceCase {
                 )
             )
         )
+            .logResponse(TAG)
+        web.getBrokerStockData(Country.TW)
             .logResponse(TAG)
         web.deleteBrokerStockData(
             Country.TW,
