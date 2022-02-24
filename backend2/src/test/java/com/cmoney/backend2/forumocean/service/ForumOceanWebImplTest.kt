@@ -3069,7 +3069,7 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.getSpecificExpertMemberRank(
                 authorization = any(),
-                memeberIds = any(),
+                memberIds = any(),
                 path = ""
             )
         } returns Response.success(
@@ -3098,7 +3098,7 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.getSpecificExpertMemberRank(
                 authorization = any(),
-                memeberIds = any(),
+                memberIds = any(),
                 path = ""
             )
         } returns Response.error(500, "".toResponseBody())
@@ -3157,7 +3157,7 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.getSpecificMemberFansRank(
                 authorization = any(),
-                memeberIds = any(),
+                memberIds = any(),
                 path = ""
             )
         } returns Response.success(
@@ -3186,7 +3186,7 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.getSpecificMemberFansRank(
                 authorization = any(),
-                memeberIds = any(),
+                memberIds = any(),
                 path = ""
             )
         } returns Response.error(500, "".toResponseBody())
@@ -3245,7 +3245,7 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.getSpecificSolutionExpertRank(
                 authorization = any(),
-                memeberIds = any(),
+                memberIds = any(),
                 path = ""
             )
         } returns Response.success(
@@ -3268,7 +3268,7 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.getSpecificSolutionExpertRank(
                 authorization = any(),
-                memeberIds = any(),
+                memberIds = any(),
                 path = ""
             )
         } returns Response.error(500, "".toResponseBody())

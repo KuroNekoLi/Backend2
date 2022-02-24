@@ -804,7 +804,7 @@ interface ForumOceanService {
     suspend fun getSpecificExpertMemberRank(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
-        @Query("memeberIds") memeberIds: String
+        @Query("memberIds") memberIds: String
     ): Response<List<GetExpertMemberRankResponseBody>>
 
 
@@ -828,7 +828,7 @@ interface ForumOceanService {
     suspend fun getSpecificMemberFansRank(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
-        @Query("memeberIds") memeberIds: String
+        @Query("memberIds") memberIds: String
     ): Response<List<FansMemberRankResponseBody>>
 
 
@@ -852,7 +852,7 @@ interface ForumOceanService {
     suspend fun getSpecificSolutionExpertRank(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
-        @Query("memeberIds") memeberIds: String
+        @Query("memberIds") memberIds: String
     ): Response<List<SolutionExpertRankResponseBody>>
 
     @RecordApi

@@ -954,12 +954,12 @@ class ForumOceanWebImpl(
     }
 
 
-    override suspend fun getSpecificExpertMemberRank(memeberIds:String): Result<List<GetExpertMemberRankResponseBody>>  = withContext(dispatcher.io()){
+    override suspend fun getSpecificExpertMemberRank(memberIds:String): Result<List<GetExpertMemberRankResponseBody>>  = withContext(dispatcher.io()){
         kotlin.runCatching {
             service.getSpecificExpertMemberRank(
                 path = serverName,
                 authorization = setting.accessToken.createAuthorizationBearer(),
-                memeberIds=memeberIds
+                memberIds=memberIds
             ).checkResponseBody(jsonParser)
         }
     }
@@ -975,12 +975,12 @@ class ForumOceanWebImpl(
         }
     }
 
-    override suspend fun getSpecificMemberFansRank(memeberIds:String): Result<List<FansMemberRankResponseBody>>  = withContext(dispatcher.io()){
+    override suspend fun getSpecificMemberFansRank(memberIds:String): Result<List<FansMemberRankResponseBody>>  = withContext(dispatcher.io()){
         kotlin.runCatching {
             service.getSpecificMemberFansRank(
                 path = serverName,
                 authorization = setting.accessToken.createAuthorizationBearer(),
-                memeberIds=memeberIds
+                memberIds=memberIds
             ).checkResponseBody(jsonParser)
         }
     }
@@ -996,12 +996,12 @@ class ForumOceanWebImpl(
         }
     }
 
-    override suspend fun getSpecificSolutionExpertRank(memeberIds:String): Result<List<SolutionExpertRankResponseBody>>  = withContext(dispatcher.io()){
+    override suspend fun getSpecificSolutionExpertRank(memberIds:String): Result<List<SolutionExpertRankResponseBody>>  = withContext(dispatcher.io()){
         kotlin.runCatching {
             service.getSpecificSolutionExpertRank(
                 path = serverName,
                 authorization = setting.accessToken.createAuthorizationBearer(),
-                memeberIds=memeberIds
+                memberIds=memberIds
             ).checkResponseBody(jsonParser)
         }
     }
