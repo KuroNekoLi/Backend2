@@ -828,9 +828,9 @@ interface ForumOceanWeb {
 
     /**
      * 取得指定達人排行
-     * @param memeberIds memberIds(用逗號分隔)
+     * @param memberIds(用逗號分隔)
      */
-    suspend fun getSpecificExpertMemberRank(memeberIds:String):Result<List<GetExpertMemberRankResponseBody>>
+    suspend fun getSpecificExpertMemberRank(memberIds:String):Result<List<GetExpertMemberRankResponseBody>>
 
     /**
      * 取得粉絲成長達人排行
@@ -841,9 +841,9 @@ interface ForumOceanWeb {
 
     /**
      * 取得指定粉絲成長達人排行
-     * @param memeberIds memberIds(用逗號分隔)
+     * @param memberIds(用逗號分隔)
      */
-    suspend fun getSpecificMemberFansRank(memeberIds:String):Result<List<FansMemberRankResponseBody>>
+    suspend fun getSpecificMemberFansRank(memberIds:String):Result<List<FansMemberRankResponseBody>>
 
     /**
      * 取得解題達人排行
@@ -854,9 +854,9 @@ interface ForumOceanWeb {
 
     /**
      * 取得指定解題達人排行
-     * @param memeberIds memberIds(用逗號分隔)
+     * @param memberIds(用逗號分隔)
      */
-    suspend fun getSpecificSolutionExpertRank(memeberIds:String):Result<List<SolutionExpertRankResponseBody>>
+    suspend fun getSpecificSolutionExpertRank(memberIds:String):Result<List<SolutionExpertRankResponseBody>>
 
     //endregion
 
