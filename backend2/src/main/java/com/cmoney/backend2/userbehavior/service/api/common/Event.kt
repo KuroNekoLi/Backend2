@@ -10,5 +10,5 @@ data class Event(
     @SerializedName("time")
     val time: Long,
     @SerializedName("duration")
-    val duration: Long
+    val duration: Long = 0
 )
