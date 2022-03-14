@@ -1,3 +1,15 @@
+#  (2022-03-14)
+
+
+
+# [5.12.0](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.11.3...5.12.0) (2022-03-14)
+
+
+### Features
+
+* UserBehavior - Event新增duration欄位用於上傳時間事件
+
+
 #  (2022-02-25)
 
 
