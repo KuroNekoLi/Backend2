@@ -8,5 +8,7 @@ data class Event(
     @SerializedName("name")
     val name: String,
     @SerializedName("time")
-    val time: Long
+    val time: Long,
+    @SerializedName("duration")
+    val duration: Long = 0
 )

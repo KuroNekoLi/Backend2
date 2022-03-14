@@ -20,7 +20,8 @@ class UserBehaviorServiceCase : ServiceCase {
                     Event(
                         descriptions = mapOf("Unit Test" to "Unit Test"),
                         name = "Unit Test",
-                        time = System.currentTimeMillis()
+                        time = System.currentTimeMillis(),
+                        duration = 0
                     )
                 ),
                 processId = "Unit Test",
