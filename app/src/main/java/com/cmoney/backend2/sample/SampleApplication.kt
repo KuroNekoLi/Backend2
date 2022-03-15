@@ -44,6 +44,7 @@ import com.cmoney.backend2.trial.di.trialServiceModule
 import com.cmoney.backend2.userbehavior.di.userBehaviorServiceModule
 import com.cmoney.backend2.videochannel.di.videoChannelServiceModule
 import com.cmoney.backend2.virtualassets.di.virtualAssetsServiceModule
+import com.cmoney.backend2.vtwebapi.di.virtualTradeServiceModule
 import com.cmoney.data_logdatarecorder.logger.LogDataRecorderLoggerAdapter
 import com.cmoney.data_logdatarecorder.recorder.LogDataRecorder
 import com.orhanobut.logger.Logger
@@ -109,7 +110,8 @@ class SampleApplication : Application() {
                     userBehaviorServiceModule,
                     clientConfigurationModule,
                     imageRecognitionServiceModule,
-                    frontEndLoggerServiceModule
+                    frontEndLoggerServiceModule,
+                    virtualTradeServiceModule
                 )
             )
         }
