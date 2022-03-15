@@ -1,3 +1,16 @@
+#  (2022-03-15)
+
+
+
+# [5.13.0](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.12.0...5.13.0) (2022-03-15)
+
+
+### Features
+
+* 新增 VirtualTrade service ([5c98889](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/5c98889d7ad12ca72ae955742d87aa18dcbb4c69))
+
+
+
 #  (2022-03-14)
 
 
