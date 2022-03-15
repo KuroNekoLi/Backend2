@@ -14,11 +14,11 @@ class VirtualTradeServiceCase : ServiceCase {
     override suspend fun testAll() {
         web.getAccount(
             domain = setting.domainUrl,
-            destMemberPk = 0,
-            skipCount = 0,
-            fetchSize = 0,
-            needGroupAccount = false,
-            needExtendInfo = false
+            destMemberPk = null,
+            skipCount = null,
+            fetchSize = null,
+            needGroupAccount = null,
+            needExtendInfo = null,
         )
             .logResponse(TAG)
 
@@ -45,8 +45,8 @@ class VirtualTradeServiceCase : ServiceCase {
 
         web.getAttendGroup(
             domain = setting.domainUrl,
-            fetchIndex = 0,
-            fetchSize = 0
+            fetchIndex = null,
+            fetchSize = null
         )
             .logResponse(TAG)
 

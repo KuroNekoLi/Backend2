@@ -20,11 +20,11 @@ interface VirtualTradeService {
     suspend fun getAccount(
         @Url url: String,
         @Header("Authorization") authorization: String,
-        @Query("destMemberPk") destMemberPk: Long,
-        @Query("skipCount") skipCount: Int,
-        @Query("fetchSize") fetchSize: Int,
-        @Query("needGroupAccount") needGroupAccount: Boolean,
-        @Query("needExtendInfo") needExtendInfo: Boolean
+        @Query("destMemberPk") destMemberPk: Long?,
+        @Query("skipCount") skipCount: Int?,
+        @Query("fetchSize") fetchSize: Int?,
+        @Query("needGroupAccount") needGroupAccount: Boolean?,
+        @Query("needExtendInfo") needExtendInfo: Boolean?
     ): Response<List<GetAccountResponseBody>>
 
     /**
@@ -67,8 +67,8 @@ interface VirtualTradeService {
     suspend fun getAttendGroup(
         @Url url: String,
         @Header("Authorization") authorization: String,
-        @Query("fetchIndex") fetchIndex: Int,
-        @Query("fetchSize") fetchSize: Int
+        @Query("fetchIndex") fetchIndex: Int?,
+        @Query("fetchSize") fetchSize: Int?
     ): Response<List<GetAttendGroupResponseBody>>
 
     /**

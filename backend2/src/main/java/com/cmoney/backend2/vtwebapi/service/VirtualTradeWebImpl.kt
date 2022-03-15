@@ -28,11 +28,11 @@ class VirtualTradeWebImpl(
 
     override suspend fun getAccount(
         domain: String,
-        destMemberPk: Long,
-        skipCount: Int,
-        fetchSize: Int,
-        needGroupAccount: Boolean,
-        needExtendInfo: Boolean
+        destMemberPk: Long?,
+        skipCount: Int?,
+        fetchSize: Int?,
+        needGroupAccount: Boolean?,
+        needExtendInfo: Boolean?
     ): Result<List<GetAccountResponseBody>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getAccount(
@@ -97,8 +97,8 @@ class VirtualTradeWebImpl(
 
     override suspend fun getAttendGroup(
         domain: String,
-        fetchIndex: Int,
-        fetchSize: Int
+        fetchIndex: Int?,
+        fetchSize: Int?
     ): Result<List<GetAttendGroupResponseBody>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getAttendGroup(

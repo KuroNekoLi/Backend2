@@ -108,11 +108,11 @@ class VirtualTradeWebImplTest {
         } returns Response.success(listOf(responseBody))
 
         val result = webImpl.getAccount(
-            destMemberPk = 0,
-            skipCount = 0,
-            fetchSize = 0,
-            needGroupAccount = false,
-            needExtendInfo = false
+            destMemberPk = null,
+            skipCount = null,
+            fetchSize = null,
+            needGroupAccount = null,
+            needExtendInfo = null
         )
         Truth.assertThat(result.isSuccess).isTrue()
     }
@@ -133,11 +133,11 @@ class VirtualTradeWebImplTest {
         } returns Response.error(409, "".toResponseBody())
 
         val result = webImpl.getAccount(
-            destMemberPk = 0,
-            skipCount = 0,
-            fetchSize = 0,
-            needGroupAccount = false,
-            needExtendInfo = false
+            destMemberPk = null,
+            skipCount = null,
+            fetchSize = null,
+            needGroupAccount = null,
+            needExtendInfo = null
         )
         Truth.assertThat(result.isSuccess).isFalse()
     }
@@ -311,14 +311,14 @@ class VirtualTradeWebImplTest {
             service.getAttendGroup(
                 url = any(),
                 authorization = any(),
-                fetchIndex = 0,
-                fetchSize = 0
+                fetchIndex = any(),
+                fetchSize = any()
             )
         } returns Response.success(listOf(responseBody))
 
         val result = webImpl.getAttendGroup(
-            fetchIndex = 0,
-            fetchSize = 0
+            fetchIndex = null,
+            fetchSize = null
         )
         Truth.assertThat(result.isSuccess).isTrue()
     }
@@ -330,14 +330,14 @@ class VirtualTradeWebImplTest {
             service.getAttendGroup(
                 url = any(),
                 authorization = any(),
-                fetchIndex = 0,
-                fetchSize = 0
+                fetchIndex = any(),
+                fetchSize = any()
             )
         } returns Response.error(409, "".toResponseBody())
 
         val result = webImpl.getAttendGroup(
-            fetchIndex = 0,
-            fetchSize = 0
+            fetchIndex = null,
+            fetchSize = null
         )
         Truth.assertThat(result.isSuccess).isFalse()
     }
