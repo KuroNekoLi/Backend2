@@ -181,6 +181,8 @@ class SampleApplication : Application() {
 | videoChannelServiceModule                 | videochannel               |
 | imageRecognitionServiceModule             | imageRecognition           |
 | brokerDataTransmissionServiceModule       | brokerdatatransmission     |
+| frontEndLoggerServiceModule               | frontendlogger             |
+| virtualTradeServiceModule                 | vtwebapi                   |
 #### 選擇使用Module的步驟
 
 - 確認目前需要使用的服務的host之後的path，以下舉例說明
