@@ -19,19 +19,19 @@ interface VirtualTradeWeb {
      * 取得會員所有帳戶資訊
      *
      * @param domain 呼叫的server網域
-     * @param destMemberPk 目標會員 PK(預設不帶->取自己)
-     * @param skipCount 跳過數量(預設不帶)
-     * @param fetchSize 取得量(預設不帶->取全部)
-     * @param needGroupAccount 是否包含競賽帳號(預設不帶)
-     * @param needExtendInfo 是否需要帳號額外資訊(含問帳戶數)(預設不帶)
+     * @param destMemberPk 目標會員 PK(預設null->取自己)
+     * @param skipCount 跳過數量(預設null)
+     * @param fetchSize 取得量(預設null->取全部)
+     * @param needGroupAccount 是否包含競賽帳號(預設null)
+     * @param needExtendInfo 是否需要帳號額外資訊(含問帳戶數)(預設null)
      */
     suspend fun getAccount(
         domain: String = setting.domainUrl,
-        destMemberPk: Long?,
-        skipCount: Int?,
-        fetchSize: Int?,
-        needGroupAccount: Boolean?,
-        needExtendInfo: Boolean?
+        destMemberPk: Long? = null,
+        skipCount: Int? = null,
+        fetchSize: Int? = null,
+        needGroupAccount: Boolean? = null,
+        needExtendInfo: Boolean? = null
     ): Result<List<GetAccountResponseBody>>
 
     /**
@@ -77,13 +77,13 @@ interface VirtualTradeWeb {
      * 取得我參加的競技場
      *
      * @param domain 呼叫的server網域
-     * @param fetchIndex 取得起始索引(index:0)(預設不帶)
-     * @param fetchSize 取得量(預設不帶->取全部)
+     * @param fetchIndex 取得起始索引(index:0)(預設null)
+     * @param fetchSize 取得量(預設null->取全部)
      */
     suspend fun getAttendGroup(
         domain: String = setting.domainUrl,
-        fetchIndex: Int?,
-        fetchSize: Int?
+        fetchIndex: Int? = null,
+        fetchSize: Int? = null
     ): Result<List<GetAttendGroupResponseBody>>
 
     /**

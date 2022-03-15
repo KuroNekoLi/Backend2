@@ -107,13 +107,7 @@ class VirtualTradeWebImplTest {
             )
         } returns Response.success(listOf(responseBody))
 
-        val result = webImpl.getAccount(
-            destMemberPk = null,
-            skipCount = null,
-            fetchSize = null,
-            needGroupAccount = null,
-            needExtendInfo = null
-        )
+        val result = webImpl.getAccount()
         Truth.assertThat(result.isSuccess).isTrue()
     }
 
@@ -132,13 +126,7 @@ class VirtualTradeWebImplTest {
             )
         } returns Response.error(409, "".toResponseBody())
 
-        val result = webImpl.getAccount(
-            destMemberPk = null,
-            skipCount = null,
-            fetchSize = null,
-            needGroupAccount = null,
-            needExtendInfo = null
-        )
+        val result = webImpl.getAccount()
         Truth.assertThat(result.isSuccess).isFalse()
     }
 
@@ -316,10 +304,7 @@ class VirtualTradeWebImplTest {
             )
         } returns Response.success(listOf(responseBody))
 
-        val result = webImpl.getAttendGroup(
-            fetchIndex = null,
-            fetchSize = null
-        )
+        val result = webImpl.getAttendGroup()
         Truth.assertThat(result.isSuccess).isTrue()
     }
 
@@ -335,10 +320,7 @@ class VirtualTradeWebImplTest {
             )
         } returns Response.error(409, "".toResponseBody())
 
-        val result = webImpl.getAttendGroup(
-            fetchIndex = null,
-            fetchSize = null
-        )
+        val result = webImpl.getAttendGroup()
         Truth.assertThat(result.isSuccess).isFalse()
     }
 
