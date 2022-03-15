@@ -20,11 +20,11 @@ import kotlinx.coroutines.withContext
 class VirtualTradeWebImpl(
     override val setting: Setting,
     private val service: VirtualTradeService,
-    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider(),
-    private val gson: Gson
+    private val gson: Gson,
+    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider()
 ) : VirtualTradeWeb {
 
-    private val servicePath: String = "/vt.webapi"
+    private val servicePath: String = "vt.webapi"
 
     override suspend fun getAccount(
         domain: String,

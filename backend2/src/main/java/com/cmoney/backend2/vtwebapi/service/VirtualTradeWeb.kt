@@ -21,7 +21,7 @@ interface VirtualTradeWeb {
      * @param domain 呼叫的server網域
      * @param destMemberPk 目標會員 PK(不帶就是取自己)
      * @param skipCount 跳過數量
-     * @param fetchSize 取得量(預設取全部)
+     * @param fetchSize 取得量(預設不帶取全部)
      * @param needGroupAccount 是否包含競賽帳號
      * @param needExtendInfo 是否需要帳號額外資訊(含問帳戶數)
      */
@@ -64,7 +64,7 @@ interface VirtualTradeWeb {
      * @param domain 呼叫的server網域
      * @param giftFromMember 這張卡是誰送的
      * @param ownerMemberPk 擁有者PK
-     * @param productSn 卡片定義序號
+     * @param productSn 卡片類型編號
      */
     suspend fun purchaseProductCard(
         domain: String = setting.domainUrl,
