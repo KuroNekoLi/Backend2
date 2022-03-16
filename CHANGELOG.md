@@ -1,3 +1,16 @@
+#  (2022-03-16)
+
+
+
+# [5.14.0](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.13.0...5.14.0) (2022-03-16)
+
+
+### Features
+
+* 更改getCardInstanceSns的path與參數 ([2f8abed](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/2f8abed3a1494a8da6e39264c8c2393850710a5e))
+
+
+
 #  (2022-03-15)
 
 
