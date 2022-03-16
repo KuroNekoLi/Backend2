@@ -4,10 +4,12 @@ import com.cmoney.backend2.base.extension.*
 import com.cmoney.backend2.base.model.dispatcher.DefaultDispatcherProvider
 import com.cmoney.backend2.base.model.dispatcher.DispatcherProvider
 import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.backend2.vtwebapi.service.api.createaccount.AccountType
 import com.cmoney.backend2.vtwebapi.service.api.createaccount.CreateAccountRequestBody
 import com.cmoney.backend2.vtwebapi.service.api.getaccount.GetAccountResponseBody
 import com.cmoney.backend2.vtwebapi.service.api.getattendgroup.GetAttendGroupResponseBody
 import com.cmoney.backend2.vtwebapi.service.api.getcardinstancesns.GetCardInstanceSnsResponseBody
+import com.cmoney.backend2.vtwebapi.service.api.getcardinstancesns.UsageType
 import com.cmoney.backend2.vtwebapi.service.api.getstockinventorylist.GetStockInventoryListResponseBody
 import com.cmoney.backend2.vtwebapi.service.api.purchaseproductcard.PurchaseProductCardRequestBody
 import com.cmoney.backend2.vtwebapi.service.api.purchaseproductcard.PurchaseProductCardResponseBody
@@ -49,7 +51,7 @@ class VirtualTradeWebImpl(
 
     override suspend fun createAccount(
         domain: String,
-        type: Int,
+        type: AccountType,
         isn: Long
     ): Result<Unit> = withContext(dispatcher.io()) {
         kotlin.runCatching {
@@ -57,7 +59,7 @@ class VirtualTradeWebImpl(
                 url = "$domain$servicePath/Account",
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 body = CreateAccountRequestBody(
-                    type = type,
+                    type = type.typeNum,
                     isn = isn
                 )
             ).handleNoContent(gson)
@@ -67,14 +69,14 @@ class VirtualTradeWebImpl(
     override suspend fun getCardInstanceSns(
         domain: String,
         productSn: Long,
-        productUsage: Int
+        productUsage: UsageType
     ): Result<GetCardInstanceSnsResponseBody> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getCardInstanceSns(
                 url = "$domain$servicePath/ByProductSn",
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 productSn = productSn,
-                productUsage = productUsage,
+                productUsage = productUsage.typeNum,
             ).checkResponseBody(gson)
         }
     }
