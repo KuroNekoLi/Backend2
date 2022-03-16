@@ -46,6 +46,8 @@ interface VirtualTradeService {
     suspend fun getCardInstanceSns(
         @Url url: String,
         @Header("Authorization") authorization: String,
+        @Query("productSn") productSn: Long?,
+        @Query("productUsage") productUsage: Int?
     ): Response<GetCardInstanceSnsResponseBody>
 
     /**

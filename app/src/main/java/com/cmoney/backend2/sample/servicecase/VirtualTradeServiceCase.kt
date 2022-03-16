@@ -26,14 +26,15 @@ class VirtualTradeServiceCase : ServiceCase {
 
         web.getCardInstanceSns(
             domain = setting.domainUrl,
-            productSn = TEST_PRODUCT
+            productSn = TEST_PRODUCT,
+            productUsage = 1
         )
             .logResponse(TAG)
 
         web.purchaseProductCard(
             domain = setting.domainUrl,
             giftFromMember = 22478,
-            ownerMemberPk = 2000,
+            ownerMemberPk = 22478,
             productSn = TEST_PRODUCT
         )
             .logResponse(TAG)

@@ -52,10 +52,12 @@ interface VirtualTradeWeb {
      *
      * @param domain 呼叫的server網域
      * @param productSn 卡片類型編號
+     * @param productUsage 道具使用狀況(未使用 : 1、使用中 : 2、終止完結 : 3、退款取消 : 5)
      */
     suspend fun getCardInstanceSns(
         domain: String = setting.domainUrl,
-        productSn: Long
+        productSn: Long,
+        productUsage: Int
     ): Result<GetCardInstanceSnsResponseBody>
 
     /**

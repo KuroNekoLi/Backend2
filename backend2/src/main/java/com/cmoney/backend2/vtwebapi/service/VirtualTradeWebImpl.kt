@@ -66,12 +66,15 @@ class VirtualTradeWebImpl(
 
     override suspend fun getCardInstanceSns(
         domain: String,
-        productSn: Long
+        productSn: Long,
+        productUsage: Int
     ): Result<GetCardInstanceSnsResponseBody> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getCardInstanceSns(
-                url = "$domain$servicePath/ProductSn/$productSn",
-                authorization = setting.accessToken.createAuthorizationBearer()
+                url = "$domain$servicePath/ByProductSn",
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                productSn = productSn,
+                productUsage = productUsage,
             ).checkResponseBody(gson)
         }
     }

@@ -175,11 +175,16 @@ class VirtualTradeWebImplTest {
         coEvery {
             service.getCardInstanceSns(
                 url = any(),
-                authorization = any()
+                authorization = any(),
+                productSn = any(),
+                productUsage = any()
             )
         } returns Response.success(responseBody)
 
-        val result = webImpl.getCardInstanceSns(productSn = 20)
+        val result = webImpl.getCardInstanceSns(
+            productSn = 20,
+            productUsage = 1
+        )
         Truth.assertThat(result.isSuccess).isTrue()
     }
 
@@ -189,11 +194,16 @@ class VirtualTradeWebImplTest {
         coEvery {
             service.getCardInstanceSns(
                 url = any(),
-                authorization = any()
+                authorization = any(),
+                productSn = any(),
+                productUsage = any()
             )
         } returns Response.error(409, "".toResponseBody())
 
-        val result = webImpl.getCardInstanceSns(productSn = 20)
+        val result = webImpl.getCardInstanceSns(
+            productSn = 20,
+            productUsage = 1
+        )
         Truth.assertThat(result.isSuccess).isFalse()
     }
 
