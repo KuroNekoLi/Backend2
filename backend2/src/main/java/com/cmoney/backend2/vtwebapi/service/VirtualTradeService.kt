@@ -6,6 +6,7 @@ import com.cmoney.backend2.vtwebapi.service.api.getcardinstancesns.GetCardInstan
 import com.cmoney.backend2.vtwebapi.service.api.createaccount.CreateAccountRequestBody
 import com.cmoney.backend2.vtwebapi.service.api.getaccount.GetAccountResponseBody
 import com.cmoney.backend2.vtwebapi.service.api.getattendgroup.GetAttendGroupResponseBody
+import com.cmoney.backend2.vtwebapi.service.api.getcardinstancesns.UsageType
 import com.cmoney.backend2.vtwebapi.service.api.getstockinventorylist.GetStockInventoryListResponseBody
 import com.cmoney.backend2.vtwebapi.service.api.purchaseproductcard.PurchaseProductCardResponseBody
 import retrofit2.Response
@@ -46,6 +47,8 @@ interface VirtualTradeService {
     suspend fun getCardInstanceSns(
         @Url url: String,
         @Header("Authorization") authorization: String,
+        @Query("productSn") productSn: Long?,
+        @Query("productUsage") productUsage: Int?
     ): Response<GetCardInstanceSnsResponseBody>
 
     /**

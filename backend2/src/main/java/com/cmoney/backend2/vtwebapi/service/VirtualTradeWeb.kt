@@ -1,9 +1,11 @@
 package com.cmoney.backend2.vtwebapi.service
 
 import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.backend2.vtwebapi.service.api.createaccount.AccountType
 import com.cmoney.backend2.vtwebapi.service.api.getaccount.GetAccountResponseBody
 import com.cmoney.backend2.vtwebapi.service.api.getattendgroup.GetAttendGroupResponseBody
 import com.cmoney.backend2.vtwebapi.service.api.getcardinstancesns.GetCardInstanceSnsResponseBody
+import com.cmoney.backend2.vtwebapi.service.api.getcardinstancesns.UsageType
 import com.cmoney.backend2.vtwebapi.service.api.getstockinventorylist.GetStockInventoryListResponseBody
 import com.cmoney.backend2.vtwebapi.service.api.purchaseproductcard.PurchaseProductCardResponseBody
 
@@ -38,12 +40,12 @@ interface VirtualTradeWeb {
      * 創建一個投資帳戶
      *
      * @param domain 呼叫的server網域
-     * @param type 創建帳號類型 現股：1 期權：2
+     * @param type 創建帳號類型
      * @param isn 使用的道具卡卡號，沒有道具卡填0(免費創建)
      */
     suspend fun createAccount(
         domain: String = setting.domainUrl,
-        type: Int,
+        type: AccountType,
         isn: Long
     ): Result<Unit>
 
@@ -52,10 +54,12 @@ interface VirtualTradeWeb {
      *
      * @param domain 呼叫的server網域
      * @param productSn 卡片類型編號
+     * @param productUsage 道具使用狀況
      */
     suspend fun getCardInstanceSns(
         domain: String = setting.domainUrl,
-        productSn: Long
+        productSn: Long,
+        productUsage: UsageType
     ): Result<GetCardInstanceSnsResponseBody>
 
     /**

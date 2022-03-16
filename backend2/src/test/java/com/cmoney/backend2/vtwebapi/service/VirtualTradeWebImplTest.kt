@@ -3,10 +3,12 @@ package com.cmoney.backend2.vtwebapi.service
 import com.cmoney.backend2.MainCoroutineRule
 import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
+import com.cmoney.backend2.vtwebapi.service.api.createaccount.AccountType
 import com.cmoney.backend2.vtwebapi.service.api.createaccount.CreateAccountRequestBody
 import com.cmoney.backend2.vtwebapi.service.api.getaccount.GetAccountResponseBody
 import com.cmoney.backend2.vtwebapi.service.api.getattendgroup.GetAttendGroupResponseBody
 import com.cmoney.backend2.vtwebapi.service.api.getcardinstancesns.GetCardInstanceSnsResponseBody
+import com.cmoney.backend2.vtwebapi.service.api.getcardinstancesns.UsageType
 import com.cmoney.backend2.vtwebapi.service.api.getstockinventorylist.GetStockInventoryListResponseBody
 import com.cmoney.backend2.vtwebapi.service.api.purchaseproductcard.PurchaseProductCardRequestBody
 import com.cmoney.backend2.vtwebapi.service.api.purchaseproductcard.PurchaseProductCardResponseBody
@@ -134,7 +136,7 @@ class VirtualTradeWebImplTest {
     @Test
     fun createAccountTestSuccess() = mainCoroutineRule.runBlockingTest {
         val requestBody = CreateAccountRequestBody(
-            type = 1,
+            type = AccountType.STOCK.typeNum,
             isn = 0
         )
         coEvery {
@@ -145,7 +147,7 @@ class VirtualTradeWebImplTest {
             )
         } returns Response.success<Void>(204, null)
 
-        val result = webImpl.createAccount(type = 1, isn = 0)
+        val result = webImpl.createAccount(type = AccountType.STOCK, isn = 0)
         Truth.assertThat(result.isSuccess).isTrue()
     }
 
@@ -153,7 +155,7 @@ class VirtualTradeWebImplTest {
     @Test
     fun createAccountTestFailure() = mainCoroutineRule.runBlockingTest {
         val requestBody = CreateAccountRequestBody(
-            type = 1,
+            type = AccountType.STOCK.typeNum,
             isn = 0
         )
         coEvery {
@@ -164,7 +166,7 @@ class VirtualTradeWebImplTest {
             )
         } returns Response.error(409, "".toResponseBody())
 
-        val result = webImpl.createAccount(type = 1, isn = 0)
+        val result = webImpl.createAccount(type = AccountType.STOCK, isn = 0)
         Truth.assertThat(result.isSuccess).isFalse()
     }
 
@@ -175,11 +177,16 @@ class VirtualTradeWebImplTest {
         coEvery {
             service.getCardInstanceSns(
                 url = any(),
-                authorization = any()
+                authorization = any(),
+                productSn = any(),
+                productUsage = any()
             )
         } returns Response.success(responseBody)
 
-        val result = webImpl.getCardInstanceSns(productSn = 20)
+        val result = webImpl.getCardInstanceSns(
+            productSn = 20,
+            productUsage = UsageType.UNUSED
+        )
         Truth.assertThat(result.isSuccess).isTrue()
     }
 
@@ -189,11 +196,16 @@ class VirtualTradeWebImplTest {
         coEvery {
             service.getCardInstanceSns(
                 url = any(),
-                authorization = any()
+                authorization = any(),
+                productSn = any(),
+                productUsage = any()
             )
         } returns Response.error(409, "".toResponseBody())
 
-        val result = webImpl.getCardInstanceSns(productSn = 20)
+        val result = webImpl.getCardInstanceSns(
+            productSn = 20,
+            productUsage = UsageType.UNUSED
+        )
         Truth.assertThat(result.isSuccess).isFalse()
     }
 

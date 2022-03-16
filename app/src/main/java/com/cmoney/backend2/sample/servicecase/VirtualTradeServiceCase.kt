@@ -4,6 +4,8 @@ import com.cmoney.backend2.base.di.BACKEND2_SETTING
 import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.sample.extension.logResponse
 import com.cmoney.backend2.vtwebapi.service.VirtualTradeWeb
+import com.cmoney.backend2.vtwebapi.service.api.createaccount.AccountType
+import com.cmoney.backend2.vtwebapi.service.api.getcardinstancesns.UsageType
 import org.koin.core.component.inject
 
 class VirtualTradeServiceCase : ServiceCase {
@@ -19,24 +21,25 @@ class VirtualTradeServiceCase : ServiceCase {
 
         web.createAccount(
             domain = setting.domainUrl,
-            type = 1,
+            type = AccountType.STOCK,
             isn = 0
         )
             .logResponse(TAG)
 
         web.getCardInstanceSns(
             domain = setting.domainUrl,
-            productSn = TEST_PRODUCT
+            productSn = TEST_PRODUCT,
+            productUsage = UsageType.UNUSED
         )
             .logResponse(TAG)
 
-        web.purchaseProductCard(
-            domain = setting.domainUrl,
-            giftFromMember = 22478,
-            ownerMemberPk = 2000,
-            productSn = TEST_PRODUCT
-        )
-            .logResponse(TAG)
+//        web.purchaseProductCard(
+//            domain = setting.domainUrl,
+//            giftFromMember = 22478,
+//            ownerMemberPk = 22478,
+//            productSn = TEST_PRODUCT
+//        )
+//            .logResponse(TAG)
 
         web.getAttendGroup(
             domain = setting.domainUrl
