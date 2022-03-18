@@ -87,7 +87,7 @@ sealed class MarketTypeV2(
                 )
             }
 
-            fun valueOf(subType: Int): MarketTypeV2? {
+            fun valueOf(subType: Int): Tse? {
                 return getAll().find {
                     it.subType == subType
                 }
@@ -133,7 +133,7 @@ sealed class MarketTypeV2(
                 )
             }
 
-            fun valueOf(subType: Int): MarketTypeV2? {
+            fun valueOf(subType: Int): Otc? {
                 return getAll().find {
                     it.subType == subType
                 }
@@ -173,7 +173,7 @@ sealed class MarketTypeV2(
                 )
             }
 
-            fun valueOf(subType: Int): MarketTypeV2? {
+            fun valueOf(subType: Int): Future? {
                 return getAll().find {
                     it.subType == subType
                 }
@@ -219,7 +219,7 @@ sealed class MarketTypeV2(
                 )
             }
 
-            fun valueOf(subType: Int): MarketTypeV2? {
+            fun valueOf(subType: Int): Option? {
                 return getAll().find {
                     it.subType == subType
                 }
@@ -247,7 +247,7 @@ sealed class MarketTypeV2(
                 )
             }
 
-            fun valueOf(subType: Int): MarketTypeV2? {
+            fun valueOf(subType: Int): Emerging? {
                 return getAll().find {
                     it.subType == subType
                 }
@@ -287,7 +287,7 @@ sealed class MarketTypeV2(
                 )
             }
 
-            fun valueOf(subType: Int): MarketTypeV2? {
+            fun valueOf(subType: Int): FutureAfterMarket? {
                 return getAll().find {
                     it.subType == subType
                 }
@@ -327,7 +327,7 @@ sealed class MarketTypeV2(
                 )
             }
 
-            fun valueOf(subType: Int): MarketTypeV2? {
+            fun valueOf(subType: Int): OptionAfterMarket? {
                 return getAll().find {
                     it.subType == subType
                 }
@@ -361,7 +361,7 @@ sealed class MarketTypeV2(
                 )
             }
 
-            fun valueOf(subType: Int): MarketTypeV2? {
+            fun valueOf(subType: Int): TseWarrant? {
                 return getAll().find {
                     it.subType == subType
                 }
@@ -395,7 +395,7 @@ sealed class MarketTypeV2(
                 )
             }
 
-            fun valueOf(subType: Int): MarketTypeV2? {
+            fun valueOf(subType: Int): OtcWarrant? {
                 return getAll().find {
                     it.subType == subType
                 }
@@ -501,7 +501,7 @@ sealed class MarketTypeV2(
                 )
             }
 
-            fun valueOf(subType: Int): MarketTypeV2? {
+            fun valueOf(subType: Int): UsaStock? {
                 return getAll().find {
                     it.subType == subType
                 }
@@ -583,7 +583,7 @@ sealed class MarketTypeV2(
                 )
             }
 
-            fun valueOf(subType: Int): MarketTypeV2? {
+            fun valueOf(subType: Int): InternationalIndex? {
                 return getAll().find {
                     it.subType == subType
                 }
