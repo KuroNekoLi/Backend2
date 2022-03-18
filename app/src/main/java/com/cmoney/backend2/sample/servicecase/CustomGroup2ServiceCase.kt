@@ -31,9 +31,11 @@ class CustomGroup2ServiceCase : ServiceCase {
             addAll(MarketTypeV2.Emerging.getAll())
             addAll(MarketTypeV2.TseWarrant.getAll())
             addAll(MarketTypeV2.OtcWarrant.getAll())
+            addAll(MarketTypeV2.PocketOverTheCounter.getAll())
+            addAll(MarketTypeV2.PocketSelfEdit.getAll())
         }
         customGroup2Web.searchStocksByMarketTypesV2(
-            "12", Language.zhTw(), marketTypes
+            "AA", Language.zhTw(), marketTypes
         ).logResponse(TAG)
         val marketType = DocMarketType.Stock
         val nonOrderedCustomGroups = customGroup2Web.getCustomGroup(marketType).also { result ->

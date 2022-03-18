@@ -591,6 +591,164 @@ sealed class MarketTypeV2(
         }
     }
 
+    /**
+     * 口袋場外
+     */
+    sealed class PocketOverTheCounter(
+        override val type: Int = 41,
+        override val subType: Int
+    ) : MarketTypeV2(type, subType) {
+
+        /**
+         * ETN
+         */
+        object Etn : PocketOverTheCounter(subType = 1)
+
+        /**
+         * REITs
+         */
+        object REITs : PocketOverTheCounter(subType = 2)
+
+        /**
+         * 存託憑證
+         */
+        object DepositoryReceipt : PocketOverTheCounter(subType = 3)
+
+        /**
+         * 有限合夥
+         */
+        object LimitedPartnership : PocketOverTheCounter(subType = 4)
+
+        /**
+         * 做多2倍ETN
+         */
+        object Long2ETN : PocketOverTheCounter(subType = 5)
+
+        /**
+         * 做多3倍ETN
+         */
+        object Long3ETN : PocketOverTheCounter(subType = 6)
+
+        /**
+         * 附認股權股票
+         */
+        object StockOption : PocketOverTheCounter(subType = 7)
+
+        /**
+         * 封閉型基金
+         */
+        object ClosedEndFund : PocketOverTheCounter(subType = 8)
+
+        /**
+         * 特別股
+         */
+        object SpecialShares : PocketOverTheCounter(subType = 9)
+
+        /**
+         * 特別股(ETD)
+         */
+        object SpecialSharesETD : PocketOverTheCounter(subType = 10)
+
+        /**
+         * 單位信託
+         */
+        object UnitTrust : PocketOverTheCounter(subType = 11)
+
+        /**
+         * 普通股
+         */
+        object CommonStock : PocketOverTheCounter(subType = 12)
+
+        /**
+         * 普開放型基金通股
+         */
+        object OpenEndFund : PocketOverTheCounter(subType = 13)
+
+        /**
+         * 開採權信託
+         */
+        object MiningRightsTrust : PocketOverTheCounter(subType = 14)
+
+        /**
+         * 權證
+         */
+        object Warrant : PocketOverTheCounter(subType = 15)
+
+        /**
+         * 作空1倍ETN
+         */
+        object Short1ETN : PocketOverTheCounter(subType = 16)
+
+        /**
+         * 作空3倍ETN
+         */
+        object Short3ETN : PocketOverTheCounter(subType = 17)
+
+        /**
+         * 紐約註冊股份
+         */
+        object NewYorkRegisteredShares : PocketOverTheCounter(subType = 18)
+
+        companion object {
+            fun getAll(): List<PocketOverTheCounter> {
+                return listOf(
+                    Etn,
+                    REITs,
+                    DepositoryReceipt,
+                    LimitedPartnership,
+                    Long2ETN,
+                    Long3ETN,
+                    StockOption,
+                    ClosedEndFund,
+                    SpecialShares,
+                    SpecialSharesETD,
+                    UnitTrust,
+                    CommonStock,
+                    OpenEndFund,
+                    MiningRightsTrust,
+                    Warrant,
+                    Short1ETN,
+                    Short3ETN,
+                    NewYorkRegisteredShares
+                )
+            }
+
+            fun valueOf(subType: Int): PocketOverTheCounter? {
+                return getAll().find {
+                    it.subType == subType
+                }
+            }
+        }
+    }
+
+    /**
+     * 口袋自編
+     */
+    sealed class PocketSelfEdit(
+        override val type: Int = 42,
+        override val subType: Int
+    ) : MarketTypeV2(type, subType) {
+
+        /**
+         * 普通股
+         */
+        object CommonStock : PocketSelfEdit(subType = 1)
+
+        companion object {
+            fun getAll(): List<PocketSelfEdit> {
+                return listOf(
+                    CommonStock
+                )
+            }
+
+            fun valueOf(subType: Int): PocketSelfEdit? {
+                return getAll().find {
+                    it.subType == subType
+                }
+            }
+        }
+    }
+
     companion object {
 
         /**
@@ -610,6 +768,8 @@ sealed class MarketTypeV2(
                     addAll(Emerging.getAll())
                     addAll(UsaStock.getAll())
                     addAll(InternationalIndex.getAll())
+                    addAll(PocketOverTheCounter.getAll())
+                    addAll(PocketSelfEdit.getAll())
                 }
             val marketTypeMap = marketTypes.groupBy { marketType ->
                 marketType.type
