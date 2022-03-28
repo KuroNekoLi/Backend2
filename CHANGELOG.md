@@ -1,3 +1,21 @@
+#  (2022-03-28)
+
+
+
+# [5.15.0](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.14.0...5.15.0) (2022-03-28)
+
+
+### Bug Fixes
+
+* 將相對應市場類型的valueOf回傳，調整成屬於的市場類型。 ([0a9e8a0](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/0a9e8a06a1b981f92b9fbf662c8abd69f798c648))
+
+
+### Features
+
+* 新增口袋證券場外、口袋證券自編 ([191c91d](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/191c91da48e80337b849be5d31b2600a39849fa7))
+* 大富翁服務創建帳號之回傳改為回傳取得帳號之內容
+
+
 #  (2022-03-16)
 
 
