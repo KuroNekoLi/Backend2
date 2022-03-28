@@ -37,7 +37,7 @@ interface VirtualTradeService {
         @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: CreateAccountRequestBody
-    ): Response<Void>
+    ): Response<GetAccountResponseBody>
 
     /**
      * 依照卡片類型回傳會員持有的卡片序號

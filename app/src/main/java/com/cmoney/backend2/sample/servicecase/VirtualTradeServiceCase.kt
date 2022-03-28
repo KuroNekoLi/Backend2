@@ -33,13 +33,13 @@ class VirtualTradeServiceCase : ServiceCase {
         )
             .logResponse(TAG)
 
-//        web.purchaseProductCard(
-//            domain = setting.domainUrl,
-//            giftFromMember = 22478,
-//            ownerMemberPk = 22478,
-//            productSn = TEST_PRODUCT
-//        )
-//            .logResponse(TAG)
+        web.purchaseProductCard(
+            domain = setting.domainUrl,
+            giftFromMember = 22478,
+            ownerMemberPk = 22478,
+            productSn = TEST_PRODUCT
+        )
+            .logResponse(TAG)
 
         web.getAttendGroup(
             domain = setting.domainUrl

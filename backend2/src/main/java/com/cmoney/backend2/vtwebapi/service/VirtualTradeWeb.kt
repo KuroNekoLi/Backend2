@@ -47,7 +47,7 @@ interface VirtualTradeWeb {
         domain: String = setting.domainUrl,
         type: AccountType,
         isn: Long
-    ): Result<Unit>
+    ): Result<GetAccountResponseBody>
 
     /**
      * 依照卡片類型回傳會員持有的卡片序號

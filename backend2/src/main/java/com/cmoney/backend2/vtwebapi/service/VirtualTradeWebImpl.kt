@@ -53,7 +53,7 @@ class VirtualTradeWebImpl(
         domain: String,
         type: AccountType,
         isn: Long
-    ): Result<Unit> = withContext(dispatcher.io()) {
+    ): Result<GetAccountResponseBody> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.createAccount(
                 url = "$domain$servicePath/Account",
@@ -62,7 +62,7 @@ class VirtualTradeWebImpl(
                     type = type.typeNum,
                     isn = isn
                 )
-            ).handleNoContent(gson)
+            ).checkResponseBody(gson)
         }
     }
 

@@ -139,13 +139,50 @@ class VirtualTradeWebImplTest {
             type = AccountType.STOCK.typeNum,
             isn = 0
         )
+        val responseBody = GetAccountResponseBody(
+            cardInstanceSn = 0,
+            payType = 0,
+            account = 1,
+            name = "小資族",
+            groupId = 0,
+            memberPK = 0,
+            defaultFunds = 2000000.0,
+            extendFunds = 0.0,
+            funds = 0.0,
+            allPrePayment = 0.0,
+            inventoryValue = 0.0,
+            foInventoryValue = 0.0,
+            ratio = 0.0,
+            isTracked = false,
+            beTrackedCount = 0,
+            accountType = 7,
+            maintenanceRate = 0.0,
+            activeDate = "2022-03-08T13:48:09.793",
+            needFee = false,
+            needTax = false,
+            canWatch = false,
+            isDefault = true,
+            isDelete = false,
+            ratioRankType = 0,
+            viewTime = "2022-03-14T11:02:19.308",
+            avgMonthOrderCount = 0.0,
+            isEmail = false,
+            punishment = 0.0,
+            dividendMemoney = 0.0,
+            tradedWarrantDate = 0,
+            incomeLoss = 0.0,
+            totalFunds = 0.0,
+            borrowLimit = 0.0,
+            borrowFunds = 0.0,
+            arenaAdInfoList = listOf()
+        )
         coEvery {
             service.createAccount(
                 url = any(),
                 authorization = any(),
                 body = requestBody
             )
-        } returns Response.success<Void>(204, null)
+        } returns Response.success(responseBody)
 
         val result = webImpl.createAccount(type = AccountType.STOCK, isn = 0)
         Truth.assertThat(result.isSuccess).isTrue()
