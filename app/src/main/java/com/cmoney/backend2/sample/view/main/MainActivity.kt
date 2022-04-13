@@ -115,6 +115,7 @@ class MainActivity : AppCompatActivity() {
 //                ForumOceanServiceCase(),
 //                FrontEndLoggerServiceCase(),
 //                CentralizedImageServiceCase(),
+//                CrawlSettingServiceCase(),
 //                MediaServiceCase(),
 //                MobileOceanServiceCase(),
 //                NotesServiceCase(),
