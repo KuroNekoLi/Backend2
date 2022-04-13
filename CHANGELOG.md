@@ -1,3 +1,16 @@
+#  (2022-04-13)
+
+
+
+# [5.16.0](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.15.0...5.16.0) (2022-04-13)
+
+
+### Features
+
+* 新增 CrawlSettingService ([077540a](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/077540a99f5ae46bf4a12e24e90b2af10b93479e))
+
+
+
 #  (2022-03-28)
 
 
