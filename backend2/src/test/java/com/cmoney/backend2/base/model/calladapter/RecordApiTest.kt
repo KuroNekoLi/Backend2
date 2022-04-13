@@ -11,6 +11,7 @@ import com.cmoney.backend2.chipk.service.ChipKService
 import com.cmoney.backend2.clientconfiguration.service.ClientConfigurationService
 import com.cmoney.backend2.cmtalk.service.CMTalkService
 import com.cmoney.backend2.common.service.CommonService
+import com.cmoney.backend2.crawlsetting.service.CrawlSettingService
 import com.cmoney.backend2.customgroup.service.CustomGroupService
 import com.cmoney.backend2.data.service.DataService
 import com.cmoney.backend2.dtno.service.DtnoService
@@ -73,6 +74,7 @@ class RecordApiTest(
                 arrayOf<Any?>(ChipKService::class),
                 arrayOf<Any?>(CMTalkService::class),
                 arrayOf<Any?>(CommonService::class),
+                arrayOf<Any?>(CrawlSettingService::class),
                 arrayOf<Any?>(CustomGroupService::class),
                 arrayOf<Any?>(DataService::class),
                 arrayOf<Any?>(DtnoService::class),
