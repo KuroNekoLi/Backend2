@@ -117,7 +117,7 @@ class CrawlSettingWebImplTest {
         } returns Response.error(401, "".toResponseBody())
 
         val result = web.getTaishinCaStatus(
-            "123"
+            userInfoKey = "123"
         )
         Truth.assertThat(result.isSuccess).isFalse()
         val exception = result.exceptionOrNull()
