@@ -17,4 +17,12 @@ interface CrawlSettingWeb {
         host: String = baseHost
     ): Result<String>
 
+    /**
+     * 由台新用戶的 [userInfoKey] 取得 CAStatus
+     */
+    suspend fun getTaishinCaStatus(
+        userInfoKey: String,
+        host: String = baseHost
+    ): Result<String>
+
 }

@@ -85,4 +85,45 @@ class CrawlSettingWebImplTest {
         Truth.assertThat(exception.code()).isEqualTo(401)
     }
 
+    @Test
+    fun getTaishinCaStatus_success(): Unit = mainCoroutineRule.runBlockingTest {
+        val responseBody = "1234"
+        coEvery {
+            service.getTaishinCaStatus(
+                url = any(),
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success(responseBody)
+
+        val result = web.getTaishinCaStatus(
+            userInfoKey = "123"
+        )
+        Truth.assertThat(result.isSuccess).isTrue()
+        val data = result.getOrNull()
+        Truth.assertThat(data).isNotNull()
+        requireNotNull(data)
+        Truth.assertThat(data).isEqualTo("1234")
+    }
+
+    @Test
+    fun getTaishinCaStatus_401_UNAUTHORIZATION(): Unit = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.getTaishinCaStatus(
+                url = any(),
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.error(401, "".toResponseBody())
+
+        val result = web.getTaishinCaStatus(
+            "123"
+        )
+        Truth.assertThat(result.isSuccess).isFalse()
+        val exception = result.exceptionOrNull()
+        Truth.assertThat(exception).isInstanceOf(HttpException::class.java)
+        require(exception is HttpException)
+        Truth.assertThat(exception.code()).isEqualTo(401)
+    }
+
 }
