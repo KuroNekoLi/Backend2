@@ -1,3 +1,16 @@
+#  (2022-04-21)
+
+
+
+# [5.17.0](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.16.0...5.17.0) (2022-04-21)
+
+
+### Features
+
+* 新增台新取得 CAStatus 服務至 CrawlSettingService ([6c4e6cb](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/6c4e6cbb57cf808abce12b28f5f85e70e6b23c8e))
+
+
+
 #  (2022-04-13)
 
 
