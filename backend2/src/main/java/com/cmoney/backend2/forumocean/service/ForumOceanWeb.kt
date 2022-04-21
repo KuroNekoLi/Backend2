@@ -1,6 +1,5 @@
 package com.cmoney.backend2.forumocean.service
 
-import androidx.annotation.ColorRes
 import com.cmoney.backend2.forumocean.service.api.article.create.CreateArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.create.variable.Content
 import com.cmoney.backend2.forumocean.service.api.article.createquestion.CreateQuestionResponseBody
@@ -18,7 +17,6 @@ import com.cmoney.backend2.forumocean.service.api.group.update.UpdateGroupReques
 import com.cmoney.backend2.forumocean.service.api.notify.get.GetNotifyResponseBody
 import com.cmoney.backend2.forumocean.service.api.notify.getcount.GetNotifyCountResponseBody
 import com.cmoney.backend2.forumocean.service.api.notifysetting.NotifyPushSetting
-import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.ReactionInfo
 import com.cmoney.backend2.forumocean.service.api.official.get.OfficialChannelInfo
 import com.cmoney.backend2.forumocean.service.api.officialsubscriber.getofficialsubscribedcount.GetOfficialSubscribedCountResponseBody
 import com.cmoney.backend2.forumocean.service.api.officialsubscriber.getsubscribedcount.GetSubscribedCountResponseBody
@@ -30,12 +28,14 @@ import com.cmoney.backend2.forumocean.service.api.relationship.getdonate.DonateI
 import com.cmoney.backend2.forumocean.service.api.relationship.getrelationshipwithme.RelationshipWithMe
 import com.cmoney.backend2.forumocean.service.api.report.create.ReasonType
 import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
+import com.cmoney.backend2.forumocean.service.api.support.SearchMembersResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.request.GroupPosition
 import com.cmoney.backend2.forumocean.service.api.variable.request.ReactionType
 import com.cmoney.backend2.forumocean.service.api.variable.request.mediatype.MediaType
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.groupresponse.GroupResponseBody
+import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.ReactionInfo
 import com.cmoney.backend2.forumocean.service.api.vote.get.VoteInfo
 
 interface ForumOceanWeb {
@@ -981,6 +981,20 @@ interface ForumOceanWeb {
      * @return
      */
     suspend fun getChannelIds(memberIdList: List<Long>): Result<List<ChannelIdAndMemberId>>
+
+    /**
+     * 以關鍵字搜尋會員
+     *
+     * @param keyword 關鍵字
+     * @param offset 偏移數量
+     * @param fetch 查詢數量
+     */
+    suspend fun searchMembers(
+        keyword: String,
+        offset: Int,
+        fetch: Int
+    ): Result<List<SearchMembersResponseBody>>
+
 
     //endregion
 

@@ -25,6 +25,7 @@ import com.cmoney.backend2.forumocean.service.api.rank.getsolutionexpertrank.Sol
 import com.cmoney.backend2.forumocean.service.api.relationship.getdonate.DonateInfo
 import com.cmoney.backend2.forumocean.service.api.report.create.ReasonType
 import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
+import com.cmoney.backend2.forumocean.service.api.support.SearchMembersResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.request.GroupPosition
 import com.cmoney.backend2.forumocean.service.api.variable.request.ReactionType
 import com.cmoney.backend2.forumocean.service.api.variable.response.GroupPositionInfo
@@ -3273,6 +3274,47 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getSpecificSolutionExpertRank("7777,8888")
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `searchMembers_以關鍵字搜尋用戶結果成功測試`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.searchMembers(
+                authorization = any(),
+                keyword = any(),
+                offset = any(),
+                fetch = any(),
+                path = ""
+            )
+        } returns Response.success(
+            listOf(
+                SearchMembersResponseBody(
+                    memberId = 7777,
+                    nickName = "",
+                    image = "",
+                    fans = 20
+                )
+            )
+        )
+        val result = web.searchMembers("123", 0, 20)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `searchMembers_以關鍵字搜尋用戶結果失敗測試`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.searchMembers(
+                authorization = any(),
+                keyword = any(),
+                offset = 0,
+                fetch = 20,
+                path = ""
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.searchMembers("123", 0, 20)
         assertThat(result.isFailure).isTrue()
     }
 }
