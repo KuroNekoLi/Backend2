@@ -2,6 +2,7 @@ package com.cmoney.backend2.crawlsetting.service
 
 import com.cmoney.backend2.base.model.calladapter.RecordApi
 import com.cmoney.backend2.crawlsetting.service.api.getcathaycastatus.GetCathayCaStatusRequestBody
+import com.cmoney.backend2.crawlsetting.service.api.gettaishincastatus.GetTaishinCaStatusRequestBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Header
@@ -21,6 +22,14 @@ interface CrawlSettingService {
         @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: GetCathayCaStatusRequestBody
+    ): Response<String>
+
+    @RecordApi
+    @POST
+    suspend fun getTaishinCaStatus(
+        @Url url: String,
+        @Header("Authorization") authorization: String,
+        @Body body: GetTaishinCaStatusRequestBody
     ): Response<String>
 
 }
