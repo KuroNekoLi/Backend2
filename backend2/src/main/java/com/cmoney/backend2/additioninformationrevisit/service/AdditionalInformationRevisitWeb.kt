@@ -305,4 +305,88 @@ interface AdditionalInformationRevisitWeb {
         value: String,
         processSteps: List<ProcessStep>
     ): Result<List<List<String>>>
+
+    /**
+     * 取得片面最新資料
+     *
+     * @param domain 呼叫的server網域
+     * @param serviceParam Service名稱
+     * @param typeName 資料型態名稱
+     * @param columns 資料輸出欄位
+     * @param processSteps
+     * @return table資料
+     */
+    suspend fun getYesterdayAll(
+        domain: String = setting.domainUrl,
+        serviceParam: String = servicePath.all,
+        columns: List<String>,
+        typeName: String,
+        processSteps: List<ProcessStep>
+    ): Result<List<List<String>>>
+
+    /**
+     * 取得以[value]篩選過的資料
+     *
+     * @param domain 呼叫的server網域
+     * @param serviceParam Service名稱
+     * @param typeName String
+     * @param columns List<String> 資料輸出欄位
+     * @param keyNamePath List<String>
+     * @param value String
+     * @return Result<List<String>>
+     */
+    suspend fun getYesterdayTarget(
+        domain: String = setting.domainUrl,
+        serviceParam: String = servicePath.target,
+        typeName: String,
+        columns: List<String>,
+        keyNamePath: List<String>,
+        value: String,
+        processSteps: List<ProcessStep>
+    ): Result<List<List<String>>>
+
+    /**
+     * 可用於股票交易明細、N分K
+     *
+     * @param domain 呼叫的server網域
+     * @param serviceParam Service名稱
+     * @param typeName String
+     * @param columns List<String> 資料輸出欄位
+     * @param keyNamePath List<String>
+     * @return Result<List<List<String>>>
+     */
+    suspend fun getYesterdayMultiple(
+        domain: String = setting.domainUrl,
+        serviceParam: String = servicePath.multiple,
+        typeName: String,
+        columns: List<String>,
+        keyNamePath: List<String>,
+        value: String,
+        processSteps: List<ProcessStep>
+    ): Result<List<List<String>>>
+
+    /**
+     * 目前可用於 部分交易明細查詢
+     *
+     * 範例請參考連結: http://192.168.99.148/AdditionInformationRevisit/swagger/index.html
+     * GetServiceList 目前主機提供之服務
+     *
+     * @param domain 呼叫的server網域
+     * @param serviceParam Service名稱
+     * @param requestType String
+     * @param responseType String
+     * @param columns List<String>
+     * @param value String
+     * @param processSteps List<ProcessingStep>
+     * @return List<List<String>>
+     */
+    suspend fun getYesterdayOtherQuery(
+        domain: String = setting.domainUrl,
+        serviceParam: String = servicePath.otherQuery,
+        requestType: String,
+        responseType: String,
+        columns: List<String>,
+        value: String,
+        processSteps: List<ProcessStep>
+    ): Result<List<List<String>>>
 }

@@ -12,6 +12,7 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
+import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -20,12 +21,13 @@ import org.junit.runner.RunWith
 import org.koin.core.context.stopKoin
 import org.koin.test.KoinTest
 import org.robolectric.RobolectricTestRunner
+import retrofit2.HttpException
 import retrofit2.Response
 
+@ExperimentalCoroutinesApi
 @RunWith(RobolectricTestRunner::class)
 class AdditionalInformationRevisitWebImplTest : KoinTest {
     // Set the main coroutines dispatcher for unit testing
-    @ExperimentalCoroutinesApi
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
     private lateinit var webImpl: AdditionalInformationRevisitWeb
@@ -52,7 +54,6 @@ class AdditionalInformationRevisitWebImplTest : KoinTest {
         stopKoin()
     }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun getAll_success_ListListString() = mainCoroutineRule.runBlockingTest {
         coEvery { service.getAll(any(), any(), any(), any()) } returns Response.success(
@@ -63,7 +64,27 @@ class AdditionalInformationRevisitWebImplTest : KoinTest {
         Truth.assertThat(response.isSuccess).isTrue()
     }
 
-    @ExperimentalCoroutinesApi
+
+    @Test
+    fun getAll_failed_401() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.getAll(any(), any(), any(), any())
+        } returns Response.error(401, "".toResponseBody())
+        val result = webImpl.getAll(
+            columns = emptyList(),
+            typeName = "StockCalculation",
+            processSteps = emptyList()
+        )
+        Truth.assertThat(result.isSuccess).isFalse()
+        val exception = result.exceptionOrNull()
+        Truth.assertThat(exception).isNotNull()
+        requireNotNull(exception)
+        Truth.assertThat(exception).isInstanceOf(HttpException::class.java)
+        require(exception is HttpException)
+        Truth.assertThat(exception.code()).isEqualTo(401)
+    }
+
+
     @Test
     fun getTarget_success_ListListString() = mainCoroutineRule.runBlockingTest {
         coEvery {
@@ -88,7 +109,34 @@ class AdditionalInformationRevisitWebImplTest : KoinTest {
         Truth.assertThat(response.isSuccess).isTrue()
     }
 
-    @ExperimentalCoroutinesApi
+    @Test
+    fun getTarget_failed_401() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.getTarget(
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns Response.error(401, "".toResponseBody())
+        val typeName = "StockCalculation"
+        val result = webImpl.getTarget(
+            typeName = typeName,
+            columns = listOf(),
+            keyNamePath = listOf("Commodity", "CommKey"),
+            value = gson.toJson(listOf("2330")),
+            processSteps = emptyList()
+        )
+        Truth.assertThat(result.isSuccess).isFalse()
+        val exception = result.exceptionOrNull()
+        Truth.assertThat(exception).isNotNull()
+        requireNotNull(exception)
+        Truth.assertThat(exception).isInstanceOf(HttpException::class.java)
+        require(exception is HttpException)
+        Truth.assertThat(exception.code()).isEqualTo(401)
+    }
+
     @Test
     fun getMultiple_success_ListListString() = mainCoroutineRule.runBlockingTest {
         coEvery {
@@ -113,7 +161,34 @@ class AdditionalInformationRevisitWebImplTest : KoinTest {
         Truth.assertThat(response.isSuccess).isTrue()
     }
 
-    @ExperimentalCoroutinesApi
+    @Test
+    fun getMultiple_failed_401() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.getMultiple(
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns Response.error(401, "".toResponseBody())
+        val typeName = "CandleStockChart"
+        val result = webImpl.getMultiple(
+            typeName = typeName,
+            columns = listOf(),
+            keyNamePath = listOf("傳輸序號", "標的"),
+            value = gson.toJson(CandleChartRequest("2330", 1)),
+            processSteps = emptyList()
+        )
+        Truth.assertThat(result.isSuccess).isFalse()
+        val exception = result.exceptionOrNull()
+        Truth.assertThat(exception).isNotNull()
+        requireNotNull(exception)
+        Truth.assertThat(exception).isInstanceOf(HttpException::class.java)
+        require(exception is HttpException)
+        Truth.assertThat(exception.code()).isEqualTo(401)
+    }
+
     @Test
     fun getOtherQuery_success_ListListString() = mainCoroutineRule.runBlockingTest {
         coEvery {
@@ -138,7 +213,34 @@ class AdditionalInformationRevisitWebImplTest : KoinTest {
         Truth.assertThat(response.isSuccess).isTrue()
     }
 
-    @ExperimentalCoroutinesApi
+    @Test
+    fun getOtherQuery_failed_401() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.getOtherQuery(
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns Response.error(401, "".toResponseBody())
+        val columns = listOf("標的")
+        val responseType = "IEnumerable<ITick<ICommodity>>"
+        val result = webImpl.getOtherQuery(
+            requestType = "SectionTransactionDetailsRequest",
+            responseType = responseType,
+            columns = columns,
+            value = gson.toJson(SomeTickRequest("2330", 0, 10)),
+            processSteps = emptyList()
+        )
+        Truth.assertThat(result.isSuccess).isFalse()
+        val exception = result.exceptionOrNull()
+        Truth.assertThat(exception).isNotNull()
+        requireNotNull(exception)
+        Truth.assertThat(exception).isInstanceOf(HttpException::class.java)
+        require(exception is HttpException)
+        Truth.assertThat(exception.code()).isEqualTo(401)
+    }
+
     @Test
     fun getSignal_success_ListListString() = mainCoroutineRule.runBlockingTest {
         coEvery { service.getSignal(any(), any(), any()) } returns Response.success(
@@ -157,5 +259,212 @@ class AdditionalInformationRevisitWebImplTest : KoinTest {
                 }
             }
         }
+    }
+
+    @Test
+    fun getSignal_failed_401() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.getSignal(any(), any(), any())
+        } returns Response.error(401, "".toResponseBody())
+        val channels = listOf<String>("4218074", "4217863", "4218054")
+        val result = webImpl.getSignal(channels)
+        Truth.assertThat(result.isSuccess).isFalse()
+        val exception = result.exceptionOrNull()
+        Truth.assertThat(exception).isNotNull()
+        requireNotNull(exception)
+        Truth.assertThat(exception).isInstanceOf(HttpException::class.java)
+        require(exception is HttpException)
+        Truth.assertThat(exception.code()).isEqualTo(401)
+    }
+
+    @Test
+    fun getYesterdayAll_success_ListListString() = mainCoroutineRule.runBlockingTest {
+        coEvery { service.getYesterdayAll(any(), any(), any(), any()) } returns Response.success(
+            emptyList()
+        )
+        val typeName = "StockCalculation"
+        val response = webImpl.getYesterdayAll(
+            columns = emptyList(),
+            typeName = typeName,
+            processSteps = emptyList()
+        )
+        Truth.assertThat(response.isSuccess).isTrue()
+    }
+
+
+    @Test
+    fun getYesterdayAll_failed_401() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.getYesterdayAll(any(), any(), any(), any())
+        } returns Response.error(401, "".toResponseBody())
+        val result = webImpl.getYesterdayAll(
+            columns = emptyList(),
+            typeName = "StockCalculation",
+            processSteps = emptyList()
+        )
+        Truth.assertThat(result.isSuccess).isFalse()
+        val exception = result.exceptionOrNull()
+        Truth.assertThat(exception).isNotNull()
+        requireNotNull(exception)
+        Truth.assertThat(exception).isInstanceOf(HttpException::class.java)
+        require(exception is HttpException)
+        Truth.assertThat(exception.code()).isEqualTo(401)
+    }
+
+
+    @Test
+    fun getYesterdayTarget_success_ListListString() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.getYesterdayTarget(
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns Response.success(
+            emptyList()
+        )
+        val typeName = "StockCalculation"
+        val response = webImpl.getYesterdayTarget(
+            typeName = typeName,
+            columns = listOf(),
+            keyNamePath = listOf("Commodity", "CommKey"),
+            value = gson.toJson(listOf("2330")),
+            processSteps = emptyList()
+        )
+        Truth.assertThat(response.isSuccess).isTrue()
+    }
+
+    @Test
+    fun getYesterdayTarget_failed_401() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.getYesterdayTarget(
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns Response.error(401, "".toResponseBody())
+        val typeName = "StockCalculation"
+        val result = webImpl.getYesterdayTarget(
+            typeName = typeName,
+            columns = listOf(),
+            keyNamePath = listOf("Commodity", "CommKey"),
+            value = gson.toJson(listOf("2330")),
+            processSteps = emptyList()
+        )
+        Truth.assertThat(result.isSuccess).isFalse()
+        val exception = result.exceptionOrNull()
+        Truth.assertThat(exception).isNotNull()
+        requireNotNull(exception)
+        Truth.assertThat(exception).isInstanceOf(HttpException::class.java)
+        require(exception is HttpException)
+        Truth.assertThat(exception.code()).isEqualTo(401)
+    }
+
+    @Test
+    fun getYesterdayMultiple_success_ListListString() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.getYesterdayMultiple(
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns Response.success(
+            emptyList()
+        )
+        val typeName = "CandleStockChart"
+        val response = webImpl.getYesterdayMultiple(
+            typeName = typeName,
+            columns = listOf(),
+            keyNamePath = listOf("傳輸序號", "標的"),
+            value = gson.toJson(CandleChartRequest("2330", 1)),
+            processSteps = emptyList()
+        )
+        Truth.assertThat(response.isSuccess).isTrue()
+    }
+
+    @Test
+    fun getYesterdayMultiple_failed_401() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.getYesterdayMultiple(
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns Response.error(401, "".toResponseBody())
+        val typeName = "CandleStockChart"
+        val result = webImpl.getYesterdayMultiple(
+            typeName = typeName,
+            columns = listOf(),
+            keyNamePath = listOf("傳輸序號", "標的"),
+            value = gson.toJson(CandleChartRequest("2330", 1)),
+            processSteps = emptyList()
+        )
+        Truth.assertThat(result.isSuccess).isFalse()
+        val exception = result.exceptionOrNull()
+        Truth.assertThat(exception).isNotNull()
+        requireNotNull(exception)
+        Truth.assertThat(exception).isInstanceOf(HttpException::class.java)
+        require(exception is HttpException)
+        Truth.assertThat(exception.code()).isEqualTo(401)
+    }
+
+    @Test
+    fun getYesterdayOtherQuery_success_ListListString() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.getYesterdayOtherQuery(
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns Response.success(
+            emptyList()
+        )
+        val columns = listOf("標的")
+        val responseType = "IEnumerable<ITick<ICommodity>>"
+        val response = webImpl.getYesterdayOtherQuery(
+            requestType = "SectionTransactionDetailsRequest",
+            responseType = responseType,
+            columns = columns,
+            value = gson.toJson(SomeTickRequest("2330", 0, 10)),
+            processSteps = emptyList()
+        )
+        Truth.assertThat(response.isSuccess).isTrue()
+    }
+
+    @Test
+    fun getYesterdayOtherQuery_failed_401() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.getYesterdayOtherQuery(
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns Response.error(401, "".toResponseBody())
+        val columns = listOf("標的")
+        val responseType = "IEnumerable<ITick<ICommodity>>"
+        val result = webImpl.getYesterdayOtherQuery(
+            requestType = "SectionTransactionDetailsRequest",
+            responseType = responseType,
+            columns = columns,
+            value = gson.toJson(SomeTickRequest("2330", 0, 10)),
+            processSteps = emptyList()
+        )
+        Truth.assertThat(result.isSuccess).isFalse()
+        val exception = result.exceptionOrNull()
+        Truth.assertThat(exception).isNotNull()
+        requireNotNull(exception)
+        Truth.assertThat(exception).isInstanceOf(HttpException::class.java)
+        require(exception is HttpException)
+        Truth.assertThat(exception.code()).isEqualTo(401)
     }
 }

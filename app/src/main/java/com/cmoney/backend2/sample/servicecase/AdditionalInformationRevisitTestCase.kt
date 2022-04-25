@@ -1,5 +1,6 @@
 package com.cmoney.backend2.sample.servicecase
 
+import com.cmoney.backend2.additioninformationrevisit.di.BACKEND_ADDITION_INFORMATION_REVISIT_SERVICE
 import com.cmoney.backend2.additioninformationrevisit.service.AdditionalInformationRevisitWeb
 import com.cmoney.backend2.additioninformationrevisit.service.ServicePath
 import com.cmoney.backend2.additioninformationrevisit.service.api.request.ProcessStep
@@ -11,6 +12,7 @@ import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import org.koin.core.component.get
 import org.koin.core.component.inject
+import org.koin.core.parameter.parametersOf
 
 /**
  * Additional information revisit test case
@@ -20,7 +22,9 @@ import org.koin.core.component.inject
 class AdditionalInformationRevisitTestCase(hasSignal: Boolean) : ServiceCase {
 
     private val web by lazy {
-        get<AdditionalInformationRevisitWeb>()
+        get<AdditionalInformationRevisitWeb>(BACKEND_ADDITION_INFORMATION_REVISIT_SERVICE) {
+            parametersOf(servicePath)
+        }
     }
     private val gson by inject<Gson>(BACKEND2_GSON)
     private val setting by inject<Setting>(BACKEND2_SETTING)
@@ -34,14 +38,16 @@ class AdditionalInformationRevisitTestCase(hasSignal: Boolean) : ServiceCase {
         test()
         // 測試後續處理功能
         testHasProcessStep()
+        // 測試昨日資料
+        testYesterdayData()
     }
 
     private suspend fun test() {
         web.getAll(
             domain = setting.domainUrl,
             serviceParam = servicePath.all,
-            columns = TEST_COLUMNS,
-            typeName = TEST_TYPE_NAME,
+            columns = listOf("標的", "商品名稱"),
+            typeName = "StockCommodity",
             processSteps = emptyList()
         )
             .logResponse(TAG)
@@ -49,8 +55,8 @@ class AdditionalInformationRevisitTestCase(hasSignal: Boolean) : ServiceCase {
         web.getTarget(
             domain = setting.domainUrl,
             serviceParam = servicePath.target,
-            typeName = TEST_TYPE_NAME,
-            columns = TEST_COLUMNS,
+            typeName = "StockCalculation",
+            columns = listOf("傳輸序號", "標的", "即時成交價"),
             keyNamePath = listOf("Commodity", "CommKey"),
             value = gson.toJson(commKeys),
             processSteps = emptyList()
@@ -59,8 +65,8 @@ class AdditionalInformationRevisitTestCase(hasSignal: Boolean) : ServiceCase {
         web.getMultiple(
             domain = setting.domainUrl,
             serviceParam = servicePath.multiple,
-            typeName = "CandlestickChart<StockCommodity>",
-            columns = TEST_MULTIPLE_CANDLE_COLUMNS,
+            typeName = "CandlestickChartTick<StockCommodity,StockTick>",
+            columns = listOf("傳輸序號", "標的", "收盤價"),
             keyNamePath = listOf("Key"),
             value = gson.toJson(CandleChartRequestValue(commodity = "2330", minuteInterval = 1)),
             processSteps = emptyList()
@@ -71,7 +77,7 @@ class AdditionalInformationRevisitTestCase(hasSignal: Boolean) : ServiceCase {
             serviceParam = servicePath.otherQuery,
             requestType = "SectionTransactionDetailsRequest<StockTick>",
             responseType = "IEnumerable<StockTick>",
-            columns = TEST_COLUMNS,
+            columns = listOf("傳輸序號", "標的", "即時成交價"),
             value = gson.toJson(
                 StockTickRequestValue(
                     commKey = "2330",
@@ -99,8 +105,8 @@ class AdditionalInformationRevisitTestCase(hasSignal: Boolean) : ServiceCase {
         web.getAll(
             domain = setting.domainUrl,
             serviceParam = servicePath.all,
-            columns = TEST_COLUMNS,
-            typeName = TEST_TYPE_NAME,
+            columns = listOf("標的", "商品名稱"),
+            typeName = "StockCommodity",
             processSteps = listOf(
                 ProcessStep(
                     type = "TakeCount",
@@ -117,8 +123,8 @@ class AdditionalInformationRevisitTestCase(hasSignal: Boolean) : ServiceCase {
         web.getTarget(
             domain = setting.domainUrl,
             serviceParam = servicePath.target,
-            typeName = TEST_TYPE_NAME,
-            columns = TEST_COLUMNS,
+            typeName = "StockCalculation",
+            columns = listOf("傳輸序號", "標的", "即時成交價"),
             keyNamePath = listOf("Commodity", "CommKey"),
             value = gson.toJson(commKeys),
             processSteps = listOf(
@@ -136,8 +142,8 @@ class AdditionalInformationRevisitTestCase(hasSignal: Boolean) : ServiceCase {
         web.getMultiple(
             domain = setting.domainUrl,
             serviceParam = servicePath.multiple,
-            typeName = "CandlestickChart<StockCommodity>",
-            columns = TEST_MULTIPLE_CANDLE_COLUMNS,
+            typeName = "CandlestickChartTick<StockCommodity,StockTick>",
+            columns = listOf("傳輸序號", "標的", "收盤價"),
             keyNamePath = listOf("Key"),
             value = gson.toJson(CandleChartRequestValue(commodity = "2330", minuteInterval = 1)),
             processSteps = listOf(
@@ -157,7 +163,7 @@ class AdditionalInformationRevisitTestCase(hasSignal: Boolean) : ServiceCase {
             serviceParam = servicePath.otherQuery,
             requestType = "SectionTransactionDetailsRequest<StockTick>",
             responseType = "IEnumerable<StockTick>",
-            columns = TEST_COLUMNS,
+            columns = listOf("傳輸序號", "標的", "即時成交價"),
             value = gson.toJson(
                 StockTickRequestValue(
                     commKey = "2330",
@@ -179,11 +185,48 @@ class AdditionalInformationRevisitTestCase(hasSignal: Boolean) : ServiceCase {
             .logResponse(TAG)
     }
 
+    private suspend fun testYesterdayData() {
+        web.getYesterdayAll(
+            columns = listOf("標的", "商品名稱"),
+            typeName = "USAStockCommodity",
+            processSteps = emptyList()
+        ).logResponse(TAG)
+
+        val commKeys = listOf("AAPL", "AMZN")
+        web.getYesterdayTarget(
+            typeName = "USAStockCalculation",
+            columns = listOf("傳輸序號", "標的", "即時成交價"),
+            keyNamePath = listOf("Commodity", "CommKey"),
+            value = gson.toJson(commKeys),
+            processSteps = emptyList()
+        ).logResponse(TAG)
+
+        web.getYesterdayMultiple(
+            typeName = "CandlestickChartTick<USAStockCommodity, USAStockTick>",
+            columns = listOf("傳輸序號", "標的", "收盤價"),
+            keyNamePath = listOf("Key"),
+            value = gson.toJson(CandleChartRequestValue(commodity = "AAPL", minuteInterval = 1)),
+            processSteps = emptyList()
+        ).logResponse(TAG)
+
+        web.getYesterdayOtherQuery(
+            requestType = "SectionTransactionDetailsRequest<USAStockTick>",
+            responseType = "IEnumerable<USAStockTick>",
+            columns = TEST_COLUMNS,
+            value = gson.toJson(
+                StockTickRequestValue(
+                    commKey = "AAPL",
+                    startSeqNo = Int.MAX_VALUE,
+                    requiredQuantity = 10
+                )
+            ),
+            processSteps = emptyList()
+        ).logResponse(TAG)
+    }
+
     companion object {
         private const val TAG = "AIRTestCase"
-        private const val TEST_TYPE_NAME = "StockCalculation"
         private val TEST_COLUMNS = listOf("傳輸序號", "標的", "即時成交價")
-        private val TEST_MULTIPLE_CANDLE_COLUMNS = listOf("傳輸序號", "標的", "收盤價")
     }
 
     private data class StockTickRequestValue(
