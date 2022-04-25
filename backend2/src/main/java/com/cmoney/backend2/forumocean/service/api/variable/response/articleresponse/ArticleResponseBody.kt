@@ -1,9 +1,7 @@
 package com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse
 
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.articleoption.*
-import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.articlestate.ArticleState
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.contentoption.ArticleContent
-import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.contentoption.ArticleStateInfo
 import com.google.gson.annotations.SerializedName
 
 /**
@@ -489,5 +487,27 @@ sealed class ArticleResponseBody(
         QuestionInfo,
         WeightInfo,
         ReportInfo
+
+    /**
+     * 個人文章類型
+     *
+     * @property articleContent 文章內容資訊
+     * @property createTime 發文時間
+     * @property id 文章Id
+     * @property modifyTime 修改時間
+     */
+    data class PersonalArticleResponseBody(
+        @SerializedName("content")
+        val articleContent: ArticleContent.Personal?,
+        @SerializedName("createTime")
+        override val createTime: Long?,
+        @SerializedName("id")
+        override val id: Long?,
+        @SerializedName("modifyTime")
+        override val modifyTime: Long?,
+        @SerializedName("weight")
+        override val weight : Long?
+    ) : ArticleResponseBody(createTime, id, modifyTime),
+        WeightInfo
 }
 

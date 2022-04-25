@@ -3,6 +3,7 @@ package com.cmoney.backend2.forumocean.service
 import com.cmoney.backend2.base.model.calladapter.RecordApi
 import com.cmoney.backend2.forumocean.service.api.article.create.CreateArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.create.variable.Content
+import com.cmoney.backend2.forumocean.service.api.article.createpersonal.CreatePersonalArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.createquestion.CreateQuestionResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.getbanstate.GetBanStateResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.update.UpdateArticleRequestBody
@@ -45,6 +46,30 @@ interface ForumOceanService {
         @Path("path") path: String,
         @Header("Authorization") authorization: String
     ): Response<GetBanStateResponseBody>
+
+    /**
+     * 發專欄文章
+     */
+    @RecordApi
+    @POST("{path}/article/{articleType}")
+    suspend fun createPersonalArticle(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("articleType") articleType: String,
+        @Body requestBody: Content.PersonalArticle.Columnist
+    ): Response<CreatePersonalArticleResponseBody>
+
+    /**
+     * 發筆記文
+     */
+    @RecordApi
+    @POST("{path}/article/{articleType}")
+    suspend fun createPersonalArticle(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("articleType") articleType: String,
+        @Body requestBody: Content.PersonalArticle.Note
+    ): Response<CreatePersonalArticleResponseBody>
 
     /**
      * 發一般文
@@ -166,7 +191,18 @@ interface ForumOceanService {
     ): Response<ArticleResponseBody.SharedArticleResponseBody>
 
     /**
-     * 取得文章資訊
+     * 取得個人文章資訊(專欄文章/筆記)
+     */
+    @RecordApi
+    @GET("{path}/api/Article/Get/{articleId}")
+    suspend fun getPersonalArticle(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("articleId") articleId: Long
+    ): Response<ArticleResponseBody.PersonalArticleResponseBody>
+
+    /**
+     * 取得未知文章資訊
      *
      */
     @RecordApi
