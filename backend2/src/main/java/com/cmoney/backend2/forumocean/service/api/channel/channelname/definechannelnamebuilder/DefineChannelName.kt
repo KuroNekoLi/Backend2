@@ -391,6 +391,29 @@ sealed class DefineChannelName : IChannelNameBuilder {
     }
 
     /**
+     * 個人筆記頻道
+     *
+     * @property memberId 會員id
+     */
+    data class MemberNote(val memberId: Long): DefineChannelName() {
+        override fun create(): String {
+            return "Note.$memberId"
+        }
+    }
+
+    data class MemberColumnist(val memberId: Long): DefineChannelName() {
+        override fun create(): String {
+            return "Member-Columnist.$memberId"
+        }
+    }
+
+    object Columnist: DefineChannelName() {
+        override fun create(): String {
+            return "Columnist"
+        }
+    }
+
+    /**
      * 指定使用者的一般頻道（美股專用)
      *
      * @property memberId 會員id

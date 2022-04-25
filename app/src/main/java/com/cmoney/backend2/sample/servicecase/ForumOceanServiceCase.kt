@@ -339,6 +339,14 @@ class ForumOceanServiceCase : ServiceCase {
             .getOrNull()
             ?.articleId
 
+        getChannelsArticleByWeight(
+            channelNameBuilderList = listOf(
+                DefineChannelName.MemberNote(memberId = setting.identityToken.getMemberId().toLong())
+            ),
+            weight = Long.MAX_VALUE,
+            count = 20
+        ).logResponse(TAG)
+
         articleId?.apply {
             getUnknownArticle(this).logResponse(TAG)
             getPersonalArticle(this).logResponse(TAG)
