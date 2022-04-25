@@ -256,6 +256,125 @@ class AdditionalInformationRevisitWebImpl(
         }
     }
 
+    override suspend fun getYesterdayAll(
+        domain: String,
+        serviceParam: String,
+        columns: List<String>,
+        typeName: String,
+        processSteps: List<ProcessStep>
+    ): Result<List<List<String>>> = withContext(dispatcher.io()) {
+        kotlin.runCatching {
+            service.getYesterdayAll(
+                url = "$domain$serviceParam/api/YesterdayData/GetAll/$typeName",
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                columns = columns.joinComma(),
+                param = GetRequestParam(
+                    appId = setting.appId,
+                    guid = setting.identityToken.getMemberGuid(),
+                    json = "",
+                    processing = processSteps
+                )
+            ).checkIsSuccessful()
+                .requireBody()
+                .map { obj ->
+                    obj.mapNotNull { value ->
+                        value
+                    }
+                }
+        }
+    }
+
+    override suspend fun getYesterdayTarget(
+        domain: String,
+        serviceParam: String,
+        typeName: String,
+        columns: List<String>,
+        keyNamePath: List<String>,
+        value: String,
+        processSteps: List<ProcessStep>
+    ): Result<List<List<String>>> = withContext(dispatcher.io()) {
+        kotlin.runCatching {
+            service.getYesterdayTarget(
+                url = "$domain$serviceParam/api/YesterdayData/GetTarget/$typeName",
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                columns = columns.joinComma(),
+                keyNamePath = keyNamePath.joinComma(),
+                param = GetRequestParam(
+                    appId = setting.appId,
+                    guid = setting.identityToken.getMemberGuid(),
+                    json = value,
+                    processing = processSteps
+                )
+            ).checkIsSuccessful()
+                .requireBody()
+                .map { row ->
+                    row.map {
+                        it.orEmpty()
+                    }
+                }
+        }
+    }
+
+    override suspend fun getYesterdayMultiple(
+        domain: String,
+        serviceParam: String,
+        typeName: String,
+        columns: List<String>,
+        keyNamePath: List<String>,
+        value: String,
+        processSteps: List<ProcessStep>
+    ): Result<List<List<String>>> = withContext(dispatcher.io()) {
+        kotlin.runCatching {
+            val response = service.getYesterdayMultiple(
+                url = "$domain$serviceParam/api/YesterdayData/GetMultiple/$typeName",
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                columns = columns.joinComma(),
+                keyNamePath = keyNamePath.joinComma(),
+                param = GetRequestParam(
+                    appId = setting.appId,
+                    guid = setting.identityToken.getMemberGuid(),
+                    json = value,
+                    processing = processSteps
+                )
+            )
+            response.checkIsSuccessful()
+                .requireBody()
+                .map { row ->
+                    row.map {
+                        it.orEmpty()
+                    }
+                }
+        }
+    }
+
+    override suspend fun getYesterdayOtherQuery(
+        domain: String,
+        serviceParam: String,
+        requestType: String,
+        responseType: String,
+        columns: List<String>,
+        value: String,
+        processSteps: List<ProcessStep>
+    ): Result<List<List<String>>> = withContext(dispatcher.io()) {
+        kotlin.runCatching {
+            service.getYesterdayOtherQuery(
+                url = "$domain$serviceParam/api/YesterdayData/GetOtherQuery/$requestType/$responseType",
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                columns = columns.joinComma(),
+                param = GetRequestParam(
+                    appId = setting.appId,
+                    guid = setting.identityToken.getMemberGuid(),
+                    json = value,
+                    processing = processSteps
+                )
+            ).checkIsSuccessful()
+                .requireBody()
+                .map { row ->
+                    row.map { it.orEmpty() }
+                }
+        }
+    }
+
     private fun Iterable<String>.joinComma(): String {
         return this.joinToString(COMMA)
     }
