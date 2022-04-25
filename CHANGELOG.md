@@ -1,3 +1,16 @@
+#  (2022-04-25)
+
+
+
+# [5.18.0](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.17.0...5.18.0) (2022-04-25)
+
+
+### Features
+
+* add AdditionalInformationRevisit YesterdayData api ([c19c0f8](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/c19c0f8a4410f70be69fdcdd5b06c9cf21d3b1f3))
+
+
+
 #  (2022-04-21)
 
 
