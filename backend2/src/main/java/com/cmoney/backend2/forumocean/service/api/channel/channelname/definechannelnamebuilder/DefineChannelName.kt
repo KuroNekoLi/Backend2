@@ -401,12 +401,20 @@ sealed class DefineChannelName : IChannelNameBuilder {
         }
     }
 
+    /**
+     * 個人專欄文章頻道
+     *
+     * @property memberId 會員id
+     */
     data class MemberColumnist(val memberId: Long): DefineChannelName() {
         override fun create(): String {
             return "Member-Columnist.$memberId"
         }
     }
 
+    /**
+     * 所有專欄文章頻道
+     */
     object Columnist: DefineChannelName() {
         override fun create(): String {
             return "Columnist"
