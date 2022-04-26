@@ -36,6 +36,7 @@ import com.cmoney.backend2.forumocean.service.api.rank.getsolutionexpertrank.Sol
 import com.cmoney.backend2.forumocean.service.api.relationship.getdonate.DonateInfo
 import com.cmoney.backend2.forumocean.service.api.report.create.ReasonType
 import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
+import com.cmoney.backend2.forumocean.service.api.support.SearchMembersResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.request.GroupPosition
 import com.cmoney.backend2.forumocean.service.api.variable.request.ReactionType
 import com.cmoney.backend2.forumocean.service.api.variable.request.mediatype.MediaType
@@ -1226,6 +1227,24 @@ class ForumOceanWebImpl(
                 ).checkResponseBody(jsonParser)
             }
         }
+
+    override suspend fun searchMembers(
+        keyword: String,
+        offset: Int,
+        fetch: Int
+    ): Result<List<SearchMembersResponseBody>> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.searchMembers(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    keyword = keyword,
+                    offset = offset,
+                    fetch = fetch
+                ).checkResponseBody(jsonParser)
+            }
+        }
+    }
 
     override suspend fun createVote(articleId: Long, optionIndex: Int): Result<Unit> =
         withContext(dispatcher.io()) {
