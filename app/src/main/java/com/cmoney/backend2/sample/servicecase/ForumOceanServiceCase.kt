@@ -39,7 +39,12 @@ class ForumOceanServiceCase : ServiceCase {
     override suspend fun testAll() {
         forumOceanWeb.apply {
 
-            getMemberStatistics(listOf(setting.identityToken.getMemberId().toLong(),35)).logResponse(TAG)
+            getMemberStatistics(
+                listOf(
+                    setting.identityToken.getMemberId().toLong(),
+                    35
+                )
+            ).logResponse(TAG)
 
             val articleId = createArticle(
                 Content.Article.General(
@@ -51,8 +56,10 @@ class ForumOceanServiceCase : ServiceCase {
                         )
                     ),
                     commodityTags = listOf(
-                        CommodityTag("1234", BullOrBear.Bear,
-                            StockTypeInfo.Stock)
+                        CommodityTag(
+                            "1234", BullOrBear.Bear,
+                            StockTypeInfo.Stock
+                        )
                     ),
                     voteOptions = null,
                     voteMinutes = null,
@@ -66,6 +73,8 @@ class ForumOceanServiceCase : ServiceCase {
                 testArticle(this)
             }
 
+            testPersonalArticle()
+
             testQuestion()
 
             testChannel()
@@ -78,37 +87,39 @@ class ForumOceanServiceCase : ServiceCase {
 
             articleId?.apply {
                 createArticle(
-                        Content.Article.General(
-                                text = "補一篇文章為了看刪除文章被夾在中間",
-                                multiMedia = listOf(
-                                        MediaType(
-                                                Type.IMAGE,
-                                                "https://zh.wikipedia.org/wiki/Google_Chrome#/media/File:Google_Chrome_icon_(September_2014).svg"
-                                        )
-                                ),
-                                commodityTags = listOf(
-                                    CommodityTag("1234", BullOrBear.Bear,
-                                        StockTypeInfo.Stock)
-                                ),
-                                voteOptions = null,
-                                voteMinutes = null,
-                                topics = null
-                        )
+                    Content.Article.General(
+                        text = "補一篇文章為了看刪除文章被夾在中間",
+                        multiMedia = listOf(
+                            MediaType(
+                                Type.IMAGE,
+                                "https://zh.wikipedia.org/wiki/Google_Chrome#/media/File:Google_Chrome_icon_(September_2014).svg"
+                            )
+                        ),
+                        commodityTags = listOf(
+                            CommodityTag(
+                                "1234", BullOrBear.Bear,
+                                StockTypeInfo.Stock
+                            )
+                        ),
+                        voteOptions = null,
+                        voteMinutes = null,
+                        topics = null
+                    )
                 ).logResponse(TAG)
                 deleteArticle(this)
                 getArticle(this).fold(
-                        {
-                            Log.d(TAG, "response: $it")
-                        },
-                        {
-                            Log.d(TAG,"預期接收到Http Code 404 結果:${(it as HttpException).code()}")
-                        }
+                    {
+                        Log.d(TAG, "response: $it")
+                    },
+                    {
+                        Log.d(TAG, "預期接收到Http Code 404 結果:${(it as HttpException).code()}")
+                    }
                 )
 
                 getChannelsArticleByWeight(
-                        listOf(DefineChannelName.Commodity(CommodityType.Stock.text,"1234")),
-                        Long.MAX_VALUE,
-                        20
+                    listOf(DefineChannelName.Commodity(CommodityType.Stock.text, "1234")),
+                    Long.MAX_VALUE,
+                    20
                 ).logResponse(TAG)
             }
 
@@ -161,7 +172,7 @@ class ForumOceanServiceCase : ServiceCase {
 
     private suspend fun ForumOceanWeb.testInteractive(articleId: Long) {
         createArticleReaction(articleId, ReactionType.LIKE).logResponse(TAG)
-        getArticleReactionDetail(articleId, listOf(ReactionType.LIKE), 0,20).logResponse(TAG)
+        getArticleReactionDetail(articleId, listOf(ReactionType.LIKE), 0, 20).logResponse(TAG)
         createArticleReaction(articleId, ReactionType.DISLIKE).logResponse(TAG)
         getArticleReactionDetail(
             articleId,
@@ -202,7 +213,7 @@ class ForumOceanServiceCase : ServiceCase {
             getComment(articleId, this, 20).logResponse(TAG)
             reactionComment(articleId, 1, ReactionType.LIKE).logResponse(TAG)
             reactionComment(articleId, 1, ReactionType.DISLIKE).logResponse(TAG)
-            getReactionDetail(articleId, 1,ReactionType.values().toList(),0,20).logResponse(TAG)
+            getReactionDetail(articleId, 1, ReactionType.values().toList(), 0, 20).logResponse(TAG)
             removeReactionComment(articleId, 1).logResponse(TAG)
             deleteComment(articleId, 1).logResponse(TAG)
             getComment(articleId, this, 20).logResponse(TAG)
@@ -281,7 +292,14 @@ class ForumOceanServiceCase : ServiceCase {
     }
 
     private suspend fun ForumOceanWeb.testChannel() {
-        getChannelsArticleByWeight(listOf(DefineChannelName.Commodity(CommodityType.Stock.text,"2330")), Long.MAX_VALUE, 50).logResponse(TAG)
+        getChannelsArticleByWeight(
+            listOf(
+                DefineChannelName.Commodity(
+                    CommodityType.Stock.text,
+                    "2330"
+                )
+            ), Long.MAX_VALUE, 50
+        ).logResponse(TAG)
     }
 
     private suspend fun ForumOceanWeb.testArticle(articleId: Long) {
@@ -298,10 +316,68 @@ class ForumOceanServiceCase : ServiceCase {
         getArticle(articleId).logResponse(TAG)
     }
 
+    private suspend fun ForumOceanWeb.testPersonalArticle() {
+        val articleId = createPersonalArticle(
+            Content.PersonalArticle.Note(
+                text = "測試發筆記文",
+                commodityTags = listOf(
+                    CommodityTag(
+                        commodityKey = "1234",
+                        bullOrBear = BullOrBear.None,
+                        type = StockTypeInfo.Stock
+                    )
+                ),
+                multiMedia = listOf(
+                    MediaType(
+                        type = Type.IMAGE,
+                        url = "https://zh.wikipedia.org/wiki/Android#/media/File:Android_logo_2019_(stacked).svg"
+                    )
+                ),
+                topics = listOf("筆記"),
+            )
+        )
+            .getOrNull()
+            ?.articleId
+
+        getChannelsArticleByWeight(
+            channelNameBuilderList = listOf(
+                DefineChannelName.MemberNote(memberId = setting.identityToken.getMemberId().toLong())
+            ),
+            weight = Long.MAX_VALUE,
+            count = 20
+        ).logResponse(TAG)
+
+        articleId?.apply {
+            getUnknownArticle(this).logResponse(TAG)
+            getPersonalArticle(this).logResponse(TAG)
+
+            val updateArticleHelper = UpdateArticleHelper()
+            updateArticleHelper.setText("測試更新筆記文")
+            updateArticleHelper.setMultiMedia(
+                listOf(
+                    MediaType(
+                        type = Type.IMAGE,
+                        url = "https://zh.wikipedia.org/wiki/Google_Chrome#/media/File:Google_Chrome_icon_(September_2014).svg"
+                    )
+                )
+            )
+            updateArticle(
+                articleId = articleId,
+                updateHelper = updateArticleHelper
+            ).logResponse(TAG)
+
+            deleteArticle(this).logResponse(TAG)
+        }
+    }
+
     private suspend fun ForumOceanWeb.testQuestion() {
         val questionId = createQuestion(
             Content.Question(
-                text = "問答", multiMedia = listOf(), anonymous = Any(), commodityTags = null, topics = null
+                text = "問答",
+                multiMedia = listOf(),
+                anonymous = Any(),
+                commodityTags = null,
+                topics = null
             )
         ).getOrNull()?.articleId
 
@@ -324,8 +400,12 @@ class ForumOceanServiceCase : ServiceCase {
                 20,
                 listOf(GroupPosition.NORMAL, GroupPosition.MANAGEMENT, GroupPosition.PRESIDENT)
             ).logResponse(TAG)
-            getMemberManagedGroups(setting.identityToken.getMemberId().toLong(),0,20).logResponse(TAG)
-            getMemberBelongGroups(setting.identityToken.getMemberId().toLong(),0,20).logResponse(TAG)
+            getMemberManagedGroups(setting.identityToken.getMemberId().toLong(), 0, 20).logResponse(
+                TAG
+            )
+            getMemberBelongGroups(setting.identityToken.getMemberId().toLong(), 0, 20).logResponse(
+                TAG
+            )
             getMemberJoinAnyGroups(setting.identityToken.getMemberId().toLong()).logResponse(TAG)
             updateGroup(
                 this,
@@ -337,7 +417,7 @@ class ForumOceanServiceCase : ServiceCase {
     }
 
     private suspend fun ForumOceanWeb.testOfficials() {
-        val builder = DefineChannelName.BotCommodity(CommodityType.Stock.text,"2330")
+        val builder = DefineChannelName.BotCommodity(CommodityType.Stock.text, "2330")
         val botIdList = getChannelsArticleByWeight(listOf(builder), Long.MAX_VALUE, 50).getOrNull()
             ?.mapNotNull { it.articleContent?.botId }?.distinct()
         if (botIdList != null && botIdList.size >= 2) {
@@ -351,7 +431,7 @@ class ForumOceanServiceCase : ServiceCase {
 
             getOfficialSubscribedCount(firstBotId).logResponse(TAG)
             getSubscribedCount(memberId).logResponse(TAG)
-            getSubscribed(memberId,0,20).logResponse(TAG)
+            getSubscribed(memberId, 0, 20).logResponse(TAG)
 
             unsubscribe(firstBotId).logResponse(TAG)
             unsubscribeAll().logResponse(TAG)
@@ -405,7 +485,7 @@ class ForumOceanServiceCase : ServiceCase {
                 200,
                 listOf(GroupPosition.PRESIDENT, GroupPosition.MANAGEMENT, GroupPosition.NORMAL)
             ).logResponse(TAG)
-            val needApprovalId = getApprovals(this,0,20).getOrNull()?.firstOrNull()?.memberId
+            val needApprovalId = getApprovals(this, 0, 20).getOrNull()?.firstOrNull()?.memberId
             needApprovalId?.let {
                 approval(this, needApprovalId, true).logResponse(TAG)
                 changeGroupMemberPosition(
@@ -434,16 +514,16 @@ class ForumOceanServiceCase : ServiceCase {
         val user2MemberId = setting.identityToken.getMemberId().toLong()
 
         follow(user1MemberId).logResponse(TAG)
-        getFollowingList(user2MemberId,0,10).logResponse(TAG)
-        getFollowers(user2MemberId,0,10).logResponse(TAG)
+        getFollowingList(user2MemberId, 0, 10).logResponse(TAG)
+        getFollowers(user2MemberId, 0, 10).logResponse(TAG)
         unfollow(user1MemberId).logResponse(TAG)
-        getFollowingList(user2MemberId,0,10).logResponse(TAG)
+        getFollowingList(user2MemberId, 0, 10).logResponse(TAG)
 
         block(user1MemberId).logResponse(TAG)
         user1.changeUser(setting)
         block(user2MemberId).logResponse(TAG)
-        getBlockers(0,10).logResponse(TAG)
-        getBlockingList(0,10).logResponse(TAG)
+        getBlockers(0, 10).logResponse(TAG)
+        getBlockingList(0, 10).logResponse(TAG)
         unblock(user2MemberId).logResponse(TAG)
         user2.changeUser(setting)
         unblock(user1MemberId).logResponse(TAG)
@@ -462,15 +542,20 @@ class ForumOceanServiceCase : ServiceCase {
         ).getOrNull()?.articleId
 
         articleId?.also {
-            val commentId = createComment(articleId = articleId, text = "需被檢舉的回文", multiMedia = null, position = null).getOrNull()
-            createReport(articleId,ReasonType.Abuse,commentId?.commentIndex).logResponse(TAG)
-            getComment(articleId,null,null).logResponse(TAG)
+            val commentId = createComment(
+                articleId = articleId,
+                text = "需被檢舉的回文",
+                multiMedia = null,
+                position = null
+            ).getOrNull()
+            createReport(articleId, ReasonType.Abuse, commentId?.commentIndex).logResponse(TAG)
+            getComment(articleId, null, null).logResponse(TAG)
         }
 
         articleId?.apply {
-            createReport(articleId, ReasonType.AD,null).logResponse(TAG)
+            createReport(articleId, ReasonType.AD, null).logResponse(TAG)
             getArticle(articleId).logResponse(TAG)
-            deleteReport(articleId,null).logResponse(TAG)
+            deleteReport(articleId, null).logResponse(TAG)
         }
     }
 
@@ -555,7 +640,7 @@ class ForumOceanServiceCase : ServiceCase {
 
             user1.changeUser(setting)
 
-            getApprovals(groupId,0,20).logResponse(TAG)
+            getApprovals(groupId, 0, 20).logResponse(TAG)
             approval(groupId, user2MemberId, true).logResponse(TAG)
 
             changeGroupMemberPosition(
@@ -612,25 +697,27 @@ class ForumOceanServiceCase : ServiceCase {
         val user2 = manager.accountList[1]
 
         user1.changeUser(setting)
-        var articleId : Long? = null
-        createArticle(Content.Article.General(
-            text = "測試回文被阻擋用主文",
-            multiMedia = listOf(),
-            commodityTags = listOf(),
-            voteOptions = listOf(),
-            voteMinutes = null,
-            topics = null
-        )).logResponse(TAG){
+        var articleId: Long? = null
+        createArticle(
+            Content.Article.General(
+                text = "測試回文被阻擋用主文",
+                multiMedia = listOf(),
+                commodityTags = listOf(),
+                voteOptions = listOf(),
+                voteMinutes = null,
+                topics = null
+            )
+        ).logResponse(TAG) {
             articleId = it.articleId
         }
         articleId?.apply {
             user2.changeUser(setting)
             val user2MemberId = setting.identityToken.getMemberId().toLong()
-            createComment(this,"使用者二的回文", multiMedia = listOf(), position = null).logResponse(TAG)
+            createComment(this, "使用者二的回文", multiMedia = listOf(), position = null).logResponse(TAG)
 
             user1.changeUser(setting)
             block(user2MemberId).logResponse(TAG)
-            getComment(this,null,null).logResponse(TAG)
+            getComment(this, null, null).logResponse(TAG)
             unblock(user2MemberId).logResponse(TAG)
             deleteArticle(this)
         }

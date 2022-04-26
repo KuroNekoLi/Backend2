@@ -14,6 +14,6 @@ val forumOceanServiceModule = module {
         get<Retrofit>(BACKEND2_RETROFIT).create(ForumOceanService::class.java)
     }
     single<ForumOceanWeb> {
-        ForumOceanWebImpl(get(),get(BACKEND2_SETTING),get(BACKEND2_GSON))
+        ForumOceanWebImpl(get(),get(BACKEND2_SETTING),get(BACKEND2_GSON), "ForumOcean")
     }
 }

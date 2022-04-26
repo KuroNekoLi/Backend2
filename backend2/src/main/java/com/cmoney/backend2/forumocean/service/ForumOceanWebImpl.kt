@@ -8,6 +8,8 @@ import com.cmoney.backend2.base.model.dispatcher.DispatcherProvider
 import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.forumocean.service.api.article.create.CreateArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.create.variable.Content
+import com.cmoney.backend2.forumocean.service.api.article.createpersonal.CreatePersonalArticleResponseBody
+import com.cmoney.backend2.forumocean.service.api.variable.request.PersonalArticleType
 import com.cmoney.backend2.forumocean.service.api.article.createquestion.CreateQuestionResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.getbanstate.GetBanStateResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.update.IUpdateArticleHelper
@@ -49,12 +51,12 @@ class ForumOceanWebImpl(
     private val service: ForumOceanService,
     private val setting: Setting,
     private val jsonParser: Gson,
-    private val serverName : String = "",
+    private val serverName: String = "",
     private val dispatcher: DispatcherProvider = DefaultDispatcherProvider()
 ) : ForumOceanWeb {
 
     override suspend fun getBanState(): Result<GetBanStateResponseBody> =
-        withContext(dispatcher.io()){
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getBanState(
                     path = serverName,
@@ -63,7 +65,26 @@ class ForumOceanWebImpl(
             }
         }
 
-    //region article
+    override suspend fun createPersonalArticle(body: Content.PersonalArticle): Result<CreatePersonalArticleResponseBody> =
+        withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                val response = when (body) {
+                    is Content.PersonalArticle.Columnist -> service.createPersonalArticle(
+                        path = serverName,
+                        authorization = setting.accessToken.createAuthorizationBearer(),
+                        articleType = PersonalArticleType.COLUMNIST.articleType,
+                        requestBody = body
+                    )
+                    is Content.PersonalArticle.Note -> service.createPersonalArticle(
+                        path = serverName,
+                        authorization = setting.accessToken.createAuthorizationBearer(),
+                        articleType = PersonalArticleType.NOTE.articleType,
+                        requestBody = body
+                    )
+                }
+                response.checkResponseBody(jsonParser)
+            }
+        }
 
     override suspend fun createArticle(body: Content.Article): Result<CreateArticleResponseBody> =
         withContext(dispatcher.io()) {
@@ -166,6 +187,17 @@ class ForumOceanWebImpl(
             }
         }
 
+    override suspend fun getPersonalArticle(articleId: Long): Result<ArticleResponseBody.PersonalArticleResponseBody> =
+        withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.getPersonalArticle(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    articleId = articleId
+                ).checkResponseBody(jsonParser)
+            }
+        }
+
     override suspend fun getUnknownArticle(articleId: Long): Result<ArticleResponseBody.UnknownArticleResponseBody> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
@@ -205,15 +237,16 @@ class ForumOceanWebImpl(
 
     //endregion
 
-    override suspend fun getMemberStatistics(memberIdList: List<Long>) = withContext(dispatcher.io()) {
-        kotlin.runCatching {
-            service.getMemberStatistics(
-                path = serverName,
-                authorization = setting.accessToken.createAuthorizationBearer(),
-                memberIds = memberIdList.joinToString(",")
-            ).checkResponseBody(jsonParser)
+    override suspend fun getMemberStatistics(memberIdList: List<Long>) =
+        withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.getMemberStatistics(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    memberIds = memberIdList.joinToString(",")
+                ).checkResponseBody(jsonParser)
+            }
         }
-    }
 
     override suspend fun getChannelsArticleByWeight(
         channelNameBuilderList: List<IChannelNameBuilder>,
@@ -460,7 +493,11 @@ class ForumOceanWebImpl(
             }
         }
 
-    override suspend fun getArticleDonate(articleId: Long,offset: Int,fetch: Int): Result<List<DonateInfo>> =
+    override suspend fun getArticleDonate(
+        articleId: Long,
+        offset: Int,
+        fetch: Int
+    ): Result<List<DonateInfo>> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getArticleDonate(
@@ -473,8 +510,11 @@ class ForumOceanWebImpl(
             }
         }
 
-    override suspend fun getNotify(updateTime : Long,offsetCount : Int): Result<List<GetNotifyResponseBody>> =
-        withContext(dispatcher.io()){
+    override suspend fun getNotify(
+        updateTime: Long,
+        offsetCount: Int
+    ): Result<List<GetNotifyResponseBody>> =
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getNotify(
                     path = serverName,
@@ -486,7 +526,7 @@ class ForumOceanWebImpl(
         }
 
     override suspend fun getNotifyCount(): Result<GetNotifyCountResponseBody> =
-        withContext(dispatcher.io()){
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getCount(
                     path = serverName,
@@ -510,7 +550,7 @@ class ForumOceanWebImpl(
         mergeKey: String,
         isNew: Boolean
     ): Result<Unit> =
-        withContext(dispatcher.io()){
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.setRead(
                     path = serverName,
@@ -523,7 +563,7 @@ class ForumOceanWebImpl(
         }
 
     override suspend fun getPushDefaultSetting(): Result<List<NotifyPushSetting>> =
-        withContext(dispatcher.io()){
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getPushDefaultSetting(
                     path = serverName,
@@ -533,7 +573,7 @@ class ForumOceanWebImpl(
         }
 
     override suspend fun getUserNotifySetting(): Result<List<NotifyPushSetting>> =
-        withContext(dispatcher.io()){
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getUserNotifySetting(
                     path = serverName,
@@ -547,7 +587,7 @@ class ForumOceanWebImpl(
         subType: String,
         enable: Boolean
     ): Result<Unit> =
-        withContext(dispatcher.io()){
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.setNotifySetting(
                     path = serverName,
@@ -575,7 +615,7 @@ class ForumOceanWebImpl(
         offset: Int,
         fetch: Int
     ): Result<List<GroupResponseBody>> =
-        withContext(dispatcher.io()){
+        withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getGroupsByKeyword(
                     path = serverName,
@@ -635,15 +675,15 @@ class ForumOceanWebImpl(
     )
 
     override suspend fun getMemberJoinAnyGroups(memberId: Long): Result<GetMemberJoinAnyGroupsResponseBody> =
-            withContext(dispatcher.io()) {
-                kotlin.runCatching {
-                    service.getMemberJoinAnyGroups(
-                            path = serverName,
-                        authorization = setting.accessToken.createAuthorizationBearer(),
-                            memberId = memberId
-                    ).checkResponseBody(jsonParser)
-                }
+        withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.getMemberJoinAnyGroups(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    memberId = memberId
+                ).checkResponseBody(jsonParser)
             }
+        }
 
     override suspend fun createGroup(groupName: String): Result<CreateGroupResponseBody> =
         withContext(dispatcher.io()) {
@@ -735,7 +775,11 @@ class ForumOceanWebImpl(
         }
     }
 
-    override suspend fun getApprovals(groupId: Long,offset: Int,fetch: Int): Result<List<GroupPendingApproval>> =
+    override suspend fun getApprovals(
+        groupId: Long,
+        offset: Int,
+        fetch: Int
+    ): Result<List<GroupPendingApproval>> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getApprovals(
@@ -842,7 +886,11 @@ class ForumOceanWebImpl(
             }
         }
 
-    override suspend fun getOfficialsByKeyWord(keyword : String,offset: Int, fetch: Int): Result<List<OfficialChannelInfo>> =
+    override suspend fun getOfficialsByKeyWord(
+        keyword: String,
+        offset: Int,
+        fetch: Int
+    ): Result<List<OfficialChannelInfo>> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getOfficialsByKeyword(
@@ -877,7 +925,7 @@ class ForumOceanWebImpl(
             }
         }
 
-    override suspend fun getSubscribed(memberId: Long,offset: Int,fetch: Int): Result<List<Int>> =
+    override suspend fun getSubscribed(memberId: Long, offset: Int, fetch: Int): Result<List<Int>> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getSubscribed(
@@ -920,93 +968,115 @@ class ForumOceanWebImpl(
         }
     }
 
-    override suspend fun getCommodityRank(offset : Int,fetch : Int): Result<List<GetCommodityRankResponseBody>>  = withContext(dispatcher.io()) {
+    override suspend fun getCommodityRank(
+        offset: Int,
+        fetch: Int
+    ): Result<List<GetCommodityRankResponseBody>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getCommodityRank(
                 path = serverName,
                 authorization = setting.accessToken.createAuthorizationBearer(),
-                offset= offset,
-                fetch=fetch
+                offset = offset,
+                fetch = fetch
             ).checkResponseBody(jsonParser)
         }
     }
 
-    override suspend fun getUSCommodityRank(offset : Int,fetch : Int): Result<List<GetCommodityRankResponseBody>>  = withContext(dispatcher.io()) {
+    override suspend fun getUSCommodityRank(
+        offset: Int,
+        fetch: Int
+    ): Result<List<GetCommodityRankResponseBody>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getUSCommodityRank(
                 path = serverName,
                 authorization = setting.accessToken.createAuthorizationBearer(),
-                offset= offset,
-                fetch=fetch
+                offset = offset,
+                fetch = fetch
             ).checkResponseBody(jsonParser)
         }
     }
 
-    override suspend fun getExpertMemberRank(offset : Int,fetch : Int): Result<List<GetExpertMemberRankResponseBody>>  = withContext(dispatcher.io()){
+    override suspend fun getExpertMemberRank(
+        offset: Int,
+        fetch: Int
+    ): Result<List<GetExpertMemberRankResponseBody>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getExpertMemberRank(
                 path = serverName,
                 authorization = setting.accessToken.createAuthorizationBearer(),
-                offset= offset,
-                fetch=fetch
+                offset = offset,
+                fetch = fetch
             ).checkResponseBody(jsonParser)
         }
     }
 
 
-    override suspend fun getSpecificExpertMemberRank(memberIds:String): Result<List<GetExpertMemberRankResponseBody>>  = withContext(dispatcher.io()){
-        kotlin.runCatching {
-            service.getSpecificExpertMemberRank(
-                path = serverName,
-                authorization = setting.accessToken.createAuthorizationBearer(),
-                memberIds=memberIds
-            ).checkResponseBody(jsonParser)
+    override suspend fun getSpecificExpertMemberRank(memberIds: String): Result<List<GetExpertMemberRankResponseBody>> =
+        withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.getSpecificExpertMemberRank(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    memberIds = memberIds
+                ).checkResponseBody(jsonParser)
+            }
         }
-    }
 
-    override suspend fun getMemberFansRank(offset : Int,fetch : Int): Result<List<FansMemberRankResponseBody>>  = withContext(dispatcher.io()){
+    override suspend fun getMemberFansRank(
+        offset: Int,
+        fetch: Int
+    ): Result<List<FansMemberRankResponseBody>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getMemberFansRank(
                 path = serverName,
                 authorization = setting.accessToken.createAuthorizationBearer(),
-                offset= offset,
-                fetch=fetch
+                offset = offset,
+                fetch = fetch
             ).checkResponseBody(jsonParser)
         }
     }
 
-    override suspend fun getSpecificMemberFansRank(memberIds:String): Result<List<FansMemberRankResponseBody>>  = withContext(dispatcher.io()){
-        kotlin.runCatching {
-            service.getSpecificMemberFansRank(
-                path = serverName,
-                authorization = setting.accessToken.createAuthorizationBearer(),
-                memberIds=memberIds
-            ).checkResponseBody(jsonParser)
+    override suspend fun getSpecificMemberFansRank(memberIds: String): Result<List<FansMemberRankResponseBody>> =
+        withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.getSpecificMemberFansRank(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    memberIds = memberIds
+                ).checkResponseBody(jsonParser)
+            }
         }
-    }
 
-    override suspend fun getSolutionExpertRank(offset : Int,fetch : Int): Result<List<SolutionExpertRankResponseBody>>  = withContext(dispatcher.io()){
+    override suspend fun getSolutionExpertRank(
+        offset: Int,
+        fetch: Int
+    ): Result<List<SolutionExpertRankResponseBody>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getSolutionExpertRank(
                 path = serverName,
                 authorization = setting.accessToken.createAuthorizationBearer(),
-                offset= offset,
-                fetch=fetch
+                offset = offset,
+                fetch = fetch
             ).checkResponseBody(jsonParser)
         }
     }
 
-    override suspend fun getSpecificSolutionExpertRank(memberIds:String): Result<List<SolutionExpertRankResponseBody>>  = withContext(dispatcher.io()){
-        kotlin.runCatching {
-            service.getSpecificSolutionExpertRank(
-                path = serverName,
-                authorization = setting.accessToken.createAuthorizationBearer(),
-                memberIds=memberIds
-            ).checkResponseBody(jsonParser)
+    override suspend fun getSpecificSolutionExpertRank(memberIds: String): Result<List<SolutionExpertRankResponseBody>> =
+        withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.getSpecificSolutionExpertRank(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    memberIds = memberIds
+                ).checkResponseBody(jsonParser)
+            }
         }
-    }
 
-    override suspend fun getFollowingList(memberId: Long,offset : Int,fetch : Int): Result<List<Long>> =
+    override suspend fun getFollowingList(
+        memberId: Long,
+        offset: Int,
+        fetch: Int
+    ): Result<List<Long>> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getFollowingList(
@@ -1019,7 +1089,7 @@ class ForumOceanWebImpl(
             }
         }
 
-    override suspend fun getFollowers(memberId: Long,offset : Int,fetch : Int): Result<List<Long>> =
+    override suspend fun getFollowers(memberId: Long, offset: Int, fetch: Int): Result<List<Long>> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getFollowers(
@@ -1072,7 +1142,7 @@ class ForumOceanWebImpl(
         }
     }
 
-    override suspend fun getBlockingList(offset : Int,fetch : Int) = withContext(dispatcher.io()) {
+    override suspend fun getBlockingList(offset: Int, fetch: Int) = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getBlockingList(
                 path = serverName,
@@ -1084,7 +1154,7 @@ class ForumOceanWebImpl(
         }
     }
 
-    override suspend fun getBlockers(offset : Int,fetch : Int) = withContext(dispatcher.io()) {
+    override suspend fun getBlockers(offset: Int, fetch: Int) = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getBlockers(
                 path = serverName,
@@ -1095,15 +1165,16 @@ class ForumOceanWebImpl(
         }
     }
 
-    override suspend fun getRelationshipWithMe(memberIdList: List<Long>) = withContext(dispatcher.io()){
-        kotlin.runCatching {
-            service.getRelationshipWithMe(
-                path = serverName,
-                authorization = setting.accessToken.createAuthorizationBearer(),
-                memberIds = memberIdList.joinToString()
-            ).checkResponseBody(jsonParser)
+    override suspend fun getRelationshipWithMe(memberIdList: List<Long>) =
+        withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.getRelationshipWithMe(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    memberIds = memberIdList.joinToString()
+                ).checkResponseBody(jsonParser)
+            }
         }
-    }
 
     override suspend fun createReport(
         articleId: Long,
