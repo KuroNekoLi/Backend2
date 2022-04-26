@@ -1,3 +1,17 @@
+#  (2022-04-26)
+
+
+
+# [5.19.0](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.18.0...5.19.0) (2022-04-26)
+
+
+### Features
+
+* 新增個人文章之發文及取得 ([2e296f2](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/2e296f2ac5fdb9857369d83982a711bacc921543))
+* 新增取得個人文章列表 ([3ddb8c0](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/3ddb8c0fefee975b90ad2f9141c2da534d8e5565))
+
+
+
 #  (2022-04-25)
 
 
