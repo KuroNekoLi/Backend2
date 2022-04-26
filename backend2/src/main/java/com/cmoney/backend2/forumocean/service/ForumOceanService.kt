@@ -30,13 +30,21 @@ import com.cmoney.backend2.forumocean.service.api.rank.getsolutionexpertrank.Sol
 import com.cmoney.backend2.forumocean.service.api.relationship.getdonate.DonateInfo
 import com.cmoney.backend2.forumocean.service.api.relationship.getrelationshipwithme.RelationshipWithMe
 import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
+import com.cmoney.backend2.forumocean.service.api.support.SearchMembersResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.groupresponse.GroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.ReactionInfo
 import com.cmoney.backend2.forumocean.service.api.vote.get.VoteInfo
 import retrofit2.Response
-import retrofit2.http.*
+import retrofit2.http.Body
+import retrofit2.http.DELETE
+import retrofit2.http.GET
+import retrofit2.http.Header
+import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface ForumOceanService {
 
@@ -778,6 +786,16 @@ interface ForumOceanService {
         @Path("path") path: String,
         @Query("memberIds") memberIds: String
     ): Response<List<ChannelIdAndMemberId>>
+
+    @RecordApi
+    @GET("{path}/api/Support/SearchMember")
+    suspend fun searchMembers(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Query("keyword") keyword: String,
+        @Query("offset") offset: Int,
+        @Query("fetch") fetch: Int
+    ): Response<List<SearchMembersResponseBody>>
 
     @RecordApi
     @POST("{path}/api/Vote/Create/{articleId}")
