@@ -5,6 +5,8 @@ import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.forumocean.service.api.article.create.CreateArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.create.variable.Content
+import com.cmoney.backend2.forumocean.service.api.article.createpersonal.CreatePersonalArticleResponseBody
+import com.cmoney.backend2.forumocean.service.api.variable.request.PersonalArticleType
 import com.cmoney.backend2.forumocean.service.api.article.createquestion.CreateQuestionResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.update.UpdateArticleHelper
 import com.cmoney.backend2.forumocean.service.api.channel.getmemberstatistics.GetMemberStatisticsResponseBody
@@ -75,6 +77,98 @@ class ForumOceanWebImplTest {
     @After
     fun tearDown() {
 
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `createPersonalArticle_發筆記文章成功測試`() = mainCoroutineRule.runBlockingTest {
+        val responseBody = CreatePersonalArticleResponseBody(articleId = 1L)
+        val createContent = Content.PersonalArticle.Note(
+            text = "發筆記",
+            commodityTags = null,
+            multiMedia = null,
+            topics = null
+        )
+        coEvery {
+            forumOceanService.createPersonalArticle(
+                authorization = any(),
+                path = "",
+                articleType = PersonalArticleType.NOTE.articleType,
+                requestBody = createContent
+            )
+        } returns Response.success(responseBody)
+        val result = web.createPersonalArticle(body = createContent)
+        assertThat(result.isSuccess).isTrue()
+        assertThat(result.getOrThrow().articleId).isEqualTo(1L)
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `createPersonalArticle_發筆記文章失敗測試`() = mainCoroutineRule.runBlockingTest {
+        val createContent = Content.PersonalArticle.Note(
+            text = "發筆記",
+            commodityTags = null,
+            multiMedia = null,
+            topics = null
+        )
+        coEvery {
+            forumOceanService.createPersonalArticle(
+                authorization = any(),
+                path = "",
+                articleType = PersonalArticleType.NOTE.articleType,
+                requestBody = createContent
+            )
+        } returns Response.error(403, "".toResponseBody())
+        val result = web.createPersonalArticle(
+            body = createContent
+        )
+        assertThat(result.isSuccess).isFalse()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `createPersonalArticle_發專欄文章成功測試`() = mainCoroutineRule.runBlockingTest {
+        val responseBody = CreatePersonalArticleResponseBody(articleId = 1)
+        val createContent = Content.PersonalArticle.Columnist(
+            text = "發專欄文章",
+            commodityTags = null,
+            multiMedia = null,
+            topics = null
+        )
+        coEvery {
+            forumOceanService.createPersonalArticle(
+                authorization = any(),
+                path = "",
+                articleType = PersonalArticleType.COLUMNIST.articleType,
+                requestBody = createContent
+            )
+        } returns Response.success(responseBody)
+        val result = web.createPersonalArticle(body = createContent)
+        assertThat(result.isSuccess).isTrue()
+        assertThat(result.getOrThrow().articleId).isEqualTo(1)
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `createPersonalArticle_發專欄文章失敗測試`() = mainCoroutineRule.runBlockingTest {
+        val createContent = Content.PersonalArticle.Columnist(
+            text = "發專欄文章",
+            commodityTags = null,
+            multiMedia = null,
+            topics = null
+        )
+        coEvery {
+            forumOceanService.createPersonalArticle(
+                authorization = any(),
+                path = "",
+                articleType = PersonalArticleType.COLUMNIST.articleType,
+                requestBody = createContent
+            )
+        } returns Response.error(403, "".toResponseBody())
+        val result = web.createPersonalArticle(
+            body = createContent
+        )
+        assertThat(result.isSuccess).isFalse()
     }
 
     @ExperimentalCoroutinesApi
@@ -599,6 +693,44 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(403, "".toResponseBody())
         val result = web.getNewsArticle(articleId)
+        assertThat(result.isSuccess).isFalse()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `getPersonalArticle_取得個人文章成功測試`() = mainCoroutineRule.runBlockingTest {
+        val articleId = 1000L
+        val successResponse = ArticleResponseBody.PersonalArticleResponseBody(
+            articleContent = null,
+            createTime = null,
+            id = articleId,
+            modifyTime = null,
+            weight = null
+        )
+        coEvery {
+            forumOceanService.getPersonalArticle(
+                authorization = any(),
+                path = "",
+                articleId = articleId
+            )
+        } returns Response.success(successResponse)
+        val result = web.getPersonalArticle(articleId)
+        assertThat(result.isSuccess).isTrue()
+        assertThat(result.getOrThrow().id).isEqualTo(articleId)
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `getPersonalArticle_取得個人文章失敗測試`() = mainCoroutineRule.runBlockingTest {
+        val articleId = 1000L
+        coEvery {
+            forumOceanService.getPersonalArticle(
+                authorization = any(),
+                path = "",
+                articleId = articleId
+            )
+        } returns Response.error(403, "".toResponseBody())
+        val result = web.getPersonalArticle(articleId)
         assertThat(result.isSuccess).isFalse()
     }
 

@@ -320,4 +320,37 @@ sealed class ArticleContent(
         QuestionInfo,
         ArticleStateInfo,
         TopicInfo
+
+    /**
+     * 個人文章
+     *
+     * @property text 文章內容
+     * @property appId 發文平台
+     * @property creatorId 發文者資訊
+     * @property multiMedia 多媒體資訊
+     * @property commodityTags 股票Tag資訊
+     * @property articleState 文章狀態
+     * @property topics 標籤名稱
+     */
+    data class Personal(
+        @SerializedName("text")
+        override val text: String?,
+        @SerializedName("appId")
+        override val appId: Int?,
+        @SerializedName("creatorId")
+        override val creatorId: Long?,
+        @SerializedName("multiMedia")
+        override val multiMedia: List<MediaTypeInfo>?,
+        @SerializedName("commodityTags")
+        override val commodityTags: List<CommodityTagInfo>?,
+        @SerializedName("topics")
+        override val topics: List<String>?,
+        @SerializedName("articleState")
+        override val articleState: ArticleState?
+    ) : ArticleContent(text),
+        CreatorInfo,
+        MultiMediaInfo,
+        TagInfo,
+        ArticleStateInfo,
+        TopicInfo
 }

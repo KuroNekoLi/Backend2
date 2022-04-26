@@ -1,8 +1,8 @@
 package com.cmoney.backend2.forumocean.service
 
-import androidx.annotation.ColorRes
 import com.cmoney.backend2.forumocean.service.api.article.create.CreateArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.create.variable.Content
+import com.cmoney.backend2.forumocean.service.api.article.createpersonal.CreatePersonalArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.createquestion.CreateQuestionResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.getbanstate.GetBanStateResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.update.IUpdateArticleHelper
@@ -48,6 +48,14 @@ interface ForumOceanWeb {
      * @return 是否被禁言
      */
     suspend fun getBanState() : Result<GetBanStateResponseBody>
+
+    /**
+     * 發個人文章(專欄文章or筆記文)
+     *
+     * @param body 發個人文章的資訊
+     * @return 個人文章id
+     */
+    suspend fun createPersonalArticle(body: Content.PersonalArticle): Result<CreatePersonalArticleResponseBody>
 
     /**
      * 發文
@@ -112,6 +120,14 @@ interface ForumOceanWeb {
      * @return 文章資訊
      */
     suspend fun getNewsArticle(articleId: Long): Result<ArticleResponseBody.NewsArticleResponseBody>
+
+    /**
+     * 取得個人文章(專欄文章/筆記)
+     *
+     * @param articleId 文章Id
+     * @return 文章資訊
+     */
+    suspend fun getPersonalArticle(articleId: Long): Result<ArticleResponseBody.PersonalArticleResponseBody>
 
     /**
      * 取得文章(不確定文章類型)

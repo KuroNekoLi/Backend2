@@ -115,4 +115,47 @@ sealed class Content(
         @SerializedName("topics")
         val topics : List<String>?
     ) : Content(text)
+
+    /**
+     * 個人文章
+     */
+    sealed class PersonalArticle(@Transient override val text: String?) : Content(text) {
+        /**
+         * 專欄文章
+         *
+         * @property text 文章內容
+         * @property commodityTags 股票tag資訊
+         * @property multiMedia 多媒體資訊
+         * @property topics 標籤
+         */
+        data class Columnist(
+            @SerializedName("text")
+            override val text: String?,
+            @SerializedName("commodityTags")
+            val commodityTags: List<CommodityTag>?,
+            @SerializedName("multiMedia")
+            val multiMedia: List<MediaType>?,
+            @SerializedName("topics")
+            val topics: List<String>?
+        ) : PersonalArticle(text)
+
+        /**
+         * 筆記文章
+         *
+         * @property text 文章內容
+         * @property commodityTags 股票tag資訊
+         * @property multiMedia 多媒體資訊
+         * @property topics 標籤
+         */
+        data class Note(
+            @SerializedName("text")
+            override val text: String?,
+            @SerializedName("commodityTags")
+            val commodityTags: List<CommodityTag>?,
+            @SerializedName("multiMedia")
+            val multiMedia: List<MediaType>?,
+            @SerializedName("topics")
+            val topics: List<String>?
+        ) : PersonalArticle(text)
+    }
 }
