@@ -6,7 +6,6 @@ import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.forumocean.service.api.article.create.CreateArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.create.variable.Content
 import com.cmoney.backend2.forumocean.service.api.article.createpersonal.CreatePersonalArticleResponseBody
-import com.cmoney.backend2.forumocean.service.api.variable.request.PersonalArticleType
 import com.cmoney.backend2.forumocean.service.api.article.createquestion.CreateQuestionResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.update.UpdateArticleHelper
 import com.cmoney.backend2.forumocean.service.api.channel.getmemberstatistics.GetMemberStatisticsResponseBody
@@ -29,6 +28,7 @@ import com.cmoney.backend2.forumocean.service.api.report.create.ReasonType
 import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
 import com.cmoney.backend2.forumocean.service.api.support.SearchMembersResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.request.GroupPosition
+import com.cmoney.backend2.forumocean.service.api.variable.request.PersonalArticleType
 import com.cmoney.backend2.forumocean.service.api.variable.request.ReactionType
 import com.cmoney.backend2.forumocean.service.api.variable.response.GroupPositionInfo
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
@@ -3447,6 +3447,35 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.searchMembers("123", 0, 20)
+        assertThat(result.isFailure).isTrue()
+    }
+
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `使用p幣兌換專欄文章_success`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.exchangeColumnArticle(
+                authorization = any(),
+                articleId = any(),
+                path = ""
+            )
+        } returns Response.success(null)
+        val result = web.exchangeColumnArticle(1)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `使用p幣兌換專欄文章_failed`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.exchangeColumnArticle(
+                authorization = any(),
+                articleId = any(),
+                path = ""
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.exchangeColumnArticle(1)
         assertThat(result.isFailure).isTrue()
     }
 }

@@ -941,4 +941,12 @@ interface ForumOceanService {
         @Query("mergeKey") mergeKey: String,
         @Query("isNew") isNew: Boolean
     ): Response<Void>
+
+    @RecordApi
+    @POST("{path}/BonusPointExchange/{articleId}")
+    suspend fun exchangeColumnArticle(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("articleId") articleId: Long
+    ): Response<Void>
 }

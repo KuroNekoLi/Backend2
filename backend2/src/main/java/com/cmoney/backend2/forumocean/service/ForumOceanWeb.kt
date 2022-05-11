@@ -48,7 +48,7 @@ interface ForumOceanWeb {
      *
      * @return 是否被禁言
      */
-    suspend fun getBanState() : Result<GetBanStateResponseBody>
+    suspend fun getBanState(): Result<GetBanStateResponseBody>
 
     /**
      * 發個人文章(專欄文章or筆記文)
@@ -366,7 +366,11 @@ interface ForumOceanWeb {
      * @param fetch 查詢數量
      * @return
      */
-    suspend fun getGroupsByKeyword(keyword : String,offset: Int,fetch: Int) : Result<List<GroupResponseBody>>
+    suspend fun getGroupsByKeyword(
+        keyword: String,
+        offset: Int,
+        fetch: Int
+    ): Result<List<GroupResponseBody>>
 
     /**
      * 取得指定使用者持有的所有社團
@@ -395,11 +399,11 @@ interface ForumOceanWeb {
      * @param includeAppGroup 是否包含app的社團
      */
     suspend fun getMemberManagedGroups(
-        memberId : Long,
+        memberId: Long,
         offset: Int,
         fetch: Int,
-        includeAppGroup : Boolean = false
-    ) : Result<List<GroupResponseBody>>
+        includeAppGroup: Boolean = false
+    ): Result<List<GroupResponseBody>>
 
     /**
      * 取得指定使用者加入的所有社團
@@ -414,7 +418,7 @@ interface ForumOceanWeb {
         memberId: Long,
         offset: Int,
         fetch: Int,
-        includeAppGroup : Boolean = false
+        includeAppGroup: Boolean = false
     ): Result<List<GroupResponseBody>>
 
     /**
@@ -423,7 +427,7 @@ interface ForumOceanWeb {
      * @param memberId 使用者Id
      * @return
      */
-    suspend fun getMemberJoinAnyGroups(memberId: Long) : Result<GetMemberJoinAnyGroupsResponseBody>
+    suspend fun getMemberJoinAnyGroups(memberId: Long): Result<GetMemberJoinAnyGroupsResponseBody>
 
     /**
      * 創建社團
@@ -654,18 +658,21 @@ interface ForumOceanWeb {
      * @param offsetCount 取得通知筆數
      * @return
      */
-    suspend fun getNotify(updateTime : Long,offsetCount : Int = 5) : Result<List<GetNotifyResponseBody>>
+    suspend fun getNotify(
+        updateTime: Long,
+        offsetCount: Int = 5
+    ): Result<List<GetNotifyResponseBody>>
 
     /**
      * 取得使用者通知數量
      *
      */
-    suspend fun getNotifyCount() : Result<GetNotifyCountResponseBody>
+    suspend fun getNotifyCount(): Result<GetNotifyCountResponseBody>
 
     /**
      * 重設使用者通知數量
      */
-    suspend fun resetNotifyCount():Result<Unit>
+    suspend fun resetNotifyCount(): Result<Unit>
 
     /**
      * 設定通知為已讀
@@ -676,10 +683,10 @@ interface ForumOceanWeb {
      * @return
      */
     suspend fun setNotifyRead(
-        notifyType : String,
-        mergeKey : String,
-        isNew : Boolean
-    ) : Result<Unit>
+        notifyType: String,
+        mergeKey: String,
+        isNew: Boolean
+    ): Result<Unit>
 
     //endregion
 
@@ -690,14 +697,14 @@ interface ForumOceanWeb {
      *
      * @return
      */
-    suspend fun getPushDefaultSetting() : Result<List<NotifyPushSetting>>
+    suspend fun getPushDefaultSetting(): Result<List<NotifyPushSetting>>
 
     /**
      * 取得使用者通知設定
      *
      * @return
      */
-    suspend fun getUserNotifySetting() : Result<List<NotifyPushSetting>>
+    suspend fun getUserNotifySetting(): Result<List<NotifyPushSetting>>
 
     /**
      * 設定通知開關
@@ -709,9 +716,9 @@ interface ForumOceanWeb {
      */
     suspend fun setNotifySetting(
         notifyType: String,
-        subType : String = "",
-        enable : Boolean
-    ) : Result<Unit>
+        subType: String = "",
+        enable: Boolean
+    ): Result<Unit>
 
     //endregion
 
@@ -751,7 +758,7 @@ interface ForumOceanWeb {
         keyword: String,
         offset: Int,
         fetch: Int
-    ) : Result<List<OfficialChannelInfo>>
+    ): Result<List<OfficialChannelInfo>>
 
     //endregion
 
@@ -827,53 +834,65 @@ interface ForumOceanWeb {
      * @param offset 跳過的數量
      * @param fetch 拿取數量
      */
-    suspend fun getCommodityRank(offset : Int,fetch : Int):Result<List<GetCommodityRankResponseBody>>
+    suspend fun getCommodityRank(
+        offset: Int,
+        fetch: Int
+    ): Result<List<GetCommodityRankResponseBody>>
 
     /**
      * 取得美股排行
      * @param offset 跳過的數量
      * @param fetch 拿取數量
      */
-    suspend fun getUSCommodityRank(offset : Int,fetch : Int):Result<List<GetCommodityRankResponseBody>>
+    suspend fun getUSCommodityRank(
+        offset: Int,
+        fetch: Int
+    ): Result<List<GetCommodityRankResponseBody>>
 
     /**
      * 取得達人排行
      * @param offset 跳過的數量
      * @param fetch 拿取數量
      */
-    suspend fun getExpertMemberRank(offset : Int,fetch : Int):Result<List<GetExpertMemberRankResponseBody>>
+    suspend fun getExpertMemberRank(
+        offset: Int,
+        fetch: Int
+    ): Result<List<GetExpertMemberRankResponseBody>>
 
     /**
      * 取得指定達人排行
      * @param memberIds(用逗號分隔)
      */
-    suspend fun getSpecificExpertMemberRank(memberIds:String):Result<List<GetExpertMemberRankResponseBody>>
+    suspend fun getSpecificExpertMemberRank(memberIds: String): Result<List<GetExpertMemberRankResponseBody>>
 
     /**
      * 取得粉絲成長達人排行
      * @param offset 跳過的數量
      * @param fetch 拿取數量
      */
-    suspend fun getMemberFansRank(offset : Int,fetch : Int):Result<List<FansMemberRankResponseBody>>
+    suspend fun getMemberFansRank(offset: Int, fetch: Int): Result<List<FansMemberRankResponseBody>>
 
     /**
      * 取得指定粉絲成長達人排行
      * @param memberIds(用逗號分隔)
      */
-    suspend fun getSpecificMemberFansRank(memberIds:String):Result<List<FansMemberRankResponseBody>>
+    suspend fun getSpecificMemberFansRank(memberIds: String): Result<List<FansMemberRankResponseBody>>
 
     /**
      * 取得解題達人排行
      * @param offset 跳過的數量
      * @param fetch 拿取數量
      */
-    suspend fun getSolutionExpertRank(offset : Int,fetch : Int):Result<List<SolutionExpertRankResponseBody>>
+    suspend fun getSolutionExpertRank(
+        offset: Int,
+        fetch: Int
+    ): Result<List<SolutionExpertRankResponseBody>>
 
     /**
      * 取得指定解題達人排行
      * @param memberIds(用逗號分隔)
      */
-    suspend fun getSpecificSolutionExpertRank(memberIds:String):Result<List<SolutionExpertRankResponseBody>>
+    suspend fun getSpecificSolutionExpertRank(memberIds: String): Result<List<SolutionExpertRankResponseBody>>
 
     //endregion
 
@@ -887,7 +906,7 @@ interface ForumOceanWeb {
      * @param fetch 拿取數量
      * @return 使用者追蹤的對象清單
      */
-    suspend fun getFollowingList(memberId: Long,offset : Int,fetch : Int): Result<List<Long>>
+    suspend fun getFollowingList(memberId: Long, offset: Int, fetch: Int): Result<List<Long>>
 
     /**
      * 取得指定使用者被對象追蹤的清單
@@ -897,7 +916,7 @@ interface ForumOceanWeb {
      * @param memberId 使用者Id
      * @return 使用者被對象追蹤的清單
      */
-    suspend fun getFollowers(memberId: Long,offset : Int,fetch : Int): Result<List<Long>>
+    suspend fun getFollowers(memberId: Long, offset: Int, fetch: Int): Result<List<Long>>
 
     /**
      * 追蹤
@@ -938,7 +957,7 @@ interface ForumOceanWeb {
      * @param fetch 拿取數量
      * @return
      */
-    suspend fun getBlockingList(offset : Int,fetch : Int): Result<List<Long>>
+    suspend fun getBlockingList(offset: Int, fetch: Int): Result<List<Long>>
 
     /**
      * 取得指定使用者被對象封鎖的清單
@@ -947,7 +966,7 @@ interface ForumOceanWeb {
      * @param fetch 拿取數量
      * @return
      */
-    suspend fun getBlockers(offset : Int,fetch : Int): Result<List<Long>>
+    suspend fun getBlockers(offset: Int, fetch: Int): Result<List<Long>>
 
     /**
      * 取得指定的會員清單與我目前的關係
@@ -955,7 +974,7 @@ interface ForumOceanWeb {
      * @param memberIdList 會員清單
      * @return
      */
-    suspend fun getRelationshipWithMe(memberIdList : List<Long>) : Result<List<RelationshipWithMe>>
+    suspend fun getRelationshipWithMe(memberIdList: List<Long>): Result<List<RelationshipWithMe>>
 
     //endregion
 
@@ -1035,4 +1054,6 @@ interface ForumOceanWeb {
     suspend fun getCurrentVote(articleId: Long): Result<List<VoteInfo>>
 
     //endregion
+
+    suspend fun exchangeColumnArticle(articleId: Long): Result<Unit>
 }
