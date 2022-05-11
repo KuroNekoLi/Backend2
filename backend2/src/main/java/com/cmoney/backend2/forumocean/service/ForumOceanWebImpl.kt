@@ -107,6 +107,11 @@ class ForumOceanWebImpl(
                         authorization = setting.accessToken.createAuthorizationBearer(),
                         requestBody = body
                     )
+                    is Content.Article.Column -> service.createArticle(
+                        path = serverName,
+                        authorization = setting.accessToken.createAuthorizationBearer(),
+                        requestBody = body
+                    )
                 }
                 response.checkResponseBody(jsonParser)
             }

@@ -127,6 +127,17 @@ interface ForumOceanService {
     ): Response<CreateQuestionResponseBody>
 
     /**
+     * 發專欄文章
+     */
+    @RecordApi
+    @POST("{path}/article/columnist")
+    suspend fun createArticle(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Body requestBody: Content.Article.Column
+    ): Response<CreateArticleResponseBody>
+
+    /**
      * 取得文章資訊
      *
      */
