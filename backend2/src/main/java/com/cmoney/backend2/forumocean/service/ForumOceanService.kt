@@ -960,4 +960,19 @@ interface ForumOceanService {
         @Path("path") path: String,
         @Path("articleId") articleId: Long
     ): Response<Void>
+
+    @RecordApi
+    @GET("{path}/Role")
+    suspend fun getRole(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String
+    ): Response<List<Int>>
+
+    @RecordApi
+    @GET("{path}/Role/{otherMemberId}")
+    suspend fun getRole(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("otherMemberId") memberId: Long
+    ): Response<List<Int>>
 }

@@ -28,6 +28,7 @@ import com.cmoney.backend2.forumocean.service.api.rank.getsolutionexpertrank.Sol
 import com.cmoney.backend2.forumocean.service.api.relationship.getdonate.DonateInfo
 import com.cmoney.backend2.forumocean.service.api.relationship.getrelationshipwithme.RelationshipWithMe
 import com.cmoney.backend2.forumocean.service.api.report.create.ReasonType
+import com.cmoney.backend2.forumocean.service.api.role.Role
 import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
 import com.cmoney.backend2.forumocean.service.api.support.SearchMembersResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.request.GroupPosition
@@ -1056,4 +1057,8 @@ interface ForumOceanWeb {
     //endregion
 
     suspend fun exchangeColumnArticle(articleId: Long): Result<Unit>
+
+    suspend fun getRole(): Result<Set<Role>>
+
+    suspend fun getRole(memberId: Long): Result<Set<Role>>
 }

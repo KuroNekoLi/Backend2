@@ -35,6 +35,7 @@ import com.cmoney.backend2.forumocean.service.api.rank.getfansmemberrank.FansMem
 import com.cmoney.backend2.forumocean.service.api.rank.getsolutionexpertrank.SolutionExpertRankResponseBody
 import com.cmoney.backend2.forumocean.service.api.relationship.getdonate.DonateInfo
 import com.cmoney.backend2.forumocean.service.api.report.create.ReasonType
+import com.cmoney.backend2.forumocean.service.api.role.Role
 import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
 import com.cmoney.backend2.forumocean.service.api.support.SearchMembersResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.request.GroupPosition
@@ -1289,4 +1290,31 @@ class ForumOceanWebImpl(
                 Unit
             }
         }
+
+    override suspend fun getRole(): Result<Set<Role>> = withContext(dispatcher.io()) {
+        kotlin.runCatching {
+            val response = service.getRole(
+                path = serverName,
+                authorization = setting.accessToken.createAuthorizationBearer()
+            ).checkResponseBody(jsonParser)
+
+            val roles = Role.values()
+            return@runCatching response.map {
+                roles[it]
+            }.toSet()
+        }
+    }
+
+
+    override suspend fun getRole(memberId: Long): Result<Set<Role>> = withContext(dispatcher.io()) {
+        kotlin.runCatching {
+            val response = service.getRole(
+                path = serverName,
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                memberId = memberId
+            ).checkResponseBody(jsonParser)
+            val roles = Role.values()
+            return@runCatching response.map { roles[it] }.toSet()
+        }
+    }
 }

@@ -3478,4 +3478,57 @@ class ForumOceanWebImplTest {
         val result = web.exchangeColumnArticle(1)
         assertThat(result.isFailure).isTrue()
     }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得會員的社群角色_success`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getRole(
+                authorization = any(),
+                path = "",
+            )
+        } returns Response.success(null)
+        val result = web.getRole()
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得會員的社群角色_failed`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getRole(
+                authorization = any(),
+                path = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getRole()
+        assertThat(result.isFailure).isTrue()
+    }
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得其他使用者的角色_success`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getRole(
+                authorization = any(),
+                memberId = any(),
+                path = ""
+            )
+        } returns Response.success(null)
+        val result = web.getRole(1)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得其他使用者的角色_failed`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getRole(
+                authorization = any(),
+                memberId = any(),
+                path = ""
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getRole(1)
+        assertThat(result.isFailure).isTrue()
+    }
 }
