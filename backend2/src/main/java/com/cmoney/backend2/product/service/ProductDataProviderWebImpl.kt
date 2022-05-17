@@ -18,14 +18,13 @@ class ProductDataProviderWebImpl(
     private val service: ProductDataProviderService,
     private val dispatcher: DispatcherProvider = DefaultDispatcherProvider()
 ) : ProductDataProviderWeb {
-    override suspend fun getProductById(
-        id: Long
-    ): Result<Product> = withContext(dispatcher.io()) {
-        kotlin.runCatching {
-            val response = service.getProductById(
-                authorization = setting.accessToken.createAuthorizationBearer(),
-                GraphQLQuery(
-                    query = """query (${'$'}id: Long!) {
+    override suspend fun getProductBySalesId(id: Long): Result<Product> =
+        withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                val response = service.getProductById(
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    GraphQLQuery(
+                        query = """query (${'$'}id: Long!) {
 	saleInfo(id: ${'$'}id) {
 		name
 		price
@@ -36,25 +35,25 @@ class ProductDataProviderWebImpl(
 		}
 	}
 }""",
-                    variables = JsonObject().apply { addProperty("id", id) }
+                        variables = JsonObject().apply { addProperty("id", id) }
+                    )
                 )
-            )
-            if (response.code() >= 400) {
-                throw response.parseServerException(gson)
+                if (response.code() >= 400) {
+                    throw response.parseServerException(gson)
+                }
+                val productJson = JsonParser.parseString(
+                    response.body()?.string() ?: "{}"
+                ).asJsonObject
+                    .get("data").asJsonObject
+                    .get("saleInfo").asJsonObject
+                val productInfoJson = productJson.get("productInformation").asJsonObject
+                Product(
+                    productJson.get("name").asString,
+                    productJson.get("price").asDouble,
+                    productJson.get("productId").asLong,
+                    productInfoJson.get("name").asString,
+                    productInfoJson.get("shortDesc").asString
+                )
             }
-            val productJson = JsonParser.parseString(
-                response.body()?.string() ?: "{}"
-            ).asJsonObject
-                .get("data").asJsonObject
-                .get("saleInfo").asJsonObject
-            val productInfoJson = productJson.get("productInformation").asJsonObject
-            Product(
-                productJson.get("name").asString,
-                productJson.get("price").asDouble,
-                productJson.get("productId").asLong,
-                productInfoJson.get("name").asString,
-                productInfoJson.get("shortDesc").asString
-            )
         }
-    }
 }
