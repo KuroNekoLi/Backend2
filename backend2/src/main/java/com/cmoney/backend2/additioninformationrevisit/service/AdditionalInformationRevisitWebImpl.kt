@@ -256,7 +256,7 @@ class AdditionalInformationRevisitWebImpl(
         }
     }
 
-    override suspend fun getYesterdayAll(
+    override suspend fun getPreviousAll(
         domain: String,
         serviceParam: String,
         columns: List<String>,
@@ -264,8 +264,8 @@ class AdditionalInformationRevisitWebImpl(
         processSteps: List<ProcessStep>
     ): Result<List<List<String>>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
-            service.getYesterdayAll(
-                url = "$domain$serviceParam/api/YesterdayData/GetAll/$typeName",
+            service.getPreviousAll(
+                url = "$domain$serviceParam/api/PreviousData/GetAll/$typeName",
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 columns = columns.joinComma(),
                 param = GetRequestParam(
@@ -284,7 +284,7 @@ class AdditionalInformationRevisitWebImpl(
         }
     }
 
-    override suspend fun getYesterdayTarget(
+    override suspend fun getPreviousTarget(
         domain: String,
         serviceParam: String,
         typeName: String,
@@ -294,8 +294,8 @@ class AdditionalInformationRevisitWebImpl(
         processSteps: List<ProcessStep>
     ): Result<List<List<String>>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
-            service.getYesterdayTarget(
-                url = "$domain$serviceParam/api/YesterdayData/GetTarget/$typeName",
+            service.getPreviousTarget(
+                url = "$domain$serviceParam/api/PreviousData/GetTarget/$typeName",
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 columns = columns.joinComma(),
                 keyNamePath = keyNamePath.joinComma(),
@@ -315,7 +315,7 @@ class AdditionalInformationRevisitWebImpl(
         }
     }
 
-    override suspend fun getYesterdayMultiple(
+    override suspend fun getPreviousMultiple(
         domain: String,
         serviceParam: String,
         typeName: String,
@@ -325,8 +325,8 @@ class AdditionalInformationRevisitWebImpl(
         processSteps: List<ProcessStep>
     ): Result<List<List<String>>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
-            val response = service.getYesterdayMultiple(
-                url = "$domain$serviceParam/api/YesterdayData/GetMultiple/$typeName",
+            val response = service.getPreviousMultiple(
+                url = "$domain$serviceParam/api/PreviousData/GetMultiple/$typeName",
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 columns = columns.joinComma(),
                 keyNamePath = keyNamePath.joinComma(),
@@ -347,7 +347,7 @@ class AdditionalInformationRevisitWebImpl(
         }
     }
 
-    override suspend fun getYesterdayOtherQuery(
+    override suspend fun getPreviousOtherQuery(
         domain: String,
         serviceParam: String,
         requestType: String,
@@ -357,8 +357,8 @@ class AdditionalInformationRevisitWebImpl(
         processSteps: List<ProcessStep>
     ): Result<List<List<String>>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
-            service.getYesterdayOtherQuery(
-                url = "$domain$serviceParam/api/YesterdayData/GetOtherQuery/$requestType/$responseType",
+            service.getPreviousOtherQuery(
+                url = "$domain$serviceParam/api/PreviousData/GetOtherQuery/$requestType/$responseType",
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 columns = columns.joinComma(),
                 param = GetRequestParam(

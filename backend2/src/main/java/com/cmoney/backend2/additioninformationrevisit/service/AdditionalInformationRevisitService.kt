@@ -60,7 +60,7 @@ interface AdditionalInformationRevisitService {
 
     @RecordApi
     @POST
-    suspend fun getYesterdayAll(
+    suspend fun getPreviousAll(
         @Url url: String,
         @Header("Authorization") authorization: String,
         @Query("columns") columns: String,
@@ -69,7 +69,7 @@ interface AdditionalInformationRevisitService {
 
     @RecordApi
     @POST
-    suspend fun getYesterdayTarget(
+    suspend fun getPreviousTarget(
         @Url url: String,
         @Header("Authorization") authorization: String,
         @Query("keyNamePath") keyNamePath: String,
@@ -79,7 +79,7 @@ interface AdditionalInformationRevisitService {
 
     @RecordApi
     @POST
-    suspend fun getYesterdayMultiple(
+    suspend fun getPreviousMultiple(
         @Url url: String,
         @Header("Authorization") authorization: String,
         @Query("columns") columns: String,
@@ -89,7 +89,7 @@ interface AdditionalInformationRevisitService {
 
     @RecordApi
     @POST
-    suspend fun getYesterdayOtherQuery(
+    suspend fun getPreviousOtherQuery(
         @Url url: String,
         @Header("Authorization") authorization: String,
         @Query("columns") columns: String,
