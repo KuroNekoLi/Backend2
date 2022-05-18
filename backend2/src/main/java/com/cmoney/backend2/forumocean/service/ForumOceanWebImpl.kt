@@ -7,6 +7,7 @@ import com.cmoney.backend2.base.extension.parseServerException
 import com.cmoney.backend2.base.model.dispatcher.DefaultDispatcherProvider
 import com.cmoney.backend2.base.model.dispatcher.DispatcherProvider
 import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.backend2.forumocean.service.api.article.ExchangeCount
 import com.cmoney.backend2.forumocean.service.api.article.create.CreateArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.create.variable.Content
 import com.cmoney.backend2.forumocean.service.api.article.createpersonal.CreatePersonalArticleResponseBody
@@ -1317,4 +1318,15 @@ class ForumOceanWebImpl(
             return@runCatching response.map { roles[it] }.toSet()
         }
     }
+
+    override suspend fun getExchangeCount(memberId: Long): Result<ExchangeCount> =
+        withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                return@runCatching service.getExchangeCount(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    memberId = memberId
+                ).checkResponseBody(jsonParser)
+            }
+        }
 }

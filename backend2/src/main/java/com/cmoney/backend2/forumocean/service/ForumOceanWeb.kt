@@ -1,5 +1,6 @@
 package com.cmoney.backend2.forumocean.service
 
+import com.cmoney.backend2.forumocean.service.api.article.ExchangeCount
 import com.cmoney.backend2.forumocean.service.api.article.create.CreateArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.create.variable.Content
 import com.cmoney.backend2.forumocean.service.api.article.createpersonal.CreatePersonalArticleResponseBody
@@ -1061,4 +1062,6 @@ interface ForumOceanWeb {
     suspend fun getRole(): Result<Set<Role>>
 
     suspend fun getRole(memberId: Long): Result<Set<Role>>
+
+    suspend fun getExchangeCount(memberId: Long): Result<ExchangeCount>
 }

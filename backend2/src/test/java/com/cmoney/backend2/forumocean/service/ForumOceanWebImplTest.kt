@@ -3,6 +3,7 @@ package com.cmoney.backend2.forumocean.service
 import com.cmoney.backend2.MainCoroutineRule
 import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
+import com.cmoney.backend2.forumocean.service.api.article.ExchangeCount
 import com.cmoney.backend2.forumocean.service.api.article.create.CreateArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.create.variable.Content
 import com.cmoney.backend2.forumocean.service.api.article.createpersonal.CreatePersonalArticleResponseBody
@@ -3504,6 +3505,7 @@ class ForumOceanWebImplTest {
         val result = web.getRole()
         assertThat(result.isFailure).isTrue()
     }
+
     @ExperimentalCoroutinesApi
     @Test
     fun `取得其他使用者的角色_success`() = mainCoroutineRule.runBlockingTest {
@@ -3530,5 +3532,33 @@ class ForumOceanWebImplTest {
         } returns Response.error(500, "".toResponseBody())
         val result = web.getRole(1)
         assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `使用者已兌換該作者文章數及上限_success`() = runBlockingTest {
+        coEvery {
+            forumOceanService.getExchangeCount(
+                authorization = any(),
+                memberId = any(),
+                path = ""
+            )
+        } returns Response.success(ExchangeCount(1, 1))
+        val result = web.getExchangeCount(1)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `使用者已兌換該作者文章數及上限_failure`() = runBlockingTest {
+        coEvery {
+            forumOceanService.getExchangeCount(
+                authorization = any(),
+                memberId = any(),
+                path = ""
+            )
+        } returns Response.error(400, "".toResponseBody())
+        val result = web.getExchangeCount(1)
+        assertThat(result.isSuccess).isTrue()
     }
 }

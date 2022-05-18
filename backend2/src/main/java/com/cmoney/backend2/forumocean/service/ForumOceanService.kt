@@ -1,6 +1,7 @@
 package com.cmoney.backend2.forumocean.service
 
 import com.cmoney.backend2.base.model.calladapter.RecordApi
+import com.cmoney.backend2.forumocean.service.api.article.ExchangeCount
 import com.cmoney.backend2.forumocean.service.api.article.create.CreateArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.create.variable.Content
 import com.cmoney.backend2.forumocean.service.api.article.createpersonal.CreatePersonalArticleResponseBody
@@ -975,4 +976,12 @@ interface ForumOceanService {
         @Path("path") path: String,
         @Path("otherMemberId") memberId: Long
     ): Response<List<Int>>
+
+    @RecordApi
+    @GET("{path}/ExchangeCount/{memberId}")
+    suspend fun getExchangeCount(
+        @Header("Authorization") authorization: String,
+        @Path("path") path : String,
+        @Path("memberId") memberId: Long
+    ):Response<ExchangeCount>
 }
