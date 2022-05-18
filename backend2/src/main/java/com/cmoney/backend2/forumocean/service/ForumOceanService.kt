@@ -274,6 +274,19 @@ interface ForumOceanService {
         @Query("count") count: Int
     ): Response<List<ArticleResponseBody.UnknownArticleResponseBody>>
 
+    /**
+     * First page of api getChannelsArticleByWeight
+     * @see getChannelsArticleByWeight
+     */
+    @RecordApi
+    @POST("{path}/api/Channel/GetChannelsArticleByWeight")
+    suspend fun getChannelsArticleByWeight(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Body channelNameList: GetChannelsArticleByWeightRequestBody,
+        @Query("count") count: Int
+    ): Response<List<ArticleResponseBody.UnknownArticleResponseBody>>
+
     @RecordApi
     @POST("{path}/api/Collection/Create/{articleId}")
     suspend fun createCollection(

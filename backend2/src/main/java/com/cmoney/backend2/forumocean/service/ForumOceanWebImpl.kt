@@ -273,6 +273,20 @@ class ForumOceanWebImpl(
         }
     }
 
+    override suspend fun getChannelsArticleByWeight(
+        channelNameBuilderList: List<IChannelNameBuilder>,
+        count: Int
+    ): Result<List<ArticleResponseBody.UnknownArticleResponseBody>> = withContext(dispatcher.io()) {
+        kotlin.runCatching {
+            service.getChannelsArticleByWeight(
+                path = serverName,
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                channelNameList = GetChannelsArticleByWeightRequestBody(channelNameBuilderList.map { it.create() }),
+                count = count
+            ).checkResponseBody(jsonParser)
+        }
+    }
+
     override suspend fun createCollection(articleId: Long): Result<Unit> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {

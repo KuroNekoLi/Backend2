@@ -183,6 +183,20 @@ interface ForumOceanWeb {
         count: Int
     ): Result<List<ArticleResponseBody.UnknownArticleResponseBody>>
 
+    /**
+     * 取得頻道文章清單(by weight) 適用於常變動的清單(First page)
+     *
+     * @param channelNameBuilderList 文章的ChannelName
+     * @param count 取得筆數(正數往舊的取N筆，負數往新的取N筆)
+     *
+     * @see getChannelsArticleByWeight
+     */
+    suspend fun getChannelsArticleByWeight(
+        channelNameBuilderList: List<IChannelNameBuilder>,
+        count: Int
+    ): Result<List<ArticleResponseBody.UnknownArticleResponseBody>>
+
+
     //endregion
 
     //region Collection 收藏
