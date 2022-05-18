@@ -1,3 +1,16 @@
+#  (2022-05-18)
+
+
+
+# [5.21.0](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.20.0...5.21.0) (2022-05-18)
+
+
+### Features
+
+* additionalInformation about change to use Previous replace Yesterday, and fix web service path default value ([6666071](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/6666071005809781c5e5986b5853d9d675b38f79))
+
+
+
 #  (2022-04-26)
 
 
