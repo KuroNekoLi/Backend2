@@ -77,7 +77,9 @@ sealed class ArticleContent(
         @SerializedName("bestAnswerCommentId")
         override val bestAnswerCommentId: Long?,
         @SerializedName("articleState")
-        override val articleState: ArticleState?
+        override val articleState: ArticleState?,
+        @SerializedName("articleType")
+        val articleType: String
     ) : ArticleContent(text),
         MultiMediaInfo,
         TagInfo,
