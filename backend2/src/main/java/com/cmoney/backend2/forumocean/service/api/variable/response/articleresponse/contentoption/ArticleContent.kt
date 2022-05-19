@@ -78,8 +78,14 @@ sealed class ArticleContent(
         override val bestAnswerCommentId: Long?,
         @SerializedName("articleState")
         override val articleState: ArticleState?,
+        @SerializedName("authType")
+        override val authType: String?,
+        @SerializedName("pCoin")
+        override val pCoin: Long?,
+        @SerializedName("exchangeCount")
+        override val exchangeCount: Long?,
         @SerializedName("articleType")
-        val articleType: String
+        override val articleType: String?
     ) : ArticleContent(text),
         MultiMediaInfo,
         TagInfo,
@@ -92,7 +98,8 @@ sealed class ArticleContent(
         VoteOptionInfo,
         QuestionInfo,
         ArticleStateInfo,
-        TopicInfo
+        TopicInfo,
+        ColumnInfo
 
     /**
      * 一般文章
