@@ -33,10 +33,12 @@ class ProductDataProviderWebImpl(
 		productInformation {
 			name
 			shortDesc
+            authorInfoSet {
+                authorName
+                memberId
+                account
+            }
 		}
-        authorInfoSet{
-            authorName
-        }
 	}
 }""",
                         variables = JsonObject().apply { addProperty("id", id) }
@@ -68,9 +70,9 @@ class ProductDataProviderWebImpl(
                 val response = service.getProductById(
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     GraphQLQuery(
-                        query = """query($id:Int)
+                        query = """query(${'$'}author:Int)
 {
-    productInfoSet(author:$id)
+    productInfoSet(author:${'$'}author)
     {
         id
         name
@@ -78,7 +80,7 @@ class ProductDataProviderWebImpl(
         logoPath
         saleInfoSet
         {
-            id
+            id,
             name
         }
     }
