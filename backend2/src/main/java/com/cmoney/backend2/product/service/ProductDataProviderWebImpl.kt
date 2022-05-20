@@ -33,6 +33,9 @@ class ProductDataProviderWebImpl(
 			name
 			shortDesc
 		}
+        authorInfoSet{
+            authorName
+        }
 	}
 }""",
                         variables = JsonObject().apply { addProperty("id", id) }
@@ -51,6 +54,7 @@ class ProductDataProviderWebImpl(
                     productJson.get("name").asString,
                     productJson.get("price").asDouble,
                     productJson.get("productId").asLong,
+                    productInfoJson.get("authorInfoSet").asJsonArray.get(0).asJsonObject.get("authorName").asString,
                     productInfoJson.get("name").asString,
                     productInfoJson.get("shortDesc").asString
                 )
