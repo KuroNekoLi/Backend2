@@ -37,6 +37,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.commentrespo
 import com.cmoney.backend2.forumocean.service.api.variable.response.groupresponse.GroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.ReactionInfo
 import com.cmoney.backend2.forumocean.service.api.vote.get.VoteInfo
+import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -994,7 +995,15 @@ interface ForumOceanService {
     @GET("{path}/api/ExchangeCount/{memberId}")
     suspend fun getExchangeCount(
         @Header("Authorization") authorization: String,
-        @Path("path") path : String,
+        @Path("path") path: String,
         @Path("memberId") memberId: Long
-    ):Response<ExchangeCount>
+    ): Response<ExchangeCount>
+
+    @RecordApi
+    @GET("{path}/api/IsMemberSubscribe/{memberId}")
+    suspend fun isMemberSubscribe(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("memberId") memberId: Long
+    ): Response<ResponseBody>
 }

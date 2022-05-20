@@ -1078,4 +1078,6 @@ interface ForumOceanWeb {
     suspend fun getRole(memberId: Long): Result<Set<Role>>
 
     suspend fun getExchangeCount(memberId: Long): Result<ExchangeCount>
+
+    suspend fun isMemberSubscribe(memberId: Long): Result<Boolean>
 }

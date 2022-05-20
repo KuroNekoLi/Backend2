@@ -6,6 +6,7 @@ import com.cmoney.backend2.base.extension.handleNoContent
 import com.cmoney.backend2.base.extension.parseServerException
 import com.cmoney.backend2.base.model.dispatcher.DefaultDispatcherProvider
 import com.cmoney.backend2.base.model.dispatcher.DispatcherProvider
+import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.forumocean.service.api.article.ExchangeCount
 import com.cmoney.backend2.forumocean.service.api.article.create.CreateArticleResponseBody
@@ -1341,6 +1342,22 @@ class ForumOceanWebImpl(
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     memberId = memberId
                 ).checkResponseBody(jsonParser)
+            }
+        }
+
+    override suspend fun isMemberSubscribe(memberId: Long): Result<Boolean> =
+        withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                val response = service.isMemberSubscribe(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    memberId = memberId
+                )
+                if (response.code() != 200) {
+                    response.body()?.string()?.trim() == "true"
+                } else {
+                    throw ServerException(response.code(), "")
+                }
             }
         }
 }
