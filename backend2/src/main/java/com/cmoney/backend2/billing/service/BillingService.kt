@@ -18,8 +18,16 @@ import com.cmoney.backend2.billing.service.api.verifygoogleinappreceipt.VerifyGo
 import com.cmoney.backend2.billing.service.api.verifygooglesubreceipt.VerifyGoogleSubReceiptRequestBody
 import com.cmoney.backend2.billing.service.api.verifyhuaweiinappreceipt.VerifyHuaweiInAppReceiptRequestBody
 import com.cmoney.backend2.billing.service.api.verifyhuaweisubreceipt.VerifyHuaweiSubReceiptRequestBody
+import okhttp3.ResponseBody
 import retrofit2.Response
-import retrofit2.http.*
+import retrofit2.http.Body
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
+import retrofit2.http.GET
+import retrofit2.http.Header
+import retrofit2.http.POST
+import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface BillingService {
     /**
@@ -174,5 +182,18 @@ interface BillingService {
         @Header("Authorization") authorization: String,
         @Path("appId") appId: Int
     ): Response<AuthByCMoneyResponseBody>
+
+    /**
+     * 取得指定CMoney銷售類型的歷史訂閱數量
+     * @param productType 商品類型 EX:後台1.2商品都是 888003
+     * @param functionIds 商品銷售代號
+     */
+    @RecordApi
+    @GET("PurchaseService/Statistics/Subscription/CMSales/HistoryCount")
+    suspend fun getHistoryCount(
+        @Header("Authorization") authorization: String,
+        @Query("productType") productType: Int,
+        @Query("functionIds") functionIds: Int
+    ): Response<ResponseBody>
 
 }

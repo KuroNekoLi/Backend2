@@ -2,7 +2,11 @@ package com.cmoney.backend2.billing.service
 
 import com.cmoney.backend2.base.model.request.MemberApiParam
 import com.cmoney.backend2.billing.service.api.getproductinfo.ProductInformation
-import com.cmoney.backend2.billing.service.common.*
+import com.cmoney.backend2.billing.service.common.Authorization
+import com.cmoney.backend2.billing.service.common.InAppGoogleReceipt
+import com.cmoney.backend2.billing.service.common.InAppHuaweiReceipt
+import com.cmoney.backend2.billing.service.common.SubGoogleReceipt
+import com.cmoney.backend2.billing.service.common.SubHuaweiReceipt
 
 interface BillingWeb {
     /**
@@ -123,4 +127,9 @@ interface BillingWeb {
      * 用戶是否有CMoney正在續約中的手機商品
      */
     suspend fun getAuthByCMoney(appId: Int): Result<Boolean>
+
+    /**
+     * 取得指定CMoney銷售類型的歷史訂閱數量
+     */
+    suspend fun getHistoryCount(productType: Int, functionIds: Int):Result<Int>
 }

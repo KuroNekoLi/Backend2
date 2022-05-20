@@ -19,6 +19,8 @@ class BillingServiceCase : ServiceCase {
             .logResponse(TAG)
         billingImpl.getAuthByCMoney(2)
             .logResponse(TAG)
+        billingImpl.getHistoryCount(888003,6531)
+            .logResponse(TAG)
     }
 
     companion object {
