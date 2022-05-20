@@ -60,7 +60,7 @@ interface ForumOceanService {
      * 發專欄文章
      */
     @RecordApi
-    @POST("{path}/article/{articleType}")
+    @POST("{path}/api/article/{articleType}")
     suspend fun createPersonalArticle(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
@@ -72,7 +72,7 @@ interface ForumOceanService {
      * 發筆記文
      */
     @RecordApi
-    @POST("{path}/article/{articleType}")
+    @POST("{path}/api/article/{articleType}")
     suspend fun createPersonalArticle(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
@@ -131,7 +131,7 @@ interface ForumOceanService {
      * 發專欄文章
      */
     @RecordApi
-    @POST("{path}/article/columnist")
+    @POST("{path}/api/article/columnist")
     suspend fun createArticle(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
@@ -968,7 +968,7 @@ interface ForumOceanService {
     ): Response<Void>
 
     @RecordApi
-    @POST("{path}/BonusPointExchange/{articleId}")
+    @POST("{path}/api/BonusPointExchange/{articleId}")
     suspend fun exchangeColumnArticle(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
@@ -976,14 +976,14 @@ interface ForumOceanService {
     ): Response<Void>
 
     @RecordApi
-    @GET("{path}/Role")
+    @GET("{path}/api/Role")
     suspend fun getRole(
         @Header("Authorization") authorization: String,
         @Path("path") path: String
     ): Response<List<Int>>
 
     @RecordApi
-    @GET("{path}/Role/{otherMemberId}")
+    @GET("{path}/api/Role/{otherMemberId}")
     suspend fun getRole(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
@@ -991,7 +991,7 @@ interface ForumOceanService {
     ): Response<List<Int>>
 
     @RecordApi
-    @GET("{path}/ExchangeCount/{memberId}")
+    @GET("{path}/api/ExchangeCount/{memberId}")
     suspend fun getExchangeCount(
         @Header("Authorization") authorization: String,
         @Path("path") path : String,
