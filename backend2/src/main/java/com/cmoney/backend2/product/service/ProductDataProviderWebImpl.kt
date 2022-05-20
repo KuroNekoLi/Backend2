@@ -7,6 +7,7 @@ import com.cmoney.backend2.base.model.dispatcher.DispatcherProvider
 import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.product.service.api.GraphQLQuery
 import com.cmoney.backend2.product.service.api.Product
+import com.cmoney.backend2.product.service.api.SaleItem
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
@@ -57,6 +58,50 @@ class ProductDataProviderWebImpl(
                     productInfoJson.get("authorInfoSet").asJsonArray.get(0).asJsonObject.get("authorName").asString,
                     productInfoJson.get("name").asString,
                     productInfoJson.get("shortDesc").asString
+                )
+            }
+        }
+
+    override suspend fun getSalesItemBySubjectId(id: Long): Result<SaleItem> =
+        withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                val response = service.getProductById(
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    GraphQLQuery(
+                        query = """query($id:Int)
+{
+    productInfoSet(author:$id)
+    {
+        id
+        name
+        status
+        logoPath
+        saleInfoSet
+        {
+            id
+            name
+        }
+    }
+}""",
+                        variables = JsonObject().apply { addProperty("author", id) }
+                    )
+                )
+                if (response.code() >= 400) {
+                    throw response.parseServerException(gson)
+                }
+                val productObj = JsonParser.parseString(
+                    response.body()?.string() ?: "{}"
+                ).asJsonObject
+                    .get("data").asJsonObject
+                    .get("productInfoSet").asJsonArray
+                    .get(0).asJsonObject
+                val saleItemObj = productObj.get("saleInfoSet").asJsonArray
+                    .get(0).asJsonObject
+                SaleItem(
+                    productObj.get("id").asLong,
+                    productObj.get("name").asString,
+                    saleItemObj.get("id").asLong,
+                    saleItemObj.get("name").asString
                 )
             }
         }
