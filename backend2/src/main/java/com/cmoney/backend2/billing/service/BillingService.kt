@@ -192,8 +192,8 @@ interface BillingService {
     @GET("PurchaseService/Statistics/Subscription/CMSales/HistoryCount")
     suspend fun getHistoryCount(
         @Header("Authorization") authorization: String,
-        @Query("productType") productType: Int,
-        @Query("functionIds") functionIds: Int
+        @Query("productType") productType: Long,
+        @Query("functionIds") functionIds: Long
     ): Response<ResponseBody>
 
 }

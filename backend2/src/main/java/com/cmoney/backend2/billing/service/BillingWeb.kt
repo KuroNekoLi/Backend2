@@ -131,5 +131,5 @@ interface BillingWeb {
     /**
      * 取得指定CMoney銷售類型的歷史訂閱數量
      */
-    suspend fun getHistoryCount(productType: Int, functionIds: Int):Result<Int>
+    suspend fun getHistoryCount(productType: Long, functionIds: Long):Result<Long>
 }

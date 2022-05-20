@@ -274,7 +274,7 @@ class BillingWebImpl(
             }
         }
 
-    override suspend fun getHistoryCount(productType: Int, functionIds: Int): Result<Int> {
+    override suspend fun getHistoryCount(productType: Long, functionIds: Long): Result<Long> {
         return withContext(dispatcher.io()) {
             runCatching {
                 val response = service.getHistoryCount(
@@ -285,7 +285,7 @@ class BillingWebImpl(
                 val responseBody = response.checkResponseBody(gson)
                 val bodyString=responseBody.string()
                 val jsonObject = JsonParser.parseString(bodyString).asJsonObject
-                jsonObject.get(functionIds.toString()).asInt
+                jsonObject.get(functionIds.toString()).asLong
             }
         }
     }

@@ -957,7 +957,7 @@ class BillingWebImplTest {
 
     @Test
     fun `getHistoryCount_成功`() = mainCoroutineRule.runBlockingTest {
-        val functionIds = 6531
+        val functionIds :Long= 6531
         val responseBody = "{\"$functionIds\":555}".toResponseBody()
         coEvery {
             service.getHistoryCount(
@@ -969,7 +969,7 @@ class BillingWebImplTest {
         val result = billingWeb.getHistoryCount(888003, functionIds)
         coVerify { service.getHistoryCount(any(), any(), any()) }
         assertThat(result.isSuccess).isTrue()
-        assertThat(result.getOrThrow()).isEqualTo(Int)
+        assertThat(result.getOrThrow()).isEqualTo(555)
     }
 
     @Test
