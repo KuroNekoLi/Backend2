@@ -3,10 +3,10 @@ package com.cmoney.backend2.forumocean.service.api.variable.response.articleresp
 import com.google.gson.annotations.SerializedName
 
 enum class ArticleState {
-    @SerializedName("blocked")
+    @SerializedName("blocked", alternate = ["Blocked"])
     Block,
-    @SerializedName("deleted")
+    @SerializedName("deleted", alternate = ["Deleted"])
     Delete,
-    @SerializedName("unreadableNote")
+    @SerializedName("unreadableNote", alternate = ["UnreadableNote"])
     UnreadableNote
 }
