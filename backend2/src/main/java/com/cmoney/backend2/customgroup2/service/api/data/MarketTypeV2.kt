@@ -18,12 +18,39 @@ sealed class MarketTypeV2(
     ) : MarketTypeV2(type, subType) {
 
         /**
-         * 上市子類型
+         * 股票
          */
+        object Stock : Tse(subType = 90)
+
+        /**
+         * 指數
+         */
+        object Index : Tse(subType = 150)
+
+        /**
+         * 特別股
+         */
+        object Special : Tse(subType = 151)
+
+        /**
+         * 存託憑證
+         */
+        object DepositoryReceipt : Tse(subType = 158)
+
         /**
          * 國內/外指數股票型ETF
          */
         object DomesticAndForeignIndexStockEtf : Tse(subType = 160)
+
+        /**
+         * 政府公債
+         */
+        object GovernmentBonds : Tse(subType = 168)
+
+        /**
+         * REITs
+         */
+        object REITs : Tse(subType = 172)
 
         /**
          * 加掛式指數股票型ETF
@@ -56,34 +83,40 @@ sealed class MarketTypeV2(
         object AddOnBondIndexEtf : Tse(subType = 207)
 
         /**
-         * ETN
+         * 國內成分ETN
          */
-        object Etn : Tse(subType = 211)
+        object DomesticEtn : Tse(subType = 300)
 
         /**
-         * 股票
+         * 國外成分ETN
          */
-        object Stock : Tse(subType = 90)
+        object ForeignEtn : Tse(subType = 301)
 
         /**
-         * 存託憑證
+         * 槓桿型及反向型成分ETN
          */
-        object DepositoryReceipt : Tse(subType = 158)
+        object LeveragedAndInverseComponentsEtn : Tse(subType = 302)
 
         companion object {
 
             fun getAll(): List<Tse> {
                 return listOf(
+                    Stock,
+                    Index,
+                    Special,
+                    DepositoryReceipt,
                     DomesticAndForeignIndexStockEtf,
+                    GovernmentBonds,
+                    REITs,
                     AddOnIndexStockEtf,
                     LeveragedIndexStockEtf,
                     InverseIndexStockEtf,
                     FuturesIndexStockEtf,
                     BondIndexStockEtf,
                     AddOnBondIndexEtf,
-                    Etn,
-                    Stock,
-                    DepositoryReceipt
+                    DomesticEtn,
+                    ForeignEtn,
+                    LeveragedAndInverseComponentsEtn
                 )
             }
 
@@ -104,6 +137,26 @@ sealed class MarketTypeV2(
     ) : MarketTypeV2(type, subType) {
 
         /**
+         * 股票
+         */
+        object Stock : Otc(subType = 90)
+
+        /**
+         * 指數
+         */
+        object Index : Otc(subType = 150)
+
+        /**
+         * 特別股
+         */
+        object Special : Otc(subType = 151)
+
+        /**
+         * 可轉政府公債
+         */
+        object ConvertibleGovernmentBonds : Otc(subType = 152)
+
+        /**
          * 國內/外指數股票型ETF
          */
         object DomesticAndForeignIndexStockEtf : Otc(subType = 160)
@@ -114,22 +167,32 @@ sealed class MarketTypeV2(
         object BondIndexStockEtf : Otc(subType = 206)
 
         /**
-         * ETN
+         * 國內成分ETN
          */
-        object Etn : Otc(subType = 211)
+        object DomesticEtn : Otc(subType = 300)
 
         /**
-         * 股票
+         * 國外成分ETN
          */
-        object Stock : Otc(subType = 90)
+        object ForeignEtn : Otc(subType = 301)
+
+        /**
+         * 槓桿型及反向型成分ETN
+         */
+        object LeveragedAndInverseComponentsEtn : Otc(subType = 302)
 
         companion object {
             fun getAll(): List<Otc> {
                 return listOf(
+                    Stock,
+                    Index,
+                    Special,
+                    ConvertibleGovernmentBonds,
                     DomesticAndForeignIndexStockEtf,
                     BondIndexStockEtf,
-                    Etn,
-                    Stock
+                    DomesticEtn,
+                    ForeignEtn,
+                    LeveragedAndInverseComponentsEtn
                 )
             }
 
@@ -155,6 +218,11 @@ sealed class MarketTypeV2(
         object Commodity : Future(subType = 67)
 
         /**
+         * 匯率期貨
+         */
+        object ExchangeRate : Future(subType = 69)
+
+        /**
          * 股價指數期貨
          */
         object StockPriceIndex : Future(subType = 73)
@@ -168,6 +236,7 @@ sealed class MarketTypeV2(
             fun getAll(): List<Future> {
                 return listOf(
                     Commodity,
+                    ExchangeRate,
                     StockPriceIndex,
                     Stock
                 )
@@ -190,9 +259,10 @@ sealed class MarketTypeV2(
     ) : MarketTypeV2(type, subType) {
 
         /**
-         * 股票選擇權
+         * 商品選擇權
          */
-        object Stock : Option(subType = 83)
+        object Commodity : Option(subType = 67)
+
 
         /**
          * 匯率選擇權
@@ -200,14 +270,14 @@ sealed class MarketTypeV2(
         object ExchangeRate : Option(subType = 69)
 
         /**
-         * 商品選擇權
-         */
-        object Commodity : Option(subType = 67)
-
-        /**
          * 股價指數選擇權
          */
         object StockPriceIndex : Option(subType = 73)
+
+        /**
+         * 股票選擇權
+         */
+        object Stock : Option(subType = 83)
 
         companion object {
             fun getAll(): List<Option> {
@@ -240,10 +310,16 @@ sealed class MarketTypeV2(
          */
         object Stock : Emerging(subType = 90)
 
+        /**
+         * 指數
+         */
+        object Index : Emerging(subType = 150)
+
         companion object {
             fun getAll(): List<Emerging> {
                 return listOf(
-                    Stock
+                    Stock,
+                    Index
                 )
             }
 
@@ -328,6 +404,104 @@ sealed class MarketTypeV2(
             }
 
             fun valueOf(subType: Int): OptionAfterMarket? {
+                return getAll().find {
+                    it.subType == subType
+                }
+            }
+        }
+    }
+
+    /**
+     * 指數彙編
+     */
+    sealed class IndexCompilation(
+        override val type: Int = 10,
+        override val subType: Int
+    ) : MarketTypeV2(type, subType) {
+
+        /**
+         * CM產業
+         */
+        object CmIndustry : IndexCompilation(subType = 1)
+
+        /**
+         * 概念股
+         */
+        object Concept : IndexCompilation(subType = 2)
+
+        /**
+         * 集團股
+         */
+        object EnterpriseGroup: IndexCompilation(subType = 3)
+
+        companion object {
+            fun getAll(): List<IndexCompilation> {
+                return listOf(
+                    CmIndustry,
+                    Concept,
+                    EnterpriseGroup
+                )
+            }
+
+            fun valueOf(subType: Int): IndexCompilation? {
+                return getAll().find {
+                    it.subType == subType
+                }
+            }
+        }
+    }
+
+    /**
+     * 上市創新版
+     */
+    sealed class TseInnovation(
+        override val type: Int = 11,
+        override val subType: Int
+    ) : MarketTypeV2(type, subType) {
+
+        /**
+         * 創新版
+         */
+        object Innovative : TseInnovation(subType = 91)
+
+
+        companion object {
+            fun getAll(): List<TseInnovation> {
+                return listOf(
+                    Innovative
+                )
+            }
+
+            fun valueOf(subType: Int): TseInnovation? {
+                return getAll().find {
+                    it.subType == subType
+                }
+            }
+        }
+    }
+
+    /**
+     * 興櫃戰略新版
+     */
+    sealed class OtcStrategy(
+        override val type: Int = 12,
+        override val subType: Int
+    ) : MarketTypeV2(type, subType) {
+
+        /**
+         * 戰略版
+         */
+        object Strategy : OtcStrategy(subType = 92)
+
+
+        companion object {
+            fun getAll(): List<OtcStrategy> {
+                return listOf(
+                    Strategy
+                )
+            }
+
+            fun valueOf(subType: Int): OtcStrategy? {
                 return getAll().find {
                     it.subType == subType
                 }
@@ -422,11 +596,6 @@ sealed class MarketTypeV2(
         object AmericanDepositaryReceipt : UsaStock(subType = 2)
 
         /**
-         * 附認股權證普通股
-         */
-        object OrdinarySharesWithWarrants : UsaStock(subType = 7)
-
-        /**
          * 股本權證
          */
         object EquityWarrants : UsaStock(subType = 3)
@@ -445,6 +614,11 @@ sealed class MarketTypeV2(
          * 業主有限合夥股
          */
         object OwnersLimitedPartnershipShares : UsaStock(subType = 6)
+
+        /**
+         * 附認股權證普通股
+         */
+        object OrdinarySharesWithWarrants : UsaStock(subType = 7)
 
         /**
          * 封閉型基金
@@ -502,88 +676,6 @@ sealed class MarketTypeV2(
             }
 
             fun valueOf(subType: Int): UsaStock? {
-                return getAll().find {
-                    it.subType == subType
-                }
-            }
-        }
-    }
-
-    /**
-     * 國際指數
-     */
-    sealed class InternationalIndex(
-        override val type: Int = 70,
-        override val subType: Int
-    ) : MarketTypeV2(type, subType) {
-
-        /**
-         * 美國
-         */
-        object UnitedState : InternationalIndex(subType = 840)
-
-        /**
-         * 法國
-         */
-        object France : InternationalIndex(subType = 250)
-
-        /**
-         * 英國
-         */
-        object UnitedKingdom : InternationalIndex(subType = 826)
-
-        /**
-         * 德國
-         */
-        object Germany : InternationalIndex(subType = 276)
-
-        /**
-         * 香港
-         */
-        object HongKong : InternationalIndex(subType = 344)
-
-        /**
-         * 韓國
-         */
-        object SouthKorea : InternationalIndex(subType = 410)
-
-        /**
-         * 日本
-         */
-        object Japan : InternationalIndex(subType = 392)
-
-        /**
-         * 俄羅斯
-         */
-        object Russia : InternationalIndex(subType = 643)
-
-        /**
-         * 中國
-         */
-        object China : InternationalIndex(subType = 156)
-
-        /**
-         * 臺灣
-         */
-        object Taiwan : InternationalIndex(subType = 158)
-
-        companion object {
-            fun getAll(): List<InternationalIndex> {
-                return listOf(
-                    UnitedState,
-                    France,
-                    UnitedKingdom,
-                    Germany,
-                    HongKong,
-                    SouthKorea,
-                    Japan,
-                    Russia,
-                    China,
-                    Taiwan
-                )
-            }
-
-            fun valueOf(subType: Int): InternationalIndex? {
                 return getAll().find {
                     it.subType == subType
                 }
@@ -749,6 +841,88 @@ sealed class MarketTypeV2(
         }
     }
 
+    /**
+     * 國際指數
+     */
+    sealed class InternationalIndex(
+        override val type: Int = 70,
+        override val subType: Int
+    ) : MarketTypeV2(type, subType) {
+
+        /**
+         * 美國
+         */
+        object UnitedState : InternationalIndex(subType = 840)
+
+        /**
+         * 法國
+         */
+        object France : InternationalIndex(subType = 250)
+
+        /**
+         * 英國
+         */
+        object UnitedKingdom : InternationalIndex(subType = 826)
+
+        /**
+         * 德國
+         */
+        object Germany : InternationalIndex(subType = 276)
+
+        /**
+         * 香港
+         */
+        object HongKong : InternationalIndex(subType = 344)
+
+        /**
+         * 韓國
+         */
+        object SouthKorea : InternationalIndex(subType = 410)
+
+        /**
+         * 日本
+         */
+        object Japan : InternationalIndex(subType = 392)
+
+        /**
+         * 俄羅斯
+         */
+        object Russia : InternationalIndex(subType = 643)
+
+        /**
+         * 中國
+         */
+        object China : InternationalIndex(subType = 156)
+
+        /**
+         * 臺灣
+         */
+        object Taiwan : InternationalIndex(subType = 158)
+
+        companion object {
+            fun getAll(): List<InternationalIndex> {
+                return listOf(
+                    UnitedState,
+                    France,
+                    UnitedKingdom,
+                    Germany,
+                    HongKong,
+                    SouthKorea,
+                    Japan,
+                    Russia,
+                    China,
+                    Taiwan
+                )
+            }
+
+            fun valueOf(subType: Int): InternationalIndex? {
+                return getAll().find {
+                    it.subType == subType
+                }
+            }
+        }
+    }
+
     companion object {
 
         /**
@@ -763,6 +937,9 @@ sealed class MarketTypeV2(
                     addAll(Option.getAll())
                     addAll(FutureAfterMarket.getAll())
                     addAll(OptionAfterMarket.getAll())
+                    addAll(IndexCompilation.getAll())
+                    addAll(TseInnovation.getAll())
+                    addAll(OtcStrategy.getAll())
                     addAll(TseWarrant.getAll())
                     addAll(OtcWarrant.getAll())
                     addAll(Emerging.getAll())
