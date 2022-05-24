@@ -81,7 +81,8 @@ class ProductDataProviderWebImpl(
         saleInfoSet
         {
             id,
-            name
+            name,
+            isShow
         }
     }
 }""",
@@ -98,7 +99,7 @@ class ProductDataProviderWebImpl(
                     .get("productInfoSet").asJsonArray
                     .get(0).asJsonObject
                 val saleItemObj = productObj.get("saleInfoSet").asJsonArray
-                    .get(0).asJsonObject
+                    .filter { it.asJsonObject.get("isShow").asBoolean }[0].asJsonObject
                 SaleItem(
                     productObj.get("id").asLong,
                     productObj.get("name").asString,
