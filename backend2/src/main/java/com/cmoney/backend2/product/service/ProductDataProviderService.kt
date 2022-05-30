@@ -12,7 +12,7 @@ import retrofit2.http.POST
 interface ProductDataProviderService {
     @RecordApi
     @POST("ProductDataProvider/Product/GraphQLQuery")
-    suspend fun getProductById(
+    suspend fun getProductByGraphQL(
         @Header("Authorization") authorization: String,
         @Body query: GraphQLQuery
     ): Response<ResponseBody>

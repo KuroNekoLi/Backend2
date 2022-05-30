@@ -22,13 +22,14 @@ class ProductDataProviderWebImpl(
     override suspend fun getProductBySalesId(id: Long): Result<Product> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
-                val response = service.getProductById(
+                val response = service.getProductByGraphQL(
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     GraphQLQuery(
                         query = """query (${'$'}id: Long!) {
 	saleInfo(id: ${'$'}id) {
 		name
 		price
+        itemPrice
 		productId
 		productInformation {
 			name
@@ -56,6 +57,7 @@ class ProductDataProviderWebImpl(
                 Product(
                     productJson.get("name").asString,
                     productJson.get("price").asDouble,
+                    productJson.get("itemPrice").asDouble,
                     productJson.get("productId").asLong,
                     productInfoJson.get("authorInfoSet").asJsonArray.get(0).asJsonObject.get("authorName").asString,
                     productInfoJson.get("name").asString,
@@ -67,7 +69,7 @@ class ProductDataProviderWebImpl(
     override suspend fun getSalesItemBySubjectId(id: Long): Result<SaleItem> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
-                val response = service.getProductById(
+                val response = service.getProductByGraphQL(
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     GraphQLQuery(
                         query = """query(${'$'}author:Int)
