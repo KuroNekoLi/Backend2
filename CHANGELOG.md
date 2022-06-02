@@ -1,3 +1,16 @@
+#  (2022-06-02)
+
+
+
+# [5.22.0](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.21.0...5.22.0) (2022-06-02)
+
+
+### Features
+
+* **自選股搜尋:** 新增指數彙編、上市創新版、興櫃戰略新版 ([992cd8e](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/992cd8e6c99a1cee53a1d9c05f1bfef7f05620ac))
+
+
+
 #  (2022-05-18)
 
 
