@@ -1353,7 +1353,7 @@ class ForumOceanWebImpl(
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     memberId = memberId
                 )
-                if (response.code() != 200) {
+                if (response.code() == 200) {
                     response.body()?.string()?.trim() == "true"
                 } else {
                     throw ServerException(response.code(), "")
