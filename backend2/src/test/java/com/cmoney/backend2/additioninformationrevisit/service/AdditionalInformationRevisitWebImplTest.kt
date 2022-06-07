@@ -279,11 +279,11 @@ class AdditionalInformationRevisitWebImplTest : KoinTest {
 
     @Test
     fun getYesterdayAll_success_ListListString() = mainCoroutineRule.runBlockingTest {
-        coEvery { service.getYesterdayAll(any(), any(), any(), any()) } returns Response.success(
+        coEvery { service.getPreviousAll(any(), any(), any(), any()) } returns Response.success(
             emptyList()
         )
         val typeName = "StockCalculation"
-        val response = webImpl.getYesterdayAll(
+        val response = webImpl.getPreviousAll(
             columns = emptyList(),
             typeName = typeName,
             processSteps = emptyList()
@@ -295,9 +295,9 @@ class AdditionalInformationRevisitWebImplTest : KoinTest {
     @Test
     fun getYesterdayAll_failed_401() = mainCoroutineRule.runBlockingTest {
         coEvery {
-            service.getYesterdayAll(any(), any(), any(), any())
+            service.getPreviousAll(any(), any(), any(), any())
         } returns Response.error(401, "".toResponseBody())
-        val result = webImpl.getYesterdayAll(
+        val result = webImpl.getPreviousAll(
             columns = emptyList(),
             typeName = "StockCalculation",
             processSteps = emptyList()
@@ -315,7 +315,7 @@ class AdditionalInformationRevisitWebImplTest : KoinTest {
     @Test
     fun getYesterdayTarget_success_ListListString() = mainCoroutineRule.runBlockingTest {
         coEvery {
-            service.getYesterdayTarget(
+            service.getPreviousTarget(
                 any(),
                 any(),
                 any(),
@@ -326,7 +326,7 @@ class AdditionalInformationRevisitWebImplTest : KoinTest {
             emptyList()
         )
         val typeName = "StockCalculation"
-        val response = webImpl.getYesterdayTarget(
+        val response = webImpl.getPreviousTarget(
             typeName = typeName,
             columns = listOf(),
             keyNamePath = listOf("Commodity", "CommKey"),
@@ -339,7 +339,7 @@ class AdditionalInformationRevisitWebImplTest : KoinTest {
     @Test
     fun getYesterdayTarget_failed_401() = mainCoroutineRule.runBlockingTest {
         coEvery {
-            service.getYesterdayTarget(
+            service.getPreviousTarget(
                 any(),
                 any(),
                 any(),
@@ -348,7 +348,7 @@ class AdditionalInformationRevisitWebImplTest : KoinTest {
             )
         } returns Response.error(401, "".toResponseBody())
         val typeName = "StockCalculation"
-        val result = webImpl.getYesterdayTarget(
+        val result = webImpl.getPreviousTarget(
             typeName = typeName,
             columns = listOf(),
             keyNamePath = listOf("Commodity", "CommKey"),
@@ -367,7 +367,7 @@ class AdditionalInformationRevisitWebImplTest : KoinTest {
     @Test
     fun getYesterdayMultiple_success_ListListString() = mainCoroutineRule.runBlockingTest {
         coEvery {
-            service.getYesterdayMultiple(
+            service.getPreviousMultiple(
                 any(),
                 any(),
                 any(),
@@ -378,7 +378,7 @@ class AdditionalInformationRevisitWebImplTest : KoinTest {
             emptyList()
         )
         val typeName = "CandleStockChart"
-        val response = webImpl.getYesterdayMultiple(
+        val response = webImpl.getPreviousMultiple(
             typeName = typeName,
             columns = listOf(),
             keyNamePath = listOf("傳輸序號", "標的"),
@@ -391,7 +391,7 @@ class AdditionalInformationRevisitWebImplTest : KoinTest {
     @Test
     fun getYesterdayMultiple_failed_401() = mainCoroutineRule.runBlockingTest {
         coEvery {
-            service.getYesterdayMultiple(
+            service.getPreviousMultiple(
                 any(),
                 any(),
                 any(),
@@ -400,7 +400,7 @@ class AdditionalInformationRevisitWebImplTest : KoinTest {
             )
         } returns Response.error(401, "".toResponseBody())
         val typeName = "CandleStockChart"
-        val result = webImpl.getYesterdayMultiple(
+        val result = webImpl.getPreviousMultiple(
             typeName = typeName,
             columns = listOf(),
             keyNamePath = listOf("傳輸序號", "標的"),
@@ -419,7 +419,7 @@ class AdditionalInformationRevisitWebImplTest : KoinTest {
     @Test
     fun getYesterdayOtherQuery_success_ListListString() = mainCoroutineRule.runBlockingTest {
         coEvery {
-            service.getYesterdayOtherQuery(
+            service.getPreviousOtherQuery(
                 any(),
                 any(),
                 any(),
@@ -430,7 +430,7 @@ class AdditionalInformationRevisitWebImplTest : KoinTest {
         )
         val columns = listOf("標的")
         val responseType = "IEnumerable<ITick<ICommodity>>"
-        val response = webImpl.getYesterdayOtherQuery(
+        val response = webImpl.getPreviousOtherQuery(
             requestType = "SectionTransactionDetailsRequest",
             responseType = responseType,
             columns = columns,
@@ -443,7 +443,7 @@ class AdditionalInformationRevisitWebImplTest : KoinTest {
     @Test
     fun getYesterdayOtherQuery_failed_401() = mainCoroutineRule.runBlockingTest {
         coEvery {
-            service.getYesterdayOtherQuery(
+            service.getPreviousOtherQuery(
                 any(),
                 any(),
                 any(),
@@ -452,7 +452,7 @@ class AdditionalInformationRevisitWebImplTest : KoinTest {
         } returns Response.error(401, "".toResponseBody())
         val columns = listOf("標的")
         val responseType = "IEnumerable<ITick<ICommodity>>"
-        val result = webImpl.getYesterdayOtherQuery(
+        val result = webImpl.getPreviousOtherQuery(
             requestType = "SectionTransactionDetailsRequest",
             responseType = responseType,
             columns = columns,

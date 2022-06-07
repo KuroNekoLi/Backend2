@@ -8,10 +8,10 @@ package com.cmoney.backend2.additioninformationrevisit.service
  * @property multiple String [AdditionalInformationRevisitService.getMultiple]的service參數
  * @property otherQuery String [AdditionalInformationRevisitService.getOtherQuery]的service參數
  * @property signal String [AdditionalInformationRevisitService.getSignal]的service參數
- * @property yesterdayAll String [AdditionalInformationRevisitService.getYesterdayAll]的service參數
- * @property yesterdayTarget String [AdditionalInformationRevisitService.getYesterdayTarget]的service參數
- * @property yesterdayMultiple String [AdditionalInformationRevisitService.getYesterdayMultiple]的service參數
- * @property yesterdayOtherQuery String [AdditionalInformationRevisitService.getYesterdayOtherQuery]的service參數
+ * @property previousAll String [AdditionalInformationRevisitService.getPreviousAll]的service參數
+ * @property previousTarget String [AdditionalInformationRevisitService.getPreviousTarget]的service參數
+ * @property previousMultiple String [AdditionalInformationRevisitService.getPreviousMultiple]的service參數
+ * @property previousOtherQuery String [AdditionalInformationRevisitService.getPreviousOtherQuery]的service參數
  * @constructor
  */
 data class ServicePath(
@@ -20,10 +20,10 @@ data class ServicePath(
     val multiple: String,
     val otherQuery: String,
     val signal: String,
-    val yesterdayAll: String,
-    val yesterdayTarget: String,
-    val yesterdayMultiple: String,
-    val yesterdayOtherQuery: String
+    val previousAll: String,
+    val previousTarget: String,
+    val previousMultiple: String,
+    val previousOtherQuery: String
 ) {
     constructor(serviceName: String = PRODUCT_SERVICE_NAME) : this(
         all = serviceName,
@@ -31,10 +31,10 @@ data class ServicePath(
         multiple = serviceName,
         otherQuery = serviceName,
         signal = serviceName,
-        yesterdayAll = serviceName,
-        yesterdayTarget = serviceName,
-        yesterdayMultiple = serviceName,
-        yesterdayOtherQuery = serviceName
+        previousAll = serviceName,
+        previousTarget = serviceName,
+        previousMultiple = serviceName,
+        previousOtherQuery = serviceName
     )
 
     companion object {

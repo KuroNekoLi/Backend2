@@ -44,7 +44,7 @@ android {
     }
 }
 dependecies {
-	implementation 'com.cmoney.backend2:backend2:5.20.0'
+	implementation 'com.cmoney.backend2:backend2:5.22.0'
 	implementation("com.cmoney.logdatarecorder:logdatarecorder-data:5.0.0")
 	implementation("com.cmoney.logdatarecorder:logdatarecorder-domain:5.0.0")
 }
@@ -54,8 +54,8 @@ dependecies {
 
 ```groovy
 dependecies {
-	releaseImplementation 'com.cmoney.backend2:backend2:5.20.0'
-	debugImplementation 'com.cmoney.backend2:backend2-debug:5.20.0'
+	releaseImplementation 'com.cmoney.backend2:backend2:5.22.0'
+	debugImplementation 'com.cmoney.backend2:backend2-debug:5.22.0'
 	implementation("com.cmoney.logdatarecorder:logdatarecorder-data:5.0.0")
 	implementation("com.cmoney.logdatarecorder:logdatarecorder-domain:5.0.0")
 }

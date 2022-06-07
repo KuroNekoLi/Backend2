@@ -38,8 +38,8 @@ class AdditionalInformationRevisitTestCase(hasSignal: Boolean) : ServiceCase {
         test()
         // 測試後續處理功能
         testHasProcessStep()
-        // 測試昨日資料
-        testYesterdayData()
+        // 測試前一次交易資料
+        testPreviousData()
     }
 
     private suspend fun test() {
@@ -185,15 +185,15 @@ class AdditionalInformationRevisitTestCase(hasSignal: Boolean) : ServiceCase {
             .logResponse(TAG)
     }
 
-    private suspend fun testYesterdayData() {
-        web.getYesterdayAll(
+    private suspend fun testPreviousData() {
+        web.getPreviousAll(
             columns = listOf("標的", "商品名稱"),
             typeName = "USAStockCommodity",
             processSteps = emptyList()
         ).logResponse(TAG)
 
         val commKeys = listOf("AAPL", "AMZN")
-        web.getYesterdayTarget(
+        web.getPreviousTarget(
             typeName = "USAStockCalculation",
             columns = listOf("傳輸序號", "標的", "即時成交價"),
             keyNamePath = listOf("Commodity", "CommKey"),
@@ -201,7 +201,7 @@ class AdditionalInformationRevisitTestCase(hasSignal: Boolean) : ServiceCase {
             processSteps = emptyList()
         ).logResponse(TAG)
 
-        web.getYesterdayMultiple(
+        web.getPreviousMultiple(
             typeName = "CandlestickChartTick<USAStockCommodity, USAStockTick>",
             columns = listOf("傳輸序號", "標的", "收盤價"),
             keyNamePath = listOf("Key"),
@@ -209,7 +209,7 @@ class AdditionalInformationRevisitTestCase(hasSignal: Boolean) : ServiceCase {
             processSteps = emptyList()
         ).logResponse(TAG)
 
-        web.getYesterdayOtherQuery(
+        web.getPreviousOtherQuery(
             requestType = "SectionTransactionDetailsRequest<USAStockTick>",
             responseType = "IEnumerable<USAStockTick>",
             columns = TEST_COLUMNS,
