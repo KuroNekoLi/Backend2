@@ -3488,7 +3488,7 @@ class ForumOceanWebImplTest {
                 authorization = any(),
                 path = "",
             )
-        } returns Response.success(null)
+        } returns Response.success(listOf())
         val result = web.getRole()
         assertThat(result.isSuccess).isTrue()
     }
@@ -3515,7 +3515,7 @@ class ForumOceanWebImplTest {
                 memberId = any(),
                 path = ""
             )
-        } returns Response.success(null)
+        } returns Response.success(listOf())
         val result = web.getRole(1)
         assertThat(result.isSuccess).isTrue()
     }
@@ -3559,6 +3559,6 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(400, "".toResponseBody())
         val result = web.getExchangeCount(1)
-        assertThat(result.isSuccess).isTrue()
+        assertThat(result.isSuccess).isFalse()
     }
 }
