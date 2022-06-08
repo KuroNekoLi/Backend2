@@ -15,7 +15,11 @@ import com.cmoney.backend2.billing.service.api.getauth.GetAuthResponseBody
 import com.cmoney.backend2.billing.service.api.getdevelpoerpayload.GetDeveloperPayloadResponseBody
 import com.cmoney.backend2.billing.service.api.getproductinfo.ProductInformation
 import com.cmoney.backend2.billing.service.api.isPurchasable.IsPurchasableResponseBody
-import com.cmoney.backend2.billing.service.common.*
+import com.cmoney.backend2.billing.service.common.Authorization
+import com.cmoney.backend2.billing.service.common.InAppGoogleReceipt
+import com.cmoney.backend2.billing.service.common.InAppHuaweiReceipt
+import com.cmoney.backend2.billing.service.common.SubGoogleReceipt
+import com.cmoney.backend2.billing.service.common.SubHuaweiReceipt
 import com.google.common.truth.Truth
 import com.google.common.truth.Truth.assertThat
 import com.google.gson.GsonBuilder
@@ -947,6 +951,45 @@ class BillingWebImplTest {
         } returns Response.error(400, errorBody)
 
         val result = billingWeb.getAuthByCMoney(2)
+        assertThat(result.isSuccess).isFalse()
+        checkServerException(result, 10001)
+    }
+
+    @Test
+    fun `getHistoryCount_成功`() = mainCoroutineRule.runBlockingTest {
+        val functionIds :Long= 6531
+        val responseBody = "{\"$functionIds\":555}".toResponseBody()
+        coEvery {
+            service.getHistoryCount(
+                authorization = any(),
+                productType = any(),
+                functionIds = any()
+            )
+        } returns Response.success(responseBody)
+        val result = billingWeb.getHistoryCount(888003, functionIds)
+        coVerify { service.getHistoryCount(any(), any(), any()) }
+        assertThat(result.isSuccess).isTrue()
+        assertThat(result.getOrThrow()).isEqualTo(555)
+    }
+
+    @Test
+    fun `getHistoryCount_錯誤_ServerException`() = mainCoroutineRule.runBlockingTest {
+        val errorBody = gson.toJson(
+            CMoneyError(
+                detail = CMoneyError.Detail(
+                    code = 10001
+                )
+            )
+        ).toResponseBody()
+        coEvery {
+            service.getHistoryCount(
+                authorization = any(),
+                productType = any(),
+                functionIds = any()
+            )
+        } returns Response.error(400, errorBody)
+
+        val result = billingWeb.getHistoryCount(888003, 666)
         assertThat(result.isSuccess).isFalse()
         checkServerException(result, 10001)
     }

@@ -3,10 +3,10 @@ package com.cmoney.backend2.forumocean.service
 import com.cmoney.backend2.MainCoroutineRule
 import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
+import com.cmoney.backend2.forumocean.service.api.article.ExchangeCount
 import com.cmoney.backend2.forumocean.service.api.article.create.CreateArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.create.variable.Content
 import com.cmoney.backend2.forumocean.service.api.article.createpersonal.CreatePersonalArticleResponseBody
-import com.cmoney.backend2.forumocean.service.api.variable.request.PersonalArticleType
 import com.cmoney.backend2.forumocean.service.api.article.createquestion.CreateQuestionResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.update.UpdateArticleHelper
 import com.cmoney.backend2.forumocean.service.api.channel.getmemberstatistics.GetMemberStatisticsResponseBody
@@ -29,6 +29,7 @@ import com.cmoney.backend2.forumocean.service.api.report.create.ReasonType
 import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
 import com.cmoney.backend2.forumocean.service.api.support.SearchMembersResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.request.GroupPosition
+import com.cmoney.backend2.forumocean.service.api.variable.request.PersonalArticleType
 import com.cmoney.backend2.forumocean.service.api.variable.request.ReactionType
 import com.cmoney.backend2.forumocean.service.api.variable.response.GroupPositionInfo
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
@@ -3448,5 +3449,116 @@ class ForumOceanWebImplTest {
         } returns Response.error(500, "".toResponseBody())
         val result = web.searchMembers("123", 0, 20)
         assertThat(result.isFailure).isTrue()
+    }
+
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `使用p幣兌換專欄文章_success`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.exchangeColumnArticle(
+                authorization = any(),
+                articleId = any(),
+                path = ""
+            )
+        } returns Response.success(null)
+        val result = web.exchangeColumnArticle(1)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `使用p幣兌換專欄文章_failed`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.exchangeColumnArticle(
+                authorization = any(),
+                articleId = any(),
+                path = ""
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.exchangeColumnArticle(1)
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得會員的社群角色_success`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getRole(
+                authorization = any(),
+                path = "",
+            )
+        } returns Response.success(listOf())
+        val result = web.getRole()
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得會員的社群角色_failed`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getRole(
+                authorization = any(),
+                path = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getRole()
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得其他使用者的角色_success`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getRole(
+                authorization = any(),
+                memberId = any(),
+                path = ""
+            )
+        } returns Response.success(listOf())
+        val result = web.getRole(1)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得其他使用者的角色_failed`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getRole(
+                authorization = any(),
+                memberId = any(),
+                path = ""
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getRole(1)
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `使用者已兌換該作者文章數及上限_success`() = runBlockingTest {
+        coEvery {
+            forumOceanService.getExchangeCount(
+                authorization = any(),
+                memberId = any(),
+                path = ""
+            )
+        } returns Response.success(ExchangeCount(1, 1))
+        val result = web.getExchangeCount(1)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `使用者已兌換該作者文章數及上限_failure`() = runBlockingTest {
+        coEvery {
+            forumOceanService.getExchangeCount(
+                authorization = any(),
+                memberId = any(),
+                path = ""
+            )
+        } returns Response.error(400, "".toResponseBody())
+        val result = web.getExchangeCount(1)
+        assertThat(result.isSuccess).isFalse()
     }
 }

@@ -3,13 +3,15 @@ package com.cmoney.backend2.forumocean.service
 import com.cmoney.backend2.base.extension.checkResponseBody
 import com.cmoney.backend2.base.extension.createAuthorizationBearer
 import com.cmoney.backend2.base.extension.handleNoContent
+import com.cmoney.backend2.base.extension.parseServerException
 import com.cmoney.backend2.base.model.dispatcher.DefaultDispatcherProvider
 import com.cmoney.backend2.base.model.dispatcher.DispatcherProvider
+import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.backend2.forumocean.service.api.article.ExchangeCount
 import com.cmoney.backend2.forumocean.service.api.article.create.CreateArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.create.variable.Content
 import com.cmoney.backend2.forumocean.service.api.article.createpersonal.CreatePersonalArticleResponseBody
-import com.cmoney.backend2.forumocean.service.api.variable.request.PersonalArticleType
 import com.cmoney.backend2.forumocean.service.api.article.createquestion.CreateQuestionResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.getbanstate.GetBanStateResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.update.IUpdateArticleHelper
@@ -35,9 +37,11 @@ import com.cmoney.backend2.forumocean.service.api.rank.getfansmemberrank.FansMem
 import com.cmoney.backend2.forumocean.service.api.rank.getsolutionexpertrank.SolutionExpertRankResponseBody
 import com.cmoney.backend2.forumocean.service.api.relationship.getdonate.DonateInfo
 import com.cmoney.backend2.forumocean.service.api.report.create.ReasonType
+import com.cmoney.backend2.forumocean.service.api.role.Role
 import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
 import com.cmoney.backend2.forumocean.service.api.support.SearchMembersResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.request.GroupPosition
+import com.cmoney.backend2.forumocean.service.api.variable.request.PersonalArticleType
 import com.cmoney.backend2.forumocean.service.api.variable.request.ReactionType
 import com.cmoney.backend2.forumocean.service.api.variable.request.mediatype.MediaType
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
@@ -102,6 +106,11 @@ class ForumOceanWebImpl(
                         requestBody = body
                     )
                     is Content.Article.Shared -> service.createArticle(
+                        path = serverName,
+                        authorization = setting.accessToken.createAuthorizationBearer(),
+                        requestBody = body
+                    )
+                    is Content.Article.Column -> service.createArticle(
                         path = serverName,
                         authorization = setting.accessToken.createAuthorizationBearer(),
                         requestBody = body
@@ -260,6 +269,20 @@ class ForumOceanWebImpl(
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 channelNameList = GetChannelsArticleByWeightRequestBody(channelNameBuilderList.map { it.create() }),
                 startScore = weight,
+                count = count
+            ).checkResponseBody(jsonParser)
+        }
+    }
+
+    override suspend fun getChannelsArticleByWeight(
+        channelNameBuilderList: List<IChannelNameBuilder>,
+        count: Int
+    ): Result<List<ArticleResponseBody.UnknownArticleResponseBody>> = withContext(dispatcher.io()) {
+        kotlin.runCatching {
+            service.getChannelsArticleByWeight(
+                path = serverName,
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                channelNameList = GetChannelsArticleByWeightRequestBody(channelNameBuilderList.map { it.create() }),
                 count = count
             ).checkResponseBody(jsonParser)
         }
@@ -1266,6 +1289,76 @@ class ForumOceanWebImpl(
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     articleId = articleId
                 ).checkResponseBody(jsonParser)
+            }
+        }
+
+    override suspend fun exchangeColumnArticle(articleId: Long): Result<Unit> =
+        withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                val response = service.exchangeColumnArticle(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    articleId = articleId
+                )
+                if (response.code() >= 400) {
+                    throw response.parseServerException(jsonParser)
+                }
+                Unit
+            }
+        }
+
+    override suspend fun getRole(): Result<Set<Role>> = withContext(dispatcher.io()) {
+        kotlin.runCatching {
+            val response = service.getRole(
+                path = serverName,
+                authorization = setting.accessToken.createAuthorizationBearer()
+            ).checkResponseBody(jsonParser)
+
+            val roles = Role.values()
+            return@runCatching response.mapNotNull { apiValue ->
+                roles.firstOrNull { it.value == apiValue }
+            }.toSet()
+        }
+    }
+
+
+    override suspend fun getRole(memberId: Long): Result<Set<Role>> = withContext(dispatcher.io()) {
+        kotlin.runCatching {
+            val response = service.getRole(
+                path = serverName,
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                memberId = memberId
+            ).checkResponseBody(jsonParser)
+            val roles = Role.values()
+            return@runCatching response.mapNotNull { apiValue ->
+                roles.firstOrNull { it.value == apiValue } }.toSet()
+        }
+    }
+
+    override suspend fun getExchangeCount(memberId: Long): Result<ExchangeCount> =
+        withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                return@runCatching service.getExchangeCount(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    memberId = memberId
+                ).checkResponseBody(jsonParser)
+            }
+        }
+
+    override suspend fun isMemberSubscribe(memberId: Long): Result<Boolean> =
+        withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                val response = service.isMemberSubscribe(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    memberId = memberId
+                )
+                if (response.code() == 200) {
+                    response.body()?.string()?.trim() == "true"
+                } else {
+                    throw ServerException(response.code(), "")
+                }
             }
         }
 }

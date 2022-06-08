@@ -1,6 +1,7 @@
 package com.cmoney.backend2.forumocean.service
 
 import com.cmoney.backend2.base.model.calladapter.RecordApi
+import com.cmoney.backend2.forumocean.service.api.article.ExchangeCount
 import com.cmoney.backend2.forumocean.service.api.article.create.CreateArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.create.variable.Content
 import com.cmoney.backend2.forumocean.service.api.article.createpersonal.CreatePersonalArticleResponseBody
@@ -36,6 +37,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.commentrespo
 import com.cmoney.backend2.forumocean.service.api.variable.response.groupresponse.GroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.ReactionInfo
 import com.cmoney.backend2.forumocean.service.api.vote.get.VoteInfo
+import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -59,7 +61,7 @@ interface ForumOceanService {
      * 發專欄文章
      */
     @RecordApi
-    @POST("{path}/article/{articleType}")
+    @POST("{path}/api/article/{articleType}")
     suspend fun createPersonalArticle(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
@@ -71,7 +73,7 @@ interface ForumOceanService {
      * 發筆記文
      */
     @RecordApi
-    @POST("{path}/article/{articleType}")
+    @POST("{path}/api/article/{articleType}")
     suspend fun createPersonalArticle(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
@@ -125,6 +127,17 @@ interface ForumOceanService {
         @Path("path") path: String,
         @Body requestBody: Content.Question
     ): Response<CreateQuestionResponseBody>
+
+    /**
+     * 發專欄文章
+     */
+    @RecordApi
+    @POST("{path}/api/article/columnist")
+    suspend fun createArticle(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Body requestBody: Content.Article.Column
+    ): Response<CreateArticleResponseBody>
 
     /**
      * 取得文章資訊
@@ -259,6 +272,19 @@ interface ForumOceanService {
         @Path("path") path: String,
         @Body channelNameList: GetChannelsArticleByWeightRequestBody,
         @Query("startScore") startScore: Long,
+        @Query("count") count: Int
+    ): Response<List<ArticleResponseBody.UnknownArticleResponseBody>>
+
+    /**
+     * First page of api getChannelsArticleByWeight
+     * @see getChannelsArticleByWeight
+     */
+    @RecordApi
+    @POST("{path}/api/Channel/GetChannelsArticleByWeight")
+    suspend fun getChannelsArticleByWeight(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Body channelNameList: GetChannelsArticleByWeightRequestBody,
         @Query("count") count: Int
     ): Response<List<ArticleResponseBody.UnknownArticleResponseBody>>
 
@@ -941,4 +967,43 @@ interface ForumOceanService {
         @Query("mergeKey") mergeKey: String,
         @Query("isNew") isNew: Boolean
     ): Response<Void>
+
+    @RecordApi
+    @POST("{path}/api/BonusPointExchange/{articleId}")
+    suspend fun exchangeColumnArticle(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("articleId") articleId: Long
+    ): Response<Void>
+
+    @RecordApi
+    @GET("{path}/api/Role")
+    suspend fun getRole(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String
+    ): Response<List<Int>>
+
+    @RecordApi
+    @GET("{path}/api/Role/{otherMemberId}")
+    suspend fun getRole(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("otherMemberId") memberId: Long
+    ): Response<List<Int>>
+
+    @RecordApi
+    @GET("{path}/api/ExchangeCount/{memberId}")
+    suspend fun getExchangeCount(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("memberId") memberId: Long
+    ): Response<ExchangeCount>
+
+    @RecordApi
+    @GET("{path}/api/IsMemberSubscribe/{memberId}")
+    suspend fun isMemberSubscribe(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("memberId") memberId: Long
+    ): Response<ResponseBody>
 }
