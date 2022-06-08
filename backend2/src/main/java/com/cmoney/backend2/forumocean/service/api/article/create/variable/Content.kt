@@ -92,6 +92,35 @@ sealed class Content(
             @SerializedName("topics")
             val topics : List<String>?
         ) : Article(text)
+
+        /**
+         * 專欄文章
+         *
+         * @property text 文章內容
+         * @property multiMedia 多媒體資訊
+         * @property commodityTags 股票tag資訊
+         * @property voteOptions 投票選項
+         * @property voteMinutes 發文起算投票截止分鐘數
+         * @property topics 標籤
+         * @property title 標題
+         */
+        data class Column(
+            @SerializedName("text")
+            override val text: String?,
+            @SerializedName("multiMedia")
+            val multiMedia : List<MediaType>?,
+            @SerializedName("commodityTags")
+            val commodityTags : List<CommodityTag>?,
+            @SerializedName("voteOptions")
+            val voteOptions : List<String>?,
+            @IntRange(from = 5,to = 10080)
+            @SerializedName("voteMinutes")
+            val voteMinutes : Int?,
+            @SerializedName("topics")
+            val topics : List<String>?,
+            @SerializedName("title")
+            val title: String,
+        ) : Article(text)
     }
 
     /**

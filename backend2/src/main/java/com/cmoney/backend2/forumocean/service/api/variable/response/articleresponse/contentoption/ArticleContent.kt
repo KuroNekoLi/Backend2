@@ -40,44 +40,52 @@ sealed class ArticleContent(
      * @property topics 標籤名稱
      */
     data class UnknownContent(
-        @SerializedName("text")
+        @SerializedName("text", alternate = ["Text"])
         override val text: String?,
-        @SerializedName("multiMedia")
+        @SerializedName("multiMedia", alternate = ["MultiMedia"])
         override val multiMedia: List<MediaTypeInfo>?,
-        @SerializedName("commodityTags")
+        @SerializedName("commodityTags", alternate = ["CommodityTags"])
         override val commodityTags: List<CommodityTagInfo>?,
-        @SerializedName("anonymous")
+        @SerializedName("anonymous", alternate = ["Anonymous"])
         override val anonymous: Any?,
-        @SerializedName("appId")
+        @SerializedName("appId", alternate = ["AppId"])
         override val appId: Int?,
-        @SerializedName("topics")
+        @SerializedName("topics", alternate = ["Topics"])
         override val topics: List<String>?,
-        @SerializedName("creatorId")
+        @SerializedName("creatorId", alternate = ["CreatorId"])
         override val creatorId: Long?,
-        @SerializedName("groupId")
+        @SerializedName("groupId", alternate = ["GroupId"])
         override val groupId: Long?,
-        @SerializedName("position")
+        @SerializedName("position", alternate = ["Position"])
         override val position: Any?,
-        @SerializedName("newsId")
+        @SerializedName("newsId", alternate = ["NewsId"])
         override val newsId: Long?,
-        @SerializedName("title")
+        @SerializedName("title", alternate = ["Title"])
         override val title: String?,
-        @SerializedName("publishTime")
+        @SerializedName("publishTime", alternate = ["PublishTime"])
         override val publishTime: Long?,
-        @SerializedName("sharedPostsArticleId")
+        @SerializedName("sharedPostsArticleId", alternate = ["SharedPostsArticleId"])
         override val sharedPostsArticleId: Long?,
-        @SerializedName("botId")
+        @SerializedName("botId", alternate = ["BotId"])
         override val botId: Long?,
-        @SerializedName("voteOptions")
+        @SerializedName("voteOptions", alternate = ["VoteOptions"])
         override val voteOptions: List<String>?,
-        @SerializedName("voteMinutes")
+        @SerializedName("voteMinutes", alternate = ["VoteMinutes"])
         override val voteMinutes: Int?,
-        @SerializedName("askPoint")
+        @SerializedName("askPoint", alternate = ["AskPoint"])
         override val askPoint: Int?,
-        @SerializedName("bestAnswerCommentId")
+        @SerializedName("bestAnswerCommentId", alternate = ["BestAnswerCommentId"])
         override val bestAnswerCommentId: Long?,
-        @SerializedName("articleState")
-        override val articleState: ArticleState?
+        @SerializedName("articleState", alternate = ["ArticleState"])
+        override val articleState: ArticleState?,
+        @SerializedName("authType", alternate = ["AuthType"])
+        override val authType: String?,
+        @SerializedName("pCoin", alternate = ["PCoin"])
+        override val pCoin: Long?,
+        @SerializedName("exchangeCount", alternate = ["ExchangeCount"])
+        override val exchangeCount: Long?,
+        @SerializedName("articleType", alternate = ["ArticleType"])
+        override val articleType: String?
     ) : ArticleContent(text),
         MultiMediaInfo,
         TagInfo,
@@ -90,7 +98,8 @@ sealed class ArticleContent(
         VoteOptionInfo,
         QuestionInfo,
         ArticleStateInfo,
-        TopicInfo
+        TopicInfo,
+        ColumnInfo
 
     /**
      * 一般文章
@@ -106,23 +115,23 @@ sealed class ArticleContent(
      * @property topics 標籤名稱
      */
     data class General(
-        @SerializedName("text")
+        @SerializedName("text", alternate = ["Text"])
         override val text: String?,
-        @SerializedName("appId")
+        @SerializedName("appId", alternate = ["AppId"])
         override val appId: Int?,
-        @SerializedName("creatorId")
+        @SerializedName("creatorId", alternate = ["CreatorId"])
         override val creatorId: Long?,
-        @SerializedName("multiMedia")
+        @SerializedName("multiMedia", alternate = ["MultiMedia"])
         override val multiMedia: List<MediaTypeInfo>?,
-        @SerializedName("commodityTags")
+        @SerializedName("commodityTags", alternate = ["CommodityTags"])
         override val commodityTags: List<CommodityTagInfo>?,
-        @SerializedName("topics")
+        @SerializedName("topics", alternate = ["Topics"])
         override val topics: List<String>?,
-        @SerializedName("voteOptions")
+        @SerializedName("voteOptions", alternate = ["VoteOptions"])
         override val voteOptions: List<String>?,
-        @SerializedName("voteMinutes")
+        @SerializedName("voteMinutes", alternate = ["VoteMinutes"])
         override val voteMinutes: Int?,
-        @SerializedName("articleState")
+        @SerializedName("articleState", alternate = ["ArticleState"])
         override val articleState: ArticleState?
     ) : ArticleContent(text),
         CreatorInfo,
@@ -147,25 +156,25 @@ sealed class ArticleContent(
      * @property articleState 文章狀態
      */
     data class Group(
-        @SerializedName("text")
+        @SerializedName("text", alternate = ["Text"])
         override val text: String?,
-        @SerializedName("appId")
+        @SerializedName("appId", alternate = ["AppId"])
         override val appId: Int?,
-        @SerializedName("creatorId")
+        @SerializedName("creatorId", alternate = ["CreatorId"])
         override val creatorId: Long?,
-        @SerializedName("multiMedia")
+        @SerializedName("multiMedia", alternate = ["MultiMedia"])
         override val multiMedia: List<MediaTypeInfo>?,
-        @SerializedName("commodityTags")
+        @SerializedName("commodityTags", alternate = ["CommodityTags"])
         override val commodityTags: List<CommodityTagInfo>?,
-        @SerializedName("groupId")
+        @SerializedName("groupId", alternate = ["GroupId"])
         override val groupId: Long?,
-        @SerializedName("position")
+        @SerializedName("position", alternate = ["Position"])
         override val position: Any?,
-        @SerializedName("voteOptions")
+        @SerializedName("voteOptions", alternate = ["VoteOptions"])
         override val voteOptions: List<String>?,
-        @SerializedName("voteMinutes")
+        @SerializedName("voteMinutes", alternate = ["VoteMinutes"])
         override val voteMinutes: Int?,
-        @SerializedName("articleState")
+        @SerializedName("articleState", alternate = ["ArticleState"])
         override val articleState: ArticleState?
     ) : ArticleContent(text),
         CreatorInfo,
@@ -190,25 +199,25 @@ sealed class ArticleContent(
      * @property topics 標籤名稱
      */
     data class Shared(
-        @SerializedName("text")
+        @SerializedName("text", alternate = ["Text"])
         override val text: String?,
-        @SerializedName("appId")
+        @SerializedName("appId", alternate = ["AppId"])
         override val appId: Int?,
-        @SerializedName("creatorId")
+        @SerializedName("creatorId", alternate = ["CreatorId"])
         override val creatorId: Long?,
-        @SerializedName("sharedPostsArticleId")
+        @SerializedName("sharedPostsArticleId", alternate = ["SharedPostsArticleId"])
         override val sharedPostsArticleId: Long?,
-        @SerializedName("multiMedia")
+        @SerializedName("multiMedia", alternate = ["MultiMedia"])
         override val multiMedia: List<MediaTypeInfo>?,
-        @SerializedName("commodityTags")
+        @SerializedName("commodityTags", alternate = ["CommodityTags"])
         override val commodityTags: List<CommodityTagInfo>?,
-        @SerializedName("topics")
+        @SerializedName("topics", alternate = ["Topics"])
         override val topics: List<String>?,
-        @SerializedName("voteOptions")
+        @SerializedName("voteOptions", alternate = ["VoteOptions"])
         override val voteOptions: List<String>?,
-        @SerializedName("voteMinutes")
+        @SerializedName("voteMinutes", alternate = ["VoteMinutes"])
         override val voteMinutes: Int?,
-        @SerializedName("articleState")
+        @SerializedName("articleState", alternate = ["ArticleState"])
         override val articleState: ArticleState?
     ) : ArticleContent(text),
         CreatorInfo,
@@ -231,19 +240,19 @@ sealed class ArticleContent(
      * @property articleState 文章狀態
      */
     data class News(
-        @SerializedName("text")
+        @SerializedName("text", alternate = ["Text"])
         override val text: String?,
-        @SerializedName("newsId")
+        @SerializedName("newsId", alternate = ["NewsId"])
         override val newsId: Long?,
-        @SerializedName("title")
+        @SerializedName("title", alternate = ["Title"])
         override val title: String?,
-        @SerializedName("publishTime")
+        @SerializedName("publishTime", alternate = ["PublishTime"])
         override val publishTime: Long?,
-        @SerializedName("multiMedia")
+        @SerializedName("multiMedia", alternate = ["MultiMedia"])
         override val multiMedia: List<MediaTypeInfo>?,
-        @SerializedName("commodityTags")
+        @SerializedName("commodityTags", alternate = ["CommodityTags"])
         override val commodityTags: List<CommodityTagInfo>?,
-        @SerializedName("articleState")
+        @SerializedName("articleState", alternate = ["ArticleState"])
         override val articleState: ArticleState?
     ) : ArticleContent(text),
         NewsInfo,
@@ -261,15 +270,15 @@ sealed class ArticleContent(
      * @property articleState 文章狀態
      */
     data class Signal(
-        @SerializedName("text")
+        @SerializedName("text", alternate = ["Text"])
         override val text: String?,
-        @SerializedName("botId")
+        @SerializedName("botId", alternate = ["BotId"])
         override val botId: Long?,
-        @SerializedName("multiMedia")
+        @SerializedName("multiMedia", alternate = ["MultiMedia"])
         override val multiMedia: List<MediaTypeInfo>?,
-        @SerializedName("commodityTags")
+        @SerializedName("commodityTags", alternate = ["CommodityTags"])
         override val commodityTags: List<CommodityTagInfo>?,
-        @SerializedName("articleState")
+        @SerializedName("articleState", alternate = ["ArticleState"])
         override val articleState: ArticleState?
     ) : ArticleContent(text),
         SignalInfo,
@@ -292,25 +301,25 @@ sealed class ArticleContent(
      * @property topics 標籤名稱
      */
     data class Question(
-        @SerializedName("text")
+        @SerializedName("text", alternate = ["Text"])
         override val text: String?,
-        @SerializedName("appId")
+        @SerializedName("appId", alternate = ["AppId"])
         override val appId: Int?,
-        @SerializedName("creatorId")
+        @SerializedName("creatorId", alternate = ["CreatorId"])
         override val creatorId: Long?,
-        @SerializedName("anonymous")
+        @SerializedName("anonymous", alternate = ["Anonymous"])
         override val anonymous: Any?,
-        @SerializedName("multiMedia")
+        @SerializedName("multiMedia", alternate = ["MultiMedia"])
         override val multiMedia: List<MediaTypeInfo>?,
-        @SerializedName("commodityTags")
+        @SerializedName("commodityTags", alternate = ["CommodityTags"])
         override val commodityTags: List<CommodityTagInfo>?,
-        @SerializedName("topics")
+        @SerializedName("topics", alternate = ["Topics"])
         override val topics: List<String>?,
-        @SerializedName("askPoint")
+        @SerializedName("askPoint", alternate = ["AskPoint"])
         override val askPoint: Int?,
-        @SerializedName("bestAnswerCommentId")
+        @SerializedName("bestAnswerCommentId", alternate = ["BestAnswerCommentId"])
         override val bestAnswerCommentId: Long?,
-        @SerializedName("articleState")
+        @SerializedName("articleState", alternate = ["ArticleState"])
         override val articleState: ArticleState?
     ) : ArticleContent(text),
         CreatorInfo,
@@ -333,19 +342,19 @@ sealed class ArticleContent(
      * @property topics 標籤名稱
      */
     data class Personal(
-        @SerializedName("text")
+        @SerializedName("text", alternate = ["Text"])
         override val text: String?,
-        @SerializedName("appId")
+        @SerializedName("appId", alternate = ["AppId"])
         override val appId: Int?,
-        @SerializedName("creatorId")
+        @SerializedName("creatorId", alternate = ["CreatorId"])
         override val creatorId: Long?,
-        @SerializedName("multiMedia")
+        @SerializedName("multiMedia", alternate = ["MultiMedia"])
         override val multiMedia: List<MediaTypeInfo>?,
-        @SerializedName("commodityTags")
+        @SerializedName("commodityTags", alternate = ["CommodityTags"])
         override val commodityTags: List<CommodityTagInfo>?,
-        @SerializedName("topics")
+        @SerializedName("topics", alternate = ["Topics"])
         override val topics: List<String>?,
-        @SerializedName("articleState")
+        @SerializedName("articleState", alternate = ["ArticleState"])
         override val articleState: ArticleState?
     ) : ArticleContent(text),
         CreatorInfo,

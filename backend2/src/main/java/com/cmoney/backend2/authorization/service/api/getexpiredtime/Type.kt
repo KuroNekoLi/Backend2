@@ -12,5 +12,8 @@ enum class Type(val value: String) {
     MOBILE_PAID("MobilePaid"),
     MEDIA_PAID("MediaPaid"),
     RICH_POWER_WEB_PAID("RichPowerWebPaid"),
-    MOBILE_FUNCTION_PAID("MobileFunctionPaid")
+    MOBILE_FUNCTION_PAID("MobileFunctionPaid"),
+
+    COLUMNIST_PAID("ColumnistPaid"), // 付費專欄作家
+    COLUMNIST_ARTICLE("ColumnistArticle");  // 專欄作家文章
 }

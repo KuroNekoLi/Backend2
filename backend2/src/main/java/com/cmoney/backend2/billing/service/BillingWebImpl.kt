@@ -1,6 +1,11 @@
 package com.cmoney.backend2.billing.service
 
-import com.cmoney.backend2.base.extension.*
+import com.cmoney.backend2.base.extension.checkISuccess
+import com.cmoney.backend2.base.extension.checkIsSuccessful
+import com.cmoney.backend2.base.extension.checkResponseBody
+import com.cmoney.backend2.base.extension.createAuthorizationBearer
+import com.cmoney.backend2.base.extension.handleNoContent
+import com.cmoney.backend2.base.extension.requireBody
 import com.cmoney.backend2.base.model.dispatcher.DefaultDispatcherProvider
 import com.cmoney.backend2.base.model.dispatcher.DispatcherProvider
 import com.cmoney.backend2.base.model.request.MemberApiParam
@@ -17,8 +22,13 @@ import com.cmoney.backend2.billing.service.api.verifygoogleinappreceipt.VerifyGo
 import com.cmoney.backend2.billing.service.api.verifygooglesubreceipt.VerifyGoogleSubReceiptRequestBody
 import com.cmoney.backend2.billing.service.api.verifyhuaweiinappreceipt.VerifyHuaweiInAppReceiptRequestBody
 import com.cmoney.backend2.billing.service.api.verifyhuaweisubreceipt.VerifyHuaweiSubReceiptRequestBody
-import com.cmoney.backend2.billing.service.common.*
+import com.cmoney.backend2.billing.service.common.Authorization
+import com.cmoney.backend2.billing.service.common.InAppGoogleReceipt
+import com.cmoney.backend2.billing.service.common.InAppHuaweiReceipt
+import com.cmoney.backend2.billing.service.common.SubGoogleReceipt
+import com.cmoney.backend2.billing.service.common.SubHuaweiReceipt
 import com.google.gson.Gson
+import com.google.gson.JsonParser
 import kotlinx.coroutines.withContext
 
 class BillingWebImpl(
@@ -252,14 +262,31 @@ class BillingWebImpl(
         }
     }
 
-    override suspend fun getAuthByCMoney(appId: Int): Result<Boolean> = withContext(dispatcher.io()) {
-        runCatching {
-            val response = service.getAuthByCMoney(
-                authorization = setting.accessToken.createAuthorizationBearer(),
-                appId = appId
-            )
-            val responseBody = response.checkResponseBody(gson)
-            responseBody.isAuth ?: false
+    override suspend fun getAuthByCMoney(appId: Int): Result<Boolean> =
+        withContext(dispatcher.io()) {
+            runCatching {
+                val response = service.getAuthByCMoney(
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    appId = appId
+                )
+                val responseBody = response.checkResponseBody(gson)
+                responseBody.isAuth ?: false
+            }
+        }
+
+    override suspend fun getHistoryCount(productType: Long, functionIds: Long): Result<Long> {
+        return withContext(dispatcher.io()) {
+            runCatching {
+                val response = service.getHistoryCount(
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    productType = productType,
+                    functionIds = functionIds
+                )
+                val responseBody = response.checkResponseBody(gson)
+                val bodyString=responseBody.string()
+                val jsonObject = JsonParser.parseString(bodyString).asJsonObject
+                jsonObject.get(functionIds.toString()).asLong
+            }
         }
     }
 }
