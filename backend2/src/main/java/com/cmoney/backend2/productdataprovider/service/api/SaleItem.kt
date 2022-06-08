@@ -2,22 +2,15 @@ package com.cmoney.backend2.productdataprovider.service.api
 
 /**
  * 銷售項目
+ *
+ * @property productId 商品ID
+ * @property productName 商品名稱
+ * @property saleId 銷售代號
+ * @property title 銷售名稱
  */
 data class SaleItem(
-    /**
-     * 商品ID
-     */
     val productId: Long,
-    /**
-     * 商品名稱
-     */
     val productName: String,
-    /**
-     * 銷售代號
-     */
     val saleId: Long,
-    /**
-     * 銷售名稱
-     */
     val title: String
 )

@@ -2,36 +2,21 @@ package com.cmoney.backend2.productdataprovider.service.api
 
 /**
  * 商品資訊
+ *
+ * @property name 名稱
+ * @property price 價格
+ * @property originalPrice 原始價格
+ * @property productId 商品ID
+ * @property authorName 作者名
+ * @property displayName 顯示商品名
+ * @property displayDesc 顯示商品敘述
  */
 data class Product(
-    /**
-     * 名稱
-     */
     val name: String,
-    /**
-     * 價格
-     */
     val price: Double,
-
-    /**
-     * 原始價格
-     */
     val originalPrice: Double,
-    /**
-     * 商品ID
-     */
     val productId: Long,
-    /**
-     * 作者名
-     */
     val authorName: String,
-    /**
-     * 顯示商品名
-     */
     val displayName: String,
-
-    /**
-     * 顯示商品敘述
-     */
     val displayDesc: String
 )
