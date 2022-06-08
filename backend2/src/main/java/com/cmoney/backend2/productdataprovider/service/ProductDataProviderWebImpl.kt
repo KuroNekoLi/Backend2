@@ -1,13 +1,13 @@
-package com.cmoney.backend2.product.service
+package com.cmoney.backend2.productdataprovider.service
 
 import com.cmoney.backend2.base.extension.createAuthorizationBearer
 import com.cmoney.backend2.base.extension.parseServerException
 import com.cmoney.backend2.base.model.dispatcher.DefaultDispatcherProvider
 import com.cmoney.backend2.base.model.dispatcher.DispatcherProvider
 import com.cmoney.backend2.base.model.setting.Setting
-import com.cmoney.backend2.product.service.api.GraphQLQuery
-import com.cmoney.backend2.product.service.api.Product
-import com.cmoney.backend2.product.service.api.SaleItem
+import com.cmoney.backend2.productdataprovider.service.api.GraphQLQuery
+import com.cmoney.backend2.productdataprovider.service.api.Product
+import com.cmoney.backend2.productdataprovider.service.api.SaleItem
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
@@ -66,7 +66,7 @@ class ProductDataProviderWebImpl(
             }
         }
 
-    override suspend fun getSalesItemBySubjectId(id: Long): Result<SaleItem> =
+    override suspend fun getSalesItemBySubjectId(subjectId: Long): Result<SaleItem> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 val response = service.getProductByGraphQL(
@@ -88,7 +88,7 @@ class ProductDataProviderWebImpl(
         }
     }
 }""",
-                        variables = JsonObject().apply { addProperty("author", id) }
+                        variables = JsonObject().apply { addProperty("author", subjectId) }
                     )
                 )
                 if (response.code() >= 400) {

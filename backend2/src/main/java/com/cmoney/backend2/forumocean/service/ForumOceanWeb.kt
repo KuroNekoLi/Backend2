@@ -1071,13 +1071,34 @@ interface ForumOceanWeb {
 
     //endregion
 
+    /**
+     * P 幣兌換專欄文章
+     *
+     * @param articleId 文章Id
+     */
     suspend fun exchangeColumnArticle(articleId: Long): Result<Unit>
 
+    /**
+     * 取得會員的社群角色
+     */
     suspend fun getRole(): Result<Set<Role>>
 
+    /**
+     * 取得其他使用者的角色
+     */
     suspend fun getRole(memberId: Long): Result<Set<Role>>
 
+    /**
+     * 使用者已兌換該作者文章數及上
+     *
+     * @param memberId 用戶Id限
+     */
     suspend fun getExchangeCount(memberId: Long): Result<ExchangeCount>
 
+    /**
+     * 取得用戶是否訂閱該專欄作家
+     *
+     * @param memberId 用戶Id
+     */
     suspend fun isMemberSubscribe(memberId: Long): Result<Boolean>
 }

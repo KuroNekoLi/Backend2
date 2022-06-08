@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class ExchangeCount(
     @SerializedName("exchangedCount")
-    val exchangeCount: Int,
+    val exchangeCount: Int?,
     @SerializedName("limit")
-    val limit: Int
+    val limit: Int?
 )

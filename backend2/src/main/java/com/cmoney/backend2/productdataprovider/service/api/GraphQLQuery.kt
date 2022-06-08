@@ -1,4 +1,4 @@
-package com.cmoney.backend2.product.service.api
+package com.cmoney.backend2.productdataprovider.service.api
 
 import com.google.gson.JsonObject
 import com.google.gson.annotations.SerializedName

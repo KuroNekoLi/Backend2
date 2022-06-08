@@ -1315,8 +1315,8 @@ class ForumOceanWebImpl(
             ).checkResponseBody(jsonParser)
 
             val roles = Role.values()
-            return@runCatching response.map {
-                roles[it]
+            return@runCatching response.mapNotNull { apiValue ->
+                roles.firstOrNull { it.value == apiValue }
             }.toSet()
         }
     }
@@ -1330,7 +1330,8 @@ class ForumOceanWebImpl(
                 memberId = memberId
             ).checkResponseBody(jsonParser)
             val roles = Role.values()
-            return@runCatching response.map { roles[it] }.toSet()
+            return@runCatching response.mapNotNull { apiValue ->
+                roles.firstOrNull { it.value == apiValue } }.toSet()
         }
     }
 

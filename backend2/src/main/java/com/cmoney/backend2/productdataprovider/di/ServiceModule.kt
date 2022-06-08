@@ -1,11 +1,11 @@
-package com.cmoney.backend2.product.di
+package com.cmoney.backend2.productdataprovider.di
 
 import com.cmoney.backend2.base.di.BACKEND2_GSON
 import com.cmoney.backend2.base.di.BACKEND2_RETROFIT
 import com.cmoney.backend2.base.di.BACKEND2_SETTING
-import com.cmoney.backend2.product.service.ProductDataProviderService
-import com.cmoney.backend2.product.service.ProductDataProviderWeb
-import com.cmoney.backend2.product.service.ProductDataProviderWebImpl
+import com.cmoney.backend2.productdataprovider.service.ProductDataProviderService
+import com.cmoney.backend2.productdataprovider.service.ProductDataProviderWeb
+import com.cmoney.backend2.productdataprovider.service.ProductDataProviderWebImpl
 import org.koin.dsl.module
 import retrofit2.Retrofit
 
