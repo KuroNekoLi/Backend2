@@ -1,13 +1,41 @@
-#  (2022-06-02)
+#  (2022-06-08)
 
 
 
-# [5.22.0](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.21.0...5.22.0) (2022-06-02)
+# [5.23.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.22.0...5.23.0) (2022-06-08)
+
+
+### Bug Fixes
+
+* Coding standards ([bd3f1cd](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/bd3f1cdf4f870fec2f595a0608ef9e2c9d4b9052))
+* GraphQL param ([223c99a](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/223c99ae44894cbe4b45708fb236dce0f47a3d92))
+* 修正檢查訂閱狀態判斷 ([d6baa75](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/d6baa751f9c5b5e2fd7e762967d111d1dd2e40ee))
 
 
 ### Features
 
-* **自選股搜尋:** 新增指數彙編、上市創新版、興櫃戰略新版 ([992cd8e](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/992cd8e6c99a1cee53a1d9c05f1bfef7f05620ac))
+* add ItemPrice for getting prodcut ([4ef4f8a](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/4ef4f8ac62f438c3a87c8b3fa40ce65008e48980))
+* ArticleType in content ([76d9e76](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/76d9e761b84311f861afe1c91f19dec5605e0de8))
+* Exchange column article by p coin ([6303c3e](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/6303c3ef155cc131d370eac0a73852be68cf66c9))
+* GetExchangeCount ([b081dad](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/b081dadce2089f6ae055a3c49c35ca7b4e58a9bc))
+* GetRole in ForumOcean ([ecbbf97](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/ecbbf979d31ecb7834dd857d200f04c2e492b845))
+* GetSaleItemBySubjectId ([030a8fa](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/030a8fa31276a661d5d683b79444e0028f1d3b2e))
+* IsMemberSubscribe ([25fcc21](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/25fcc21aa621a2c45e98b7f3243994b9655e8c8e))
+* 取得指定CMoney銷售類型的歷史訂閱數量 ([1266325](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/126632555734fb7314ed8b9865b029ea61246db3))
+* 歷史訂閱數量改為Long ([a1514b4](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/a1514b4ddf56fc890a1c4ed5d12c89d41144dfd2))
+
+
+
+#  (2022-06-02)
+
+
+
+# [5.22.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.21.0...5.22.0) (2022-06-02)
+
+
+### Features
+
+* **自選股搜尋:** 新增指數彙編、上市創新版、興櫃戰略新版 ([992cd8e](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/992cd8e6c99a1cee53a1d9c05f1bfef7f05620ac))
 
 
 
@@ -15,12 +43,12 @@
 
 
 
-# [5.21.0](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.20.0...5.21.0) (2022-05-18)
+# [5.21.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.20.0...5.21.0) (2022-05-18)
 
 
 ### Features
 
-* additionalInformation about change to use Previous replace Yesterday, and fix web service path default value ([6666071](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/6666071005809781c5e5986b5853d9d675b38f79))
+* additionalInformation about change to use Previous replace Yesterday, and fix web service path default value ([6666071](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/6666071005809781c5e5986b5853d9d675b38f79))
 
 
 
@@ -28,12 +56,12 @@
 
 
 
-# [5.20.0](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.19.0...5.20.0) (2022-04-26)
+# [5.20.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.19.0...5.20.0) (2022-04-26)
 
 
 ### Features
 
-* ForumOcean新增以關鍵字搜尋會員 ([46278ed](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/46278ed0e86ab3ae62904ced295a0e29bddd2cde))
+* ForumOcean新增以關鍵字搜尋會員 ([46278ed](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/46278ed0e86ab3ae62904ced295a0e29bddd2cde))
 
 
 
@@ -41,13 +69,13 @@
 
 
 
-# [5.19.0](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.18.0...5.19.0) (2022-04-26)
+# [5.19.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.18.0...5.19.0) (2022-04-26)
 
 
 ### Features
 
-* ForumOcean新增個人文章之發文及取得 ([2e296f2](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/2e296f2ac5fdb9857369d83982a711bacc921543))
-* ForumOcean新增取得個人文章列表 ([3ddb8c0](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/3ddb8c0fefee975b90ad2f9141c2da534d8e5565))
+* ForumOcean新增個人文章之發文及取得 ([2e296f2](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/2e296f2ac5fdb9857369d83982a711bacc921543))
+* ForumOcean新增取得個人文章列表 ([3ddb8c0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/3ddb8c0fefee975b90ad2f9141c2da534d8e5565))
 
 
 
@@ -55,12 +83,12 @@
 
 
 
-# [5.18.0](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.17.0...5.18.0) (2022-04-25)
+# [5.18.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.17.0...5.18.0) (2022-04-25)
 
 
 ### Features
 
-* add AdditionalInformationRevisit YesterdayData api ([c19c0f8](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/c19c0f8a4410f70be69fdcdd5b06c9cf21d3b1f3))
+* add AdditionalInformationRevisit YesterdayData api ([c19c0f8](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/c19c0f8a4410f70be69fdcdd5b06c9cf21d3b1f3))
 
 
 
@@ -68,12 +96,12 @@
 
 
 
-# [5.17.0](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.16.0...5.17.0) (2022-04-21)
+# [5.17.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.16.0...5.17.0) (2022-04-21)
 
 
 ### Features
 
-* 新增台新取得 CAStatus 服務至 CrawlSettingService ([6c4e6cb](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/6c4e6cbb57cf808abce12b28f5f85e70e6b23c8e))
+* 新增台新取得 CAStatus 服務至 CrawlSettingService ([6c4e6cb](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/6c4e6cbb57cf808abce12b28f5f85e70e6b23c8e))
 
 
 
@@ -81,12 +109,12 @@
 
 
 
-# [5.16.0](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.15.0...5.16.0) (2022-04-13)
+# [5.16.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.15.0...5.16.0) (2022-04-13)
 
 
 ### Features
 
-* 新增 CrawlSettingService ([077540a](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/077540a99f5ae46bf4a12e24e90b2af10b93479e))
+* 新增 CrawlSettingService ([077540a](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/077540a99f5ae46bf4a12e24e90b2af10b93479e))
 
 
 
@@ -94,17 +122,17 @@
 
 
 
-# [5.15.0](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.14.0...5.15.0) (2022-03-28)
+# [5.15.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.14.0...5.15.0) (2022-03-28)
 
 
 ### Bug Fixes
 
-* 將相對應市場類型的valueOf回傳，調整成屬於的市場類型。 ([0a9e8a0](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/0a9e8a06a1b981f92b9fbf662c8abd69f798c648))
+* 將相對應市場類型的valueOf回傳，調整成屬於的市場類型。 ([0a9e8a0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/0a9e8a06a1b981f92b9fbf662c8abd69f798c648))
 
 
 ### Features
 
-* 新增口袋證券場外、口袋證券自編 ([191c91d](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/191c91da48e80337b849be5d31b2600a39849fa7))
+* 新增口袋證券場外、口袋證券自編 ([191c91d](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/191c91da48e80337b849be5d31b2600a39849fa7))
 * 大富翁服務創建帳號之回傳改為回傳取得帳號之內容
 
 
@@ -112,12 +140,12 @@
 
 
 
-# [5.14.0](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.13.0...5.14.0) (2022-03-16)
+# [5.14.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.13.0...5.14.0) (2022-03-16)
 
 
 ### Features
 
-* 更改getCardInstanceSns的path與參數 ([2f8abed](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/2f8abed3a1494a8da6e39264c8c2393850710a5e))
+* 更改getCardInstanceSns的path與參數 ([2f8abed](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/2f8abed3a1494a8da6e39264c8c2393850710a5e))
 
 
 
@@ -125,12 +153,12 @@
 
 
 
-# [5.13.0](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.12.0...5.13.0) (2022-03-15)
+# [5.13.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.12.0...5.13.0) (2022-03-15)
 
 
 ### Features
 
-* 新增 VirtualTrade service ([5c98889](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/5c98889d7ad12ca72ae955742d87aa18dcbb4c69))
+* 新增 VirtualTrade service ([5c98889](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/5c98889d7ad12ca72ae955742d87aa18dcbb4c69))
 
 
 
@@ -138,7 +166,7 @@
 
 
 
-# [5.12.0](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.11.3...5.12.0) (2022-03-14)
+# [5.12.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.11.3...5.12.0) (2022-03-14)
 
 
 ### Features
