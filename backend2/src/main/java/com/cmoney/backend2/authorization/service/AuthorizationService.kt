@@ -34,4 +34,15 @@ interface AuthorizationService {
         @Header("Authorization") authorization: String,
         @Url url: String
     ): Response<Auth>
+
+
+    /**
+     * 取得會員指定類型有權限的基底功能清單
+     */
+    @RecordApi
+    @GET("AuthorizationServer/Authorization/{type}/SubjectIds")
+    suspend fun getPurchasedSubjectIds(
+        @Header("Authorization") authorization: String,
+        @Path("type") type: String
+    ): Response<List<Long>>
 }

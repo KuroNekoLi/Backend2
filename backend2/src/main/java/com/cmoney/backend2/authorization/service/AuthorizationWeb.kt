@@ -37,4 +37,9 @@ interface AuthorizationWeb {
         type: Type,
         subjectId: Long
     ): Result<Auth>
+
+    /**
+     * 取得會員指定類型有權限的基底功能清單
+     */
+    suspend fun getPurchasedSubjectIds(type: Type): Result<List<Long>>
 }
