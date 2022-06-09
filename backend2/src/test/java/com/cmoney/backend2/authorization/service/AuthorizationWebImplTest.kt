@@ -263,4 +263,22 @@ class AuthorizationWebImplTest {
         require(exception is HttpException)
         Truth.assertThat(exception.code()).isEqualTo(401)
     }
+
+    @Test
+    fun getPurchasedSubjectIds_success() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.getPurchasedSubjectIds(authorization = any(), type = any())
+        } returns Response.success(listOf())
+        val result = authorizationWeb.getPurchasedSubjectIds(type = Type.MOBILE_PAID)
+        Truth.assertThat(result.isSuccess).isTrue()
+    }
+
+    @Test
+    fun getPurchasedSubjectIds_failure() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.getPurchasedSubjectIds(authorization = any(), type = any())
+        } returns Response.error(400, "".toResponseBody())
+        val result = authorizationWeb.getPurchasedSubjectIds(type = Type.MOBILE_PAID)
+        Truth.assertThat(result.isSuccess).isFalse()
+    }
 }

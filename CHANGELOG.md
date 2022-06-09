@@ -1,3 +1,16 @@
+#  (2022-06-09)
+
+
+
+# [5.24.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.23.0...5.24.0) (2022-06-09)
+
+
+### Features
+
+* AuthorizationWeb.getPurchasedSubjectIds ([a0095e6](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/a0095e6f6c13f72f8692658dd9ee08a357cbe203))
+
+
+
 #  (2022-06-08)
 
 
