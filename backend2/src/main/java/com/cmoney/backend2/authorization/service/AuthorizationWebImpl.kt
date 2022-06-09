@@ -38,4 +38,13 @@ class AuthorizationWebImpl(
                 ).checkResponseBody(gson)
             }
         }
+
+    override suspend fun getPurchasedSubjectIds(type: Type): Result<List<Long>> = withContext(dispatcher.io()){
+        kotlin.runCatching {
+            service.getPurchasedSubjectIds(
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                type = type.value
+            ).checkResponseBody(gson)
+        }
+    }
 }
