@@ -10,6 +10,7 @@ import com.cmoney.backend2.forumocean.service.api.article.createpersonal.CreateP
 import com.cmoney.backend2.forumocean.service.api.article.createquestion.CreateQuestionResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.update.UpdateArticleHelper
 import com.cmoney.backend2.forumocean.service.api.channel.getmemberstatistics.GetMemberStatisticsResponseBody
+import com.cmoney.backend2.forumocean.service.api.columnist.GetColumnistVipGroupResponse
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.comment.update.UpdateCommentHelper
 import com.cmoney.backend2.forumocean.service.api.group.create.CreateGroupResponseBody
@@ -3559,6 +3560,34 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(400, "".toResponseBody())
         val result = web.getExchangeCount(1)
+        assertThat(result.isSuccess).isFalse()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得專欄作家Vip社團資訊_success`() = runBlockingTest {
+        coEvery {
+            forumOceanService.getColumnistVipGroup(
+                authorization = any(),
+                columnistMemberId = any(),
+                path = ""
+            )
+        } returns Response.success(GetColumnistVipGroupResponse(1))
+        val result = web.getColumnistVipGroup(1)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得專欄作家Vip社團資訊_failure`() = runBlockingTest {
+        coEvery {
+            forumOceanService.getColumnistVipGroup(
+                authorization = any(),
+                columnistMemberId = any(),
+                path = ""
+            )
+        } returns Response.error(400, "".toResponseBody())
+        val result = web.getColumnistVipGroup(1)
         assertThat(result.isSuccess).isFalse()
     }
 }
