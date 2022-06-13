@@ -10,6 +10,7 @@ import com.cmoney.backend2.forumocean.service.api.article.getbanstate.GetBanStat
 import com.cmoney.backend2.forumocean.service.api.article.update.UpdateArticleRequestBody
 import com.cmoney.backend2.forumocean.service.api.channel.getchannelsarticlebyweight.GetChannelsArticleByWeightRequestBody
 import com.cmoney.backend2.forumocean.service.api.channel.getmemberstatistics.GetMemberStatisticsResponseBody
+import com.cmoney.backend2.forumocean.service.api.columnist.GetColumnistVipGroupResponse
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentRequestBody
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.comment.update.UpdateCommentRequestBody
@@ -1006,4 +1007,12 @@ interface ForumOceanService {
         @Path("path") path: String,
         @Path("memberId") memberId: Long
     ): Response<ResponseBody>
+
+    @RecordApi
+    @GET("{path}/api/ColumnistVipGroup/{columnistMemberId}")
+    suspend fun getColumnistVipGroup(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("columnistMemberId") columnistMemberId: Long
+    ): Response<GetColumnistVipGroupResponse>
 }

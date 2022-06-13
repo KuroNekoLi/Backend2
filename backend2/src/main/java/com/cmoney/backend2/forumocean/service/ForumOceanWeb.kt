@@ -9,6 +9,7 @@ import com.cmoney.backend2.forumocean.service.api.article.getbanstate.GetBanStat
 import com.cmoney.backend2.forumocean.service.api.article.update.IUpdateArticleHelper
 import com.cmoney.backend2.forumocean.service.api.channel.channelname.IChannelNameBuilder
 import com.cmoney.backend2.forumocean.service.api.channel.getmemberstatistics.GetMemberStatisticsResponseBody
+import com.cmoney.backend2.forumocean.service.api.columnist.GetColumnistVipGroupResponse
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.comment.update.IUpdateCommentHelper
 import com.cmoney.backend2.forumocean.service.api.group.create.CreateGroupResponseBody
@@ -1089,9 +1090,9 @@ interface ForumOceanWeb {
     suspend fun getRole(memberId: Long): Result<Set<Role>>
 
     /**
-     * 使用者已兌換該作者文章數及上
+     * 使用者已兌換該作者文章數及上限
      *
-     * @param memberId 用戶Id限
+     * @param memberId 用戶Id
      */
     suspend fun getExchangeCount(memberId: Long): Result<ExchangeCount>
 
@@ -1101,4 +1102,11 @@ interface ForumOceanWeb {
      * @param memberId 用戶Id
      */
     suspend fun isMemberSubscribe(memberId: Long): Result<Boolean>
+
+    /**
+     *取得專欄作家Vip社團資訊
+     *
+     * @param columnistMemberId 專欄作家Id
+     */
+    suspend fun getColumnistVipGroup(columnistMemberId: Long):Result<GetColumnistVipGroupResponse>
 }
