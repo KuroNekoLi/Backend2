@@ -17,6 +17,7 @@ import com.cmoney.backend2.forumocean.service.api.article.getbanstate.GetBanStat
 import com.cmoney.backend2.forumocean.service.api.article.update.IUpdateArticleHelper
 import com.cmoney.backend2.forumocean.service.api.channel.channelname.IChannelNameBuilder
 import com.cmoney.backend2.forumocean.service.api.channel.getchannelsarticlebyweight.GetChannelsArticleByWeightRequestBody
+import com.cmoney.backend2.forumocean.service.api.columnist.GetColumnistVipGroupResponse
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentRequestBody
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.comment.update.IUpdateCommentHelper
@@ -1376,6 +1377,19 @@ class ForumOceanWebImpl(
                 brokerId = brokerId,
                 stockId = stockId
             ).checkResponseBody(jsonParser)
+        }
+    }
+
+    override suspend fun getColumnistVipGroup(columnistMemberId: Long): Result<GetColumnistVipGroupResponse> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.getColumnistVipGroup(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    columnistMemberId = columnistMemberId
+                ).checkResponseBody(jsonParser)
+            }
+
         }
     }
 }

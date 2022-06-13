@@ -10,6 +10,7 @@ import com.cmoney.backend2.forumocean.service.api.article.createpersonal.CreateP
 import com.cmoney.backend2.forumocean.service.api.article.createquestion.CreateQuestionResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.update.UpdateArticleHelper
 import com.cmoney.backend2.forumocean.service.api.channel.getmemberstatistics.GetMemberStatisticsResponseBody
+import com.cmoney.backend2.forumocean.service.api.columnist.GetColumnistVipGroupResponse
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.comment.update.UpdateCommentHelper
 import com.cmoney.backend2.forumocean.service.api.group.create.CreateGroupResponseBody
@@ -3564,6 +3565,34 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
+    fun `取得專欄作家Vip社團資訊_success`() = runBlockingTest {
+        coEvery {
+            forumOceanService.getColumnistVipGroup(
+                authorization = any(),
+                columnistMemberId = any(),
+                path = ""
+            )
+        } returns Response.success(GetColumnistVipGroupResponse(1))
+        val result = web.getColumnistVipGroup(1)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得專欄作家Vip社團資訊_failure`() = runBlockingTest {
+        coEvery {
+            forumOceanService.getColumnistVipGroup(
+                authorization = any(),
+                columnistMemberId = any(),
+                path = ""
+            )
+        } returns Response.error(400, "".toResponseBody())
+        val result = web.getColumnistVipGroup(1)
+        assertThat(result.isSuccess).isFalse()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
     fun `取得研究報告Id_success`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.getStockReportId(
@@ -3584,7 +3613,7 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.getStockReportId(
                 authorization = any(),
-                path = any(),
+                path = "",
                 date = any(),
                 brokerId = any(),
                 stockId = any()
@@ -3593,5 +3622,4 @@ class ForumOceanWebImplTest {
         val result = web.getStockReportId("20220505", "C0090", "8046")
         assertThat(result.isFailure).isTrue()
     }
-
 }
