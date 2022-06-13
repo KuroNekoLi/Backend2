@@ -39,14 +39,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.
 import com.cmoney.backend2.forumocean.service.api.vote.get.VoteInfo
 import okhttp3.ResponseBody
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.DELETE
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.POST
-import retrofit2.http.PUT
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface ForumOceanService {
 
@@ -1006,4 +999,17 @@ interface ForumOceanService {
         @Path("path") path: String,
         @Path("memberId") memberId: Long
     ): Response<ResponseBody>
+
+    /**
+     * 取得指定研究報告文章ID
+     */
+    @RecordApi
+    @GET("{path}/api/StockReport")
+    suspend fun getStockReportId(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Query("date") date: String,
+        @Query("brokerId") brokerId: String,
+        @Query("stockId") stockId: String
+    ): Response<Int>
 }

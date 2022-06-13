@@ -1101,4 +1101,13 @@ interface ForumOceanWeb {
      * @param memberId 用戶Id
      */
     suspend fun isMemberSubscribe(memberId: Long): Result<Boolean>
+
+    /**
+     * 取得指定研究報告文章ID
+     *
+     * @param date 日期(yyyyMMdd)
+     * @param brokerId 券商代號
+     * @param stockId 股票代號
+     */
+    suspend fun getStockReportId(date: String, brokerId: String, stockId: String): Result<Int>
 }

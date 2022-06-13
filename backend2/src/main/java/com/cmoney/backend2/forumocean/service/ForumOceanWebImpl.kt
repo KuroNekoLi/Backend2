@@ -1331,7 +1331,8 @@ class ForumOceanWebImpl(
             ).checkResponseBody(jsonParser)
             val roles = Role.values()
             return@runCatching response.mapNotNull { apiValue ->
-                roles.firstOrNull { it.value == apiValue } }.toSet()
+                roles.firstOrNull { it.value == apiValue }
+            }.toSet()
         }
     }
 
@@ -1361,4 +1362,20 @@ class ForumOceanWebImpl(
                 }
             }
         }
+
+    override suspend fun getStockReportId(
+        date: String,
+        brokerId: String,
+        stockId: String
+    ): Result<Int> = withContext(dispatcher.io()) {
+        kotlin.runCatching {
+            return@runCatching service.getStockReportId(
+                path = serverName,
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                date = date,
+                brokerId = brokerId,
+                stockId = stockId
+            ).checkResponseBody(jsonParser)
+        }
+    }
 }
