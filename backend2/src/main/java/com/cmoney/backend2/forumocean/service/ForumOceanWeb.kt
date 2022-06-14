@@ -1104,9 +1104,18 @@ interface ForumOceanWeb {
     suspend fun isMemberSubscribe(memberId: Long): Result<Boolean>
 
     /**
-     *取得專欄作家Vip社團資訊
-     *
+     * 取得專欄作家Vip社團資訊
+     * 
      * @param columnistMemberId 專欄作家Id
      */
-    suspend fun getColumnistVipGroup(columnistMemberId: Long):Result<GetColumnistVipGroupResponse>
+    suspend fun getColumnistVipGroup(columnistMemberId: Long): Result<GetColumnistVipGroupResponse>
+
+    /**
+     * 取得指定研究報告文章ID
+     *
+     * @param date 日期(yyyyMMdd)
+     * @param brokerId 券商代號
+     * @param stockId 股票代號
+     */
+    suspend fun getStockReportId(date: String, brokerId: String, stockId: String): Result<Int>
 }

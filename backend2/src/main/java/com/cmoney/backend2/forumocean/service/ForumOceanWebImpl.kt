@@ -1364,6 +1364,22 @@ class ForumOceanWebImpl(
             }
         }
 
+    override suspend fun getStockReportId(
+        date: String,
+        brokerId: String,
+        stockId: String
+    ): Result<Int> = withContext(dispatcher.io()) {
+        kotlin.runCatching {
+            return@runCatching service.getStockReportId(
+                path = serverName,
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                date = date,
+                brokerId = brokerId,
+                stockId = stockId
+            ).checkResponseBody(jsonParser)
+        }
+    }
+
     override suspend fun getColumnistVipGroup(columnistMemberId: Long): Result<GetColumnistVipGroupResponse> {
         return withContext(dispatcher.io()) {
             kotlin.runCatching {
@@ -1373,6 +1389,7 @@ class ForumOceanWebImpl(
                     columnistMemberId = columnistMemberId
                 ).checkResponseBody(jsonParser)
             }
+
         }
     }
 }

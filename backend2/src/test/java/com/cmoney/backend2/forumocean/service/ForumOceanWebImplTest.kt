@@ -3590,4 +3590,36 @@ class ForumOceanWebImplTest {
         val result = web.getColumnistVipGroup(1)
         assertThat(result.isSuccess).isFalse()
     }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得研究報告Id_success`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getStockReportId(
+                authorization = any(),
+                path = "",
+                date = any(),
+                brokerId = any(),
+                stockId = any()
+            )
+        } returns Response.success(145516088)
+        val result = web.getStockReportId("20220505", "C0090", "8046")
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得研究報告Id_failed`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getStockReportId(
+                authorization = any(),
+                path = "",
+                date = any(),
+                brokerId = any(),
+                stockId = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getStockReportId("20220505", "C0090", "8046")
+        assertThat(result.isFailure).isTrue()
+    }
 }
