@@ -1,3 +1,16 @@
+#  (2022-06-14)
+
+
+
+# [5.25.0](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.24.0...5.25.0) (2022-06-14)
+
+
+### Features
+
+* 新增ForumOcean取得專欄作家的VIP社團資訊 ([3209677](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/32096779f45d29d87219e5c1bca5d8295b8a8b34))
+* 新增ForumOcean取得指定研究報告文章ID
+
+
 #  (2022-06-09)
 
 

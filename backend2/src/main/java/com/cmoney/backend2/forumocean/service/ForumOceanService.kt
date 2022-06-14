@@ -10,6 +10,7 @@ import com.cmoney.backend2.forumocean.service.api.article.getbanstate.GetBanStat
 import com.cmoney.backend2.forumocean.service.api.article.update.UpdateArticleRequestBody
 import com.cmoney.backend2.forumocean.service.api.channel.getchannelsarticlebyweight.GetChannelsArticleByWeightRequestBody
 import com.cmoney.backend2.forumocean.service.api.channel.getmemberstatistics.GetMemberStatisticsResponseBody
+import com.cmoney.backend2.forumocean.service.api.columnist.GetColumnistVipGroupResponse
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentRequestBody
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.comment.update.UpdateCommentRequestBody
@@ -39,14 +40,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.
 import com.cmoney.backend2.forumocean.service.api.vote.get.VoteInfo
 import okhttp3.ResponseBody
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.DELETE
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.POST
-import retrofit2.http.PUT
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface ForumOceanService {
 
@@ -1006,4 +1000,26 @@ interface ForumOceanService {
         @Path("path") path: String,
         @Path("memberId") memberId: Long
     ): Response<ResponseBody>
+
+    @RecordApi
+    @GET("{path}/api/ColumnistVipGroup/{columnistMemberId}")
+    suspend fun getColumnistVipGroup(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("columnistMemberId") columnistMemberId: Long
+    ): Response<GetColumnistVipGroupResponse>
+
+    /**
+     * 取得指定研究報告文章ID
+     */
+    @RecordApi
+    @GET("{path}/api/StockReport")
+    suspend fun getStockReportId(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Query("date") date: String,
+        @Query("brokerId") brokerId: String,
+        @Query("stockId") stockId: String
+    ): Response<Int>
+
 }
