@@ -44,7 +44,7 @@ android {
     }
 }
 dependecies {
-	implementation 'com.cmoney.backend2:backend2:5.24.0'
+	implementation 'com.cmoney.backend2:backend2:5.25.0'
 	implementation("com.cmoney.logdatarecorder:logdatarecorder-data:5.0.0")
 	implementation("com.cmoney.logdatarecorder:logdatarecorder-domain:5.0.0")
 }
@@ -54,8 +54,8 @@ dependecies {
 
 ```groovy
 dependecies {
-	releaseImplementation 'com.cmoney.backend2:backend2:5.24.0'
-	debugImplementation 'com.cmoney.backend2:backend2-debug:5.24.0'
+	releaseImplementation 'com.cmoney.backend2:backend2:5.25.0'
+	debugImplementation 'com.cmoney.backend2:backend2-debug:5.25.0'
 	implementation("com.cmoney.logdatarecorder:logdatarecorder-data:5.0.0")
 	implementation("com.cmoney.logdatarecorder:logdatarecorder-domain:5.0.0")
 }
@@ -184,6 +184,7 @@ class SampleApplication : Application() {
 | frontEndLoggerServiceModule               | frontendlogger             |
 | virtualTradeServiceModule                 | vtwebapi                   |
 | crawlSettingServiceModule                 | crawlsetting               |
+| productProvider                           | productdataprovider        |
 #### 選擇使用Module的步驟
 
 - 確認目前需要使用的服務的host之後的path，以下舉例說明
