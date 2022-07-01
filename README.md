@@ -44,7 +44,7 @@ android {
     }
 }
 dependecies {
-	implementation 'com.cmoney.backend2:backend2:5.25.0'
+	implementation 'com.cmoney.backend2:backend2:5.26.0'
 	implementation("com.cmoney.logdatarecorder:logdatarecorder-data:5.0.0")
 	implementation("com.cmoney.logdatarecorder:logdatarecorder-domain:5.0.0")
 }
@@ -54,8 +54,8 @@ dependecies {
 
 ```groovy
 dependecies {
-	releaseImplementation 'com.cmoney.backend2:backend2:5.25.0'
-	debugImplementation 'com.cmoney.backend2:backend2-debug:5.25.0'
+	releaseImplementation 'com.cmoney.backend2:backend2:5.26.0'
+	debugImplementation 'com.cmoney.backend2:backend2-debug:5.26.0'
 	implementation("com.cmoney.logdatarecorder:logdatarecorder-data:5.0.0")
 	implementation("com.cmoney.logdatarecorder:logdatarecorder-domain:5.0.0")
 }
@@ -154,6 +154,7 @@ class SampleApplication : Application() {
 | chipkServiceModule,                       | chipk                      |
 | cmtalkServiceModule,                      | cmtalk                     |
 | commonServiceModule,                      | common                     |
+| commonUseModule,                          | commonuse                  |
 | customGroupServiceModule,                 | customgroup                |
 | customGroup2ServiceModule,                | customgroup2               |
 | dataServiceModule                         | data                       |

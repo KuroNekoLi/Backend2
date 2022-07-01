@@ -17,6 +17,7 @@ import com.cmoney.backend2.chipk.di.chipkServiceModule
 import com.cmoney.backend2.clientconfiguration.di.clientConfigurationModule
 import com.cmoney.backend2.cmtalk.di.cmtalkServiceModule
 import com.cmoney.backend2.common.di.commonServiceModule
+import com.cmoney.backend2.commonuse.di.commonUseModule
 import com.cmoney.backend2.crawlsetting.di.crawlSettingServiceModule
 import com.cmoney.backend2.crm.di.crmServiceModule
 import com.cmoney.backend2.customgroup.di.customGroupServiceModule
@@ -85,6 +86,7 @@ class SampleApplication : Application() {
                     chipkServiceModule,
                     cmtalkServiceModule,
                     commonServiceModule,
+                    commonUseModule,
                     crawlSettingServiceModule,
                     customGroupServiceModule,
                     customGroup2ServiceModule,
