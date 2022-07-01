@@ -1,13 +1,26 @@
-#  (2022-06-14)
+#  (2022-07-01)
 
 
 
-# [5.25.0](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.24.0...5.25.0) (2022-06-14)
+# [5.26.0](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.25.0...5.26.0) (2022-07-01)
 
 
 ### Features
 
-* 新增ForumOcean取得專欄作家的VIP社團資訊 ([3209677](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/32096779f45d29d87219e5c1bca5d8295b8a8b34))
+* 新增 CommonUse 服務 ([4c6b313](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/4c6b313d2c7c87f6c570dcdef788582ac58159f9))
+
+
+
+#  (2022-06-14)
+
+
+
+# [5.25.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.24.0...5.25.0) (2022-06-14)
+
+
+### Features
+
+* 新增ForumOcean取得專欄作家的VIP社團資訊 ([3209677](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/32096779f45d29d87219e5c1bca5d8295b8a8b34))
 * 新增ForumOcean取得指定研究報告文章ID
 
 
