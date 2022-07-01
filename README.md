@@ -154,6 +154,7 @@ class SampleApplication : Application() {
 | chipkServiceModule,                       | chipk                      |
 | cmtalkServiceModule,                      | cmtalk                     |
 | commonServiceModule,                      | common                     |
+| commonUseModule,                          | commonuse                  |
 | customGroupServiceModule,                 | customgroup                |
 | customGroup2ServiceModule,                | customgroup2               |
 | dataServiceModule                         | data                       |
