@@ -108,6 +108,7 @@ class MainActivity : AppCompatActivity() {
 //                ChipKServiceCase(),
 //                CMTalkServiceCase(),
 //                CommonServiceCase(this@MainActivity),
+//                CommonUseServiceCase(),
 //                CustomGroupServiceCase(),
 //                DataServiceCase(),
 //                DtnoServiceCase(),
