@@ -19,6 +19,9 @@ import com.cmoney.backend2.forumocean.service.api.group.getapprovals.GroupPendin
 import com.cmoney.backend2.forumocean.service.api.group.getmember.GroupMember
 import com.cmoney.backend2.forumocean.service.api.group.getmemberjoinanygroups.GetMemberJoinAnyGroupsResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.update.UpdateGroupRequestBody
+import com.cmoney.backend2.forumocean.service.api.group.v2.GroupDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.GroupManipulationDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.InsertedIdDTO
 import com.cmoney.backend2.forumocean.service.api.notify.get.GetNotifyResponseBody
 import com.cmoney.backend2.forumocean.service.api.notify.getcount.GetNotifyCountResponseBody
 import com.cmoney.backend2.forumocean.service.api.notifysetting.NotifyPushSetting
@@ -44,6 +47,7 @@ import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
@@ -1029,4 +1033,65 @@ interface ForumOceanService {
         @Query("stockId") stockId: String
     ): Response<Int>
 
+    /**
+     * 取得指定社團資訊
+     */
+    @RecordApi
+    @GET("{path}/api/Group/{groupId}")
+    @Headers("X-Version: 2.0")
+    suspend fun getGroupV2(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("groupId") groupId: Long,
+    ): Response<GroupDTO>
+
+    /**
+     * 依角色取得會員所有社團(MemberId不帶等於取自己)
+     */
+    @RecordApi
+    @GET("{path}/api/Group/All")
+    @Headers("X-Version: 2.0")
+    suspend fun getGroupsByRole(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Query("memberId") memberId: Long?,
+        @Query("roles") roles: String
+    ): Response<List<GroupDTO>>
+
+    /**
+     * 創建社團
+     */
+    @RecordApi
+    @POST("{path}/api/Group")
+    @Headers("X-Version: 2.0")
+    suspend fun createGroup(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Body body: GroupManipulationDTO
+    ): Response<InsertedIdDTO>
+
+    /**
+     * 更新社團資訊
+     */
+    @RecordApi
+    @PUT("{path}/api/Group/{groupId}")
+    @Headers("X-Version: 2.0")
+    suspend fun updateGroup(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("groupId") groupId: String,
+        @Body body: GroupManipulationDTO
+    ): Response<Unit>
+
+    /**
+     * 解散社團(鎖權限：社長)
+     */
+    @RecordApi
+    @DELETE("{path}/api/Group/{groupId}")
+    @Headers("X-Version: 2.0")
+    suspend fun deleteGroup(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("groupId") groupId: String
+    ): Response<Unit>
 }
