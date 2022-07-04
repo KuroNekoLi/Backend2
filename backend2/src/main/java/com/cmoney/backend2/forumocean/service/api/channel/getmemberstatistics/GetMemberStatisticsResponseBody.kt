@@ -21,5 +21,7 @@ data class GetMemberStatisticsResponseBody(
     @SerializedName("totalCountFollowing")
     val totalCountFollowing : Int?,
     @SerializedName("totalCountFollower")
-    val totalCountFollower : Int?
+    val totalCountFollower: Int?,
+    @SerializedName("isBan")
+    val isBan: Boolean?
 )

@@ -40,7 +40,14 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.
 import com.cmoney.backend2.forumocean.service.api.vote.get.VoteInfo
 import okhttp3.ResponseBody
 import retrofit2.Response
-import retrofit2.http.*
+import retrofit2.http.Body
+import retrofit2.http.DELETE
+import retrofit2.http.GET
+import retrofit2.http.Header
+import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface ForumOceanService {
 
@@ -252,7 +259,7 @@ interface ForumOceanService {
     ): Response<Void>
 
     @RecordApi
-    @GET("{path}/api/Channel/GetMemberStatistics")
+    @GET("{path}/api/Member/Info")
     suspend fun getMemberStatistics(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
