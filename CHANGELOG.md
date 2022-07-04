@@ -1,3 +1,15 @@
+#  (2022-07-04)
+
+
+
+# [5.27.0](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.26.0...5.27.0) (2022-07-04)
+
+
+### Features
+
+* 調整ForumOcean - MemberStaticsResponse API路徑
+
+
 #  (2022-07-01)
 
 

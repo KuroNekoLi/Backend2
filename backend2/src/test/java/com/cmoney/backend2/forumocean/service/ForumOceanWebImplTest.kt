@@ -909,7 +909,8 @@ class ForumOceanWebImplTest {
                     totalCountReaction = 3,
                     memberId = 100,
                     totalCountFollowing = 16,
-                    totalCountFollower = 10
+                    totalCountFollower = 10,
+                    isBan = false
                 )
             )
         )
