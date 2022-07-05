@@ -19,6 +19,8 @@ import com.cmoney.backend2.forumocean.service.api.group.getapprovals.GroupPendin
 import com.cmoney.backend2.forumocean.service.api.group.getmember.GroupMember
 import com.cmoney.backend2.forumocean.service.api.group.getmemberjoinanygroups.GetMemberJoinAnyGroupsResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.update.UpdateGroupRequestBody
+import com.cmoney.backend2.forumocean.service.api.group.v2.BoardDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.BoardManipulationDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupManipulationDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.InsertedIdDTO
@@ -1094,4 +1096,78 @@ interface ForumOceanService {
         @Path("path") path: String,
         @Path("groupId") groupId: String
     ): Response<Unit>
+
+    /**
+     * 增加社團的板(鎖權限:社長)
+     */
+    @RecordApi
+    @POST("{path}/api/Group/{groupId}/Board")
+    @Headers("X-Version: 2.0")
+    suspend fun createBoard(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("groupId") groupId: String,
+        @Body body: BoardManipulationDTO
+    ): Result<InsertedIdDTO>
+
+    /**
+     * 修改看板
+     */
+    @RecordApi
+    @PUT("{path}/api/Group/Board/{boardId}")
+    @Headers("X-Version: 2.0")
+    suspend fun updateBoard(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("boardId") boardId: String,
+        @Body body: BoardManipulationDTO
+    ): Result<Unit>
+
+    /**
+     * 取得社團所有看板
+     */
+    @RecordApi
+    @GET("{path}/api/Group/{groupId}/Board/All")
+    @Headers("X-Version: 2.0")
+    suspend fun getBoards(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("groupId") groupId: String,
+    ): Result<List<BoardDTO>>
+
+    /**
+     * 取得特定看板資訊
+     */
+    @RecordApi
+    @GET("{path}/api/Group/Board/{boardId}")
+    @Headers("X-Version: 2.0")
+    suspend fun getBoard(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("boardId") boardId: String,
+    ): Result<BoardDTO>
+
+    /**
+     * 刪除社團看板(鎖權限：幹部以上)
+     */
+    @RecordApi
+    @DELETE("{path}/api/Group/Board/{boardId}")
+    @Headers("X-Version: 2.0")
+    suspend fun deleteBoard(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("boardId") boardId: String,
+    ): Result<Unit>
+
+    /**
+     * 取得社團是否有未察看的待審用戶
+     */
+    @RecordApi
+    @DELETE("{path}/api/Group/{groupId}/HasNewPending")
+    @Headers("X-Version: 2.0")
+    suspend fun hasNewPending(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("groupId") groupId: String,
+    ): Result<String>
 }
