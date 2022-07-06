@@ -13,7 +13,7 @@ data class GroupDTO(
     @SerializedName("description")
     val description: String?,
     @SerializedName("groupRoles")
-    val groupRoles: List<GroupRoleDTO?>?,
+    val groupRoles: List<GroupRoleDTO>?,
     @SerializedName("id")
     val id: Int?,
     @SerializedName("imgUrl")
@@ -23,7 +23,7 @@ data class GroupDTO(
     @SerializedName("memberCount")
     val memberCount: Int?,
     @SerializedName("memberRoles")
-    val memberRoles: List<Int?>?,
+    val memberRoles: List<Int>?,
     @SerializedName("name")
     val name: String?,
     @SerializedName("needApproval")
