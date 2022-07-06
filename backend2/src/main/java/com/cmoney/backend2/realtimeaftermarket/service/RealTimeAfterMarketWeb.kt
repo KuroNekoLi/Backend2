@@ -12,12 +12,9 @@ import com.cmoney.backend2.realtimeaftermarket.service.api.getisintradeday.GetIs
 import com.cmoney.backend2.realtimeaftermarket.service.api.getmarketnewtick.MarketNewTick
 import com.cmoney.backend2.realtimeaftermarket.service.api.getnewtickinfo.NewTickInfo
 import com.cmoney.backend2.realtimeaftermarket.service.api.getsinglenewtick.SingleStockNewTick
-import com.cmoney.backend2.realtimeaftermarket.service.api.getstocksinindex.GetStockSinIndexResponseBody
+import com.cmoney.backend2.realtimeaftermarket.service.api.getstocksinindex.GetStocksInIndexResponseBody
 import com.cmoney.backend2.realtimeaftermarket.service.api.searchstock.ResultEntry
 import com.cmoney.backend2.realtimeaftermarket.service.api.searchustock.UsResultEntry
-import retrofit2.Response
-import retrofit2.http.Field
-import retrofit2.http.Header
 
 interface RealTimeAfterMarketWeb {
 
@@ -188,5 +185,5 @@ interface RealTimeAfterMarketWeb {
     /**
      * 服務23.取得指數的成分股票清單
      */
-    suspend fun getStockSinIndex(commKey: String): Result<GetStockSinIndexResponseBody>
+    suspend fun getStockSinIndex(commKey: String): Result<GetStocksInIndexResponseBody>
 }

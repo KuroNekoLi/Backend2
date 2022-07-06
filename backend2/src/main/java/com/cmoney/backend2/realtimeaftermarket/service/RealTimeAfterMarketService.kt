@@ -11,7 +11,7 @@ import com.cmoney.backend2.realtimeaftermarket.service.api.getisintradeday.GetIs
 import com.cmoney.backend2.realtimeaftermarket.service.api.getmarketnewtick.MarketNewTick
 import com.cmoney.backend2.realtimeaftermarket.service.api.getnewtickinfo.NewTickInfo
 import com.cmoney.backend2.realtimeaftermarket.service.api.getsinglenewtick.SingleStockNewTick
-import com.cmoney.backend2.realtimeaftermarket.service.api.getstocksinindex.GetStockSinIndexResponseBody
+import com.cmoney.backend2.realtimeaftermarket.service.api.getstocksinindex.GetStocksInIndexResponseBodyWithError
 import com.cmoney.backend2.realtimeaftermarket.service.api.searchstock.ResultEntry
 import com.cmoney.backend2.realtimeaftermarket.service.api.searchustock.UsResultEntry
 import retrofit2.Response
@@ -299,5 +299,5 @@ interface RealTimeAfterMarketService {
         @Field("AppId") appId: Int,
         @Field("Guid") guid: String,
         @Field("Commkey") commKey: String,
-    ): Response<GetStockSinIndexResponseBody>
+    ): Response<GetStocksInIndexResponseBodyWithError>
 }

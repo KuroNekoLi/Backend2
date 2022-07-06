@@ -26,7 +26,8 @@ import com.cmoney.backend2.realtimeaftermarket.service.api.getsinglenewtick.Char
 import com.cmoney.backend2.realtimeaftermarket.service.api.getsinglenewtick.GroupedPriceVolumeData
 import com.cmoney.backend2.realtimeaftermarket.service.api.getsinglenewtick.InvestorChartData
 import com.cmoney.backend2.realtimeaftermarket.service.api.getsinglenewtick.SingleStockNewTick
-import com.cmoney.backend2.realtimeaftermarket.service.api.getstocksinindex.GetStockSinIndexResponseBody
+import com.cmoney.backend2.realtimeaftermarket.service.api.getstocksinindex.GetStocksInIndexResponseBody
+import com.cmoney.backend2.realtimeaftermarket.service.api.getstocksinindex.GetStocksInIndexResponseBodyWithError
 import com.cmoney.backend2.realtimeaftermarket.service.api.getstocksinindex.Stock
 import com.cmoney.backend2.realtimeaftermarket.service.api.searchstock.ResultEntry
 import com.cmoney.backend2.realtimeaftermarket.service.api.searchustock.UsResultEntry
@@ -926,7 +927,7 @@ class RealTimeAfterMarketWebImplTest {
     fun `getStockSinIndex_成功`() = mainCoroutineRule.runBlockingTest {
         val responseJSON =
             "{\"Stocks\":[{\"Commkey\":\"1201\",\"CommName\":\"味全\"},{\"Commkey\":\"1203\",\"CommName\":\"味王\"},{\"Commkey\":\"1210\",\"CommName\":\"大成\"},{\"Commkey\":\"1213\",\"CommName\":\"大飲\"},{\"Commkey\":\"1215\",\"CommName\":\"卜蜂\"},{\"Commkey\":\"1216\",\"CommName\":\"統一\"},{\"Commkey\":\"1217\",\"CommName\":\"愛之味\"},{\"Commkey\":\"1218\",\"CommName\":\"泰山\"},{\"Commkey\":\"1219\",\"CommName\":\"福壽\"},{\"Commkey\":\"1220\",\"CommName\":\"台榮\"},{\"Commkey\":\"1225\",\"CommName\":\"福懋油\"},{\"Commkey\":\"1227\",\"CommName\":\"佳格\"},{\"Commkey\":\"1229\",\"CommName\":\"聯華\"},{\"Commkey\":\"1231\",\"CommName\":\"聯華食\"},{\"Commkey\":\"1232\",\"CommName\":\"大統益\"},{\"Commkey\":\"1233\",\"CommName\":\"天仁\"},{\"Commkey\":\"1234\",\"CommName\":\"黑松\"},{\"Commkey\":\"1235\",\"CommName\":\"興泰\"},{\"Commkey\":\"1236\",\"CommName\":\"宏亞\"},{\"Commkey\":\"1256\",\"CommName\":\"鮮活果汁-KY\"},{\"Commkey\":\"1702\",\"CommName\":\"南僑\"},{\"Commkey\":\"1737\",\"CommName\":\"臺鹽\"}]}"
-        val response = gson.fromJson(responseJSON, GetStockSinIndexResponseBody::class.java)
+        val response = gson.fromJson(responseJSON, GetStocksInIndexResponseBodyWithError::class.java)
         coEvery {
             service.getStockSinIndex(
                 commKey = any(),
@@ -935,7 +936,7 @@ class RealTimeAfterMarketWebImplTest {
                 authorization = any(),
             )
         } returns Response.success(response)
-        val answer = GetStockSinIndexResponseBody(stocks = listOf(
+        val answer = GetStocksInIndexResponseBody(stocks = listOf(
             Stock(commKey = "1201", commName = "味全"),
             Stock(commKey = "1203", commName = "味王"),
             Stock(commKey = "1210", commName = "大成"),
@@ -968,7 +969,7 @@ class RealTimeAfterMarketWebImplTest {
         val errorJson =
             "{\"Error\":{\"Code\":101,\"Message\":\"Auth Failed\"},\"error\":{\"Code\":101,\"Message\":\"Auth Failed\"}}"
         val responseBody =
-            gson.fromJson(errorJson, GetStockSinIndexResponseBody::class.java)
+            gson.fromJson(errorJson, GetStocksInIndexResponseBodyWithError::class.java)
         coEvery {
             service.getStockSinIndex(
                 commKey = any(),
@@ -977,35 +978,15 @@ class RealTimeAfterMarketWebImplTest {
                 authorization = any(),
             )
         } returns Response.success(responseBody)
-
-        val answer = GetStockSinIndexResponseBody(stocks =null)
         val result = webImpl.getStockSinIndex(commKey = "TWB12")
-        Truth.assertThat(result.getOrNull()).isEqualTo(answer)
-    }
-    @Test
-    fun `getStockSinIndex_失敗_illegal_commKey`() = mainCoroutineRule.runBlockingTest {
-        val errorJson =
-            "{\"Error\": \"Commkey格式不正確\"}"
-        val responseBody =
-            gson.fromJson(errorJson, GetStockSinIndexResponseBody::class.java)
-        coEvery {
-            service.getStockSinIndex(
-                commKey = any(),
-                appId = any(),
-                guid = any(),
-                authorization = any(),
-            )
-        } returns Response.success(responseBody)
-        val answer = GetStockSinIndexResponseBody(stocks =null)
-        val result = webImpl.getStockSinIndex(commKey = "")
-        Truth.assertThat(result.getOrNull()).isEqualTo(answer)
+        Truth.assertThat(result.isFailure).isTrue()
     }
     @Test
     fun `getStockSinIndex_失敗_not_match_commKey`() = mainCoroutineRule.runBlockingTest {
         val errorJson =
             "{\"Stocks\":[]}"
         val responseBody =
-            gson.fromJson(errorJson, GetStockSinIndexResponseBody::class.java)
+            gson.fromJson(errorJson, GetStocksInIndexResponseBodyWithError::class.java)
         coEvery {
             service.getStockSinIndex(
                 commKey = any(),
@@ -1014,7 +995,7 @@ class RealTimeAfterMarketWebImplTest {
                 authorization = any(),
             )
         } returns Response.success(responseBody)
-        val answer = GetStockSinIndexResponseBody(stocks = listOf())
+        val answer = GetStocksInIndexResponseBody(stocks = listOf())
         val result = webImpl.getStockSinIndex(commKey = "2330")
         Truth.assertThat(result.getOrNull()).isEqualTo(answer)
     }
