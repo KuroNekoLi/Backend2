@@ -1,13 +1,15 @@
 package com.cmoney.backend2.forumocean.service.api.group.v2
 
 
-import com.google.gson.annotations.SerializedName
 import androidx.annotation.Keep
+import com.google.gson.annotations.SerializedName
 
 @Keep
 data class GroupMemberDTO(
+    @SerializedName("createTime")
+    val createTime: Int?,
     @SerializedName("id")
     val id: Int?,
-    @SerializedName("roles")
-    val roles: List<Int>?
+    @SerializedName("reason")
+    val reason: String?
 )
