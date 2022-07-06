@@ -60,6 +60,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.grouprespons
 import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.ReactionInfo
 import com.cmoney.backend2.forumocean.service.api.vote.get.VoteInfo
 import com.google.gson.Gson
+import com.google.gson.JsonParser
 import kotlinx.coroutines.withContext
 
 class ForumOceanWebImpl(
@@ -1543,7 +1544,9 @@ class ForumOceanWebImpl(
                     groupId = groupId
                 )
                 if (response.code() == 200) {
-                    response.body()?.string()?.trim() == "true"
+                    JsonParser.parseString(
+                        response.body()?.string()?: "{}"
+                    ).asJsonObject.get("hasNewPending").asBoolean
                 } else {
                     throw ServerException(response.code(), "")
                 }
@@ -1698,7 +1701,7 @@ class ForumOceanWebImpl(
     }
 
     override suspend fun kickGroupMember(groupId: Long, memberId: Long): Result<Unit> {
-        return withContext(dispatcher.io()){
+        return withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.kickGroupMember(
                     path = serverName,
