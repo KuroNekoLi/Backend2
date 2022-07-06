@@ -11,6 +11,7 @@ import com.cmoney.backend2.realtimeaftermarket.service.api.getisintradeday.GetIs
 import com.cmoney.backend2.realtimeaftermarket.service.api.getmarketnewtick.MarketNewTick
 import com.cmoney.backend2.realtimeaftermarket.service.api.getnewtickinfo.NewTickInfo
 import com.cmoney.backend2.realtimeaftermarket.service.api.getsinglenewtick.SingleStockNewTick
+import com.cmoney.backend2.realtimeaftermarket.service.api.getstocksinindex.GetStocksInIndexResponseBodyWithError
 import com.cmoney.backend2.realtimeaftermarket.service.api.searchstock.ResultEntry
 import com.cmoney.backend2.realtimeaftermarket.service.api.searchustock.UsResultEntry
 import retrofit2.Response
@@ -283,4 +284,20 @@ interface RealTimeAfterMarketService {
         @Field("Guid") guid: String,
         @Field("AppId") appId: Int
     ): Response<GetIsInTradeDayResponseBodyWithError>
+    /**
+     * 服務23.取得指數的成分股票清單
+     * @param commKey 類股指數代號
+     * @param appId App編號
+     * @param guid 該會員的guid
+     */
+    @RecordApi(cmoneyAction = "getstocksinindex")
+    @FormUrlEncoded
+    @POST("MobileService/ashx/InstantTrading/InstantTrading.ashx")
+    suspend fun getStockSinIndex(
+        @Header("Authorization") authorization: String,
+        @Field("Action") action: String = "getstocksinindex",
+        @Field("AppId") appId: Int,
+        @Field("Guid") guid: String,
+        @Field("Commkey") commKey: String,
+    ): Response<GetStocksInIndexResponseBodyWithError>
 }
