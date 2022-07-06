@@ -1088,7 +1088,7 @@ interface ForumOceanService {
         @Path("path") path: String,
         @Path("groupId") groupId: Long,
         @Body body: GroupManipulationDTO
-    ): Response<Unit>
+    ): Response<Void>
 
     /**
      * 解散社團(鎖權限：社長)
@@ -1100,7 +1100,7 @@ interface ForumOceanService {
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Path("groupId") groupId: Long
-    ): Response<Unit>
+    ): Response<Void>
 
     /**
      * 增加社團的板(鎖權限:社長)
@@ -1113,7 +1113,7 @@ interface ForumOceanService {
         @Path("path") path: String,
         @Path("groupId") groupId: Long,
         @Body body: BoardManipulationDTO
-    ): Result<InsertedIdDTO>
+    ): Response<InsertedIdDTO>
 
     /**
      * 修改看板
@@ -1124,9 +1124,9 @@ interface ForumOceanService {
     suspend fun updateGroupBoard(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
-        @Path("boardId") boardId: String,
+        @Path("boardId") boardId: Long,
         @Body body: BoardManipulationDTO
-    ): Result<Unit>
+    ): Response<Void>
 
     /**
      * 取得社團所有看板
@@ -1138,7 +1138,7 @@ interface ForumOceanService {
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Path("groupId") groupId: Long,
-    ): Result<List<BoardDTO>>
+    ): Response<List<BoardDTO>>
 
     /**
      * 取得特定看板資訊
@@ -1149,8 +1149,8 @@ interface ForumOceanService {
     suspend fun getGroupBoard(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
-        @Path("boardId") boardId: String,
-    ): Result<BoardDTO>
+        @Path("boardId") boardId: Long,
+    ): Response<BoardDTO>
 
     /**
      * 刪除社團看板(鎖權限：幹部以上)
@@ -1161,8 +1161,8 @@ interface ForumOceanService {
     suspend fun deleteGroupBoard(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
-        @Path("boardId") boardId: String,
-    ): Result<Unit>
+        @Path("boardId") boardId: Long,
+    ): Response<Void>
 
     /**
      * 取得社團是否有未察看的待審用戶
@@ -1170,11 +1170,11 @@ interface ForumOceanService {
     @RecordApi
     @GET("{path}/api/Group/{groupId}/HasNewPending")
     @Headers("X-Version: 2.0")
-    suspend fun hasNewGroupPendings(
+    suspend fun hasNewGroupPending(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Path("groupId") groupId: Long,
-    ): Result<String>
+    ): Response<ResponseBody>
 
     /**
      * 取得該社員在社團的所有角色
@@ -1187,7 +1187,7 @@ interface ForumOceanService {
         @Path("path") path: String,
         @Path("groupId") groupId: Long,
         @Path("memberId") memberId: Long
-    ): Result<MemberRolesDTO>
+    ): Response<MemberRolesDTO>
 
     /**
      * 設定社團身份(鎖權限：幹部以上)
@@ -1201,7 +1201,7 @@ interface ForumOceanService {
         @Path("groupId") groupId: Long,
         @Path("memberId") memberId: Long,
         @Body roles: List<Long>
-    ): Result<String>
+    ): Response<Void>
 
     /**
      * 取得社團成員列表
@@ -1213,7 +1213,7 @@ interface ForumOceanService {
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Path("groupId") groupId: Long
-    ): Result<List<GroupMemberDTO>>
+    ): Response<List<GroupMemberDTO>>
 
     /**
      * 離開社團
@@ -1225,7 +1225,7 @@ interface ForumOceanService {
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Path("groupId") groupId: Long
-    ): Result<Unit>
+    ): Response<Void>
 
     /**
      * 取得社長及幹部清單
@@ -1237,7 +1237,7 @@ interface ForumOceanService {
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Path("groupId") groupId: Long
-    ): Result<AdminsDTO>
+    ): Response<AdminsDTO>
 
     /**
      * 搜尋社員
@@ -1250,7 +1250,7 @@ interface ForumOceanService {
         @Path("path") path: String,
         @Path("groupId") groupId: Long,
         @Query("keyword") keyword: String
-    ): Result<List<GroupMemberDTO>>
+    ): Response<List<GroupMemberDTO>>
 
     /**
      * 申請加入社團
@@ -1263,7 +1263,7 @@ interface ForumOceanService {
         @Path("path") path: String,
         @Path("groupId") groupId: Long,
         @Body body: JoinGroupRequestDTO
-    ): Result<Unit>
+    ): Response<Void>
 
     /**
      * 取得審核成員列表(鎖權限：幹部以上)
@@ -1275,7 +1275,7 @@ interface ForumOceanService {
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Path("groupId") groupId: Long
-    ): Result<List<GroupMemberDTO>>
+    ): Response<List<GroupMemberDTO>>
 
     /**
      * 搜尋審核中的社員(鎖權限：幹部以上)
@@ -1288,7 +1288,7 @@ interface ForumOceanService {
         @Path("path") path: String,
         @Path("groupId") groupId: Long,
         @Query("keyword") keyword: String
-    ): Result<List<GroupMemberDTO>>
+    ): Response<List<GroupMemberDTO>>
 
     /**
      * 審核成員加入(鎖權限：幹部以上)
@@ -1300,8 +1300,8 @@ interface ForumOceanService {
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Path("groupId") groupId: Long,
-        @Body body: ApprovalDTO
-    ): Result<Unit>
+        @Body body: List<ApprovalDTO>
+    ): Response<Void>
 
     /**
      * 踢出成員(鎖權限：幹部以上)
@@ -1314,5 +1314,5 @@ interface ForumOceanService {
         @Path("path") path: String,
         @Path("groupId") groupId: Long,
         @Path("memberId") memberId: Long
-    ): Result<Unit>
+    ): Response<Void>
 }

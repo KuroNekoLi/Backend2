@@ -17,6 +17,15 @@ import com.cmoney.backend2.forumocean.service.api.group.getapprovals.GroupPendin
 import com.cmoney.backend2.forumocean.service.api.group.getmember.GroupMember
 import com.cmoney.backend2.forumocean.service.api.group.getmemberjoinanygroups.GetMemberJoinAnyGroupsResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.update.UpdateGroupRequestBody
+import com.cmoney.backend2.forumocean.service.api.group.v2.AdminsDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.ApprovalDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.BoardDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.BoardManipulationDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.GroupDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.GroupManipulationDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.GroupMemberDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.JoinGroupRequestDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.MemberRolesDTO
 import com.cmoney.backend2.forumocean.service.api.notify.get.GetNotifyResponseBody
 import com.cmoney.backend2.forumocean.service.api.notify.getcount.GetNotifyCountResponseBody
 import com.cmoney.backend2.forumocean.service.api.notifysetting.NotifyPushSetting
@@ -1105,7 +1114,7 @@ interface ForumOceanWeb {
 
     /**
      * 取得專欄作家Vip社團資訊
-     * 
+     *
      * @param columnistMemberId 專欄作家Id
      */
     suspend fun getColumnistVipGroup(columnistMemberId: Long): Result<GetColumnistVipGroupResponse>
@@ -1118,4 +1127,165 @@ interface ForumOceanWeb {
      * @param stockId 股票代號
      */
     suspend fun getStockReportId(date: String, brokerId: String, stockId: String): Result<Int>
+
+    /**
+     * 取得指定社團資訊
+     *
+     * GroupV2
+     */
+    suspend fun getGroupV2(groupId: Long): Result<GroupDTO>
+
+    /**
+     * 依角色取得會員所有社團(MemberId不帶等於取自己)
+     *
+     * GroupV2
+     */
+    suspend fun getGroupByRole(memberId: Long?, roleIds: List<Long>): Result<List<GroupDTO>>
+
+    /**
+     * 創建社團
+     *
+     * GroupV2
+     * @return Id of inserted group
+     */
+    suspend fun createGroup(group: GroupManipulationDTO): Result<Long>
+
+    /**
+     * 更新社團資訊
+     *
+     * GroupV2
+     */
+    suspend fun updateGroup(groupId: Long, group: GroupManipulationDTO): Result<Unit>
+
+    /**
+     * 解散社團(鎖權限：社長)
+     *
+     * GroupV2
+     */
+    suspend fun dismissGroup(groupId: Long): Result<Unit>
+
+    /**
+     * 增加社團的板(鎖權限:社長)
+     *
+     * GroupV2
+     * @return Id of inserted board
+     */
+    suspend fun createGroupBoard(groupId: Long, board: BoardManipulationDTO): Result<Long>
+
+    /**
+     * 修改看板
+     *
+     * GroupV2
+     */
+    suspend fun updateGroupBoard(boardId: Long, board: BoardManipulationDTO): Result<Unit>
+
+    /**
+     * 取得社團所有看板
+     *
+     * GroupV2
+     */
+    suspend fun getGroupBoards(groupId: Long): Result<List<BoardDTO>>
+
+    /**
+     * 取得特定看板資訊
+     *
+     * GroupV2
+     */
+    suspend fun getGroupBoard(boardId: Long): Result<BoardDTO>
+
+    /**
+     * 刪除社團看板(鎖權限：幹部以上)
+     *
+     * GroupV2
+     */
+    suspend fun deleteGroupBoard(boardId: Long): Result<Unit>
+
+    /**
+     * 取得社團是否有未察看的待審用戶
+     *
+     * GroupV2
+     */
+    suspend fun hasNewGroupPending(groupId: Long): Result<Boolean>
+
+    /**
+     * 取得該社員在社團的所有角色
+     *
+     * GroupV2
+     */
+    suspend fun getGroupMemberRoles(groupId: Long, memberId: Long): Result<MemberRolesDTO>
+
+    /**
+     * 設定社團身份(鎖權限：幹部以上)
+     *
+     * GroupV2
+     */
+    suspend fun updateGroupMemberRoles(
+        groupId: Long,
+        memberId: Long,
+        roleIds: List<Long>
+    ): Result<Unit>
+
+    /**
+     * 取得社團成員列表
+     *
+     * GroupV2
+     */
+    suspend fun getGroupMembers(groupId: Long): Result<List<GroupMemberDTO>>
+
+    /**
+     * 離開社團
+     *
+     * GroupV2
+     */
+    suspend fun leaveGroup(groupId: Long): Result<Unit>
+
+    /**
+     * 取得社長及幹部清單
+     *
+     * GroupV2
+     */
+    suspend fun getGroupAdmins(groupId: Long): Result<AdminsDTO>
+
+    /**
+     * 搜尋社員
+     *
+     * GroupV2
+     */
+    suspend fun searchGroupMember(groupId: Long, keyword: String): Result<List<GroupMemberDTO>>
+
+    /**
+     * 申請加入社團
+     *
+     * GroupV2
+     */
+    suspend fun joinGroup(groupId: Long, joinGroupRequestDTO: JoinGroupRequestDTO): Result<Unit>
+
+    /**
+     * 取得審核成員列表(鎖權限：幹部以上)
+     *
+     * GroupV2
+     */
+    suspend fun getGroupPendingRequests(groupId: Long): Result<List<GroupMemberDTO>>
+
+    /**
+     * 搜尋審核中的社員(鎖權限：幹部以上)
+     *
+     * GroupV2
+     */
+    suspend fun searchGroupPendingRequests(
+        groupId: Long,
+        keyword: String
+    ): Result<List<GroupMemberDTO>>
+
+    /**
+     * 審核成員加入(鎖權限：幹部以上)
+     *
+     * GroupV2
+     */
+    suspend fun approvalGroupRequest(groupId: Long, approval: List<ApprovalDTO>): Result<Unit>
+
+    /**
+     * 踢出成員(鎖權限：幹部以上)
+     */
+    suspend fun kickGroupMember(groupId: Long, memberId: Long): Result<Unit>
 }
