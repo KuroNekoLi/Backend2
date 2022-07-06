@@ -15,6 +15,7 @@ import com.cmoney.backend2.realtimeaftermarket.service.api.getisintradeday.GetIs
 import com.cmoney.backend2.realtimeaftermarket.service.api.getmarketnewtick.MarketNewTick
 import com.cmoney.backend2.realtimeaftermarket.service.api.getnewtickinfo.NewTickInfo
 import com.cmoney.backend2.realtimeaftermarket.service.api.getsinglenewtick.SingleStockNewTick
+import com.cmoney.backend2.realtimeaftermarket.service.api.getstocksinindex.GetStocksInIndexResponseBody
 import com.cmoney.backend2.realtimeaftermarket.service.api.searchstock.ResultEntry
 import kotlinx.coroutines.withContext
 
@@ -309,6 +310,22 @@ class RealTimeAfterMarketWebImpl(
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 appId = setting.appId,
                 guid = setting.identityToken.getMemberGuid()
+            ).checkIsSuccessful()
+                .requireBody()
+                .checkIWithError()
+                .toRealResponse()
+        }
+    }
+
+    override suspend fun getStockSinIndex(
+        commKey: String
+    ): Result<GetStocksInIndexResponseBody> = withContext(dispatcher.io()){
+        kotlin.runCatching {
+            service.getStockSinIndex(
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                appId = setting.appId,
+                guid = setting.identityToken.getMemberGuid(),
+                commKey = commKey
             ).checkIsSuccessful()
                 .requireBody()
                 .checkIWithError()

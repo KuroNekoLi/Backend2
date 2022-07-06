@@ -33,6 +33,7 @@ class RealTimeAfterMarketServiceCase: ServiceCase {
             timeCode = 0
         )
         realTimeAfterMarketServiceImpl.getIsInTradeDay().logResponse(TAG)
+        realTimeAfterMarketServiceImpl.getStockSinIndex("TWB12").logResponse(TAG)
     }
 
     companion object {
