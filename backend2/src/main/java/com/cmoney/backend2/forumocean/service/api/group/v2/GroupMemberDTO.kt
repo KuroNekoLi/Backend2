@@ -5,9 +5,9 @@ import com.google.gson.annotations.SerializedName
 import androidx.annotation.Keep
 
 @Keep
-data class RolesAuth(
-    @SerializedName("canRead")
-    val canRead: Boolean?,
-    @SerializedName("roleId")
-    val roleId: Int?
+data class GroupMemberDTO(
+    @SerializedName("id")
+    val id: Int?,
+    @SerializedName("roles")
+    val roles: List<Int>?
 )

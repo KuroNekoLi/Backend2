@@ -19,11 +19,16 @@ import com.cmoney.backend2.forumocean.service.api.group.getapprovals.GroupPendin
 import com.cmoney.backend2.forumocean.service.api.group.getmember.GroupMember
 import com.cmoney.backend2.forumocean.service.api.group.getmemberjoinanygroups.GetMemberJoinAnyGroupsResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.update.UpdateGroupRequestBody
+import com.cmoney.backend2.forumocean.service.api.group.v2.AdminsDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.ApprovalDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.BoardDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.BoardManipulationDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupManipulationDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.GroupMemberDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.InsertedIdDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.JoinGroupRequestDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.MemberRolesDTO
 import com.cmoney.backend2.forumocean.service.api.notify.get.GetNotifyResponseBody
 import com.cmoney.backend2.forumocean.service.api.notify.getcount.GetNotifyCountResponseBody
 import com.cmoney.backend2.forumocean.service.api.notifysetting.NotifyPushSetting
@@ -1056,7 +1061,7 @@ interface ForumOceanService {
     suspend fun getGroupsByRole(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
-        @Query("memberId") memberId: Long?,
+        @Query("memberId") memberId: Long?, // Optional
         @Query("roles") roles: String
     ): Response<List<GroupDTO>>
 
@@ -1081,7 +1086,7 @@ interface ForumOceanService {
     suspend fun updateGroup(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
-        @Path("groupId") groupId: String,
+        @Path("groupId") groupId: Long,
         @Body body: GroupManipulationDTO
     ): Response<Unit>
 
@@ -1091,10 +1096,10 @@ interface ForumOceanService {
     @RecordApi
     @DELETE("{path}/api/Group/{groupId}")
     @Headers("X-Version: 2.0")
-    suspend fun deleteGroup(
+    suspend fun deleteGroupV2(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
-        @Path("groupId") groupId: String
+        @Path("groupId") groupId: Long
     ): Response<Unit>
 
     /**
@@ -1103,10 +1108,10 @@ interface ForumOceanService {
     @RecordApi
     @POST("{path}/api/Group/{groupId}/Board")
     @Headers("X-Version: 2.0")
-    suspend fun createBoard(
+    suspend fun createGroupBoard(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
-        @Path("groupId") groupId: String,
+        @Path("groupId") groupId: Long,
         @Body body: BoardManipulationDTO
     ): Result<InsertedIdDTO>
 
@@ -1116,7 +1121,7 @@ interface ForumOceanService {
     @RecordApi
     @PUT("{path}/api/Group/Board/{boardId}")
     @Headers("X-Version: 2.0")
-    suspend fun updateBoard(
+    suspend fun updateGroupBoard(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Path("boardId") boardId: String,
@@ -1129,10 +1134,10 @@ interface ForumOceanService {
     @RecordApi
     @GET("{path}/api/Group/{groupId}/Board/All")
     @Headers("X-Version: 2.0")
-    suspend fun getBoards(
+    suspend fun getGroupBoards(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
-        @Path("groupId") groupId: String,
+        @Path("groupId") groupId: Long,
     ): Result<List<BoardDTO>>
 
     /**
@@ -1141,7 +1146,7 @@ interface ForumOceanService {
     @RecordApi
     @GET("{path}/api/Group/Board/{boardId}")
     @Headers("X-Version: 2.0")
-    suspend fun getBoard(
+    suspend fun getGroupBoard(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Path("boardId") boardId: String,
@@ -1153,7 +1158,7 @@ interface ForumOceanService {
     @RecordApi
     @DELETE("{path}/api/Group/Board/{boardId}")
     @Headers("X-Version: 2.0")
-    suspend fun deleteBoard(
+    suspend fun deleteGroupBoard(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Path("boardId") boardId: String,
@@ -1163,11 +1168,151 @@ interface ForumOceanService {
      * 取得社團是否有未察看的待審用戶
      */
     @RecordApi
-    @DELETE("{path}/api/Group/{groupId}/HasNewPending")
+    @GET("{path}/api/Group/{groupId}/HasNewPending")
     @Headers("X-Version: 2.0")
-    suspend fun hasNewPending(
+    suspend fun hasNewGroupPendings(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
-        @Path("groupId") groupId: String,
+        @Path("groupId") groupId: Long,
     ): Result<String>
+
+    /**
+     * 取得該社員在社團的所有角色
+     */
+    @RecordApi
+    @GET("{path}/api/GroupMember/{groupId}/{memberId}/Role")
+    @Headers("X-Version: 2.0")
+    suspend fun getGroupMemberRoles(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("groupId") groupId: Long,
+        @Path("memberId") memberId: Long
+    ): Result<MemberRolesDTO>
+
+    /**
+     * 設定社團身份(鎖權限：幹部以上)
+     */
+    @RecordApi
+    @PUT("{path}/api/GroupMember/{groupId}/{memberId}/Role")
+    @Headers("X-Version: 2.0")
+    suspend fun updateGroupMemberRoles(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("groupId") groupId: Long,
+        @Path("memberId") memberId: Long,
+        @Body roles: List<Long>
+    ): Result<String>
+
+    /**
+     * 取得社團成員列表
+     */
+    @RecordApi
+    @GET("{path}/api/GroupMember/{groupId}")
+    @Headers("X-Version: 2.0")
+    suspend fun getGroupMembers(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("groupId") groupId: Long
+    ): Result<List<GroupMemberDTO>>
+
+    /**
+     * 離開社團
+     */
+    @RecordApi
+    @DELETE("{path}/api/GroupMember/{groupId}")
+    @Headers("X-Version: 2.0")
+    suspend fun leaveGroup(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("groupId") groupId: Long
+    ): Result<Unit>
+
+    /**
+     * 取得社長及幹部清單
+     */
+    @RecordApi
+    @GET("{path}/api/GroupMember/{groupId}/Admins")
+    @Headers("X-Version: 2.0")
+    suspend fun getGroupAdmins(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("groupId") groupId: Long
+    ): Result<AdminsDTO>
+
+    /**
+     * 搜尋社員
+     */
+    @RecordApi
+    @GET("{path}/api/GroupMember/{groupId}/Search")
+    @Headers("X-Version: 2.0")
+    suspend fun searchGroupMember(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("groupId") groupId: Long,
+        @Query("keyword") keyword: String
+    ): Result<List<GroupMemberDTO>>
+
+    /**
+     * 申請加入社團
+     */
+    @RecordApi
+    @POST("{path}/api/GroupMember/{groupId}/Join")
+    @Headers("X-Version: 2.0")
+    suspend fun joinGroup(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("groupId") groupId: Long,
+        @Body body: JoinGroupRequestDTO
+    ): Result<Unit>
+
+    /**
+     * 取得審核成員列表(鎖權限：幹部以上)
+     */
+    @RecordApi
+    @GET("{path}/api/GroupMember/{groupId}/Pending")
+    @Headers("X-Version: 2.0")
+    suspend fun getGroupPendingRequests(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("groupId") groupId: Long
+    ): Result<List<GroupMemberDTO>>
+
+    /**
+     * 搜尋審核中的社員(鎖權限：幹部以上)
+     */
+    @RecordApi
+    @GET("{path}/api/GroupMember/{groupId}/SearchPending")
+    @Headers("X-Version: 2.0")
+    suspend fun searchGroupPendingRequests(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("groupId") groupId: Long,
+        @Query("keyword") keyword: String
+    ): Result<List<GroupMemberDTO>>
+
+    /**
+     * 審核成員加入(鎖權限：幹部以上)
+     */
+    @RecordApi
+    @POST("{path}/api/GroupMember/{groupId}/Approve")
+    @Headers("X-Version: 2.0")
+    suspend fun approvalGroupRequest(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("groupId") groupId: Long,
+        @Body body: ApprovalDTO
+    ): Result<Unit>
+
+    /**
+     * 踢出成員(鎖權限：幹部以上)
+     */
+    @RecordApi
+    @DELETE("{path}/api/GroupMember/{groupId}/{memberId}")
+    @Headers("X-Version: 2.0")
+    suspend fun kickGroupMember(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("groupId") groupId: Long,
+        @Path("memberId") memberId: Long
+    ): Result<Unit>
 }

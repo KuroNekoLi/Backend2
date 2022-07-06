@@ -5,9 +5,9 @@ import com.google.gson.annotations.SerializedName
 import androidx.annotation.Keep
 
 @Keep
-data class GroupRole(
+data class ApprovalDTO(
+    @SerializedName("approval")
+    val approval: Boolean?,
     @SerializedName("id")
-    val id: Int?,
-    @SerializedName("name")
-    val name: String?
+    val id: Int?
 )
