@@ -1,3 +1,15 @@
+#  (2022-07-06)
+
+
+
+# [5.28.0](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.27.0...5.28.0) (2022-07-06)
+
+
+### Features
+
+* 新增RealtimeAfterMarketWeb - getStockSinIndex(服務23.取得指數的成分股票清單)
+
+
 #  (2022-07-04)
 
 
