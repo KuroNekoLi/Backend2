@@ -9,5 +9,5 @@ data class ApprovalDTO(
     @SerializedName("approval")
     val approval: Boolean?,
     @SerializedName("id")
-    val id: Int?
+    val id: Long?
 )

@@ -1286,6 +1286,8 @@ interface ForumOceanWeb {
 
     /**
      * 踢出成員(鎖權限：幹部以上)
+     *
+     * GroupV2
      */
     suspend fun kickGroupMember(groupId: Long, memberId: Long): Result<Unit>
 }
