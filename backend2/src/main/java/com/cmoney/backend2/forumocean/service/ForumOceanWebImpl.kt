@@ -33,6 +33,7 @@ import com.cmoney.backend2.forumocean.service.api.group.v2.BoardManipulationDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupManipulationDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupMemberDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.JoinRequestsDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.JoinGroupRequestDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.MemberRolesDTO
 import com.cmoney.backend2.forumocean.service.api.notify.get.GetNotifyResponseBody
@@ -1588,7 +1589,7 @@ class ForumOceanWebImpl(
         }
     }
 
-    override suspend fun getGroupMembers(groupId: Long): Result<List<GroupMemberDTO>> {
+    override suspend fun getGroupMembers(groupId: Long): Result<List<JoinRequestsDTO>> {
         return withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getGroupMembers(
@@ -1656,7 +1657,7 @@ class ForumOceanWebImpl(
         }
     }
 
-    override suspend fun getGroupPendingRequests(groupId: Long): Result<List<GroupMemberDTO>> {
+    override suspend fun getGroupPendingRequests(groupId: Long): Result<List<JoinRequestsDTO>> {
         return withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getGroupPendingRequests(
@@ -1671,7 +1672,7 @@ class ForumOceanWebImpl(
     override suspend fun searchGroupPendingRequests(
         groupId: Long,
         keyword: String
-    ): Result<List<GroupMemberDTO>> {
+    ): Result<List<JoinRequestsDTO>> {
         return withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.searchGroupPendingRequests(

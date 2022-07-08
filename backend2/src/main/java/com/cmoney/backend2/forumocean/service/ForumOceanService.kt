@@ -26,6 +26,7 @@ import com.cmoney.backend2.forumocean.service.api.group.v2.BoardManipulationDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupManipulationDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupMemberDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.JoinRequestsDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.InsertedIdDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.JoinGroupRequestDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.MemberRolesDTO
@@ -1213,7 +1214,7 @@ interface ForumOceanService {
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Path("groupId") groupId: Long
-    ): Response<List<GroupMemberDTO>>
+    ): Response<List<JoinRequestsDTO>>
 
     /**
      * 離開社團
@@ -1275,7 +1276,7 @@ interface ForumOceanService {
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Path("groupId") groupId: Long
-    ): Response<List<GroupMemberDTO>>
+    ): Response<List<JoinRequestsDTO>>
 
     /**
      * 搜尋審核中的社員(鎖權限：幹部以上)
@@ -1288,7 +1289,7 @@ interface ForumOceanService {
         @Path("path") path: String,
         @Path("groupId") groupId: Long,
         @Query("keyword") keyword: String
-    ): Response<List<GroupMemberDTO>>
+    ): Response<List<JoinRequestsDTO>>
 
     /**
      * 審核成員加入(鎖權限：幹部以上)

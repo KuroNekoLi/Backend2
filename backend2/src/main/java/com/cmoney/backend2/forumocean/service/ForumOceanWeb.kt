@@ -24,6 +24,7 @@ import com.cmoney.backend2.forumocean.service.api.group.v2.BoardManipulationDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupManipulationDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupMemberDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.JoinRequestsDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.JoinGroupRequestDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.MemberRolesDTO
 import com.cmoney.backend2.forumocean.service.api.notify.get.GetNotifyResponseBody
@@ -1230,7 +1231,7 @@ interface ForumOceanWeb {
      *
      * GroupV2
      */
-    suspend fun getGroupMembers(groupId: Long): Result<List<GroupMemberDTO>>
+    suspend fun getGroupMembers(groupId: Long): Result<List<JoinRequestsDTO>>
 
     /**
      * 離開社團
@@ -1265,7 +1266,7 @@ interface ForumOceanWeb {
      *
      * GroupV2
      */
-    suspend fun getGroupPendingRequests(groupId: Long): Result<List<GroupMemberDTO>>
+    suspend fun getGroupPendingRequests(groupId: Long): Result<List<JoinRequestsDTO>>
 
     /**
      * 搜尋審核中的社員(鎖權限：幹部以上)
@@ -1275,7 +1276,7 @@ interface ForumOceanWeb {
     suspend fun searchGroupPendingRequests(
         groupId: Long,
         keyword: String
-    ): Result<List<GroupMemberDTO>>
+    ): Result<List<JoinRequestsDTO>>
 
     /**
      * 審核成員加入(鎖權限：幹部以上)
