@@ -1223,7 +1223,7 @@ interface ForumOceanWeb {
     suspend fun updateGroupMemberRoles(
         groupId: Long,
         memberId: Long,
-        roleIds: List<Long>
+        roleIds: List<Int>
     ): Result<Unit>
 
     /**
@@ -1231,7 +1231,7 @@ interface ForumOceanWeb {
      *
      * GroupV2
      */
-    suspend fun getGroupMembers(groupId: Long): Result<List<JoinRequestsDTO>>
+    suspend fun getGroupMembers(groupId: Long): Result<List<GroupMemberDTO>>
 
     /**
      * 離開社團

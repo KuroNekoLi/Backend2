@@ -1201,7 +1201,7 @@ interface ForumOceanService {
         @Path("path") path: String,
         @Path("groupId") groupId: Long,
         @Path("memberId") memberId: Long,
-        @Body roles: List<Long>
+        @Body roles: List<Int>
     ): Response<Void>
 
     /**
@@ -1214,7 +1214,7 @@ interface ForumOceanService {
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Path("groupId") groupId: Long
-    ): Response<List<JoinRequestsDTO>>
+    ): Response<List<GroupMemberDTO>>
 
     /**
      * 離開社團

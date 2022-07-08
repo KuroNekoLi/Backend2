@@ -1574,7 +1574,7 @@ class ForumOceanWebImpl(
     override suspend fun updateGroupMemberRoles(
         groupId: Long,
         memberId: Long,
-        roleIds: List<Long>
+        roleIds: List<Int>
     ): Result<Unit> {
         return withContext(dispatcher.io()) {
             kotlin.runCatching {
@@ -1589,7 +1589,7 @@ class ForumOceanWebImpl(
         }
     }
 
-    override suspend fun getGroupMembers(groupId: Long): Result<List<JoinRequestsDTO>> {
+    override suspend fun getGroupMembers(groupId: Long): Result<List<GroupMemberDTO>> {
         return withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getGroupMembers(
