@@ -1316,4 +1316,42 @@ interface ForumOceanService {
         @Path("groupId") groupId: Long,
         @Path("memberId") memberId: Long
     ): Response<Void>
+
+    /**
+     * 對社團看板發文
+     */
+    @RecordApi
+    @POST("{path}/api/GroupArticle/Board/{boardId}/normal")
+    @Headers("X-Version: 2.0")
+    suspend fun createGroupArticle(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("boardId") boardId: Long,
+        @Body requestBody: Content.Article
+    ): Response<CreateArticleResponseBody>
+
+    /**
+     * 對社團看板發文
+     */
+    @RecordApi
+    @DELETE("{path}/api/GroupArticle/{articleId}")
+    @Headers("X-Version: 2.0")
+    suspend fun deleteGroupArticle(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("articleId") articleId: Long
+    ): Response<Void>
+
+    /**
+     * 刪除看板文章留言
+     */
+    @RecordApi
+    @DELETE("{path}/api/GroupArticle/{articleId}/{commentId}")
+    @Headers("X-Version: 2.0")
+    suspend fun deleteGroupArticleComment(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("articleId") articleId: Long,
+        @Path("commentId") commentId: Long
+    ): Response<Void>
 }

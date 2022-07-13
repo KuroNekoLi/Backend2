@@ -1713,4 +1713,45 @@ class ForumOceanWebImpl(
             }
         }
     }
+
+    override suspend fun createGroupArticle(
+        boardId: Long,
+        content: Content.Article.General
+    ): Result<CreateArticleResponseBody> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.createGroupArticle(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    boardId = boardId,
+                    requestBody = content
+                ).checkResponseBody(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun deleteGroupArticle(articleId: Long): Result<Unit> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.deleteGroupArticle(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    articleId = articleId
+                ).handleNoContent(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun deleteGroupArticleComment(articleId: Long, commentId: Long): Result<Unit> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.deleteGroupArticleComment(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    articleId = articleId,
+                    commentId = commentId
+                ).handleNoContent(jsonParser)
+            }
+        }
+    }
 }

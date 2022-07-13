@@ -1291,4 +1291,19 @@ interface ForumOceanWeb {
      * GroupV2
      */
     suspend fun kickGroupMember(groupId: Long, memberId: Long): Result<Unit>
+
+    /**
+     * 對社團看板發文
+     */
+    suspend fun createGroupArticle(boardId: Long, content: Content.Article.General): Result<CreateArticleResponseBody>
+
+    /**
+     * 刪除看板文章
+     */
+    suspend fun deleteGroupArticle(articleId: Long): Result<Unit>
+
+    /**
+     * 刪除看板文章留言
+     */
+    suspend fun deleteGroupArticleComment(articleId: Long, commentId: Long): Result<Unit>
 }
