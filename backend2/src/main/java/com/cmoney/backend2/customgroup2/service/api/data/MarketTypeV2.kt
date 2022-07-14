@@ -692,6 +692,11 @@ sealed class MarketTypeV2(
     ) : MarketTypeV2(type, subType) {
 
         /**
+         * 未定義
+         */
+        object NoDefinition : PocketOverTheCounter(subType = 0)
+
+        /**
          * ETN
          */
         object Etn : PocketOverTheCounter(subType = 1)
@@ -784,6 +789,7 @@ sealed class MarketTypeV2(
         companion object {
             fun getAll(): List<PocketOverTheCounter> {
                 return listOf(
+                    NoDefinition,
                     Etn,
                     REITs,
                     DepositoryReceipt,
