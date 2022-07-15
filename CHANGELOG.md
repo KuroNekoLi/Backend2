@@ -1,8 +1,21 @@
+#  (2022-07-15)
+
+
+
+# [5.29.0](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.28.0...5.29.0) (2022-07-15)
+
+
+### Features
+
+* 新增自選股搜尋，口袋場外的未定義類型。 ([eaf9b3f](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/eaf9b3f3bf45abccdc1a16b3afcfca77727ce51c))
+
+
+
 #  (2022-07-06)
 
 
 
-# [5.28.0](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.27.0...5.28.0) (2022-07-06)
+# [5.28.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.27.0...5.28.0) (2022-07-06)
 
 
 ### Features
@@ -14,7 +27,7 @@
 
 
 
-# [5.27.0](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.26.0...5.27.0) (2022-07-04)
+# [5.27.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.26.0...5.27.0) (2022-07-04)
 
 
 ### Features
@@ -26,12 +39,12 @@
 
 
 
-# [5.26.0](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.25.0...5.26.0) (2022-07-01)
+# [5.26.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.25.0...5.26.0) (2022-07-01)
 
 
 ### Features
 
-* 新增 CommonUse 服務 ([4c6b313](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/4c6b313d2c7c87f6c570dcdef788582ac58159f9))
+* 新增 CommonUse 服務 ([4c6b313](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/4c6b313d2c7c87f6c570dcdef788582ac58159f9))
 
 
 
