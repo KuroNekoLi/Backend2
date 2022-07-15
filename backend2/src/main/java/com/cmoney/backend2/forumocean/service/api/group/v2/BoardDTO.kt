@@ -15,5 +15,7 @@ data class BoardDTO(
     @SerializedName("isDefault")
     val isDefault: Boolean?,
     @SerializedName("name")
-    val name: String?
+    val name: String?,
+    @SerializedName("groupId")
+    val groupId: Long?
 )

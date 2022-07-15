@@ -56,6 +56,8 @@ sealed class ArticleContent(
         override val creatorId: Long?,
         @SerializedName("groupId", alternate = ["GroupId"])
         override val groupId: Long?,
+        @SerializedName("boardId", alternate = ["BoardId"])
+        override val boardId: Long?,
         @SerializedName("position", alternate = ["Position"])
         override val position: Any?,
         @SerializedName("newsId", alternate = ["NewsId"])
@@ -99,7 +101,8 @@ sealed class ArticleContent(
         QuestionInfo,
         ArticleStateInfo,
         TopicInfo,
-        ColumnInfo
+        ColumnInfo,
+        Group2Info
 
     /**
      * 一般文章
