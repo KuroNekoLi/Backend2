@@ -5,7 +5,7 @@ import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
 
 @Keep
-data class JoinRequestsDTO(
+data class PendingRequestDTO(
     @SerializedName("createTime")
     val createTime: Int?,
     @SerializedName("id")

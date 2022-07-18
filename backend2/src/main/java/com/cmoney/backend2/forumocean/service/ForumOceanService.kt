@@ -26,10 +26,11 @@ import com.cmoney.backend2.forumocean.service.api.group.v2.BoardManipulationDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupManipulationDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupMemberDTO
-import com.cmoney.backend2.forumocean.service.api.group.v2.JoinRequestsDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.PendingRequestDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.InsertedIdDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.JoinGroupRequestDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.MemberRolesDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.PendingRequestsDTO
 import com.cmoney.backend2.forumocean.service.api.notify.get.GetNotifyResponseBody
 import com.cmoney.backend2.forumocean.service.api.notify.getcount.GetNotifyCountResponseBody
 import com.cmoney.backend2.forumocean.service.api.notifysetting.NotifyPushSetting
@@ -1213,7 +1214,10 @@ interface ForumOceanService {
     suspend fun getGroupMembers(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
-        @Path("groupId") groupId: Long
+        @Path("groupId") groupId: Long,
+        @Query("roles") roles: String,
+        @Query("offset") offset: Int,
+        @Query("fetch") fetch: Int
     ): Response<List<GroupMemberDTO>>
 
     /**
@@ -1250,7 +1254,9 @@ interface ForumOceanService {
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Path("groupId") groupId: Long,
-        @Query("keyword") keyword: String
+        @Query("keyword") keyword: String,
+        @Query("offset") offset: Int,
+        @Query("fetch") fetch: Int
     ): Response<List<GroupMemberDTO>>
 
     /**
@@ -1275,8 +1281,10 @@ interface ForumOceanService {
     suspend fun getGroupPendingRequests(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
-        @Path("groupId") groupId: Long
-    ): Response<List<JoinRequestsDTO>>
+        @Path("groupId") groupId: Long,
+        @Query("timestamp") timestamp: Long,
+        @Query("fetch") fetch: Int = 20
+    ): Response<PendingRequestsDTO>
 
     /**
      * 搜尋審核中的社員(鎖權限：幹部以上)
@@ -1288,8 +1296,10 @@ interface ForumOceanService {
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Path("groupId") groupId: Long,
-        @Query("keyword") keyword: String
-    ): Response<List<JoinRequestsDTO>>
+        @Query("keyword") keyword: String,
+        @Query("timestamp") timestamp: Long,
+        @Query("fetch") fetch: Int = 20
+    ): Response<PendingRequestsDTO>
 
     /**
      * 審核成員加入(鎖權限：幹部以上)

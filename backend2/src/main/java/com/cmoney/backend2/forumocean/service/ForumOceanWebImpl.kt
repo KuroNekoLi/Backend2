@@ -33,9 +33,9 @@ import com.cmoney.backend2.forumocean.service.api.group.v2.BoardManipulationDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupManipulationDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupMemberDTO
-import com.cmoney.backend2.forumocean.service.api.group.v2.JoinRequestsDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.JoinGroupRequestDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.MemberRolesDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.PendingRequestsDTO
 import com.cmoney.backend2.forumocean.service.api.notify.get.GetNotifyResponseBody
 import com.cmoney.backend2.forumocean.service.api.notify.getcount.GetNotifyCountResponseBody
 import com.cmoney.backend2.forumocean.service.api.notifysetting.NotifyPushSetting
@@ -1589,13 +1589,21 @@ class ForumOceanWebImpl(
         }
     }
 
-    override suspend fun getGroupMembers(groupId: Long): Result<List<GroupMemberDTO>> {
+    override suspend fun getGroupMembers(
+        groupId: Long,
+        roles: List<com.cmoney.backend2.forumocean.service.api.group.v2.Role>,
+        offset: Int,
+        fetch: Int
+    ): Result<List<GroupMemberDTO>> {
         return withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getGroupMembers(
                     path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
-                    groupId = groupId
+                    groupId = groupId,
+                    roles = roles.joinToString { it.value },
+                    offset = offset,
+                    fetch = fetch
                 ).checkResponseBody(jsonParser)
             }
         }
@@ -1627,7 +1635,9 @@ class ForumOceanWebImpl(
 
     override suspend fun searchGroupMember(
         groupId: Long,
-        keyword: String
+        keyword: String,
+        offset: Int,
+        fetch: Int
     ): Result<List<GroupMemberDTO>> {
         return withContext(dispatcher.io()) {
             kotlin.runCatching {
@@ -1635,7 +1645,9 @@ class ForumOceanWebImpl(
                     path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     groupId = groupId,
-                    keyword = keyword
+                    keyword = keyword,
+                    offset = offset,
+                    fetch = fetch
                 ).checkResponseBody(jsonParser)
             }
         }
@@ -1657,13 +1669,19 @@ class ForumOceanWebImpl(
         }
     }
 
-    override suspend fun getGroupPendingRequests(groupId: Long): Result<List<JoinRequestsDTO>> {
+    override suspend fun getGroupPendingRequests(
+        groupId: Long,
+        timestamp: Long,
+        fetch: Int
+    ): Result<PendingRequestsDTO> {
         return withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getGroupPendingRequests(
                     path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
-                    groupId = groupId
+                    groupId = groupId,
+                    timestamp = timestamp,
+                    fetch = fetch
                 ).checkResponseBody(jsonParser)
             }
         }
@@ -1671,15 +1689,19 @@ class ForumOceanWebImpl(
 
     override suspend fun searchGroupPendingRequests(
         groupId: Long,
-        keyword: String
-    ): Result<List<JoinRequestsDTO>> {
+        keyword: String,
+        timestamp: Long,
+        fetch: Int
+    ): Result<PendingRequestsDTO> {
         return withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.searchGroupPendingRequests(
                     path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     groupId = groupId,
-                    keyword = keyword
+                    keyword = keyword,
+                    timestamp = timestamp,
+                    fetch = fetch
                 ).checkResponseBody(jsonParser)
             }
         }

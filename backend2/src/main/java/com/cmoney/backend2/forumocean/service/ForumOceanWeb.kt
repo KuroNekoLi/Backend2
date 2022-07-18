@@ -24,9 +24,9 @@ import com.cmoney.backend2.forumocean.service.api.group.v2.BoardManipulationDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupManipulationDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupMemberDTO
-import com.cmoney.backend2.forumocean.service.api.group.v2.JoinRequestsDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.JoinGroupRequestDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.MemberRolesDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.PendingRequestsDTO
 import com.cmoney.backend2.forumocean.service.api.notify.get.GetNotifyResponseBody
 import com.cmoney.backend2.forumocean.service.api.notify.getcount.GetNotifyCountResponseBody
 import com.cmoney.backend2.forumocean.service.api.notifysetting.NotifyPushSetting
@@ -1141,7 +1141,10 @@ interface ForumOceanWeb {
      *
      * GroupV2
      */
-    suspend fun getGroupByRoles(memberId: Long?, roles: List<com.cmoney.backend2.forumocean.service.api.group.v2.Role>): Result<List<GroupDTO>>
+    suspend fun getGroupByRoles(
+        memberId: Long?,
+        roles: List<com.cmoney.backend2.forumocean.service.api.group.v2.Role>
+    ): Result<List<GroupDTO>>
 
     /**
      * 創建社團
@@ -1231,7 +1234,12 @@ interface ForumOceanWeb {
      *
      * GroupV2
      */
-    suspend fun getGroupMembers(groupId: Long): Result<List<GroupMemberDTO>>
+    suspend fun getGroupMembers(
+        groupId: Long,
+        roles: List<com.cmoney.backend2.forumocean.service.api.group.v2.Role>,
+        offset: Int,
+        fetch: Int
+    ): Result<List<GroupMemberDTO>>
 
     /**
      * 離開社團
@@ -1252,7 +1260,12 @@ interface ForumOceanWeb {
      *
      * GroupV2
      */
-    suspend fun searchGroupMember(groupId: Long, keyword: String): Result<List<GroupMemberDTO>>
+    suspend fun searchGroupMember(
+        groupId: Long,
+        keyword: String,
+        offset: Int,
+        fetch: Int
+    ): Result<List<GroupMemberDTO>>
 
     /**
      * 申請加入社團
@@ -1264,9 +1277,15 @@ interface ForumOceanWeb {
     /**
      * 取得審核成員列表(鎖權限：幹部以上)
      *
+     * @param timestamp The page timestamp. (For pagination).
+     *
      * GroupV2
      */
-    suspend fun getGroupPendingRequests(groupId: Long): Result<List<JoinRequestsDTO>>
+    suspend fun getGroupPendingRequests(
+        groupId: Long,
+        timestamp: Long,
+        fetch: Int = 20
+    ): Result<PendingRequestsDTO>
 
     /**
      * 搜尋審核中的社員(鎖權限：幹部以上)
@@ -1275,8 +1294,10 @@ interface ForumOceanWeb {
      */
     suspend fun searchGroupPendingRequests(
         groupId: Long,
-        keyword: String
-    ): Result<List<JoinRequestsDTO>>
+        keyword: String,
+        timestamp: Long,
+        fetch: Int = 20
+    ): Result<PendingRequestsDTO>
 
     /**
      * 審核成員加入(鎖權限：幹部以上)
@@ -1295,7 +1316,10 @@ interface ForumOceanWeb {
     /**
      * 對社團看板發文
      */
-    suspend fun createGroupArticle(boardId: Long, content: Content.Article.General): Result<CreateArticleResponseBody>
+    suspend fun createGroupArticle(
+        boardId: Long,
+        content: Content.Article.General
+    ): Result<CreateArticleResponseBody>
 
     /**
      * 刪除看板文章
