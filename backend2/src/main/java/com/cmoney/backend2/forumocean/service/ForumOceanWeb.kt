@@ -1141,7 +1141,7 @@ interface ForumOceanWeb {
      *
      * GroupV2
      */
-    suspend fun getGroupByRole(memberId: Long?, roleIds: List<Long>): Result<List<GroupDTO>>
+    suspend fun getGroupByRoles(memberId: Long?, roles: List<com.cmoney.backend2.forumocean.service.api.group.v2.Role>): Result<List<GroupDTO>>
 
     /**
      * 創建社團

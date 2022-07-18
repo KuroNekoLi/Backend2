@@ -1415,16 +1415,16 @@ class ForumOceanWebImpl(
         }
     }
 
-    override suspend fun getGroupByRole(
+    override suspend fun getGroupByRoles(
         memberId: Long?,
-        roleIds: List<Long>
+        roles: List<com.cmoney.backend2.forumocean.service.api.group.v2.Role>
     ): Result<List<GroupDTO>> {
         return withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getGroupsByRole(
                     path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
-                    roles = roleIds.joinToString(),
+                    roles = roles.joinToString { it.value },
                     memberId = memberId
                 ).checkResponseBody(jsonParser)
             }
