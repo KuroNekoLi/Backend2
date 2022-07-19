@@ -1297,7 +1297,7 @@ interface ForumOceanService {
         @Path("path") path: String,
         @Path("groupId") groupId: Long,
         @Query("keyword") keyword: String,
-        @Query("timestamp") timestamp: Long,
+        @Query("timestamp") timestamp: Long?,
         @Query("fetch") fetch: Int = 20
     ): Response<PendingRequestsDTO>
 

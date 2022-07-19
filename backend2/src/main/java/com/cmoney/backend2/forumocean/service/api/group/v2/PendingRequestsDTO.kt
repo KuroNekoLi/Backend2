@@ -7,7 +7,7 @@ import androidx.annotation.Keep
 @Keep
 data class PendingRequestsDTO(
     @SerializedName("lastTimestamp")
-    val lastTimestamp: Int?,
+    val lastTimestamp: Long?,
     @SerializedName("pendingList")
     val pendingList: List<PendingRequestDTO>?
 )
