@@ -3,5 +3,5 @@ package com.cmoney.backend2.forumocean.service.api.group.v2
 enum class Role(val value: String) {
     OWNER("owner"),
     MANAGER("manager"),
-    NORMAL_MANAGER("normalManager")
+    NORMAL_MEMBER("normalMember")
 }
