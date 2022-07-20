@@ -14,4 +14,15 @@ data class GroupRoleDTO(
     val name: String?,
     @SerializedName("type")
     val type: String?
-)
+) {
+    /**
+     * The type enum for the type of this role.
+     */
+    fun roleType(): Role {
+        return when (type) {
+            Role.OWNER.value -> Role.OWNER
+            Role.MANAGER.value -> Role.MANAGER
+            else -> Role.NORMAL_MEMBER
+        }
+    }
+}
