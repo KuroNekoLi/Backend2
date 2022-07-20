@@ -6,11 +6,11 @@ import com.google.gson.annotations.SerializedName
 @Keep
 data class GroupMemberDTO(
     @SerializedName("image")
-    val image: String,
+    val image: String?,
     @SerializedName("memberId")
-    val memberId: Int,
+    val memberId: Int?,
     @SerializedName("nickName")
-    val nickName: String,
-    @SerializedName("roleIds")
-    val roleIds: List<Int>
+    val nickName: String?,
+    @SerializedName("roles")
+    val roleIds: List<Int>?
 )
