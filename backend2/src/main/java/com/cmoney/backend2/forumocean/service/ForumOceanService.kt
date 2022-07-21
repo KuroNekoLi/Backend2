@@ -1064,7 +1064,7 @@ interface ForumOceanService {
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Query("memberId") memberId: Long?, // Optional
-        @Query("roleTypes") roles: List<String>
+        @Query("roleTypes") roles: String
     ): Response<List<GroupDTO>>
 
     /**
@@ -1215,7 +1215,7 @@ interface ForumOceanService {
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Path("groupId") groupId: Long,
-        @Query("roleTypes") roles: List<String>,
+        @Query("roleTypes") roles: String,
         @Query("offset") offset: Int,
         @Query("fetch") fetch: Int
     ): Response<List<GroupMemberDTO>>
