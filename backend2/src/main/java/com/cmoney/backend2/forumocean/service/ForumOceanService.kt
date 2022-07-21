@@ -26,6 +26,7 @@ import com.cmoney.backend2.forumocean.service.api.group.v2.BoardManipulationDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupManipulationDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupMemberDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.GroupMemberDTOX
 import com.cmoney.backend2.forumocean.service.api.group.v2.PendingRequestDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.InsertedIdDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.JoinGroupRequestDTO
@@ -1218,7 +1219,7 @@ interface ForumOceanService {
         @Query("roleTypes") roles: String,
         @Query("offset") offset: Int,
         @Query("fetch") fetch: Int
-    ): Response<List<GroupMemberDTO>>
+    ): Response<List<GroupMemberDTOX>>
 
     /**
      * 離開社團

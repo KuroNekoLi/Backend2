@@ -33,6 +33,7 @@ import com.cmoney.backend2.forumocean.service.api.group.v2.BoardManipulationDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupManipulationDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupMemberDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.GroupMemberDTOX
 import com.cmoney.backend2.forumocean.service.api.group.v2.JoinGroupRequestDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.MemberRolesDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.PendingRequestsDTO
@@ -1594,7 +1595,7 @@ class ForumOceanWebImpl(
         roles: List<com.cmoney.backend2.forumocean.service.api.group.v2.Role>,
         offset: Int,
         fetch: Int
-    ): Result<List<GroupMemberDTO>> {
+    ): Result<List<GroupMemberDTOX>> {
         return withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getGroupMembers(
