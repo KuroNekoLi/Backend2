@@ -11,6 +11,6 @@ data class GroupMemberDTO(
     val memberId: Int?,
     @SerializedName("nickName")
     val nickName: String?,
-    @SerializedName("roles")
+    @SerializedName("roleIds")
     val roleIds: List<Int>?
 )
