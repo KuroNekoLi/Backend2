@@ -1425,7 +1425,7 @@ class ForumOceanWebImpl(
                 service.getGroupsByRole(
                     path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
-                    roles = roles.joinToString { it.value },
+                    roles = roles.joinToString(",") { it.value },
                     memberId = memberId
                 ).checkResponseBody(jsonParser)
             }
@@ -1602,7 +1602,7 @@ class ForumOceanWebImpl(
                     path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     groupId = groupId,
-                    roles = roles.joinToString { it.value },
+                    roles = roles.joinToString(",") { it.value },
                     offset = offset,
                     fetch = fetch
                 ).checkResponseBody(jsonParser)
