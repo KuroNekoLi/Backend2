@@ -7,7 +7,7 @@ import androidx.annotation.Keep
 @Keep
 data class AdminsDTO(
     @SerializedName("managers")
-    val managers: List<Int?>?,
+    val managers: List<Long>?,
     @SerializedName("owner")
-    val owner: Int?
+    val owner: Long?
 )
