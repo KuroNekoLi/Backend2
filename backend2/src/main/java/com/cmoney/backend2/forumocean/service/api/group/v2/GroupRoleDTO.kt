@@ -22,7 +22,9 @@ data class GroupRoleDTO(
         return when (type) {
             Role.OWNER.value -> Role.OWNER
             Role.MANAGER.value -> Role.MANAGER
-            else -> Role.NORMAL_MEMBER
+            Role.NON_MEMBER.value -> Role.NON_MEMBER
+            Role.NORMAL_MEMBER.value -> Role.NORMAL_MEMBER
+            else -> Role.NON_MEMBER
         }
     }
 }
