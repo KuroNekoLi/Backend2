@@ -5,13 +5,13 @@ import com.google.gson.annotations.SerializedName
 import androidx.annotation.Keep
 
 @Keep
-data class BoardDTO(
+data class BoardDTOSingle(
+    @SerializedName("auth")
+    val auth: Auth?,
     @SerializedName("boardType")
     val boardType: String?,
-    @SerializedName("canRead")
-    val canRead: Boolean?,
-    @SerializedName("id")
-    val id: Int?,
+    @SerializedName("groupId")
+    val groupId: Int?,
     @SerializedName("isDefault")
     val isDefault: Boolean?,
     @SerializedName("name")

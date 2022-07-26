@@ -22,12 +22,12 @@ import com.cmoney.backend2.forumocean.service.api.group.update.UpdateGroupReques
 import com.cmoney.backend2.forumocean.service.api.group.v2.AdminsDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.ApprovalDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.BoardDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.BoardDTOSingle
 import com.cmoney.backend2.forumocean.service.api.group.v2.BoardManipulationDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupManipulationDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupMemberDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupMemberDTOX
-import com.cmoney.backend2.forumocean.service.api.group.v2.PendingRequestDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.InsertedIdDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.JoinGroupRequestDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.MemberRolesDTO
@@ -1153,7 +1153,7 @@ interface ForumOceanService {
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Path("boardId") boardId: Long,
-    ): Response<BoardDTO>
+    ): Response<BoardDTOSingle>
 
     /**
      * 刪除社團看板(鎖權限：幹部以上)
@@ -1338,7 +1338,7 @@ interface ForumOceanService {
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Path("boardId") boardId: Long,
-        @Body requestBody: Content.Article
+        @Body requestBody: Content.Article.General
     ): Response<CreateArticleResponseBody>
 
     /**

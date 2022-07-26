@@ -29,6 +29,7 @@ import com.cmoney.backend2.forumocean.service.api.group.update.UpdateGroupReques
 import com.cmoney.backend2.forumocean.service.api.group.v2.AdminsDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.ApprovalDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.BoardDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.BoardDTOSingle
 import com.cmoney.backend2.forumocean.service.api.group.v2.BoardManipulationDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupManipulationDTO
@@ -1513,7 +1514,7 @@ class ForumOceanWebImpl(
         }
     }
 
-    override suspend fun getGroupBoard(boardId: Long): Result<BoardDTO> {
+    override suspend fun getGroupBoard(boardId: Long): Result<BoardDTOSingle> {
         return withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getGroupBoard(

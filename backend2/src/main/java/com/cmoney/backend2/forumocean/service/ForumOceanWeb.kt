@@ -20,6 +20,7 @@ import com.cmoney.backend2.forumocean.service.api.group.update.UpdateGroupReques
 import com.cmoney.backend2.forumocean.service.api.group.v2.AdminsDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.ApprovalDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.BoardDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.BoardDTOSingle
 import com.cmoney.backend2.forumocean.service.api.group.v2.BoardManipulationDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupManipulationDTO
@@ -1196,7 +1197,7 @@ interface ForumOceanWeb {
      *
      * GroupV2
      */
-    suspend fun getGroupBoard(boardId: Long): Result<BoardDTO>
+    suspend fun getGroupBoard(boardId: Long): Result<BoardDTOSingle>
 
     /**
      * 刪除社團看板(鎖權限：幹部以上)
