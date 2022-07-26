@@ -28,6 +28,7 @@ import com.cmoney.backend2.forumocean.service.api.group.getmemberjoinanygroups.G
 import com.cmoney.backend2.forumocean.service.api.group.update.UpdateGroupRequestBody
 import com.cmoney.backend2.forumocean.service.api.group.v2.AdminsDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.ApprovalDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.AvailableBoardIds
 import com.cmoney.backend2.forumocean.service.api.group.v2.BoardDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.BoardDTOSingle
 import com.cmoney.backend2.forumocean.service.api.group.v2.BoardManipulationDTO
@@ -1775,6 +1776,17 @@ class ForumOceanWebImpl(
                     articleId = articleId,
                     commentId = commentId
                 ).handleNoContent(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun getAvailableBoardIds(): Result<AvailableBoardIds> {
+        return withContext(dispatcher.io()){
+            kotlin.runCatching {
+                service.getAvailableBoardIds(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                ).checkResponseBody(jsonParser)
             }
         }
     }

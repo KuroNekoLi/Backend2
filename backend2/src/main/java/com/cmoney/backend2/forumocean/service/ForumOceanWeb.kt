@@ -19,6 +19,7 @@ import com.cmoney.backend2.forumocean.service.api.group.getmemberjoinanygroups.G
 import com.cmoney.backend2.forumocean.service.api.group.update.UpdateGroupRequestBody
 import com.cmoney.backend2.forumocean.service.api.group.v2.AdminsDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.ApprovalDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.AvailableBoardIds
 import com.cmoney.backend2.forumocean.service.api.group.v2.BoardDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.BoardDTOSingle
 import com.cmoney.backend2.forumocean.service.api.group.v2.BoardManipulationDTO
@@ -1332,4 +1333,9 @@ interface ForumOceanWeb {
      * 刪除看板文章留言
      */
     suspend fun deleteGroupArticleComment(articleId: Long, commentId: Long): Result<Unit>
+
+    /**
+     * 取得用戶可以進入的所有看板 id
+     */
+    suspend fun getAvailableBoardIds(): Result<AvailableBoardIds>
 }

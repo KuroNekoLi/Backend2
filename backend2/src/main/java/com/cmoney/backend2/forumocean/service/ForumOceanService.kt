@@ -21,6 +21,7 @@ import com.cmoney.backend2.forumocean.service.api.group.getmemberjoinanygroups.G
 import com.cmoney.backend2.forumocean.service.api.group.update.UpdateGroupRequestBody
 import com.cmoney.backend2.forumocean.service.api.group.v2.AdminsDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.ApprovalDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.AvailableBoardIds
 import com.cmoney.backend2.forumocean.service.api.group.v2.BoardDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.BoardDTOSingle
 import com.cmoney.backend2.forumocean.service.api.group.v2.BoardManipulationDTO
@@ -1365,4 +1366,15 @@ interface ForumOceanService {
         @Path("articleId") articleId: Long,
         @Path("commentId") commentId: Long
     ): Response<Void>
+
+    /**
+     * 取得用戶可以進入的所有看板 id
+     */
+    @RecordApi
+    @GET("{path}/api/Group/Board/All")
+    @Headers("X-Version: 2.0")
+    suspend fun getAvailableBoardIds(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String
+    ): Response<AvailableBoardIds>
 }
