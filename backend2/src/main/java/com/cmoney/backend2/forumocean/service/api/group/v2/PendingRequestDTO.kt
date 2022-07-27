@@ -7,9 +7,9 @@ import com.google.gson.annotations.SerializedName
 @Keep
 data class PendingRequestDTO(
     @SerializedName("createTime")
-    val createTime: Int?,
+    val createTime: Long?,
     @SerializedName("id")
-    val id: Int?,
+    val id: Long?,
     @SerializedName("reason")
     val reason: String?
 )
