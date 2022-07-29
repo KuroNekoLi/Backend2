@@ -16,12 +16,12 @@ interface CommonUseWeb {
      * 更新用戶選擇的投資屬性
      *
      * @param investmentPreferenceType 用戶選擇的投資屬性
-     * @return 用戶選擇的投資屬性編號清單
+     * @return 用戶選擇的投資屬性
      */
     suspend fun updateInvestmentPreference(
         host: String = baseHost,
         investmentPreferenceType: InvestmentPreferenceType
-    ): Result<List<Int>>
+    ): Result<InvestmentPreferenceType>
 
     /**
      * 取得用戶選擇的投資屬性

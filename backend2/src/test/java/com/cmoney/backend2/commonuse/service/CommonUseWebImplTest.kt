@@ -114,7 +114,6 @@ class CommonUseWebImplTest {
                 }
             """.trimMargin()
         )
-        val responseBody = listOf(1, 2, 3)
 
         coEvery {
             service.query(any(), any(), any())
@@ -123,7 +122,7 @@ class CommonUseWebImplTest {
         val result =
             web.updateInvestmentPreference(investmentPreferenceType = InvestmentPreferenceType.All)
         Truth.assertThat(result.isSuccess).isTrue()
-        Truth.assertThat(result.getOrNull()).isEqualTo(responseBody)
+        Truth.assertThat(result.getOrNull()).isEqualTo(InvestmentPreferenceType.All)
     }
 
     @Test

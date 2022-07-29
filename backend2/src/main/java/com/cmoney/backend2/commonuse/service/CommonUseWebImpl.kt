@@ -51,7 +51,7 @@ class CommonUseWebImpl(
     override suspend fun updateInvestmentPreference(
         host: String,
         investmentPreferenceType: InvestmentPreferenceType
-    ): Result<List<Int>> =
+    ): Result<InvestmentPreferenceType> =
         withContext(dispatcherProvider.io()) {
             kotlin.runCatching {
                 val requestBody = gson.toJson(investmentPreferenceType.ids)
@@ -67,14 +67,13 @@ class CommonUseWebImpl(
                 val data = response.body()?.getAsJsonObject("data")
                 val updateMember = data?.getAsJsonObject("updateMember")
                 val newInvestmentPreferenceIds = updateMember?.get("updateInvestmentRiskPreference")
-                if (newInvestmentPreferenceIds?.isJsonNull == true) {
-                    emptyList()
-                } else {
-                    gson.fromJson(
-                        newInvestmentPreferenceIds,
-                        object : TypeToken<List<Int>>() {}.type
-                    )
-                }
+
+                newInvestmentPreferenceIds?.let { ids ->
+                    val result = gson.fromJson(ids, IntArray::class.java)
+                    InvestmentPreferenceType.values().find { type ->
+                        type.ids.contentEquals(result)
+                    }
+                } ?: InvestmentPreferenceType.None
             }
         }
 
@@ -84,7 +83,7 @@ class CommonUseWebImpl(
                 val response = commonUseService.query(
                     url = "$host$servicePath/graphql",
                     authorization = setting.accessToken.createAuthorizationBearer(),
-                    query = QueryParam("query{member{investmentRiskPreferences{id,name,isChosen}}}")
+                    query = QueryParam("query{member{investmentRiskPreferences{id name isChosen}}}")
                 )
                 if (response.code() >= 400) {
                     throw response.parseServerException(gson)

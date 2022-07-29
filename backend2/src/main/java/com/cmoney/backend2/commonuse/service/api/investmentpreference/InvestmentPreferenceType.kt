@@ -5,24 +5,29 @@ package com.cmoney.backend2.commonuse.service.api.investmentpreference
  *
  * @property ids 投資偏好id編號
  */
-enum class InvestmentPreferenceType(val ids: List<Int>) {
+enum class InvestmentPreferenceType(val ids: IntArray) {
     /**
      * 短線
      */
-    Short(listOf(1)),
+    Short(intArrayOf(1)),
 
     /**
      * 波段
      */
-    Band(listOf(2)),
+    Band(intArrayOf(2)),
 
     /**
      * 長期
      */
-    Long(listOf(3)),
+    Long(intArrayOf(3)),
 
     /**
      * 短線+波段+長期
      */
-    All(listOf(1, 2, 3))
+    All(intArrayOf(1, 2, 3)),
+
+    /**
+     * 無
+     */
+    None(intArrayOf())
 }
