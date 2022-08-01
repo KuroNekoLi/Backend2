@@ -1,5 +1,6 @@
 package com.cmoney.backend2.commonuse.service
 
+import com.cmoney.backend2.base.extension.checkResponseBody
 import com.cmoney.backend2.base.extension.createAuthorizationBearer
 import com.cmoney.backend2.base.extension.parseServerException
 import com.cmoney.backend2.base.model.dispatcher.DefaultDispatcherProvider
@@ -33,7 +34,7 @@ class CommonUseWebImpl(
                     query = QueryParam("query{member{remoteConfigLabel}}")
                 )
                 if (response.code() >= 400) {
-                    throw response.parseServerException(gson)
+                    response.checkResponseBody(gson)
                 }
 
                 val data = response.body()?.getAsJsonObject("data")
@@ -61,7 +62,7 @@ class CommonUseWebImpl(
                     query = QueryParam("mutation{updateMember{updateInvestmentRiskPreference(ids:$requestBody)}}")
                 )
                 if (response.code() >= 400) {
-                    throw  response.parseServerException(gson)
+                    response.checkResponseBody(gson)
                 }
 
                 val data = response.body()?.getAsJsonObject("data")

@@ -11,9 +11,9 @@ import com.google.gson.annotations.SerializedName
  */
 data class InvestmentPreference(
     @SerializedName("id")
-    val id: Int,
+    val id: Int?,
     @SerializedName("name")
-    val name: String,
+    val name: String?,
     @SerializedName("isChosen")
-    val isChosen: Boolean
+    val isChosen: Boolean?
 )
