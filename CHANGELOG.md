@@ -1,8 +1,22 @@
+#  (2022-08-01)
+
+
+
+# [5.30.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.29.0...5.30.0) (2022-08-01)
+
+
+### Features
+
+* CommonUse新增取得與更新用戶投資屬性 ([419897e](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/419897e142ddd6108a5c90b4dae23f6feeb642d4))
+* CommonUse更改更新用戶投資屬性回傳值 ([6e29ed6](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/6e29ed6edd5fa676dce0e08c5c0c8d3d6c81db71))
+
+
+
 #  (2022-07-15)
 
 
 
-# [5.29.0](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.28.0...5.29.0) (2022-07-15)
+# [5.29.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.28.0...5.29.0) (2022-07-15)
 
 
 ### Features

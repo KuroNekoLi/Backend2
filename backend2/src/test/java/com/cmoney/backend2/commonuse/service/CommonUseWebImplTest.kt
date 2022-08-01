@@ -4,6 +4,8 @@ import com.cmoney.backend2.MainCoroutineRule
 import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.backend2.commonuse.service.api.investmentpreference.InvestmentPreference
+import com.cmoney.backend2.commonuse.service.api.investmentpreference.InvestmentPreferenceType
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
@@ -12,6 +14,7 @@ import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import io.mockk.unmockkAll
 import kotlinx.coroutines.test.runBlockingTest
+import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -92,5 +95,90 @@ class CommonUseWebImplTest {
         val result = web.getRemoteConfigLabel()
         Truth.assertThat(result.isSuccess).isTrue()
         Truth.assertThat(result.getOrNull()).isEmpty()
+    }
+
+    @Test
+    fun `updateInvestmentPreference success`() = mainCoroutineRule.runBlockingTest {
+        val response = JsonParser.parseString(
+            """
+                {
+                  "data": {
+                    "updateMember": {
+                      "updateInvestmentRiskPreference": [
+                        1,
+                        2,
+                        3
+                      ]
+                    }
+                  }
+                }
+            """.trimMargin()
+        )
+
+        coEvery {
+            service.query(any(), any(), any())
+        } returns Response.success(response.asJsonObject)
+
+        val result =
+            web.updateInvestmentPreference(investmentPreferenceType = InvestmentPreferenceType.All)
+        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.getOrNull()).isEqualTo(InvestmentPreferenceType.All)
+    }
+
+    @Test
+    fun `updateInvestmentPreference failure`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.query(any(), any(), any())
+        } returns Response.error(400, "".toResponseBody())
+
+        val result =
+            web.updateInvestmentPreference(investmentPreferenceType = InvestmentPreferenceType.All)
+        Truth.assertThat(result.isSuccess).isFalse()
+    }
+
+    @Test
+    fun `getInvestmentPreference success`() = mainCoroutineRule.runBlockingTest {
+        val response = JsonParser.parseString(
+            """
+                {
+                  "data": {
+                    "member": {
+                      "investmentRiskPreferences": [
+                        {
+                          "id": 1,
+                          "name": "短線賺價差",
+                          "isChosen": true
+                        }
+                      ]
+                    }
+                  }
+                }
+            """.trimMargin()
+        )
+        val responseBody = listOf(
+            InvestmentPreference(
+                id = 1,
+                name = "短線賺價差",
+                isChosen = true
+            )
+        )
+
+        coEvery {
+            service.query(any(), any(), any())
+        } returns Response.success(response.asJsonObject)
+
+        val result = web.getInvestmentPreferences()
+        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.getOrNull()).isEqualTo(responseBody)
+    }
+
+    @Test
+    fun `gegInvestmentPreference failure`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.query(any(), any(), any())
+        } returns Response.error(400, "".toResponseBody())
+
+        val result = web.getInvestmentPreferences()
+        Truth.assertThat(result.isSuccess).isFalse()
     }
 }
