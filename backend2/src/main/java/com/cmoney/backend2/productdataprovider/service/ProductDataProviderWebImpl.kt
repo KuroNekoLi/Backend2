@@ -1,7 +1,7 @@
 package com.cmoney.backend2.productdataprovider.service
 
+import com.cmoney.backend2.base.extension.checkResponseBody
 import com.cmoney.backend2.base.extension.createAuthorizationBearer
-import com.cmoney.backend2.base.extension.parseServerException
 import com.cmoney.backend2.base.model.dispatcher.DefaultDispatcherProvider
 import com.cmoney.backend2.base.model.dispatcher.DispatcherProvider
 import com.cmoney.backend2.base.model.setting.Setting
@@ -45,11 +45,9 @@ class ProductDataProviderWebImpl(
                         variables = JsonObject().apply { addProperty("id", id) }
                     )
                 )
-                if (response.code() >= 400) {
-                    throw response.parseServerException(gson)
-                }
+                val responseBody = response.checkResponseBody(gson)
                 val productJson = JsonParser.parseString(
-                    response.body()?.string() ?: "{}"
+                    responseBody.string()
                 ).asJsonObject
                     .get("data").asJsonObject
                     .get("saleInfo").asJsonObject
@@ -66,7 +64,7 @@ class ProductDataProviderWebImpl(
             }
         }
 
-    override suspend fun getSalesItemBySubjectId(subjectId: Long): Result<SaleItem> =
+    override suspend fun getSalesItemBySubjectId(subjectId: Long): Result<List<SaleItem>> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 val response = service.getProductByGraphQL(
@@ -91,23 +89,27 @@ class ProductDataProviderWebImpl(
                         variables = JsonObject().apply { addProperty("author", subjectId) }
                     )
                 )
-                if (response.code() >= 400) {
-                    throw response.parseServerException(gson)
-                }
+                val responseBody = response.checkResponseBody(gson)
                 val productObj = JsonParser.parseString(
-                    response.body()?.string() ?: "{}"
+                    responseBody.string()
                 ).asJsonObject
                     .get("data").asJsonObject
                     .get("productInfoSet").asJsonArray
                     .get(0).asJsonObject
-                val saleItemObj = productObj.get("saleInfoSet").asJsonArray
-                    .filter { it.asJsonObject.get("isShow").asBoolean }[0].asJsonObject
-                SaleItem(
-                    productObj.get("id").asLong,
-                    productObj.get("name").asString,
-                    saleItemObj.get("id").asLong,
-                    saleItemObj.get("name").asString
-                )
+                val saleItemObjs = productObj.get("saleInfoSet").asJsonArray
+                saleItemObjs.map { it.asJsonObject }.mapNotNull { saleItemObj ->
+                    try {
+                        SaleItem(
+                            productObj.get("id").asLong,
+                            productObj.get("name").asString,
+                            saleItemObj.get("id").asLong,
+                            saleItemObj.get("name").asString,
+                            saleItemObj.get("isShow").asBoolean
+                        )
+                    } catch (e: Exception) {
+                        null
+                    }
+                }
             }
         }
 }
