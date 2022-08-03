@@ -66,7 +66,7 @@ class ProductDataProviderWebImpl(
             }
         }
 
-    override suspend fun getSalesItemBySubjectId(subjectId: Long): Result<SaleItem> =
+    override suspend fun getSalesItemBySubjectId(subjectId: Long): Result<List<SaleItem>> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 val response = service.getProductByGraphQL(
@@ -100,14 +100,20 @@ class ProductDataProviderWebImpl(
                     .get("data").asJsonObject
                     .get("productInfoSet").asJsonArray
                     .get(0).asJsonObject
-                val saleItemObj = productObj.get("saleInfoSet").asJsonArray
-                    .filter { it.asJsonObject.get("isShow").asBoolean }[0].asJsonObject
-                SaleItem(
-                    productObj.get("id").asLong,
-                    productObj.get("name").asString,
-                    saleItemObj.get("id").asLong,
-                    saleItemObj.get("name").asString
-                )
+                val saleItemObjs = productObj.get("saleInfoSet").asJsonArray
+                saleItemObjs.map { it.asJsonObject }.mapNotNull { saleItemObj ->
+                    try {
+                        SaleItem(
+                            productObj.get("id").asLong,
+                            productObj.get("name").asString,
+                            saleItemObj.get("id").asLong,
+                            saleItemObj.get("name").asString,
+                            saleItemObj.get("isShow").asBoolean
+                        )
+                    } catch (e: Exception) {
+                        null
+                    }
+                }
             }
         }
 }

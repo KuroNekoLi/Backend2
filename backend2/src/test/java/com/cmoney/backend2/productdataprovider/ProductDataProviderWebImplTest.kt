@@ -127,7 +127,7 @@ class ProductDataProviderWebImplTest {
             }
         """.trimIndent().toResponseBody())
         val result = web.getSalesItemBySubjectId(1)
-        Truth.assertThat(result.getOrNull()?.productId).isEqualTo(4399)
+        Truth.assertThat(result.getOrNull()?.firstOrNull()?.productId).isEqualTo(4399)
         Truth.assertThat(result.isSuccess).isTrue()
     }
 
@@ -137,7 +137,7 @@ class ProductDataProviderWebImplTest {
             service.getProductByGraphQL(any(), any())
         } returns Response.error(400, "".toResponseBody())
         val result = web.getSalesItemBySubjectId(1)
-        Truth.assertThat(result.getOrNull()?.productId).isEqualTo(null)
+        Truth.assertThat(result.getOrNull()?.firstOrNull()?.productId).isEqualTo(null)
         Truth.assertThat(result.isSuccess).isFalse()
     }
 }
