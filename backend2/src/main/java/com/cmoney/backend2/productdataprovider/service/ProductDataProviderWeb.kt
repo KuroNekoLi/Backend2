@@ -13,5 +13,5 @@ interface ProductDataProviderWeb {
     /**
      * Get first sale item we can find with given subjectId.
      */
-    suspend fun getSalesItemBySubjectId(subjectId: Long): Result<SaleItem>
+    suspend fun getSalesItemBySubjectId(subjectId: Long): Result<List<SaleItem>>
 }
