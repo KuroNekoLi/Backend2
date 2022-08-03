@@ -2,6 +2,19 @@
 
 
 
+# [5.32.0](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.31.0...5.32.0) (2022-08-03)
+
+
+### Features
+
+* Support getting multiple products ([2b67971](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/2b6797113426aeb207da8cf01a7b43335a5f6349))
+
+
+
+#  (2022-08-03)
+
+
+
 # [5.31.0](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.30.0...5.31.0) (2022-08-03)
 
 
