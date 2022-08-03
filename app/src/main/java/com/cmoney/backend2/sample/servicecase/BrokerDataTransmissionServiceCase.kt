@@ -31,7 +31,7 @@ class BrokerDataTransmissionServiceCase : ServiceCase {
                 brokerId = "9800",
                 subBrokerId = "",
                 inStockData = listOf(
-                    StockData("2330", listOf(StockInfo(TradeType.Spot, 1000, 600000.0)))
+                    StockData("2330", listOf(StockInfo(TradeType.Spot, 1000, 600000.0, 0.0, 0.0)))
                 )
             )
         )
