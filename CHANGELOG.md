@@ -1,3 +1,16 @@
+#  (2022-08-03)
+
+
+
+# [5.31.0](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.30.0...5.31.0) (2022-08-03)
+
+
+### Features
+
+* 新增現金股利與股票股利欄位至 BrokerDataTransmissionWeb 的 getBrokerStockData 和 putBrokerStockData 方法 ([4deaec9](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/4deaec9a78ddefef1340ea861797c572f6fe3889))
+
+
+
 #  (2022-08-01)
 
 
