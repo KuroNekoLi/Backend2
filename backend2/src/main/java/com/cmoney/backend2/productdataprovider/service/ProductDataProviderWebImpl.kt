@@ -1,7 +1,7 @@
 package com.cmoney.backend2.productdataprovider.service
 
+import com.cmoney.backend2.base.extension.checkResponseBody
 import com.cmoney.backend2.base.extension.createAuthorizationBearer
-import com.cmoney.backend2.base.extension.parseServerException
 import com.cmoney.backend2.base.model.dispatcher.DefaultDispatcherProvider
 import com.cmoney.backend2.base.model.dispatcher.DispatcherProvider
 import com.cmoney.backend2.base.model.setting.Setting
@@ -45,11 +45,9 @@ class ProductDataProviderWebImpl(
                         variables = JsonObject().apply { addProperty("id", id) }
                     )
                 )
-                if (response.code() >= 400) {
-                    throw response.parseServerException(gson)
-                }
+                val responseBody = response.checkResponseBody(gson)
                 val productJson = JsonParser.parseString(
-                    response.body()?.string() ?: "{}"
+                    responseBody.string()
                 ).asJsonObject
                     .get("data").asJsonObject
                     .get("saleInfo").asJsonObject
@@ -91,11 +89,9 @@ class ProductDataProviderWebImpl(
                         variables = JsonObject().apply { addProperty("author", subjectId) }
                     )
                 )
-                if (response.code() >= 400) {
-                    throw response.parseServerException(gson)
-                }
+                val responseBody = response.checkResponseBody(gson)
                 val productObj = JsonParser.parseString(
-                    response.body()?.string() ?: "{}"
+                    responseBody.string()
                 ).asJsonObject
                     .get("data").asJsonObject
                     .get("productInfoSet").asJsonArray
