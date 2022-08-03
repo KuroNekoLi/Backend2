@@ -29,6 +29,8 @@ import com.cmoney.backend2.forumocean.service.api.group.v2.GroupDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupManipulationDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupMemberDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupMemberDTOX
+import com.cmoney.backend2.forumocean.service.api.group.v2.GroupPushSettingDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.GroupPushSettingRequestDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.InsertedIdDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.JoinGroupRequestDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.MemberRolesDTO
@@ -1377,4 +1379,28 @@ interface ForumOceanService {
         @Header("Authorization") authorization: String,
         @Path("path") path: String
     ): Response<AvailableBoardIds>
+
+    /**
+     * 取得會員在社團內的推播設定
+     */
+    @RecordApi
+    @GET("{path}/api/GroupNotification/PushSetting/Group/{groupId}")
+    @Headers("X-Version: 2.0")
+    suspend fun getGroupPushSetting(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("groupId") groupId: Long
+    ): Response<GroupPushSettingDTO>
+
+    /**
+     * 設定會員在社團內的推播
+     */
+    @RecordApi
+    @PUT("{path}/api/GroupNotification/PushSetting")
+    @Headers("X-Version: 2.0")
+    suspend fun setGroupPushSetting(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Body body: GroupPushSettingRequestDTO
+    ): Response<Void>
 }

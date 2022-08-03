@@ -30,6 +30,7 @@ import com.cmoney.backend2.forumocean.service.api.group.v2.GroupMemberDTOX
 import com.cmoney.backend2.forumocean.service.api.group.v2.JoinGroupRequestDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.MemberRolesDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.PendingRequestsDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.PushType
 import com.cmoney.backend2.forumocean.service.api.notify.get.GetNotifyResponseBody
 import com.cmoney.backend2.forumocean.service.api.notify.getcount.GetNotifyCountResponseBody
 import com.cmoney.backend2.forumocean.service.api.notifysetting.NotifyPushSetting
@@ -1338,4 +1339,8 @@ interface ForumOceanWeb {
      * 取得用戶可以進入的所有看板 id
      */
     suspend fun getAvailableBoardIds(): Result<AvailableBoardIds>
+
+    suspend fun getGroupPushSetting(groupId: Long): Result<PushType>
+
+    suspend fun setGroupPushSetting(groupId: Long, pushType: PushType): Result<Unit>
 }

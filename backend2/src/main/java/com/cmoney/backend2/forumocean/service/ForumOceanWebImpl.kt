@@ -36,9 +36,11 @@ import com.cmoney.backend2.forumocean.service.api.group.v2.GroupDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupManipulationDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupMemberDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupMemberDTOX
+import com.cmoney.backend2.forumocean.service.api.group.v2.GroupPushSettingRequestDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.JoinGroupRequestDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.MemberRolesDTO
 import com.cmoney.backend2.forumocean.service.api.group.v2.PendingRequestsDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.PushType
 import com.cmoney.backend2.forumocean.service.api.notify.get.GetNotifyResponseBody
 import com.cmoney.backend2.forumocean.service.api.notify.getcount.GetNotifyCountResponseBody
 import com.cmoney.backend2.forumocean.service.api.notifysetting.NotifyPushSetting
@@ -95,6 +97,7 @@ class ForumOceanWebImpl(
                         articleType = PersonalArticleType.COLUMNIST.articleType,
                         requestBody = body
                     )
+
                     is Content.PersonalArticle.Note -> service.createPersonalArticle(
                         path = serverName,
                         authorization = setting.accessToken.createAuthorizationBearer(),
@@ -115,16 +118,19 @@ class ForumOceanWebImpl(
                         authorization = setting.accessToken.createAuthorizationBearer(),
                         requestBody = body
                     )
+
                     is Content.Article.Group -> service.createArticle(
                         path = serverName,
                         authorization = setting.accessToken.createAuthorizationBearer(),
                         requestBody = body
                     )
+
                     is Content.Article.Shared -> service.createArticle(
                         path = serverName,
                         authorization = setting.accessToken.createAuthorizationBearer(),
                         requestBody = body
                     )
+
                     is Content.Article.Column -> service.createArticle(
                         path = serverName,
                         authorization = setting.accessToken.createAuthorizationBearer(),
@@ -1549,7 +1555,7 @@ class ForumOceanWebImpl(
                 )
                 if (response.code() == 200) {
                     JsonParser.parseString(
-                        response.body()?.string()?: "{}"
+                        response.body()?.string() ?: "{}"
                     ).asJsonObject.get("hasNewPending").asBoolean
                 } else {
                     throw ServerException(response.code(), "")
@@ -1781,12 +1787,49 @@ class ForumOceanWebImpl(
     }
 
     override suspend fun getAvailableBoardIds(): Result<AvailableBoardIds> {
-        return withContext(dispatcher.io()){
+        return withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getAvailableBoardIds(
                     path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                 ).checkResponseBody(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun getGroupPushSetting(groupId: Long): Result<PushType> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                val result = service.getGroupPushSetting(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    groupId = groupId
+                ).checkResponseBody(jsonParser)
+                when (result.pushType) {
+                    "all" -> PushType.ALL
+                    "admin" -> PushType.ADMIN
+                    "none" -> PushType.NONE
+                    else -> PushType.NONE
+                }
+            }
+        }
+    }
+
+    override suspend fun setGroupPushSetting(groupId: Long, pushType: PushType): Result<Unit> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.setGroupPushSetting(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    body = GroupPushSettingRequestDTO(
+                        groupId,
+                        when (pushType) {
+                            PushType.ALL -> "all"
+                            PushType.ADMIN -> "admin"
+                            PushType.NONE -> "none"
+                        }
+                    )
+                ).handleNoContent(jsonParser)
             }
         }
     }
