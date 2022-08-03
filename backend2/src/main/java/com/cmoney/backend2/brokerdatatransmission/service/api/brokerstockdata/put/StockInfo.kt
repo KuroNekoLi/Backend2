@@ -9,15 +9,20 @@ class StockInfo internal constructor(
     @SerializedName("Amount")
     val amount: Int,
     @SerializedName("TradeTotalCost")
-    val tradeTotalCost: Double
+    val tradeTotalCost: Double,
+    @SerializedName("cashDividend")
+    val cashDividend: Double,
+    @SerializedName("stockDividend")
+    val stockDividend: Double,
 ) {
 
     constructor(
         tradeType: TradeType,
         amount: Int,
-        tradeTotalCost: Double
-    ) : this(tradeType.value, amount, tradeTotalCost)
+        tradeTotalCost: Double,
+        cashDividend: Double,
+        stockDividend: Double,
+    ) : this(tradeType.value, amount, tradeTotalCost, cashDividend, stockDividend)
 
     val tradeType get() = TradeType.fromValue(tradeTypeValue)
-
 }

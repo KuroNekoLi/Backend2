@@ -9,9 +9,11 @@ data class StockInfo(
     @SerializedName("amount")
     val amount: Long?,
     @SerializedName("tradeTotalCost")
-    val tradeTotalCost: Double?
+    val tradeTotalCost: Double?,
+    @SerializedName("cashDividend")
+    val cashDividend: Double?,
+    @SerializedName("stockDividend")
+    val stockDividend: Double?,
 ) {
-
     val tradeType get() = tradeTypeValue?.let { TradeType.fromValue(tradeTypeValue) }
-
 }
