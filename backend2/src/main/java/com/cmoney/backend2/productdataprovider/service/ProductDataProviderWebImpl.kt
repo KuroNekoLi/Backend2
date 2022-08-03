@@ -12,6 +12,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import kotlinx.coroutines.withContext
+import retrofit2.HttpException
 
 class ProductDataProviderWebImpl(
     private val gson: Gson,
@@ -91,8 +92,11 @@ class ProductDataProviderWebImpl(
                         variables = JsonObject().apply { addProperty("author", subjectId) }
                     )
                 )
-                if (response.code() >= 400) {
+                if (response.code() == 400) {
                     throw response.parseServerException(gson)
+                }
+                if (response.code() > 400){
+                    throw HttpException(response)
                 }
                 val productObj = JsonParser.parseString(
                     response.body()?.string() ?: "{}"
