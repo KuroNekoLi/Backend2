@@ -251,6 +251,21 @@ interface ForumOceanWeb {
     ): Result<CreateCommentResponseBody>
 
     /**
+     * 對指定Group主文發一篇回文
+     * @param articleId 指定主文Id
+     * @param text content
+     * @param multiMedia ContentType
+     * @param position
+     * @return 回文Id
+     */
+    suspend fun createGroupArticleComment(
+        articleId: Long,
+        text: String?,
+        multiMedia: List<MediaType>?,
+        position: Any?
+    ): Result<CreateCommentResponseBody>
+
+    /**
      * 取得指定主文的回文清單
      *
      * @param articleId 指定主文Id

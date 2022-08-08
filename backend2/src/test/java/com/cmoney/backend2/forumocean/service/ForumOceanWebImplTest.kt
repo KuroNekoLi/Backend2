@@ -1123,6 +1123,50 @@ class ForumOceanWebImplTest {
         )
         assertThat(result.isSuccess).isFalse()
     }
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `createGroupArticleComment_回復文章成功測試`() = mainCoroutineRule.runBlockingTest {
+        val commentId = 123L
+        coEvery {
+            forumOceanService.createGroupArticleComment(
+                authorization = any(),
+                articleId = any(),
+                body = any(),
+                path = ""
+            )
+        } returns Response.success<CreateCommentResponseBody>(
+            200,
+            CreateCommentResponseBody(commentId)
+        )
+        val result = web.createGroupArticleComment(
+            articleId = 0,
+            text = null,
+            multiMedia = listOf(),
+            position = null
+        )
+        assertThat(result.isSuccess).isTrue()
+        assertThat(result.getOrThrow().commentIndex).isEqualTo(commentId)
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `createGroupArticleComment_回復文章失敗測試`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.createGroupArticleComment(
+                authorization = any(),
+                articleId = any(),
+                body = any(),
+                path = ""
+            )
+        } returns Response.error(403, "".toResponseBody())
+        val result = web.createGroupArticleComment(
+            articleId = 0,
+            text = null,
+            multiMedia = listOf(),
+            position = null
+        )
+        assertThat(result.isSuccess).isFalse()
+    }
 
     @ExperimentalCoroutinesApi
     @Test

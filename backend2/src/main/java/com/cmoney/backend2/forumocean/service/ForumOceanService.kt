@@ -332,6 +332,16 @@ interface ForumOceanService {
     ): Response<CreateCommentResponseBody>
 
     @RecordApi
+    @POST("{path}/api/GroupArticle/{articleId}/Comment")
+    @Headers("X-Version: 2.0")
+    suspend fun createGroupArticleComment(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("articleId") articleId: Long,
+        @Body body: CreateCommentRequestBody
+    ): Response<CreateCommentResponseBody>
+
+    @RecordApi
     @GET("{path}/api/Comment/Get/{articleId}")
     suspend fun getComment(
         @Header("Authorization") authorization: String,
@@ -1360,7 +1370,7 @@ interface ForumOceanService {
      * 刪除看板文章留言
      */
     @RecordApi
-    @DELETE("{path}/api/GroupArticle/{articleId}/{commentId}")
+    @DELETE("{path}/api/GroupArticle/{articleId}/Comment/{commentId}")
     @Headers("X-Version: 2.0")
     suspend fun deleteGroupArticleComment(
         @Header("Authorization") authorization: String,

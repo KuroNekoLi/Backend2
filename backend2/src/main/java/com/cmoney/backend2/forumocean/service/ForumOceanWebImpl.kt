@@ -350,6 +350,24 @@ class ForumOceanWebImpl(
         }
     }
 
+    override suspend fun createGroupArticleComment(
+        articleId: Long,
+        text: String?,
+        multiMedia: List<MediaType>?,
+        position: Any?
+    ): Result<CreateCommentResponseBody> = withContext(dispatcher.io()) {
+        kotlin.runCatching {
+            service.createGroupArticleComment(
+                path = serverName,
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                articleId = articleId, body = CreateCommentRequestBody(
+                    text = text,
+                    multiMedia = multiMedia,
+                    position = position
+                )
+            ).checkResponseBody(jsonParser)
+        }
+    }
     override suspend fun getComment(
         articleId: Long,
         commentId: Long?,
