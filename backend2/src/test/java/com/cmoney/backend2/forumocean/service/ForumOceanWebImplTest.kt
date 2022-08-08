@@ -18,6 +18,19 @@ import com.cmoney.backend2.forumocean.service.api.group.getapprovals.GroupPendin
 import com.cmoney.backend2.forumocean.service.api.group.getmember.GroupMember
 import com.cmoney.backend2.forumocean.service.api.group.getmemberjoinanygroups.GetMemberJoinAnyGroupsResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.update.UpdateGroupRequestBody
+import com.cmoney.backend2.forumocean.service.api.group.v2.AdminsDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.AvailableBoardIds
+import com.cmoney.backend2.forumocean.service.api.group.v2.BoardDTOSingle
+import com.cmoney.backend2.forumocean.service.api.group.v2.BoardManipulationDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.GroupDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.GroupManipulationDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.GroupPushSettingDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.InsertedIdDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.JoinGroupRequestDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.MemberRolesDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.PendingRequestDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.PendingRequestsDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.PushType
 import com.cmoney.backend2.forumocean.service.api.official.get.OfficialChannelInfo
 import com.cmoney.backend2.forumocean.service.api.officialsubscriber.getofficialsubscribedcount.GetOfficialSubscribedCountResponseBody
 import com.cmoney.backend2.forumocean.service.api.officialsubscriber.getsubscribedcount.GetSubscribedCountResponseBody
@@ -47,6 +60,7 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.After
 import org.junit.Before
@@ -3621,6 +3635,833 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getStockReportId("20220505", "C0090", "8046")
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得指定社團資訊_success`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getGroupV2(
+                authorization = any(),
+                path = "",
+                groupId = any()
+            )
+        } returns Response.success(
+            GroupDTO(
+                1,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+            )
+        )
+        val result = web.getGroupV2(1)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得指定社團資訊_failed`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getGroupV2(
+                authorization = any(),
+                path = "",
+                groupId = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getGroupV2(-1L)
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `依角色取得會員所有社團_success`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getGroupsByRole(
+                authorization = any(),
+                path = "",
+                memberId = any(),
+                roles = any()
+            )
+        } returns Response.success(listOf())
+        val result = web.getGroupByRoles(1, listOf())
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `依角色取得會員所有社團_failed`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getGroupsByRole(
+                authorization = any(),
+                path = "",
+                memberId = any(),
+                roles = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getGroupByRoles(-1L, listOf())
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `創建社團_success`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.createGroup(
+                authorization = any(),
+                path = "",
+                body = GroupManipulationDTO(null, null, null, null)
+            )
+        } returns Response.success(200, InsertedIdDTO(0))
+        val result = web.createGroup(GroupManipulationDTO(null, null, null, null))
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `創建社團_failed`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.createGroup(
+                authorization = any(),
+                path = "",
+                groupName = ""
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.createGroup("name")
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `更新社團資訊_success`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.updateGroup(
+                authorization = any(),
+                path = "",
+                body = GroupManipulationDTO("", "", "", false),
+                groupId = any()
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.updateGroup(
+            1,
+            GroupManipulationDTO("", "", "", false)
+        )
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `更新社團資訊_failed`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.updateGroup(
+                authorization = any(),
+                path = "",
+                body = GroupManipulationDTO(null, null, null, null),
+                groupId = 0
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.updateGroup(1, GroupManipulationDTO(null, null, null, null))
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `增加社團的板_success`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.createGroupBoard(
+                authorization = any(),
+                path = "",
+                groupId = 1L,
+                body = any()
+            )
+        } returns Response.success(InsertedIdDTO(-1))
+        val result = web.createGroupBoard(1, BoardManipulationDTO(null, null))
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `增加社團的板_failed`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.createGroupBoard(
+                authorization = any(),
+                path = "",
+                groupId = 1L,
+                body = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.createGroupBoard(1, BoardManipulationDTO(null, null))
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得社團所有看板_success`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getGroupBoards(
+                authorization = any(),
+                path = "",
+                groupId = 1L
+            )
+        } returns Response.success(listOf())
+        val result = web.getGroupBoards(1)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得社團所有看板_failed`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getGroupBoards(
+                authorization = any(),
+                path = "",
+                groupId = 1L
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getGroupBoards(1)
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `修改看板_success`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.updateGroupBoard(
+                authorization = any(),
+                path = "",
+                boardId = 1L,
+                body = any()
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.updateGroupBoard(1, BoardManipulationDTO(null, null))
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `修改看板_failed`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.updateGroupBoard(
+                authorization = any(),
+                path = "",
+                boardId = 1L,
+                body = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.updateGroupBoard(1, BoardManipulationDTO(null, null))
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得特定看板資訊_success`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getGroupBoard(
+                authorization = any(),
+                path = "",
+                boardId = 1L
+            )
+        } returns Response.success(BoardDTOSingle(null, null, null, null, null, null))
+        val result = web.getGroupBoard(1)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得特定看板資訊_failed`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getGroupBoard(
+                authorization = any(),
+                path = "",
+                boardId = 1L
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getGroupBoard(1)
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `刪除社團看板_success`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.deleteGroupBoard(
+                authorization = any(),
+                path = "",
+                boardId = 1L
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.deleteGroupBoard(1)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `刪除社團看板_failed`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.deleteGroupBoard(
+                authorization = any(),
+                path = "",
+                boardId = 1L
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.deleteGroupBoard(1)
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得社團是否有未察看的待審用戶_success`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.hasNewGroupPending(
+                authorization = any(),
+                path = "",
+                groupId = 1L
+            )
+        } returns Response.success(
+            200,
+            //langauge=JSON
+            """{ "hasNewPending": true }""".toResponseBody("application/json".toMediaType())
+        )
+        val result = web.hasNewGroupPending(1)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得社團是否有未察看的待審用戶_failed`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.hasNewGroupPending(
+                authorization = any(),
+                path = "",
+                groupId = 1L
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.hasNewGroupPending(1)
+        assertThat(result.isFailure).isTrue()
+    }
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得該社員在社團的所有角色_success`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getGroupMemberRoles(
+                authorization = any(),
+                path = "",
+                groupId = any(),
+                memberId = any()
+            )
+        } returns Response.success(MemberRolesDTO(listOf()))
+        val result = web.getGroupMemberRoles(1, 1)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得該社員在社團的所有角色_failed`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getGroupMemberRoles(
+                authorization = any(),
+                path = "",
+                groupId = any(),
+                memberId = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getGroupMemberRoles(1, 1)
+        assertThat(result.isFailure).isTrue()
+    }
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `設定社團身份_success`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.updateGroupMemberRoles(
+                authorization = any(),
+                path = any(),
+                groupId = any(),
+                memberId = any(),
+                roles = any()
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.updateGroupMemberRoles(1, 1, listOf())
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `設定社團身份_failed`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.updateGroupMemberRoles(
+                authorization = any(),
+                path = "",
+                groupId = any(),
+                memberId = any(),
+                roles = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.updateGroupMemberRoles(1, 1, listOf())
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得社團成員列表_success`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getGroupMembers(
+                authorization = any(),
+                path = "",
+                groupId = any(),
+                roles = any(),
+                offset = any(),
+                fetch = any()
+            )
+        } returns Response.success(listOf())
+        val result = web.getGroupMembers(1, listOf(), 0 , 0)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得社團成員列表_failed`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getGroupMembers(
+                authorization = any(),
+                path = "",
+                groupId = any(),
+                roles = any(),
+                offset = any(),
+                fetch = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getGroupMembers(1, listOf(), 0 , 0)
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `離開社團_success`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.leaveGroup(
+                authorization = any(),
+                path = "",
+                groupId = any()
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.leaveGroup(1)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `離開社團_failed`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.leaveGroup(
+                authorization = any(),
+                path = "",
+                groupId = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.leaveGroup(1)
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得社長及幹部清單_success`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getGroupAdmins(
+                authorization = any(),
+                path = "",
+                groupId = any()
+            )
+        } returns Response.success(AdminsDTO(listOf(), 0L))
+        val result = web.getGroupAdmins(1)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得社長及幹部清單_failed`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getGroupAdmins(
+                authorization = any(),
+                path = "",
+                groupId = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getGroupAdmins(1)
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `搜尋社員_success`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.searchGroupMember(
+                authorization = any(),
+                path = "",
+                groupId = any(),
+                keyword = any(),
+                offset = any(),
+                fetch = any()
+            )
+        } returns Response.success(listOf())
+        val result = web.searchGroupMember(1, "", 0, 0)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `搜尋社員_failed`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.searchGroupMember(
+                authorization = any(),
+                path = "",
+                groupId = any(),
+                keyword = any(),
+                offset = any(),
+                fetch = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.searchGroupMember(1, "", 0, 0)
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `申請加入社團_success`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.joinGroup(
+                authorization = any(),
+                path = "",
+                groupId = any(),
+                body = JoinGroupRequestDTO("reason")
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.joinGroup(1, JoinGroupRequestDTO("reason"))
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `申請加入社團_failed`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.joinGroup(
+                authorization = any(),
+                path = "",
+                groupId = any(),
+                body = JoinGroupRequestDTO("reason")
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.joinGroup(1, JoinGroupRequestDTO("reason"))
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得審核成員列表_success`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getGroupPendingRequests(
+                authorization = any(),
+                path = "",
+                groupId = any(),
+                timestamp = any()
+            )
+        } returns Response.success(PendingRequestsDTO(0L, listOf()))
+        val result = web.getGroupPendingRequests(1, 0)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得審核成員列表_failed`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getGroupPendingRequests(
+                authorization = any(),
+                path = "",
+                groupId = any(),
+                timestamp = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getGroupPendingRequests(1, -1L)
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `搜尋審核中的社員_success`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.searchGroupPendingRequests(
+                authorization = any(),
+                path = "",
+                groupId = any(),
+                timestamp = any(),
+                keyword = any()
+            )
+        } returns Response.success(PendingRequestsDTO(0L, listOf()))
+        val result = web.searchGroupPendingRequests(1L, "keyword", 0L)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `搜尋審核中的社員_failed`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.searchGroupPendingRequests(
+                authorization = any(),
+                path = "",
+                groupId = any(),
+                timestamp = any(),
+                keyword = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.searchGroupPendingRequests(1L, "keyword", 0L)
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `審核成員加入_success`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.approvalGroupRequest(
+                authorization = any(),
+                path = "",
+                groupId = any(),
+                body = any()
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.approvalGroupRequest(1L, listOf())
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `審核成員加入_failed`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.approvalGroupRequest(
+                authorization = any(),
+                path = "",
+                groupId = any(),
+                body = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.approvalGroupRequest(1L, listOf())
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `踢出成員_success`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.kickGroupMember(
+                authorization = any(),
+                path = "",
+                groupId = any(),
+                memberId = any()
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.kickGroupMember(1L, 1L)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `踢出成員_failed`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.kickGroupMember(
+                authorization = any(),
+                path = "",
+                groupId = any(),
+                memberId = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.kickGroupMember(1L, 1L)
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `對社團看板發文_success`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.createGroupArticle(
+                authorization = any(),
+                path = "",
+                boardId = any(),
+                requestBody = any()
+            )
+        } returns Response.success(CreateArticleResponseBody(0L))
+        val result = web.createGroupArticle(
+            1L,
+            Content.Article.General(null, null, null, null, null, null)
+        )
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `對社團看板發文_failed`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.createGroupArticle(
+                authorization = any(),
+                path = "",
+                boardId = any(),
+                requestBody = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.createGroupArticle(
+            1L,
+            Content.Article.General(null, null, null, null, null, null)
+        )
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `刪除看板文章_success`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.deleteGroupArticle(
+                authorization = any(),
+                path = any(),
+                articleId = any()
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.deleteGroupArticle(1L)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `刪除看板文章_failed`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.deleteGroupArticle(
+                authorization = any(),
+                path = any(),
+                articleId = 0L
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.deleteGroupArticle(1L)
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `刪除看板文章留言_success`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.deleteGroupArticleComment(
+                authorization = any(),
+                path = any(),
+                articleId = any(),
+                commentId = any()
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.deleteGroupArticleComment(1L, 1L)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `刪除看板文章留言_failed`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.deleteGroupArticleComment(
+                authorization = any(),
+                path = "",
+                articleId = 0L,
+                commentId = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.deleteGroupArticleComment(1L, 1L)
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得用戶可以進入的所有看板 id_success`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getAvailableBoardIds(
+                authorization = any(),
+                path = ""
+            )
+        } returns Response.success(AvailableBoardIds(listOf()))
+        val result = web.getAvailableBoardIds()
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得用戶可以進入的所有看板 id_failed`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getAvailableBoardIds(
+                authorization = any(),
+                path = ""
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getAvailableBoardIds()
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得社團推播_success`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getGroupPushSetting(
+                authorization = any(),
+                path = "",
+                groupId = any()
+            )
+        } returns Response.success(GroupPushSettingDTO(""))
+        val result = web.getGroupPushSetting(1L)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得社團推播_failed`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getGroupPushSetting(
+                authorization = any(),
+                path = "",
+                groupId = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getGroupPushSetting(1L)
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `設定社團推播_success`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.setGroupPushSetting(
+                authorization = any(),
+                path = any(),
+                body = any()
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.setGroupPushSetting(
+            1L,
+            PushType.NONE
+        )
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `設定社團推播_failed`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.setGroupPushSetting(
+                authorization = any(),
+                path = any(),
+                body = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.setGroupPushSetting(
+            -1,
+            PushType.NONE
+        )
         assertThat(result.isFailure).isTrue()
     }
 }

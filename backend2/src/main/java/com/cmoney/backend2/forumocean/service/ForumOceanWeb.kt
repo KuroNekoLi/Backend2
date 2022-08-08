@@ -1340,7 +1340,13 @@ interface ForumOceanWeb {
      */
     suspend fun getAvailableBoardIds(): Result<AvailableBoardIds>
 
+    /**
+     * 取得社團推播
+     */
     suspend fun getGroupPushSetting(groupId: Long): Result<PushType>
 
+    /**
+     * 設定社團推播
+     */
     suspend fun setGroupPushSetting(groupId: Long, pushType: PushType): Result<Unit>
 }
