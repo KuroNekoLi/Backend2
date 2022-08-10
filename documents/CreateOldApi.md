@@ -98,7 +98,7 @@ class ProfileWebImpl(略) : ProfileWeb {
 ```kotlin
     // 成功
     @Test
-    fun getAccountTestSuccess() = mainCoroutineRule.runBlockingTest {
+    fun getAccountTestSuccess() = mainCoroutineRule.runTest {
         // Mock service,我們在單元測試只測試我們的程式碼。
         coEvery {
             service.getAccount(
@@ -126,7 +126,7 @@ class ProfileWebImpl(略) : ProfileWeb {
 
     // 錯誤
     @Test
-    fun getAccountTestError() = mainCoroutineRule.runBlockingTest {
+    fun getAccountTestError() = mainCoroutineRule.runTest {
         // Mock server,回傳200帶error物件
         coEvery {
             service.getAccount(

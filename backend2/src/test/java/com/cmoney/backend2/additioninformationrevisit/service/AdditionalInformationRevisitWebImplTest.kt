@@ -1,17 +1,17 @@
 package com.cmoney.backend2.additioninformationrevisit.service
 
-import com.cmoney.backend2.MainCoroutineRule
 import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.additioninformationrevisit.service.testing.CandleChartRequest
 import com.cmoney.backend2.additioninformationrevisit.service.testing.SomeTickRequest
+import com.cmoney.core.CoroutineTestRule
+import com.cmoney.core.extension.runTest
 import com.google.common.truth.Truth
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.After
 import org.junit.Before
@@ -29,7 +29,7 @@ import retrofit2.Response
 class AdditionalInformationRevisitWebImplTest : KoinTest {
     // Set the main coroutines dispatcher for unit testing
     @get:Rule
-    var mainCoroutineRule = MainCoroutineRule()
+    var mainCoroutineRule = CoroutineTestRule()
     private lateinit var webImpl: AdditionalInformationRevisitWeb
     private lateinit var service: AdditionalInformationRevisitService
     private lateinit var gson: Gson
@@ -55,7 +55,7 @@ class AdditionalInformationRevisitWebImplTest : KoinTest {
     }
 
     @Test
-    fun getAll_success_ListListString() = mainCoroutineRule.runBlockingTest {
+    fun getAll_success_ListListString() = mainCoroutineRule.runTest {
         coEvery { service.getAll(any(), any(), any(), any()) } returns Response.success(
             emptyList()
         )
@@ -66,7 +66,7 @@ class AdditionalInformationRevisitWebImplTest : KoinTest {
 
 
     @Test
-    fun getAll_failed_401() = mainCoroutineRule.runBlockingTest {
+    fun getAll_failed_401() = mainCoroutineRule.runTest {
         coEvery {
             service.getAll(any(), any(), any(), any())
         } returns Response.error(401, "".toResponseBody())
@@ -86,7 +86,7 @@ class AdditionalInformationRevisitWebImplTest : KoinTest {
 
 
     @Test
-    fun getTarget_success_ListListString() = mainCoroutineRule.runBlockingTest {
+    fun getTarget_success_ListListString() = mainCoroutineRule.runTest {
         coEvery {
             service.getTarget(
                 any(),
@@ -110,7 +110,7 @@ class AdditionalInformationRevisitWebImplTest : KoinTest {
     }
 
     @Test
-    fun getTarget_failed_401() = mainCoroutineRule.runBlockingTest {
+    fun getTarget_failed_401() = mainCoroutineRule.runTest {
         coEvery {
             service.getTarget(
                 any(),
@@ -138,7 +138,7 @@ class AdditionalInformationRevisitWebImplTest : KoinTest {
     }
 
     @Test
-    fun getMultiple_success_ListListString() = mainCoroutineRule.runBlockingTest {
+    fun getMultiple_success_ListListString() = mainCoroutineRule.runTest {
         coEvery {
             service.getMultiple(
                 any(),
@@ -162,7 +162,7 @@ class AdditionalInformationRevisitWebImplTest : KoinTest {
     }
 
     @Test
-    fun getMultiple_failed_401() = mainCoroutineRule.runBlockingTest {
+    fun getMultiple_failed_401() = mainCoroutineRule.runTest {
         coEvery {
             service.getMultiple(
                 any(),
@@ -190,7 +190,7 @@ class AdditionalInformationRevisitWebImplTest : KoinTest {
     }
 
     @Test
-    fun getOtherQuery_success_ListListString() = mainCoroutineRule.runBlockingTest {
+    fun getOtherQuery_success_ListListString() = mainCoroutineRule.runTest {
         coEvery {
             service.getOtherQuery(
                 any(),
@@ -214,7 +214,7 @@ class AdditionalInformationRevisitWebImplTest : KoinTest {
     }
 
     @Test
-    fun getOtherQuery_failed_401() = mainCoroutineRule.runBlockingTest {
+    fun getOtherQuery_failed_401() = mainCoroutineRule.runTest {
         coEvery {
             service.getOtherQuery(
                 any(),
@@ -242,7 +242,7 @@ class AdditionalInformationRevisitWebImplTest : KoinTest {
     }
 
     @Test
-    fun getSignal_success_ListListString() = mainCoroutineRule.runBlockingTest {
+    fun getSignal_success_ListListString() = mainCoroutineRule.runTest {
         coEvery { service.getSignal(any(), any(), any()) } returns Response.success(
             listOf(
                 listOf("2330", "1620696741000", "true", "true", "true")
@@ -262,7 +262,7 @@ class AdditionalInformationRevisitWebImplTest : KoinTest {
     }
 
     @Test
-    fun getSignal_failed_401() = mainCoroutineRule.runBlockingTest {
+    fun getSignal_failed_401() = mainCoroutineRule.runTest {
         coEvery {
             service.getSignal(any(), any(), any())
         } returns Response.error(401, "".toResponseBody())
@@ -278,7 +278,7 @@ class AdditionalInformationRevisitWebImplTest : KoinTest {
     }
 
     @Test
-    fun getYesterdayAll_success_ListListString() = mainCoroutineRule.runBlockingTest {
+    fun getYesterdayAll_success_ListListString() = mainCoroutineRule.runTest {
         coEvery { service.getPreviousAll(any(), any(), any(), any()) } returns Response.success(
             emptyList()
         )
@@ -293,7 +293,7 @@ class AdditionalInformationRevisitWebImplTest : KoinTest {
 
 
     @Test
-    fun getYesterdayAll_failed_401() = mainCoroutineRule.runBlockingTest {
+    fun getYesterdayAll_failed_401() = mainCoroutineRule.runTest {
         coEvery {
             service.getPreviousAll(any(), any(), any(), any())
         } returns Response.error(401, "".toResponseBody())
@@ -313,7 +313,7 @@ class AdditionalInformationRevisitWebImplTest : KoinTest {
 
 
     @Test
-    fun getYesterdayTarget_success_ListListString() = mainCoroutineRule.runBlockingTest {
+    fun getYesterdayTarget_success_ListListString() = mainCoroutineRule.runTest {
         coEvery {
             service.getPreviousTarget(
                 any(),
@@ -337,7 +337,7 @@ class AdditionalInformationRevisitWebImplTest : KoinTest {
     }
 
     @Test
-    fun getYesterdayTarget_failed_401() = mainCoroutineRule.runBlockingTest {
+    fun getYesterdayTarget_failed_401() = mainCoroutineRule.runTest {
         coEvery {
             service.getPreviousTarget(
                 any(),
@@ -365,7 +365,7 @@ class AdditionalInformationRevisitWebImplTest : KoinTest {
     }
 
     @Test
-    fun getYesterdayMultiple_success_ListListString() = mainCoroutineRule.runBlockingTest {
+    fun getYesterdayMultiple_success_ListListString() = mainCoroutineRule.runTest {
         coEvery {
             service.getPreviousMultiple(
                 any(),
@@ -389,7 +389,7 @@ class AdditionalInformationRevisitWebImplTest : KoinTest {
     }
 
     @Test
-    fun getYesterdayMultiple_failed_401() = mainCoroutineRule.runBlockingTest {
+    fun getYesterdayMultiple_failed_401() = mainCoroutineRule.runTest {
         coEvery {
             service.getPreviousMultiple(
                 any(),
@@ -417,7 +417,7 @@ class AdditionalInformationRevisitWebImplTest : KoinTest {
     }
 
     @Test
-    fun getYesterdayOtherQuery_success_ListListString() = mainCoroutineRule.runBlockingTest {
+    fun getYesterdayOtherQuery_success_ListListString() = mainCoroutineRule.runTest {
         coEvery {
             service.getPreviousOtherQuery(
                 any(),
@@ -441,7 +441,7 @@ class AdditionalInformationRevisitWebImplTest : KoinTest {
     }
 
     @Test
-    fun getYesterdayOtherQuery_failed_401() = mainCoroutineRule.runBlockingTest {
+    fun getYesterdayOtherQuery_failed_401() = mainCoroutineRule.runTest {
         coEvery {
             service.getPreviousOtherQuery(
                 any(),

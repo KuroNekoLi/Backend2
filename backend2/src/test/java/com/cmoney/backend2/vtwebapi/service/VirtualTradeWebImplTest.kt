@@ -1,6 +1,5 @@
 package com.cmoney.backend2.vtwebapi.service
 
-import com.cmoney.backend2.MainCoroutineRule
 import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.vtwebapi.service.api.createaccount.AccountType
@@ -12,6 +11,8 @@ import com.cmoney.backend2.vtwebapi.service.api.getcardinstancesns.UsageType
 import com.cmoney.backend2.vtwebapi.service.api.getstockinventorylist.GetStockInventoryListResponseBody
 import com.cmoney.backend2.vtwebapi.service.api.purchaseproductcard.PurchaseProductCardRequestBody
 import com.cmoney.backend2.vtwebapi.service.api.purchaseproductcard.PurchaseProductCardResponseBody
+import com.cmoney.core.CoroutineTestRule
+import com.cmoney.core.extension.runTest
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
@@ -19,7 +20,6 @@ import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import io.mockk.unmockkAll
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.After
 import org.junit.Before
@@ -34,7 +34,7 @@ class VirtualTradeWebImplTest {
 
     @ExperimentalCoroutinesApi
     @get:Rule
-    val mainCoroutineRule = MainCoroutineRule()
+    val mainCoroutineRule = CoroutineTestRule()
 
     @MockK
     private lateinit var service: VirtualTradeService
@@ -59,7 +59,7 @@ class VirtualTradeWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun getAccountTestSuccess() = mainCoroutineRule.runBlockingTest {
+    fun getAccountTestSuccess() = mainCoroutineRule.runTest {
         val responseBody = GetAccountResponseBody(
             cardInstanceSn = 0,
             payType = 0,
@@ -115,7 +115,7 @@ class VirtualTradeWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun getAccountTestFailure() = mainCoroutineRule.runBlockingTest {
+    fun getAccountTestFailure() = mainCoroutineRule.runTest {
         coEvery {
             service.getAccount(
                 url = any(),
@@ -134,7 +134,7 @@ class VirtualTradeWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun createAccountTestSuccess() = mainCoroutineRule.runBlockingTest {
+    fun createAccountTestSuccess() = mainCoroutineRule.runTest {
         val requestBody = CreateAccountRequestBody(
             type = AccountType.STOCK.typeNum,
             isn = 0
@@ -190,7 +190,7 @@ class VirtualTradeWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun createAccountTestFailure() = mainCoroutineRule.runBlockingTest {
+    fun createAccountTestFailure() = mainCoroutineRule.runTest {
         val requestBody = CreateAccountRequestBody(
             type = AccountType.STOCK.typeNum,
             isn = 0
@@ -209,7 +209,7 @@ class VirtualTradeWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun getCardInstanceSnsTestSuccess() = mainCoroutineRule.runBlockingTest {
+    fun getCardInstanceSnsTestSuccess() = mainCoroutineRule.runTest {
         val responseBody = GetCardInstanceSnsResponseBody(cardInstanceSns = listOf(1L))
         coEvery {
             service.getCardInstanceSns(
@@ -229,7 +229,7 @@ class VirtualTradeWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun getCardInstanceSnsTestFailure() = mainCoroutineRule.runBlockingTest {
+    fun getCardInstanceSnsTestFailure() = mainCoroutineRule.runTest {
         coEvery {
             service.getCardInstanceSns(
                 url = any(),
@@ -248,7 +248,7 @@ class VirtualTradeWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun purchaseProductCardTestSuccess() = mainCoroutineRule.runBlockingTest {
+    fun purchaseProductCardTestSuccess() = mainCoroutineRule.runTest {
         val requestBody = PurchaseProductCardRequestBody(
             giftFromMember = 1,
             ownerMemberPk = 200,
@@ -273,7 +273,7 @@ class VirtualTradeWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun purchaseProductCardTestFailure() = mainCoroutineRule.runBlockingTest {
+    fun purchaseProductCardTestFailure() = mainCoroutineRule.runTest {
         val requestBody = PurchaseProductCardRequestBody(
             giftFromMember = 1,
             ownerMemberPk = 200,
@@ -297,7 +297,7 @@ class VirtualTradeWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun getAttendGroupTestSuccess() = mainCoroutineRule.runBlockingTest {
+    fun getAttendGroupTestSuccess() = mainCoroutineRule.runTest {
         val responseBody = GetAttendGroupResponseBody(
             account = 1,
             accountType = null,
@@ -359,7 +359,7 @@ class VirtualTradeWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun getAttendGroupTestFailure() = mainCoroutineRule.runBlockingTest {
+    fun getAttendGroupTestFailure() = mainCoroutineRule.runTest {
         coEvery {
             service.getAttendGroup(
                 url = any(),
@@ -375,7 +375,7 @@ class VirtualTradeWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun getStockInventoryListTestSuccess() = mainCoroutineRule.runBlockingTest {
+    fun getStockInventoryListTestSuccess() = mainCoroutineRule.runTest {
         val responseBody = GetStockInventoryListResponseBody(
             account = 1,
             boardLostSize = 1,
@@ -412,7 +412,7 @@ class VirtualTradeWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun getStockInventoryListTestFailure() = mainCoroutineRule.runBlockingTest {
+    fun getStockInventoryListTestFailure() = mainCoroutineRule.runTest {
         coEvery {
             service.getStockInventoryList(
                 url = any(),

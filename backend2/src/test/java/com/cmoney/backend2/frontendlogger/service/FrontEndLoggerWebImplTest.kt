@@ -1,9 +1,10 @@
 package com.cmoney.backend2.frontendlogger.service
 
-import com.cmoney.backend2.MainCoroutineRule
 import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.core.CoroutineTestRule
+import com.cmoney.core.extension.runTest
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
@@ -11,7 +12,6 @@ import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import io.mockk.unmockkAll
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.After
 import org.junit.Before
@@ -28,7 +28,7 @@ class FrontEndLoggerWebImplTest {
 
     @ExperimentalCoroutinesApi
     @get:Rule
-    val mainCoroutineRule = MainCoroutineRule()
+    val mainCoroutineRule = CoroutineTestRule()
 
     @MockK
     private lateinit var service: FrontEndLoggerService
@@ -55,7 +55,7 @@ class FrontEndLoggerWebImplTest {
     }
 
     @Test
-    fun `log 成功`() = mainCoroutineRule.runBlockingTest {
+    fun `log 成功`() = mainCoroutineRule.runTest {
         coEvery {
             service.log(any(), any(), any())
         } returns Response.success<Void>(204, null)
@@ -65,7 +65,7 @@ class FrontEndLoggerWebImplTest {
     }
 
     @Test
-    fun `log 身分驗證錯誤`() = mainCoroutineRule.runBlockingTest {
+    fun `log 身分驗證錯誤`() = mainCoroutineRule.runTest {
         coEvery {
             service.log(any(), any(), any())
         } returns Response.error(401, "".toResponseBody())
@@ -81,7 +81,7 @@ class FrontEndLoggerWebImplTest {
     }
 
     @Test
-    fun `log indexName錯誤`() = mainCoroutineRule.runBlockingTest {
+    fun `log indexName錯誤`() = mainCoroutineRule.runTest {
         coEvery {
             service.log(any(), any(), any())
         } returns Response.error(404, "".toResponseBody())

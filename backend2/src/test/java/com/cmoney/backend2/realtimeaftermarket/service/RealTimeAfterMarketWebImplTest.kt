@@ -1,6 +1,5 @@
 package com.cmoney.backend2.realtimeaftermarket.service
 
-import com.cmoney.backend2.MainCoroutineRule
 import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.EmptyBodyException
@@ -31,13 +30,14 @@ import com.cmoney.backend2.realtimeaftermarket.service.api.getstocksinindex.GetS
 import com.cmoney.backend2.realtimeaftermarket.service.api.getstocksinindex.Stock
 import com.cmoney.backend2.realtimeaftermarket.service.api.searchstock.ResultEntry
 import com.cmoney.backend2.realtimeaftermarket.service.api.searchustock.UsResultEntry
+import com.cmoney.core.CoroutineTestRule
+import com.cmoney.core.extension.runTest
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -52,7 +52,7 @@ import java.util.concurrent.TimeoutException
 class RealTimeAfterMarketWebImplTest {
 
     @get:Rule
-    val mainCoroutineRule = MainCoroutineRule()
+    val mainCoroutineRule = CoroutineTestRule()
 
     @MockK
     private lateinit var service: RealTimeAfterMarketService
@@ -72,7 +72,7 @@ class RealTimeAfterMarketWebImplTest {
     }
 
     @Test
-    fun `getCommList_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getCommList_成功`() = mainCoroutineRule.runTest {
         val mockResponse = GetCommListResponseBody(
             products = listOf(
                 Product(
@@ -113,7 +113,7 @@ class RealTimeAfterMarketWebImplTest {
     }
 
     @Test
-    fun `getForeignExchangeTicks_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getForeignExchangeTicks_成功`() = mainCoroutineRule.runTest {
         val responseBody = GetForeignExchangeTickResponseBody(
             isMarketClosed = false,
             isSuccess = true,
@@ -180,7 +180,7 @@ class RealTimeAfterMarketWebImplTest {
     }
 
     @Test
-    fun `searchStock_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `searchStock_成功`() = mainCoroutineRule.runTest {
         val response = listOf(
             ResultEntry("2222", "2222", 1),
             ResultEntry("4444", "4444", 3),
@@ -199,7 +199,7 @@ class RealTimeAfterMarketWebImplTest {
     }
 
     @Test
-    fun `searchStock_無搜尋結果`() = mainCoroutineRule.runBlockingTest {
+    fun `searchStock_無搜尋結果`() = mainCoroutineRule.runTest {
         val response = emptyList<ResultEntry>()
         coEvery {
             service.searchStock(
@@ -214,7 +214,7 @@ class RealTimeAfterMarketWebImplTest {
     }
 
     @Test
-    fun `searchUsStock_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `searchUsStock_成功`() = mainCoroutineRule.runTest {
         val response = listOf(
             UsResultEntry("2222", 1, "2222"),
             UsResultEntry("4444", 3, "4444"),
@@ -233,7 +233,7 @@ class RealTimeAfterMarketWebImplTest {
     }
 
     @Test
-    fun `getNewTickInfo_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getNewTickInfo_成功`() = mainCoroutineRule.runTest {
         val response = NewTickInfo(
             isMarketClosed = true,
             isSuccess = true,
@@ -277,7 +277,7 @@ class RealTimeAfterMarketWebImplTest {
     }
 
     @Test
-    fun `getNewTickInfo_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `getNewTickInfo_失敗`() = mainCoroutineRule.runTest {
         val response = NewTickInfo(
             isMarketClosed = true,
             isSuccess = false,
@@ -299,7 +299,7 @@ class RealTimeAfterMarketWebImplTest {
     }
 
     @Test
-    fun `getSingleStockNewTick_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getSingleStockNewTick_成功`() = mainCoroutineRule.runTest {
         val response = SingleStockNewTick(
             askQty = 1,
             averagePrice = 12.2,
@@ -394,7 +394,7 @@ class RealTimeAfterMarketWebImplTest {
     }
 
     @Test
-    fun `getSingleStockNewTick_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `getSingleStockNewTick_失敗`() = mainCoroutineRule.runTest {
         val response = SingleStockNewTick(
             askQty = 0,
             averagePrice = 0.0,
@@ -458,7 +458,7 @@ class RealTimeAfterMarketWebImplTest {
     }
 
     @Test
-    fun `getMarketNewTick_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getMarketNewTick_成功`() = mainCoroutineRule.runTest {
         val response = MarketNewTick(
             isMarketClosed = true,
             tickInfoSet = listOf(
@@ -514,7 +514,7 @@ class RealTimeAfterMarketWebImplTest {
     }
 
     @Test
-    fun `getMarketNewTick_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `getMarketNewTick_失敗`() = mainCoroutineRule.runTest {
         val response = MarketNewTick(
             isMarketClosed = false,
             tickInfoSet = emptyList(),
@@ -536,7 +536,7 @@ class RealTimeAfterMarketWebImplTest {
     }
 
     @Test
-    fun `getInternationalNewTick_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getInternationalNewTick_成功`() = mainCoroutineRule.runTest {
         val response = InternationalNewTicks(
             commKey = "1111",
             refPr = "456",
@@ -582,7 +582,7 @@ class RealTimeAfterMarketWebImplTest {
     }
 
     @Test
-    fun `getInternationalNewTick_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `getInternationalNewTick_失敗`() = mainCoroutineRule.runTest {
         val response = InternationalNewTicks(
             commKey = "1111",
             refPr = "",
@@ -617,7 +617,7 @@ class RealTimeAfterMarketWebImplTest {
     }
 
     @Test
-    fun `getDtno_成功_訪客`() = mainCoroutineRule.runBlockingTest {
+    fun `getDtno_成功_訪客`() = mainCoroutineRule.runTest {
         val response = DtnoWithError(
             listOf(
                 "股票代號",
@@ -669,7 +669,7 @@ class RealTimeAfterMarketWebImplTest {
     }
 
     @Test
-    fun `getDtno_成功_身分識別`() = mainCoroutineRule.runBlockingTest {
+    fun `getDtno_成功_身分識別`() = mainCoroutineRule.runTest {
         val response = DtnoWithError(
             listOf(
                 "股票代號",
@@ -710,7 +710,7 @@ class RealTimeAfterMarketWebImplTest {
     }
 
     @Test
-    fun `getDtno_空表`() = mainCoroutineRule.runBlockingTest {
+    fun `getDtno_空表`() = mainCoroutineRule.runTest {
         val responseBodyJson = """
             { "Error": {"Code": 101,"Message": "身分驗證錯誤"}}
         """.trimIndent()
@@ -733,7 +733,7 @@ class RealTimeAfterMarketWebImplTest {
     }
 
     @Test
-    fun `getDtno_身分驗證錯誤`() = mainCoroutineRule.runBlockingTest {
+    fun `getDtno_身分驗證錯誤`() = mainCoroutineRule.runTest {
         val responseBodyJson = """
              { "Error": {"Code": 101,"Message": "身分驗證錯誤"}}
         """.trimIndent()
@@ -756,7 +756,7 @@ class RealTimeAfterMarketWebImplTest {
     }
 
     @Test
-    fun `getAfterHoursTime_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getAfterHoursTime_成功`() = mainCoroutineRule.runTest {
         coEvery {
             service.getAfterHoursTime(
                 authorization = any(),
@@ -769,7 +769,7 @@ class RealTimeAfterMarketWebImplTest {
     }
 
     @Test(expected = ParseException::class)
-    fun `getAfterHoursTime_日期格式錯誤`() = mainCoroutineRule.runBlockingTest {
+    fun `getAfterHoursTime_日期格式錯誤`() = mainCoroutineRule.runTest {
         coEvery {
             service.getAfterHoursTime(
                 authorization = any(),
@@ -782,7 +782,7 @@ class RealTimeAfterMarketWebImplTest {
     }
 
     @Test(expected = TimeoutException::class)
-    fun `getStockDealDetail_TimeoutException`() = mainCoroutineRule.runBlockingTest {
+    fun `getStockDealDetail_TimeoutException`() = mainCoroutineRule.runTest {
         coEvery {
             service.getStockDealDetail(
                 commKey = any(),
@@ -800,7 +800,7 @@ class RealTimeAfterMarketWebImplTest {
     }
 
     @Test
-    fun `getStockDealDetail_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getStockDealDetail_成功`() = mainCoroutineRule.runTest {
         val response = StockDealDetailWithError(
             timeCode = 0,
             dealInfoSet = listOf(),
@@ -823,7 +823,7 @@ class RealTimeAfterMarketWebImplTest {
     }
 
     @Test
-    fun `getStockDealDetail_失敗_股票代號錯誤`() = mainCoroutineRule.runBlockingTest {
+    fun `getStockDealDetail_失敗_股票代號錯誤`() = mainCoroutineRule.runTest {
         val expectResponseCode = 100004
         val response = StockDealDetailWithError(
             timeCode = -1,
@@ -847,7 +847,7 @@ class RealTimeAfterMarketWebImplTest {
     }
 
     @Test
-    fun `getStockDealDetail_失敗_AuthFailed`() = mainCoroutineRule.runBlockingTest {
+    fun `getStockDealDetail_失敗_AuthFailed`() = mainCoroutineRule.runTest {
         val errorJson =
             "{\"Error\":{\"Code\":101,\"Message\":\"Auth Failed\"},\"error\":{\"Code\":101,\"Message\":\"Auth Failed\"}}"
         val responseBody =
@@ -867,7 +867,7 @@ class RealTimeAfterMarketWebImplTest {
     }
 
     @Test(expected = EmptyBodyException::class)
-    fun `getStockDealDetail_失敗_bodyIsNull`() = mainCoroutineRule.runBlockingTest {
+    fun `getStockDealDetail_失敗_bodyIsNull`() = mainCoroutineRule.runTest {
         coEvery {
             service.getStockDealDetail(
                 commKey = any(),
@@ -883,7 +883,7 @@ class RealTimeAfterMarketWebImplTest {
     }
 
     @Test
-    fun `getIsInTradeDay_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getIsInTradeDay_成功`() = mainCoroutineRule.runTest {
         val response = GetIsInTradeDayResponseBodyWithError(
             isInTradeDay = true
         )
@@ -899,7 +899,7 @@ class RealTimeAfterMarketWebImplTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `getIsInTradeDay_失敗_AuthFailed`() = mainCoroutineRule.runBlockingTest {
+    fun `getIsInTradeDay_失敗_AuthFailed`() = mainCoroutineRule.runTest {
         val errorJson =
             "{\"Error\":{\"Code\":101,\"Message\":\"Auth Failed\"},\"error\":{\"Code\":101,\"Message\":\"Auth Failed\"}}"
         val responseBody = gson.fromJson<GetIsInTradeDayResponseBodyWithError>(
@@ -924,7 +924,7 @@ class RealTimeAfterMarketWebImplTest {
     }
 
     @Test
-    fun `getStockSinIndex_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getStockSinIndex_成功`() = mainCoroutineRule.runTest {
         val responseJSON =
             "{\"Stocks\":[{\"Commkey\":\"1201\",\"CommName\":\"味全\"},{\"Commkey\":\"1203\",\"CommName\":\"味王\"},{\"Commkey\":\"1210\",\"CommName\":\"大成\"},{\"Commkey\":\"1213\",\"CommName\":\"大飲\"},{\"Commkey\":\"1215\",\"CommName\":\"卜蜂\"},{\"Commkey\":\"1216\",\"CommName\":\"統一\"},{\"Commkey\":\"1217\",\"CommName\":\"愛之味\"},{\"Commkey\":\"1218\",\"CommName\":\"泰山\"},{\"Commkey\":\"1219\",\"CommName\":\"福壽\"},{\"Commkey\":\"1220\",\"CommName\":\"台榮\"},{\"Commkey\":\"1225\",\"CommName\":\"福懋油\"},{\"Commkey\":\"1227\",\"CommName\":\"佳格\"},{\"Commkey\":\"1229\",\"CommName\":\"聯華\"},{\"Commkey\":\"1231\",\"CommName\":\"聯華食\"},{\"Commkey\":\"1232\",\"CommName\":\"大統益\"},{\"Commkey\":\"1233\",\"CommName\":\"天仁\"},{\"Commkey\":\"1234\",\"CommName\":\"黑松\"},{\"Commkey\":\"1235\",\"CommName\":\"興泰\"},{\"Commkey\":\"1236\",\"CommName\":\"宏亞\"},{\"Commkey\":\"1256\",\"CommName\":\"鮮活果汁-KY\"},{\"Commkey\":\"1702\",\"CommName\":\"南僑\"},{\"Commkey\":\"1737\",\"CommName\":\"臺鹽\"}]}"
         val response = gson.fromJson(responseJSON, GetStocksInIndexResponseBodyWithError::class.java)
@@ -965,7 +965,7 @@ class RealTimeAfterMarketWebImplTest {
     }
 
     @Test
-    fun `getStockSinIndex_失敗_AuthFailed`() = mainCoroutineRule.runBlockingTest {
+    fun `getStockSinIndex_失敗_AuthFailed`() = mainCoroutineRule.runTest {
         val errorJson =
             "{\"Error\":{\"Code\":101,\"Message\":\"Auth Failed\"},\"error\":{\"Code\":101,\"Message\":\"Auth Failed\"}}"
         val responseBody =
@@ -982,7 +982,7 @@ class RealTimeAfterMarketWebImplTest {
         Truth.assertThat(result.isFailure).isTrue()
     }
     @Test
-    fun `getStockSinIndex_失敗_not_match_commKey`() = mainCoroutineRule.runBlockingTest {
+    fun `getStockSinIndex_失敗_not_match_commKey`() = mainCoroutineRule.runTest {
         val errorJson =
             "{\"Stocks\":[]}"
         val responseBody =

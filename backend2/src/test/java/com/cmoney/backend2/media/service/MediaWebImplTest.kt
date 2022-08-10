@@ -1,12 +1,13 @@
 package com.cmoney.backend2.media.service
 
-import com.cmoney.backend2.MainCoroutineRule
 import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.media.service.api.getmediadetail.GetMediaDetailResponseWithError
 import com.cmoney.backend2.media.service.api.getmediainfo.MediaInfoWithError
 import com.cmoney.backend2.media.service.api.getmediaurl.GetMediaUrlResponseBody
+import com.cmoney.core.CoroutineTestRule
+import com.cmoney.core.extension.runTest
 import com.google.common.truth.Truth
 import com.google.gson.Gson
 import io.mockk.MockKAnnotations
@@ -14,7 +15,6 @@ import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Before
 import org.junit.Rule
@@ -27,7 +27,7 @@ import retrofit2.Response
 class MediaWebImplTest {
     @ExperimentalCoroutinesApi
     @get:Rule
-    val mainCoroutineRule = MainCoroutineRule()
+    val mainCoroutineRule = CoroutineTestRule()
 
     @MockK
     private val mediaService = mockk<MediaService>()
@@ -41,7 +41,7 @@ class MediaWebImplTest {
     }
 
     @Test
-    fun getMediaList_success() = mainCoroutineRule.runBlockingTest {
+    fun getMediaList_success() = mainCoroutineRule.runTest {
         coEvery {
             mediaService.getMediaList(
                 authorization = any(),
@@ -66,7 +66,7 @@ class MediaWebImplTest {
     }
 
     @Test
-    fun getMediaList_failure_status_code() = mainCoroutineRule.runBlockingTest {
+    fun getMediaList_failure_status_code() = mainCoroutineRule.runTest {
         coEvery {
             mediaService.getMediaList(
                 authorization = any(),
@@ -90,7 +90,7 @@ class MediaWebImplTest {
     }
 
     @Test
-    fun getMediaList_failure_error_object() = mainCoroutineRule.runBlockingTest {
+    fun getMediaList_failure_error_object() = mainCoroutineRule.runTest {
         coEvery {
             mediaService.getMediaList(
                 authorization = any(),
@@ -124,7 +124,7 @@ class MediaWebImplTest {
     }
 
     @Test
-    fun getMediaPurchaseUrl_success() = mainCoroutineRule.runBlockingTest {
+    fun getMediaPurchaseUrl_success() = mainCoroutineRule.runTest {
         coEvery {
             mediaService.getMediaPurchaseUrl(
                 authorization = any(),
@@ -141,7 +141,7 @@ class MediaWebImplTest {
     }
 
     @Test
-    fun getMediaPurchaseUrl_failure_status_code() = mainCoroutineRule.runBlockingTest {
+    fun getMediaPurchaseUrl_failure_status_code() = mainCoroutineRule.runTest {
         coEvery {
             mediaService.getMediaPurchaseUrl(
                 authorization = any(),
@@ -158,7 +158,7 @@ class MediaWebImplTest {
     }
 
     @Test
-    fun getMediaUrl_success() = mainCoroutineRule.runBlockingTest {
+    fun getMediaUrl_success() = mainCoroutineRule.runTest {
         coEvery {
             mediaService.getMediaUrl(
                 authorization = any(),
@@ -175,7 +175,7 @@ class MediaWebImplTest {
     }
 
     @Test
-    fun getMediaUrl_failure_status_code() = mainCoroutineRule.runBlockingTest {
+    fun getMediaUrl_failure_status_code() = mainCoroutineRule.runTest {
         coEvery {
             mediaService.getMediaUrl(
                 authorization = any(),
@@ -192,7 +192,7 @@ class MediaWebImplTest {
     }
 
     @Test
-    fun getLiveStreamList_success() = mainCoroutineRule.runBlockingTest {
+    fun getLiveStreamList_success() = mainCoroutineRule.runTest {
         coEvery {
             mediaService.getLiveStreamList(
                 authorization = any(),
@@ -213,7 +213,7 @@ class MediaWebImplTest {
     }
 
     @Test
-    fun getLiveStreamList_failure_status_code() = mainCoroutineRule.runBlockingTest {
+    fun getLiveStreamList_failure_status_code() = mainCoroutineRule.runTest {
         coEvery {
             mediaService.getLiveStreamList(
                 authorization = any(),
@@ -234,7 +234,7 @@ class MediaWebImplTest {
     }
 
     @Test
-    fun getLiveStreamList_failure_error_object() = mainCoroutineRule.runBlockingTest {
+    fun getLiveStreamList_failure_error_object() = mainCoroutineRule.runTest {
         coEvery {
             mediaService.getLiveStreamList(
                 authorization = any(),
@@ -266,7 +266,7 @@ class MediaWebImplTest {
     }
 
     @Test
-    fun getPaidMediaListOfMember_success() = mainCoroutineRule.runBlockingTest {
+    fun getPaidMediaListOfMember_success() = mainCoroutineRule.runTest {
         coEvery {
             mediaService.getPaidMediaListOfMember(
                 authorization = any(),
@@ -282,7 +282,7 @@ class MediaWebImplTest {
     }
 
     @Test
-    fun getPaidMediaListOfMember_failure_status_code() = mainCoroutineRule.runBlockingTest {
+    fun getPaidMediaListOfMember_failure_status_code() = mainCoroutineRule.runTest {
         coEvery {
             mediaService.getPaidMediaListOfMember(
                 authorization = any(),
@@ -298,7 +298,7 @@ class MediaWebImplTest {
     }
 
     @Test
-    fun getPaidMediaListOfMember_failure_error_object() = mainCoroutineRule.runBlockingTest {
+    fun getPaidMediaListOfMember_failure_error_object() = mainCoroutineRule.runTest {
         val responseBody =
             """{"Error":{"Code":101,"Message":"Auth Failed"},"error":{"Code":101,"Message":"Auth Failed"}}""".toResponseBody()
         coEvery {
@@ -319,7 +319,7 @@ class MediaWebImplTest {
     }
 
     @Test
-    fun getPaidMediaList_success() = mainCoroutineRule.runBlockingTest {
+    fun getPaidMediaList_success() = mainCoroutineRule.runTest {
         coEvery {
             mediaService.getPaidMediaList(
                 action = any(),
@@ -336,7 +336,7 @@ class MediaWebImplTest {
     }
 
     @Test
-    fun getPaidMediaList_failure_status_code() = mainCoroutineRule.runBlockingTest {
+    fun getPaidMediaList_failure_status_code() = mainCoroutineRule.runTest {
         coEvery {
             mediaService.getPaidMediaList(
                 action = any(),
@@ -353,7 +353,7 @@ class MediaWebImplTest {
     }
 
     @Test
-    fun getPaidMediaList_failure_error_object() = mainCoroutineRule.runBlockingTest {
+    fun getPaidMediaList_failure_error_object() = mainCoroutineRule.runTest {
         val responseBody =
             """{"Error":{"Code":101,"Message":"Auth Failed"},"error":{"Code":101,"Message":"Auth Failed"}}""".toResponseBody()
         coEvery {
@@ -374,7 +374,7 @@ class MediaWebImplTest {
     }
 
     @Test
-    fun getPaidLiveList_success() = mainCoroutineRule.runBlockingTest {
+    fun getPaidLiveList_success() = mainCoroutineRule.runTest {
         coEvery {
             mediaService.getPaidLiveList(
                 action = any(),
@@ -390,7 +390,7 @@ class MediaWebImplTest {
     }
 
     @Test
-    fun getPaidLiveList_failure_status_code() = mainCoroutineRule.runBlockingTest {
+    fun getPaidLiveList_failure_status_code() = mainCoroutineRule.runTest {
         coEvery {
             mediaService.getPaidLiveList(
                 action = any(),
@@ -407,7 +407,7 @@ class MediaWebImplTest {
     }
 
     @Test
-    fun getPaidLiveList_failure_error_object() = mainCoroutineRule.runBlockingTest {
+    fun getPaidLiveList_failure_error_object() = mainCoroutineRule.runTest {
         val responseBody =
             """{"Error":{"Code":101,"Message":"Auth Failed"},"error":{"Code":101,"Message":"Auth Failed"}}""".toResponseBody()
         coEvery {
@@ -428,7 +428,7 @@ class MediaWebImplTest {
 
     @Test
     fun getMediaInfo_success() {
-        mainCoroutineRule.runBlockingTest {
+        mainCoroutineRule.runTest {
             coEvery {
                 mediaService.getMediaInfo(
                     action = any(),
@@ -446,7 +446,7 @@ class MediaWebImplTest {
 
     @Test
     fun getMediaInfo_failure() {
-        mainCoroutineRule.runBlockingTest {
+        mainCoroutineRule.runTest {
             coEvery {
                 mediaService.getMediaInfo(
                     action = any(),
@@ -477,7 +477,7 @@ class MediaWebImplTest {
 
     @Test
     fun getMediaDetail_success() {
-        mainCoroutineRule.runBlockingTest {
+        mainCoroutineRule.runTest {
             coEvery {
                 mediaService.getMediaDetail(
                     action = any(),
@@ -506,7 +506,7 @@ class MediaWebImplTest {
 
     @Test
     fun getMediaDetail_failure() {
-        mainCoroutineRule.runBlockingTest {
+        mainCoroutineRule.runTest {
             coEvery {
                 mediaService.getMediaDetail(
                     action = any(),
@@ -538,7 +538,7 @@ class MediaWebImplTest {
 
     @Test
     fun getPaidMediaListOfMemberByAppIdSuccess() {
-        mainCoroutineRule.runBlockingTest {
+        mainCoroutineRule.runTest {
             coEvery {
                 mediaService.getPaidMediaListOfMemberByAppId(
                     action = any(),
@@ -557,7 +557,7 @@ class MediaWebImplTest {
 
     @Test
     fun getPaidMediaListOfMemberByAppIdFailure() {
-        mainCoroutineRule.runBlockingTest {
+        mainCoroutineRule.runTest {
             val responseBody =
                 """{"Error":{"Code":101,"Message":"Auth Failed"},"error":{"Code":101,"Message":"Auth Failed"}}""".toResponseBody()
             coEvery {

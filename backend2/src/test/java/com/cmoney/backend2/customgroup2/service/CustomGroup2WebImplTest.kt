@@ -1,13 +1,22 @@
 package com.cmoney.backend2.customgroup2.service
 
-import com.cmoney.backend2.MainCoroutineRule
 import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.request.Language
 import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.customgroup2.service.api.createcustomgroup.CreateCustomGroupResponseBody
-import com.cmoney.backend2.customgroup2.service.api.data.*
+import com.cmoney.backend2.customgroup2.service.api.data.CustomGroup
+import com.cmoney.backend2.customgroup2.service.api.data.DocMarketType
+import com.cmoney.backend2.customgroup2.service.api.data.Document
+import com.cmoney.backend2.customgroup2.service.api.data.MarketType
+import com.cmoney.backend2.customgroup2.service.api.data.MarketTypeV2
+import com.cmoney.backend2.customgroup2.service.api.data.RawStock
+import com.cmoney.backend2.customgroup2.service.api.data.Stock
+import com.cmoney.backend2.customgroup2.service.api.data.StockV2
+import com.cmoney.backend2.customgroup2.service.api.data.UserConfigurationDocument
 import com.cmoney.backend2.customgroup2.service.api.getcustomgroup.Documents
+import com.cmoney.core.CoroutineTestRule
+import com.cmoney.core.extension.runTest
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
@@ -16,7 +25,6 @@ import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
 import io.mockk.spyk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Before
 import org.junit.Rule
@@ -31,7 +39,7 @@ import retrofit2.Response
 class CustomGroup2WebImplTest {
 
     @get:Rule
-    val mainCoroutineRule = MainCoroutineRule()
+    val mainCoroutineRule = CoroutineTestRule()
 
     @MockK
     private lateinit var service: CustomGroup2Service
@@ -52,7 +60,7 @@ class CustomGroup2WebImplTest {
     }
 
     @Test
-    fun `檢查所有的MarketTypeV2類型`() = mainCoroutineRule.runBlockingTest {
+    fun `檢查所有的MarketTypeV2類型`() = mainCoroutineRule.runTest {
         val except = MarketTypeV2::class.sealedSubclasses
             .flatMap { market ->
                 market.sealedSubclasses.map { subType ->
@@ -68,14 +76,14 @@ class CustomGroup2WebImplTest {
     }
 
     @Test
-    fun `MarketTypeV2的valueOf，尋找上市的台積電`() = mainCoroutineRule.runBlockingTest {
+    fun `MarketTypeV2的valueOf，尋找上市的台積電`() = mainCoroutineRule.runTest {
         val except = MarketTypeV2.Tse.Stock
         val result = MarketTypeV2.valueOf(2, 90)
         Truth.assertThat(result).isEqualTo(except)
     }
 
     @Test
-    fun `searchStocks_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `searchStocks_成功`() = mainCoroutineRule.runTest {
         val expect = listOf(
             Stock(
                 id = "2330",
@@ -103,7 +111,7 @@ class CustomGroup2WebImplTest {
     }
 
     @Test
-    fun `searchStocks_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `searchStocks_失敗`() = mainCoroutineRule.runTest {
         coEvery {
             service.searchStocks(any(), any(), any())
         } returns Response.error(401, "".toResponseBody())
@@ -119,7 +127,7 @@ class CustomGroup2WebImplTest {
     }
 
     @Test
-    fun `searchStocksV2_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `searchStocksV2_成功`() = mainCoroutineRule.runTest {
         val expect = listOf(
             StockV2(
                 id = "2330",
@@ -147,7 +155,7 @@ class CustomGroup2WebImplTest {
     }
 
     @Test
-    fun `searchStocksV2_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `searchStocksV2_失敗`() = mainCoroutineRule.runTest {
         coEvery {
             service.searchStocks(any(), any(), any())
         } returns Response.error(401, "".toResponseBody())
@@ -164,7 +172,7 @@ class CustomGroup2WebImplTest {
 
     @Test
     fun `searchStocks_one_language_param_will_invoke_list_param_default`() =
-        mainCoroutineRule.runBlockingTest {
+        mainCoroutineRule.runTest {
             coEvery {
                 service.searchStocks(any(), any(), any())
             } returns Response.success(emptyList())
@@ -179,7 +187,7 @@ class CustomGroup2WebImplTest {
 
     @Test
     fun `searchStocksV2_one_language_param_will_invoke_list_param_default`() =
-        mainCoroutineRule.runBlockingTest {
+        mainCoroutineRule.runTest {
             coEvery {
                 service.searchStocks(any(), any(), any())
             } returns Response.success(emptyList())
@@ -193,7 +201,7 @@ class CustomGroup2WebImplTest {
         }
 
     @Test
-    fun `searchStocksByMarketTypes_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `searchStocksByMarketTypes_成功`() = mainCoroutineRule.runTest {
         val expect = listOf(
             Stock(
                 id = "2330",
@@ -225,7 +233,7 @@ class CustomGroup2WebImplTest {
     }
 
     @Test
-    fun `searchStocksByMarketTypes_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `searchStocksByMarketTypes_失敗`() = mainCoroutineRule.runTest {
         coEvery {
             service.searchStocksByMarketType(any(), any(), any())
         } returns Response.error(401, "".toResponseBody())
@@ -245,7 +253,7 @@ class CustomGroup2WebImplTest {
     }
 
     @Test
-    fun `searchStocksByMarketTypesV2_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `searchStocksByMarketTypesV2_成功`() = mainCoroutineRule.runTest {
         val expect = listOf(
             StockV2(
                 id = "2330",
@@ -277,7 +285,7 @@ class CustomGroup2WebImplTest {
     }
 
     @Test
-    fun `searchStocksByMarketTypesV2_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `searchStocksByMarketTypesV2_失敗`() = mainCoroutineRule.runTest {
         coEvery {
             service.searchStocksByMarketType(any(), any(), any())
         } returns Response.error(401, "".toResponseBody())
@@ -298,7 +306,7 @@ class CustomGroup2WebImplTest {
 
     @Test
     fun `searchStocksByMarketTypes_one_language_param_will_invoke_list_param_default`() =
-        runBlockingTest {
+        mainCoroutineRule.runTest {
             coEvery {
                 service.searchStocksByMarketType(any(), any(), any())
             } returns Response.success(emptyList())
@@ -322,7 +330,7 @@ class CustomGroup2WebImplTest {
 
     @Test
     fun `searchStocksByMarketTypesV2_one_language_param_will_invoke_list_param_default`() =
-        runBlockingTest {
+        mainCoroutineRule.runTest {
             coEvery {
                 service.searchStocksByMarketType(any(), any(), any())
             } returns Response.success(emptyList())
@@ -349,7 +357,7 @@ class CustomGroup2WebImplTest {
         }
 
     @Test
-    fun getCustomGroup_成功() = mainCoroutineRule.runBlockingTest {
+    fun getCustomGroup_成功() = mainCoroutineRule.runTest {
         coEvery {
             service.getCustomGroup(
                 authorization = any(),
@@ -379,7 +387,7 @@ class CustomGroup2WebImplTest {
     }
 
     @Test
-    fun getCustomGroup_401_失敗() = mainCoroutineRule.runBlockingTest {
+    fun getCustomGroup_401_失敗() = mainCoroutineRule.runTest {
         coEvery {
             service.getCustomGroup(
                 authorization = any(),
@@ -395,7 +403,7 @@ class CustomGroup2WebImplTest {
     }
 
     @Test
-    fun getCustomGroup_by_id_成功() = mainCoroutineRule.runBlockingTest {
+    fun getCustomGroup_by_id_成功() = mainCoroutineRule.runTest {
         coEvery {
             service.getCustomGroupBy(
                 authorization = any(),
@@ -419,7 +427,7 @@ class CustomGroup2WebImplTest {
     }
 
     @Test
-    fun getCustomGroup_by_id_401_失敗() = mainCoroutineRule.runBlockingTest {
+    fun getCustomGroup_by_id_401_失敗() = mainCoroutineRule.runTest {
         coEvery {
             service.getCustomGroupBy(
                 authorization = any(),
@@ -435,7 +443,7 @@ class CustomGroup2WebImplTest {
     }
 
     @Test
-    fun updateCustomGroup_成功() = mainCoroutineRule.runBlockingTest {
+    fun updateCustomGroup_成功() = mainCoroutineRule.runTest {
         coEvery {
             service.updateCustomGroup(
                 authorization = any(),
@@ -455,7 +463,7 @@ class CustomGroup2WebImplTest {
     }
 
     @Test
-    fun updateCustomGroup_401_失敗() = mainCoroutineRule.runBlockingTest {
+    fun updateCustomGroup_401_失敗() = mainCoroutineRule.runTest {
         coEvery {
             service.updateCustomGroup(
                 authorization = any(),
@@ -478,7 +486,7 @@ class CustomGroup2WebImplTest {
     }
 
     @Test
-    fun createCustomGroup_成功() = mainCoroutineRule.runBlockingTest {
+    fun createCustomGroup_成功() = mainCoroutineRule.runTest {
         coEvery {
             service.createCustomGroup(
                 authorization = any(),
@@ -499,7 +507,7 @@ class CustomGroup2WebImplTest {
     }
 
     @Test
-    fun createCustomGroup_401_失敗() = mainCoroutineRule.runBlockingTest {
+    fun createCustomGroup_401_失敗() = mainCoroutineRule.runTest {
         coEvery {
             service.createCustomGroup(
                 authorization = any(),
@@ -515,7 +523,7 @@ class CustomGroup2WebImplTest {
     }
 
     @Test
-    fun deleteCustomGroup_成功() = mainCoroutineRule.runBlockingTest {
+    fun deleteCustomGroup_成功() = mainCoroutineRule.runTest {
         coEvery {
             service.deleteCustomGroup(
                 authorization = any(),
@@ -528,7 +536,7 @@ class CustomGroup2WebImplTest {
     }
 
     @Test
-    fun deleteCustomGroup_401_失敗() = mainCoroutineRule.runBlockingTest {
+    fun deleteCustomGroup_401_失敗() = mainCoroutineRule.runTest {
         coEvery {
             service.deleteCustomGroup(
                 authorization = any(),
@@ -544,7 +552,7 @@ class CustomGroup2WebImplTest {
     }
 
     @Test
-    fun getUserConfiguration_成功() = mainCoroutineRule.runBlockingTest {
+    fun getUserConfiguration_成功() = mainCoroutineRule.runTest {
         coEvery {
             service.getUserConfiguration(authorization = any())
         } returns Response.success(
@@ -567,7 +575,7 @@ class CustomGroup2WebImplTest {
     }
 
     @Test
-    fun getUserConfiguration_401_失敗() = mainCoroutineRule.runBlockingTest {
+    fun getUserConfiguration_401_失敗() = mainCoroutineRule.runTest {
         coEvery {
             service.getUserConfiguration(authorization = any())
         } returns Response.error(401, "".toResponseBody())
@@ -580,7 +588,7 @@ class CustomGroup2WebImplTest {
     }
 
     @Test
-    fun updateUserConfiguration_成功() = mainCoroutineRule.runBlockingTest {
+    fun updateUserConfiguration_成功() = mainCoroutineRule.runTest {
         coEvery {
             service.updateUserConfiguration(
                 authorization = any(),
@@ -597,7 +605,7 @@ class CustomGroup2WebImplTest {
     }
 
     @Test
-    fun updateUserConfiguration_401_失敗() = mainCoroutineRule.runBlockingTest {
+    fun updateUserConfiguration_401_失敗() = mainCoroutineRule.runTest {
         coEvery {
             service.updateUserConfiguration(
                 authorization = any(),

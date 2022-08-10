@@ -1,11 +1,12 @@
 package com.cmoney.backend2.commonuse.service
 
-import com.cmoney.backend2.MainCoroutineRule
 import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.commonuse.service.api.investmentpreference.InvestmentPreference
 import com.cmoney.backend2.commonuse.service.api.investmentpreference.InvestmentPreferenceType
+import com.cmoney.core.CoroutineTestRule
+import com.cmoney.core.extension.runTest
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
@@ -13,7 +14,6 @@ import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import io.mockk.unmockkAll
-import kotlinx.coroutines.test.runBlockingTest
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.After
 import org.junit.Before
@@ -27,7 +27,7 @@ import retrofit2.Response
 class CommonUseWebImplTest {
 
     @get:Rule
-    val mainCoroutineRule = MainCoroutineRule()
+    val mainCoroutineRule = CoroutineTestRule()
 
     @MockK
     private lateinit var service: CommonUseService
@@ -54,7 +54,7 @@ class CommonUseWebImplTest {
     }
 
     @Test
-    fun `getRemoteConfigLabel with non null response`() = mainCoroutineRule.runBlockingTest {
+    fun `getRemoteConfigLabel with non null response`() = mainCoroutineRule.runTest {
         val response = JsonParser.parseString(
             """
                 {
@@ -76,7 +76,7 @@ class CommonUseWebImplTest {
     }
 
     @Test
-    fun `getRemoteConfigLabel with null response`() = mainCoroutineRule.runBlockingTest {
+    fun `getRemoteConfigLabel with null response`() = mainCoroutineRule.runTest {
         val response = JsonParser.parseString(
             """
                 {
@@ -98,7 +98,7 @@ class CommonUseWebImplTest {
     }
 
     @Test
-    fun `updateInvestmentPreference success`() = mainCoroutineRule.runBlockingTest {
+    fun `updateInvestmentPreference success`() = mainCoroutineRule.runTest {
         val response = JsonParser.parseString(
             """
                 {
@@ -126,7 +126,7 @@ class CommonUseWebImplTest {
     }
 
     @Test
-    fun `updateInvestmentPreference failure`() = mainCoroutineRule.runBlockingTest {
+    fun `updateInvestmentPreference failure`() = mainCoroutineRule.runTest {
         coEvery {
             service.query(any(), any(), any())
         } returns Response.error(400, "".toResponseBody())
@@ -137,7 +137,7 @@ class CommonUseWebImplTest {
     }
 
     @Test
-    fun `getInvestmentPreference success`() = mainCoroutineRule.runBlockingTest {
+    fun `getInvestmentPreference success`() = mainCoroutineRule.runTest {
         val response = JsonParser.parseString(
             """
                 {
@@ -173,7 +173,7 @@ class CommonUseWebImplTest {
     }
 
     @Test
-    fun `gegInvestmentPreference failure`() = mainCoroutineRule.runBlockingTest {
+    fun `gegInvestmentPreference failure`() = mainCoroutineRule.runTest {
         coEvery {
             service.query(any(), any(), any())
         } returns Response.error(400, "".toResponseBody())

@@ -1,6 +1,5 @@
 package com.cmoney.backend2.notification2.service
 
-import com.cmoney.backend2.MainCoroutineRule
 import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.ServerException
@@ -8,13 +7,14 @@ import com.cmoney.backend2.base.model.response.error.CMoneyError
 import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.notification2.service.api.getmonitor.GetMonitorResponseBody
 import com.cmoney.backend2.notification2.service.api.getmonitorhistory.GetMonitorHistoryResponseBody
+import com.cmoney.core.CoroutineTestRule
+import com.cmoney.core.extension.runTest
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Before
 import org.junit.Rule
@@ -28,7 +28,7 @@ import retrofit2.Response
 class MonitorTest {
 
     @get:Rule
-    val mainCoroutineRule = MainCoroutineRule()
+    val mainCoroutineRule = CoroutineTestRule()
 
     @MockK
     private lateinit var service: Notification2Service
@@ -49,7 +49,7 @@ class MonitorTest {
     }
 
     @Test
-    fun `getMonitorList_成功_沒有資料`() = mainCoroutineRule.runBlockingTest {
+    fun `getMonitorList_成功_沒有資料`() = mainCoroutineRule.runTest {
         coEvery {
             service.getMonitorList(
                 appId = any(),
@@ -64,7 +64,7 @@ class MonitorTest {
     }
 
     @Test
-    fun `getMonitorList_成功_有資料`() = mainCoroutineRule.runBlockingTest {
+    fun `getMonitorList_成功_有資料`() = mainCoroutineRule.runTest {
         val responseBody = listOf(
             GetMonitorResponseBody(
                 conditionId = 10000,
@@ -95,7 +95,7 @@ class MonitorTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `getMonitorList_失敗_ServerException`() = mainCoroutineRule.runBlockingTest {
+    fun `getMonitorList_失敗_ServerException`() = mainCoroutineRule.runTest {
         val errorBody = gson.toJson(
             CMoneyError(
                 detail = CMoneyError.Detail(
@@ -116,7 +116,7 @@ class MonitorTest {
     }
 
     @Test
-    fun `insertMonitor_成功204`() = mainCoroutineRule.runBlockingTest {
+    fun `insertMonitor_成功204`() = mainCoroutineRule.runTest {
         coEvery {
             service.insertMonitor(
                 authorization = any(),
@@ -130,7 +130,7 @@ class MonitorTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `insertMonitor_失敗_ServerException`() = mainCoroutineRule.runBlockingTest {
+    fun `insertMonitor_失敗_ServerException`() = mainCoroutineRule.runTest {
         val errorBody = gson.toJson(
             CMoneyError(
                 detail = CMoneyError.Detail(
@@ -150,7 +150,7 @@ class MonitorTest {
     }
 
     @Test
-    fun `updateMonitor_成功204`() = mainCoroutineRule.runBlockingTest {
+    fun `updateMonitor_成功204`() = mainCoroutineRule.runTest {
         coEvery {
             service.updateMonitor(
                 authorization = any(),
@@ -164,7 +164,7 @@ class MonitorTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `updateMonitor_失敗_ServerException`() = mainCoroutineRule.runBlockingTest {
+    fun `updateMonitor_失敗_ServerException`() = mainCoroutineRule.runTest {
         val errorBody = gson.toJson(
             CMoneyError(
                 detail = CMoneyError.Detail(
@@ -183,7 +183,7 @@ class MonitorTest {
     }
 
     @Test
-    fun `deleteMonitor_成功204`() = mainCoroutineRule.runBlockingTest {
+    fun `deleteMonitor_成功204`() = mainCoroutineRule.runTest {
         coEvery {
             service.deleteMonitor(
                 authorization = any(),
@@ -197,7 +197,7 @@ class MonitorTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `deleteMonitor_失敗_ServerException`() = mainCoroutineRule.runBlockingTest {
+    fun `deleteMonitor_失敗_ServerException`() = mainCoroutineRule.runTest {
         val errorBody = gson.toJson(
             CMoneyError(
                 detail = CMoneyError.Detail(
@@ -216,7 +216,7 @@ class MonitorTest {
     }
 
     @Test
-    fun `getMonitorHistoryList_成功_有資料`() = mainCoroutineRule.runBlockingTest {
+    fun `getMonitorHistoryList_成功_有資料`() = mainCoroutineRule.runTest {
         val responseBody = listOf(
             GetMonitorHistoryResponseBody(
                 sn = null,
@@ -245,7 +245,7 @@ class MonitorTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `getMonitorHistoryList_失敗_ServerException`() = mainCoroutineRule.runBlockingTest {
+    fun `getMonitorHistoryList_失敗_ServerException`() = mainCoroutineRule.runTest {
         val errorBody = gson.toJson(
             CMoneyError(
                 detail = CMoneyError.Detail(
@@ -265,7 +265,7 @@ class MonitorTest {
     }
 
     @Test
-    fun `updateMonitorPushNotification_成功204`() = mainCoroutineRule.runBlockingTest {
+    fun `updateMonitorPushNotification_成功204`() = mainCoroutineRule.runTest {
         coEvery {
             service.updateMonitorPushNotification(
                 authorization = any(),
@@ -279,7 +279,7 @@ class MonitorTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `updateMonitorPushNotification_失敗_ServerException`() = mainCoroutineRule.runBlockingTest {
+    fun `updateMonitorPushNotification_失敗_ServerException`() = mainCoroutineRule.runTest {
         val errorBody = gson.toJson(
             CMoneyError(
                 detail = CMoneyError.Detail(

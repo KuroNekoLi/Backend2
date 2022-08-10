@@ -2,7 +2,6 @@ package com.cmoney.backend2.billing.service
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
-import com.cmoney.backend2.MainCoroutineRule
 import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.ServerException
@@ -20,6 +19,8 @@ import com.cmoney.backend2.billing.service.common.InAppGoogleReceipt
 import com.cmoney.backend2.billing.service.common.InAppHuaweiReceipt
 import com.cmoney.backend2.billing.service.common.SubGoogleReceipt
 import com.cmoney.backend2.billing.service.common.SubHuaweiReceipt
+import com.cmoney.core.CoroutineTestRule
+import com.cmoney.core.extension.runTest
 import com.google.common.truth.Truth
 import com.google.common.truth.Truth.assertThat
 import com.google.gson.GsonBuilder
@@ -29,7 +30,6 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Before
 import org.junit.Rule
@@ -49,7 +49,7 @@ class BillingWebImplTest {
     private val context = ApplicationProvider.getApplicationContext<Context>()
 
     @get:Rule
-    val mainCoroutineRule = MainCoroutineRule()
+    val mainCoroutineRule = CoroutineTestRule()
 
     @RelaxedMockK
     lateinit var service: BillingService
@@ -76,7 +76,7 @@ class BillingWebImplTest {
     }
 
     @Test
-    fun `getDeveloperPayload_成功_有定義的資料`() = mainCoroutineRule.runBlockingTest {
+    fun `getDeveloperPayload_成功_有定義的資料`() = mainCoroutineRule.runTest {
         val responseBody = GetDeveloperPayloadResponseBody(
             id = 14948
         )
@@ -93,7 +93,7 @@ class BillingWebImplTest {
     }
 
     @Test
-    fun `getDeveloperPayload_失敗400_有Error物件`() = mainCoroutineRule.runBlockingTest {
+    fun `getDeveloperPayload_失敗400_有Error物件`() = mainCoroutineRule.runTest {
         val errorBody = gson.toJson(
             CMoneyError(
                 detail = CMoneyError.Detail(
@@ -112,7 +112,7 @@ class BillingWebImplTest {
     }
 
     @Test
-    fun `isReadyToPurchase_還沒開放購買_false`() = mainCoroutineRule.runBlockingTest {
+    fun `isReadyToPurchase_還沒開放購買_false`() = mainCoroutineRule.runTest {
         val responseBody = IsPurchasableResponseBody(
             isPurchasable = false
         )
@@ -131,7 +131,7 @@ class BillingWebImplTest {
 
 
     @Test
-    fun `isReadyToPurchase_開放購買_true`() = mainCoroutineRule.runBlockingTest {
+    fun `isReadyToPurchase_開放購買_true`() = mainCoroutineRule.runTest {
         val responseBody = IsPurchasableResponseBody(
             isPurchasable = true
         )
@@ -150,7 +150,7 @@ class BillingWebImplTest {
     }
 
     @Test
-    fun `isReadyToPurchase_錯誤_ServerException`() = mainCoroutineRule.runBlockingTest {
+    fun `isReadyToPurchase_錯誤_ServerException`() = mainCoroutineRule.runTest {
         val errorBody = gson.toJson(
             CMoneyError(
                 detail = CMoneyError.Detail(
@@ -172,7 +172,7 @@ class BillingWebImplTest {
     }
 
     @Test
-    fun `getProductInfo_華為商品成功_是空的清單`() = mainCoroutineRule.runBlockingTest {
+    fun `getProductInfo_華為商品成功_是空的清單`() = mainCoroutineRule.runTest {
         coEvery {
             service.getIapProductInformation(
                 authorization = any(),
@@ -187,7 +187,7 @@ class BillingWebImplTest {
     }
 
     @Test
-    fun `getProductInfo_成功_不是空的清單`() = mainCoroutineRule.runBlockingTest {
+    fun `getProductInfo_成功_不是空的清單`() = mainCoroutineRule.runTest {
         val productInfoJson = context.assets.open(HAUWEI_PRODUCT_INFO)
             .bufferedReader()
             .use {
@@ -212,7 +212,7 @@ class BillingWebImplTest {
     }
 
     @Test
-    fun `getIapProductInfo_失敗_有錯誤碼`() = mainCoroutineRule.runBlockingTest {
+    fun `getIapProductInfo_失敗_有錯誤碼`() = mainCoroutineRule.runTest {
         val errorBody = gson.toJson(
             CMoneyError(
                 detail = CMoneyError.Detail(
@@ -233,7 +233,7 @@ class BillingWebImplTest {
     }
 
     @Test
-    fun `getAuthStatus_authType是0_授權是免費`() = mainCoroutineRule.runBlockingTest {
+    fun `getAuthStatus_authType是0_授權是免費`() = mainCoroutineRule.runTest {
         val responseBody = GetAuthResponseBody(
             authType = 0,
             authExpTime = "2020/05/05",
@@ -255,7 +255,7 @@ class BillingWebImplTest {
     }
 
     @Test
-    fun `getAuthStatus_authType是1_授權是手機`() = mainCoroutineRule.runBlockingTest {
+    fun `getAuthStatus_authType是1_授權是手機`() = mainCoroutineRule.runTest {
         val responseBody = GetAuthResponseBody(
             authType = 1,
             authExpTime = "2020/05/05",
@@ -277,7 +277,7 @@ class BillingWebImplTest {
     }
 
     @Test
-    fun `getAuthStatus_authType是2_授權是PC`() = mainCoroutineRule.runBlockingTest {
+    fun `getAuthStatus_authType是2_授權是PC`() = mainCoroutineRule.runTest {
         val responseBody = GetAuthResponseBody(
             authType = 2,
             authExpTime = "2020/05/05",
@@ -299,7 +299,7 @@ class BillingWebImplTest {
     }
 
     @Test
-    fun `getAuthStatus_authType是3_授權是PC`() = mainCoroutineRule.runBlockingTest {
+    fun `getAuthStatus_authType是3_授權是PC`() = mainCoroutineRule.runTest {
         val responseBody = GetAuthResponseBody(
             authType = 3,
             authExpTime = "2020/05/05",
@@ -322,7 +322,7 @@ class BillingWebImplTest {
 
 
     @Test
-    fun `getAuthStatus_authType是其他_授權是免費`() = mainCoroutineRule.runBlockingTest {
+    fun `getAuthStatus_authType是其他_授權是免費`() = mainCoroutineRule.runTest {
         val responseBody = GetAuthResponseBody(
             authType = 4,
             authExpTime = "2020/05/05",
@@ -344,7 +344,7 @@ class BillingWebImplTest {
     }
 
     @Test
-    fun `getAuthStatus_授權日期期格式正確`() = mainCoroutineRule.runBlockingTest {
+    fun `getAuthStatus_授權日期期格式正確`() = mainCoroutineRule.runTest {
         val responseBody = GetAuthResponseBody(
             authType = 0,
             authExpTime = "2020/05/05",
@@ -367,7 +367,7 @@ class BillingWebImplTest {
     }
 
     @Test(expected = ParseException::class)
-    fun `getAuthStatus_授權日期期格式錯誤_ParseException`() = mainCoroutineRule.runBlockingTest {
+    fun `getAuthStatus_授權日期期格式錯誤_ParseException`() = mainCoroutineRule.runTest {
         val responseBody = GetAuthResponseBody(
             authType = 0,
             authExpTime = "2020",
@@ -388,7 +388,7 @@ class BillingWebImplTest {
     }
 
     @Test
-    fun `getTargetAppAuthStatus_authType是0_授權是免費`() = mainCoroutineRule.runBlockingTest {
+    fun `getTargetAppAuthStatus_authType是0_授權是免費`() = mainCoroutineRule.runTest {
         val responseBody = GetAppAuthResponseBody(
             authType = 0,
             authExpTime = "2020/05/05",
@@ -413,7 +413,7 @@ class BillingWebImplTest {
     }
 
     @Test
-    fun `getTargetAppAuthStatus_authType是1_授權是手機`() = mainCoroutineRule.runBlockingTest {
+    fun `getTargetAppAuthStatus_authType是1_授權是手機`() = mainCoroutineRule.runTest {
         val responseBody = GetAppAuthResponseBody(
             authType = 1,
             authExpTime = "2020/05/05",
@@ -438,7 +438,7 @@ class BillingWebImplTest {
     }
 
     @Test
-    fun `getTargetAppAuthStatus_authType是2_授權是PC`() = mainCoroutineRule.runBlockingTest {
+    fun `getTargetAppAuthStatus_authType是2_授權是PC`() = mainCoroutineRule.runTest {
         val responseBody = GetAppAuthResponseBody(
             authType = 2,
             authExpTime = "2020/05/05",
@@ -463,7 +463,7 @@ class BillingWebImplTest {
     }
 
     @Test
-    fun `getTargetAppAuthStatus_authType是3_授權是PC`() = mainCoroutineRule.runBlockingTest {
+    fun `getTargetAppAuthStatus_authType是3_授權是PC`() = mainCoroutineRule.runTest {
         val responseBody = GetAppAuthResponseBody(
             authType = 3,
             authExpTime = "2020/05/05",
@@ -488,7 +488,7 @@ class BillingWebImplTest {
     }
 
     @Test
-    fun `getTargetAppAuthStatus_authType是其他_授權是免費`() = mainCoroutineRule.runBlockingTest {
+    fun `getTargetAppAuthStatus_authType是其他_授權是免費`() = mainCoroutineRule.runTest {
         val responseBody = GetAppAuthResponseBody(
             authType = 4,
             authExpTime = "2020/05/05",
@@ -513,7 +513,7 @@ class BillingWebImplTest {
     }
 
     @Test
-    fun `getTargetAppAuthStatus_授權日期期格式正確`() = mainCoroutineRule.runBlockingTest {
+    fun `getTargetAppAuthStatus_授權日期期格式正確`() = mainCoroutineRule.runTest {
         val responseBody = GetAppAuthResponseBody(
             authType = 0,
             authExpTime = "2020/05/05",
@@ -539,7 +539,7 @@ class BillingWebImplTest {
     }
 
     @Test(expected = ParseException::class)
-    fun `getTargetAppAuthStatus_授權日期期格式錯誤_ParseException`() = mainCoroutineRule.runBlockingTest {
+    fun `getTargetAppAuthStatus_授權日期期格式錯誤_ParseException`() = mainCoroutineRule.runTest {
         val responseBody = GetAppAuthResponseBody(
             authType = 0,
             authExpTime = "2020",
@@ -563,7 +563,7 @@ class BillingWebImplTest {
     }
 
     @Test
-    fun `verifyHuaweiInAppReceipt_購買成功`() = mainCoroutineRule.runBlockingTest {
+    fun `verifyHuaweiInAppReceipt_購買成功`() = mainCoroutineRule.runTest {
         coEvery {
             service.verifyHuaweiInAppReceipt(
                 authorization = any(),
@@ -585,7 +585,7 @@ class BillingWebImplTest {
     }
 
     @Test
-    fun `verifyHuaweiInAppReceipt_購買失敗，收據錯誤_ServerException`() = mainCoroutineRule.runBlockingTest {
+    fun `verifyHuaweiInAppReceipt_購買失敗，收據錯誤_ServerException`() = mainCoroutineRule.runTest {
         val errorBody = gson.toJson(
             CMoneyError(
                 detail = CMoneyError.Detail(
@@ -614,7 +614,7 @@ class BillingWebImplTest {
     }
 
     @Test
-    fun `verifyHuaweiSubReceipt_購買成功`() = mainCoroutineRule.runBlockingTest {
+    fun `verifyHuaweiSubReceipt_購買成功`() = mainCoroutineRule.runTest {
         coEvery {
             service.verifyHuaweiSubReceipt(
                 authorization = any(),
@@ -637,7 +637,7 @@ class BillingWebImplTest {
     }
 
     @Test
-    fun `verifyHuaweiSubReceipt_購買失敗，收據錯誤_ServerException`() = mainCoroutineRule.runBlockingTest {
+    fun `verifyHuaweiSubReceipt_購買失敗，收據錯誤_ServerException`() = mainCoroutineRule.runTest {
         val errorBody = gson.toJson(
             CMoneyError(
                 detail = CMoneyError.Detail(
@@ -667,7 +667,7 @@ class BillingWebImplTest {
     }
 
     @Test
-    fun `recoveryHuaweiInAppReceipt_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `recoveryHuaweiInAppReceipt_成功`() = mainCoroutineRule.runTest {
         coEvery {
             service.recoveryHuaweiInAppReceipt(
                 authorization = any(),
@@ -685,7 +685,7 @@ class BillingWebImplTest {
 
     @Test
     fun `recoveryHuaweiInAppReceipt_購買失敗，收據錯誤_ServerException`() =
-        mainCoroutineRule.runBlockingTest {
+        mainCoroutineRule.runTest {
             val errorBody = gson.toJson(
                 CMoneyError(
                     detail = CMoneyError.Detail(
@@ -708,7 +708,7 @@ class BillingWebImplTest {
         }
 
     @Test
-    fun `recoveryHuaweiSubReceipt_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `recoveryHuaweiSubReceipt_成功`() = mainCoroutineRule.runTest {
         coEvery {
             service.recoveryHuaweiSubReceipt(
                 authorization = any(),
@@ -724,7 +724,7 @@ class BillingWebImplTest {
     }
 
     @Test
-    fun `recoveryHuaweiSubReceipt_購買失敗，收據錯誤_ServerException`() = mainCoroutineRule.runBlockingTest {
+    fun `recoveryHuaweiSubReceipt_購買失敗，收據錯誤_ServerException`() = mainCoroutineRule.runTest {
         val errorBody = gson.toJson(
             CMoneyError(
                 detail = CMoneyError.Detail(
@@ -747,7 +747,7 @@ class BillingWebImplTest {
     }
 
     @Test
-    fun `verifyGoogleInAppReceipt_購買成功`() = mainCoroutineRule.runBlockingTest {
+    fun `verifyGoogleInAppReceipt_購買成功`() = mainCoroutineRule.runTest {
         coEvery {
             service.verifyGoogleInAppReceipt(
                 authorization = any(),
@@ -766,7 +766,7 @@ class BillingWebImplTest {
     }
 
     @Test
-    fun `verifyGoogleInAppReceipt_購買失敗，收據錯誤_ServerException`() = mainCoroutineRule.runBlockingTest {
+    fun `verifyGoogleInAppReceipt_購買失敗，收據錯誤_ServerException`() = mainCoroutineRule.runTest {
         val errorBody = gson.toJson(
             CMoneyError(
                 detail = CMoneyError.Detail(
@@ -792,7 +792,7 @@ class BillingWebImplTest {
     }
 
     @Test
-    fun `verifyGoogleSubReceipt_購買成功`() = mainCoroutineRule.runBlockingTest {
+    fun `verifyGoogleSubReceipt_購買成功`() = mainCoroutineRule.runTest {
         coEvery {
             service.verifyGoogleSubReceipt(
                 authorization = any(),
@@ -811,7 +811,7 @@ class BillingWebImplTest {
     }
 
     @Test
-    fun `verifyGoogleSubReceipt_購買失敗，收據錯誤_ServerException`() = mainCoroutineRule.runBlockingTest {
+    fun `verifyGoogleSubReceipt_購買失敗，收據錯誤_ServerException`() = mainCoroutineRule.runTest {
         val errorBody = gson.toJson(
             CMoneyError(
                 detail = CMoneyError.Detail(
@@ -837,7 +837,7 @@ class BillingWebImplTest {
     }
 
     @Test
-    fun `recoveryGoogleInAppReceipt_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `recoveryGoogleInAppReceipt_成功`() = mainCoroutineRule.runTest {
         coEvery {
             service.recoveryGoogleInAppReceipt(
                 authorization = any(),
@@ -855,7 +855,7 @@ class BillingWebImplTest {
 
     @Test
     fun `recoveryGoogleInAppReceipt_購買失敗，收據錯誤_ServerException`() =
-        mainCoroutineRule.runBlockingTest {
+        mainCoroutineRule.runTest {
             val errorBody = gson.toJson(
                 CMoneyError(
                     detail = CMoneyError.Detail(
@@ -878,7 +878,7 @@ class BillingWebImplTest {
         }
 
     @Test
-    fun `recoveryGoogleSubReceipt_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `recoveryGoogleSubReceipt_成功`() = mainCoroutineRule.runTest {
         coEvery {
             service.recoveryGoogleSubReceipt(
                 authorization = any(),
@@ -895,7 +895,7 @@ class BillingWebImplTest {
 
 
     @Test
-    fun `recoveryGoogleSubReceipt_購買失敗，收據錯誤_ServerException`() = mainCoroutineRule.runBlockingTest {
+    fun `recoveryGoogleSubReceipt_購買失敗，收據錯誤_ServerException`() = mainCoroutineRule.runTest {
         val errorBody = gson.toJson(
             CMoneyError(
                 detail = CMoneyError.Detail(
@@ -918,7 +918,7 @@ class BillingWebImplTest {
     }
 
     @Test
-    fun `getAuthByCMoney_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getAuthByCMoney_成功`() = mainCoroutineRule.runTest {
         val responseBody = AuthByCMoneyResponseBody(
             isAuth = false
         )
@@ -935,7 +935,7 @@ class BillingWebImplTest {
     }
 
     @Test
-    fun `getAuthByCMoney_錯誤_ServerException`() = mainCoroutineRule.runBlockingTest {
+    fun `getAuthByCMoney_錯誤_ServerException`() = mainCoroutineRule.runTest {
         val errorBody = gson.toJson(
             CMoneyError(
                 detail = CMoneyError.Detail(
@@ -956,7 +956,7 @@ class BillingWebImplTest {
     }
 
     @Test
-    fun `getHistoryCount_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getHistoryCount_成功`() = mainCoroutineRule.runTest {
         val functionIds :Long= 6531
         val responseBody = "{\"$functionIds\":555}".toResponseBody()
         coEvery {
@@ -973,7 +973,7 @@ class BillingWebImplTest {
     }
 
     @Test
-    fun `getHistoryCount_錯誤_ServerException`() = mainCoroutineRule.runBlockingTest {
+    fun `getHistoryCount_錯誤_ServerException`() = mainCoroutineRule.runTest {
         val errorBody = gson.toJson(
             CMoneyError(
                 detail = CMoneyError.Detail(

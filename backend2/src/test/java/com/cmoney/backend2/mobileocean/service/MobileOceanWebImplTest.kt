@@ -1,7 +1,6 @@
 package com.cmoney.backend2.mobileocean.service
 
 import android.text.TextUtils
-import com.cmoney.backend2.MainCoroutineRule
 import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.ServerException
@@ -51,6 +50,8 @@ import com.cmoney.backend2.mobileocean.service.api.leavechannel.LeaveChannelResp
 import com.cmoney.backend2.mobileocean.service.api.likearticle.LikeArticleResponseWithError
 import com.cmoney.backend2.mobileocean.service.api.replyarticle.ReplyArticleResponse
 import com.cmoney.backend2.mobileocean.service.api.updatechanneldescription.UpdateChannelIdDescriptionResponseWithError
+import com.cmoney.core.CoroutineTestRule
+import com.cmoney.core.extension.runTest
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
@@ -59,7 +60,6 @@ import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockkStatic
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -72,7 +72,7 @@ import retrofit2.Response
 @RunWith(RobolectricTestRunner::class)
 class MobileOceanWebImplTest {
     @get:Rule
-    val mainCoroutineRule = MainCoroutineRule()
+    val mainCoroutineRule = CoroutineTestRule()
 
     @MockK
     private lateinit var service: MobileOceanService
@@ -92,7 +92,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `getPopularStocks_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getPopularStocks_成功`() = mainCoroutineRule.runTest {
         val responseBody = PopularStockCollectionWithError(
             stocks = listOf(
                 PopularStock(
@@ -138,7 +138,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `getPopularStocks_code is 101_授權失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `getPopularStocks_code is 101_授權失敗`() = mainCoroutineRule.runTest {
         val responseBodyJson = """
             {"Error":{"Code":101,"Message":"Auth Failed"},"error":{"Code":101,"Message":"Auth Failed"}}
         """.trimIndent()
@@ -165,7 +165,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `createArticleToOcean__response code is 1_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `createArticleToOcean__response code is 1_成功`() = mainCoroutineRule.runTest {
         val responseBody = CreateArticleToOceanResponse(
             articleId = 0.toLong(),
             responseCode = 1,
@@ -199,7 +199,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `createArticleToOcean__response code is 2_沒有輸入發文內容`() = mainCoroutineRule.runBlockingTest {
+    fun `createArticleToOcean__response code is 2_沒有輸入發文內容`() = mainCoroutineRule.runTest {
         val responseBody = CreateArticleToOceanResponse(
             articleId = null,
             responseCode = 2,
@@ -234,7 +234,7 @@ class MobileOceanWebImplTest {
 
     @Test
     fun `createArticleToOcean__response code is 3_系統版本、名稱為空，確認後重發`() =
-        mainCoroutineRule.runBlockingTest {
+        mainCoroutineRule.runTest {
             val responseBody = CreateArticleToOceanResponse(
                 articleId = null,
                 responseCode = 3,
@@ -268,7 +268,7 @@ class MobileOceanWebImplTest {
         }
 
     @Test
-    fun `createArticle_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `createArticle_成功`() = mainCoroutineRule.runTest {
         val responseBody = CreateArticleResponseWithError(
             isSuccess = true,
             responseCode = 0,
@@ -297,7 +297,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `createArticle_isSuccess = false失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `createArticle_isSuccess = false失敗`() = mainCoroutineRule.runTest {
         val responseBody = CreateArticleResponseWithError(
             isSuccess = false,
             responseCode = 0,
@@ -320,7 +320,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `replyArticle_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `replyArticle_成功`() = mainCoroutineRule.runTest {
         val responseBody = ReplyArticleResponse(
             isSuccess = true,
             responseCode = 0,
@@ -346,7 +346,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `replyArticle_isSuccess = false失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `replyArticle_isSuccess = false失敗`() = mainCoroutineRule.runTest {
         val responseBody = ReplyArticleResponse(
             isSuccess = false,
             responseCode = 0,
@@ -371,7 +371,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `getRepliedArticleIds_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getRepliedArticleIds_成功`() = mainCoroutineRule.runTest {
         mockkStatic(TextUtils::class)
         every { TextUtils.join(any(), any<Iterable<Long>>()) } returns "0"
         val expect = RepliedArticleIds(
@@ -400,7 +400,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `getRepliedArticleIds_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `getRepliedArticleIds_失敗`() = mainCoroutineRule.runTest {
         mockkStatic(TextUtils::class)
         every { TextUtils.join(any(), any<Iterable<Long>>()) } returns "0"
         val responseBodyJson = """
@@ -424,7 +424,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `isTodayAskedStockTendency_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `isTodayAskedStockTendency_成功`() = mainCoroutineRule.runTest {
         val responseBody = IsTodayAskedStockTendencyResponseWithError(
             isAsked = true
         )
@@ -447,7 +447,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `isTodayAskedStockTendency_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `isTodayAskedStockTendency_失敗`() = mainCoroutineRule.runTest {
         val responseBodyJson = """
             {"Error":{"Code":101,"Message":"不合理的股票代號"},"error":{"Code":101,"Message":"不合理的股票代號"}}
         """.trimIndent()
@@ -472,7 +472,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `addAskStockTendencyLog_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `addAskStockTendencyLog_成功`() = mainCoroutineRule.runTest {
         val responseBody = AddAskStockTendencyLogResponseWithError(
             isSuccess = true
         )
@@ -495,7 +495,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `addAskStockTendencyLog_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `addAskStockTendencyLog_失敗`() = mainCoroutineRule.runTest {
         val responseBodyJson = """
             {"Error":{"Code":101,"Message":"不合理的股票代號"},"error":{"Code":101,"Message":"不合理的股票代號"}}
         """.trimIndent()
@@ -520,7 +520,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `getAskStockTendencyAmount_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getAskStockTendencyAmount_成功`() = mainCoroutineRule.runTest {
         val responseBody = AskStockTendencyAmountResponseWithError(
             amount = 1
         )
@@ -543,7 +543,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `getAskStockTendencyAmount_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `getAskStockTendencyAmount_失敗`() = mainCoroutineRule.runTest {
         val responseBodyJson = """
             {"Error":{"Code":101,"Message":"不合理的股票代號"},"error":{"Code":101,"Message":"不合理的股票代號"}}
         """.trimIndent()
@@ -568,7 +568,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `likeArticle_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `likeArticle_成功`() = mainCoroutineRule.runTest {
         val responseBody = LikeArticleResponseWithError(
             isSuccess = true
         )
@@ -591,7 +591,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `likeArticle_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `likeArticle_失敗`() = mainCoroutineRule.runTest {
         val responseBodyJson = """
             {"Error":{"Code":9001,"Message":"參數錯誤"}}
         """.trimIndent()
@@ -615,7 +615,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `getStockArticleList_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getStockArticleList_成功`() = mainCoroutineRule.runTest {
         val responseBody = GetStockArticleListResponseWithError(
             articles = arrayListOf()
         )
@@ -644,7 +644,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `getStockArticleList_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `getStockArticleList_失敗`() = mainCoroutineRule.runTest {
         val responseBodyJson = """
             {"Error":{"Code":9001,"Message":"參數錯誤"}}
         """.trimIndent()
@@ -675,7 +675,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `getReplyArticleList_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getReplyArticleList_成功`() = mainCoroutineRule.runTest {
         val responseBody = GetReplyArticleListResponseWithError(
             articles = arrayListOf()
         )
@@ -698,7 +698,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `getReplyArticleList_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `getReplyArticleList_失敗`() = mainCoroutineRule.runTest {
         val responseBodyJson = """
             {"Error":{"Code":9001,"Message":"參數錯誤"}}
         """.trimIndent()
@@ -723,7 +723,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `getForumLatestArticles_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getForumLatestArticles_成功`() = mainCoroutineRule.runTest {
         val responseBody = GetForumLatestArticlesResponseWithError(
             articles = arrayListOf(),
             updatedInSeconds = 20
@@ -750,7 +750,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `getForumLatestArticles_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `getForumLatestArticles_失敗`() = mainCoroutineRule.runTest {
         val responseBodyJson = """
             {"Error":{"Code":9001,"Message":"參數錯誤"}}
         """.trimIndent()
@@ -778,7 +778,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `getForumPopularArticles_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getForumPopularArticles_成功`() = mainCoroutineRule.runTest {
         val responseBody = GetForumPopularArticlesResponseWithError(
             articles = arrayListOf(),
             updatedInSeconds = 20
@@ -805,7 +805,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `getForumPopularArticles_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `getForumPopularArticles_失敗`() = mainCoroutineRule.runTest {
         val responseBodyJson = """
             {"Error":{"Code":9001,"Message":"參數錯誤"}}
         """.trimIndent()
@@ -833,7 +833,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `getStockLatestArticles_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getStockLatestArticles_成功`() = mainCoroutineRule.runTest {
         val responseBody = GetStockLatestArticlesResponseWithError(
             articles = arrayListOf()
         )
@@ -863,7 +863,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `getStockLatestArticles_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `getStockLatestArticles_失敗`() = mainCoroutineRule.runTest {
         val responseBodyJson = """
             {"Error":{"Code":9001,"Message":"參數錯誤"}}
         """.trimIndent()
@@ -895,7 +895,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `getStockPopularArticles_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getStockPopularArticles_成功`() = mainCoroutineRule.runTest {
         val responseBody = GetStockPopularArticlesResponseWithError(
             articles = arrayListOf()
         )
@@ -925,7 +925,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `getStockPopularArticles_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `getStockPopularArticles_失敗`() = mainCoroutineRule.runTest {
         val responseBodyJson = """
             {"Error":{"Code":9001,"Message":"參數錯誤"}}
         """.trimIndent()
@@ -957,7 +957,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `getFollowedChannelArticles_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getFollowedChannelArticles_成功`() = mainCoroutineRule.runTest {
         val responseBody = GetFollowedChannelArticlesResponseWithError(
             articles = arrayListOf()
         )
@@ -986,7 +986,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `getFollowedChannelArticles_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `getFollowedChannelArticles_失敗`() = mainCoroutineRule.runTest {
         val responseBodyJson = """
             {"Error":{"Code":9001,"Message":"參數錯誤"}}
         """.trimIndent()
@@ -1017,7 +1017,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `getPopularQuestionArticles_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getPopularQuestionArticles_成功`() = mainCoroutineRule.runTest {
         val responseBody = GetPopularQuestionArticlesResponseWithError(
             articles = arrayListOf()
         )
@@ -1044,7 +1044,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `getPopularQuestionArticles_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `getPopularQuestionArticles_失敗`() = mainCoroutineRule.runTest {
         val responseBodyJson = """
             {"Error":{"Code":9001,"Message":"參數錯誤"}}
         """.trimIndent()
@@ -1073,7 +1073,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `getLatestQuestionArticles_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getLatestQuestionArticles_成功`() = mainCoroutineRule.runTest {
         val responseBody = GetLatestQuestionArticlesResponseWithError(
             articles = arrayListOf()
         )
@@ -1100,7 +1100,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `getLatestQuestionArticles_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `getLatestQuestionArticles_失敗`() = mainCoroutineRule.runTest {
         val responseBodyJson = """
             {"Error":{"Code":9001,"Message":"參數錯誤"}}
         """.trimIndent()
@@ -1129,7 +1129,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `followChannel_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `followChannel_成功`() = mainCoroutineRule.runTest {
         val responseBody = FollowChannelResponseWithError(
             isSuccess = true
         )
@@ -1152,7 +1152,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `followChannel_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `followChannel_失敗`() = mainCoroutineRule.runTest {
         val responseBodyJson = """
             {"Error":{"Code":9001,"Message":"參數錯誤"}}
         """.trimIndent()
@@ -1177,7 +1177,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `leaveChannel_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `leaveChannel_成功`() = mainCoroutineRule.runTest {
         val responseBody = LeaveChannelResponseWithError(
             isSuccess = true
         )
@@ -1200,7 +1200,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `leaveChannel_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `leaveChannel_失敗`() = mainCoroutineRule.runTest {
         val responseBodyJson = """
             {"Error":{"Code":9001,"Message":"參數錯誤"}}
         """.trimIndent()
@@ -1225,7 +1225,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `updateChannelDescription_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `updateChannelDescription_成功`() = mainCoroutineRule.runTest {
         val responseBody = UpdateChannelIdDescriptionResponseWithError(
             isSuccess = true
         )
@@ -1248,7 +1248,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `updateChannelDescription_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `updateChannelDescription_失敗`() = mainCoroutineRule.runTest {
         val responseBodyJson = """
             {"Error":{"Code":9001,"Message":"參數錯誤"}}
         """.trimIndent()
@@ -1273,7 +1273,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `giveArticleTip_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `giveArticleTip_成功`() = mainCoroutineRule.runTest {
         val responseBody = GiveArticleTipResponseWithError(
             isSuccess = true
         )
@@ -1298,7 +1298,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `giveArticleTip_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `giveArticleTip_失敗`() = mainCoroutineRule.runTest {
         val responseBodyJson = """
             {"Error":{"Code":9001,"Message":"參數錯誤"}}
         """.trimIndent()
@@ -1325,7 +1325,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `addInterestedInArticleInfo_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `addInterestedInArticleInfo_成功`() = mainCoroutineRule.runTest {
         val responseBody = AddInterestedInArticleInfoResponseWithError(
             isSuccess = true
         )
@@ -1350,7 +1350,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `addInterestedInArticleInfo_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `addInterestedInArticleInfo_失敗`() = mainCoroutineRule.runTest {
         val responseBodyJson = """
             {"Error":{"Code":9001,"Message":"參數錯誤"}}
         """.trimIndent()
@@ -1377,7 +1377,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `dislikeArticle_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `dislikeArticle_成功`() = mainCoroutineRule.runTest {
         val responseBody = DisLikeArticleResponseWithError(
             isSuccess = true
         )
@@ -1400,7 +1400,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `dislikeArticle_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `dislikeArticle_失敗`() = mainCoroutineRule.runTest {
         val responseBodyJson = """
             {"Error":{"Code":700374,"Message":"已經使用此功能！"}}
         """.trimIndent()
@@ -1425,7 +1425,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `getFansChannel_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getFansChannel_成功`() = mainCoroutineRule.runTest {
         val response = GetFansChannelResponseWithError(
             channels = listOf(
                 FansChannel(
@@ -1469,7 +1469,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `getFansChannel_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `getFansChannel_失敗`() = mainCoroutineRule.runTest {
         val responseBodyJson = """
             {"Error":{"Code":9001,"Message":"參數錯誤"}}
         """.trimIndent()
@@ -1501,7 +1501,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `getAttentionChannel_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getAttentionChannel_成功`() = mainCoroutineRule.runTest {
         val response = GetAttentionChannelResponseWithError(
             channels = listOf(
                 AttentionChannel(
@@ -1545,7 +1545,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `getAttentionChannel_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `getAttentionChannel_失敗`() = mainCoroutineRule.runTest {
         val responseBodyJson = """
             {"Error":{"Code":9001,"Message":"參數錯誤"}}
         """.trimIndent()
@@ -1577,7 +1577,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `getStockPicture_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getStockPicture_成功`() = mainCoroutineRule.runTest {
         val response = GetStockPictureResponseWithError(
             image = "http://fsv.cmoney.tw/cmstatic/t/images/article/1443597/52d9772f-51dd-4f29-a2d3-a3029eda1ee3.png"
         )
@@ -1602,7 +1602,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `getStockPicture_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `getStockPicture_失敗`() = mainCoroutineRule.runTest {
         val responseBodyJson = """
             {"Error":{"Code":9001,"Message":"參數錯誤"}}
         """.trimIndent()
@@ -1630,7 +1630,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `activeFollow_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `activeFollow_成功`() = mainCoroutineRule.runTest {
         val response = ActiveFollowResponseWithError(
             isSuccess = true
         )
@@ -1650,7 +1650,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `activeFollow_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `activeFollow_失敗`() = mainCoroutineRule.runTest {
         val responseBodyJson = """
             {"Error":{"Code":101,"Message":"Auth Failed"}}
         """.trimIndent()
@@ -1673,7 +1673,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `getMemberMasterRanking_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getMemberMasterRanking_成功`() = mainCoroutineRule.runTest {
         val response = GetMemberMasterRankingResponseWithError(
             hasRanking = true,
             ranking = 2,
@@ -1697,7 +1697,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `getMemberMasterRanking_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `getMemberMasterRanking_失敗`() = mainCoroutineRule.runTest {
         val responseBodyJson = """
             {"Error":{"Code":101,"Message":"Auth Failed"}}
         """.trimIndent()
@@ -1720,7 +1720,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `getArticleTips_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getArticleTips_成功`() = mainCoroutineRule.runTest {
         val response = GetArticleTipsResponseWithError(
             tips = listOf()
         )
@@ -1747,7 +1747,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `getArticleTips_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `getArticleTips_失敗`() = mainCoroutineRule.runTest {
         val responseBodyJson = """
             {"Error":{"Code":101,"Message":"Auth Failed"}}
         """.trimIndent()
@@ -1777,7 +1777,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `getChannelPopularArticles_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getChannelPopularArticles_成功`() = mainCoroutineRule.runTest {
         val response = GetChannelPopularArticlesResponseWithError(
             articles = listOf()
         )
@@ -1806,7 +1806,7 @@ class MobileOceanWebImplTest {
     }
 
     @Test
-    fun `getChannelPopularArticles_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `getChannelPopularArticles_失敗`() = mainCoroutineRule.runTest {
         val responseBodyJson = """
             {"Error":{"Code":9001,"Message":"參數錯誤"}}
         """.trimIndent()

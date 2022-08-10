@@ -1,6 +1,5 @@
 package com.cmoney.backend2.chipk.service
 
-import com.cmoney.backend2.MainCoroutineRule
 import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.ServerException
@@ -10,6 +9,8 @@ import com.cmoney.backend2.chipk.service.api.getOfficialStockPickData.OfficialSt
 import com.cmoney.backend2.chipk.service.api.internationalkchart.ProductType
 import com.cmoney.backend2.chipk.service.api.internationalkchart.TickInfo
 import com.cmoney.backend2.chipk.service.api.internationalkchart.TickInfoSetWithError
+import com.cmoney.core.CoroutineTestRule
+import com.cmoney.core.extension.runTest
 import com.google.common.truth.Truth
 import com.google.gson.Gson
 import com.google.gson.JsonArray
@@ -19,7 +20,6 @@ import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -32,7 +32,7 @@ import retrofit2.Response
 class ChipKWebImplTest {
 
     @get:Rule
-    val mainCoroutineRule = MainCoroutineRule()
+    val mainCoroutineRule = CoroutineTestRule()
 
     @MockK
     private val chipKService = mockk<ChipKService>()
@@ -46,7 +46,7 @@ class ChipKWebImplTest {
     }
 
     @Test
-    fun `getData_success`() = mainCoroutineRule.runBlockingTest {
+    fun `getData_success`() = mainCoroutineRule.runTest {
         val response = DtnoWithError(
             title = listOf(
                 "日期",
@@ -77,7 +77,7 @@ class ChipKWebImplTest {
     }
 
     @Test
-    fun `getData_failure`() = mainCoroutineRule.runBlockingTest {
+    fun `getData_failure`() = mainCoroutineRule.runTest {
         val responseBodyJson = """
             {
                 "error": {
@@ -105,7 +105,7 @@ class ChipKWebImplTest {
     }
 
     @Test
-    fun `getIndexKData_success`() = mainCoroutineRule.runBlockingTest {
+    fun `getIndexKData_success`() = mainCoroutineRule.runTest {
         val response = DtnoWithError(
             title = listOf(
                 "日期",
@@ -150,7 +150,7 @@ class ChipKWebImplTest {
     }
 
     @Test
-    fun `getChipKData_failure`() = mainCoroutineRule.runBlockingTest {
+    fun `getChipKData_failure`() = mainCoroutineRule.runTest {
         val responseBodyJson = """
             {
                 "error": {
@@ -178,7 +178,7 @@ class ChipKWebImplTest {
     }
 
     @Test
-    fun `getChipKData_success`() = mainCoroutineRule.runBlockingTest {
+    fun `getChipKData_success`() = mainCoroutineRule.runTest {
         val response = DtnoWithError(
             title = listOf(
                 "日期",
@@ -223,7 +223,7 @@ class ChipKWebImplTest {
     }
 
     @Test
-    fun `getIndexKData_failure`() = mainCoroutineRule.runBlockingTest {
+    fun `getIndexKData_failure`() = mainCoroutineRule.runTest {
         val responseBodyJson = """
             {
                 "error": {
@@ -251,7 +251,7 @@ class ChipKWebImplTest {
     }
 
     @Test
-    fun `getOfficialStockData_success`() = mainCoroutineRule.runBlockingTest {
+    fun `getOfficialStockData_success`() = mainCoroutineRule.runTest {
         val response = OfficialStockInfoWithError(
             replaceSymbol = "周成交量 {#}",
             description = "連 {#} 天賣超",
@@ -280,7 +280,7 @@ class ChipKWebImplTest {
     }
 
     @Test
-    fun `getOfficialStockData_failure`() = mainCoroutineRule.runBlockingTest {
+    fun `getOfficialStockData_failure`() = mainCoroutineRule.runTest {
         val responseBodyJson = """
             {
                 "error": {
@@ -308,7 +308,7 @@ class ChipKWebImplTest {
     }
 
     @Test
-    fun `getOfficialStockPickTitle_success`() = mainCoroutineRule.runBlockingTest {
+    fun `getOfficialStockPickTitle_success`() = mainCoroutineRule.runTest {
         val response = JsonArray()
         coEvery {
             chipKService.getOfficialStockPickTitle(
@@ -326,7 +326,7 @@ class ChipKWebImplTest {
     }
 
     @Test
-    fun `getOfficialStockPickTitle_failure`() = mainCoroutineRule.runBlockingTest {
+    fun `getOfficialStockPickTitle_failure`() = mainCoroutineRule.runTest {
         val responseBodyJson = """
             {
                 "error": {
@@ -354,7 +354,7 @@ class ChipKWebImplTest {
     }
 
     @Test
-    fun `getIndexForeignInvestment_success`() = mainCoroutineRule.runBlockingTest {
+    fun `getIndexForeignInvestment_success`() = mainCoroutineRule.runTest {
         val response = DtnoWithError(
             title = listOf(
                 "日期",
@@ -386,7 +386,7 @@ class ChipKWebImplTest {
     }
 
     @Test
-    fun `getIndexForeignInvestment_failure`() = mainCoroutineRule.runBlockingTest {
+    fun `getIndexForeignInvestment_failure`() = mainCoroutineRule.runTest {
         val responseBodyJson = """
             {
                 "error": {
@@ -414,7 +414,7 @@ class ChipKWebImplTest {
     }
 
     @Test
-    fun `getIndexMain_success`() = mainCoroutineRule.runBlockingTest {
+    fun `getIndexMain_success`() = mainCoroutineRule.runTest {
         val response = DtnoWithError(
             title = listOf(
                 "日期",
@@ -448,7 +448,7 @@ class ChipKWebImplTest {
     }
 
     @Test
-    fun `getIndexMain_failure`() = mainCoroutineRule.runBlockingTest {
+    fun `getIndexMain_failure`() = mainCoroutineRule.runTest {
         val responseBodyJson = """
             {
                 "error": {
@@ -476,7 +476,7 @@ class ChipKWebImplTest {
     }
 
     @Test
-    fun `getIndexFunded_success`() = mainCoroutineRule.runBlockingTest {
+    fun `getIndexFunded_success`() = mainCoroutineRule.runTest {
         val response = DtnoWithError(
             title = listOf(
                 "日期",
@@ -526,7 +526,7 @@ class ChipKWebImplTest {
     }
 
     @Test
-    fun `getIndexFunded_failure`() = mainCoroutineRule.runBlockingTest {
+    fun `getIndexFunded_failure`() = mainCoroutineRule.runTest {
         val responseBodyJson = """
             {
                 "error": {
@@ -554,7 +554,7 @@ class ChipKWebImplTest {
     }
 
     @Test
-    fun `getInternationalKChart_success`() = mainCoroutineRule.runBlockingTest {
+    fun `getInternationalKChart_success`() = mainCoroutineRule.runTest {
         val tickInfo = TickInfo(
             ceilingPrice = "28146.6800",
             closePrice = "28070.5100",
@@ -586,7 +586,7 @@ class ChipKWebImplTest {
     }
 
     @Test
-    fun `getInternationalKChart_failure`() = mainCoroutineRule.runBlockingTest {
+    fun `getInternationalKChart_failure`() = mainCoroutineRule.runTest {
         val errorResponseBodyJson = """
             {
                 "error": {
@@ -619,7 +619,7 @@ class ChipKWebImplTest {
     }
 
     @Test
-    fun `getCreditRate_success`() = mainCoroutineRule.runBlockingTest {
+    fun `getCreditRate_success`() = mainCoroutineRule.runTest {
         val response = DtnoWithError(
             title = listOf(
                 "日期",
@@ -646,7 +646,7 @@ class ChipKWebImplTest {
     }
 
     @Test
-    fun `getCreditRate_failure`() = mainCoroutineRule.runBlockingTest {
+    fun `getCreditRate_failure`() = mainCoroutineRule.runTest {
         val responseBodyJson = """
             {
                 "error": {
@@ -673,7 +673,7 @@ class ChipKWebImplTest {
     }
 
     @Test
-    fun `getIndexCalculateRate_success`() = mainCoroutineRule.runBlockingTest {
+    fun `getIndexCalculateRate_success`() = mainCoroutineRule.runTest {
         val response = DtnoWithError(
             title = listOf(
                 "日期",
@@ -714,7 +714,7 @@ class ChipKWebImplTest {
     }
 
     @Test
-    fun `getIndexCalculateRate_failure`() = mainCoroutineRule.runBlockingTest {
+    fun `getIndexCalculateRate_failure`() = mainCoroutineRule.runTest {
         val responseBodyJson = """
             {
                 "error": {

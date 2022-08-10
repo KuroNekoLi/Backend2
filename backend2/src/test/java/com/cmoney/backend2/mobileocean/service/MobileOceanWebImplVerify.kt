@@ -1,14 +1,14 @@
 package com.cmoney.backend2.mobileocean.service
 
-import com.cmoney.backend2.MainCoroutineRule
 import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.mobileocean.service.api.createarticletoocean.requestbody.SubmitAdviceParam
+import com.cmoney.core.CoroutineTestRule
+import com.cmoney.core.extension.runTest
 import io.mockk.MockKAnnotations
 import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -21,7 +21,7 @@ class MobileOceanWebImplVerify {
 
     @ExperimentalCoroutinesApi
     @get:Rule
-    val mainCoroutineRule = MainCoroutineRule()
+    val mainCoroutineRule = CoroutineTestRule()
 
     @MockK
     private lateinit var service: MobileOceanService
@@ -39,7 +39,7 @@ class MobileOceanWebImplVerify {
     }
 
     @Test
-    fun `createArticleToOcean_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `createArticleToOcean_成功`() = mainCoroutineRule.runTest {
 
         webImpl.createArticleToOcean(
             SubmitAdviceParam(

@@ -1,19 +1,19 @@
 package com.cmoney.backend2.note_extension.service
 
-import com.cmoney.backend2.MainCoroutineRule
 import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.note_extension.service.api.createreply.CreateCommentResponseBody
 import com.cmoney.backend2.note_extension.service.api.getnotecommentcount.GetCommentCountByNoteIdsResponseBody
 import com.cmoney.backend2.note_extension.service.api.getreplylistbyid.GetCommentListByNoteIdResponseBody
+import com.cmoney.core.CoroutineTestRule
+import com.cmoney.core.extension.runTest
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -25,7 +25,7 @@ import retrofit2.Response
 @RunWith(RobolectricTestRunner::class)
 class NotesExtensionWebImplTest {
     @get:Rule
-    val mainCoroutineRule = MainCoroutineRule()
+    val mainCoroutineRule = CoroutineTestRule()
 
     @MockK
     private lateinit var noteExtensionService: NoteExtensionService
@@ -62,7 +62,7 @@ class NotesExtensionWebImplTest {
 
     @Test
     fun `createReply取得指定主文的回文清單 成功`() =
-        mainCoroutineRule.runBlockingTest {
+        mainCoroutineRule.runTest {
             val responseBody = CreateCommentResponseBody(1)
             coEvery {
                 noteExtensionService.createComment(
@@ -87,7 +87,7 @@ class NotesExtensionWebImplTest {
 
     @Test
     fun `createReply取得指定主文的回文清單 失敗`() =
-        mainCoroutineRule.runBlockingTest {
+        mainCoroutineRule.runTest {
             coEvery {
                 noteExtensionService.createComment(
                     authorization = any(),
@@ -109,7 +109,7 @@ class NotesExtensionWebImplTest {
 
     @Test
     fun `getReplyListById取得指定主文的回文清單 成功`() =
-        mainCoroutineRule.runBlockingTest {
+        mainCoroutineRule.runTest {
             val response =
                 listOf(
                     GetCommentListByNoteIdResponseBody.Comment(
@@ -144,7 +144,7 @@ class NotesExtensionWebImplTest {
 
     @Test
     fun `getReplyListById取得指定主文的回文清單 失敗`() =
-        mainCoroutineRule.runBlockingTest {
+        mainCoroutineRule.runTest {
             coEvery {
                 noteExtensionService.getCommentListByNoteId(
                     authorization = any(),
@@ -166,7 +166,7 @@ class NotesExtensionWebImplTest {
 
     @Test
     fun `getNoteCommentCount取得網誌回文數量 成功`() =
-        mainCoroutineRule.runBlockingTest {
+        mainCoroutineRule.runTest {
             val response =
                 listOf(
                     GetCommentCountByNoteIdsResponseBody.CommentCount(
@@ -195,7 +195,7 @@ class NotesExtensionWebImplTest {
 
     @Test
     fun `getNoteCommentCount取得網誌回文數量 失敗`() =
-        mainCoroutineRule.runBlockingTest {
+        mainCoroutineRule.runTest {
             coEvery {
                 noteExtensionService.getCommentCountByNoteIds(
                     authorization = any(),
@@ -213,7 +213,7 @@ class NotesExtensionWebImplTest {
 
     @Test
     fun `deleteReply刪除回文 成功`() =
-        mainCoroutineRule.runBlockingTest {
+        mainCoroutineRule.runTest {
             val response: Void? = null
             coEvery {
                 noteExtensionService.deleteComment(
@@ -234,7 +234,7 @@ class NotesExtensionWebImplTest {
 
     @Test
     fun `deleteReply刪除回文 失敗`() =
-        mainCoroutineRule.runBlockingTest {
+        mainCoroutineRule.runTest {
             coEvery {
                 noteExtensionService.deleteComment(
                     authorization = any(),

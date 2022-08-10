@@ -1,8 +1,8 @@
 package com.cmoney.backend2.base.model.calladapter
 
-import com.cmoney.backend2.MainCoroutineRule
 import com.cmoney.backend2.base.TestSetting
 import com.cmoney.backend2.testing.noContentMockResponse
+import com.cmoney.core.CoroutineTestRule
 import com.cmoney.data_logdatarecorder.recorder.LogDataRecorder
 import com.google.common.truth.Truth
 import com.google.gson.reflect.TypeToken
@@ -33,7 +33,7 @@ class RecordApiLogCallAdapterFactoryTest {
 
     @ExperimentalCoroutinesApi
     @get:Rule
-    val coroutineRule = MainCoroutineRule()
+    val coroutineRule = CoroutineTestRule()
 
     @get:Rule
     val mockServer = MockWebServer()

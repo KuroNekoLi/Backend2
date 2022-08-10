@@ -1,18 +1,18 @@
 package com.cmoney.backend2.centralizedimage.service
 
-import com.cmoney.backend2.MainCoroutineRule
 import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.centralizedimage.service.api.upload.GenreAndSubGenre
 import com.cmoney.backend2.centralizedimage.service.api.upload.UploadResponseBody
+import com.cmoney.core.CoroutineTestRule
+import com.cmoney.core.extension.runTest
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Before
 import org.junit.Rule
@@ -21,14 +21,18 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import retrofit2.HttpException
 import retrofit2.Response
-import java.io.*
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.io.InputStream
+import java.io.OutputStream
 
 @ExperimentalCoroutinesApi
 @RunWith(RobolectricTestRunner::class)
 class CentralizedImageWebImplTest {
 
     @get:Rule
-    val mainCoroutineRule = MainCoroutineRule()
+    val mainCoroutineRule = CoroutineTestRule()
 
     @MockK
     private lateinit var service: CentralizedImageService
@@ -47,7 +51,7 @@ class CentralizedImageWebImplTest {
     }
 
     @Test
-    fun `upload_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `upload_成功`() = mainCoroutineRule.runTest {
         coEvery {
             service.upload(
                 authorization = any(),
@@ -67,7 +71,7 @@ class CentralizedImageWebImplTest {
     }
 
     @Test
-    fun `upload_檔案太大失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `upload_檔案太大失敗`() = mainCoroutineRule.runTest {
         coEvery {
             service.upload(
                 authorization = any(),
@@ -85,7 +89,7 @@ class CentralizedImageWebImplTest {
     }
 
     @Test
-    fun `upload_401_UNAUTHORIZATION`() = mainCoroutineRule.runBlockingTest {
+    fun `upload_401_UNAUTHORIZATION`() = mainCoroutineRule.runTest {
         coEvery {
             service.upload(
                 authorization = any(),

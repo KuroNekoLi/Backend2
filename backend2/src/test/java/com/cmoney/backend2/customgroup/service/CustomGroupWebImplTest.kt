@@ -2,12 +2,15 @@ package com.cmoney.backend2.customgroup.service
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
-import com.cmoney.backend2.MainCoroutineRule
 import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.setting.Setting
-import com.cmoney.backend2.customgroup.*
+import com.cmoney.backend2.customgroup.TW_CUSTOM_GROUP_CONTENT
+import com.cmoney.backend2.customgroup.TW_CUSTOM_GROUP_LIST
+import com.cmoney.backend2.customgroup.TW_CUSTOM_GROUP_LIST_WITH_CONTENT
+import com.cmoney.backend2.customgroup.US_CUSTOM_GROUP_CONTENT
+import com.cmoney.backend2.customgroup.US_CUSTOM_GROUP_LIST
 import com.cmoney.backend2.customgroup.service.api.addcustomgroup.NewCustomGroupWithError
 import com.cmoney.backend2.customgroup.service.api.common.CustomGroupType
 import com.cmoney.backend2.customgroup.service.api.deletecustomgroup.DeleteCustomGroupCompleteWithError
@@ -18,6 +21,8 @@ import com.cmoney.backend2.customgroup.service.api.searchstocks.SearchStocksResp
 import com.cmoney.backend2.customgroup.service.api.updatecustomgroupname.UpdateCustomGroupNameCompleteWithError
 import com.cmoney.backend2.customgroup.service.api.updatecustomgrouporder.UpdateCustomGroupOrderCompleteWithError
 import com.cmoney.backend2.customgroup.service.api.updatecustomlist.UpdateCustomListCompleteWithError
+import com.cmoney.core.CoroutineTestRule
+import com.cmoney.core.extension.runTest
 import com.google.common.truth.Truth
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -27,7 +32,6 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Before
 import org.junit.Rule
@@ -41,7 +45,7 @@ import retrofit2.Response
 class CustomGroupWebImplTest {
 
     @get:Rule
-    val mainCoroutineRule = MainCoroutineRule()
+    val mainCoroutineRule = CoroutineTestRule()
 
     @MockK
     lateinit var service: CustomGroupService
@@ -67,7 +71,7 @@ class CustomGroupWebImplTest {
         gson.fromJson<T>(this, object : TypeToken<T>() {}.type)
 
     @Test
-    fun `getCustomGroupWithOrder_TW成功`() = runBlockingTest {
+    fun `getCustomGroupWithOrder_TW成功`() = mainCoroutineRule.runTest {
         val response = context.assets.open(TW_CUSTOM_GROUP_LIST)
             .bufferedReader()
             .use {
@@ -95,7 +99,7 @@ class CustomGroupWebImplTest {
     }
 
     @Test
-    fun `getCustomGroupWithOrder_US成功`() = runBlockingTest {
+    fun `getCustomGroupWithOrder_US成功`() = mainCoroutineRule.runTest {
         val response = context.assets.open(US_CUSTOM_GROUP_LIST)
             .bufferedReader()
             .use {
@@ -123,7 +127,7 @@ class CustomGroupWebImplTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `getCustomGroupWithOrder_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `getCustomGroupWithOrder_失敗`() = mainCoroutineRule.runTest {
         val responseBodyJson = """
             {"Error":{"Code":101,"Message":"Auth Failed"},"error":{"Code":101,"Message":"Auth Failed"}}
         """.trimIndent()
@@ -137,7 +141,7 @@ class CustomGroupWebImplTest {
     }
 
     @Test
-    fun `getCustomGroupContent_TW成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getCustomGroupContent_TW成功`() = mainCoroutineRule.runTest {
         val response = context.assets.open(TW_CUSTOM_GROUP_CONTENT)
             .bufferedReader()
             .use {
@@ -158,7 +162,7 @@ class CustomGroupWebImplTest {
     }
 
     @Test
-    fun `getCustomGroupContent_US成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getCustomGroupContent_US成功`() = mainCoroutineRule.runTest {
         val response = context.assets.open(US_CUSTOM_GROUP_CONTENT)
             .bufferedReader()
             .use {
@@ -179,7 +183,7 @@ class CustomGroupWebImplTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `getCustomGroupContent_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `getCustomGroupContent_失敗`() = mainCoroutineRule.runTest {
         val responseBodyJson = """
             {"Error":{"Code":101,"Message":"Auth Failed"},"error":{"Code":101,"Message":"Auth Failed"}}
         """.trimIndent()
@@ -193,7 +197,7 @@ class CustomGroupWebImplTest {
     }
 
     @Test
-    fun `getCustomGroupListIncludeOrderAndContent_TW成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getCustomGroupListIncludeOrderAndContent_TW成功`() = mainCoroutineRule.runTest {
         val response = context.assets.open(TW_CUSTOM_GROUP_LIST_WITH_CONTENT)
             .bufferedReader()
             .use {
@@ -220,7 +224,7 @@ class CustomGroupWebImplTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `getCustomGroupListIncludeOrderAndContent_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `getCustomGroupListIncludeOrderAndContent_失敗`() = mainCoroutineRule.runTest {
         val responseBodyJson = """
             {"Error":{"Code":101,"Message":"Auth Failed"},"error":{"Code":101,"Message":"Auth Failed"}}
         """.trimIndent()
@@ -234,7 +238,7 @@ class CustomGroupWebImplTest {
     }
 
     @Test
-    fun `updateCustomList_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `updateCustomList_成功`() = mainCoroutineRule.runTest {
         val responseBody = UpdateCustomListCompleteWithError(isSuccess = true)
         coEvery {
             service.updateCustomList(
@@ -271,7 +275,7 @@ class CustomGroupWebImplTest {
 
 
     @Test(expected = ServerException::class)
-    fun `updateCustomList_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `updateCustomList_失敗`() = mainCoroutineRule.runTest {
         //GIVEN
         val responseBodyJson = """
             {"Error":{"Code":101,"Message":"Auth Failed"},"error":{"Code":101,"Message":"Auth Failed"}}
@@ -300,7 +304,7 @@ class CustomGroupWebImplTest {
     }
 
     @Test
-    fun `addCustomGroup_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `addCustomGroup_成功`() = mainCoroutineRule.runTest {
         val responseBody = NewCustomGroupWithError(docNo = 1, docName = "DocName")
 
         coEvery {
@@ -329,7 +333,7 @@ class CustomGroupWebImplTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `addCustomGroup_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `addCustomGroup_失敗`() = mainCoroutineRule.runTest {
         //GIVEN
         val responseBodyJson = """
             {"Error":{"Code":101,"Message":"Auth Failed"},"error":{"Code":101,"Message":"Auth Failed"}}
@@ -351,7 +355,7 @@ class CustomGroupWebImplTest {
     }
 
     @Test
-    fun `deleteCustomGroup_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `deleteCustomGroup_成功`() = mainCoroutineRule.runTest {
         //GIVEN
         val responseBody = DeleteCustomGroupCompleteWithError(isSuccess = true)
 
@@ -373,7 +377,7 @@ class CustomGroupWebImplTest {
     }
 
     @Test
-    fun `deleteCustomGroup_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `deleteCustomGroup_失敗`() = mainCoroutineRule.runTest {
         //GIVEN
         val responseBodyJson = """
             {"Error":{"Code":101,"Message":"Auth Failed"},"error":{"Code":101,"Message":"Auth Failed"}}
@@ -399,7 +403,7 @@ class CustomGroupWebImplTest {
     }
 
     @Test
-    fun `updateCustomGroupOrder_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `updateCustomGroupOrder_成功`() = mainCoroutineRule.runTest {
         val responseBody = UpdateCustomGroupOrderCompleteWithError(isSuccess = true)
 
         coEvery {
@@ -430,7 +434,7 @@ class CustomGroupWebImplTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `updateCustomGroupOrder_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `updateCustomGroupOrder_失敗`() = mainCoroutineRule.runTest {
         //GIVEN
         val responseBodyJson = """
             {"Error":{"Code":101,"Message":"Auth Failed"},"error":{"Code":101,"Message":"Auth Failed"}}
@@ -453,7 +457,7 @@ class CustomGroupWebImplTest {
     }
 
     @Test
-    fun `renameCustomGroup_成功`() = runBlockingTest {
+    fun `renameCustomGroup_成功`() = mainCoroutineRule.runTest {
         val responseBody = UpdateCustomGroupNameCompleteWithError(isSuccess = true)
 
         coEvery {
@@ -486,7 +490,7 @@ class CustomGroupWebImplTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `renameCustomGroup_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `renameCustomGroup_失敗`() = mainCoroutineRule.runTest {
         val responseBodyJson = """
             {"Error":{"Code":101,"Message":"Auth Failed"},"error":{"Code":101,"Message":"Auth Failed"}}
         """.trimIndent()
@@ -511,7 +515,7 @@ class CustomGroupWebImplTest {
     }
 
     @Test
-    fun `searchStocks搜尋關鍵字找股票 成功`() = mainCoroutineRule.runBlockingTest {
+    fun `searchStocks搜尋關鍵字找股票 成功`() = mainCoroutineRule.runTest {
         //準備api成功時的回傳
         val responseBody = SearchStocksResponseBody()
         //設定api成功時的回傳
@@ -531,7 +535,7 @@ class CustomGroupWebImplTest {
     }
 
     @Test
-    fun `searchStocks搜尋關鍵字找股票 失敗 發生ServerException`() = mainCoroutineRule.runBlockingTest {
+    fun `searchStocks搜尋關鍵字找股票 失敗 發生ServerException`() = mainCoroutineRule.runTest {
         val json = """{
           "Error": {
             "Code": 100,

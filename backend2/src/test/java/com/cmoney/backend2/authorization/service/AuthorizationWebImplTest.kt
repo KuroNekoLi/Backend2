@@ -2,7 +2,6 @@ package com.cmoney.backend2.authorization.service
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
-import com.cmoney.backend2.MainCoroutineRule
 import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.authorization.service.api.getexpiredtime.ExpiredTime
@@ -12,13 +11,14 @@ import com.cmoney.backend2.base.model.exception.EmptyBodyException
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.response.error.CMoneyError
 import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.core.CoroutineTestRule
+import com.cmoney.core.extension.runTest
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Before
 import org.junit.Rule
@@ -33,7 +33,7 @@ import retrofit2.Response
 class AuthorizationWebImplTest {
 
     @get:Rule
-    val mainCoroutineRule = MainCoroutineRule()
+    val mainCoroutineRule = CoroutineTestRule()
 
     @MockK
     lateinit var service: AuthorizationService
@@ -61,7 +61,7 @@ class AuthorizationWebImplTest {
     }
 
     @Test
-    fun `getExpiredTime_有權限_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getExpiredTime_有權限_成功`() = mainCoroutineRule.runTest {
         val expiredTimeJson = context.assets.open(HAS_AUTH_RESPONSE)
             .bufferedReader()
             .use {
@@ -93,7 +93,7 @@ class AuthorizationWebImplTest {
 
 
     @Test
-    fun `getExpiredTime_無權限_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getExpiredTime_無權限_成功`() = mainCoroutineRule.runTest {
         val expiredTimeJson = context.assets.open(NON_AUTH_RESPONSE)
             .bufferedReader()
             .use {
@@ -126,7 +126,7 @@ class AuthorizationWebImplTest {
 
 
     @Test
-    fun `getExpiredTime_200_失敗_EmptyBodyException`() = mainCoroutineRule.runBlockingTest {
+    fun `getExpiredTime_200_失敗_EmptyBodyException`() = mainCoroutineRule.runTest {
         coEvery {
             service.getExpiredTime(
                 authorization = any(),
@@ -143,7 +143,7 @@ class AuthorizationWebImplTest {
     }
 
     @Test
-    fun `getExpiredTime_400_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `getExpiredTime_400_失敗`() = mainCoroutineRule.runTest {
         val errorBody = gson.toJson(
             CMoneyError(
                 detail = CMoneyError.Detail(
@@ -171,7 +171,7 @@ class AuthorizationWebImplTest {
     }
 
     @Test
-    fun `getExpiredTime_401_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `getExpiredTime_401_失敗`() = mainCoroutineRule.runTest {
         val errorBody = gson.toJson(
             CMoneyError(
                 detail = CMoneyError.Detail(
@@ -199,7 +199,7 @@ class AuthorizationWebImplTest {
     }
 
     @Test
-    fun `getExpiredTime_500_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `getExpiredTime_500_失敗`() = mainCoroutineRule.runTest {
         val errorBody = gson.toJson(
             CMoneyError(
                 detail = CMoneyError.Detail(
@@ -227,7 +227,7 @@ class AuthorizationWebImplTest {
     }
 
     @Test
-    fun `hasAuth_200_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `hasAuth_200_成功`() = mainCoroutineRule.runTest {
         val auth = Auth(hasAuthorization = true)
         coEvery {
             service.hasAuth(authorization = any(), url = any())
@@ -240,7 +240,7 @@ class AuthorizationWebImplTest {
     }
 
     @Test
-    fun hasAuth_401_失敗() = mainCoroutineRule.runBlockingTest {
+    fun hasAuth_401_失敗() = mainCoroutineRule.runTest {
         val errorBody = gson.toJson(
             CMoneyError(
                 detail = CMoneyError.Detail(
@@ -265,7 +265,7 @@ class AuthorizationWebImplTest {
     }
 
     @Test
-    fun getPurchasedSubjectIds_success() = mainCoroutineRule.runBlockingTest {
+    fun getPurchasedSubjectIds_success() = mainCoroutineRule.runTest {
         coEvery {
             service.getPurchasedSubjectIds(authorization = any(), type = any())
         } returns Response.success(listOf())
@@ -274,7 +274,7 @@ class AuthorizationWebImplTest {
     }
 
     @Test
-    fun getPurchasedSubjectIds_failure() = mainCoroutineRule.runBlockingTest {
+    fun getPurchasedSubjectIds_failure() = mainCoroutineRule.runTest {
         coEvery {
             service.getPurchasedSubjectIds(authorization = any(), type = any())
         } returns Response.error(400, "".toResponseBody())

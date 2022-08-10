@@ -65,6 +65,8 @@ dependencies {
     //logger
     implementation(Dependencies.LOG_DATA_RECORDER_DATA)
     implementation(Dependencies.LOG_DATA_RECORDER_DOMAIN)
+    // utils
+    implementation(Dependencies.CMONEY_UTILS_ANDROID)
     //test
     testImplementation(Dependencies.JUNIT)
     testImplementation(Dependencies.ANDROID_TEST_JUNIT)
@@ -85,4 +87,6 @@ dependencies {
     //truth
     testImplementation(Dependencies.TRUTH)
     testImplementation(Dependencies.TRUTH_EXTENSION_JAVA8)
+    // utils-test
+    testImplementation(Dependencies.CMONEY_UTILS_TEST)
 }

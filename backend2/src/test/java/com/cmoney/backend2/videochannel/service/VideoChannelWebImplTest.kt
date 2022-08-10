@@ -1,14 +1,14 @@
 package com.cmoney.backend2.videochannel.service
 
-import com.cmoney.backend2.MainCoroutineRule
 import com.cmoney.backend2.TestDispatcher
+import com.cmoney.core.CoroutineTestRule
+import com.cmoney.core.extension.runTest
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Before
 import org.junit.Rule
@@ -21,7 +21,7 @@ import retrofit2.Response
 @RunWith(RobolectricTestRunner::class)
 class VideoChannelWebImplTest {
     @get:Rule
-    val mainCoroutineRule = MainCoroutineRule()
+    val mainCoroutineRule = CoroutineTestRule()
 
     @MockK
     private lateinit var videoChannelService: VideoChannelService
@@ -39,7 +39,7 @@ class VideoChannelWebImplTest {
     }
 
     @Test
-    fun getYoutubeVideos_success() = mainCoroutineRule.runBlockingTest {
+    fun getYoutubeVideos_success() = mainCoroutineRule.runTest {
         coEvery {
             videoChannelService.getYoutubeVideos(
                 id = any(),
@@ -58,7 +58,7 @@ class VideoChannelWebImplTest {
     }
 
     @Test
-    fun getYoutubeVideos_failure_status_code() = mainCoroutineRule.runBlockingTest {
+    fun getYoutubeVideos_failure_status_code() = mainCoroutineRule.runTest {
         coEvery {
             videoChannelService.getYoutubeVideos(
                 id = any(),
@@ -89,7 +89,7 @@ class VideoChannelWebImplTest {
     }
 
     @Test
-    fun getYoutubeVideos_failure_error_object() = mainCoroutineRule.runBlockingTest {
+    fun getYoutubeVideos_failure_error_object() = mainCoroutineRule.runTest {
         coEvery {
             videoChannelService.getYoutubeVideos(
                 id = any(),

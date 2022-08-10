@@ -1,18 +1,18 @@
 package com.cmoney.backend2.productdataprovider
 
-import com.cmoney.backend2.MainCoroutineRule
 import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.productdataprovider.service.ProductDataProviderService
 import com.cmoney.backend2.productdataprovider.service.ProductDataProviderWeb
 import com.cmoney.backend2.productdataprovider.service.ProductDataProviderWebImpl
+import com.cmoney.core.CoroutineTestRule
+import com.cmoney.core.extension.runTest
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Before
 import org.junit.Rule
@@ -25,7 +25,7 @@ import retrofit2.Response
 @ExperimentalCoroutinesApi
 class ProductDataProviderWebImplTest {
     @get:Rule
-    val mainCoroutineRule = MainCoroutineRule()
+    val mainCoroutineRule = CoroutineTestRule()
 
     @MockK
     private lateinit var service: ProductDataProviderService
@@ -44,7 +44,7 @@ class ProductDataProviderWebImplTest {
     }
 
     @Test
-    fun getProductBySalesId_success() = mainCoroutineRule.runBlockingTest {
+    fun getProductBySalesId_success() = mainCoroutineRule.runTest {
         coEvery {
             service.getProductByGraphQL(any(), any())
         } returns Response.success(
@@ -77,7 +77,7 @@ class ProductDataProviderWebImplTest {
     }
 
     @Test
-    fun getProductBySalesId_failure() = mainCoroutineRule.runBlockingTest {
+    fun getProductBySalesId_failure() = mainCoroutineRule.runTest {
         coEvery {
             service.getProductByGraphQL(any(), any())
         } returns Response.error(400, "".toResponseBody())
@@ -87,7 +87,7 @@ class ProductDataProviderWebImplTest {
     }
 
     @Test
-    fun getSalesItemBySubjectId_success() = mainCoroutineRule.runBlockingTest {
+    fun getSalesItemBySubjectId_success() = mainCoroutineRule.runTest {
         coEvery {
             service.getProductByGraphQL(any(), any())
         } returns Response.success(
@@ -132,7 +132,7 @@ class ProductDataProviderWebImplTest {
     }
 
     @Test
-    fun getSalesItemBySubjectId_failure() = mainCoroutineRule.runBlockingTest {
+    fun getSalesItemBySubjectId_failure() = mainCoroutineRule.runTest {
         coEvery {
             service.getProductByGraphQL(any(), any())
         } returns Response.error(400, "".toResponseBody())

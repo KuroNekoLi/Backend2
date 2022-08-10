@@ -1,17 +1,17 @@
 package com.cmoney.backend2.data.service
 
-import com.cmoney.backend2.MainCoroutineRule
 import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.data.service.api.FundIdWithError
+import com.cmoney.core.CoroutineTestRule
+import com.cmoney.core.extension.runTest
 import com.google.common.truth.Truth
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -25,7 +25,7 @@ class DataWebImplTest {
 
     @ExperimentalCoroutinesApi
     @get:Rule
-    val mainCoroutineRule = MainCoroutineRule()
+    val mainCoroutineRule = CoroutineTestRule()
 
     @MockK
     private lateinit var service: DataService
@@ -44,7 +44,7 @@ class DataWebImplTest {
     }
 
     @Test
-    fun `getFundIdData 服務成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getFundIdData 服務成功`() = mainCoroutineRule.runTest {
         val response = FundIdWithError(
             state = FundIdWithError.STATE_SUCCESS,
             title = listOf("日期"),
@@ -65,7 +65,7 @@ class DataWebImplTest {
     }
 
     @Test
-    fun `getFundIdData 服務空資料`() = mainCoroutineRule.runBlockingTest {
+    fun `getFundIdData 服務空資料`() = mainCoroutineRule.runTest {
         val response = FundIdWithError(
             state = FundIdWithError.STATE_EMPTY,
             title = listOf(),
@@ -86,7 +86,7 @@ class DataWebImplTest {
     }
 
     @Test
-    fun `getFundIdData 服務失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `getFundIdData 服務失敗`() = mainCoroutineRule.runTest {
         val response = FundIdWithError(
             state = FundIdWithError.STATE_FAIL,
             title = listOf(),
@@ -107,7 +107,7 @@ class DataWebImplTest {
     }
 
     @Test
-    fun `getFundIdData 服務逾時`() = mainCoroutineRule.runBlockingTest {
+    fun `getFundIdData 服務逾時`() = mainCoroutineRule.runTest {
         val response = FundIdWithError(
             state = FundIdWithError.STATE_TIMEOUT,
             title = listOf(),

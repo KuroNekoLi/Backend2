@@ -1,6 +1,5 @@
 package com.cmoney.backend2.notes.service
 
-import com.cmoney.backend2.MainCoroutineRule
 import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.EmptyBodyException
@@ -12,13 +11,14 @@ import com.cmoney.backend2.notes.service.api.getnotesbytags.Note
 import com.cmoney.backend2.notes.service.api.getpopularandpaynotes.GetPopularAndPayNotesResponseBodyWithError
 import com.cmoney.backend2.notes.service.api.notesapi.getnotes.GetNotesResponseBodyWithError
 import com.cmoney.backend2.notes.service.api.notesapi.getnotesbytags.GetNotesByTagsResponseBodyWithError
+import com.cmoney.core.CoroutineTestRule
+import com.cmoney.core.extension.runTest
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -30,7 +30,7 @@ import retrofit2.Response
 @RunWith(RobolectricTestRunner::class)
 class NotesWebImplTest {
     @get:Rule
-    val mainCoroutineRule = MainCoroutineRule()
+    val mainCoroutineRule = CoroutineTestRule()
 
     @MockK
     private lateinit var noteService: NotesService
@@ -51,7 +51,7 @@ class NotesWebImplTest {
     }
 
     @Test
-    fun fetchWritingPost_success() = mainCoroutineRule.runBlockingTest {
+    fun fetchWritingPost_success() = mainCoroutineRule.runTest {
         coEvery {
             noteService.getNotesByTags(
                 authorization = any(),
@@ -84,7 +84,7 @@ class NotesWebImplTest {
     }
 
     @Test
-    fun fetchWritingPost_failure() = mainCoroutineRule.runBlockingTest {
+    fun fetchWritingPost_failure() = mainCoroutineRule.runTest {
         val response = """{
           "Error": {
             "Code": 100,
@@ -113,7 +113,7 @@ class NotesWebImplTest {
     }
 
     @Test
-    fun `getNotes取得網誌文章 成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getNotes取得網誌文章 成功`() = mainCoroutineRule.runTest {
         //準備api成功時的回傳
         val responseBody = GetNotesResponseBodyWithError(
             notes = listOf()
@@ -150,7 +150,7 @@ class NotesWebImplTest {
     }
 
     @Test
-    fun `getNotes取得網誌文章 失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `getNotes取得網誌文章 失敗`() = mainCoroutineRule.runTest {
         //設定api成功時的回傳
         coEvery {
             noteService.getNotes(
@@ -181,7 +181,7 @@ class NotesWebImplTest {
     }
 
     @Test
-    fun `getNotesByTagsUsingNotesApi取得網誌文章ByTag分類 成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getNotesByTagsUsingNotesApi取得網誌文章ByTag分類 成功`() = mainCoroutineRule.runTest {
         //準備api成功時的回傳
         val responseBody = GetNotesByTagsResponseBodyWithError(
             notes = listOf()
@@ -220,7 +220,7 @@ class NotesWebImplTest {
     }
 
     @Test
-    fun `getNotesByTagsUsingNotesApi取得網誌文章ByTag分類 失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `getNotesByTagsUsingNotesApi取得網誌文章ByTag分類 失敗`() = mainCoroutineRule.runTest {
         //設定api成功時的回傳
         coEvery {
             noteService.getNotesByTagsUsingNotesApi(
@@ -254,7 +254,7 @@ class NotesWebImplTest {
 
     @Test
     fun `getPopularAndPayNotes取得網誌近三天觀看次數達5000以上以及近一日付費文章 成功`() =
-        mainCoroutineRule.runBlockingTest {
+        mainCoroutineRule.runTest {
             val responseBody = GetPopularAndPayNotesResponseBodyWithError(
                 notes = listOf()
             )
@@ -278,7 +278,7 @@ class NotesWebImplTest {
 
     @Test
     fun `getPopularAndPayNotes取得網誌近三天觀看次數達5000以上以及近一日付費文章 失敗`() =
-        mainCoroutineRule.runBlockingTest {
+        mainCoroutineRule.runTest {
 
             coEvery {
                 noteService.getPopularAndPayNotes(
@@ -299,7 +299,7 @@ class NotesWebImplTest {
         }
 
     @Test
-    fun `getNotesByCoAuthorIds取得指定網誌作者(撰文者)的網誌文章清單 成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getNotesByCoAuthorIds取得指定網誌作者(撰文者)的網誌文章清單 成功`() = mainCoroutineRule.runTest {
         val responseBody = GetNotesByCoAuthorIdsResponseBody(
             notes = listOf()
         )
@@ -325,7 +325,7 @@ class NotesWebImplTest {
     }
 
     @Test
-    fun `getNotesByCoAuthorIds取得指定網誌作者(撰文者)的網誌文章清單 失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `getNotesByCoAuthorIds取得指定網誌作者(撰文者)的網誌文章清單 失敗`() = mainCoroutineRule.runTest {
 
         coEvery {
             noteService.getNotesByCoAuthorIds(
