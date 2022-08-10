@@ -4,10 +4,13 @@ package com.cmoney.backend2.forumocean.service.api.group.v2
 import com.google.gson.annotations.SerializedName
 import androidx.annotation.Keep
 
+/**
+ * 待審核api
+ */
 @Keep
-data class PendingRequestsDTO(
+data class PendingRequests(
     @SerializedName("lastTimestamp")
     val lastTimestamp: Long?,
     @SerializedName("pendingList")
-    val pendingList: List<PendingRequestDTO>?
+    val pendingList: List<PendingRequest>?
 )

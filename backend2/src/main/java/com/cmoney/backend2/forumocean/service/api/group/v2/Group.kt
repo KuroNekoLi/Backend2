@@ -4,16 +4,31 @@ package com.cmoney.backend2.forumocean.service.api.group.v2
 import com.google.gson.annotations.SerializedName
 import androidx.annotation.Keep
 
+/**
+ * 社團
+ */
 @Keep
-data class GroupDTO(
+data class Group(
+    /**
+     * 建立時間
+     */
     @SerializedName("createTime")
     val createTime: Long?,
+    /**
+     * 預設看板ID
+     */
     @SerializedName("defaultBoard")
     val defaultBoard: Int?,
+    /**
+     * 社團敘述
+     */
     @SerializedName("description")
     val description: String?,
+    /**
+     * 社團角色
+     */
     @SerializedName("groupRoles")
-    val groupRoles: List<GroupRoleDTO>?,
+    val groupRoles: List<GroupRole>?,
     @SerializedName("id")
     val id: Int?,
     @SerializedName("imgUrl")

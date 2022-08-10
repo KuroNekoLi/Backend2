@@ -18,18 +18,17 @@ import com.cmoney.backend2.forumocean.service.api.group.getapprovals.GroupPendin
 import com.cmoney.backend2.forumocean.service.api.group.getmember.GroupMember
 import com.cmoney.backend2.forumocean.service.api.group.getmemberjoinanygroups.GetMemberJoinAnyGroupsResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.update.UpdateGroupRequestBody
-import com.cmoney.backend2.forumocean.service.api.group.v2.AdminsDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.Admins
 import com.cmoney.backend2.forumocean.service.api.group.v2.AvailableBoardIds
-import com.cmoney.backend2.forumocean.service.api.group.v2.BoardDTOSingle
-import com.cmoney.backend2.forumocean.service.api.group.v2.BoardManipulationDTO
-import com.cmoney.backend2.forumocean.service.api.group.v2.GroupDTO
-import com.cmoney.backend2.forumocean.service.api.group.v2.GroupManipulationDTO
-import com.cmoney.backend2.forumocean.service.api.group.v2.GroupPushSettingDTO
-import com.cmoney.backend2.forumocean.service.api.group.v2.InsertedIdDTO
-import com.cmoney.backend2.forumocean.service.api.group.v2.JoinGroupRequestDTO
-import com.cmoney.backend2.forumocean.service.api.group.v2.MemberRolesDTO
-import com.cmoney.backend2.forumocean.service.api.group.v2.PendingRequestDTO
-import com.cmoney.backend2.forumocean.service.api.group.v2.PendingRequestsDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.BoardSingle
+import com.cmoney.backend2.forumocean.service.api.group.v2.BoardManipulation
+import com.cmoney.backend2.forumocean.service.api.group.v2.Group
+import com.cmoney.backend2.forumocean.service.api.group.v2.GroupManipulation
+import com.cmoney.backend2.forumocean.service.api.group.v2.GroupPushSetting
+import com.cmoney.backend2.forumocean.service.api.group.v2.InsertedId
+import com.cmoney.backend2.forumocean.service.api.group.v2.JoinGroupRequest
+import com.cmoney.backend2.forumocean.service.api.group.v2.MemberRoles
+import com.cmoney.backend2.forumocean.service.api.group.v2.PendingRequests
 import com.cmoney.backend2.forumocean.service.api.group.v2.PushType
 import com.cmoney.backend2.forumocean.service.api.official.get.OfficialChannelInfo
 import com.cmoney.backend2.forumocean.service.api.officialsubscriber.getofficialsubscribedcount.GetOfficialSubscribedCountResponseBody
@@ -3692,7 +3691,7 @@ class ForumOceanWebImplTest {
                 groupId = any()
             )
         } returns Response.success(
-            GroupDTO(
+            Group(
                 1,
                 null,
                 null,
@@ -3761,10 +3760,10 @@ class ForumOceanWebImplTest {
             forumOceanService.createGroup(
                 authorization = any(),
                 path = "",
-                body = GroupManipulationDTO(null, null, null, null)
+                body = GroupManipulation(null, null, null, null)
             )
-        } returns Response.success(200, InsertedIdDTO(0))
-        val result = web.createGroup(GroupManipulationDTO(null, null, null, null))
+        } returns Response.success(200, InsertedId(0))
+        val result = web.createGroup(GroupManipulation(null, null, null, null))
         assertThat(result.isSuccess).isTrue()
     }
 
@@ -3789,13 +3788,13 @@ class ForumOceanWebImplTest {
             forumOceanService.updateGroup(
                 authorization = any(),
                 path = "",
-                body = GroupManipulationDTO("", "", "", false),
+                body = GroupManipulation("", "", "", false),
                 groupId = any()
             )
         } returns Response.success<Void>(204, null)
         val result = web.updateGroup(
             1,
-            GroupManipulationDTO("", "", "", false)
+            GroupManipulation("", "", "", false)
         )
         assertThat(result.isSuccess).isTrue()
     }
@@ -3807,11 +3806,11 @@ class ForumOceanWebImplTest {
             forumOceanService.updateGroup(
                 authorization = any(),
                 path = "",
-                body = GroupManipulationDTO(null, null, null, null),
+                body = GroupManipulation(null, null, null, null),
                 groupId = 0
             )
         } returns Response.error(500, "".toResponseBody())
-        val result = web.updateGroup(1, GroupManipulationDTO(null, null, null, null))
+        val result = web.updateGroup(1, GroupManipulation(null, null, null, null))
         assertThat(result.isFailure).isTrue()
     }
 
@@ -3825,8 +3824,8 @@ class ForumOceanWebImplTest {
                 groupId = 1L,
                 body = any()
             )
-        } returns Response.success(InsertedIdDTO(-1))
-        val result = web.createGroupBoard(1, BoardManipulationDTO(null, null))
+        } returns Response.success(InsertedId(-1))
+        val result = web.createGroupBoard(1, BoardManipulation(null, null))
         assertThat(result.isSuccess).isTrue()
     }
 
@@ -3841,7 +3840,7 @@ class ForumOceanWebImplTest {
                 body = any()
             )
         } returns Response.error(500, "".toResponseBody())
-        val result = web.createGroupBoard(1, BoardManipulationDTO(null, null))
+        val result = web.createGroupBoard(1, BoardManipulation(null, null))
         assertThat(result.isFailure).isTrue()
     }
 
@@ -3884,7 +3883,7 @@ class ForumOceanWebImplTest {
                 body = any()
             )
         } returns Response.success<Void>(204, null)
-        val result = web.updateGroupBoard(1, BoardManipulationDTO(null, null))
+        val result = web.updateGroupBoard(1, BoardManipulation(null, null))
         assertThat(result.isSuccess).isTrue()
     }
 
@@ -3899,7 +3898,7 @@ class ForumOceanWebImplTest {
                 body = any()
             )
         } returns Response.error(500, "".toResponseBody())
-        val result = web.updateGroupBoard(1, BoardManipulationDTO(null, null))
+        val result = web.updateGroupBoard(1, BoardManipulation(null, null))
         assertThat(result.isFailure).isTrue()
     }
 
@@ -3912,7 +3911,7 @@ class ForumOceanWebImplTest {
                 path = "",
                 boardId = 1L
             )
-        } returns Response.success(BoardDTOSingle(null, null, null, null, null, null))
+        } returns Response.success(BoardSingle(null, null, null, null, null, null))
         val result = web.getGroupBoard(1)
         assertThat(result.isSuccess).isTrue()
     }
@@ -4000,7 +3999,7 @@ class ForumOceanWebImplTest {
                 groupId = any(),
                 memberId = any()
             )
-        } returns Response.success(MemberRolesDTO(listOf()))
+        } returns Response.success(MemberRoles(listOf()))
         val result = web.getGroupMemberRoles(1, 1)
         assertThat(result.isSuccess).isTrue()
     }
@@ -4122,7 +4121,7 @@ class ForumOceanWebImplTest {
                 path = "",
                 groupId = any()
             )
-        } returns Response.success(AdminsDTO(listOf(), 0L))
+        } returns Response.success(Admins(listOf(), 0L))
         val result = web.getGroupAdmins(1)
         assertThat(result.isSuccess).isTrue()
     }
@@ -4183,10 +4182,10 @@ class ForumOceanWebImplTest {
                 authorization = any(),
                 path = "",
                 groupId = any(),
-                body = JoinGroupRequestDTO("reason")
+                body = JoinGroupRequest("reason")
             )
         } returns Response.success<Void>(204, null)
-        val result = web.joinGroup(1, JoinGroupRequestDTO("reason"))
+        val result = web.joinGroup(1, JoinGroupRequest("reason"))
         assertThat(result.isSuccess).isTrue()
     }
 
@@ -4198,10 +4197,10 @@ class ForumOceanWebImplTest {
                 authorization = any(),
                 path = "",
                 groupId = any(),
-                body = JoinGroupRequestDTO("reason")
+                body = JoinGroupRequest("reason")
             )
         } returns Response.error(500, "".toResponseBody())
-        val result = web.joinGroup(1, JoinGroupRequestDTO("reason"))
+        val result = web.joinGroup(1, JoinGroupRequest("reason"))
         assertThat(result.isFailure).isTrue()
     }
 
@@ -4215,7 +4214,7 @@ class ForumOceanWebImplTest {
                 groupId = any(),
                 timestamp = any()
             )
-        } returns Response.success(PendingRequestsDTO(0L, listOf()))
+        } returns Response.success(PendingRequests(0L, listOf()))
         val result = web.getGroupPendingRequests(1, 0)
         assertThat(result.isSuccess).isTrue()
     }
@@ -4246,7 +4245,7 @@ class ForumOceanWebImplTest {
                 timestamp = any(),
                 keyword = any()
             )
-        } returns Response.success(PendingRequestsDTO(0L, listOf()))
+        } returns Response.success(PendingRequests(0L, listOf()))
         val result = web.searchGroupPendingRequests(1L, "keyword", 0L)
         assertThat(result.isSuccess).isTrue()
     }
@@ -4456,7 +4455,7 @@ class ForumOceanWebImplTest {
                 path = "",
                 groupId = any()
             )
-        } returns Response.success(GroupPushSettingDTO(""))
+        } returns Response.success(GroupPushSetting(""))
         val result = web.getGroupPushSetting(1L)
         assertThat(result.isSuccess).isTrue()
     }

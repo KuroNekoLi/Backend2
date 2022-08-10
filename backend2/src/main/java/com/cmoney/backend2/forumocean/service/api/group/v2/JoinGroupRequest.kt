@@ -1,15 +1,17 @@
 package com.cmoney.backend2.forumocean.service.api.group.v2
 
 
-import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
+import androidx.annotation.Keep
 
+/**
+ * 加入社團請求
+ */
 @Keep
-data class PendingRequestDTO(
-    @SerializedName("createTime")
-    val createTime: Long?,
-    @SerializedName("id")
-    val id: Long?,
+data class JoinGroupRequest(
+    /**
+     * 加入原因
+     */
     @SerializedName("reason")
     val reason: String?
 )

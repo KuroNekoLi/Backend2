@@ -26,20 +26,20 @@ import com.cmoney.backend2.forumocean.service.api.group.getapprovals.GroupPendin
 import com.cmoney.backend2.forumocean.service.api.group.getmember.GroupMember
 import com.cmoney.backend2.forumocean.service.api.group.getmemberjoinanygroups.GetMemberJoinAnyGroupsResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.update.UpdateGroupRequestBody
-import com.cmoney.backend2.forumocean.service.api.group.v2.AdminsDTO
-import com.cmoney.backend2.forumocean.service.api.group.v2.ApprovalDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.Admins
+import com.cmoney.backend2.forumocean.service.api.group.v2.Approval
 import com.cmoney.backend2.forumocean.service.api.group.v2.AvailableBoardIds
-import com.cmoney.backend2.forumocean.service.api.group.v2.BoardDTO
-import com.cmoney.backend2.forumocean.service.api.group.v2.BoardDTOSingle
-import com.cmoney.backend2.forumocean.service.api.group.v2.BoardManipulationDTO
-import com.cmoney.backend2.forumocean.service.api.group.v2.GroupDTO
-import com.cmoney.backend2.forumocean.service.api.group.v2.GroupManipulationDTO
-import com.cmoney.backend2.forumocean.service.api.group.v2.GroupMemberDTO
-import com.cmoney.backend2.forumocean.service.api.group.v2.GroupMemberDTOX
-import com.cmoney.backend2.forumocean.service.api.group.v2.GroupPushSettingRequestDTO
-import com.cmoney.backend2.forumocean.service.api.group.v2.JoinGroupRequestDTO
-import com.cmoney.backend2.forumocean.service.api.group.v2.MemberRolesDTO
-import com.cmoney.backend2.forumocean.service.api.group.v2.PendingRequestsDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.Board
+import com.cmoney.backend2.forumocean.service.api.group.v2.BoardSingle
+import com.cmoney.backend2.forumocean.service.api.group.v2.BoardManipulation
+import com.cmoney.backend2.forumocean.service.api.group.v2.Group
+import com.cmoney.backend2.forumocean.service.api.group.v2.GroupManipulation
+import com.cmoney.backend2.forumocean.service.api.group.v2.GroupMember
+import com.cmoney.backend2.forumocean.service.api.group.v2.GroupMember2
+import com.cmoney.backend2.forumocean.service.api.group.v2.GroupPushSettingRequest
+import com.cmoney.backend2.forumocean.service.api.group.v2.JoinGroupRequest
+import com.cmoney.backend2.forumocean.service.api.group.v2.MemberRoles
+import com.cmoney.backend2.forumocean.service.api.group.v2.PendingRequests
 import com.cmoney.backend2.forumocean.service.api.group.v2.PushType
 import com.cmoney.backend2.forumocean.service.api.notify.get.GetNotifyResponseBody
 import com.cmoney.backend2.forumocean.service.api.notify.getcount.GetNotifyCountResponseBody
@@ -1430,7 +1430,7 @@ class ForumOceanWebImpl(
         }
     }
 
-    override suspend fun getGroupV2(groupId: Long): Result<GroupDTO> {
+    override suspend fun getGroupV2(groupId: Long): Result<Group> {
         return withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getGroupV2(
@@ -1445,7 +1445,7 @@ class ForumOceanWebImpl(
     override suspend fun getGroupByRoles(
         memberId: Long?,
         roles: List<com.cmoney.backend2.forumocean.service.api.group.v2.Role>
-    ): Result<List<GroupDTO>> {
+    ): Result<List<Group>> {
         return withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getGroupsByRole(
@@ -1458,7 +1458,7 @@ class ForumOceanWebImpl(
         }
     }
 
-    override suspend fun createGroup(group: GroupManipulationDTO): Result<Long> {
+    override suspend fun createGroup(group: GroupManipulation): Result<Long> {
         return withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.createGroup(
@@ -1470,7 +1470,7 @@ class ForumOceanWebImpl(
         }
     }
 
-    override suspend fun updateGroup(groupId: Long, group: GroupManipulationDTO): Result<Unit> {
+    override suspend fun updateGroup(groupId: Long, group: GroupManipulation): Result<Unit> {
         return withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.updateGroup(
@@ -1497,7 +1497,7 @@ class ForumOceanWebImpl(
 
     override suspend fun createGroupBoard(
         groupId: Long,
-        board: BoardManipulationDTO
+        board: BoardManipulation
     ): Result<Long> {
         return withContext(dispatcher.io()) {
             kotlin.runCatching {
@@ -1513,7 +1513,7 @@ class ForumOceanWebImpl(
 
     override suspend fun updateGroupBoard(
         boardId: Long,
-        board: BoardManipulationDTO
+        board: BoardManipulation
     ): Result<Unit> {
         return withContext(dispatcher.io()) {
             kotlin.runCatching {
@@ -1527,7 +1527,7 @@ class ForumOceanWebImpl(
         }
     }
 
-    override suspend fun getGroupBoards(groupId: Long): Result<List<BoardDTO>> {
+    override suspend fun getGroupBoards(groupId: Long): Result<List<Board>> {
         return withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getGroupBoards(
@@ -1539,7 +1539,7 @@ class ForumOceanWebImpl(
         }
     }
 
-    override suspend fun getGroupBoard(boardId: Long): Result<BoardDTOSingle> {
+    override suspend fun getGroupBoard(boardId: Long): Result<BoardSingle> {
         return withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getGroupBoard(
@@ -1585,7 +1585,7 @@ class ForumOceanWebImpl(
     override suspend fun getGroupMemberRoles(
         groupId: Long,
         memberId: Long
-    ): Result<MemberRolesDTO> {
+    ): Result<MemberRoles> {
         return withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getGroupMemberRoles(
@@ -1621,7 +1621,7 @@ class ForumOceanWebImpl(
         roles: List<com.cmoney.backend2.forumocean.service.api.group.v2.Role>,
         offset: Int,
         fetch: Int
-    ): Result<List<GroupMemberDTOX>> {
+    ): Result<List<GroupMember2>> {
         return withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getGroupMembers(
@@ -1648,7 +1648,7 @@ class ForumOceanWebImpl(
         }
     }
 
-    override suspend fun getGroupAdmins(groupId: Long): Result<AdminsDTO> {
+    override suspend fun getGroupAdmins(groupId: Long): Result<Admins> {
         return withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getGroupAdmins(
@@ -1665,7 +1665,7 @@ class ForumOceanWebImpl(
         keyword: String,
         offset: Int,
         fetch: Int
-    ): Result<List<GroupMemberDTO>> {
+    ): Result<List<com.cmoney.backend2.forumocean.service.api.group.v2.GroupMember>> {
         return withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.searchGroupMember(
@@ -1682,7 +1682,7 @@ class ForumOceanWebImpl(
 
     override suspend fun joinGroup(
         groupId: Long,
-        joinGroupRequestDTO: JoinGroupRequestDTO
+        joinGroupRequest: JoinGroupRequest
     ): Result<Unit> {
         return withContext(dispatcher.io()) {
             kotlin.runCatching {
@@ -1690,7 +1690,7 @@ class ForumOceanWebImpl(
                     path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     groupId = groupId,
-                    body = joinGroupRequestDTO
+                    body = joinGroupRequest
                 ).handleNoContent(jsonParser)
             }
         }
@@ -1700,7 +1700,7 @@ class ForumOceanWebImpl(
         groupId: Long,
         timestamp: Long,
         fetch: Int
-    ): Result<PendingRequestsDTO> {
+    ): Result<PendingRequests> {
         return withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getGroupPendingRequests(
@@ -1719,7 +1719,7 @@ class ForumOceanWebImpl(
         keyword: String,
         timestamp: Long,
         fetch: Int
-    ): Result<PendingRequestsDTO> {
+    ): Result<PendingRequests> {
         return withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.searchGroupPendingRequests(
@@ -1736,7 +1736,7 @@ class ForumOceanWebImpl(
 
     override suspend fun approvalGroupRequest(
         groupId: Long,
-        approval: List<ApprovalDTO>
+        approval: List<Approval>
     ): Result<Unit> {
         return withContext(dispatcher.io()) {
             kotlin.runCatching {
@@ -1839,7 +1839,7 @@ class ForumOceanWebImpl(
                 service.setGroupPushSetting(
                     path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
-                    body = GroupPushSettingRequestDTO(
+                    body = GroupPushSettingRequest(
                         groupId,
                         when (pushType) {
                             PushType.ALL -> "all"

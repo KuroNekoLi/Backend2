@@ -19,22 +19,22 @@ import com.cmoney.backend2.forumocean.service.api.group.getapprovals.GroupPendin
 import com.cmoney.backend2.forumocean.service.api.group.getmember.GroupMember
 import com.cmoney.backend2.forumocean.service.api.group.getmemberjoinanygroups.GetMemberJoinAnyGroupsResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.update.UpdateGroupRequestBody
-import com.cmoney.backend2.forumocean.service.api.group.v2.AdminsDTO
-import com.cmoney.backend2.forumocean.service.api.group.v2.ApprovalDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.Admins
+import com.cmoney.backend2.forumocean.service.api.group.v2.Approval
 import com.cmoney.backend2.forumocean.service.api.group.v2.AvailableBoardIds
-import com.cmoney.backend2.forumocean.service.api.group.v2.BoardDTO
-import com.cmoney.backend2.forumocean.service.api.group.v2.BoardDTOSingle
-import com.cmoney.backend2.forumocean.service.api.group.v2.BoardManipulationDTO
-import com.cmoney.backend2.forumocean.service.api.group.v2.GroupDTO
-import com.cmoney.backend2.forumocean.service.api.group.v2.GroupManipulationDTO
-import com.cmoney.backend2.forumocean.service.api.group.v2.GroupMemberDTO
-import com.cmoney.backend2.forumocean.service.api.group.v2.GroupMemberDTOX
-import com.cmoney.backend2.forumocean.service.api.group.v2.GroupPushSettingDTO
-import com.cmoney.backend2.forumocean.service.api.group.v2.GroupPushSettingRequestDTO
-import com.cmoney.backend2.forumocean.service.api.group.v2.InsertedIdDTO
-import com.cmoney.backend2.forumocean.service.api.group.v2.JoinGroupRequestDTO
-import com.cmoney.backend2.forumocean.service.api.group.v2.MemberRolesDTO
-import com.cmoney.backend2.forumocean.service.api.group.v2.PendingRequestsDTO
+import com.cmoney.backend2.forumocean.service.api.group.v2.Board
+import com.cmoney.backend2.forumocean.service.api.group.v2.BoardSingle
+import com.cmoney.backend2.forumocean.service.api.group.v2.BoardManipulation
+import com.cmoney.backend2.forumocean.service.api.group.v2.Group
+import com.cmoney.backend2.forumocean.service.api.group.v2.GroupManipulation
+import com.cmoney.backend2.forumocean.service.api.group.v2.GroupMember
+import com.cmoney.backend2.forumocean.service.api.group.v2.GroupMember2
+import com.cmoney.backend2.forumocean.service.api.group.v2.GroupPushSetting
+import com.cmoney.backend2.forumocean.service.api.group.v2.GroupPushSettingRequest
+import com.cmoney.backend2.forumocean.service.api.group.v2.InsertedId
+import com.cmoney.backend2.forumocean.service.api.group.v2.JoinGroupRequest
+import com.cmoney.backend2.forumocean.service.api.group.v2.MemberRoles
+import com.cmoney.backend2.forumocean.service.api.group.v2.PendingRequests
 import com.cmoney.backend2.forumocean.service.api.notify.get.GetNotifyResponseBody
 import com.cmoney.backend2.forumocean.service.api.notify.getcount.GetNotifyCountResponseBody
 import com.cmoney.backend2.forumocean.service.api.notifysetting.NotifyPushSetting
@@ -1066,7 +1066,7 @@ interface ForumOceanService {
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Path("groupId") groupId: Long,
-    ): Response<GroupDTO>
+    ): Response<Group>
 
     /**
      * 依角色取得會員所有社團(MemberId不帶等於取自己)
@@ -1079,7 +1079,7 @@ interface ForumOceanService {
         @Path("path") path: String,
         @Query("memberId") memberId: Long?, // Optional
         @Query("roleTypes", encoded = true) roles: String
-    ): Response<List<GroupDTO>>
+    ): Response<List<Group>>
 
     /**
      * 創建社團
@@ -1090,8 +1090,8 @@ interface ForumOceanService {
     suspend fun createGroup(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
-        @Body body: GroupManipulationDTO
-    ): Response<InsertedIdDTO>
+        @Body body: GroupManipulation
+    ): Response<InsertedId>
 
     /**
      * 更新社團資訊
@@ -1103,7 +1103,7 @@ interface ForumOceanService {
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Path("groupId") groupId: Long,
-        @Body body: GroupManipulationDTO
+        @Body body: GroupManipulation
     ): Response<Void>
 
     /**
@@ -1128,8 +1128,8 @@ interface ForumOceanService {
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Path("groupId") groupId: Long,
-        @Body body: BoardManipulationDTO
-    ): Response<InsertedIdDTO>
+        @Body body: BoardManipulation
+    ): Response<InsertedId>
 
     /**
      * 修改看板
@@ -1141,7 +1141,7 @@ interface ForumOceanService {
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Path("boardId") boardId: Long,
-        @Body body: BoardManipulationDTO
+        @Body body: BoardManipulation
     ): Response<Void>
 
     /**
@@ -1154,7 +1154,7 @@ interface ForumOceanService {
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Path("groupId") groupId: Long,
-    ): Response<List<BoardDTO>>
+    ): Response<List<Board>>
 
     /**
      * 取得特定看板資訊
@@ -1166,7 +1166,7 @@ interface ForumOceanService {
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Path("boardId") boardId: Long,
-    ): Response<BoardDTOSingle>
+    ): Response<BoardSingle>
 
     /**
      * 刪除社團看板(鎖權限：幹部以上)
@@ -1203,7 +1203,7 @@ interface ForumOceanService {
         @Path("path") path: String,
         @Path("groupId") groupId: Long,
         @Path("memberId") memberId: Long
-    ): Response<MemberRolesDTO>
+    ): Response<MemberRoles>
 
     /**
      * 設定社團身份(鎖權限：幹部以上)
@@ -1232,7 +1232,7 @@ interface ForumOceanService {
         @Query("roleTypes", encoded = true) roles: String,
         @Query("offset") offset: Int,
         @Query("fetch") fetch: Int
-    ): Response<List<GroupMemberDTOX>>
+    ): Response<List<GroupMember2>>
 
     /**
      * 離開社團
@@ -1256,7 +1256,7 @@ interface ForumOceanService {
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Path("groupId") groupId: Long
-    ): Response<AdminsDTO>
+    ): Response<Admins>
 
     /**
      * 搜尋社員
@@ -1271,7 +1271,7 @@ interface ForumOceanService {
         @Query("keyword") keyword: String,
         @Query("offset") offset: Int,
         @Query("fetch") fetch: Int
-    ): Response<List<GroupMemberDTO>>
+    ): Response<List<com.cmoney.backend2.forumocean.service.api.group.v2.GroupMember>>
 
     /**
      * 申請加入社團
@@ -1283,7 +1283,7 @@ interface ForumOceanService {
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Path("groupId") groupId: Long,
-        @Body body: JoinGroupRequestDTO
+        @Body body: JoinGroupRequest
     ): Response<Void>
 
     /**
@@ -1298,7 +1298,7 @@ interface ForumOceanService {
         @Path("groupId") groupId: Long,
         @Query("timestamp") timestamp: Long,
         @Query("fetch") fetch: Int = 20
-    ): Response<PendingRequestsDTO>
+    ): Response<PendingRequests>
 
     /**
      * 搜尋審核中的社員(鎖權限：幹部以上)
@@ -1313,7 +1313,7 @@ interface ForumOceanService {
         @Query("keyword") keyword: String,
         @Query("timestamp") timestamp: Long?,
         @Query("fetch") fetch: Int = 20
-    ): Response<PendingRequestsDTO>
+    ): Response<PendingRequests>
 
     /**
      * 審核成員加入(鎖權限：幹部以上)
@@ -1325,7 +1325,7 @@ interface ForumOceanService {
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Path("groupId") groupId: Long,
-        @Body body: List<ApprovalDTO>
+        @Body body: List<Approval>
     ): Response<Void>
 
     /**
@@ -1400,7 +1400,7 @@ interface ForumOceanService {
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Path("groupId") groupId: Long
-    ): Response<GroupPushSettingDTO>
+    ): Response<GroupPushSetting>
 
     /**
      * 設定會員在社團內的推播
@@ -1411,6 +1411,6 @@ interface ForumOceanService {
     suspend fun setGroupPushSetting(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
-        @Body body: GroupPushSettingRequestDTO
+        @Body body: GroupPushSettingRequest
     ): Response<Void>
 }

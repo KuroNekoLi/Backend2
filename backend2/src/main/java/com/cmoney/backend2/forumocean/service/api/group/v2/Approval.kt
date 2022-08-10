@@ -5,18 +5,18 @@ import com.google.gson.annotations.SerializedName
 import androidx.annotation.Keep
 
 /**
- * 角色權限
+ * 核准
  */
 @Keep
-data class RolesAuth(
+data class Approval(
     /**
-     * 是否可讀
+     * 核准加入
      */
-    @SerializedName("canRead")
-    val canRead: Boolean?,
+    @SerializedName("approval")
+    val approval: Boolean?,
     /**
-     * 角色ID
+     * 用戶memberId
      */
-    @SerializedName("roleId")
-    val roleId: Int?
+    @SerializedName("id")
+    val id: Long?
 )
