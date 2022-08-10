@@ -7,7 +7,6 @@ import androidx.annotation.Keep
 /**
  * GroupPushSetting 請求
  */
-@Keep
 data class GroupPushSettingRequest(
     /**
      * 社團Id

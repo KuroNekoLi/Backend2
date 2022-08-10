@@ -7,7 +7,6 @@ import androidx.annotation.Keep
 /**
  * 權限物件
  */
-@Keep
 data class Auth(
     /**
      * 是否有權限

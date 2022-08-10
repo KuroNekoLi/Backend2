@@ -7,7 +7,6 @@ import androidx.annotation.Keep
 /**
  * 待審核api
  */
-@Keep
 data class PendingRequests(
     @SerializedName("lastTimestamp")
     val lastTimestamp: Long?,

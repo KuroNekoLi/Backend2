@@ -7,7 +7,6 @@ import com.google.gson.annotations.SerializedName
 /**
  * 待審核
  */
-@Keep
 data class PendingRequest(
     /**
      * 建立時間

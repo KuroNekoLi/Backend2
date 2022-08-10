@@ -7,7 +7,6 @@ import androidx.annotation.Keep
 /**
  * 修改看板
  */
-@Keep
 data class BoardManipulation(
     /**
      * 看板名稱

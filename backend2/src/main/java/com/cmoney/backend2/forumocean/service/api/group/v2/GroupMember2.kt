@@ -7,7 +7,6 @@ import androidx.annotation.Keep
 /**
  * 社團成員物件 第二種
  */
-@Keep
 data class GroupMember2(
     /**
      * memberId

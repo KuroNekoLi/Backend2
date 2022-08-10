@@ -7,7 +7,6 @@ import androidx.annotation.Keep
 /**
  * 社團角色
  */
-@Keep
 data class GroupRole(
     /**
      * 預設角色

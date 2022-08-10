@@ -2,12 +2,10 @@ package com.cmoney.backend2.forumocean.service.api.group.v2
 
 
 import com.google.gson.annotations.SerializedName
-import androidx.annotation.Keep
 
 /**
  * 單一看板
  */
-@Keep
 data class BoardSingle(
     /**
      * 權限

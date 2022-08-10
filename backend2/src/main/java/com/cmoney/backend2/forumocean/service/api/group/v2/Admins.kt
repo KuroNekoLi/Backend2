@@ -7,7 +7,6 @@ import androidx.annotation.Keep
 /**
  * 管理權限用戶清單
  */
-@Keep
 data class Admins(
     /**
      * 管理員 memberId

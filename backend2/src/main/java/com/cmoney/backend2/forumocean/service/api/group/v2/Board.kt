@@ -7,7 +7,6 @@ import androidx.annotation.Keep
 /**
  * 一個看板
  */
-@Keep
 data class Board(
     /**
      * 專欄預設看板：ColumnistDefaultBoard

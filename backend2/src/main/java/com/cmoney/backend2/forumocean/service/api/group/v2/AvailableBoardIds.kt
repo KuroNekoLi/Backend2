@@ -7,7 +7,6 @@ import androidx.annotation.Keep
 /**
  * 可用的boardId
  */
-@Keep
 data class AvailableBoardIds(
     /**
      * memberIds

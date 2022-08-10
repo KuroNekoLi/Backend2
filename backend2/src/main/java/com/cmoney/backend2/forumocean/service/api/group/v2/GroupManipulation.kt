@@ -7,7 +7,6 @@ import androidx.annotation.Keep
 /**
  * 社團修改
  */
-@Keep
 data class GroupManipulation(
     /**
      * 描述

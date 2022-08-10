@@ -7,7 +7,6 @@ import androidx.annotation.Keep
 /**
  * 角色權限
  */
-@Keep
 data class RolesAuth(
     /**
      * 是否可讀

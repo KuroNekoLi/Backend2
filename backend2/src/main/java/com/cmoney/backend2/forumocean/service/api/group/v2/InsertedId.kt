@@ -7,7 +7,6 @@ import androidx.annotation.Keep
 /**
  * 新增完成物件
  */
-@Keep
 data class InsertedId(
     /**
      * 對象物件ID

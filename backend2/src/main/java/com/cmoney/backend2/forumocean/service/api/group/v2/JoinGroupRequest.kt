@@ -7,7 +7,6 @@ import androidx.annotation.Keep
 /**
  * 加入社團請求
  */
-@Keep
 data class JoinGroupRequest(
     /**
      * 加入原因

@@ -6,7 +6,6 @@ import com.google.gson.annotations.SerializedName
 /**
  * 社團成員
  */
-@Keep
 data class GroupMember(
     /**
      * 社團圖片

@@ -7,7 +7,6 @@ import androidx.annotation.Keep
 /**
  * 核准
  */
-@Keep
 data class Approval(
     /**
      * 核准加入

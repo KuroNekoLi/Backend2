@@ -7,7 +7,6 @@ import androidx.annotation.Keep
 /**
  * 角色
  */
-@Keep
 data class MemberRoles(
     /**
      * 角色ID

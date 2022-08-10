@@ -7,7 +7,6 @@ import androidx.annotation.Keep
 /**
  * 社團推播設定
  */
-@Keep
 data class GroupPushSetting(
     /**
      * 推播種類

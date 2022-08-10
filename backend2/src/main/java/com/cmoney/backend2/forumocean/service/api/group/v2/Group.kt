@@ -7,7 +7,6 @@ import androidx.annotation.Keep
 /**
  * 社團
  */
-@Keep
 data class Group(
     /**
      * 建立時間
