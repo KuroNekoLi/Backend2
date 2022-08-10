@@ -23,7 +23,6 @@ import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentRe
 import com.cmoney.backend2.forumocean.service.api.comment.update.IUpdateCommentHelper
 import com.cmoney.backend2.forumocean.service.api.group.create.CreateGroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.getapprovals.GroupPendingApproval
-import com.cmoney.backend2.forumocean.service.api.group.getmember.GroupMember
 import com.cmoney.backend2.forumocean.service.api.group.getmemberjoinanygroups.GetMemberJoinAnyGroupsResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.update.UpdateGroupRequestBody
 import com.cmoney.backend2.forumocean.service.api.group.v2.Admins
@@ -825,7 +824,7 @@ class ForumOceanWebImpl(
         offset: Int,
         fetch: Int,
         position: List<GroupPosition>
-    ): Result<List<GroupMember>> = withContext(dispatcher.io()) {
+    ): Result<List<com.cmoney.backend2.forumocean.service.api.group.getmember.GroupMember>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getMembers(
                 path = serverName,

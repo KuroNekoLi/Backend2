@@ -16,7 +16,6 @@ import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentRe
 import com.cmoney.backend2.forumocean.service.api.comment.update.UpdateCommentRequestBody
 import com.cmoney.backend2.forumocean.service.api.group.create.CreateGroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.getapprovals.GroupPendingApproval
-import com.cmoney.backend2.forumocean.service.api.group.getmember.GroupMember
 import com.cmoney.backend2.forumocean.service.api.group.getmemberjoinanygroups.GetMemberJoinAnyGroupsResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.update.UpdateGroupRequestBody
 import com.cmoney.backend2.forumocean.service.api.group.v2.Admins
@@ -553,7 +552,7 @@ interface ForumOceanService {
         @Query("offset") offset: Int,
         @Query("fetch") fetch: Int,
         @Query("position") position: Int
-    ): Response<List<GroupMember>>
+    ): Response<List<com.cmoney.backend2.forumocean.service.api.group.getmember.GroupMember>>
 
     @RecordApi
     @GET("{path}/api/GroupMember/GetApprovals/{groupId}")
