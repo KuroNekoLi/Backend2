@@ -2,6 +2,19 @@
 
 
 
+## [5.33.1](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.33.0...5.33.1) (2022-08-12)
+
+
+### Bug Fixes
+
+* 修正endCursor沒有轉成json格式問題 ([fd9fe55](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/fd9fe55b5995e7c0487488f6d86f3966f582c29a))
+
+
+
+#  (2022-08-12)
+
+
+
 # [5.33.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.32.0...5.33.0) (2022-08-12)
 
 
