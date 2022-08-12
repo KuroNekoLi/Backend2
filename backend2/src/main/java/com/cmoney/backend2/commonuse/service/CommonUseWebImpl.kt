@@ -5,6 +5,7 @@ import com.cmoney.backend2.base.extension.createAuthorizationBearer
 import com.cmoney.backend2.base.model.dispatcher.DefaultDispatcherProvider
 import com.cmoney.backend2.base.model.dispatcher.DispatcherProvider
 import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.backend2.commonuse.service.api.historyevent.HistoryEvents
 import com.cmoney.backend2.commonuse.service.api.investmentpreference.InvestmentPreference
 import com.cmoney.backend2.commonuse.service.api.investmentpreference.InvestmentPreferenceType
 import com.cmoney.backend2.commonuse.service.api.query.QueryParam
@@ -97,4 +98,59 @@ class CommonUseWebImpl(
                 }
             }
         }
+
+    override suspend fun getCommodityHistoryEvent(
+        host: String,
+        commodityIds: List<String>,
+        endCursor: String?
+    ): Result<HistoryEvents> = withContext(dispatcherProvider.io()) {
+        kotlin.runCatching {
+            val requestCommodityIds = gson.toJson(commodityIds)
+            val responseBody = commonUseService.query(
+                url = "$host$servicePath/graphql",
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                query = QueryParam(
+                    """
+                        |query{
+                          |notif{
+                              |majorEvents(commKeys:$requestCommodityIds,after:$endCursor){
+                                  |edges{
+                                      |node{
+                                          |commKey
+                                          |commName
+                                          |body
+                                          |link
+                                          |notifyTime
+                                      |}
+                                  |}
+                                  |pageInfo{
+                                      |hasNextPage
+                                      |endCursor
+                                  |}
+                              |}
+                          |}
+                        |}
+                    """.trimMargin()
+                )
+            )
+                .checkResponseBody(gson)
+
+            val response = responseBody
+                .getAsJsonObject("data")
+                .getAsJsonObject("notif")
+                .get("majorEvents")
+
+            if (response.isJsonNull) {
+                HistoryEvents(
+                    events = null,
+                    pageInfo = null
+                )
+            } else {
+                gson.fromJson(
+                    response,
+                    object : TypeToken<HistoryEvents>() {}.type
+                )
+            }
+        }
+    }
 }
