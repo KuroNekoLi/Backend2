@@ -14,9 +14,21 @@ import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentRe
 import com.cmoney.backend2.forumocean.service.api.comment.update.IUpdateCommentHelper
 import com.cmoney.backend2.forumocean.service.api.group.create.CreateGroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.getapprovals.GroupPendingApproval
-import com.cmoney.backend2.forumocean.service.api.group.getmember.GroupMember
 import com.cmoney.backend2.forumocean.service.api.group.getmemberjoinanygroups.GetMemberJoinAnyGroupsResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.update.UpdateGroupRequestBody
+import com.cmoney.backend2.forumocean.service.api.group.v2.Admins
+import com.cmoney.backend2.forumocean.service.api.group.v2.Approval
+import com.cmoney.backend2.forumocean.service.api.group.v2.AvailableBoardIds
+import com.cmoney.backend2.forumocean.service.api.group.v2.Board
+import com.cmoney.backend2.forumocean.service.api.group.v2.BoardSingle
+import com.cmoney.backend2.forumocean.service.api.group.v2.BoardManipulation
+import com.cmoney.backend2.forumocean.service.api.group.v2.Group
+import com.cmoney.backend2.forumocean.service.api.group.v2.GroupManipulation
+import com.cmoney.backend2.forumocean.service.api.group.v2.GroupMember2
+import com.cmoney.backend2.forumocean.service.api.group.v2.JoinGroupRequest
+import com.cmoney.backend2.forumocean.service.api.group.v2.MemberRoles
+import com.cmoney.backend2.forumocean.service.api.group.v2.PendingRequests
+import com.cmoney.backend2.forumocean.service.api.group.v2.PushType
 import com.cmoney.backend2.forumocean.service.api.notify.get.GetNotifyResponseBody
 import com.cmoney.backend2.forumocean.service.api.notify.getcount.GetNotifyCountResponseBody
 import com.cmoney.backend2.forumocean.service.api.notifysetting.NotifyPushSetting
@@ -230,6 +242,21 @@ interface ForumOceanWeb {
      * @return 回文Id
      */
     suspend fun createComment(
+        articleId: Long,
+        text: String?,
+        multiMedia: List<MediaType>?,
+        position: Any?
+    ): Result<CreateCommentResponseBody>
+
+    /**
+     * 對指定Group主文發一篇回文
+     * @param articleId 指定主文Id
+     * @param text content
+     * @param multiMedia ContentType
+     * @param position
+     * @return 回文Id
+     */
+    suspend fun createGroupArticleComment(
         articleId: Long,
         text: String?,
         multiMedia: List<MediaType>?,
@@ -520,7 +547,7 @@ interface ForumOceanWeb {
         offset: Int,
         fetch: Int,
         position: List<GroupPosition>
-    ): Result<List<GroupMember>>
+    ): Result<List<com.cmoney.backend2.forumocean.service.api.group.getmember.GroupMember>>
 
     /**
      * 取得申請加入社團待審核清單
@@ -1105,7 +1132,7 @@ interface ForumOceanWeb {
 
     /**
      * 取得專欄作家Vip社團資訊
-     * 
+     *
      * @param columnistMemberId 專欄作家Id
      */
     suspend fun getColumnistVipGroup(columnistMemberId: Long): Result<GetColumnistVipGroupResponse>
@@ -1118,4 +1145,221 @@ interface ForumOceanWeb {
      * @param stockId 股票代號
      */
     suspend fun getStockReportId(date: String, brokerId: String, stockId: String): Result<Int>
+
+    /**
+     * 取得指定社團資訊
+     *
+     * GroupV2
+     */
+    suspend fun getGroupV2(groupId: Long): Result<Group>
+
+    /**
+     * 依角色取得會員所有社團(MemberId不帶等於取自己)
+     *
+     * GroupV2
+     */
+    suspend fun getGroupByRoles(
+        memberId: Long?,
+        roles: List<com.cmoney.backend2.forumocean.service.api.group.v2.Role>
+    ): Result<List<Group>>
+
+    /**
+     * 創建社團
+     *
+     * GroupV2
+     * @return Id of inserted group
+     */
+    suspend fun createGroup(group: GroupManipulation): Result<Long>
+
+    /**
+     * 更新社團資訊
+     *
+     * GroupV2
+     */
+    suspend fun updateGroup(groupId: Long, group: GroupManipulation): Result<Unit>
+
+    /**
+     * 解散社團(鎖權限：社長)
+     *
+     * GroupV2
+     */
+    suspend fun dismissGroup(groupId: Long): Result<Unit>
+
+    /**
+     * 增加社團的板(鎖權限:社長)
+     *
+     * GroupV2
+     * @return Id of inserted board
+     */
+    suspend fun createGroupBoard(groupId: Long, board: BoardManipulation): Result<Long>
+
+    /**
+     * 修改看板
+     *
+     * GroupV2
+     */
+    suspend fun updateGroupBoard(boardId: Long, board: BoardManipulation): Result<Unit>
+
+    /**
+     * 取得社團所有看板
+     *
+     * GroupV2
+     */
+    suspend fun getGroupBoards(groupId: Long): Result<List<Board>>
+
+    /**
+     * 取得特定看板資訊
+     *
+     * GroupV2
+     */
+    suspend fun getGroupBoard(boardId: Long): Result<BoardSingle>
+
+    /**
+     * 刪除社團看板(鎖權限：幹部以上)
+     *
+     * GroupV2
+     */
+    suspend fun deleteGroupBoard(boardId: Long): Result<Unit>
+
+    /**
+     * 取得社團是否有未察看的待審用戶
+     *
+     * GroupV2
+     */
+    suspend fun hasNewGroupPending(groupId: Long): Result<Boolean>
+
+    /**
+     * 取得該社員在社團的所有角色
+     *
+     * GroupV2
+     */
+    suspend fun getGroupMemberRoles(groupId: Long, memberId: Long): Result<MemberRoles>
+
+    /**
+     * 設定社團身份(鎖權限：幹部以上)
+     *
+     * GroupV2
+     */
+    suspend fun updateGroupMemberRoles(
+        groupId: Long,
+        memberId: Long,
+        roleIds: List<Int>
+    ): Result<Unit>
+
+    /**
+     * 取得社團成員列表
+     *
+     * GroupV2
+     */
+    suspend fun getGroupMembers(
+        groupId: Long,
+        roles: List<com.cmoney.backend2.forumocean.service.api.group.v2.Role>,
+        offset: Int,
+        fetch: Int
+    ): Result<List<GroupMember2>>
+
+    /**
+     * 離開社團
+     *
+     * GroupV2
+     */
+    suspend fun leaveGroup(groupId: Long): Result<Unit>
+
+    /**
+     * 取得社長及幹部清單
+     *
+     * GroupV2
+     */
+    suspend fun getGroupAdmins(groupId: Long): Result<Admins>
+
+    /**
+     * 搜尋社員
+     *
+     * GroupV2
+     */
+    suspend fun searchGroupMember(
+        groupId: Long,
+        keyword: String,
+        offset: Int,
+        fetch: Int
+    ): Result<List<com.cmoney.backend2.forumocean.service.api.group.v2.GroupMember>>
+
+    /**
+     * 申請加入社團
+     *
+     * GroupV2
+     */
+    suspend fun joinGroup(groupId: Long, joinGroupRequest: JoinGroupRequest): Result<Unit>
+
+    /**
+     * 取得審核成員列表(鎖權限：幹部以上)
+     *
+     * @param timestamp The page timestamp. (For pagination).
+     *
+     * GroupV2
+     */
+    suspend fun getGroupPendingRequests(
+        groupId: Long,
+        timestamp: Long,
+        fetch: Int = 20
+    ): Result<PendingRequests>
+
+    /**
+     * 搜尋審核中的社員(鎖權限：幹部以上)
+     *
+     * GroupV2
+     */
+    suspend fun searchGroupPendingRequests(
+        groupId: Long,
+        keyword: String,
+        timestamp: Long,
+        fetch: Int = 20
+    ): Result<PendingRequests>
+
+    /**
+     * 審核成員加入(鎖權限：幹部以上)
+     *
+     * GroupV2
+     */
+    suspend fun approvalGroupRequest(groupId: Long, approval: List<Approval>): Result<Unit>
+
+    /**
+     * 踢出成員(鎖權限：幹部以上)
+     *
+     * GroupV2
+     */
+    suspend fun kickGroupMember(groupId: Long, memberId: Long): Result<Unit>
+
+    /**
+     * 對社團看板發文
+     */
+    suspend fun createGroupArticle(
+        boardId: Long,
+        content: Content.Article.General
+    ): Result<CreateArticleResponseBody>
+
+    /**
+     * 刪除看板文章
+     */
+    suspend fun deleteGroupArticle(articleId: Long): Result<Unit>
+
+    /**
+     * 刪除看板文章留言
+     */
+    suspend fun deleteGroupArticleComment(articleId: Long, commentId: Long): Result<Unit>
+
+    /**
+     * 取得用戶可以進入的所有看板 id
+     */
+    suspend fun getAvailableBoardIds(): Result<AvailableBoardIds>
+
+    /**
+     * 取得社團推播
+     */
+    suspend fun getGroupPushSetting(groupId: Long): Result<PushType>
+
+    /**
+     * 設定社團推播
+     */
+    suspend fun setGroupPushSetting(groupId: Long, pushType: PushType): Result<Unit>
 }
