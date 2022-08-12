@@ -106,6 +106,7 @@ class CommonUseWebImpl(
     ): Result<HistoryEvents> = withContext(dispatcherProvider.io()) {
         kotlin.runCatching {
             val requestCommodityIds = gson.toJson(commodityIds)
+            val requestEndCursor = gson.toJson(endCursor)
             val responseBody = commonUseService.query(
                 url = "$host$servicePath/graphql",
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -113,7 +114,7 @@ class CommonUseWebImpl(
                     """
                         |query{
                           |notif{
-                              |majorEvents(commKeys:$requestCommodityIds,after:$endCursor){
+                              |majorEvents(commKeys:$requestCommodityIds,after:$requestEndCursor){
                                   |edges{
                                       |node{
                                           |commKey
