@@ -1,5 +1,6 @@
 package com.cmoney.backend2.commonuse.service
 
+import com.cmoney.backend2.commonuse.service.api.historyevent.HistoryEvents
 import com.cmoney.backend2.commonuse.service.api.investmentpreference.InvestmentPreference
 import com.cmoney.backend2.commonuse.service.api.investmentpreference.InvestmentPreferenceType
 
@@ -29,4 +30,17 @@ interface CommonUseWeb {
      * @return 用戶選擇的投資屬性清單
      */
     suspend fun getInvestmentPreferences(host: String = baseHost): Result<List<InvestmentPreference>>
+
+    /**
+     * 取得商品的歷史推播事件紀錄
+     *
+     * @param commodityIds 欲取的商品清單
+     * @param endCursor 取得下筆分頁的 key, 第一筆預設為 null
+     * @return 歷史推播事件清單
+     */
+    suspend fun getCommodityHistoryEvent(
+        host: String = baseHost,
+        commodityIds: List<String>,
+        endCursor: String? = null
+    ): Result<HistoryEvents>
 }
