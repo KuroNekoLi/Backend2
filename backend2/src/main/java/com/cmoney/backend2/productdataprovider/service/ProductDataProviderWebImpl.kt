@@ -82,7 +82,8 @@ class ProductDataProviderWebImpl(
         {
             id,
             name,
-            isShow
+            isShow,
+            rank
         }
     }
 }""",
@@ -97,19 +98,21 @@ class ProductDataProviderWebImpl(
                     .get("productInfoSet").asJsonArray
                     .get(0).asJsonObject
                 val saleItemObjs = productObj.get("saleInfoSet").asJsonArray
-                saleItemObjs.map { it.asJsonObject }.mapNotNull { saleItemObj ->
-                    try {
-                        SaleItem(
-                            productObj.get("id").asLong,
-                            productObj.get("name").asString,
-                            saleItemObj.get("id").asLong,
-                            saleItemObj.get("name").asString,
-                            saleItemObj.get("isShow").asBoolean
-                        )
-                    } catch (e: Exception) {
-                        null
+                saleItemObjs.map { it.asJsonObject }
+                    .sortedBy { it.get("rank").asInt }
+                    .mapNotNull { saleItemObj ->
+                        try {
+                            SaleItem(
+                                productObj.get("id").asLong,
+                                productObj.get("name").asString,
+                                saleItemObj.get("id").asLong,
+                                saleItemObj.get("name").asString,
+                                saleItemObj.get("isShow").asBoolean
+                            )
+                        } catch (e: Exception) {
+                            null
+                        }
                     }
-                }
             }
         }
 }
