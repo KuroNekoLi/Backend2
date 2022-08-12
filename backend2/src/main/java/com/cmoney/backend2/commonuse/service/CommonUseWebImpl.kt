@@ -148,7 +148,7 @@ class CommonUseWebImpl(
             } else {
                 gson.fromJson(
                     response,
-                    object : TypeToken<HistoryEvents>() {}.type
+                    HistoryEvents::class.java
                 )
             }
         }
