@@ -1,13 +1,26 @@
+#  (2022-08-15)
+
+
+
+# [5.34.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.33.1...5.34.0) (2022-08-15)
+
+
+### Features
+
+* 更新檢舉文章接口 ([7bd2fe5](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/7bd2fe5fb8f08de1bc3bd46bf75e82bf5630eb9d))
+
+
+
 #  (2022-08-12)
 
 
 
-## [5.33.1](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.33.0...5.33.1) (2022-08-12)
+## [5.33.1](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.33.0...5.33.1) (2022-08-12)
 
 
 ### Bug Fixes
 
-* 修正endCursor沒有轉成json格式問題 ([fd9fe55](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/fd9fe55b5995e7c0487488f6d86f3966f582c29a))
+* 修正endCursor沒有轉成json格式問題 ([fd9fe55](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/fd9fe55b5995e7c0487488f6d86f3966f582c29a))
 
 
 
