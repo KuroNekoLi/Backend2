@@ -51,7 +51,6 @@ import com.cmoney.backend2.forumocean.service.api.rank.getexpertmemberrank.GetEx
 import com.cmoney.backend2.forumocean.service.api.rank.getfansmemberrank.FansMemberRankResponseBody
 import com.cmoney.backend2.forumocean.service.api.rank.getsolutionexpertrank.SolutionExpertRankResponseBody
 import com.cmoney.backend2.forumocean.service.api.relationship.getdonate.DonateInfo
-import com.cmoney.backend2.forumocean.service.api.report.create.ReasonType
 import com.cmoney.backend2.forumocean.service.api.role.Role
 import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
 import com.cmoney.backend2.forumocean.service.api.support.SearchMembersResponseBody
@@ -1240,7 +1239,7 @@ class ForumOceanWebImpl(
 
     override suspend fun createReport(
         articleId: Long,
-        reason: ReasonType,
+        reasonType: Int,
         commentId: Long?
     ): Result<Unit> =
         withContext(dispatcher.io()) {
@@ -1249,7 +1248,7 @@ class ForumOceanWebImpl(
                     path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     articleId = articleId,
-                    reasonType = reason.value,
+                    reasonType =reasonType,
                     commentId = commentId
                 ).handleNoContent(jsonParser)
             }

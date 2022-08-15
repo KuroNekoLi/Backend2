@@ -20,8 +20,8 @@ import com.cmoney.backend2.forumocean.service.api.group.getmemberjoinanygroups.G
 import com.cmoney.backend2.forumocean.service.api.group.update.UpdateGroupRequestBody
 import com.cmoney.backend2.forumocean.service.api.group.v2.Admins
 import com.cmoney.backend2.forumocean.service.api.group.v2.AvailableBoardIds
-import com.cmoney.backend2.forumocean.service.api.group.v2.BoardSingle
 import com.cmoney.backend2.forumocean.service.api.group.v2.BoardManipulation
+import com.cmoney.backend2.forumocean.service.api.group.v2.BoardSingle
 import com.cmoney.backend2.forumocean.service.api.group.v2.Group
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupManipulation
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupPushSetting
@@ -38,7 +38,6 @@ import com.cmoney.backend2.forumocean.service.api.rank.getexpertmemberrank.GetEx
 import com.cmoney.backend2.forumocean.service.api.rank.getfansmemberrank.FansMemberRankResponseBody
 import com.cmoney.backend2.forumocean.service.api.rank.getsolutionexpertrank.SolutionExpertRankResponseBody
 import com.cmoney.backend2.forumocean.service.api.relationship.getdonate.DonateInfo
-import com.cmoney.backend2.forumocean.service.api.report.create.ReasonType
 import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
 import com.cmoney.backend2.forumocean.service.api.support.SearchMembersResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.request.GroupPosition
@@ -1122,6 +1121,7 @@ class ForumOceanWebImplTest {
         )
         assertThat(result.isSuccess).isFalse()
     }
+
     @ExperimentalCoroutinesApi
     @Test
     fun `createGroupArticleComment_回復文章成功測試`() = mainCoroutineRule.runBlockingTest {
@@ -2915,7 +2915,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success<Void>(204, null)
-        val result = web.createReport(231321, ReasonType.AD, null)
+        val result = web.createReport(231321, 1, null)
         assertThat(result.isSuccess)
     }
 
@@ -2931,7 +2931,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.error(500, "".toResponseBody())
-        val result = web.createReport(231321, ReasonType.AD, null)
+        val result = web.createReport(231321, 1, null)
         assertThat(result.isFailure).isTrue()
     }
 
@@ -3989,6 +3989,7 @@ class ForumOceanWebImplTest {
         val result = web.hasNewGroupPending(1)
         assertThat(result.isFailure).isTrue()
     }
+
     @ExperimentalCoroutinesApi
     @Test
     fun `取得該社員在社團的所有角色_success`() = mainCoroutineRule.runBlockingTest {
@@ -4018,6 +4019,7 @@ class ForumOceanWebImplTest {
         val result = web.getGroupMemberRoles(1, 1)
         assertThat(result.isFailure).isTrue()
     }
+
     @ExperimentalCoroutinesApi
     @Test
     fun `設定社團身份_success`() = mainCoroutineRule.runBlockingTest {
@@ -4063,7 +4065,7 @@ class ForumOceanWebImplTest {
                 fetch = any()
             )
         } returns Response.success(listOf())
-        val result = web.getGroupMembers(1, listOf(), 0 , 0)
+        val result = web.getGroupMembers(1, listOf(), 0, 0)
         assertThat(result.isSuccess).isTrue()
     }
 
@@ -4080,7 +4082,7 @@ class ForumOceanWebImplTest {
                 fetch = any()
             )
         } returns Response.error(500, "".toResponseBody())
-        val result = web.getGroupMembers(1, listOf(), 0 , 0)
+        val result = web.getGroupMembers(1, listOf(), 0, 0)
         assertThat(result.isFailure).isTrue()
     }
 
