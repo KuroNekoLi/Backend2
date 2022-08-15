@@ -20,8 +20,8 @@ import com.cmoney.backend2.forumocean.service.api.group.v2.Admins
 import com.cmoney.backend2.forumocean.service.api.group.v2.Approval
 import com.cmoney.backend2.forumocean.service.api.group.v2.AvailableBoardIds
 import com.cmoney.backend2.forumocean.service.api.group.v2.Board
-import com.cmoney.backend2.forumocean.service.api.group.v2.BoardSingle
 import com.cmoney.backend2.forumocean.service.api.group.v2.BoardManipulation
+import com.cmoney.backend2.forumocean.service.api.group.v2.BoardSingle
 import com.cmoney.backend2.forumocean.service.api.group.v2.Group
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupManipulation
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupMember2
@@ -1027,7 +1027,7 @@ interface ForumOceanWeb {
      * 使用者檢舉文章 (主文回文Id帶null 回文帶回文Id)
      *
      * @param articleId 文章ID
-     * @param reasonType 檢舉原因
+     * @param reasonType 檢舉原因 [對照表(Report) -> http://outpost.cmoney.net.tw/ForumOcean/swagger/index.html]
      * @param commentId 回文Id
      * @return
      */
