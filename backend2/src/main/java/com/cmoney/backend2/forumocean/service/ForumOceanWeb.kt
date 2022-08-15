@@ -41,7 +41,6 @@ import com.cmoney.backend2.forumocean.service.api.rank.getfansmemberrank.FansMem
 import com.cmoney.backend2.forumocean.service.api.rank.getsolutionexpertrank.SolutionExpertRankResponseBody
 import com.cmoney.backend2.forumocean.service.api.relationship.getdonate.DonateInfo
 import com.cmoney.backend2.forumocean.service.api.relationship.getrelationshipwithme.RelationshipWithMe
-import com.cmoney.backend2.forumocean.service.api.report.create.ReasonType
 import com.cmoney.backend2.forumocean.service.api.role.Role
 import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
 import com.cmoney.backend2.forumocean.service.api.support.SearchMembersResponseBody
@@ -1028,11 +1027,11 @@ interface ForumOceanWeb {
      * 使用者檢舉文章 (主文回文Id帶null 回文帶回文Id)
      *
      * @param articleId 文章ID
-     * @param reason 檢舉原因
+     * @param reasonType 檢舉原因
      * @param commentId 回文Id
      * @return
      */
-    suspend fun createReport(articleId: Long, reason: ReasonType, commentId: Long?): Result<Unit>
+    suspend fun createReport(articleId: Long, reasonType: Int, commentId: Long?): Result<Unit>
 
     /**
      * 刪除指定使用者檢舉文章的記錄

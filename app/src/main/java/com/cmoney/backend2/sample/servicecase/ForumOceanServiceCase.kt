@@ -10,7 +10,6 @@ import com.cmoney.backend2.forumocean.service.api.channel.channelname.definechan
 import com.cmoney.backend2.forumocean.service.api.channel.channelname.definechannelnamebuilder.DefineChannelName
 import com.cmoney.backend2.forumocean.service.api.comment.update.UpdateCommentHelper
 import com.cmoney.backend2.forumocean.service.api.group.update.UpdateGroupRequestBody
-import com.cmoney.backend2.forumocean.service.api.report.create.ReasonType
 import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
 import com.cmoney.backend2.forumocean.service.api.variable.request.GroupJoinType
 import com.cmoney.backend2.forumocean.service.api.variable.request.GroupPosition
@@ -341,7 +340,9 @@ class ForumOceanServiceCase : ServiceCase {
 
         getChannelsArticleByWeight(
             channelNameBuilderList = listOf(
-                DefineChannelName.MemberNote(memberId = setting.identityToken.getMemberId().toLong())
+                DefineChannelName.MemberNote(
+                    memberId = setting.identityToken.getMemberId().toLong()
+                )
             ),
             weight = Long.MAX_VALUE,
             count = 20
@@ -548,12 +549,12 @@ class ForumOceanServiceCase : ServiceCase {
                 multiMedia = null,
                 position = null
             ).getOrNull()
-            createReport(articleId, ReasonType.Abuse, commentId?.commentIndex).logResponse(TAG)
+            createReport(articleId, 1, commentId?.commentIndex).logResponse(TAG)
             getComment(articleId, null, null).logResponse(TAG)
         }
 
         articleId?.apply {
-            createReport(articleId, ReasonType.AD, null).logResponse(TAG)
+            createReport(articleId, 1, null).logResponse(TAG)
             getArticle(articleId).logResponse(TAG)
             deleteReport(articleId, null).logResponse(TAG)
         }
