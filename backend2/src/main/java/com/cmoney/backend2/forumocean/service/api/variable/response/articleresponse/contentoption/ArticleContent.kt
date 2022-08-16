@@ -1,5 +1,6 @@
 package com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.contentoption
 
+import com.cmoney.backend2.forumocean.service.api.article.OpenGraph
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.articlestate.ArticleState
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.commoditytag.CommodityTagInfo
 import com.cmoney.backend2.forumocean.service.api.variable.response.mediatype.MediaTypeInfo
@@ -87,7 +88,9 @@ sealed class ArticleContent(
         @SerializedName("exchangeCount", alternate = ["ExchangeCount"])
         override val exchangeCount: Long?,
         @SerializedName("articleType", alternate = ["ArticleType"])
-        override val articleType: String?
+        override val articleType: String?,
+        @SerializedName("openGraph")
+        val openGraph: OpenGraph?
     ) : ArticleContent(text),
         MultiMediaInfo,
         TagInfo,
