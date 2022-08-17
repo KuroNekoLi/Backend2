@@ -196,7 +196,8 @@ class ForumOceanWebImplTest {
             commodityTags = null,
             voteOptions = null,
             voteMinutes = null,
-            topics = null
+            topics = null,
+            openGraph = null
         )
         coEvery {
             forumOceanService.createArticle(
@@ -222,7 +223,8 @@ class ForumOceanWebImplTest {
             commodityTags = null,
             voteOptions = null,
             voteMinutes = null,
-            topics = null
+            topics = null,
+            openGraph = null
         )
         coEvery {
             forumOceanService.createArticle(
@@ -248,7 +250,8 @@ class ForumOceanWebImplTest {
             voteOptions = null,
             voteMinutes = null,
             groupId = 164656464,
-            position = null
+            position = null,
+            openGraph = null
         )
         coEvery {
             forumOceanService.createArticle(
@@ -275,7 +278,8 @@ class ForumOceanWebImplTest {
             voteOptions = null,
             voteMinutes = null,
             groupId = 164656464,
-            position = null
+            position = null,
+            openGraph = null
         )
         coEvery {
             forumOceanService.createArticle(
@@ -301,7 +305,8 @@ class ForumOceanWebImplTest {
             voteOptions = null,
             voteMinutes = null,
             sharedPostsArticleId = 13243543,
-            topics = null
+            topics = null,
+            openGraph = null
         )
         coEvery {
             forumOceanService.createArticle(
@@ -327,7 +332,8 @@ class ForumOceanWebImplTest {
             voteOptions = null,
             voteMinutes = null,
             sharedPostsArticleId = 13243543,
-            topics = null
+            topics = null,
+            openGraph = null
         )
         coEvery {
             forumOceanService.createArticle(
@@ -368,7 +374,8 @@ class ForumOceanWebImplTest {
             multiMedia = null,
             commodityTags = null,
             anonymous = null,
-            topics = null
+            topics = null,
+            openGraph = null
         )
         coEvery {
             forumOceanService.createQuestion(
@@ -392,7 +399,8 @@ class ForumOceanWebImplTest {
             multiMedia = null,
             commodityTags = null,
             anonymous = null,
-            topics = null
+            topics = null,
+            openGraph = null
         )
         coEvery {
             forumOceanService.createQuestion(
@@ -4341,7 +4349,7 @@ class ForumOceanWebImplTest {
         } returns Response.success(CreateArticleResponseBody(0L))
         val result = web.createGroupArticle(
             1L,
-            Content.Article.General(null, null, null, null, null, null)
+            Content.Article.General(null, null, null, null, null, null, null)
         )
         assertThat(result.isSuccess).isTrue()
     }
@@ -4359,7 +4367,7 @@ class ForumOceanWebImplTest {
         } returns Response.error(500, "".toResponseBody())
         val result = web.createGroupArticle(
             1L,
-            Content.Article.General(null, null, null, null, null, null)
+            Content.Article.General(null, null, null, null, null, null, null)
         )
         assertThat(result.isFailure).isTrue()
     }
