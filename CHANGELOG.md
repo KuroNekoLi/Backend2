@@ -1,3 +1,16 @@
+#  (2022-08-19)
+
+
+
+# [5.35.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.34.0...5.35.0) (2022-08-19)
+
+
+### Features
+
+* ForumOcean 新增 OpenGraph field in articles. ([4ee15c7](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/4ee15c7e4fe9df4632a095195863dacfcfdef738))
+
+
+
 #  (2022-08-15)
 
 
