@@ -64,7 +64,8 @@ class ForumOceanServiceCase : ServiceCase {
                     voteMinutes = null,
                     topics = listOf(
                         "測測測測測測"
-                    )
+                    ),
+                    openGraph = null
                 )
             ).getOrNull()?.articleId
 
@@ -102,7 +103,8 @@ class ForumOceanServiceCase : ServiceCase {
                         ),
                         voteOptions = null,
                         voteMinutes = null,
-                        topics = null
+                        topics = null,
+                        openGraph = null
                     )
                 ).logResponse(TAG)
                 deleteArticle(this)
@@ -158,7 +160,8 @@ class ForumOceanServiceCase : ServiceCase {
                 commodityTags = null,
                 voteOptions = null,
                 voteMinutes = null,
-                topics = null
+                topics = null,
+                openGraph = null
             )
         ).getOrNull()?.articleId
 
@@ -378,7 +381,8 @@ class ForumOceanServiceCase : ServiceCase {
                 multiMedia = listOf(),
                 anonymous = Any(),
                 commodityTags = null,
-                topics = null
+                topics = null,
+                openGraph = null
             )
         ).getOrNull()?.articleId
 
@@ -460,7 +464,8 @@ class ForumOceanServiceCase : ServiceCase {
                     commodityTags = null,
                     position = null,
                     voteOptions = null,
-                    voteMinutes = null
+                    voteMinutes = null,
+                    openGraph = null
                 )
             ).getOrNull()?.articleId
             leave(this).logResponse(TAG)
@@ -538,7 +543,8 @@ class ForumOceanServiceCase : ServiceCase {
                 commodityTags = null,
                 voteOptions = null,
                 voteMinutes = null,
-                topics = null
+                topics = null,
+                openGraph = null
             )
         ).getOrNull()?.articleId
 
@@ -568,7 +574,8 @@ class ForumOceanServiceCase : ServiceCase {
                 commodityTags = null,
                 voteOptions = listOf("A選項", "B選項"),
                 voteMinutes = 5,
-                topics = null
+                topics = null,
+                openGraph = null
             )
         ).getOrNull()?.articleId
 
@@ -603,7 +610,8 @@ class ForumOceanServiceCase : ServiceCase {
                     commodityTags = null,
                     position = Any(),
                     voteOptions = null,
-                    voteMinutes = null
+                    voteMinutes = null,
+                    openGraph = null
                 )
             ).logResponse(TAG) {
                 presidentGroupArticleId = it.articleId
@@ -635,7 +643,8 @@ class ForumOceanServiceCase : ServiceCase {
                     commodityTags = null,
                     position = Any(),
                     voteOptions = null,
-                    voteMinutes = null
+                    voteMinutes = null,
+                    openGraph = null
                 )
             ).logResponse(TAG)
 
@@ -660,7 +669,8 @@ class ForumOceanServiceCase : ServiceCase {
                     commodityTags = null,
                     position = Any(),
                     voteOptions = null,
-                    voteMinutes = null
+                    voteMinutes = null,
+                    openGraph = null
                 )
             ).logResponse(TAG) {
                 groupArticleId = it.articleId
@@ -706,7 +716,8 @@ class ForumOceanServiceCase : ServiceCase {
                 commodityTags = listOf(),
                 voteOptions = listOf(),
                 voteMinutes = null,
-                topics = null
+                topics = null,
+                openGraph = null
             )
         ).logResponse(TAG) {
             articleId = it.articleId
