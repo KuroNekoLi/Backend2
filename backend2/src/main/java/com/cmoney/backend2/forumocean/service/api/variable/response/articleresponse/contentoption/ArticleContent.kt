@@ -39,6 +39,7 @@ sealed class ArticleContent(
      * @property bestAnswerCommentId 最佳解答回文Id
      * @property articleState 文章狀態
      * @property topics 標籤名稱
+     * @property openGraph OpenGraph Info
      */
     data class UnknownContent(
         @SerializedName("text", alternate = ["Text"])
