@@ -26,7 +26,6 @@ import com.cmoney.backend2.forumocean.service.api.group.v2.BoardSingle
 import com.cmoney.backend2.forumocean.service.api.group.v2.BoardManipulation
 import com.cmoney.backend2.forumocean.service.api.group.v2.Group
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupManipulation
-import com.cmoney.backend2.forumocean.service.api.group.v2.GroupMember
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupMember2
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupPushSetting
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupPushSettingRequest
@@ -46,6 +45,7 @@ import com.cmoney.backend2.forumocean.service.api.rank.getfansmemberrank.FansMem
 import com.cmoney.backend2.forumocean.service.api.rank.getsolutionexpertrank.SolutionExpertRankResponseBody
 import com.cmoney.backend2.forumocean.service.api.relationship.getdonate.DonateInfo
 import com.cmoney.backend2.forumocean.service.api.relationship.getrelationshipwithme.RelationshipWithMe
+import com.cmoney.backend2.forumocean.service.api.role.GetMembersByRoleResponse
 import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
 import com.cmoney.backend2.forumocean.service.api.support.SearchMembersResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
@@ -1009,6 +1009,14 @@ interface ForumOceanService {
         @Header("Authorization") authorization: String,
         @Path("path") path: String
     ): Response<List<Int>>
+
+    @RecordApi
+    @GET("{path}/api/Role/Id/{communityRoleId}")
+    suspend fun getMembersByRoleId(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("communityRoleId") roleId: Int
+    ): Response<GetMembersByRoleResponse>
 
     @RecordApi
     @GET("{path}/api/Role/{otherMemberId}")

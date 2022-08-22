@@ -33,7 +33,6 @@ import com.cmoney.backend2.forumocean.service.api.group.v2.BoardSingle
 import com.cmoney.backend2.forumocean.service.api.group.v2.BoardManipulation
 import com.cmoney.backend2.forumocean.service.api.group.v2.Group
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupManipulation
-import com.cmoney.backend2.forumocean.service.api.group.v2.GroupMember
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupMember2
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupPushSettingRequest
 import com.cmoney.backend2.forumocean.service.api.group.v2.JoinGroupRequest
@@ -1358,6 +1357,16 @@ class ForumOceanWebImpl(
         }
     }
 
+    override suspend fun getMembersByRole(roleId: Int) = withContext(dispatcher.io()) {
+        kotlin.runCatching {
+            val response = service.getMembersByRoleId(
+                path = serverName,
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                roleId = roleId
+            ).checkResponseBody(jsonParser)
+            response.memberIds?: listOf()
+        }
+    }
 
     override suspend fun getRole(memberId: Long): Result<Set<Role>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
