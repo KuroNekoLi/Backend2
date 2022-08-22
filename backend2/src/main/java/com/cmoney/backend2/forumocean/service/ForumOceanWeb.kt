@@ -1116,6 +1116,13 @@ interface ForumOceanWeb {
     suspend fun getRole(memberId: Long): Result<Set<Role>>
 
     /**
+     * 依角色類型取得會員名單
+     *
+     * @param roleId 1: KOL
+     */
+    suspend fun getMembersByRole(roleId: Int): Result<List<Long>>
+
+    /**
      * 使用者已兌換該作者文章數及上限
      *
      * @param memberId 用戶Id
