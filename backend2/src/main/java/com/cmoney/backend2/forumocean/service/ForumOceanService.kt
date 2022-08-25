@@ -43,6 +43,10 @@ import com.cmoney.backend2.forumocean.service.api.rank.getcommodityrank.GetCommo
 import com.cmoney.backend2.forumocean.service.api.rank.getexpertmemberrank.GetExpertMemberRankResponseBody
 import com.cmoney.backend2.forumocean.service.api.rank.getfansmemberrank.FansMemberRankResponseBody
 import com.cmoney.backend2.forumocean.service.api.rank.getsolutionexpertrank.SolutionExpertRankResponseBody
+import com.cmoney.backend2.forumocean.service.api.rating.MemberRatingCounter
+import com.cmoney.backend2.forumocean.service.api.rating.RatingComment
+import com.cmoney.backend2.forumocean.service.api.rating.OthersRatingComment
+import com.cmoney.backend2.forumocean.service.api.rating.ReviewRequest
 import com.cmoney.backend2.forumocean.service.api.relationship.getdonate.DonateInfo
 import com.cmoney.backend2.forumocean.service.api.relationship.getrelationshipwithme.RelationshipWithMe
 import com.cmoney.backend2.forumocean.service.api.role.GetMembersByRoleResponse
@@ -1420,4 +1424,49 @@ interface ForumOceanService {
         @Path("path") path: String,
         @Body body: GroupPushSettingRequest
     ): Response<Void>
+
+    /**
+     * 取得會員的被評價資訊統計
+     */
+    @RecordApi
+    @GET("{path}/api/Rating/{memberId}")
+    suspend fun getMemberRatingCounter(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("memberId") memberId: Long
+    ): Response<MemberRatingCounter>
+
+    /**
+     * 取得指定評價
+     */
+    @RecordApi
+    @GET("{path}/api/Rating/Review/{creatorId}/{memberId}")
+    suspend fun getRatingComment(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("creatorId") creatorId: Long,
+        @Path("memberId") memberId: Long
+    ): Response<RatingComment>
+
+    /**
+     * 取得指定會員的被評價清單
+     */
+    @RecordApi
+    @GET("{path}/api/Rating/Reviews/{memberId}")
+    suspend fun getMemberRatingComments(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("memberId") memberId: Long
+    ): Response<List<OthersRatingComment>>
+
+    /**
+     * 滿分為5, 評論字數不可多於200
+     */
+    @RecordApi
+    @PUT("{path}/api/Rating/Review")
+    suspend fun reviewUser(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Body body: ReviewRequest
+    ): Response<String>
 }

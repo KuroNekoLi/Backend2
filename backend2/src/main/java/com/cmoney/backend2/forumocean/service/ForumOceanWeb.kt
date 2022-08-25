@@ -39,6 +39,10 @@ import com.cmoney.backend2.forumocean.service.api.rank.getcommodityrank.GetCommo
 import com.cmoney.backend2.forumocean.service.api.rank.getexpertmemberrank.GetExpertMemberRankResponseBody
 import com.cmoney.backend2.forumocean.service.api.rank.getfansmemberrank.FansMemberRankResponseBody
 import com.cmoney.backend2.forumocean.service.api.rank.getsolutionexpertrank.SolutionExpertRankResponseBody
+import com.cmoney.backend2.forumocean.service.api.rating.MemberRatingCounter
+import com.cmoney.backend2.forumocean.service.api.rating.OthersRatingComment
+import com.cmoney.backend2.forumocean.service.api.rating.RatingComment
+import com.cmoney.backend2.forumocean.service.api.rating.ReviewRequest
 import com.cmoney.backend2.forumocean.service.api.relationship.getdonate.DonateInfo
 import com.cmoney.backend2.forumocean.service.api.relationship.getrelationshipwithme.RelationshipWithMe
 import com.cmoney.backend2.forumocean.service.api.role.Role
@@ -1368,4 +1372,27 @@ interface ForumOceanWeb {
      * 設定社團推播
      */
     suspend fun setGroupPushSetting(groupId: Long, pushType: PushType): Result<Unit>
+
+    /**
+     * 取得會員的被評價資訊統計
+     */
+    suspend fun getMemberRatingCounter(memberId: Long): Result<MemberRatingCounter>
+
+    /**
+     * 取得指定評價
+     *
+     * @param creatorId 評價會員
+     * @param memberId 被評價會員
+     */
+    suspend fun getRatingComment(creatorId: Long, memberId: Long): Result<RatingComment>
+
+    /**
+     * 取得指定會員的被評價清單
+     */
+    suspend fun getMemberRatingComments(memberId: Long): Result<List<OthersRatingComment>>
+
+    /**
+     * 滿分為5, 評論字數不可多於200
+     */
+    suspend fun reviewUser(request: ReviewRequest): Result<String>
 }
