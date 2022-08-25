@@ -1,3 +1,16 @@
+#  (2022-08-25)
+
+
+
+# [5.36.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.35.0...5.36.0) (2022-08-25)
+
+
+### Features
+
+* ForumOceanWeb 新增 getMembersByRole ([6945515](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/6945515499c4429835347fd66d53cc56fa9d8d55))
+
+
+
 #  (2022-08-19)
 
 
