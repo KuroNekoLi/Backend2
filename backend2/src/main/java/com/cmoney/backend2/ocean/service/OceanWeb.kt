@@ -1083,17 +1083,6 @@ interface OceanWeb {
     ): Result<GetCollectArticleListResponseBody>
 
     @Deprecated("ApiParam no longer required")
-    suspend fun isInCreateArticleWhiteList(
-        apiParam: MemberApiParam
-    ): Result<IsInCreateArticleWhiteListResponseBody>
-
-    /**
-     * 取得使用者是否在白名單中
-     *
-     */
-    suspend fun isInCreateArticleWhiteList(): Result<IsInCreateArticleWhiteListResponseBody>
-
-    @Deprecated("ApiParam no longer required")
     suspend fun getMasters(
         apiParam: MemberApiParam,
         masterType: MasterType,

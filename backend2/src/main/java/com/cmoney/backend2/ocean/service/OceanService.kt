@@ -625,18 +625,6 @@ interface OceanService {
     ): Response<GetCollectArticleListResponseBodyWithError>
 
     /**
-     * 取得使用者是否在白名單中
-     *
-     * @param requestBody
-     */
-    @RecordApi
-    @POST("OceanService/api/CreateArticleWhiteList/InCreateArticleWhiteList")
-    suspend fun isInCreateArticleWhiteList(
-        @Header("Authorization") authorization: String,
-        @Body requestBody: IsInCreateArticleWhiteListRequestBody
-    ): Response<IsInCreateArticleWhiteListResponseBody>
-
-    /**
      * 取得大師排行榜
      *
      * @param requestBody

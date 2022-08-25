@@ -20,26 +20,31 @@ before_script:
   - chmod +x ./gradlew
 
 stages:
-  - reportstart
+  - start
+  - build
   - test
   - upload
-  - reportend
+  - end
 
 startReport:
-  stage: reportstart
+  stage: start
   script:
     - sh ~/2swift/CMoney/MobilePlugin/Android/CICD/BeforeScript.sh $CI_PROJECT_NAME $CI_PROJECT_URL $CI_RUNNER_ID $CI_RUNNER_DESCRIPTION $CI_COMMIT_REF_SLUG $GITLAB_USER_EMAIL
 
+release_build:
+  stage: build
+  script:
+    - ./gradlew app:assembleRelease
+
 unitTest:
   stage: test
-  script: ./gradlew backend2:testReleaseUnitTest
+  script:
+    - ./gradlew backend2:testReleaseUnitTest
 
 publish_upload_githhub:
   stage: upload
   script:
-#    - ./gradlew backend2:assembleRelease
     - ./gradlew backend2:publish
-#    - sh ~/2swift/CMoney/MobilePlugin/Android/CICD/AarToGithub.sh AndroidBackend2Backend2 . backend2 "upload backend2 $CI_COMMIT_REF_SLUG"
   when: on_success
   only:
     - tags
@@ -48,10 +53,10 @@ if_test_failure:
   script:
     - sh ~/2swift/CMoney/MobilePlugin/Android/CICD/AfterScriptFailure.sh $CI_PROJECT_NAME $CI_PROJECT_URL $CI_RUNNER_ID $CI_RUNNER_DESCRIPTION $CI_COMMIT_REF_SLUG $GITLAB_USER_EMAIL
   when: on_failure
-  stage: reportend
+  stage: end
 
 after_build_success:
   script:
     - sh ~/2swift/CMoney/MobilePlugin/Android/CICD/AfterScriptSuccess.sh $CI_PROJECT_NAME $CI_PROJECT_URL $CI_RUNNER_ID $CI_RUNNER_DESCRIPTION $CI_COMMIT_REF_SLUG $GITLAB_USER_EMAIL
   when: on_success
-  stage: reportend
+  stage: end

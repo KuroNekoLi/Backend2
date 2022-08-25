@@ -38,6 +38,7 @@ import com.cmoney.backend2.forumocean.service.api.rank.getexpertmemberrank.GetEx
 import com.cmoney.backend2.forumocean.service.api.rank.getfansmemberrank.FansMemberRankResponseBody
 import com.cmoney.backend2.forumocean.service.api.rank.getsolutionexpertrank.SolutionExpertRankResponseBody
 import com.cmoney.backend2.forumocean.service.api.relationship.getdonate.DonateInfo
+import com.cmoney.backend2.forumocean.service.api.role.GetMembersByRoleResponse
 import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
 import com.cmoney.backend2.forumocean.service.api.support.SearchMembersResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.request.GroupPosition
@@ -3572,6 +3573,35 @@ class ForumOceanWebImplTest {
         val result = web.getRole()
         assertThat(result.isFailure).isTrue()
     }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `依角色類型取得會員名單_success`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getMembersByRoleId(
+                authorization = any(),
+                path = any(),
+                roleId = any()
+            )
+        } returns Response.success(GetMembersByRoleResponse(listOf()))
+        val result = web.getMembersByRole(1)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `依角色類型取得會員名單_failed`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getMembersByRoleId(
+                authorization = any(),
+                path = any(),
+                roleId = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getMembersByRole(1)
+        assertThat(result.isFailure).isTrue()
+    }
+
 
     @ExperimentalCoroutinesApi
     @Test
