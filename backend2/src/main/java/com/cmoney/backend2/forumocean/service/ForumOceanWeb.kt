@@ -56,6 +56,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.commentrespo
 import com.cmoney.backend2.forumocean.service.api.variable.response.groupresponse.GroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.ReactionInfo
 import com.cmoney.backend2.forumocean.service.api.vote.get.VoteInfo
+import com.cmoney.backend2.ocean.service.api.getevaluationlist.SortType
 
 interface ForumOceanWeb {
 
@@ -1389,7 +1390,12 @@ interface ForumOceanWeb {
     /**
      * 取得指定會員的被評價清單
      */
-    suspend fun getMemberRatingComments(memberId: Long): Result<List<OthersRatingComment>>
+    suspend fun getMemberRatingComments(
+        memberId: Long,
+        offset: Int,
+        fetch: Int,
+        sortType: SortType
+    ): Result<List<OthersRatingComment>>
 
     /**
      * 滿分為5, 評論字數不可多於200

@@ -54,6 +54,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.commentrespo
 import com.cmoney.backend2.forumocean.service.api.variable.response.groupresponse.GroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.ReactionInfo
 import com.cmoney.backend2.forumocean.service.api.vote.get.VoteInfo
+import com.cmoney.backend2.ocean.service.api.getevaluationlist.SortType
 import com.google.common.truth.Truth.assertThat
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
@@ -4591,7 +4592,7 @@ class ForumOceanWebImplTest {
                 creatorId = any(),
                 memberId = any()
             )
-        } returns Response.success(RatingComment("comment", 0.0))
+        } returns Response.success(RatingComment("comment", 0))
         val result = web.getRatingComment(1L, 1L)
         assertThat(result.isSuccess).isTrue()
     }
@@ -4619,10 +4620,13 @@ class ForumOceanWebImplTest {
             forumOceanService.getMemberRatingComments(
                 authorization = any(),
                 path = any(),
-                memberId = any()
+                memberId = any(),
+                sortType = any(),
+                skipCount = any(),
+                fetchCount = any()
             )
         } returns Response.success(listOf())
-        val result = web.getMemberRatingComments(1L)
+        val result = web.getMemberRatingComments(1L, 0, 10, SortType.LatestToOldest)
         assertThat(result.isSuccess).isTrue()
     }
 
@@ -4633,10 +4637,13 @@ class ForumOceanWebImplTest {
             forumOceanService.getMemberRatingComments(
                 authorization = any(),
                 path = any(),
-                memberId = any()
+                memberId = any(),
+                sortType = any(),
+                skipCount = any(),
+                fetchCount = any()
             )
         } returns Response.error(500, "".toResponseBody())
-        val result = web.getMemberRatingComments(-1,)
+        val result = web.getMemberRatingComments(1L, 0, 10, SortType.LatestToOldest)
         assertThat(result.isFailure).isTrue()
     }
 

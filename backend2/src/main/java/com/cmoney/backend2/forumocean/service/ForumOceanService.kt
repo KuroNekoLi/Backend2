@@ -1456,7 +1456,10 @@ interface ForumOceanService {
     suspend fun getMemberRatingComments(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
-        @Path("memberId") memberId: Long
+        @Path("memberId") memberId: Long,
+        @Query("sortType") sortType: Int,
+        @Query("skipCount") skipCount: Int,
+        @Query("fetchCount") fetchCount: Int
     ): Response<List<OthersRatingComment>>
 
     /**
