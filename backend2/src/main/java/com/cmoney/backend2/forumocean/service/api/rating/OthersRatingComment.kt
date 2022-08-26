@@ -19,5 +19,5 @@ data class OthersRatingComment(
     @SerializedName("score")
     val score: Double?,
     @SerializedName("updateTime")
-    val updateTime: String?
+    val updateTime: Long?
 )
