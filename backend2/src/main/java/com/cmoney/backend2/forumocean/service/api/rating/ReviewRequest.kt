@@ -14,7 +14,7 @@ data class ReviewRequest(
     @SerializedName("comment")
     val comment: String?,
     @SerializedName("score")
-    val score: Double?,
+    val score: Int?,
     @SerializedName("toMemberId")
     val toMemberId: Long?
 )

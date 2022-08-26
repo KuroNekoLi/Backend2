@@ -4652,7 +4652,7 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success("true")
         val result = web.reviewUser(
-            ReviewRequest("comment", 0.0, 0L)
+            ReviewRequest("comment", 1, 0L)
         )
         assertThat(result.isSuccess).isTrue()
     }
@@ -4668,7 +4668,7 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.reviewUser(
-            ReviewRequest("comment", 0.0, 0L)
+            ReviewRequest("comment", 0, 0L)
         )
         assertThat(result.isFailure).isTrue()
     }

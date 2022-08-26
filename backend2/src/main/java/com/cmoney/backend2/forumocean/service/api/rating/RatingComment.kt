@@ -13,5 +13,5 @@ data class RatingComment(
     @SerializedName("comment")
     val comment: String?,
     @SerializedName("score")
-    val score: Double?
+    val score: Int?
 )
