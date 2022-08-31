@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName
  * @param comment 評語
  * @param memberId 用戶ID
  * @param score 評分
- * @param updateTime 更新時間
+ * @param reviewTime 更新時間
  */
 data class OthersRatingComment(
     @SerializedName("comment")
@@ -18,6 +18,6 @@ data class OthersRatingComment(
     val memberId: Long?,
     @SerializedName("score")
     val score: Double?,
-    @SerializedName("updateTime")
-    val updateTime: Long?
+    @SerializedName("reviewTime")
+    val reviewTime: Long?
 )
