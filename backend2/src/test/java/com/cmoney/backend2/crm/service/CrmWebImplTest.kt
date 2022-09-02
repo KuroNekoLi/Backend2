@@ -6,13 +6,14 @@ import com.cmoney.backend2.base.model.response.error.CMoneyError
 import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.crm.service.api.creatlivechat.CreateLiveChatResponseBody
 import com.cmoney.core.CoroutineTestRule
-import com.cmoney.core.extension.runTest
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runTest
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Before
 import org.junit.Rule
@@ -24,9 +25,10 @@ import retrofit2.Response
 @ExperimentalCoroutinesApi
 @RunWith(RobolectricTestRunner::class)
 class CrmWebImplTest {
+    private val testScope = TestScope()
     @ExperimentalCoroutinesApi
     @get:Rule
-    val mainCoroutineRule = CoroutineTestRule()
+    val mainCoroutineRule = CoroutineTestRule(testScope = testScope)
 
     @MockK
     private lateinit var service: CrmService
@@ -47,7 +49,7 @@ class CrmWebImplTest {
     }
 
     @Test
-    fun `createLiveChat_成功`() = mainCoroutineRule.runTest {
+    fun `createLiveChat_成功`() = testScope.runTest {
         val expect =
             "https://cmoney.01.firstline.cc/livechat/messenger/13?once_code=be99ffdf-75da-43cd-aa10-366620692211"
 
@@ -67,7 +69,7 @@ class CrmWebImplTest {
     }
 
     @Test
-    fun `createLiveChat_失敗`() = mainCoroutineRule.runTest {
+    fun `createLiveChat_失敗`() = testScope.runTest {
         val errorBody = gson.toJson(CMoneyError(message = "錯誤訊息")).toResponseBody()
         coEvery {
             service.createLiveChat(

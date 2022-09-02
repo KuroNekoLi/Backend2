@@ -5,7 +5,6 @@ import com.cmoney.backend2.activity.service.api.getdaycount.GetDayCountResponseB
 import com.cmoney.backend2.activity.service.api.getreferralcount.GetReferralCountResponseBody
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.core.CoroutineTestRule
-import com.cmoney.core.extension.runTest
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
@@ -14,6 +13,8 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runTest
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.After
 import org.junit.Before
@@ -26,9 +27,10 @@ import retrofit2.Response
 
 @RunWith(RobolectricTestRunner::class)
 class ActivityWebImplTest {
+    private val testScope = TestScope()
     @ExperimentalCoroutinesApi
     @get:Rule
-    val mainCoroutineRule = CoroutineTestRule()
+    val mainCoroutineRule = CoroutineTestRule(testScope = testScope)
 
     @MockK
     private val activityService = mockk<ActivityService>()
@@ -51,7 +53,7 @@ class ActivityWebImplTest {
     }
 
     @Test
-    fun `getDayCount取得用戶這個月開啟幾天APP 成功`() = mainCoroutineRule.runTest {
+    fun `getDayCount取得用戶這個月開啟幾天APP 成功`() = testScope.runTest {
         //準備api成功時的回傳
         val responseBody = GetDayCountResponseBody(dayCount = 1)
         //設定api成功時的回傳
@@ -73,7 +75,7 @@ class ActivityWebImplTest {
     }
 
     @Test
-    fun `getDayCount取得用戶這個月開啟幾天APP 失敗`() = mainCoroutineRule.runTest {
+    fun `getDayCount取得用戶這個月開啟幾天APP 失敗`() = testScope.runTest {
         val json = ""
 
         //設定api成功時的回傳
@@ -90,7 +92,7 @@ class ActivityWebImplTest {
     }
 
     @Test
-    fun `requestBonus請求獎勵 成功`() = mainCoroutineRule.runTest {
+    fun `requestBonus請求獎勵 成功`() = testScope.runTest {
         //準備api成功時的回傳(後端在成功時回傳204和空值)
         //設定api成功時的回傳
         coEvery {
@@ -108,7 +110,7 @@ class ActivityWebImplTest {
     }
 
     @Test
-    fun `requestBonus請求獎勵 失敗 發生ServerException`() = mainCoroutineRule.runTest {
+    fun `requestBonus請求獎勵 失敗 發生ServerException`() = testScope.runTest {
         val json = """{
           "Error": {
             "Code": 10002,
@@ -130,7 +132,7 @@ class ActivityWebImplTest {
     }
 
     @Test
-    fun `getReferralCount取得推薦人總共成功推薦次數 成功`() = mainCoroutineRule.runTest {
+    fun `getReferralCount取得推薦人總共成功推薦次數 成功`() = testScope.runTest {
         //準備api成功時的回傳
         val responseBody = GetReferralCountResponseBody(referralCount = 1)
         //設定api成功時的回傳
@@ -152,7 +154,7 @@ class ActivityWebImplTest {
     }
 
     @Test
-    fun `getReferralCount取得推薦人總共成功推薦次數 失敗 發生ServerException`() = mainCoroutineRule.runTest {
+    fun `getReferralCount取得推薦人總共成功推薦次數 失敗 發生ServerException`() = testScope.runTest {
         val json = """{
           "Error": {
             "Code": 100,

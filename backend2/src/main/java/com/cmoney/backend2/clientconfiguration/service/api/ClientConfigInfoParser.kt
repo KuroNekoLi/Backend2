@@ -11,13 +11,8 @@ object ClientConfigInfoParser {
     @Throws(JsonSyntaxException::class)
     fun getClientConfigType(responseBody: ClientConfigInfo, jsonParser: Gson): ClientConfigType? {
         val key = ConfigKey.getKeyByStringValue(responseBody.configKey ?: return null)
-      return  when (key) {
-            ConfigKey.KOL -> {
-                val value = responseBody.configValue ?: return null
-                jsonParser.fromJson(value, ClientConfigType.KOL::class.java)
-            }
-            null ->  null
-        }
+      return  when (key) { // 目前沒有已知需要使用服務之設定
+          else -> null
+      }
     }
-
 }

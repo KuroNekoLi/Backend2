@@ -11,7 +11,7 @@ class ClientConfigurationServiceCase : ServiceCase {
 
     override suspend fun testAll() {
         webImpl.apply {
-            getConfig(listOf(ConfigKey.KOL)).logResponse(TAG)
+            getConfig(listOf()).logResponse(TAG)
         }
     }
 

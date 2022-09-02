@@ -17,6 +17,18 @@ import com.cmoney.backend2.forumocean.service.api.group.getapprovals.GroupPendin
 import com.cmoney.backend2.forumocean.service.api.group.getmember.GroupMember
 import com.cmoney.backend2.forumocean.service.api.group.getmemberjoinanygroups.GetMemberJoinAnyGroupsResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.update.UpdateGroupRequestBody
+import com.cmoney.backend2.forumocean.service.api.group.v2.Admins
+import com.cmoney.backend2.forumocean.service.api.group.v2.AvailableBoardIds
+import com.cmoney.backend2.forumocean.service.api.group.v2.BoardManipulation
+import com.cmoney.backend2.forumocean.service.api.group.v2.BoardSingle
+import com.cmoney.backend2.forumocean.service.api.group.v2.Group
+import com.cmoney.backend2.forumocean.service.api.group.v2.GroupManipulation
+import com.cmoney.backend2.forumocean.service.api.group.v2.GroupPushSetting
+import com.cmoney.backend2.forumocean.service.api.group.v2.InsertedId
+import com.cmoney.backend2.forumocean.service.api.group.v2.JoinGroupRequest
+import com.cmoney.backend2.forumocean.service.api.group.v2.MemberRoles
+import com.cmoney.backend2.forumocean.service.api.group.v2.PendingRequests
+import com.cmoney.backend2.forumocean.service.api.group.v2.PushType
 import com.cmoney.backend2.forumocean.service.api.official.get.OfficialChannelInfo
 import com.cmoney.backend2.forumocean.service.api.officialsubscriber.getofficialsubscribedcount.GetOfficialSubscribedCountResponseBody
 import com.cmoney.backend2.forumocean.service.api.officialsubscriber.getsubscribedcount.GetSubscribedCountResponseBody
@@ -25,7 +37,7 @@ import com.cmoney.backend2.forumocean.service.api.rank.getexpertmemberrank.GetEx
 import com.cmoney.backend2.forumocean.service.api.rank.getfansmemberrank.FansMemberRankResponseBody
 import com.cmoney.backend2.forumocean.service.api.rank.getsolutionexpertrank.SolutionExpertRankResponseBody
 import com.cmoney.backend2.forumocean.service.api.relationship.getdonate.DonateInfo
-import com.cmoney.backend2.forumocean.service.api.report.create.ReasonType
+import com.cmoney.backend2.forumocean.service.api.role.GetMembersByRoleResponse
 import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
 import com.cmoney.backend2.forumocean.service.api.support.SearchMembersResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.request.GroupPosition
@@ -39,7 +51,6 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.grouprespons
 import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.ReactionInfo
 import com.cmoney.backend2.forumocean.service.api.vote.get.VoteInfo
 import com.cmoney.core.CoroutineTestRule
-import com.cmoney.core.extension.runTest
 import com.google.common.truth.Truth.assertThat
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
@@ -47,6 +58,9 @@ import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runTest
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.After
 import org.junit.Before
@@ -61,9 +75,10 @@ import retrofit2.Response
 @RunWith(RobolectricTestRunner::class)
 @Config(manifest = Config.NONE)
 class ForumOceanWebImplTest {
+    private val testScope = TestScope()
     @ExperimentalCoroutinesApi
     @get:Rule
-    val mainCoroutineRule = CoroutineTestRule()
+    val mainCoroutineRule = CoroutineTestRule(testScope = testScope)
 
     @MockK
     private val forumOceanService = mockk<ForumOceanService>()
@@ -84,7 +99,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `createPersonalArticle_發筆記文章成功測試`() = mainCoroutineRule.runTest {
+    fun `createPersonalArticle_發筆記文章成功測試`() = testScope.runTest {
         val responseBody = CreatePersonalArticleResponseBody(articleId = 1L)
         val createContent = Content.PersonalArticle.Note(
             text = "發筆記",
@@ -107,7 +122,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `createPersonalArticle_發筆記文章失敗測試`() = mainCoroutineRule.runTest {
+    fun `createPersonalArticle_發筆記文章失敗測試`() = testScope.runTest {
         val createContent = Content.PersonalArticle.Note(
             text = "發筆記",
             commodityTags = null,
@@ -130,7 +145,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `createPersonalArticle_發專欄文章成功測試`() = mainCoroutineRule.runTest {
+    fun `createPersonalArticle_發專欄文章成功測試`() = testScope.runTest {
         val responseBody = CreatePersonalArticleResponseBody(articleId = 1)
         val createContent = Content.PersonalArticle.Columnist(
             text = "發專欄文章",
@@ -153,7 +168,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `createPersonalArticle_發專欄文章失敗測試`() = mainCoroutineRule.runTest {
+    fun `createPersonalArticle_發專欄文章失敗測試`() = testScope.runTest {
         val createContent = Content.PersonalArticle.Columnist(
             text = "發專欄文章",
             commodityTags = null,
@@ -176,7 +191,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `createArticle_發一般文章成功測試`() = mainCoroutineRule.runTest {
+    fun `createArticle_發一般文章成功測試`() = testScope.runTest {
         val responseBody = CreateArticleResponseBody(articleId = 1)
         val createContent = Content.Article.General(
             text = "發表文章",
@@ -184,7 +199,8 @@ class ForumOceanWebImplTest {
             commodityTags = null,
             voteOptions = null,
             voteMinutes = null,
-            topics = null
+            topics = null,
+            openGraph = null
         )
         coEvery {
             forumOceanService.createArticle(
@@ -202,7 +218,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `createArticle_發一般文章失敗測試`() = mainCoroutineRule.runTest {
+    fun `createArticle_發一般文章失敗測試`() = testScope.runTest {
         val responseBody = CreateArticleResponseBody(articleId = 1)
         val createContent = Content.Article.General(
             text = "發表文章",
@@ -210,7 +226,8 @@ class ForumOceanWebImplTest {
             commodityTags = null,
             voteOptions = null,
             voteMinutes = null,
-            topics = null
+            topics = null,
+            openGraph = null
         )
         coEvery {
             forumOceanService.createArticle(
@@ -227,7 +244,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `createArticle_發社團文章成功測試`() = mainCoroutineRule.runTest {
+    fun `createArticle_發社團文章成功測試`() = testScope.runTest {
         val responseBody = CreateArticleResponseBody(articleId = 1)
         val createContent = Content.Article.Group(
             text = "發表文章",
@@ -236,7 +253,8 @@ class ForumOceanWebImplTest {
             voteOptions = null,
             voteMinutes = null,
             groupId = 164656464,
-            position = null
+            position = null,
+            openGraph = null
         )
         coEvery {
             forumOceanService.createArticle(
@@ -254,7 +272,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `createArticle_發社團文章失敗測試`() = mainCoroutineRule.runTest {
+    fun `createArticle_發社團文章失敗測試`() = testScope.runTest {
         val responseBody = CreateArticleResponseBody(articleId = 1)
         val createContent = Content.Article.Group(
             text = "發表文章",
@@ -263,7 +281,8 @@ class ForumOceanWebImplTest {
             voteOptions = null,
             voteMinutes = null,
             groupId = 164656464,
-            position = null
+            position = null,
+            openGraph = null
         )
         coEvery {
             forumOceanService.createArticle(
@@ -280,7 +299,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `createArticle_發轉推文章成功測試`() = mainCoroutineRule.runTest {
+    fun `createArticle_發轉推文章成功測試`() = testScope.runTest {
         val responseBody = CreateArticleResponseBody(articleId = 1)
         val createContent = Content.Article.Shared(
             text = "發表文章",
@@ -289,7 +308,8 @@ class ForumOceanWebImplTest {
             voteOptions = null,
             voteMinutes = null,
             sharedPostsArticleId = 13243543,
-            topics = null
+            topics = null,
+            openGraph = null
         )
         coEvery {
             forumOceanService.createArticle(
@@ -307,7 +327,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `createArticle_發轉推文章失敗測試`() = mainCoroutineRule.runTest {
+    fun `createArticle_發轉推文章失敗測試`() = testScope.runTest {
         val createContent = Content.Article.Shared(
             text = "發表文章",
             multiMedia = null,
@@ -315,7 +335,8 @@ class ForumOceanWebImplTest {
             voteOptions = null,
             voteMinutes = null,
             sharedPostsArticleId = 13243543,
-            topics = null
+            topics = null,
+            openGraph = null
         )
         coEvery {
             forumOceanService.createArticle(
@@ -332,7 +353,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getArticle_取得一般文章_遇到文章不存在的情況`() = mainCoroutineRule.runTest {
+    fun `getArticle_取得一般文章_遇到文章不存在的情況`() = testScope.runTest {
         coEvery {
             forumOceanService.getArticle(
                 authorization = any(),
@@ -349,14 +370,15 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `createQuestion_發問答文章成功測試`() = mainCoroutineRule.runTest {
+    fun `createQuestion_發問答文章成功測試`() = testScope.runTest {
         val responseBody = CreateQuestionResponseBody(articleId = 1)
         val createContent = Content.Question(
             text = "發表問答",
             multiMedia = null,
             commodityTags = null,
             anonymous = null,
-            topics = null
+            topics = null,
+            openGraph = null
         )
         coEvery {
             forumOceanService.createQuestion(
@@ -374,13 +396,14 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `createQuestion_發問答文章失敗測試`() = mainCoroutineRule.runTest {
+    fun `createQuestion_發問答文章失敗測試`() = testScope.runTest {
         val createContent = Content.Question(
             text = "發表問答",
             multiMedia = null,
             commodityTags = null,
             anonymous = null,
-            topics = null
+            topics = null,
+            openGraph = null
         )
         coEvery {
             forumOceanService.createQuestion(
@@ -397,7 +420,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getArticle_取得一般文章成功`() = mainCoroutineRule.runTest {
+    fun `getArticle_取得一般文章成功`() = testScope.runTest {
         val articleId = 1000L
         val successResponse = ArticleResponseBody.GeneralArticleResponseBody(
             articleContent = null,
@@ -434,7 +457,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getArticle_取得一般文章失敗`() = mainCoroutineRule.runTest {
+    fun `getArticle_取得一般文章失敗`() = testScope.runTest {
         val articleId = 1000L
         coEvery {
             forumOceanService.getArticle(
@@ -449,7 +472,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getQuestionArticle_取得問答文章成功測試`() = mainCoroutineRule.runTest {
+    fun `getQuestionArticle_取得問答文章成功測試`() = testScope.runTest {
         val articleId = 1000L
         val successResponse = ArticleResponseBody.QuestionArticleResponseBody(
             articleContent = null,
@@ -485,7 +508,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getQuestionArticle_取得問答文章失敗測試`() = mainCoroutineRule.runTest {
+    fun `getQuestionArticle_取得問答文章失敗測試`() = testScope.runTest {
         val articleId = 1000L
         coEvery {
             forumOceanService.getQuestionArticle(
@@ -500,7 +523,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getGroupArticle_取得社團文章成功測試`() = mainCoroutineRule.runTest {
+    fun `getGroupArticle_取得社團文章成功測試`() = testScope.runTest {
         val articleId = 1000L
         val successResponse = ArticleResponseBody.GroupArticleResponseBody(
             articleContent = null,
@@ -537,7 +560,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getGroupArticle_取得社團文章失敗測試`() = mainCoroutineRule.runTest {
+    fun `getGroupArticle_取得社團文章失敗測試`() = testScope.runTest {
         val articleId = 1000L
         coEvery {
             forumOceanService.getGroupArticle(
@@ -552,7 +575,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getSharedArticle_取得轉推文章成功測試`() = mainCoroutineRule.runTest {
+    fun `getSharedArticle_取得轉推文章成功測試`() = testScope.runTest {
         val articleId = 1000L
         val successResponse = ArticleResponseBody.SharedArticleResponseBody(
             articleContent = null,
@@ -590,7 +613,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getSharedArticle_取得轉推文章失敗測試`() = mainCoroutineRule.runTest {
+    fun `getSharedArticle_取得轉推文章失敗測試`() = testScope.runTest {
         val articleId = 1000L
         coEvery {
             forumOceanService.getSharedArticle(
@@ -605,7 +628,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getSignalArticle_取得訊號文章成功測試`() = mainCoroutineRule.runTest {
+    fun `getSignalArticle_取得訊號文章成功測試`() = testScope.runTest {
         val articleId = 1000L
         val successResponse = ArticleResponseBody.SignalArticleResponseBody(
             articleContent = null,
@@ -638,7 +661,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getSignalArticle_取得訊號文章失敗測試`() = mainCoroutineRule.runTest {
+    fun `getSignalArticle_取得訊號文章失敗測試`() = testScope.runTest {
         val articleId = 1000L
         coEvery {
             forumOceanService.getSignalArticle(
@@ -653,7 +676,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getNewsArticle_取得新聞文章成功測試`() = mainCoroutineRule.runTest {
+    fun `getNewsArticle_取得新聞文章成功測試`() = testScope.runTest {
         val articleId = 1000L
         val successResponse = ArticleResponseBody.NewsArticleResponseBody(
             articleContent = null,
@@ -686,7 +709,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getNewsArticle_取得新聞文章失敗測試`() = mainCoroutineRule.runTest {
+    fun `getNewsArticle_取得新聞文章失敗測試`() = testScope.runTest {
         val articleId = 1000L
         coEvery {
             forumOceanService.getNewsArticle(
@@ -701,7 +724,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getPersonalArticle_取得個人文章成功測試`() = mainCoroutineRule.runTest {
+    fun `getPersonalArticle_取得個人文章成功測試`() = testScope.runTest {
         val articleId = 1000L
         val successResponse = ArticleResponseBody.PersonalArticleResponseBody(
             articleContent = null,
@@ -724,7 +747,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getPersonalArticle_取得個人文章失敗測試`() = mainCoroutineRule.runTest {
+    fun `getPersonalArticle_取得個人文章失敗測試`() = testScope.runTest {
         val articleId = 1000L
         coEvery {
             forumOceanService.getPersonalArticle(
@@ -739,7 +762,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getUnknownArticle_取得未知型態文章成功測試`() = mainCoroutineRule.runTest {
+    fun `getUnknownArticle_取得未知型態文章成功測試`() = testScope.runTest {
         val articleId = 1000L
         val successResponse = ArticleResponseBody.UnknownArticleResponseBody(
             articleContent = null,
@@ -780,7 +803,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getUnknownArticle_取得未知型態文章失敗測試`() = mainCoroutineRule.runTest {
+    fun `getUnknownArticle_取得未知型態文章失敗測試`() = testScope.runTest {
         val articleId = 1000L
         coEvery {
             forumOceanService.getUnknownArticle(
@@ -795,7 +818,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `updateArticle_修改文章成功測試`() = mainCoroutineRule.runTest {
+    fun `updateArticle_修改文章成功測試`() = testScope.runTest {
         val helper = UpdateArticleHelper()
         helper.deleteMultiMedia()
         coEvery {
@@ -813,7 +836,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `updateArticle_修改文章失敗測試`() = mainCoroutineRule.runTest {
+    fun `updateArticle_修改文章失敗測試`() = testScope.runTest {
         val helper = UpdateArticleHelper()
         helper.deleteMultiMedia()
         coEvery {
@@ -831,7 +854,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `updateArticle_修改文章_遇到文章不存在的情況`() = mainCoroutineRule.runTest {
+    fun `updateArticle_修改文章_遇到文章不存在的情況`() = testScope.runTest {
         coEvery {
             forumOceanService.updateArticle(
                 authorization = any(),
@@ -849,7 +872,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `deleteArticle_刪除文章成功測試`() = mainCoroutineRule.runTest {
+    fun `deleteArticle_刪除文章成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.deleteArticle(
                 authorization = any(),
@@ -864,7 +887,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `deleteArticle_刪除文章失敗測試`() = mainCoroutineRule.runTest {
+    fun `deleteArticle_刪除文章失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.deleteArticle(
                 authorization = any(),
@@ -879,7 +902,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `deleteArticle_刪除文章_遇到文章不存在的情況`() = mainCoroutineRule.runTest {
+    fun `deleteArticle_刪除文章_遇到文章不存在的情況`() = testScope.runTest {
         coEvery {
             forumOceanService.deleteArticle(
                 authorization = any(),
@@ -895,7 +918,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getMemberStatistics_取得指定使用者的統計資訊成功測試`() = mainCoroutineRule.runTest {
+    fun `getMemberStatistics_取得指定使用者的統計資訊成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getMemberStatistics(
                 authorization = any(),
@@ -927,7 +950,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getMemberStatistics_取得指定使用者的統計資訊失敗測試`() = mainCoroutineRule.runTest {
+    fun `getMemberStatistics_取得指定使用者的統計資訊失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getMemberStatistics(
                 authorization = any(),
@@ -942,7 +965,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getChannelsArticleByWeight_取得頻道文章清單以權重取成功測試`() = mainCoroutineRule.runTest {
+    fun `getChannelsArticleByWeight_取得頻道文章清單以權重取成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getChannelsArticleByWeight(
                 authorization = any(),
@@ -991,7 +1014,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getChannelsArticleByWeight_取得頻道文章清單以權重取失敗測試`() = mainCoroutineRule.runTest {
+    fun `getChannelsArticleByWeight_取得頻道文章清單以權重取失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getChannelsArticleByWeight(
                 authorization = any(),
@@ -1011,7 +1034,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `createCollection_收藏文章成功測試`() = mainCoroutineRule.runTest {
+    fun `createCollection_收藏文章成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.createCollection(
                 authorization = any(),
@@ -1025,7 +1048,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `createCollection_收藏文章失敗測試`() = mainCoroutineRule.runTest {
+    fun `createCollection_收藏文章失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.createCollection(
                 authorization = any(),
@@ -1039,7 +1062,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `deleteCollection_取消收藏文章成功測試`() = mainCoroutineRule.runTest {
+    fun `deleteCollection_取消收藏文章成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.deleteCollection(
                 authorization = any(),
@@ -1053,7 +1076,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `deleteCollection_取消收藏文章失敗測試`() = mainCoroutineRule.runTest {
+    fun `deleteCollection_取消收藏文章失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.deleteCollection(
                 authorization = any(),
@@ -1067,7 +1090,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `createComment_回復文章成功測試`() = mainCoroutineRule.runTest {
+    fun `createComment_回復文章成功測試`() = testScope.runTest {
         val commentId = 123L
         coEvery {
             forumOceanService.createComment(
@@ -1092,7 +1115,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `createComment_回復文章失敗測試`() = mainCoroutineRule.runTest {
+    fun `createComment_回復文章失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.createComment(
                 authorization = any(),
@@ -1112,7 +1135,52 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getComment_取得回復清單成功測試`() = mainCoroutineRule.runTest {
+    fun `createGroupArticleComment_回復文章成功測試`() = testScope.runTest {
+        val commentId = 123L
+        coEvery {
+            forumOceanService.createGroupArticleComment(
+                authorization = any(),
+                articleId = any(),
+                body = any(),
+                path = ""
+            )
+        } returns Response.success<CreateCommentResponseBody>(
+            200,
+            CreateCommentResponseBody(commentId)
+        )
+        val result = web.createGroupArticleComment(
+            articleId = 0,
+            text = null,
+            multiMedia = listOf(),
+            position = null
+        )
+        assertThat(result.isSuccess).isTrue()
+        assertThat(result.getOrThrow().commentIndex).isEqualTo(commentId)
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `createGroupArticleComment_回復文章失敗測試`() = testScope.runTest {
+        coEvery {
+            forumOceanService.createGroupArticleComment(
+                authorization = any(),
+                articleId = any(),
+                body = any(),
+                path = ""
+            )
+        } returns Response.error(403, "".toResponseBody())
+        val result = web.createGroupArticleComment(
+            articleId = 0,
+            text = null,
+            multiMedia = listOf(),
+            position = null
+        )
+        assertThat(result.isSuccess).isFalse()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `getComment_取得回復清單成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getComment(
                 authorization = any(),
@@ -1147,7 +1215,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getComment_取得回復清單失敗測試`() = mainCoroutineRule.runTest {
+    fun `getComment_取得回復清單失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getComment(
                 authorization = any(),
@@ -1163,7 +1231,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getCommentWithIds_取得指定回文清單成功測試`() = mainCoroutineRule.runTest {
+    fun `getCommentWithIds_取得指定回文清單成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getCommentWithId(
                 authorization = any(),
@@ -1212,7 +1280,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getCommentWithIds_取得指定回文清單失敗測試`() = mainCoroutineRule.runTest {
+    fun `getCommentWithIds_取得指定回文清單失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getCommentWithId(
                 authorization = any(),
@@ -1227,7 +1295,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getGroupManagerComments_取得指定主文的社團管理員回文清單成功測試`() = mainCoroutineRule.runTest {
+    fun `getGroupManagerComments_取得指定主文的社團管理員回文清單成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getGroupManagerComments(
                 authorization = any(),
@@ -1275,7 +1343,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getGroupManagerComments_取得指定主文的社團管理員回文清單失敗測試`() = mainCoroutineRule.runTest {
+    fun `getGroupManagerComments_取得指定主文的社團管理員回文清單失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getGroupManagerComments(
                 authorization = any(),
@@ -1289,7 +1357,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `updateComment_更新回覆成功測試`() = mainCoroutineRule.runTest {
+    fun `updateComment_更新回覆成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.updateComment(
                 authorization = any(),
@@ -1305,7 +1373,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `updateComment_更新回覆失敗測試`() = mainCoroutineRule.runTest {
+    fun `updateComment_更新回覆失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.updateComment(
                 authorization = any(),
@@ -1321,7 +1389,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `deleteComment_刪除回復成功測試`() = mainCoroutineRule.runTest {
+    fun `deleteComment_刪除回復成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.deleteComment(
                 authorization = any(),
@@ -1336,7 +1404,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `deleteComment_刪除回復失敗測試`() = mainCoroutineRule.runTest {
+    fun `deleteComment_刪除回復失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.deleteComment(
                 authorization = any(),
@@ -1351,7 +1419,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `reactionComment_對回復做反應成功測試`() = mainCoroutineRule.runTest {
+    fun `reactionComment_對回復做反應成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.reactComment(
                 authorization = any(),
@@ -1367,7 +1435,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `reactionComment_對回復做反應失敗測試`() = mainCoroutineRule.runTest {
+    fun `reactionComment_對回復做反應失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.reactComment(
                 authorization = any(),
@@ -1383,7 +1451,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getReactionDetail_取得反映詳細資料成功測試`() = mainCoroutineRule.runTest {
+    fun `getReactionDetail_取得反映詳細資料成功測試`() = testScope.runTest {
         val reactionTypeList = listOf(ReactionType.LIKE, ReactionType.DISLIKE)
         coEvery {
             forumOceanService.getReactionDetail(
@@ -1415,7 +1483,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getReactionDetail_取得反映詳細資料失敗測試`() = mainCoroutineRule.runTest {
+    fun `getReactionDetail_取得反映詳細資料失敗測試`() = testScope.runTest {
         val reactionTypeList = listOf(ReactionType.LIKE, ReactionType.DISLIKE)
         coEvery {
             forumOceanService.getReactionDetail(
@@ -1434,7 +1502,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `removeReactionComment_移除回文反應成功測試`() = mainCoroutineRule.runTest {
+    fun `removeReactionComment_移除回文反應成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.removeCommentReaction(
                 authorization = any(),
@@ -1449,7 +1517,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `removeReactionComment_移除回文反應失敗測試`() = mainCoroutineRule.runTest {
+    fun `removeReactionComment_移除回文反應失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.removeCommentReaction(
                 authorization = any(),
@@ -1464,7 +1532,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `createArticleReaction_建立文章反應成功測試`() = mainCoroutineRule.runTest {
+    fun `createArticleReaction_建立文章反應成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.createArticleReaction(
                 authorization = any(),
@@ -1479,7 +1547,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `createArticleReaction_建立文章反應失敗測試`() = mainCoroutineRule.runTest {
+    fun `createArticleReaction_建立文章反應失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.createArticleReaction(
                 authorization = any(),
@@ -1494,7 +1562,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getArticleReactionDetail_取得主文反應成功測試`() = mainCoroutineRule.runTest {
+    fun `getArticleReactionDetail_取得主文反應成功測試`() = testScope.runTest {
         val reactionTypeList = listOf(ReactionType.DISLIKE)
         coEvery {
             forumOceanService.getArticleReactionDetail(
@@ -1520,7 +1588,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getArticleReactionDetail_取得主文反應失敗測試`() = mainCoroutineRule.runTest {
+    fun `getArticleReactionDetail_取得主文反應失敗測試`() = testScope.runTest {
         val reactionTypeList = listOf(ReactionType.DISLIKE)
         coEvery {
             forumOceanService.getArticleReactionDetail(
@@ -1538,7 +1606,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `deleteArticleReaction_刪除文章反應成功測試`() = mainCoroutineRule.runTest {
+    fun `deleteArticleReaction_刪除文章反應成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.deleteArticleReaction(
                 authorization = any(),
@@ -1552,7 +1620,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `deleteArticleReaction_刪除文章反應失敗測試`() = mainCoroutineRule.runTest {
+    fun `deleteArticleReaction_刪除文章反應失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.deleteArticleReaction(
                 authorization = any(),
@@ -1566,7 +1634,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `createArticleInterest_對文章有興趣成功測試`() = mainCoroutineRule.runTest {
+    fun `createArticleInterest_對文章有興趣成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.createArticleInterest(
                 authorization = any(),
@@ -1580,7 +1648,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `createArticleInterest_對文章有興趣失敗測試`() = mainCoroutineRule.runTest {
+    fun `createArticleInterest_對文章有興趣失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.createArticleInterest(
                 authorization = any(),
@@ -1594,7 +1662,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `createArticleDonate_對文章做打賞成功測試`() = mainCoroutineRule.runTest {
+    fun `createArticleDonate_對文章做打賞成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.createArticleDonate(
                 authorization = any(),
@@ -1609,7 +1677,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `createArticleDonate_對文章做打賞失敗測試`() = mainCoroutineRule.runTest {
+    fun `createArticleDonate_對文章做打賞失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.createArticleDonate(
                 authorization = any(),
@@ -1624,7 +1692,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getArticleDonate_取得文章打賞成功測試`() = mainCoroutineRule.runTest {
+    fun `getArticleDonate_取得文章打賞成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getArticleDonate(
                 authorization = any(),
@@ -1648,7 +1716,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getArticleDonate_取得文章打賞失敗測試`() = mainCoroutineRule.runTest {
+    fun `getArticleDonate_取得文章打賞失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getArticleDonate(
                 authorization = any(),
@@ -1664,7 +1732,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getGroup_取得社團資訊成功測試`() = mainCoroutineRule.runTest {
+    fun `getGroup_取得社團資訊成功測試`() = testScope.runTest {
         val groupId = 1161616L
         coEvery {
             forumOceanService.getGroup(
@@ -1696,7 +1764,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getGroup_取得社團資訊失敗測試`() = mainCoroutineRule.runTest {
+    fun `getGroup_取得社團資訊失敗測試`() = testScope.runTest {
         val groupId = 1161616L
         coEvery {
             forumOceanService.getGroup(
@@ -1711,7 +1779,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getUserOwnGroup_取得用戶所擁有社團成功測試`() = mainCoroutineRule.runTest {
+    fun `getUserOwnGroup_取得用戶所擁有社團成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getGroupsWithPosition(
                 authorization = any(),
@@ -1768,7 +1836,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getUserOwnGroup_取得用戶所擁有社團失敗測試`() = mainCoroutineRule.runTest {
+    fun `getUserOwnGroup_取得用戶所擁有社團失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getGroupsWithPosition(
                 authorization = any(),
@@ -1791,7 +1859,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `readMemberManagedGroups_取得指定使用者管理的所有社團成功測試`() = mainCoroutineRule.runTest {
+    fun `readMemberManagedGroups_取得指定使用者管理的所有社團成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getGroupsWithPosition(
                 authorization = any(),
@@ -1828,7 +1896,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `readMemberManagedGroups_取得指定使用者管理的所有社團失敗測試`() = mainCoroutineRule.runTest {
+    fun `readMemberManagedGroups_取得指定使用者管理的所有社團失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getGroupsWithPosition(
                 authorization = any(),
@@ -1847,7 +1915,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getMemberBelongGroups_取得用戶所屬社團成功測試`() = mainCoroutineRule.runTest {
+    fun `getMemberBelongGroups_取得用戶所屬社團成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getGroupsWithPosition(
                 authorization = any(),
@@ -1888,7 +1956,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getMemberBelongGroups_取得用戶所屬社團失敗測試`() = mainCoroutineRule.runTest {
+    fun `getMemberBelongGroups_取得用戶所屬社團失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getGroupsWithPosition(
                 authorization = any(),
@@ -1910,7 +1978,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getMemberJoinAnyGroups_取得指定使用者是否加入或擁有任何社團成功測試`() = mainCoroutineRule.runTest {
+    fun `getMemberJoinAnyGroups_取得指定使用者是否加入或擁有任何社團成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getMemberJoinAnyGroups(
                 authorization = any(),
@@ -1929,7 +1997,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getMemberJoinAnyGroups_取得指定使用者是否加入或擁有任何社團失敗測試`() = mainCoroutineRule.runTest {
+    fun `getMemberJoinAnyGroups_取得指定使用者是否加入或擁有任何社團失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getMemberJoinAnyGroups(
                 authorization = any(),
@@ -1943,7 +2011,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `createGroup_建立社團成功測試`() = mainCoroutineRule.runTest {
+    fun `createGroup_建立社團成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.createGroup(
                 authorization = any(),
@@ -1960,7 +2028,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `createGroup_建立社團失敗測試`() = mainCoroutineRule.runTest {
+    fun `createGroup_建立社團失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.createGroup(
                 authorization = any(),
@@ -1974,7 +2042,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `updateGroup_更新社團資訊成功測試`() = mainCoroutineRule.runTest {
+    fun `updateGroup_更新社團資訊成功測試`() = testScope.runTest {
         val updateRequestBody = UpdateGroupRequestBody(
             name = null,
             description = null,
@@ -2000,7 +2068,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `updateGroup_更新社團資訊失敗測試`() = mainCoroutineRule.runTest {
+    fun `updateGroup_更新社團資訊失敗測試`() = testScope.runTest {
         val updateRequestBody = UpdateGroupRequestBody(
             name = null,
             description = null,
@@ -2026,7 +2094,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `transferGroup_轉讓社團成功測試`() = mainCoroutineRule.runTest {
+    fun `transferGroup_轉讓社團成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.transferGroup(
                 authorization = any(),
@@ -2041,7 +2109,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `transferGroup_轉讓社團失敗測試`() = mainCoroutineRule.runTest {
+    fun `transferGroup_轉讓社團失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.transferGroup(
                 authorization = any(),
@@ -2056,7 +2124,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `deleteGroup_刪除社團成功測試`() = mainCoroutineRule.runTest {
+    fun `deleteGroup_刪除社團成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.deleteGroup(
                 authorization = any(),
@@ -2070,7 +2138,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `deleteGroup_刪除社團失敗測試`() = mainCoroutineRule.runTest {
+    fun `deleteGroup_刪除社團失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.deleteGroup(
                 authorization = any(),
@@ -2084,7 +2152,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `join_加入社團成功測試`() = mainCoroutineRule.runTest {
+    fun `join_加入社團成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.join(
                 authorization = any(),
@@ -2099,7 +2167,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `join_加入社團失敗測試`() = mainCoroutineRule.runTest {
+    fun `join_加入社團失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.join(
                 authorization = any(),
@@ -2114,7 +2182,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getMembers_取得社團用戶成功測試`() = mainCoroutineRule.runTest {
+    fun `getMembers_取得社團用戶成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getMembers(
                 authorization = any(),
@@ -2139,7 +2207,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getMembers_取得社團用戶失敗測試`() = mainCoroutineRule.runTest {
+    fun `getMembers_取得社團用戶失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getMembers(
                 authorization = any(),
@@ -2156,7 +2224,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getApprovals_取得社團待審核清單成功測試`() = mainCoroutineRule.runTest {
+    fun `getApprovals_取得社團待審核清單成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getApprovals(
                 authorization = any(),
@@ -2182,7 +2250,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getApprovals_取得社團待審核清單失敗測試`() = mainCoroutineRule.runTest {
+    fun `getApprovals_取得社團待審核清單失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getApprovals(
                 authorization = any(),
@@ -2198,7 +2266,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `approval_審核用戶加入社團成功測試`() = mainCoroutineRule.runTest {
+    fun `approval_審核用戶加入社團成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.approval(
                 authorization = any(),
@@ -2214,7 +2282,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `approval_審核用戶加入社團失敗測試`() = mainCoroutineRule.runTest {
+    fun `approval_審核用戶加入社團失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.approval(
                 authorization = any(),
@@ -2230,7 +2298,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `changeGroupMemberPosition_設定社團成員職位成功測試`() = mainCoroutineRule.runTest {
+    fun `changeGroupMemberPosition_設定社團成員職位成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.changeGroupMemberPosition(
                 authorization = any(),
@@ -2246,7 +2314,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `changeGroupMemberPosition_設定社團成員職位失敗測試`() = mainCoroutineRule.runTest {
+    fun `changeGroupMemberPosition_設定社團成員職位失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.changeGroupMemberPosition(
                 authorization = any(),
@@ -2262,7 +2330,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `kick_踢出社員成功測試`() = mainCoroutineRule.runTest {
+    fun `kick_踢出社員成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.kick(
                 authorization = any(),
@@ -2277,7 +2345,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `kick_踢出社員失敗測試`() = mainCoroutineRule.runTest {
+    fun `kick_踢出社員失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.kick(
                 authorization = any(),
@@ -2292,7 +2360,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `leave_離開社團成功測試`() = mainCoroutineRule.runTest {
+    fun `leave_離開社團成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.leave(
                 authorization = any(),
@@ -2306,7 +2374,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `leave_離開社團失敗測試`() = mainCoroutineRule.runTest {
+    fun `leave_離開社團失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.leave(
                 authorization = any(),
@@ -2320,7 +2388,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `pinArticle_置頂社團文章成功測試`() = mainCoroutineRule.runTest {
+    fun `pinArticle_置頂社團文章成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.pinArticle(
                 authorization = any(),
@@ -2334,7 +2402,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `pinArticle_置頂社團文章失敗測試`() = mainCoroutineRule.runTest {
+    fun `pinArticle_置頂社團文章失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.pinArticle(
                 authorization = any(),
@@ -2348,7 +2416,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `unpinArticle_取消置頂社團文章成功測試`() = mainCoroutineRule.runTest {
+    fun `unpinArticle_取消置頂社團文章成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.unpinArticle(
                 authorization = any(),
@@ -2362,7 +2430,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `unpinArticle_取消置頂社團文章失敗測試`() = mainCoroutineRule.runTest {
+    fun `unpinArticle_取消置頂社團文章失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.unpinArticle(
                 authorization = any(),
@@ -2376,7 +2444,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getOfficials_取得官方頻道成功測試`() = mainCoroutineRule.runTest {
+    fun `getOfficials_取得官方頻道成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getOfficials(
                 authorization = any(),
@@ -2411,7 +2479,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getOfficials_取得官方頻道失敗測試`() = mainCoroutineRule.runTest {
+    fun `getOfficials_取得官方頻道失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getOfficials(
                 authorization = any(),
@@ -2426,7 +2494,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getOfficialSubscribedCount_取得官方訂閱數成功測試`() = mainCoroutineRule.runTest {
+    fun `getOfficialSubscribedCount_取得官方訂閱數成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getOfficialSubscribedCount(
                 authorization = any(),
@@ -2443,7 +2511,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getOfficialSubscribedCount_取得官方訂閱數失敗測試`() = mainCoroutineRule.runTest {
+    fun `getOfficialSubscribedCount_取得官方訂閱數失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getOfficialSubscribedCount(
                 authorization = any(),
@@ -2457,7 +2525,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getSubscribedCount_取得用戶訂閱數成功測試`() = mainCoroutineRule.runTest {
+    fun `getSubscribedCount_取得用戶訂閱數成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getSubscribedCount(
                 authorization = any(),
@@ -2472,7 +2540,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getSubscribedCount_取得用戶訂閱數失敗測試`() = mainCoroutineRule.runTest {
+    fun `getSubscribedCount_取得用戶訂閱數失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getSubscribedCount(
                 authorization = any(),
@@ -2486,7 +2554,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getSubscribed_取得訂閱用戶清單成功測試`() = mainCoroutineRule.runTest {
+    fun `getSubscribed_取得訂閱用戶清單成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getSubscribed(
                 authorization = any(),
@@ -2505,7 +2573,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getSubscribed_取得訂閱用戶清單失敗測試`() = mainCoroutineRule.runTest {
+    fun `getSubscribed_取得訂閱用戶清單失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getSubscribed(
                 authorization = any(),
@@ -2521,7 +2589,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `subscribe_訂閱官方成功測試`() = mainCoroutineRule.runTest {
+    fun `subscribe_訂閱官方成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.subscribe(
                 authorization = any(),
@@ -2535,7 +2603,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `subscribe_訂閱官方失敗測試`() = mainCoroutineRule.runTest {
+    fun `subscribe_訂閱官方失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.subscribe(
                 authorization = any(),
@@ -2549,7 +2617,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `unsubscribe_解除訂閱官方成功測試`() = mainCoroutineRule.runTest {
+    fun `unsubscribe_解除訂閱官方成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.unsubscribe(
                 authorization = any(),
@@ -2563,7 +2631,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `unsubscribe_解除訂閱官方失敗測試`() = mainCoroutineRule.runTest {
+    fun `unsubscribe_解除訂閱官方失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.unsubscribe(
                 authorization = any(),
@@ -2577,7 +2645,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `unsubscribeAll_解除訂閱所有官方成功測試`() = mainCoroutineRule.runTest {
+    fun `unsubscribeAll_解除訂閱所有官方成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.unsubscribeAll(
                 authorization = any(),
@@ -2591,7 +2659,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `unsubscribeAll_解除訂閱所有官方失敗測試`() = mainCoroutineRule.runTest {
+    fun `unsubscribeAll_解除訂閱所有官方失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.unsubscribeAll(
                 authorization = any(),
@@ -2604,7 +2672,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getFollowingList_取得指定會員追蹤中的清單成功測試`() = mainCoroutineRule.runTest {
+    fun `getFollowingList_取得指定會員追蹤中的清單成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getFollowingList(
                 authorization = any(),
@@ -2623,7 +2691,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getFollowingList_取得指定會員追蹤中的清單失敗測試`() = mainCoroutineRule.runTest {
+    fun `getFollowingList_取得指定會員追蹤中的清單失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getFollowingList(
                 authorization = any(),
@@ -2639,7 +2707,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getFollowers_取得指定會員被追蹤中清單成功測試`() = mainCoroutineRule.runTest {
+    fun `getFollowers_取得指定會員被追蹤中清單成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getFollowers(
                 authorization = any(),
@@ -2656,7 +2724,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getFollowers_取得指定會員被追蹤中清單失敗測試`() = mainCoroutineRule.runTest {
+    fun `getFollowers_取得指定會員被追蹤中清單失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getFollowers(
                 authorization = any(),
@@ -2672,7 +2740,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `follow_追蹤成功測試`() = mainCoroutineRule.runTest {
+    fun `follow_追蹤成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.follow(
                 authorization = any(),
@@ -2686,7 +2754,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `follow_追蹤失敗測試`() = mainCoroutineRule.runTest {
+    fun `follow_追蹤失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.follow(
                 authorization = any(),
@@ -2700,7 +2768,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `unfollow_解除追蹤成功測試`() = mainCoroutineRule.runTest {
+    fun `unfollow_解除追蹤成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.unfollow(
                 authorization = any(),
@@ -2714,7 +2782,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `unfollow_解除追蹤失敗測試`() = mainCoroutineRule.runTest {
+    fun `unfollow_解除追蹤失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.unfollow(
                 authorization = any(),
@@ -2728,7 +2796,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `block_封鎖用戶成功測試`() = mainCoroutineRule.runTest {
+    fun `block_封鎖用戶成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.block(
                 authorization = any(),
@@ -2742,7 +2810,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `block_封鎖用戶失敗測試`() = mainCoroutineRule.runTest {
+    fun `block_封鎖用戶失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.block(
                 authorization = any(),
@@ -2756,7 +2824,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `unblock_解除封鎖用戶成功測試`() = mainCoroutineRule.runTest {
+    fun `unblock_解除封鎖用戶成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.unblock(
                 authorization = any(),
@@ -2771,7 +2839,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `unblock_解除封鎖用戶失敗測試`() = mainCoroutineRule.runTest {
+    fun `unblock_解除封鎖用戶失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.unblock(
                 authorization = any(),
@@ -2785,7 +2853,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getBlockingList_取得封鎖用戶清單成功測試`() = mainCoroutineRule.runTest {
+    fun `getBlockingList_取得封鎖用戶清單成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getBlockingList(
                 authorization = any(),
@@ -2801,7 +2869,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getBlockingList_取得封鎖用戶清單失敗測試`() = mainCoroutineRule.runTest {
+    fun `getBlockingList_取得封鎖用戶清單失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getBlockingList(
                 authorization = any(),
@@ -2816,7 +2884,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getBlockers_取得被用戶封鎖清單成功測試`() = mainCoroutineRule.runTest {
+    fun `getBlockers_取得被用戶封鎖清單成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getBlockers(
                 authorization = any(),
@@ -2833,7 +2901,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getBlockers_取得被用戶封鎖清單失敗測試`() = mainCoroutineRule.runTest {
+    fun `getBlockers_取得被用戶封鎖清單失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getBlockers(
                 authorization = any(),
@@ -2848,7 +2916,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `createReport_檢舉文章成功測試`() = mainCoroutineRule.runTest {
+    fun `createReport_檢舉文章成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.createReport(
                 authorization = any(),
@@ -2858,13 +2926,13 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.success<Void>(204, null)
-        val result = web.createReport(231321, ReasonType.AD, null)
+        val result = web.createReport(231321, 1, null)
         assertThat(result.isSuccess)
     }
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `createReport_檢舉文章失敗測試`() = mainCoroutineRule.runTest {
+    fun `createReport_檢舉文章失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.createReport(
                 authorization = any(),
@@ -2874,13 +2942,13 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.error(500, "".toResponseBody())
-        val result = web.createReport(231321, ReasonType.AD, null)
+        val result = web.createReport(231321, 1, null)
         assertThat(result.isFailure).isTrue()
     }
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `deleteReport_刪除檢舉成功測試`() = mainCoroutineRule.runTest {
+    fun `deleteReport_刪除檢舉成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.deleteReport(
                 authorization = any(),
@@ -2895,7 +2963,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `deleteReport_刪除檢舉失敗測試`() = mainCoroutineRule.runTest {
+    fun `deleteReport_刪除檢舉失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.deleteReport(
                 authorization = any(),
@@ -2910,7 +2978,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getMemberIds_取得會員ID成功測試`() = mainCoroutineRule.runTest {
+    fun `getMemberIds_取得會員ID成功測試`() = testScope.runTest {
 
         val memberIds: List<Long> = listOf(67, 68)
         coEvery {
@@ -2940,7 +3008,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getMemberIds_取得會員ID失敗測試`() = mainCoroutineRule.runTest {
+    fun `getMemberIds_取得會員ID失敗測試`() = testScope.runTest {
         val memberIds: List<Long> = listOf(67, 68)
         coEvery {
             forumOceanService.getMemberIds(
@@ -2955,7 +3023,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getChannelIds_取得頻道ID成功測試`() = mainCoroutineRule.runTest {
+    fun `getChannelIds_取得頻道ID成功測試`() = testScope.runTest {
 
         val channelIds: List<Long> = listOf(1979787, 2266693)
         coEvery {
@@ -2985,7 +3053,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getChannelIds_取得頻道ID失敗測試`() = mainCoroutineRule.runTest {
+    fun `getChannelIds_取得頻道ID失敗測試`() = testScope.runTest {
 
         val channelIds: List<Long> = listOf(1979787, 2266693)
         coEvery {
@@ -3001,7 +3069,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `createVote_投票成功測試`() = mainCoroutineRule.runTest {
+    fun `createVote_投票成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.createVote(
                 authorization = any(),
@@ -3016,7 +3084,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `createVote_投票失敗測試`() = mainCoroutineRule.runTest {
+    fun `createVote_投票失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.createVote(
                 authorization = any(),
@@ -3031,7 +3099,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getCurrentVote_取得目前投票結果成功測試`() = mainCoroutineRule.runTest {
+    fun `getCurrentVote_取得目前投票結果成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getCurrentVote(
                 authorization = any(),
@@ -3052,7 +3120,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getCurrentVote_取得目前投票結果失敗測試`() = mainCoroutineRule.runTest {
+    fun `getCurrentVote_取得目前投票結果失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getCurrentVote(
                 authorization = any(),
@@ -3066,7 +3134,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getCommodityRank_取得個股排行結果成功測試`() = mainCoroutineRule.runTest {
+    fun `getCommodityRank_取得個股排行結果成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getCommodityRank(
                 authorization = any(),
@@ -3096,7 +3164,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getCommodityRank_取得個股排行結果失敗測試`() = mainCoroutineRule.runTest {
+    fun `getCommodityRank_取得個股排行結果失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getCommodityRank(
                 authorization = any(),
@@ -3111,7 +3179,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getUSCommodityRank_取得美股排行結果成功測試`() = mainCoroutineRule.runTest {
+    fun `getUSCommodityRank_取得美股排行結果成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getUSCommodityRank(
                 authorization = any(),
@@ -3141,7 +3209,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getUSCommodityRank_取得美股排行結果失敗測試`() = mainCoroutineRule.runTest {
+    fun `getUSCommodityRank_取得美股排行結果失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getUSCommodityRank(
                 authorization = any(),
@@ -3156,7 +3224,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getExpertMemberRank_取得達人排行結果成功測試`() = mainCoroutineRule.runTest {
+    fun `getExpertMemberRank_取得達人排行結果成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getExpertMemberRank(
                 authorization = any(),
@@ -3186,7 +3254,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getExpertMemberRank_取得達人排行結果失敗測試`() = mainCoroutineRule.runTest {
+    fun `getExpertMemberRank_取得達人排行結果失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getExpertMemberRank(
                 authorization = any(),
@@ -3201,7 +3269,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getSpecificExpertMemberRank_取得指定達人排行結果成功測試`() = mainCoroutineRule.runTest {
+    fun `getSpecificExpertMemberRank_取得指定達人排行結果成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getSpecificExpertMemberRank(
                 authorization = any(),
@@ -3230,7 +3298,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getSpecificExpertMemberRank_取得指定達人排行結果失敗測試`() = mainCoroutineRule.runTest {
+    fun `getSpecificExpertMemberRank_取得指定達人排行結果失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getSpecificExpertMemberRank(
                 authorization = any(),
@@ -3244,7 +3312,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getMemberFansRank_取得粉絲成長達人排行結果成功測試`() = mainCoroutineRule.runTest {
+    fun `getMemberFansRank_取得粉絲成長達人排行結果成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getMemberFansRank(
                 authorization = any(),
@@ -3274,7 +3342,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getMemberFansRank_取得粉絲成長達人排行結果失敗測試`() = mainCoroutineRule.runTest {
+    fun `getMemberFansRank_取得粉絲成長達人排行結果失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getMemberFansRank(
                 authorization = any(),
@@ -3289,7 +3357,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getSpecificMemberFansRank_取得指定粉絲成長達人排行結果成功測試`() = mainCoroutineRule.runTest {
+    fun `getSpecificMemberFansRank_取得指定粉絲成長達人排行結果成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getSpecificMemberFansRank(
                 authorization = any(),
@@ -3318,7 +3386,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getSpecificMemberFansRank_取得指定粉絲成長達人排行結果失敗測試`() = mainCoroutineRule.runTest {
+    fun `getSpecificMemberFansRank_取得指定粉絲成長達人排行結果失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getSpecificMemberFansRank(
                 authorization = any(),
@@ -3332,7 +3400,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getSolutionExpertRank_取得解題達人排行結果成功測試`() = mainCoroutineRule.runTest {
+    fun `getSolutionExpertRank_取得解題達人排行結果成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getSolutionExpertRank(
                 authorization = any(),
@@ -3362,7 +3430,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getSolutionExpertRank_取得解題達人排行結果失敗測試`() = mainCoroutineRule.runTest {
+    fun `getSolutionExpertRank_取得解題達人排行結果失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getSolutionExpertRank(
                 authorization = any(),
@@ -3377,7 +3445,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getSpecificMemberFansRank_取得指定解題達人排行結果成功測試`() = mainCoroutineRule.runTest {
+    fun `getSpecificMemberFansRank_取得指定解題達人排行結果成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getSpecificSolutionExpertRank(
                 authorization = any(),
@@ -3400,7 +3468,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getSpecificMemberFansRank_取得指定解題達人排行結果失敗測試`() = mainCoroutineRule.runTest {
+    fun `getSpecificMemberFansRank_取得指定解題達人排行結果失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getSpecificSolutionExpertRank(
                 authorization = any(),
@@ -3414,7 +3482,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `searchMembers_以關鍵字搜尋用戶結果成功測試`() = mainCoroutineRule.runTest {
+    fun `searchMembers_以關鍵字搜尋用戶結果成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.searchMembers(
                 authorization = any(),
@@ -3439,7 +3507,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `searchMembers_以關鍵字搜尋用戶結果失敗測試`() = mainCoroutineRule.runTest {
+    fun `searchMembers_以關鍵字搜尋用戶結果失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.searchMembers(
                 authorization = any(),
@@ -3456,7 +3524,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `使用p幣兌換專欄文章_success`() = mainCoroutineRule.runTest {
+    fun `使用p幣兌換專欄文章_success`() = testScope.runTest {
         coEvery {
             forumOceanService.exchangeColumnArticle(
                 authorization = any(),
@@ -3470,7 +3538,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `使用p幣兌換專欄文章_failed`() = mainCoroutineRule.runTest {
+    fun `使用p幣兌換專欄文章_failed`() = testScope.runTest {
         coEvery {
             forumOceanService.exchangeColumnArticle(
                 authorization = any(),
@@ -3484,7 +3552,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `取得會員的社群角色_success`() = mainCoroutineRule.runTest {
+    fun `取得會員的社群角色_success`() = testScope.runTest {
         coEvery {
             forumOceanService.getRole(
                 authorization = any(),
@@ -3497,7 +3565,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `取得會員的社群角色_failed`() = mainCoroutineRule.runTest {
+    fun `取得會員的社群角色_failed`() = testScope.runTest {
         coEvery {
             forumOceanService.getRole(
                 authorization = any(),
@@ -3510,7 +3578,36 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `取得其他使用者的角色_success`() = mainCoroutineRule.runTest {
+    fun `依角色類型取得會員名單_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getMembersByRoleId(
+                authorization = any(),
+                path = any(),
+                roleId = any()
+            )
+        } returns Response.success(GetMembersByRoleResponse(listOf()))
+        val result = web.getMembersByRole(1)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `依角色類型取得會員名單_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getMembersByRoleId(
+                authorization = any(),
+                path = any(),
+                roleId = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getMembersByRole(1)
+        assertThat(result.isFailure).isTrue()
+    }
+
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得其他使用者的角色_success`() = testScope.runTest {
         coEvery {
             forumOceanService.getRole(
                 authorization = any(),
@@ -3524,7 +3621,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `取得其他使用者的角色_failed`() = mainCoroutineRule.runTest {
+    fun `取得其他使用者的角色_failed`() = testScope.runTest {
         coEvery {
             forumOceanService.getRole(
                 authorization = any(),
@@ -3538,7 +3635,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `使用者已兌換該作者文章數及上限_success`() = mainCoroutineRule.runTest {
+    fun `使用者已兌換該作者文章數及上限_success`() = testScope.runTest {
         coEvery {
             forumOceanService.getExchangeCount(
                 authorization = any(),
@@ -3552,7 +3649,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `使用者已兌換該作者文章數及上限_failure`() = mainCoroutineRule.runTest {
+    fun `使用者已兌換該作者文章數及上限_failure`() = testScope.runTest {
         coEvery {
             forumOceanService.getExchangeCount(
                 authorization = any(),
@@ -3566,7 +3663,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `取得專欄作家Vip社團資訊_success`() = mainCoroutineRule.runTest {
+    fun `取得專欄作家Vip社團資訊_success`() = testScope.runTest {
         coEvery {
             forumOceanService.getColumnistVipGroup(
                 authorization = any(),
@@ -3580,7 +3677,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `取得專欄作家Vip社團資訊_failure`() = mainCoroutineRule.runTest {
+    fun `取得專欄作家Vip社團資訊_failure`() = testScope.runTest {
         coEvery {
             forumOceanService.getColumnistVipGroup(
                 authorization = any(),
@@ -3594,7 +3691,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `取得研究報告Id_success`() = mainCoroutineRule.runTest {
+    fun `取得研究報告Id_success`() = testScope.runTest {
         coEvery {
             forumOceanService.getStockReportId(
                 authorization = any(),
@@ -3610,7 +3707,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `取得研究報告Id_failed`() = mainCoroutineRule.runTest {
+    fun `取得研究報告Id_failed`() = testScope.runTest {
         coEvery {
             forumOceanService.getStockReportId(
                 authorization = any(),
@@ -3621,6 +3718,835 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getStockReportId("20220505", "C0090", "8046")
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得指定社團資訊_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getGroupV2(
+                authorization = any(),
+                path = "",
+                groupId = any()
+            )
+        } returns Response.success(
+            Group(
+                1,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+            )
+        )
+        val result = web.getGroupV2(1)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得指定社團資訊_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getGroupV2(
+                authorization = any(),
+                path = "",
+                groupId = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getGroupV2(-1L)
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `依角色取得會員所有社團_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getGroupsByRole(
+                authorization = any(),
+                path = "",
+                memberId = any(),
+                roles = any()
+            )
+        } returns Response.success(listOf())
+        val result = web.getGroupByRoles(1, listOf())
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `依角色取得會員所有社團_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getGroupsByRole(
+                authorization = any(),
+                path = "",
+                memberId = any(),
+                roles = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getGroupByRoles(-1L, listOf())
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `創建社團_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.createGroup(
+                authorization = any(),
+                path = "",
+                body = GroupManipulation(null, null, null, null)
+            )
+        } returns Response.success(200, InsertedId(0))
+        val result = web.createGroup(GroupManipulation(null, null, null, null))
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `創建社團_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.createGroup(
+                authorization = any(),
+                path = "",
+                groupName = ""
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.createGroup("name")
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `更新社團資訊_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.updateGroup(
+                authorization = any(),
+                path = "",
+                body = GroupManipulation("", "", "", false),
+                groupId = any()
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.updateGroup(
+            1,
+            GroupManipulation("", "", "", false)
+        )
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `更新社團資訊_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.updateGroup(
+                authorization = any(),
+                path = "",
+                body = GroupManipulation(null, null, null, null),
+                groupId = 0
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.updateGroup(1, GroupManipulation(null, null, null, null))
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `增加社團的板_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.createGroupBoard(
+                authorization = any(),
+                path = "",
+                groupId = 1L,
+                body = any()
+            )
+        } returns Response.success(InsertedId(-1))
+        val result = web.createGroupBoard(1, BoardManipulation(null, null))
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `增加社團的板_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.createGroupBoard(
+                authorization = any(),
+                path = "",
+                groupId = 1L,
+                body = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.createGroupBoard(1, BoardManipulation(null, null))
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得社團所有看板_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getGroupBoards(
+                authorization = any(),
+                path = "",
+                groupId = 1L
+            )
+        } returns Response.success(listOf())
+        val result = web.getGroupBoards(1)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得社團所有看板_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getGroupBoards(
+                authorization = any(),
+                path = "",
+                groupId = 1L
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getGroupBoards(1)
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `修改看板_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.updateGroupBoard(
+                authorization = any(),
+                path = "",
+                boardId = 1L,
+                body = any()
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.updateGroupBoard(1, BoardManipulation(null, null))
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `修改看板_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.updateGroupBoard(
+                authorization = any(),
+                path = "",
+                boardId = 1L,
+                body = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.updateGroupBoard(1, BoardManipulation(null, null))
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得特定看板資訊_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getGroupBoard(
+                authorization = any(),
+                path = "",
+                boardId = 1L
+            )
+        } returns Response.success(BoardSingle(null, null, null, null, null, null))
+        val result = web.getGroupBoard(1)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得特定看板資訊_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getGroupBoard(
+                authorization = any(),
+                path = "",
+                boardId = 1L
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getGroupBoard(1)
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `刪除社團看板_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.deleteGroupBoard(
+                authorization = any(),
+                path = "",
+                boardId = 1L
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.deleteGroupBoard(1)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `刪除社團看板_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.deleteGroupBoard(
+                authorization = any(),
+                path = "",
+                boardId = 1L
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.deleteGroupBoard(1)
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得社團是否有未察看的待審用戶_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.hasNewGroupPending(
+                authorization = any(),
+                path = "",
+                groupId = 1L
+            )
+        } returns Response.success(
+            200,
+            //langauge=JSON
+            """{ "hasNewPending": true }""".toResponseBody("application/json".toMediaType())
+        )
+        val result = web.hasNewGroupPending(1)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得社團是否有未察看的待審用戶_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.hasNewGroupPending(
+                authorization = any(),
+                path = "",
+                groupId = 1L
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.hasNewGroupPending(1)
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得該社員在社團的所有角色_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getGroupMemberRoles(
+                authorization = any(),
+                path = "",
+                groupId = any(),
+                memberId = any()
+            )
+        } returns Response.success(MemberRoles(listOf()))
+        val result = web.getGroupMemberRoles(1, 1)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得該社員在社團的所有角色_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getGroupMemberRoles(
+                authorization = any(),
+                path = "",
+                groupId = any(),
+                memberId = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getGroupMemberRoles(1, 1)
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `設定社團身份_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.updateGroupMemberRoles(
+                authorization = any(),
+                path = any(),
+                groupId = any(),
+                memberId = any(),
+                roles = any()
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.updateGroupMemberRoles(1, 1, listOf())
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `設定社團身份_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.updateGroupMemberRoles(
+                authorization = any(),
+                path = "",
+                groupId = any(),
+                memberId = any(),
+                roles = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.updateGroupMemberRoles(1, 1, listOf())
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得社團成員列表_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getGroupMembers(
+                authorization = any(),
+                path = "",
+                groupId = any(),
+                roles = any(),
+                offset = any(),
+                fetch = any()
+            )
+        } returns Response.success(listOf())
+        val result = web.getGroupMembers(1, listOf(), 0, 0)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得社團成員列表_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getGroupMembers(
+                authorization = any(),
+                path = "",
+                groupId = any(),
+                roles = any(),
+                offset = any(),
+                fetch = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getGroupMembers(1, listOf(), 0, 0)
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `離開社團_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.leaveGroup(
+                authorization = any(),
+                path = "",
+                groupId = any()
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.leaveGroup(1)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `離開社團_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.leaveGroup(
+                authorization = any(),
+                path = "",
+                groupId = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.leaveGroup(1)
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得社長及幹部清單_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getGroupAdmins(
+                authorization = any(),
+                path = "",
+                groupId = any()
+            )
+        } returns Response.success(Admins(listOf(), 0L))
+        val result = web.getGroupAdmins(1)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得社長及幹部清單_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getGroupAdmins(
+                authorization = any(),
+                path = "",
+                groupId = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getGroupAdmins(1)
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `搜尋社員_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.searchGroupMember(
+                authorization = any(),
+                path = "",
+                groupId = any(),
+                keyword = any(),
+                offset = any(),
+                fetch = any()
+            )
+        } returns Response.success(listOf())
+        val result = web.searchGroupMember(1, "", 0, 0)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `搜尋社員_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.searchGroupMember(
+                authorization = any(),
+                path = "",
+                groupId = any(),
+                keyword = any(),
+                offset = any(),
+                fetch = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.searchGroupMember(1, "", 0, 0)
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `申請加入社團_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.joinGroup(
+                authorization = any(),
+                path = "",
+                groupId = any(),
+                body = JoinGroupRequest("reason")
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.joinGroup(1, JoinGroupRequest("reason"))
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `申請加入社團_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.joinGroup(
+                authorization = any(),
+                path = "",
+                groupId = any(),
+                body = JoinGroupRequest("reason")
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.joinGroup(1, JoinGroupRequest("reason"))
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得審核成員列表_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getGroupPendingRequests(
+                authorization = any(),
+                path = "",
+                groupId = any(),
+                timestamp = any()
+            )
+        } returns Response.success(PendingRequests(0L, listOf()))
+        val result = web.getGroupPendingRequests(1, 0)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得審核成員列表_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getGroupPendingRequests(
+                authorization = any(),
+                path = "",
+                groupId = any(),
+                timestamp = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getGroupPendingRequests(1, -1L)
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `搜尋審核中的社員_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.searchGroupPendingRequests(
+                authorization = any(),
+                path = "",
+                groupId = any(),
+                timestamp = any(),
+                keyword = any()
+            )
+        } returns Response.success(PendingRequests(0L, listOf()))
+        val result = web.searchGroupPendingRequests(1L, "keyword", 0L)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `搜尋審核中的社員_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.searchGroupPendingRequests(
+                authorization = any(),
+                path = "",
+                groupId = any(),
+                timestamp = any(),
+                keyword = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.searchGroupPendingRequests(1L, "keyword", 0L)
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `審核成員加入_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.approvalGroupRequest(
+                authorization = any(),
+                path = "",
+                groupId = any(),
+                body = any()
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.approvalGroupRequest(1L, listOf())
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `審核成員加入_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.approvalGroupRequest(
+                authorization = any(),
+                path = "",
+                groupId = any(),
+                body = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.approvalGroupRequest(1L, listOf())
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `踢出成員_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.kickGroupMember(
+                authorization = any(),
+                path = "",
+                groupId = any(),
+                memberId = any()
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.kickGroupMember(1L, 1L)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `踢出成員_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.kickGroupMember(
+                authorization = any(),
+                path = "",
+                groupId = any(),
+                memberId = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.kickGroupMember(1L, 1L)
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `對社團看板發文_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.createGroupArticle(
+                authorization = any(),
+                path = "",
+                boardId = any(),
+                requestBody = any()
+            )
+        } returns Response.success(CreateArticleResponseBody(0L))
+        val result = web.createGroupArticle(
+            1L,
+            Content.Article.General(null, null, null, null, null, null, null)
+        )
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `對社團看板發文_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.createGroupArticle(
+                authorization = any(),
+                path = "",
+                boardId = any(),
+                requestBody = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.createGroupArticle(
+            1L,
+            Content.Article.General(null, null, null, null, null, null, null)
+        )
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `刪除看板文章_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.deleteGroupArticle(
+                authorization = any(),
+                path = any(),
+                articleId = any()
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.deleteGroupArticle(1L)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `刪除看板文章_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.deleteGroupArticle(
+                authorization = any(),
+                path = any(),
+                articleId = 0L
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.deleteGroupArticle(1L)
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `刪除看板文章留言_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.deleteGroupArticleComment(
+                authorization = any(),
+                path = any(),
+                articleId = any(),
+                commentId = any()
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.deleteGroupArticleComment(1L, 1L)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `刪除看板文章留言_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.deleteGroupArticleComment(
+                authorization = any(),
+                path = "",
+                articleId = 0L,
+                commentId = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.deleteGroupArticleComment(1L, 1L)
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得用戶可以進入的所有看板 id_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getAvailableBoardIds(
+                authorization = any(),
+                path = ""
+            )
+        } returns Response.success(AvailableBoardIds(listOf()))
+        val result = web.getAvailableBoardIds()
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得用戶可以進入的所有看板 id_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getAvailableBoardIds(
+                authorization = any(),
+                path = ""
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getAvailableBoardIds()
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得社團推播_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getGroupPushSetting(
+                authorization = any(),
+                path = "",
+                groupId = any()
+            )
+        } returns Response.success(GroupPushSetting(""))
+        val result = web.getGroupPushSetting(1L)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得社團推播_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getGroupPushSetting(
+                authorization = any(),
+                path = "",
+                groupId = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getGroupPushSetting(1L)
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `設定社團推播_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.setGroupPushSetting(
+                authorization = any(),
+                path = any(),
+                body = any()
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.setGroupPushSetting(
+            1L,
+            PushType.NONE
+        )
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `設定社團推播_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.setGroupPushSetting(
+                authorization = any(),
+                path = any(),
+                body = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.setGroupPushSetting(
+            -1,
+            PushType.NONE
+        )
         assertThat(result.isFailure).isTrue()
     }
 }

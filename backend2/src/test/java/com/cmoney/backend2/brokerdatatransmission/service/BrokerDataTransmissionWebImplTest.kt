@@ -12,7 +12,6 @@ import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.Tr
 import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.put.BrokerData
 import com.cmoney.backend2.brokerdatatransmission.service.api.encryptionkey.GetEncryptionKeyResponseWithError
 import com.cmoney.core.CoroutineTestRule
-import com.cmoney.core.extension.runTest
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonElement
@@ -21,6 +20,8 @@ import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import io.mockk.unmockkAll
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runTest
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.After
 import org.junit.Before
@@ -35,9 +36,10 @@ import retrofit2.Response
 @RunWith(RobolectricTestRunner::class)
 class BrokerDataTransmissionWebImplTest {
 
+    private val testScope = TestScope()
     @ExperimentalCoroutinesApi
     @get:Rule
-    val mainCoroutineRule = CoroutineTestRule()
+    val mainCoroutineRule = CoroutineTestRule(testScope = testScope)
 
     @MockK
     private lateinit var service: BrokerDataTransmissionService
@@ -64,7 +66,7 @@ class BrokerDataTransmissionWebImplTest {
     }
 
     @Test
-    fun `getBrokers 成功`() = mainCoroutineRule.runTest {
+    fun `getBrokers 成功`() = testScope.runTest {
         val responseBody = BrokerResponseWithError(
             brokers = emptyList()
         )
@@ -83,7 +85,7 @@ class BrokerDataTransmissionWebImplTest {
     }
 
     @Test
-    fun `getBrokers 失敗`() = mainCoroutineRule.runTest {
+    fun `getBrokers 失敗`() = testScope.runTest {
         val response: Response<BrokerResponseWithError> =
             Response.error(400, """{"message": "參數錯誤"}""".toResponseBody())
         coEvery {
@@ -104,7 +106,7 @@ class BrokerDataTransmissionWebImplTest {
     }
 
     @Test
-    fun `getEncryptionKey 成功`() = mainCoroutineRule.runTest {
+    fun `getEncryptionKey 成功`() = testScope.runTest {
         val responseBody =
             GetEncryptionKeyResponseWithError("""-----BEGIN PUBLIC KEY-----\r\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAi5f+LhvlxB32a3AOeIno\r\n/+dhdu92P9IR0P1in6GUNW+vEgzZAZdBNF+EPgsEPRi0tGLYXrx9BJUIHah1ORoY\r\nUgU0PD1ydyJ2cDp/kP8IQ3cDIvXKSYyKNQ2erxFvvOFFvrqoB7QxLQgP+xKkFoz/\r\nbdAAQAjT/4dtRHGd82wZETWcXHqv7mL9KZj1TEvNDu77yu90PhodGtByCmvJjXd8\r\nYi2Nr7esIapsQafFOyyOAYFXE3UtFiHDf19SAVqC4TS7WpVDeBn/+PPNeSrkApVs\r\n0nxXNDpCumuXkqVtcbih3pKF5mrfPaTSlVClNBTXaj2UdQfrjfFCcqIyyWIdnkEc\r\nVQIDAQAB\r\n-----END PUBLIC KEY-----\r\n""")
         coEvery {
@@ -122,7 +124,7 @@ class BrokerDataTransmissionWebImplTest {
     }
 
     @Test
-    fun `getEncryptionKey 失敗`() = mainCoroutineRule.runTest {
+    fun `getEncryptionKey 失敗`() = testScope.runTest {
         val response: Response<GetEncryptionKeyResponseWithError> =
             Response.error(400, """{"message": "參數錯誤"}""".toResponseBody())
         coEvery {
@@ -143,7 +145,7 @@ class BrokerDataTransmissionWebImplTest {
     }
 
     @Test
-    fun `fetchTransactionHistory 成功`() = mainCoroutineRule.runTest {
+    fun `fetchTransactionHistory 成功`() = testScope.runTest {
         coEvery {
             service.fetchTransactionHistory(
                 url = any(),
@@ -157,7 +159,7 @@ class BrokerDataTransmissionWebImplTest {
     }
 
     @Test
-    fun `fetchTransactionHistory 失敗`() = mainCoroutineRule.runTest {
+    fun `fetchTransactionHistory 失敗`() = testScope.runTest {
         coEvery {
             service.fetchTransactionHistory(
                 url = any(),
@@ -179,7 +181,7 @@ class BrokerDataTransmissionWebImplTest {
     }
 
     @Test
-    fun `getUserAgreesImportRecord 成功`() = mainCoroutineRule.runTest {
+    fun `getUserAgreesImportRecord 成功`() = testScope.runTest {
         val expect = true
 
         coEvery {
@@ -197,7 +199,7 @@ class BrokerDataTransmissionWebImplTest {
     }
 
     @Test
-    fun `getBrokerStockData 成功`() = mainCoroutineRule.runTest {
+    fun `getBrokerStockData 成功`() = testScope.runTest {
         val body = gson.fromJson(
             """[{"brokerId":"9800","brokerShortName":"元大","subBrokerId":"","updateTimeOfUnixTimeSeconds":1640167278,"inStockData":[{"stockID":"2330","stockInfos":[{"tradeType":0,"amount":1000,"tradeTotalCost":600000.0000}]}]}]""",
             JsonElement::class.java
@@ -241,7 +243,7 @@ class BrokerDataTransmissionWebImplTest {
     }
 
     @Test
-    fun `getBrokerStockData 失敗`() = mainCoroutineRule.runTest {
+    fun `getBrokerStockData 失敗`() = testScope.runTest {
         coEvery {
             service.getBrokerStockData(
                 url = any(),
@@ -260,7 +262,7 @@ class BrokerDataTransmissionWebImplTest {
     }
 
     @Test
-    fun `putBrokerStockData 成功`() = mainCoroutineRule.runTest {
+    fun `putBrokerStockData 成功`() = testScope.runTest {
         coEvery {
             service.putBrokerStockData(
                 url = any(),
@@ -274,7 +276,7 @@ class BrokerDataTransmissionWebImplTest {
     }
 
     @Test
-    fun `putBrokerStockData 失敗`() = mainCoroutineRule.runTest {
+    fun `putBrokerStockData 失敗`() = testScope.runTest {
         coEvery {
             service.putBrokerStockData(
                 url = any(),
@@ -293,7 +295,7 @@ class BrokerDataTransmissionWebImplTest {
     }
 
     @Test
-    fun `deleteBrokerStockData 成功`() = mainCoroutineRule.runTest {
+    fun `deleteBrokerStockData 成功`() = testScope.runTest {
         coEvery {
             service.deleteBrokerStockData(
                 url = any(),
@@ -307,7 +309,7 @@ class BrokerDataTransmissionWebImplTest {
     }
 
     @Test
-    fun `deleteBrokerStockData 失敗`() = mainCoroutineRule.runTest {
+    fun `deleteBrokerStockData 失敗`() = testScope.runTest {
         coEvery {
             service.deleteBrokerStockData(
                 url = any(),
@@ -326,7 +328,7 @@ class BrokerDataTransmissionWebImplTest {
     }
 
     @Test
-    fun `getConsents 成功`() = mainCoroutineRule.runTest {
+    fun `getConsents 成功`() = testScope.runTest {
         val body = gson.fromJson(
             """[{"brokerId":"9800","hasSigned":true}]""",
             JsonElement::class.java
@@ -351,7 +353,7 @@ class BrokerDataTransmissionWebImplTest {
     }
 
     @Test
-    fun `getConsents 失敗`() = mainCoroutineRule.runTest {
+    fun `getConsents 失敗`() = testScope.runTest {
         val response: Response<JsonElement> =
             Response.error(400, """{"message": "參數錯誤"}""".toResponseBody())
         coEvery {
@@ -373,7 +375,7 @@ class BrokerDataTransmissionWebImplTest {
     }
 
     @Test
-    fun `signConsent 成功`() = mainCoroutineRule.runTest {
+    fun `signConsent 成功`() = testScope.runTest {
         coEvery {
             service.signConsent(
                 url = any(),

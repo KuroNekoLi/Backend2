@@ -5,12 +5,14 @@ import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.imagerecognition.service.api.getpicturewords.PictureWordsResponseBody
 import com.cmoney.core.CoroutineTestRule
-import com.cmoney.core.extension.runTest
+
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runTest
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Before
 import org.junit.Rule
@@ -22,9 +24,9 @@ import retrofit2.Response
 
 @RunWith(RobolectricTestRunner::class)
 class ImageRecognitionWebImplTest {
-
+    private val testScope = TestScope()
     @get:Rule
-    val mainCoroutineRule = CoroutineTestRule()
+    val mainCoroutineRule = CoroutineTestRule(testScope = testScope)
 
     @MockK
     private lateinit var service: ImageRecognitionService
@@ -46,7 +48,7 @@ class ImageRecognitionWebImplTest {
     }
 
     @Test
-    fun getPictureWords_success():Unit = mainCoroutineRule.runTest {
+    fun getPictureWords_success():Unit = testScope.runTest {
         val responseBody = PictureWordsResponseBody(
             result = "9988"
         )
@@ -69,7 +71,7 @@ class ImageRecognitionWebImplTest {
     }
 
     @Test
-    fun getPictureWords_401_UNAUTHORIZATION(): Unit = mainCoroutineRule.runTest {
+    fun getPictureWords_401_UNAUTHORIZATION(): Unit = testScope.runTest {
         coEvery {
             service.getPictureWords(
                 url = any(),

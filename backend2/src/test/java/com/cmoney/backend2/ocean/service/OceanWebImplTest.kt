@@ -41,7 +41,6 @@ import com.cmoney.backend2.ocean.service.api.getstockmasterevaluationlist.GetSto
 import com.cmoney.backend2.ocean.service.api.gettopicarticles.GetTopicArticlesResponseBodyWithError
 import com.cmoney.backend2.ocean.service.api.getunreadcount.GetUnreadCountResponseBody
 import com.cmoney.backend2.ocean.service.api.invite.InviteResponseBodyWithError
-import com.cmoney.backend2.ocean.service.api.isinwhitelist.IsInCreateArticleWhiteListResponseBody
 import com.cmoney.backend2.ocean.service.api.joinclub.JoinClubResponseBodyWithError
 import com.cmoney.backend2.ocean.service.api.leaveclub.LeaveClubResponseBodyWithError
 import com.cmoney.backend2.ocean.service.api.removeannouncement.RemoveAnnouncementResponseWithError
@@ -61,7 +60,6 @@ import com.cmoney.backend2.ocean.service.api.variable.Relation
 import com.cmoney.backend2.ocean.service.api.variable.SuccessResultWithError
 import com.cmoney.backend2.ocean.service.api.variable.channelinfo.ChannelInfo
 import com.cmoney.core.CoroutineTestRule
-import com.cmoney.core.extension.runTest
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
@@ -69,6 +67,8 @@ import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runTest
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.After
 import org.junit.Before
@@ -82,9 +82,10 @@ import retrofit2.Response
 @RunWith(RobolectricTestRunner::class)
 class OceanWebImplTest {
 
+    private val testScope = TestScope()
     @ExperimentalCoroutinesApi
     @get:Rule
-    val mainCoroutineRule = CoroutineTestRule()
+    val mainCoroutineRule = CoroutineTestRule(testScope = testScope)
 
     @MockK
     private val oceanService = mockk<OceanService>()
@@ -103,7 +104,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `putOnBlackList加入黑名單 成功回傳`() = mainCoroutineRule.runTest {
+    fun `putOnBlackList加入黑名單 成功回傳`() = testScope.runTest {
 
         //準備api成功時的回傳
         val responseBody = SuccessResultWithError(
@@ -127,7 +128,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `putOnBlackList加入黑名單 發生ServerException`() = mainCoroutineRule.runTest {
+    fun `putOnBlackList加入黑名單 發生ServerException`() = testScope.runTest {
         val json = """{
           "Error": {
             "Code": 100,
@@ -150,7 +151,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `spinOffBlackList移除黑名單 成功回傳`() = mainCoroutineRule.runTest {
+    fun `spinOffBlackList移除黑名單 成功回傳`() = testScope.runTest {
         //準備api成功時的回傳
         val responseBody = SuccessResultWithError(
             isSuccess = true
@@ -173,7 +174,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `spinOffBlackList移除黑名單 發生ServerException`() = mainCoroutineRule.runTest {
+    fun `spinOffBlackList移除黑名單 發生ServerException`() = testScope.runTest {
         val json = """{
           "Error": {
             "Code": 100,
@@ -196,7 +197,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `getBlackList取得黑名單清單 listof(22222)`() = mainCoroutineRule.runTest {
+    fun `getBlackList取得黑名單清單 listof(22222)`() = testScope.runTest {
         //準備api成功時的回傳
         val responseBody = GetBlackListResponseBodyWithError(
             channelIds = listOf(222222)
@@ -219,7 +220,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `getBlackList取得黑名單清單 發生ServerException`() = mainCoroutineRule.runTest {
+    fun `getBlackList取得黑名單清單 發生ServerException`() = testScope.runTest {
         val json = """{
           "Error": {
             "Code": 100,
@@ -242,7 +243,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `getBlockList取得被黑名單清單 listof(22222)`() = mainCoroutineRule.runTest {
+    fun `getBlockList取得被黑名單清單 listof(22222)`() = testScope.runTest {
         //準備api成功時的回傳
         val responseBody = GetBlockListResponseBodyWithError(
             channelIds = listOf(222222)
@@ -265,7 +266,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `getBlockList取得被黑名單清單 發生ServerException`() = mainCoroutineRule.runTest {
+    fun `getBlockList取得被黑名單清單 發生ServerException`() = testScope.runTest {
         val json = """{
           "Error": {
             "Code": 100,
@@ -288,7 +289,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `getNotify取得通知訊息`() = mainCoroutineRule.runTest {
+    fun `getNotify取得通知訊息`() = testScope.runTest {
         val responseBody = GetNotifyResponseBody(
             listOf(
                 Notify(
@@ -332,7 +333,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `getUnReadCount取得未讀通知數`() = mainCoroutineRule.runTest {
+    fun `getUnReadCount取得未讀通知數`() = testScope.runTest {
         val responseBody = GetUnreadCountResponseBody(
             data = 25
         )
@@ -359,7 +360,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `setReaded設定已讀通知`() = mainCoroutineRule.runTest {
+    fun `setReaded設定已讀通知`() = testScope.runTest {
         coEvery {
             oceanService.setReaded(
                 authorization = any(),
@@ -375,7 +376,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `getSingleArticle 取得單一文章(如果有回覆會有最多20篇回覆)`() = mainCoroutineRule.runTest {
+    fun `getSingleArticle 取得單一文章(如果有回覆會有最多20篇回覆)`() = testScope.runTest {
         val articleId = 87030622L
         val responseBody = GetSingleArticleResponseBody(
             data = ArticleResult(
@@ -432,7 +433,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `getComments 取得指定文章的回覆`() = mainCoroutineRule.runTest {
+    fun `getComments 取得指定文章的回覆`() = testScope.runTest {
         val articleId = 87030622L
         val responseBody = GetCommentsResponseBody(
             data = listOf(
@@ -472,7 +473,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `getOtherChannelInfo 取得指定頻道資訊(其他類型頻道)`() = mainCoroutineRule.runTest {
+    fun `getOtherChannelInfo 取得指定頻道資訊(其他類型頻道)`() = testScope.runTest {
         val responseBody = ChannelInfo.ChannelBaseInfo(
             channelId = 1000,
             channelName = null,
@@ -499,7 +500,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `getMemberChannelInfo 取得指定頻道資訊(會員頻道資訊)`() = mainCoroutineRule.runTest {
+    fun `getMemberChannelInfo 取得指定頻道資訊(會員頻道資訊)`() = testScope.runTest {
         val responseBody = ChannelInfo.MemberChannelInfo(
             channelId = 1000,
             channelName = null,
@@ -537,7 +538,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `getClubChannelInfo 取得指定頻道資訊(社團頻道資訊)`() = mainCoroutineRule.runTest {
+    fun `getClubChannelInfo 取得指定頻道資訊(社團頻道資訊)`() = testScope.runTest {
         val responseBody = ChannelInfo.ClubChannelInfo(
             channelId = 1000,
             channelName = null,
@@ -567,7 +568,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `getRssSignalChannelInfo 取得指定頻道資訊(RSS、訊號頻道資訊)`() = mainCoroutineRule.runTest {
+    fun `getRssSignalChannelInfo 取得指定頻道資訊(RSS、訊號頻道資訊)`() = testScope.runTest {
         val responseBody = ChannelInfo.RssSignalChannelInfo(
             channelId = 1000,
             channelName = null,
@@ -598,7 +599,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `searchChannel 搜尋社團 ( 搜尋頻道 )`() = mainCoroutineRule.runTest {
+    fun `searchChannel 搜尋社團 ( 搜尋頻道 )`() = testScope.runTest {
         val responseBody = SearchChannelResponseBody(
             clubs = listOf()
         )
@@ -626,7 +627,7 @@ class OceanWebImplTest {
 
     @Test
     fun `getFanListExcludeJoinedClub 取得排除加入社團的粉絲清單(已邀請或審核中或黑名單的粉絲也會排除)`() =
-        mainCoroutineRule.runTest {
+        testScope.runTest {
             val responseBody = GetFansListExcludeJoinedClubResponseBody(
                 channels = listOf()
             )
@@ -654,7 +655,7 @@ class OceanWebImplTest {
         }
 
     @Test
-    fun `getSimpleChannelInfo 取得頻道基本資訊(多筆)`() = mainCoroutineRule.runTest {
+    fun `getSimpleChannelInfo 取得頻道基本資訊(多筆)`() = testScope.runTest {
         val responseBody = GetSimpleChannelInfoResponseBody(
             channelInfo = listOf()
         )
@@ -678,7 +679,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `setEvaluation 設定評價`() = mainCoroutineRule.runTest {
+    fun `setEvaluation 設定評價`() = testScope.runTest {
         //準備api成功時的回傳
         val responseBody = SuccessResultWithError(
             isSuccess = true
@@ -702,7 +703,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `checkHasEvaluated 是否給過評價`() = mainCoroutineRule.runTest {
+    fun `checkHasEvaluated 是否給過評價`() = testScope.runTest {
         //準備api成功時的回傳
         val responseBody = CheckHasEvaluatedResponseBodyWithError(
             hasEvaluated = true
@@ -726,7 +727,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `getEvaluationList 取得指定用戶的評價清單`() = mainCoroutineRule.runTest {
+    fun `getEvaluationList 取得指定用戶的評價清單`() = testScope.runTest {
         //準備api成功時的回傳
         val responseBody = GetEvaluationListResponseBodyWithError(
             evaluations = listOf()
@@ -762,7 +763,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `changeCollectArticleState_收藏文章成功`() = mainCoroutineRule.runTest {
+    fun `changeCollectArticleState_收藏文章成功`() = testScope.runTest {
         val responseBody = SuccessResultWithError(true)
         coEvery { oceanService.changeCollectArticleState(any(), any()) }
             .returns(Response.success(responseBody))
@@ -773,7 +774,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `changeCollectArticleState_取消收藏文章成功`() = mainCoroutineRule.runTest {
+    fun `changeCollectArticleState_取消收藏文章成功`() = testScope.runTest {
         val responseBody = SuccessResultWithError(false)
         coEvery { oceanService.changeCollectArticleState(any(), any()) }
             .returns(Response.success(responseBody))
@@ -784,7 +785,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `changeCollectArticleState_收藏文章失敗`() = mainCoroutineRule.runTest {
+    fun `changeCollectArticleState_收藏文章失敗`() = testScope.runTest {
         val errorBody = """
             {"Error":{"Code":100,"Message":"參數錯誤"}}
         """.trimIndent()
@@ -803,7 +804,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `getCollectArticleList取得收藏文章清單`() = mainCoroutineRule.runTest {
+    fun `getCollectArticleList取得收藏文章清單`() = testScope.runTest {
         //準備api成功時的回傳
         val responseBody = GetCollectArticleListResponseBodyWithError(
             articles = listOf()
@@ -827,7 +828,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `getCollectArticleList取得收藏文章清單 發生ServerException`() = mainCoroutineRule.runTest {
+    fun `getCollectArticleList取得收藏文章清單 發生ServerException`() = testScope.runTest {
         val json = """{
           "Error": {
             "Code": 100,
@@ -851,47 +852,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `isInCreateArticleWhiteList取得使用者是否在白名單中 成功`() = mainCoroutineRule.runTest {
-        //準備api成功時的回傳
-        val responseBody = IsInCreateArticleWhiteListResponseBody(
-            isInWhiteList = true
-        )
-        //設定api成功時的回傳
-        coEvery {
-            oceanService.isInCreateArticleWhiteList(
-                authorization = any(),
-                requestBody = any()
-            )
-        } returns Response.success(responseBody)
-
-        //確認api是否成功
-        val result = service.isInCreateArticleWhiteList()
-        Truth.assertThat(result.isSuccess).isTrue()
-
-        //確認api回傳是否如預期
-        val data = result.getOrThrow()
-        Truth.assertThat(data.isInWhiteList).isTrue()
-    }
-
-    @Test
-    fun `isInCreateArticleWhiteList取得使用者是否在白名單中 失敗`() = mainCoroutineRule.runTest {
-        //準備api成功時的回傳
-        val json = ""
-        //設定api成功時的回傳
-        coEvery {
-            oceanService.isInCreateArticleWhiteList(
-                authorization = any(),
-                requestBody = any()
-            )
-        } returns Response.error(401, json.toResponseBody())
-
-        //確認api是否成功
-        val result = service.isInCreateArticleWhiteList()
-        checkHttpException(result)
-    }
-
-    @Test
-    fun `getMasters取得大師排行榜 成功`() = mainCoroutineRule.runTest {
+    fun `getMasters取得大師排行榜 成功`() = testScope.runTest {
         //準備api成功時的回傳
         val responseBody = GetMastersResponseBodyWithError(
             masters = listOf()
@@ -915,7 +876,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `getMasters取得大師排行榜 失敗`() = mainCoroutineRule.runTest {
+    fun `getMasters取得大師排行榜 失敗`() = testScope.runTest {
         //準備api成功時的回傳
         val json = ""
         //設定api成功時的回傳
@@ -932,7 +893,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `getAskLatestArticle取得最新問答文章 成功回傳`() = mainCoroutineRule.runTest {
+    fun `getAskLatestArticle取得最新問答文章 成功回傳`() = testScope.runTest {
 
         //準備api成功時的回傳
         val responseBody = GetAskLatestArticleResponseBody(
@@ -956,7 +917,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `getAskLatestArticle取得最新問答文章 發生ServerException`() = mainCoroutineRule.runTest {
+    fun `getAskLatestArticle取得最新問答文章 發生ServerException`() = testScope.runTest {
         val json = """{
           "Error": {
             "Code": 100,
@@ -978,7 +939,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `getAskLatestArticle取得最新問答文章 發生401HttpException`() = mainCoroutineRule.runTest {
+    fun `getAskLatestArticle取得最新問答文章 發生401HttpException`() = testScope.runTest {
         //設定api成功時的回傳
         coEvery {
             oceanService.getAskLatestArticle(
@@ -996,7 +957,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `getStockMasterEvaluationList取得多股大師評價分數 成功`() = mainCoroutineRule.runTest {
+    fun `getStockMasterEvaluationList取得多股大師評價分數 成功`() = testScope.runTest {
         //準備api成功時的回傳
         val responseBody = GetStockMasterEvaluationListResponseBodyWithError(
             masterEvaluationScores = listOf()
@@ -1020,7 +981,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `getStockMasterEvaluationList取得多股大師評價分數 失敗`() = mainCoroutineRule.runTest {
+    fun `getStockMasterEvaluationList取得多股大師評價分數 失敗`() = testScope.runTest {
         //準備api成功時的回傳
         val json = ""
         //設定api成功時的回傳
@@ -1037,7 +998,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `getStockMasterEvaluation取得個股大師評價 成功`() = mainCoroutineRule.runTest {
+    fun `getStockMasterEvaluation取得個股大師評價 成功`() = testScope.runTest {
         //準備api成功時的回傳
         val responseBody = GetStockMasterEvaluationResponseBodyWithError(
             avgScores = 7.2,
@@ -1067,7 +1028,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `getStockMasterEvaluation取得個股大師評價 失敗`() = mainCoroutineRule.runTest {
+    fun `getStockMasterEvaluation取得個股大師評價 失敗`() = testScope.runTest {
         //準備api成功時的回傳
         val json = ""
         //設定api成功時的回傳
@@ -1086,7 +1047,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `uploadChannelImage上傳社團頭像 成功`() = mainCoroutineRule.runTest {
+    fun `uploadChannelImage上傳社團頭像 成功`() = testScope.runTest {
         //準備api成功時的回傳
         val responseBody = UploadChannelImageResponseBodyWithError(
             isSuccess = true
@@ -1110,7 +1071,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `uploadChannelImage上傳社團頭像 失敗`() = mainCoroutineRule.runTest {
+    fun `uploadChannelImage上傳社團頭像 失敗`() = testScope.runTest {
         val json = """{
           "Error": {
             "Code": 8001005,
@@ -1134,7 +1095,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `createClub創建社團 成功`() = mainCoroutineRule.runTest {
+    fun `createClub創建社團 成功`() = testScope.runTest {
         //準備api成功時的回傳
         val responseBody = CreateClubResponseBodyWithError(
             channelId = 1000
@@ -1158,7 +1119,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `createClub創建社團 失敗`() = mainCoroutineRule.runTest {
+    fun `createClub創建社團 失敗`() = testScope.runTest {
         val json = """{
           "Error": {
             "Code": 1001002,
@@ -1182,7 +1143,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `deleteClub關閉社團 成功`() = mainCoroutineRule.runTest {
+    fun `deleteClub關閉社團 成功`() = testScope.runTest {
         //準備api成功時的回傳
         val responseBody = DeleteClubResponseBodyWithError(
             isSuccess = true
@@ -1206,7 +1167,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `deleteClub關閉社團 失敗`() = mainCoroutineRule.runTest {
+    fun `deleteClub關閉社團 失敗`() = testScope.runTest {
         val json = """{
           "Error": {
             "Code": 100,
@@ -1230,7 +1191,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `leaveClub離開社團 成功`() = mainCoroutineRule.runTest {
+    fun `leaveClub離開社團 成功`() = testScope.runTest {
         //準備api成功時的回傳
         val responseBody = LeaveClubResponseBodyWithError(
             isSuccess = true
@@ -1254,7 +1215,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `leaveClub離開社團 失敗`() = mainCoroutineRule.runTest {
+    fun `leaveClub離開社團 失敗`() = testScope.runTest {
         val json = """{
           "Error": {
             "Code": 100,
@@ -1278,7 +1239,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `checkHasJoinedClub是否有參加的社團 成功`() = mainCoroutineRule.runTest {
+    fun `checkHasJoinedClub是否有參加的社團 成功`() = testScope.runTest {
         //準備api成功時的回傳
         val responseBody = HasJoinedClubResponseWithError(
             isJoin = true
@@ -1302,7 +1263,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `checkHasJoinedClub是否有參加的社團 失敗`() = mainCoroutineRule.runTest {
+    fun `checkHasJoinedClub是否有參加的社團 失敗`() = testScope.runTest {
         val json = """{
           "Error": {
             "Code": 100,
@@ -1326,7 +1287,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `invite邀請加入社團 成功`() = mainCoroutineRule.runTest {
+    fun `invite邀請加入社團 成功`() = testScope.runTest {
         //準備api成功時的回傳
         val responseBody = InviteResponseBodyWithError(
             isSuccess = true
@@ -1350,7 +1311,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `invite邀請加入社團 失敗`() = mainCoroutineRule.runTest {
+    fun `invite邀請加入社團 失敗`() = testScope.runTest {
         val json = """{
           "Error": {
             "Code": 100,
@@ -1374,7 +1335,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `joinClub加入社團 成功`() = mainCoroutineRule.runTest {
+    fun `joinClub加入社團 成功`() = testScope.runTest {
         //準備api成功時的回傳
         val responseBody = JoinClubResponseBodyWithError(
             memberPosition = MemberPosition.Reviewing
@@ -1398,7 +1359,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `joinClub加入社團 失敗`() = mainCoroutineRule.runTest {
+    fun `joinClub加入社團 失敗`() = testScope.runTest {
         val json = """{
           "Error": {
             "Code": 100,
@@ -1422,7 +1383,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `getMemberClubs取得指定會員的社團清單 成功`() = mainCoroutineRule.runTest {
+    fun `getMemberClubs取得指定會員的社團清單 成功`() = testScope.runTest {
         //準備api成功時的回傳
         val responseBody = GetMemberClubsResponseBodyWithError(
             clubs = listOf()
@@ -1450,7 +1411,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `getMemberClubs取得指定會員的社團清單 失敗`() = mainCoroutineRule.runTest {
+    fun `getMemberClubs取得指定會員的社團清單 失敗`() = testScope.runTest {
         val json = """{
           "Error": {
             "Code": 100,
@@ -1478,7 +1439,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `getRecommendClubs取得推薦社團 成功`() = mainCoroutineRule.runTest {
+    fun `getRecommendClubs取得推薦社團 成功`() = testScope.runTest {
         //準備api成功時的回傳
         val responseBody = GetRecommendClubsResponseBodyWithError(
             clubs = listOf(),
@@ -1510,7 +1471,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `getRecommendClubs取得推薦社團 失敗`() = mainCoroutineRule.runTest {
+    fun `getRecommendClubs取得推薦社團 失敗`() = testScope.runTest {
         val json = """{
           "Error": {
             "Code": 100,
@@ -1540,7 +1501,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `changeMemberStatus改變會員身分 成功`() = mainCoroutineRule.runTest {
+    fun `changeMemberStatus改變會員身分 成功`() = testScope.runTest {
         //準備api成功時的回傳
         val responseBody = ChangeMemberStatusResponseBodyWithError(
             isSuccess = true
@@ -1564,7 +1525,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `changeMemberStatus改變會員身分 失敗`() = mainCoroutineRule.runTest {
+    fun `changeMemberStatus改變會員身分 失敗`() = testScope.runTest {
         val json = """{
           "Error": {
             "Code": 701101,
@@ -1588,7 +1549,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `updateClubDescription變更社團描述 成功`() = mainCoroutineRule.runTest {
+    fun `updateClubDescription變更社團描述 成功`() = testScope.runTest {
         //準備api成功時的回傳
         val responseBody = UpdateClubDescriptionResponseBodyWithError(
             isSuccess = true
@@ -1612,7 +1573,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `updateClubDescription變更社團描述 失敗`() = mainCoroutineRule.runTest {
+    fun `updateClubDescription變更社團描述 失敗`() = testScope.runTest {
         val json = """{
           "Error": {
             "Code": 1001009,
@@ -1636,7 +1597,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `getMemberStatusList取得指定身份的社團成員清單(審核清單,黑名單) 成功`() = mainCoroutineRule.runTest {
+    fun `getMemberStatusList取得指定身份的社團成員清單(審核清單,黑名單) 成功`() = testScope.runTest {
         //準備api成功時的回傳
         val responseBody = GetMemberStatusListResponseBodyWithError(
             channels = listOf()
@@ -1673,7 +1634,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `getMemberStatusList取得指定身份的社團成員清單(審核清單,黑名單) 失敗`() = mainCoroutineRule.runTest {
+    fun `getMemberStatusList取得指定身份的社團成員清單(審核清單,黑名單) 失敗`() = testScope.runTest {
         val json = """{
           "Error": {
             "Code": 100,
@@ -1710,7 +1671,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `getManagerList取得管理者清單(幹部、社長) 成功`() = mainCoroutineRule.runTest {
+    fun `getManagerList取得管理者清單(幹部、社長) 成功`() = testScope.runTest {
         //準備api成功時的回傳
         val responseBody = GetManagerListResponseWithError(
             creator = null,
@@ -1741,7 +1702,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `getManagerList取得管理者清單(幹部、社長) 失敗`() = mainCoroutineRule.runTest {
+    fun `getManagerList取得管理者清單(幹部、社長) 失敗`() = testScope.runTest {
         val json = """{
           "Error": {
             "Code": 100,
@@ -1771,7 +1732,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun getAnnouncementsSuccess() = mainCoroutineRule.runTest {
+    fun getAnnouncementsSuccess() = testScope.runTest {
         val responseBody = GetAnnouncementsWithError(listOf())
         coEvery {
             oceanService.getAnnouncements(
@@ -1791,7 +1752,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun getAnnouncementsFailed() = mainCoroutineRule.runTest {
+    fun getAnnouncementsFailed() = testScope.runTest {
         val json = """{
           "Error": {
             "Code": 100,
@@ -1812,7 +1773,7 @@ class OceanWebImplTest {
 
 
     @Test
-    fun removeAnnouncement() = mainCoroutineRule.runTest {
+    fun removeAnnouncement() = testScope.runTest {
         val responseBody = RemoveAnnouncementResponseWithError(true)
         coEvery {
             oceanService.removeAnnouncement(
@@ -1832,7 +1793,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun removeAnnouncementFailed() = mainCoroutineRule.runTest {
+    fun removeAnnouncementFailed() = testScope.runTest {
         val json = """{
           "Error": {
             "Code": 100,
@@ -1856,7 +1817,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun createAnnouncementSuccess() = mainCoroutineRule.runTest {
+    fun createAnnouncementSuccess() = testScope.runTest {
         val responseBody = CreateAnnouncementResponseWithError(true)
         coEvery {
             oceanService.createAnnouncement(
@@ -1876,7 +1837,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun createAnnouncementFailed() = mainCoroutineRule.runTest {
+    fun createAnnouncementFailed() = testScope.runTest {
         val json = """{
           "Error": {
             "Code": 100,
@@ -1900,7 +1861,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun getRelevantCommentSuccess() = mainCoroutineRule.runTest {
+    fun getRelevantCommentSuccess() = testScope.runTest {
         val responseBody = GetRelevantCommentsResponseWithError(listOf())
         coEvery {
             oceanService.getRelevantComments(
@@ -1918,7 +1879,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun getRelevantCommentSuccessFailure() = mainCoroutineRule.runTest {
+    fun getRelevantCommentSuccessFailure() = testScope.runTest {
         val json = """{
           "Error": {
             "Code": 100,
@@ -1936,7 +1897,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `getTopicArticles取得主題標籤文章 成功回傳`() = mainCoroutineRule.runTest {
+    fun `getTopicArticles取得主題標籤文章 成功回傳`() = testScope.runTest {
 
         //準備api成功時的回傳
         val responseBody = GetTopicArticlesResponseBodyWithError(
@@ -1966,7 +1927,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `getTopicArticles取得主題標籤文章 失敗200發生ServerException`() = mainCoroutineRule.runTest {
+    fun `getTopicArticles取得主題標籤文章 失敗200發生ServerException`() = testScope.runTest {
         val json = """{
           "Error": {
             "Code": 100,
@@ -1997,7 +1958,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `getStockAndTopicArticles取得個股下有主題標籤文章 成功回傳`() = mainCoroutineRule.runTest {
+    fun `getStockAndTopicArticles取得個股下有主題標籤文章 成功回傳`() = testScope.runTest {
 
         //準備api成功時的回傳
         val responseBody = GetStockAndTopicArticlesResponseBodyWithError(
@@ -2029,7 +1990,7 @@ class OceanWebImplTest {
 
     @Test
     fun `getStockAndTopicArticles取得個股下有主題標籤文章 失敗200有ServerException`() =
-        mainCoroutineRule.runTest {
+        testScope.runTest {
             val json = """{
           "Error": {
             "Code": 100,
@@ -2062,7 +2023,7 @@ class OceanWebImplTest {
 
 //
 //    @Test
-//    fun `getManagerList取得管理者清單(幹部、社長) 失敗`() = mainCoroutineRule.runTest {
+//    fun `getManagerList取得管理者清單(幹部、社長) 失敗`() = testScope.runTest {
 //        val json = """{
 //          "Error": {
 //            "Code": 100,
@@ -2091,7 +2052,7 @@ class OceanWebImplTest {
 //    }
 
     @Test
-    fun `createOrUpdateAnnouncement 新增公告Api回傳失敗`() = mainCoroutineRule.runTest {
+    fun `createOrUpdateAnnouncement 新增公告Api回傳失敗`() = testScope.runTest {
         val json = """{
           "Error": {
             "Code": 100,
@@ -2120,7 +2081,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `createOrUpdateAnnouncement_新增或更新公告_回傳正確(成功)`() = mainCoroutineRule.runTest {
+    fun `createOrUpdateAnnouncement_新增或更新公告_回傳正確(成功)`() = testScope.runTest {
         val json = """{"IsSuccess":true}""".trimIndent()
         val responseBody =
             gson.fromJson(json, IsCreateOrUpdateSuccessResponseWithError::class.java)
@@ -2142,7 +2103,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `createOrUpdateAnnouncement_新增或更新公告_回傳正確(失敗)`() = mainCoroutineRule.runTest {
+    fun `createOrUpdateAnnouncement_新增或更新公告_回傳正確(失敗)`() = testScope.runTest {
         val json = """{"IsSuccess":false}""".trimIndent()
         val responseBody =
             gson.fromJson(json, IsCreateOrUpdateSuccessResponseWithError::class.java)
@@ -2164,7 +2125,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `getAllAnnouncement_拿到所有公告_錯誤`() = mainCoroutineRule.runTest {
+    fun `getAllAnnouncement_拿到所有公告_錯誤`() = testScope.runTest {
         val json = """{
           "Error": {
             "Code": 100,
@@ -2191,7 +2152,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `getAllAnnouncement_拿到所有資料_正確有資料回傳`() = mainCoroutineRule.runTest {
+    fun `getAllAnnouncement_拿到所有資料_正確有資料回傳`() = testScope.runTest {
         val json = """{
           "Announcements":[
             {
@@ -2259,7 +2220,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `removeannouncement_刪除公告_失敗`() = mainCoroutineRule.runTest {
+    fun `removeannouncement_刪除公告_失敗`() = testScope.runTest {
         val json = """{
           "Error":{"Code":103,"Message":"該公告不存在"}
         }""".trimIndent()
@@ -2284,7 +2245,7 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `remove_announcement_成功`() = mainCoroutineRule.runTest {
+    fun `remove_announcement_成功`() = testScope.runTest {
         val json = """{
           "IsSuccess":true
         }""".trimIndent()

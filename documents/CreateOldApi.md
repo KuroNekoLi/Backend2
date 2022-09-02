@@ -73,7 +73,9 @@ interface ProfileWeb { // 既有Web物件
 #### 增加-Web實做
 
 ```kotlin
-class ProfileWebImpl(略) : ProfileWeb {
+class ProfileWebImpl(
+    // 略
+) : ProfileWeb {
     override suspend fun getAccount(): Result<GetAccountResponse> =
         withContext(ioDispatcher) {
             kotlin.runCatching {
@@ -96,9 +98,11 @@ class ProfileWebImpl(略) : ProfileWeb {
 - 失敗
 
 ```kotlin
+    private val testScope = TestScope()
+
     // 成功
     @Test
-    fun getAccountTestSuccess() = mainCoroutineRule.runTest {
+    fun getAccountTestSuccess() = testScope.runTest {
         // Mock service,我們在單元測試只測試我們的程式碼。
         coEvery {
             service.getAccount(
@@ -126,7 +130,7 @@ class ProfileWebImpl(略) : ProfileWeb {
 
     // 錯誤
     @Test
-    fun getAccountTestError() = mainCoroutineRule.runTest {
+    fun getAccountTestError() = testScope.runTest {
         // Mock server,回傳200帶error物件
         coEvery {
             service.getAccount(

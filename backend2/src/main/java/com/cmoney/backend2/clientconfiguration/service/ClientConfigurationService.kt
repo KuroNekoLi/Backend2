@@ -13,7 +13,7 @@ interface ClientConfigurationService {
     /**
      * 取得設定檔
      *
-     *  @param keys Key list , ex: KOL
+     *  @param keys Key list
      */
     @RecordApi
     @POST("ClientConfiguration/api/config/get")

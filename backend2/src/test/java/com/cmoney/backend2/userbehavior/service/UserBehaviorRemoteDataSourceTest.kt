@@ -5,13 +5,15 @@ import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.response.error.CMoneyError
 import com.cmoney.core.CoroutineTestRule
-import com.cmoney.core.extension.runTest
+
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runTest
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Before
 import org.junit.Rule
@@ -23,9 +25,9 @@ import retrofit2.Response
 @RunWith(RobolectricTestRunner::class)
 @ExperimentalCoroutinesApi
 class UserBehaviorRemoteDataSourceTest {
-
+    private val testScope = TestScope()
     @get:Rule
-    val mainCoroutineRule = CoroutineTestRule()
+    val mainCoroutineRule = CoroutineTestRule(testScope = testScope)
 
     @MockK
     private lateinit var service: UserBehaviorService
@@ -44,7 +46,7 @@ class UserBehaviorRemoteDataSourceTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `uploadReport_失敗`() = mainCoroutineRule.runTest {
+    fun `uploadReport_失敗`() = testScope.runTest {
         val error = CMoneyError(detail = CMoneyError.Detail(400, "error"))
         val responseBody = gson.toJson(error, CMoneyError::class.java).toResponseBody()
         coEvery {
@@ -66,7 +68,7 @@ class UserBehaviorRemoteDataSourceTest {
     }
 
     @Test
-    fun `uploadReport_成功`() = mainCoroutineRule.runTest {
+    fun `uploadReport_成功`() = testScope.runTest {
         coEvery {
             service.uploadReport(
                 authorization = any(), requestBody = any()

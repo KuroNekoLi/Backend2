@@ -9,13 +9,14 @@ import com.cmoney.backend2.identityprovider.service.api.gettoken.GetTokenRespons
 import com.cmoney.backend2.identityprovider.service.api.islatest.IsLatestResponseBodyWithError
 import com.cmoney.backend2.identityprovider.service.api.revoke.RevokeResponseBodyWithError
 import com.cmoney.core.CoroutineTestRule
-import com.cmoney.core.extension.runTest
 import com.google.common.truth.Truth.assertThat
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runTest
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Before
 import org.junit.Rule
@@ -30,9 +31,9 @@ import retrofit2.Response
 @RunWith(RobolectricTestRunner::class)
 @Config(manifest = Config.NONE)
 class IdentityProviderWebImplTest {
-
+    private val testScope = TestScope()
     @get:Rule
-    val mainCoroutineRule = CoroutineTestRule()
+    val mainCoroutineRule = CoroutineTestRule(testScope = testScope)
 
     @MockK
     private lateinit var service: IdentityProviderService
@@ -53,7 +54,7 @@ class IdentityProviderWebImplTest {
     }
 
     @Test
-    fun `isTokenLatest_是最新回傳true`() = mainCoroutineRule.runTest {
+    fun `isTokenLatest_是最新回傳true`() = testScope.runTest {
         val responseBody = IsLatestResponseBodyWithError(isSuccess = true)
         coEvery {
             service.isTokenLatest(any())
@@ -64,7 +65,7 @@ class IdentityProviderWebImplTest {
     }
 
     @Test
-    fun `isTokenLatest_是最新回傳false`() = mainCoroutineRule.runTest {
+    fun `isTokenLatest_是最新回傳false`() = testScope.runTest {
         val responseBody = IsLatestResponseBodyWithError(isSuccess = false)
         coEvery {
             service.isTokenLatest(any())
@@ -75,7 +76,7 @@ class IdentityProviderWebImplTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `isTokenLatest_status is 400_ServerException`() = mainCoroutineRule.runTest {
+    fun `isTokenLatest_status is 400_ServerException`() = testScope.runTest {
         val errorBody = gson.toJson(
             CMoneyError(
                 detail = CMoneyError.Detail(
@@ -92,7 +93,7 @@ class IdentityProviderWebImplTest {
     }
 
     @Test(expected = HttpException::class)
-    fun `isTokenLatest_status is 401_HttpException`() = mainCoroutineRule.runTest {
+    fun `isTokenLatest_status is 401_HttpException`() = testScope.runTest {
         val errorBody = gson.toJson(
             CMoneyError(
                 detail = CMoneyError.Detail(
@@ -109,7 +110,7 @@ class IdentityProviderWebImplTest {
     }
 
     @Test
-    fun `loginByEmail_status is 200_成功`() = mainCoroutineRule.runTest {
+    fun `loginByEmail_status is 200_成功`() = testScope.runTest {
         val responseBody = GetTokenResponseBodyWithError(
             accessToken = "",
             expiresIn = 0,
@@ -141,7 +142,7 @@ class IdentityProviderWebImplTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `loginByEmail_status is 400_ServerException`() = mainCoroutineRule.runTest {
+    fun `loginByEmail_status is 400_ServerException`() = testScope.runTest {
         val errorBody = gson.toJson(
             CMoneyError(
                 detail = CMoneyError.Detail(
@@ -172,7 +173,7 @@ class IdentityProviderWebImplTest {
     }
 
     @Test(expected = HttpException::class)
-    fun `loginByEmail_status is 400_HttpException`() = mainCoroutineRule.runTest {
+    fun `loginByEmail_status is 400_HttpException`() = testScope.runTest {
         val errorBody = gson.toJson(
             CMoneyError(
                 detail = CMoneyError.Detail(
@@ -203,7 +204,7 @@ class IdentityProviderWebImplTest {
     }
 
     @Test
-    fun `loginByCellphone_status is 200_成功`() = mainCoroutineRule.runTest {
+    fun `loginByCellphone_status is 200_成功`() = testScope.runTest {
         val responseBody = GetTokenResponseBodyWithError(
             accessToken = "",
             expiresIn = 0,
@@ -235,7 +236,7 @@ class IdentityProviderWebImplTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `loginByCellphone_status is 400_ServerException`() = mainCoroutineRule.runTest {
+    fun `loginByCellphone_status is 400_ServerException`() = testScope.runTest {
         val errorBody = gson.toJson(
             CMoneyError(
                 detail = CMoneyError.Detail(
@@ -266,7 +267,7 @@ class IdentityProviderWebImplTest {
     }
 
     @Test(expected = HttpException::class)
-    fun `loginByCellphone_status is 400_HttpException`() = mainCoroutineRule.runTest {
+    fun `loginByCellphone_status is 400_HttpException`() = testScope.runTest {
         val errorBody = gson.toJson(
             CMoneyError(
                 detail = CMoneyError.Detail(
@@ -297,7 +298,7 @@ class IdentityProviderWebImplTest {
     }
 
     @Test
-    fun `loginByFacebook_status is 200_成功`() = mainCoroutineRule.runTest {
+    fun `loginByFacebook_status is 200_成功`() = testScope.runTest {
         val responseBody = GetTokenResponseBodyWithError(
             accessToken = "",
             expiresIn = 0,
@@ -329,7 +330,7 @@ class IdentityProviderWebImplTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `loginByFacebook_status is 400_ServerException`() = mainCoroutineRule.runTest {
+    fun `loginByFacebook_status is 400_ServerException`() = testScope.runTest {
         val errorBody = gson.toJson(
             CMoneyError(
                 detail = CMoneyError.Detail(
@@ -360,7 +361,7 @@ class IdentityProviderWebImplTest {
     }
 
     @Test(expected = HttpException::class)
-    fun `loginByFacebook_status is 400_HttpException`() = mainCoroutineRule.runTest {
+    fun `loginByFacebook_status is 400_HttpException`() = testScope.runTest {
         val errorBody = gson.toJson(
             CMoneyError(
                 detail = CMoneyError.Detail(
@@ -391,7 +392,7 @@ class IdentityProviderWebImplTest {
     }
 
     @Test
-    fun `loginByGoogle_status is 200_成功`() = mainCoroutineRule.runTest {
+    fun `loginByGoogle_status is 200_成功`() = testScope.runTest {
         val responseBody = GetTokenResponseBodyWithError(
             accessToken = "",
             expiresIn = 0,
@@ -424,7 +425,7 @@ class IdentityProviderWebImplTest {
 
 
     @Test(expected = ServerException::class)
-    fun `loginByGoogle_status is 400_ServerException`() = mainCoroutineRule.runTest {
+    fun `loginByGoogle_status is 400_ServerException`() = testScope.runTest {
         val errorBody = gson.toJson(
             CMoneyError(
                 detail = CMoneyError.Detail(
@@ -455,7 +456,7 @@ class IdentityProviderWebImplTest {
     }
 
     @Test
-    fun `loginByFirebaseAnonymousToken_status is 200_成功`() = mainCoroutineRule.runTest {
+    fun `loginByFirebaseAnonymousToken_status is 200_成功`() = testScope.runTest {
         val responseBody = GetTokenResponseBodyWithError(
             accessToken = "",
             expiresIn = 0,
@@ -488,7 +489,7 @@ class IdentityProviderWebImplTest {
 
     @Test(expected = ServerException::class)
     fun `loginByFirebaseAnonymousToken_status is 400_ServerException`() =
-        mainCoroutineRule.runTest {
+        testScope.runTest {
             val errorBody = gson.toJson(
                 CMoneyError(
                     detail = CMoneyError.Detail(
@@ -520,7 +521,7 @@ class IdentityProviderWebImplTest {
 
     @Test(expected = HttpException::class)
     fun `loginByFirebaseAnonymousToken_status is 400_HttpException`() =
-        mainCoroutineRule.runTest {
+        testScope.runTest {
             val errorBody = gson.toJson(
                 CMoneyError(
                     detail = CMoneyError.Detail(
@@ -551,7 +552,7 @@ class IdentityProviderWebImplTest {
         }
 
     @Test
-    fun `logByPkce_status is 200_成功`() = mainCoroutineRule.runTest {
+    fun `logByPkce_status is 200_成功`() = testScope.runTest {
         val responseBody = GetTokenResponseBodyWithError(
             accessToken = "",
             expiresIn = 0,
@@ -584,7 +585,7 @@ class IdentityProviderWebImplTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `loginByPkce_status is 400_ServerException`() = mainCoroutineRule.runTest {
+    fun `loginByPkce_status is 400_ServerException`() = testScope.runTest {
         val errorBody = gson.toJson(
             CMoneyError(
                 message = "參數錯誤"
@@ -613,7 +614,7 @@ class IdentityProviderWebImplTest {
     }
 
     @Test(expected = HttpException::class)
-    fun `loginByPkce_status is 401_HttpException`() = mainCoroutineRule.runTest {
+    fun `loginByPkce_status is 401_HttpException`() = testScope.runTest {
         val errorBody = "".toResponseBody()
         coEvery {
             service.getIdentityToken(
@@ -638,7 +639,7 @@ class IdentityProviderWebImplTest {
     }
 
     @Test
-    fun `logByCMoneyThirdParty_status is 200_成功`() = mainCoroutineRule.runTest {
+    fun `logByCMoneyThirdParty_status is 200_成功`() = testScope.runTest {
         val responseBody = GetTokenResponseBodyWithError(
             accessToken = "",
             expiresIn = 0,
@@ -671,7 +672,7 @@ class IdentityProviderWebImplTest {
     }
 
     @Test(expected = HttpException::class)
-    fun `logByCMoneyThirdParty is 401_HttpException`() = mainCoroutineRule.runTest {
+    fun `logByCMoneyThirdParty is 401_HttpException`() = testScope.runTest {
         val errorBody = "".toResponseBody()
         coEvery {
             service.getIdentityToken(
@@ -696,7 +697,7 @@ class IdentityProviderWebImplTest {
     }
 
     @Test
-    fun `revokeToken_http is 200_success是true`() = mainCoroutineRule.runTest {
+    fun `revokeToken_http is 200_success是true`() = testScope.runTest {
         val responseBody = RevokeResponseBodyWithError(tokenType = "", success = true)
         coEvery {
             service.revokeIdentityToken(
@@ -712,7 +713,7 @@ class IdentityProviderWebImplTest {
     }
 
     @Test
-    fun `revokeToken_http is 200_success是false`() = mainCoroutineRule.runTest {
+    fun `revokeToken_http is 200_success是false`() = testScope.runTest {
         val responseBody = RevokeResponseBodyWithError(tokenType = "", success = false)
         coEvery {
             service.revokeIdentityToken(
@@ -728,7 +729,7 @@ class IdentityProviderWebImplTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `revokeToken_status is 400_ServerException`() = mainCoroutineRule.runTest {
+    fun `revokeToken_status is 400_ServerException`() = testScope.runTest {
         val errorBody = gson.toJson(
             CMoneyError(
                 detail = CMoneyError.Detail(
@@ -750,7 +751,7 @@ class IdentityProviderWebImplTest {
     }
 
     @Test(expected = HttpException::class)
-    fun `revokeToken_status is 401_HttpException`() = mainCoroutineRule.runTest {
+    fun `revokeToken_status is 401_HttpException`() = testScope.runTest {
         val errorBody = gson.toJson(
             CMoneyError(
                 detail = CMoneyError.Detail(
@@ -772,7 +773,7 @@ class IdentityProviderWebImplTest {
     }
 
     @Test
-    fun `refreshToken_status is 200_成功`() = mainCoroutineRule.runTest {
+    fun `refreshToken_status is 200_成功`() = testScope.runTest {
         val responseBody = GetTokenResponseBodyWithError(
             accessToken = "",
             expiresIn = 0,
@@ -804,7 +805,7 @@ class IdentityProviderWebImplTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `refreshToken_status is 400_ServerException`() = mainCoroutineRule.runTest {
+    fun `refreshToken_status is 400_ServerException`() = testScope.runTest {
         val errorBody = gson.toJson(
             CMoneyError(
                 detail = CMoneyError.Detail(
@@ -835,7 +836,7 @@ class IdentityProviderWebImplTest {
     }
 
     @Test(expected = HttpException::class)
-    fun `refreshToken_status is 401_HttpException`() = mainCoroutineRule.runTest {
+    fun `refreshToken_status is 401_HttpException`() = testScope.runTest {
         val errorBody = gson.toJson(
             CMoneyError(
                 detail = CMoneyError.Detail(

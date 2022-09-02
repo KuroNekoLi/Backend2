@@ -1531,28 +1531,6 @@ class OceanWebImpl(
     }
 
     /**
-     * 取得使用者是否在白名單中
-     *
-     * @param apiParam MemberApiParam
-     */
-    override suspend fun isInCreateArticleWhiteList(
-        apiParam: MemberApiParam
-    ): Result<IsInCreateArticleWhiteListResponseBody> = isInCreateArticleWhiteList()
-
-    override suspend fun isInCreateArticleWhiteList(): Result<IsInCreateArticleWhiteListResponseBody> =
-        withContext(dispatcher.io()) {
-            kotlin.runCatching {
-                oceanService.isInCreateArticleWhiteList(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    requestBody = IsInCreateArticleWhiteListRequestBody(
-                        appId = setting.appId,
-                        guid = setting.identityToken.getMemberGuid()
-                    )
-                ).checkOceanResponseBody(gson)
-            }
-        }
-
-    /**
      * 取得大師排行榜
      *
      * @param apiParam MemberApiParam

@@ -27,13 +27,14 @@ import com.cmoney.backend2.common.service.api.registeraccount.EmailRegister
 import com.cmoney.backend2.common.service.api.starttrialtiming.TrialBeginStatus
 import com.cmoney.backend2.common.service.api.updateisneedpushcomplete.UpdateIsNeedPushComplete
 import com.cmoney.core.CoroutineTestRule
-import com.cmoney.core.extension.runTest
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runTest
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Before
 import org.junit.Rule
@@ -46,8 +47,9 @@ import java.util.*
 @ExperimentalCoroutinesApi
 @RunWith(RobolectricTestRunner::class)
 class CommonWebImplTest {
+    private val testScope = TestScope()
     @get:Rule
-    val mainCoroutineRule = CoroutineTestRule()
+    val mainCoroutineRule = CoroutineTestRule(testScope = testScope)
 
     @MockK
     private lateinit var service: CommonService
@@ -68,7 +70,7 @@ class CommonWebImplTest {
     }
 
     @Test
-    fun `getConfig_response code is 1_成功`() = mainCoroutineRule.runTest {
+    fun `getConfig_response code is 1_成功`() = testScope.runTest {
         val responseBody = GetConfigResponseBody(
             dpscPort = 0,
             dpscChkSum = 1,
@@ -99,7 +101,7 @@ class CommonWebImplTest {
     }
 
     @Test
-    fun `getConfig_response code is 2_需要更新`() = mainCoroutineRule.runTest {
+    fun `getConfig_response code is 2_需要更新`() = testScope.runTest {
         val responseBody = GetConfigResponseBody(
             dpscPort = null,
             dpscChkSum = null,
@@ -130,7 +132,7 @@ class CommonWebImplTest {
     }
 
     @Test
-    fun `getConfig_response code is 3_參數錯誤`() = mainCoroutineRule.runTest {
+    fun `getConfig_response code is 3_參數錯誤`() = testScope.runTest {
         val responseBody = GetConfigResponseBody(
             dpscPort = null,
             dpscChkSum = null,
@@ -158,7 +160,7 @@ class CommonWebImplTest {
     }
 
     @Test
-    fun `forgotPasswordForEmail_response code is 1_成功`() = mainCoroutineRule.runTest {
+    fun `forgotPasswordForEmail_response code is 1_成功`() = testScope.runTest {
         val responseBody = EmailForgotPassword(
             responseCode = 1,
             responseMsg = ""
@@ -177,7 +179,7 @@ class CommonWebImplTest {
     }
 
     @Test
-    fun `forgotPasswordForEmail_response code is 5_格式錯誤`() = mainCoroutineRule.runTest {
+    fun `forgotPasswordForEmail_response code is 5_格式錯誤`() = testScope.runTest {
         val responseBody = EmailForgotPassword(
             responseCode = 5,
             responseMsg = "格式錯誤"
@@ -194,7 +196,7 @@ class CommonWebImplTest {
     }
 
     @Test
-    fun `forgotPasswordForEmail_response code is 6_帳號不存在`() = mainCoroutineRule.runTest {
+    fun `forgotPasswordForEmail_response code is 6_帳號不存在`() = testScope.runTest {
         val responseBody = EmailForgotPassword(
             responseCode = 6,
             responseMsg = "帳號不存在"
@@ -211,7 +213,7 @@ class CommonWebImplTest {
     }
 
     @Test
-    fun `forgotPasswordForEmail_response code is 3_帳號不存在`() = mainCoroutineRule.runTest {
+    fun `forgotPasswordForEmail_response code is 3_帳號不存在`() = testScope.runTest {
         val responseBody = EmailForgotPassword(
             responseCode = 3,
             responseMsg = "已申請,請等一分鐘"
@@ -228,7 +230,7 @@ class CommonWebImplTest {
     }
 
     @Test
-    fun `registerByEmail_response code is 1_成功`() = mainCoroutineRule.runTest {
+    fun `registerByEmail_response code is 1_成功`() = testScope.runTest {
         val responseBody = EmailRegister(
             responseCode = 1,
             responseMsg = ""
@@ -250,7 +252,7 @@ class CommonWebImplTest {
 
 
     @Test
-    fun `registerByEmail_response code is 4_帳號已註冊`() = mainCoroutineRule.runTest {
+    fun `registerByEmail_response code is 4_帳號已註冊`() = testScope.runTest {
         val responseBody = EmailRegister(
             responseCode = 4,
             responseMsg = "帳號已註冊"
@@ -269,7 +271,7 @@ class CommonWebImplTest {
     }
 
     @Test
-    fun `registerByEmail_response code is 6_帳號已註冊`() = mainCoroutineRule.runTest {
+    fun `registerByEmail_response code is 6_帳號已註冊`() = testScope.runTest {
         val responseBody = EmailRegister(
             responseCode = 6,
             responseMsg = "帳號已註冊"
@@ -288,7 +290,7 @@ class CommonWebImplTest {
     }
 
     @Test
-    fun `registerByEmail_response code is 11_帳號已註冊`() = mainCoroutineRule.runTest {
+    fun `registerByEmail_response code is 11_帳號已註冊`() = testScope.runTest {
         val responseBody = EmailRegister(
             responseCode = 11,
             responseMsg = "帳號已註冊"
@@ -307,7 +309,7 @@ class CommonWebImplTest {
     }
 
     @Test
-    fun `registerByEmail_response code is 10_該帳號已加入黑名單`() = mainCoroutineRule.runTest {
+    fun `registerByEmail_response code is 10_該帳號已加入黑名單`() = testScope.runTest {
         val responseBody = EmailRegister(
             responseCode = 10,
             responseMsg = "該帳號已加入黑名單"
@@ -326,7 +328,7 @@ class CommonWebImplTest {
     }
 
     @Test
-    fun `getMemberProfile_response code is 1_成功`() = mainCoroutineRule.runTest {
+    fun `getMemberProfile_response code is 1_成功`() = testScope.runTest {
         val responseBody = MemberProfile(
             channelId = 3915521,
             channelImage = "https://fsv.cmoney.tw/cmstatic/t/images/channel/34025791.png",
@@ -356,7 +358,7 @@ class CommonWebImplTest {
     }
 
     @Test
-    fun `getMemberProfile_response code is 101_授權失敗`() = mainCoroutineRule.runTest {
+    fun `getMemberProfile_response code is 101_授權失敗`() = testScope.runTest {
         val responseBodyJson = """
             {"Error":{"Code":101,"Message":"Auth Failed"},"error":{"Code":101,"Message":"Auth Failed"}}
         """.trimIndent()
@@ -374,7 +376,7 @@ class CommonWebImplTest {
     }
 
     @Test
-    fun `logInReward_response code is 1_成功`() = mainCoroutineRule.runTest {
+    fun `logInReward_response code is 1_成功`() = testScope.runTest {
         val responseBody = LoginRewardComplete(true, 0)
         coEvery {
             service.loginReward(
@@ -389,7 +391,7 @@ class CommonWebImplTest {
     }
 
     @Test
-    fun `logInReward_response code is 101_授權失敗`() = mainCoroutineRule.runTest {
+    fun `logInReward_response code is 101_授權失敗`() = testScope.runTest {
         val responseBodyJson = """
             {"Error":{"Code":101,"Message":"Auth Failed"},"error":{"Code":101,"Message":"Auth Failed"}}
         """.trimIndent()
@@ -408,7 +410,7 @@ class CommonWebImplTest {
     }
 
     @Test
-    fun `logInReward_response code is 105_不適用此功能`() = mainCoroutineRule.runTest {
+    fun `logInReward_response code is 105_不適用此功能`() = testScope.runTest {
         val responseBodyJson = """
             {"Error":{"Code":105,"Message":"不適用此功能"}}
         """.trimIndent()
@@ -427,7 +429,7 @@ class CommonWebImplTest {
     }
 
     @Test
-    fun `hasSentLogInReward_response code is 1_成功`() = mainCoroutineRule.runTest {
+    fun `hasSentLogInReward_response code is 1_成功`() = testScope.runTest {
         val responseBody = HasSentLoginRewardTodayComplete(true, 0)
         coEvery {
             service.hasSentLoginRewardToday(
@@ -442,7 +444,7 @@ class CommonWebImplTest {
     }
 
     @Test
-    fun `hasSentLogInReward_response code is 101_授權失敗`() = mainCoroutineRule.runTest {
+    fun `hasSentLogInReward_response code is 101_授權失敗`() = testScope.runTest {
         val responseBodyJson = """
             {"Error":{"Code":101,"Message":"Auth Failed"},"error":{"Code":101,"Message":"Auth Failed"}}
         """.trimIndent()
@@ -463,7 +465,7 @@ class CommonWebImplTest {
     }
 
     @Test
-    fun `startTrial_response code is 1_成功`() = mainCoroutineRule.runTest {
+    fun `startTrial_response code is 1_成功`() = testScope.runTest {
         val responseBody = TrialBeginStatus(canTrial = false, trialRemainingSeconds = 0)
         coEvery {
             service.startTrial(
@@ -478,7 +480,7 @@ class CommonWebImplTest {
     }
 
     @Test
-    fun `startTrial_response code is 101_授權失敗`() = mainCoroutineRule.runTest {
+    fun `startTrial_response code is 101_授權失敗`() = testScope.runTest {
         val responseBodyJson = """
             {"Error":{"Code":101,"Message":"Auth Failed"},"error":{"Code":101,"Message":"Auth Failed"}}
         """.trimIndent()
@@ -497,7 +499,7 @@ class CommonWebImplTest {
     }
 
     @Test
-    fun `pauseTrial_response code is 1_成功`() = mainCoroutineRule.runTest {
+    fun `pauseTrial_response code is 1_成功`() = testScope.runTest {
         val responseBody = TrialPauseStatus(isSuccess = false)
         coEvery {
             service.pauseTrial(
@@ -513,7 +515,7 @@ class CommonWebImplTest {
 
 
     @Test
-    fun `pauseTrial_response code is 101_授權失敗`() = mainCoroutineRule.runTest {
+    fun `pauseTrial_response code is 101_授權失敗`() = testScope.runTest {
         val responseBodyJson = """
             {"Error":{"Code":101,"Message":"Auth Failed"},"error":{"Code":101,"Message":"Auth Failed"}}
         """.trimIndent()
@@ -532,7 +534,7 @@ class CommonWebImplTest {
     }
 
     @Test
-    fun `addDeviceIdentification_isSuccess=true_成功`() = mainCoroutineRule.runTest {
+    fun `addDeviceIdentification_isSuccess=true_成功`() = testScope.runTest {
         val responseBody = AddDeviceIdentificationComplete(
             isSuccess = true,
             responseCode = null,
@@ -554,7 +556,7 @@ class CommonWebImplTest {
     }
 
     @Test
-    fun `addDeviceIdentification_isSuccess=false_失敗`() = mainCoroutineRule.runTest {
+    fun `addDeviceIdentification_isSuccess=false_失敗`() = testScope.runTest {
         val responseBody = AddDeviceIdentificationComplete(
             isSuccess = false,
             responseCode = null,
@@ -583,7 +585,7 @@ class CommonWebImplTest {
     }
 
     @Test
-    fun `getAccessToken 成功`() = mainCoroutineRule.runTest {
+    fun `getAccessToken 成功`() = testScope.runTest {
         val fakeToken = UUID.randomUUID().toString()
         val responseBody = GetAccessTokenResponseWithError(
             accessToken = fakeToken
@@ -603,7 +605,7 @@ class CommonWebImplTest {
     }
 
     @Test
-    fun `getAccessToken 101 授權失敗`() = mainCoroutineRule.runTest {
+    fun `getAccessToken 101 授權失敗`() = testScope.runTest {
         val errorBody = CMoneyError(
             detail = CMoneyError.Detail(
                 code = 101,
@@ -633,7 +635,7 @@ class CommonWebImplTest {
     }
 
     @Test
-    fun `invocationSerialNumber 開通序號成功`() = mainCoroutineRule.runTest {
+    fun `invocationSerialNumber 開通序號成功`() = testScope.runTest {
         val responseBody = InvocationSerialComplete(
             isSuccess = true,
             responseCode = 1,
@@ -661,7 +663,7 @@ class CommonWebImplTest {
     }
 
     @Test
-    fun `invocationSerialNumber開通序號失敗(已經開通過)`() = mainCoroutineRule.runTest {
+    fun `invocationSerialNumber開通序號失敗(已經開通過)`() = testScope.runTest {
         val responseBody = InvocationSerialComplete(
             isSuccess = false,
             responseCode = 14,
@@ -687,7 +689,7 @@ class CommonWebImplTest {
     }
 
     @Test
-    fun `invocationSerialNumber 失敗 序號不得為空`() = mainCoroutineRule.runTest {
+    fun `invocationSerialNumber 失敗 序號不得為空`() = testScope.runTest {
         val responseBody = InvocationSerialComplete(
             isSuccess = false,
             responseCode = 11,
@@ -711,7 +713,7 @@ class CommonWebImplTest {
     }
 
     @Test
-    fun `getDailyHeadline 取得清單成功`() = mainCoroutineRule.runTest {
+    fun `getDailyHeadline 取得清單成功`() = testScope.runTest {
         val responseBody = HeadlineResponse(
             newsList = listOf(
                 News(
@@ -749,7 +751,7 @@ class CommonWebImplTest {
     }
 
     @Test
-    fun `getDailyHeadline 取得清單失敗`() = mainCoroutineRule.runTest {
+    fun `getDailyHeadline 取得清單失敗`() = testScope.runTest {
         val errorBody = CMoneyError(detail = CMoneyError.Detail(104, ""))
         val errorString = gson.toJson(errorBody)
         val errorResponse =
@@ -779,7 +781,7 @@ class CommonWebImplTest {
     }
 
     @Test
-    fun `getStockRssArticleResponse 取得清單成功`() = mainCoroutineRule.runTest {
+    fun `getStockRssArticleResponse 取得清單成功`() = testScope.runTest {
         val responseBody = StockRssNewsResponse(
             stockNewsList = listOf(
                 StockNews(
@@ -829,7 +831,7 @@ class CommonWebImplTest {
     }
 
     @Test
-    fun `getStockRssArticleResponse 取得清單失敗`() = mainCoroutineRule.runTest {
+    fun `getStockRssArticleResponse 取得清單失敗`() = testScope.runTest {
         val errorBody = CMoneyError(detail = CMoneyError.Detail(103, ""))
         val errorString = gson.toJson(errorBody)
         val errorResponse =
@@ -871,7 +873,7 @@ class CommonWebImplTest {
     }
 
     @Test
-    fun `addRssStockNewsResponse 增加成功`() = mainCoroutineRule.runTest {
+    fun `addRssStockNewsResponse 增加成功`() = testScope.runTest {
         coEvery {
             service.addRssArticleClickCount(
                 authorization = any(),
@@ -888,7 +890,7 @@ class CommonWebImplTest {
     }
 
     @Test
-    fun `addRssStockNewsResponse 增加失敗`() = mainCoroutineRule.runTest {
+    fun `addRssStockNewsResponse 增加失敗`() = testScope.runTest {
         val error = CMoneyError(detail = CMoneyError.Detail(101, ""))
         val errorString = gson.toJson(error)
         coEvery {
@@ -913,7 +915,7 @@ class CommonWebImplTest {
     }
 
     @Test
-    fun `changeNickname 成功`() = mainCoroutineRule.runTest {
+    fun `changeNickname 成功`() = testScope.runTest {
         coEvery {
             service.changeNickname(
                 action = any(),
@@ -935,7 +937,7 @@ class CommonWebImplTest {
     }
 
     @Test
-    fun `changeNickname 失敗`() = mainCoroutineRule.runTest {
+    fun `changeNickname 失敗`() = testScope.runTest {
         val json = """{
           "Error": {
             "Code": 100,
@@ -964,7 +966,7 @@ class CommonWebImplTest {
     }
 
     @Test
-    fun `changeUserImage 成功`() = mainCoroutineRule.runTest {
+    fun `changeUserImage 成功`() = testScope.runTest {
         coEvery {
             service.changeUserImage(
                 authorization = any(),
@@ -983,7 +985,7 @@ class CommonWebImplTest {
     }
 
     @Test
-    fun `changeUserImage 失敗`() = mainCoroutineRule.runTest {
+    fun `changeUserImage 失敗`() = testScope.runTest {
         val json = """{
           "Error": {
             "Code": 100,
@@ -1009,7 +1011,7 @@ class CommonWebImplTest {
     }
 
     @Test
-    fun `getMemberBonus 成功`() = mainCoroutineRule.runTest {
+    fun `getMemberBonus 成功`() = testScope.runTest {
         coEvery {
             service.getMemberBonus(
                 action = any(),
@@ -1029,7 +1031,7 @@ class CommonWebImplTest {
     }
 
     @Test
-    fun `getMemberBonus 失敗`() = mainCoroutineRule.runTest {
+    fun `getMemberBonus 失敗`() = testScope.runTest {
         val json = """{
           "Error": {
             "Code": 100,
@@ -1057,7 +1059,7 @@ class CommonWebImplTest {
     }
 
     @Test
-    fun `hasReceivedCellphoneBindRewards 成功`() = mainCoroutineRule.runTest {
+    fun `hasReceivedCellphoneBindRewards 成功`() = testScope.runTest {
         coEvery {
             service.hasReceivedCellphoneBindReward(
                 appId = any(),
@@ -1076,7 +1078,7 @@ class CommonWebImplTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `hasReceivedCellphoneBindReward 失敗_權限失效`() = mainCoroutineRule.runTest {
+    fun `hasReceivedCellphoneBindReward 失敗_權限失效`() = testScope.runTest {
         val responseBodyJson = """
             {"Error":{"Code":101,"Message":"Auth Failed"},"error":{"Code":101,"Message":"Auth Failed"}}
         """.trimIndent()
@@ -1098,7 +1100,7 @@ class CommonWebImplTest {
     }
 
     @Test
-    fun `updateIsNeedPush 成功`() = mainCoroutineRule.runTest {
+    fun `updateIsNeedPush 成功`() = testScope.runTest {
         val responseBody = UpdateIsNeedPushComplete(true)
         coEvery {
             service.updateIsNeedPush(
@@ -1114,7 +1116,7 @@ class CommonWebImplTest {
     }
 
     @Test
-    fun `updateIsNeedPush 參數錯誤`() = mainCoroutineRule.runTest {
+    fun `updateIsNeedPush 參數錯誤`() = testScope.runTest {
         val responseBodyJson = """{"Error":{"Code":9001,"Message":"參數錯誤"}}""".trimIndent()
         val responseBody =
             gson.fromJson<UpdateIsNeedPushComplete>(
