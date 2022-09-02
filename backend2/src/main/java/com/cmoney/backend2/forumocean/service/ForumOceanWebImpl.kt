@@ -23,9 +23,22 @@ import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentRe
 import com.cmoney.backend2.forumocean.service.api.comment.update.IUpdateCommentHelper
 import com.cmoney.backend2.forumocean.service.api.group.create.CreateGroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.getapprovals.GroupPendingApproval
-import com.cmoney.backend2.forumocean.service.api.group.getmember.GroupMember
 import com.cmoney.backend2.forumocean.service.api.group.getmemberjoinanygroups.GetMemberJoinAnyGroupsResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.update.UpdateGroupRequestBody
+import com.cmoney.backend2.forumocean.service.api.group.v2.Admins
+import com.cmoney.backend2.forumocean.service.api.group.v2.Approval
+import com.cmoney.backend2.forumocean.service.api.group.v2.AvailableBoardIds
+import com.cmoney.backend2.forumocean.service.api.group.v2.Board
+import com.cmoney.backend2.forumocean.service.api.group.v2.BoardSingle
+import com.cmoney.backend2.forumocean.service.api.group.v2.BoardManipulation
+import com.cmoney.backend2.forumocean.service.api.group.v2.Group
+import com.cmoney.backend2.forumocean.service.api.group.v2.GroupManipulation
+import com.cmoney.backend2.forumocean.service.api.group.v2.GroupMember2
+import com.cmoney.backend2.forumocean.service.api.group.v2.GroupPushSettingRequest
+import com.cmoney.backend2.forumocean.service.api.group.v2.JoinGroupRequest
+import com.cmoney.backend2.forumocean.service.api.group.v2.MemberRoles
+import com.cmoney.backend2.forumocean.service.api.group.v2.PendingRequests
+import com.cmoney.backend2.forumocean.service.api.group.v2.PushType
 import com.cmoney.backend2.forumocean.service.api.notify.get.GetNotifyResponseBody
 import com.cmoney.backend2.forumocean.service.api.notify.getcount.GetNotifyCountResponseBody
 import com.cmoney.backend2.forumocean.service.api.notifysetting.NotifyPushSetting
@@ -37,7 +50,6 @@ import com.cmoney.backend2.forumocean.service.api.rank.getexpertmemberrank.GetEx
 import com.cmoney.backend2.forumocean.service.api.rank.getfansmemberrank.FansMemberRankResponseBody
 import com.cmoney.backend2.forumocean.service.api.rank.getsolutionexpertrank.SolutionExpertRankResponseBody
 import com.cmoney.backend2.forumocean.service.api.relationship.getdonate.DonateInfo
-import com.cmoney.backend2.forumocean.service.api.report.create.ReasonType
 import com.cmoney.backend2.forumocean.service.api.role.Role
 import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
 import com.cmoney.backend2.forumocean.service.api.support.SearchMembersResponseBody
@@ -51,6 +63,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.grouprespons
 import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.ReactionInfo
 import com.cmoney.backend2.forumocean.service.api.vote.get.VoteInfo
 import com.google.gson.Gson
+import com.google.gson.JsonParser
 import kotlinx.coroutines.withContext
 
 class ForumOceanWebImpl(
@@ -81,6 +94,7 @@ class ForumOceanWebImpl(
                         articleType = PersonalArticleType.COLUMNIST.articleType,
                         requestBody = body
                     )
+
                     is Content.PersonalArticle.Note -> service.createPersonalArticle(
                         path = serverName,
                         authorization = setting.accessToken.createAuthorizationBearer(),
@@ -101,16 +115,19 @@ class ForumOceanWebImpl(
                         authorization = setting.accessToken.createAuthorizationBearer(),
                         requestBody = body
                     )
+
                     is Content.Article.Group -> service.createArticle(
                         path = serverName,
                         authorization = setting.accessToken.createAuthorizationBearer(),
                         requestBody = body
                     )
+
                     is Content.Article.Shared -> service.createArticle(
                         path = serverName,
                         authorization = setting.accessToken.createAuthorizationBearer(),
                         requestBody = body
                     )
+
                     is Content.Article.Column -> service.createArticle(
                         path = serverName,
                         authorization = setting.accessToken.createAuthorizationBearer(),
@@ -330,6 +347,24 @@ class ForumOceanWebImpl(
         }
     }
 
+    override suspend fun createGroupArticleComment(
+        articleId: Long,
+        text: String?,
+        multiMedia: List<MediaType>?,
+        position: Any?
+    ): Result<CreateCommentResponseBody> = withContext(dispatcher.io()) {
+        kotlin.runCatching {
+            service.createGroupArticleComment(
+                path = serverName,
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                articleId = articleId, body = CreateCommentRequestBody(
+                    text = text,
+                    multiMedia = multiMedia,
+                    position = position
+                )
+            ).checkResponseBody(jsonParser)
+        }
+    }
     override suspend fun getComment(
         articleId: Long,
         commentId: Long?,
@@ -787,7 +822,7 @@ class ForumOceanWebImpl(
         offset: Int,
         fetch: Int,
         position: List<GroupPosition>
-    ): Result<List<GroupMember>> = withContext(dispatcher.io()) {
+    ): Result<List<com.cmoney.backend2.forumocean.service.api.group.getmember.GroupMember>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getMembers(
                 path = serverName,
@@ -1203,7 +1238,7 @@ class ForumOceanWebImpl(
 
     override suspend fun createReport(
         articleId: Long,
-        reason: ReasonType,
+        reasonType: Int,
         commentId: Long?
     ): Result<Unit> =
         withContext(dispatcher.io()) {
@@ -1212,7 +1247,7 @@ class ForumOceanWebImpl(
                     path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     articleId = articleId,
-                    reasonType = reason.value,
+                    reasonType =reasonType,
                     commentId = commentId
                 ).handleNoContent(jsonParser)
             }
@@ -1322,6 +1357,16 @@ class ForumOceanWebImpl(
         }
     }
 
+    override suspend fun getMembersByRole(roleId: Int) = withContext(dispatcher.io()) {
+        kotlin.runCatching {
+            val response = service.getMembersByRoleId(
+                path = serverName,
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                roleId = roleId
+            ).checkResponseBody(jsonParser)
+            response.memberIds?: listOf()
+        }
+    }
 
     override suspend fun getRole(memberId: Long): Result<Set<Role>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
@@ -1389,7 +1434,428 @@ class ForumOceanWebImpl(
                     columnistMemberId = columnistMemberId
                 ).checkResponseBody(jsonParser)
             }
+        }
+    }
 
+    override suspend fun getGroupV2(groupId: Long): Result<Group> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.getGroupV2(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    groupId = groupId
+                ).checkResponseBody(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun getGroupByRoles(
+        memberId: Long?,
+        roles: List<com.cmoney.backend2.forumocean.service.api.group.v2.Role>
+    ): Result<List<Group>> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.getGroupsByRole(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    roles = roles.joinToString(",") { it.value },
+                    memberId = memberId
+                ).checkResponseBody(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun createGroup(group: GroupManipulation): Result<Long> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.createGroup(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    body = group
+                ).checkResponseBody(jsonParser).id?.toLong() ?: 0L
+            }
+        }
+    }
+
+    override suspend fun updateGroup(groupId: Long, group: GroupManipulation): Result<Unit> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.updateGroup(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    groupId = groupId,
+                    body = group
+                ).handleNoContent(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun dismissGroup(groupId: Long): Result<Unit> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.deleteGroupV2(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    groupId = groupId
+                ).handleNoContent(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun createGroupBoard(
+        groupId: Long,
+        board: BoardManipulation
+    ): Result<Long> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.createGroupBoard(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    groupId = groupId,
+                    body = board
+                ).checkResponseBody(jsonParser).id?.toLong() ?: 0L
+            }
+        }
+    }
+
+    override suspend fun updateGroupBoard(
+        boardId: Long,
+        board: BoardManipulation
+    ): Result<Unit> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.updateGroupBoard(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    boardId = boardId,
+                    body = board
+                ).handleNoContent(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun getGroupBoards(groupId: Long): Result<List<Board>> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.getGroupBoards(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    groupId = groupId
+                ).checkResponseBody(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun getGroupBoard(boardId: Long): Result<BoardSingle> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.getGroupBoard(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    boardId = boardId
+                ).checkResponseBody(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun deleteGroupBoard(boardId: Long): Result<Unit> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.deleteGroupBoard(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    boardId = boardId
+                ).handleNoContent(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun hasNewGroupPending(groupId: Long): Result<Boolean> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                val response = service.hasNewGroupPending(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    groupId = groupId
+                )
+                if (response.code() == 200) {
+                    JsonParser.parseString(
+                        response.body()?.string() ?: "{}"
+                    ).asJsonObject.get("hasNewPending").asBoolean
+                } else {
+                    throw ServerException(response.code(), "")
+                }
+            }
+        }
+    }
+
+    override suspend fun getGroupMemberRoles(
+        groupId: Long,
+        memberId: Long
+    ): Result<MemberRoles> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.getGroupMemberRoles(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    groupId = groupId,
+                    memberId = memberId
+                ).checkResponseBody(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun updateGroupMemberRoles(
+        groupId: Long,
+        memberId: Long,
+        roleIds: List<Int>
+    ): Result<Unit> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.updateGroupMemberRoles(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    groupId = groupId,
+                    memberId = memberId,
+                    roles = roleIds
+                ).handleNoContent(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun getGroupMembers(
+        groupId: Long,
+        roles: List<com.cmoney.backend2.forumocean.service.api.group.v2.Role>,
+        offset: Int,
+        fetch: Int
+    ): Result<List<GroupMember2>> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.getGroupMembers(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    groupId = groupId,
+                    roles = roles.joinToString(",") { it.value },
+                    offset = offset,
+                    fetch = fetch
+                ).checkResponseBody(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun leaveGroup(groupId: Long): Result<Unit> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.leaveGroup(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    groupId = groupId
+                ).handleNoContent(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun getGroupAdmins(groupId: Long): Result<Admins> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.getGroupAdmins(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    groupId = groupId
+                ).checkResponseBody(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun searchGroupMember(
+        groupId: Long,
+        keyword: String,
+        offset: Int,
+        fetch: Int
+    ): Result<List<com.cmoney.backend2.forumocean.service.api.group.v2.GroupMember>> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.searchGroupMember(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    groupId = groupId,
+                    keyword = keyword,
+                    offset = offset,
+                    fetch = fetch
+                ).checkResponseBody(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun joinGroup(
+        groupId: Long,
+        joinGroupRequest: JoinGroupRequest
+    ): Result<Unit> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.joinGroup(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    groupId = groupId,
+                    body = joinGroupRequest
+                ).handleNoContent(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun getGroupPendingRequests(
+        groupId: Long,
+        timestamp: Long,
+        fetch: Int
+    ): Result<PendingRequests> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.getGroupPendingRequests(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    groupId = groupId,
+                    timestamp = timestamp,
+                    fetch = fetch
+                ).checkResponseBody(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun searchGroupPendingRequests(
+        groupId: Long,
+        keyword: String,
+        timestamp: Long,
+        fetch: Int
+    ): Result<PendingRequests> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.searchGroupPendingRequests(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    groupId = groupId,
+                    keyword = keyword,
+                    timestamp = timestamp,
+                    fetch = fetch
+                ).checkResponseBody(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun approvalGroupRequest(
+        groupId: Long,
+        approval: List<Approval>
+    ): Result<Unit> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.approvalGroupRequest(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    groupId = groupId,
+                    body = approval
+                ).handleNoContent(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun kickGroupMember(groupId: Long, memberId: Long): Result<Unit> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.kickGroupMember(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    groupId = groupId,
+                    memberId = memberId
+                ).handleNoContent(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun createGroupArticle(
+        boardId: Long,
+        content: Content.Article.General
+    ): Result<CreateArticleResponseBody> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.createGroupArticle(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    boardId = boardId,
+                    requestBody = content
+                ).checkResponseBody(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun deleteGroupArticle(articleId: Long): Result<Unit> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.deleteGroupArticle(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    articleId = articleId
+                ).handleNoContent(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun deleteGroupArticleComment(articleId: Long, commentId: Long): Result<Unit> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.deleteGroupArticleComment(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    articleId = articleId,
+                    commentId = commentId
+                ).handleNoContent(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun getAvailableBoardIds(): Result<AvailableBoardIds> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.getAvailableBoardIds(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                ).checkResponseBody(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun getGroupPushSetting(groupId: Long): Result<PushType> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                val result = service.getGroupPushSetting(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    groupId = groupId
+                ).checkResponseBody(jsonParser)
+                when (result.pushType) {
+                    "all" -> PushType.ALL
+                    "admin" -> PushType.ADMIN
+                    "none" -> PushType.NONE
+                    else -> PushType.NONE
+                }
+            }
+        }
+    }
+
+    override suspend fun setGroupPushSetting(groupId: Long, pushType: PushType): Result<Unit> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.setGroupPushSetting(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    body = GroupPushSettingRequest(
+                        groupId,
+                        when (pushType) {
+                            PushType.ALL -> "all"
+                            PushType.ADMIN -> "admin"
+                            PushType.NONE -> "none"
+                        }
+                    )
+                ).handleNoContent(jsonParser)
+            }
         }
     }
 }

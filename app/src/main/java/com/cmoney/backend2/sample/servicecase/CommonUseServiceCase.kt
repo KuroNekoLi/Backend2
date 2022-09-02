@@ -18,6 +18,25 @@ class CommonUseServiceCase : ServiceCase {
 
         web.getInvestmentPreferences()
             .logResponse(TAG)
+
+        getAllCommodityHistoryEvent(commodityIds = listOf("5880"))
+    }
+
+    private suspend fun getAllCommodityHistoryEvent(commodityIds: List<String>) {
+        var hasNextPage = true
+        var endCursor: String? = null
+        while (hasNextPage) {
+            val result = web.getCommodityHistoryEvent(
+                commodityIds = commodityIds,
+                endCursor = endCursor
+            )
+                .also { response ->
+                    response.logResponse(TAG)
+                }
+                .getOrThrow()
+            hasNextPage = result.pageInfo?.hasNextPage ?: false
+            endCursor = result.pageInfo?.endCursor
+        }
     }
 
     companion object {

@@ -46,7 +46,7 @@ class ClientConfigurationWebImplTest {
             clientConfigurationService.getConfig(keys = any())
         } returns Response.success(ClientConfigResponseBody(listOf()))
 
-        val result = clientConfigurationWeb.getConfig(listOf(ConfigKey.KOL))
+        val result = clientConfigurationWeb.getConfig(listOf())
         Truth.assertThat(result.isSuccess)
     }
 
@@ -58,7 +58,7 @@ class ClientConfigurationWebImplTest {
             clientConfigurationService.getConfig(keys = any())
         } returns Response.error(401, json.toResponseBody())
 
-        val result = clientConfigurationWeb.getConfig(listOf(ConfigKey.KOL))
+        val result = clientConfigurationWeb.getConfig(listOf())
         Truth.assertThat(result.isSuccess).isFalse()
         val exception = result.exceptionOrNull() as HttpException
         Truth.assertThat(exception).isNotNull()

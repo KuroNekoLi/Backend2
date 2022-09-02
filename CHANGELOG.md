@@ -1,26 +1,99 @@
-#  (2022-08-03)
+#  (2022-08-25)
 
 
 
-# [5.32.0](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.31.0...5.32.0) (2022-08-03)
-
-
-### Features
-
-* Support getting multiple products ([2b67971](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/2b6797113426aeb207da8cf01a7b43335a5f6349))
-
-
-
-#  (2022-08-03)
-
-
-
-# [5.31.0](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.30.0...5.31.0) (2022-08-03)
+# [5.36.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.35.0...5.36.0) (2022-08-25)
 
 
 ### Features
 
-* 新增現金股利與股票股利欄位至 BrokerDataTransmissionWeb 的 getBrokerStockData 和 putBrokerStockData 方法 ([4deaec9](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/4deaec9a78ddefef1340ea861797c572f6fe3889))
+* ForumOceanWeb 新增 getMembersByRole ([6945515](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/6945515499c4429835347fd66d53cc56fa9d8d55))
+
+
+
+#  (2022-08-19)
+
+
+
+# [5.35.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.34.0...5.35.0) (2022-08-19)
+
+
+### Features
+
+* ForumOcean 新增 OpenGraph field in articles. ([4ee15c7](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/4ee15c7e4fe9df4632a095195863dacfcfdef738))
+
+
+
+#  (2022-08-15)
+
+
+
+# [5.34.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.33.1...5.34.0) (2022-08-15)
+
+
+### Features
+
+* 更新檢舉文章接口 ([7bd2fe5](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/7bd2fe5fb8f08de1bc3bd46bf75e82bf5630eb9d))
+
+
+
+#  (2022-08-12)
+
+
+
+## [5.33.1](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.33.0...5.33.1) (2022-08-12)
+
+
+### Bug Fixes
+
+* 修正endCursor沒有轉成json格式問題 ([fd9fe55](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/fd9fe55b5995e7c0487488f6d86f3966f582c29a))
+
+
+
+#  (2022-08-12)
+
+
+
+# [5.33.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.32.0...5.33.0) (2022-08-12)
+
+
+### Features
+
+* Api of Group CRUD. ([e1d59c1](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/e1d59c11a363430cf0a886f39e3c4ed5eff25d61))
+* Api spec updated. ([9f2f7d4](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/9f2f7d475d52c8ba9e2d6ed2926a5025681d9e70))
+* Available board ids. ([08ecee6](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/08ecee644edd9ba66ed68fc602075da35cf7d610))
+* Board's endpoints ([d34941d](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/d34941d1cc894192d8cc07539bffbb7e10bc0420))
+* CommonUse新增取得商品歷史推播事件 ([bde315c](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/bde315ce842eb3a0406fa55b106ae2037d20249e))
+* ForumOceanWeb implementation ([207b583](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/207b5839cba29c091401a9bb116621b168231d28))
+* GroupMember endpoints ([10d5a05](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/10d5a0524c3d5a23f00ee9a128c7dd374c0767dc))
+* PendingRequestDTO id/createTime改為Long ([8a6904f](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/8a6904f8bd6782761a4cff01207cc10e9c59cb7e))
+* PushSettings ([0ddb57c](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/0ddb57c0944499f8dfcff732bd373156fb5f08a4))
+
+
+
+#  (2022-08-03)
+
+
+
+# [5.32.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.31.0...5.32.0) (2022-08-03)
+
+
+### Features
+
+* Support getting multiple products ([2b67971](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/2b6797113426aeb207da8cf01a7b43335a5f6349))
+
+
+
+#  (2022-08-03)
+
+
+
+# [5.31.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.30.0...5.31.0) (2022-08-03)
+
+
+### Features
+
+* 新增現金股利與股票股利欄位至 BrokerDataTransmissionWeb 的 getBrokerStockData 和 putBrokerStockData 方法 ([4deaec9](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/4deaec9a78ddefef1340ea861797c572f6fe3889))
 
 
 

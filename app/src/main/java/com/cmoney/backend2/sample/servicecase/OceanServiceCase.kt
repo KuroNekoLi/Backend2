@@ -161,7 +161,6 @@ class OceanServiceCase : ServiceCase {
             getSingleArticle(102029966, articleNeedInfo).logResponse(TAG)
 
             getCollectArticleList(0, 20, articleNeedInfo, true).logResponse(TAG)
-            isInCreateArticleWhiteList().logResponse(TAG)
 
             getMasters(MasterType.Popularity, 20).logResponse(TAG)
 

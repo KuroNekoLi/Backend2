@@ -1,6 +1,7 @@
 package com.cmoney.backend2.forumocean.service.api.article.create.variable
 
 import androidx.annotation.IntRange
+import com.cmoney.backend2.forumocean.service.api.article.OpenGraph
 import com.cmoney.backend2.forumocean.service.api.variable.request.commoditytag.CommodityTag
 import com.cmoney.backend2.forumocean.service.api.variable.request.mediatype.MediaType
 import com.google.gson.annotations.SerializedName
@@ -32,7 +33,9 @@ sealed class Content(
             @SerializedName("voteMinutes")
             val voteMinutes : Int?,
             @SerializedName("topics")
-            val topics : List<String>?
+            val topics : List<String>?,
+            @SerializedName("openGraph")
+            val openGraph: OpenGraph?
         ) : Article(text)
 
         /**
@@ -61,7 +64,9 @@ sealed class Content(
             val voteOptions : List<String>?,
             @IntRange(from = 5,to = 10080)
             @SerializedName("voteMinutes")
-            val voteMinutes : Int?
+            val voteMinutes : Int?,
+            @SerializedName("openGraph")
+            val openGraph: OpenGraph?
         ) : Article(text)
 
         /**
@@ -90,7 +95,9 @@ sealed class Content(
             @SerializedName("voteMinutes")
             val voteMinutes : Int?,
             @SerializedName("topics")
-            val topics : List<String>?
+            val topics : List<String>?,
+            @SerializedName("openGraph")
+            val openGraph: OpenGraph?
         ) : Article(text)
 
         /**
@@ -120,6 +127,8 @@ sealed class Content(
             val topics : List<String>?,
             @SerializedName("title")
             val title: String,
+            @SerializedName("openGraph")
+            val openGraph: OpenGraph?
         ) : Article(text)
     }
 
@@ -142,7 +151,9 @@ sealed class Content(
         @SerializedName("commodityTags")
         val commodityTags : List<CommodityTag>?,
         @SerializedName("topics")
-        val topics : List<String>?
+        val topics : List<String>?,
+        @SerializedName("openGraph")
+        val openGraph: OpenGraph?
     ) : Content(text)
 
     /**

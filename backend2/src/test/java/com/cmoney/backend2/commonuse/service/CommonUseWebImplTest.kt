@@ -3,6 +3,7 @@ package com.cmoney.backend2.commonuse.service
 import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.backend2.commonuse.service.api.historyevent.HistoryEvents
 import com.cmoney.backend2.commonuse.service.api.investmentpreference.InvestmentPreference
 import com.cmoney.backend2.commonuse.service.api.investmentpreference.InvestmentPreferenceType
 import com.cmoney.core.CoroutineTestRule
@@ -179,6 +180,128 @@ class CommonUseWebImplTest {
         } returns Response.error(400, "".toResponseBody())
 
         val result = web.getInvestmentPreferences()
+        Truth.assertThat(result.isSuccess).isFalse()
+    }
+
+    @Test
+    fun `getCommodityHistoryEvent success with endCursor null`() = mainCoroutineRule.runBlockingTest {
+        val response = JsonParser.parseString(
+            """
+                {
+                  "data": {
+                    "notif": {
+                      "majorEvents": {
+                        "edges": [
+                            {
+                                "node": {
+                                  "commKey": "5880",
+                                  "commName": "合庫金",
+                                  "body": "合庫金(5880)因除息，2022年08月04日星期四訂為融券最後回補日，尚餘1個交易日，2022年08月10日星期三開放融券。",
+                                  "link": "https://www.cmoney.tw/app/landing_page/chipk?page=stock&subpage=0&stockid=5880&stockname=合庫金",
+                                  "notifyTime": 1659522320
+                                }
+                            }
+                        ],
+                        "pageInfo": {
+                          "hasNextPage": true,
+                          "endCursor": "1"
+                        }
+                      }
+                    }
+                  }
+                }
+            """.trimMargin()
+        )
+        val expectResult = HistoryEvents(
+            events = listOf(
+                HistoryEvents.Event(
+                    content = HistoryEvents.Event.Content(
+                        commKey = "5880",
+                        commName = "合庫金",
+                        body = "合庫金(5880)因除息，2022年08月04日星期四訂為融券最後回補日，尚餘1個交易日，2022年08月10日星期三開放融券。",
+                        link = "https://www.cmoney.tw/app/landing_page/chipk?page=stock&subpage=0&stockid=5880&stockname=合庫金",
+                        notifyTime = 1659522320
+                    )
+                )
+            ),
+            pageInfo = HistoryEvents.PageInfo(
+                hasNextPage = true,
+                endCursor = "1"
+            )
+        )
+
+        coEvery {
+            service.query(any(), any(), any())
+        } returns Response.success(response.asJsonObject)
+
+        val result = web.getCommodityHistoryEvent(commodityIds = listOf("5880"))
+        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.getOrNull()).isEqualTo(expectResult)
+    }
+
+    @Test
+    fun `getCommodityHistoryEvent success with endCursor`() = mainCoroutineRule.runBlockingTest {
+        val response = JsonParser.parseString(
+            """
+                {
+                  "data": {
+                    "notif": {
+                      "majorEvents": {
+                        "edges": [
+                            {
+                                "node": {
+                                  "commKey": "5880",
+                                  "commName": "合庫金",
+                                  "body": "合庫金(5880)因除息，2022年08月04日星期四訂為融券最後回補日，尚餘1個交易日，2022年08月10日星期三開放融券。",
+                                  "link": "https://www.cmoney.tw/app/landing_page/chipk?page=stock&subpage=0&stockid=5880&stockname=合庫金",
+                                  "notifyTime": 1659522320
+                                }
+                            }
+                        ],
+                        "pageInfo": {
+                          "hasNextPage": true,
+                          "endCursor": "1"
+                        }
+                      }
+                    }
+                  }
+                }
+            """.trimMargin()
+        )
+        val expectResult = HistoryEvents(
+            events = listOf(
+                HistoryEvents.Event(
+                    content = HistoryEvents.Event.Content(
+                        commKey = "5880",
+                        commName = "合庫金",
+                        body = "合庫金(5880)因除息，2022年08月04日星期四訂為融券最後回補日，尚餘1個交易日，2022年08月10日星期三開放融券。",
+                        link = "https://www.cmoney.tw/app/landing_page/chipk?page=stock&subpage=0&stockid=5880&stockname=合庫金",
+                        notifyTime = 1659522320
+                    )
+                )
+            ),
+            pageInfo = HistoryEvents.PageInfo(
+                hasNextPage = true,
+                endCursor = "1"
+            )
+        )
+
+        coEvery {
+            service.query(any(), any(), any())
+        } returns Response.success(response.asJsonObject)
+
+        val result = web.getCommodityHistoryEvent(commodityIds = listOf("5880"), endCursor = "8")
+        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.getOrNull()).isEqualTo(expectResult)
+    }
+
+    @Test
+    fun `getCommodityHistoryEvent failure`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            service.query(any(), any(), any())
+        } returns Response.error(400, "".toResponseBody())
+
+        val result = web.getCommodityHistoryEvent(commodityIds = listOf("5880"))
         Truth.assertThat(result.isSuccess).isFalse()
     }
 }

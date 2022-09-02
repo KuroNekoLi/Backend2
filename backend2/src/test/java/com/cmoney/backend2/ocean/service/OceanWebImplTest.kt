@@ -851,46 +851,6 @@ class OceanWebImplTest {
     }
 
     @Test
-    fun `isInCreateArticleWhiteList取得使用者是否在白名單中 成功`() = mainCoroutineRule.runTest {
-        //準備api成功時的回傳
-        val responseBody = IsInCreateArticleWhiteListResponseBody(
-            isInWhiteList = true
-        )
-        //設定api成功時的回傳
-        coEvery {
-            oceanService.isInCreateArticleWhiteList(
-                authorization = any(),
-                requestBody = any()
-            )
-        } returns Response.success(responseBody)
-
-        //確認api是否成功
-        val result = service.isInCreateArticleWhiteList()
-        Truth.assertThat(result.isSuccess).isTrue()
-
-        //確認api回傳是否如預期
-        val data = result.getOrThrow()
-        Truth.assertThat(data.isInWhiteList).isTrue()
-    }
-
-    @Test
-    fun `isInCreateArticleWhiteList取得使用者是否在白名單中 失敗`() = mainCoroutineRule.runTest {
-        //準備api成功時的回傳
-        val json = ""
-        //設定api成功時的回傳
-        coEvery {
-            oceanService.isInCreateArticleWhiteList(
-                authorization = any(),
-                requestBody = any()
-            )
-        } returns Response.error(401, json.toResponseBody())
-
-        //確認api是否成功
-        val result = service.isInCreateArticleWhiteList()
-        checkHttpException(result)
-    }
-
-    @Test
     fun `getMasters取得大師排行榜 成功`() = mainCoroutineRule.runTest {
         //準備api成功時的回傳
         val responseBody = GetMastersResponseBodyWithError(

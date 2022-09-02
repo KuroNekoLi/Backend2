@@ -1,5 +1,6 @@
 package com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.contentoption
 
+import com.cmoney.backend2.forumocean.service.api.article.OpenGraph
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.articlestate.ArticleState
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.commoditytag.CommodityTagInfo
 import com.cmoney.backend2.forumocean.service.api.variable.response.mediatype.MediaTypeInfo
@@ -38,6 +39,7 @@ sealed class ArticleContent(
      * @property bestAnswerCommentId 最佳解答回文Id
      * @property articleState 文章狀態
      * @property topics 標籤名稱
+     * @property openGraph OpenGraph Info
      */
     data class UnknownContent(
         @SerializedName("text", alternate = ["Text"])
@@ -56,6 +58,8 @@ sealed class ArticleContent(
         override val creatorId: Long?,
         @SerializedName("groupId", alternate = ["GroupId"])
         override val groupId: Long?,
+        @SerializedName("boardId", alternate = ["BoardId"])
+        override val boardId: Long?,
         @SerializedName("position", alternate = ["Position"])
         override val position: Any?,
         @SerializedName("newsId", alternate = ["NewsId"])
@@ -85,7 +89,9 @@ sealed class ArticleContent(
         @SerializedName("exchangeCount", alternate = ["ExchangeCount"])
         override val exchangeCount: Long?,
         @SerializedName("articleType", alternate = ["ArticleType"])
-        override val articleType: String?
+        override val articleType: String?,
+        @SerializedName("openGraph")
+        val openGraph: OpenGraph?
     ) : ArticleContent(text),
         MultiMediaInfo,
         TagInfo,
@@ -99,7 +105,8 @@ sealed class ArticleContent(
         QuestionInfo,
         ArticleStateInfo,
         TopicInfo,
-        ColumnInfo
+        ColumnInfo,
+        Group2Info
 
     /**
      * 一般文章
