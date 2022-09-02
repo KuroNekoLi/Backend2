@@ -17,7 +17,7 @@ data class OthersRatingComment(
     @SerializedName("memberId")
     val memberId: Long?,
     @SerializedName("score")
-    val score: Double?,
+    val score: Int?,
     @SerializedName("reviewTime")
     val reviewTime: Long?
 )
