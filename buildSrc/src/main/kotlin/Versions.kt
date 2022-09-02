@@ -128,5 +128,5 @@ object Versions {
     const val CMONEY_CORE = "5.0.0-beta03"
     const val CMONEY_LOG_CORE = "5.0.0-beta02"
     const val CMONEY_MEMBER = "5.0.0-alpha14"
-    const val CMONEY_UTILS = "5.1.0"
+    const val CMONEY_UTILS = "5.3.0"
 }

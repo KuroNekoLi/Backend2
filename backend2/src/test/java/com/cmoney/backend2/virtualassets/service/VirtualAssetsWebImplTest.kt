@@ -7,13 +7,15 @@ import com.cmoney.backend2.virtualassets.service.api.getexchangeproductlist.GetE
 import com.cmoney.backend2.virtualassets.service.api.getexchangeproductlist.ProductInfo
 import com.cmoney.backend2.virtualassets.service.api.getgrouplastexchangetime.GetGroupLastExchangeTimeResponseBody
 import com.cmoney.core.CoroutineTestRule
-import com.cmoney.core.extension.runTest
+
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runTest
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.After
 import org.junit.Before
@@ -27,9 +29,10 @@ import retrofit2.Response
 @RunWith(RobolectricTestRunner::class)
 class VirtualAssetsWebImplTest {
 
+    private val testScope = TestScope()
     @ExperimentalCoroutinesApi
     @get:Rule
-    val mainCoroutineRule = CoroutineTestRule()
+    val mainCoroutineRule = CoroutineTestRule(testScope = testScope)
 
     @MockK
     private lateinit var virtualAssetsService: VirtualAssetsService
@@ -54,7 +57,7 @@ class VirtualAssetsWebImplTest {
     }
 
     @Test
-    fun `getExchangeProductList取得可兌換商品清單 成功`() = mainCoroutineRule.runTest {
+    fun `getExchangeProductList取得可兌換商品清單 成功`() = testScope.runTest {
         //準備api成功時的回傳
         val responseBody = GetExchangeProductListResponseBody(
             list = listOf<ProductInfo>()
@@ -80,7 +83,7 @@ class VirtualAssetsWebImplTest {
     }
 
     @Test
-    fun `getExchangeProductList取得可兌換商品清單 失敗`() = mainCoroutineRule.runTest {
+    fun `getExchangeProductList取得可兌換商品清單 失敗`() = testScope.runTest {
         val json = """{
           "Error": {
             "Code": 100103,
@@ -103,7 +106,7 @@ class VirtualAssetsWebImplTest {
     }
 
     @Test
-    fun `getGroupLastExchangeTime批次取得會員最後一次兌換指定商品的時間 成功`() = mainCoroutineRule.runTest {
+    fun `getGroupLastExchangeTime批次取得會員最後一次兌換指定商品的時間 成功`() = testScope.runTest {
         //準備api成功時的回傳
         val map = HashMap<String, Long>()
         map["1"] = 123456L
@@ -128,7 +131,7 @@ class VirtualAssetsWebImplTest {
     }
 
     @Test
-    fun `getGroupLastExchangeTime批次取得會員最後一次兌換指定商品的時間 失敗`() = mainCoroutineRule.runTest {
+    fun `getGroupLastExchangeTime批次取得會員最後一次兌換指定商品的時間 失敗`() = testScope.runTest {
         val json = ""
 
         //設定api成功時的回傳
@@ -145,7 +148,7 @@ class VirtualAssetsWebImplTest {
     }
 
     @Test
-    fun `exchange會員兌換指定商品 成功`() = mainCoroutineRule.runTest {
+    fun `exchange會員兌換指定商品 成功`() = testScope.runTest {
         //準備api成功時的回傳(後端在成功時回傳204和空值)
         //設定api成功時的回傳
         coEvery {
@@ -164,7 +167,7 @@ class VirtualAssetsWebImplTest {
     }
 
     @Test
-    fun `exchange會員兌換指定商品 失敗 發生ServerException`() = mainCoroutineRule.runTest {
+    fun `exchange會員兌換指定商品 失敗 發生ServerException`() = testScope.runTest {
         val json = """{
           "Error": {
             "Code": 100103,

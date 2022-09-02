@@ -4,7 +4,6 @@ import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.base.model.request.MemberApiParam
 import com.cmoney.backend2.cmtalk.service.api.TargetMediaListInfo
 import com.cmoney.core.CoroutineTestRule
-import com.cmoney.core.extension.runTest
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
@@ -12,6 +11,8 @@ import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runTest
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.After
 import org.junit.Before
@@ -22,9 +23,10 @@ import java.util.*
 
 class CMTalkWebImplTest {
 
+    private val testScope = TestScope()
     @ExperimentalCoroutinesApi
     @get:Rule
-    val mainCoroutineRule = CoroutineTestRule()
+    val mainCoroutineRule = CoroutineTestRule(testScope = testScope)
     private lateinit var apiParam: MemberApiParam
 
     @MockK
@@ -40,7 +42,7 @@ class CMTalkWebImplTest {
     }
 
     @Test
-    fun `getTargetMediaList_response code is 1_成功`() = mainCoroutineRule.runTest {
+    fun `getTargetMediaList_response code is 1_成功`() = testScope.runTest {
         val responseBody = TargetMediaListInfo(
             listOf(),
             1,
@@ -60,7 +62,7 @@ class CMTalkWebImplTest {
     }
 
     @Test
-    fun `getTargetMediaList_失敗`() = mainCoroutineRule.runTest {
+    fun `getTargetMediaList_失敗`() = testScope.runTest {
         coEvery {
             service.getTargetMediaList(
                 mediaType = any(),

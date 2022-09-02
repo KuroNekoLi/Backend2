@@ -6,13 +6,14 @@ import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.centralizedimage.service.api.upload.GenreAndSubGenre
 import com.cmoney.backend2.centralizedimage.service.api.upload.UploadResponseBody
 import com.cmoney.core.CoroutineTestRule
-import com.cmoney.core.extension.runTest
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runTest
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Before
 import org.junit.Rule
@@ -31,8 +32,9 @@ import java.io.OutputStream
 @RunWith(RobolectricTestRunner::class)
 class CentralizedImageWebImplTest {
 
+    private val testScope = TestScope()
     @get:Rule
-    val mainCoroutineRule = CoroutineTestRule()
+    val mainCoroutineRule = CoroutineTestRule(testScope = testScope)
 
     @MockK
     private lateinit var service: CentralizedImageService
@@ -51,7 +53,7 @@ class CentralizedImageWebImplTest {
     }
 
     @Test
-    fun `upload_成功`() = mainCoroutineRule.runTest {
+    fun `upload_成功`() = testScope.runTest {
         coEvery {
             service.upload(
                 authorization = any(),
@@ -71,7 +73,7 @@ class CentralizedImageWebImplTest {
     }
 
     @Test
-    fun `upload_檔案太大失敗`() = mainCoroutineRule.runTest {
+    fun `upload_檔案太大失敗`() = testScope.runTest {
         coEvery {
             service.upload(
                 authorization = any(),
@@ -89,7 +91,7 @@ class CentralizedImageWebImplTest {
     }
 
     @Test
-    fun `upload_401_UNAUTHORIZATION`() = mainCoroutineRule.runTest {
+    fun `upload_401_UNAUTHORIZATION`() = testScope.runTest {
         coEvery {
             service.upload(
                 authorization = any(),

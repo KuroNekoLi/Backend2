@@ -8,13 +8,15 @@ import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.dtno.service.api.getLatestBasicInfo.BasicInfoData
 import com.cmoney.backend2.dtno.service.api.getLatestBasicInfo.BasicInfoResponseBodyWithError
 import com.cmoney.core.CoroutineTestRule
-import com.cmoney.core.extension.runTest
+
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -26,9 +28,10 @@ import retrofit2.Response
 @RunWith(RobolectricTestRunner::class)
 class DtnoWebImplTest {
 
+    private val testScope = TestScope()
     @ExperimentalCoroutinesApi
     @get:Rule
-    val mainCoroutineRule = CoroutineTestRule()
+    val mainCoroutineRule = CoroutineTestRule(testScope = testScope)
 
     @MockK
     private lateinit var service: DtnoService
@@ -49,7 +52,7 @@ class DtnoWebImplTest {
     }
 
     @Test
-    fun `getKLineData_成功`() = mainCoroutineRule.runTest {
+    fun `getKLineData_成功`() = testScope.runTest {
         val response = DtnoWithError(
             listOf("日期", "開盤價", "最高價", "最低價", "收盤價", "成交量", "漲跌", "漲幅(%)", "成交金額(千)"),
             listOf(
@@ -94,7 +97,7 @@ class DtnoWebImplTest {
     }
 
     @Test
-    fun `getKLineData_參數錯誤`() = mainCoroutineRule.runTest {
+    fun `getKLineData_參數錯誤`() = testScope.runTest {
         val response = DtnoWithError(
             listOf("日期", "開盤價", "最高價", "最低價", "收盤價", "成交量", "漲跌", "漲幅(%)", "成交金額(千)"),
             listOf()
@@ -117,7 +120,7 @@ class DtnoWebImplTest {
     }
 
     @Test
-    fun `getLatestBasicInfo_成功`() = mainCoroutineRule.runTest {
+    fun `getLatestBasicInfo_成功`() = testScope.runTest {
         val response = BasicInfoResponseBodyWithError(
             listOf(
                 BasicInfoData("TSM", "73.90", "9.69", "6.53", "20200724"),
@@ -143,7 +146,7 @@ class DtnoWebImplTest {
     }
 
     @Test
-    fun `getLatestBasicInfo_參數錯誤`() = mainCoroutineRule.runTest {
+    fun `getLatestBasicInfo_參數錯誤`() = testScope.runTest {
         val responseBodyJson = """
             {"Error": {"Code": 100,"Message": "參數錯誤"}}
         """.trimIndent()
@@ -168,7 +171,7 @@ class DtnoWebImplTest {
     }
 
     @Test
-    fun `getLatestBasicInfo_身分驗證錯誤`() = mainCoroutineRule.runTest {
+    fun `getLatestBasicInfo_身分驗證錯誤`() = testScope.runTest {
         val responseBodyJson = """
             { "Error": {"Code": 101,"Message": "身分驗證錯誤"}}
         """.trimIndent()

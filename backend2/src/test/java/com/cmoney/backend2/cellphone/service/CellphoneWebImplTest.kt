@@ -15,13 +15,14 @@ import com.cmoney.backend2.cellphone.service.api.register.CellphoneRegisterWithE
 import com.cmoney.backend2.cellphone.service.api.unbindcellphone.UnbindCellphoneResponseBodyWithError
 import com.cmoney.backend2.cellphone.service.api.updatepassword.UpdatePasswordResponseBodyWithError
 import com.cmoney.core.CoroutineTestRule
-import com.cmoney.core.extension.runTest
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -33,9 +34,10 @@ import retrofit2.Response
 @RunWith(RobolectricTestRunner::class)
 class CellphoneWebImplTest {
 
+    private val testScope = TestScope()
     @ExperimentalCoroutinesApi
     @get:Rule
-    val mainCoroutineRule = CoroutineTestRule()
+    val mainCoroutineRule = CoroutineTestRule(testScope = testScope)
 
     @MockK
     private lateinit var service: CellphoneService
@@ -56,7 +58,7 @@ class CellphoneWebImplTest {
     }
 
     @Test
-    fun `getVerifyCode_成功`() = mainCoroutineRule.runTest {
+    fun `getVerifyCode_成功`() = testScope.runTest {
         val responseBody = CellphoneGetVerifyCodeWithError(
             verifyCodeDuration = 300,
             verifyCodeResendInterval = 300
@@ -77,7 +79,7 @@ class CellphoneWebImplTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `getVerifyCode_失敗_ServerException`() = mainCoroutineRule.runTest {
+    fun `getVerifyCode_失敗_ServerException`() = testScope.runTest {
         val responseBodyJson = """{"Error":{"Code":9001,"Message":"手機號碼轉換錯誤"}}"""
         val responseBody =
             gson.fromJson(responseBodyJson, CellphoneGetVerifyCodeWithError::class.java)
@@ -94,7 +96,7 @@ class CellphoneWebImplTest {
     }
 
     @Test
-    fun `checkVerifyCode_成功`() = mainCoroutineRule.runTest {
+    fun `checkVerifyCode_成功`() = testScope.runTest {
         val responseBody = CellphoneCheckVerifyCodeWithError(isSuccess = true)
         coEvery {
             service.checkVerifyCode(
@@ -112,7 +114,7 @@ class CellphoneWebImplTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `checkVerifyCode_失敗_ServerException`() = mainCoroutineRule.runTest {
+    fun `checkVerifyCode_失敗_ServerException`() = testScope.runTest {
         val responseBodyJson = """{"Error":{"Code":2,"Message":"驗證碼有誤"}}"""
         val responseBody =
             gson.fromJson(responseBodyJson, CellphoneCheckVerifyCodeWithError::class.java)
@@ -130,7 +132,7 @@ class CellphoneWebImplTest {
     }
 
     @Test
-    fun `registerByCellphone_成功`() = mainCoroutineRule.runTest {
+    fun `registerByCellphone_成功`() = testScope.runTest {
         val responseBody = CellphoneRegisterWithError(isSuccess = true)
         coEvery {
             service.registerByCellphone(
@@ -148,7 +150,7 @@ class CellphoneWebImplTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `registerByCellphone_失敗_ServerException`() = mainCoroutineRule.runTest {
+    fun `registerByCellphone_失敗_ServerException`() = testScope.runTest {
         val responseBodyJson = """{"Error":{"Code":9001,"Message":"手機號碼轉換錯誤"}}"""
         val responseBody = gson.fromJson(responseBodyJson, CellphoneRegisterWithError::class.java)
         coEvery {
@@ -166,7 +168,7 @@ class CellphoneWebImplTest {
 
 
     @Test
-    fun `forgotPasswordForCellphone_成功`() = mainCoroutineRule.runTest {
+    fun `forgotPasswordForCellphone_成功`() = testScope.runTest {
         val responseBody = CellphoneForgotPasswordWithError(isSuccess = true)
         coEvery {
             service.forgotPasswordForCellphone(
@@ -183,7 +185,7 @@ class CellphoneWebImplTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `forgotPasswordForCellphone_失敗_ServerException`() = mainCoroutineRule.runTest {
+    fun `forgotPasswordForCellphone_失敗_ServerException`() = testScope.runTest {
         val responseBodyJson = """{"Error":{"Code":9001,"Message":"手機號碼轉換錯誤"}}"""
         val responseBody =
             gson.fromJson(responseBodyJson, CellphoneForgotPasswordWithError::class.java)
@@ -200,7 +202,7 @@ class CellphoneWebImplTest {
     }
 
     @Test
-    fun `updatePassword_成功`() = mainCoroutineRule.runTest {
+    fun `updatePassword_成功`() = testScope.runTest {
         val responseBody = UpdatePasswordResponseBodyWithError(isSuccess = true)
         coEvery {
             service.updatePassword(
@@ -220,7 +222,7 @@ class CellphoneWebImplTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `updatePassword_失敗_ServerException`() = mainCoroutineRule.runTest {
+    fun `updatePassword_失敗_ServerException`() = testScope.runTest {
         val responseBodyJson = """{"Error":{"Code":9001,"Message":"手機號碼轉換錯誤"}}"""
         val responseBody =
             gson.fromJson(responseBodyJson, UpdatePasswordResponseBodyWithError::class.java)
@@ -240,7 +242,7 @@ class CellphoneWebImplTest {
     }
 
     @Test
-    fun `getAccountInfo_成功`() = mainCoroutineRule.runTest {
+    fun `getAccountInfo_成功`() = testScope.runTest {
         val responseBody = AccountInfoWithError(
             account = null,
             cellphone = null,
@@ -267,7 +269,7 @@ class CellphoneWebImplTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `getAccountInfo_失敗_ServerException`() = mainCoroutineRule.runTest {
+    fun `getAccountInfo_失敗_ServerException`() = testScope.runTest {
         val responseBodyJson = """{"Error":{"Code":9001,"Message":"手機號碼轉換錯誤"}}"""
         val responseBody = gson.fromJson(responseBodyJson, AccountInfoWithError::class.java)
         coEvery {
@@ -284,7 +286,7 @@ class CellphoneWebImplTest {
     }
 
     @Test
-    fun `bindCellphone_成功`() = mainCoroutineRule.runTest {
+    fun `bindCellphone_成功`() = testScope.runTest {
         val responseBody = BindCellphoneResponseBodyWithError(
             verifyCodeDuration = 300,
             verifyCodeResendInterval = 120
@@ -312,7 +314,7 @@ class CellphoneWebImplTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `bindCellphone_失敗_ServerException`() = mainCoroutineRule.runTest {
+    fun `bindCellphone_失敗_ServerException`() = testScope.runTest {
         val responseBodyJson = """{"Error":{"Code":9001,"Message":"手機號碼轉換錯誤"}}"""
         val responseBody =
             gson.fromJson(responseBodyJson, BindCellphoneResponseBodyWithError::class.java)
@@ -336,7 +338,7 @@ class CellphoneWebImplTest {
     }
 
     @Test
-    fun `checkCellphoneBindingVerifyCode_成功`() = mainCoroutineRule.runTest {
+    fun `checkCellphoneBindingVerifyCode_成功`() = testScope.runTest {
         val responseBody = CheckCellphoneBindingVerifyCodeResponseBodyWithError(isSuccess = true)
         coEvery {
             service.checkCellphoneBindingVerifyCode(
@@ -363,7 +365,7 @@ class CellphoneWebImplTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `checkCellphoneBindingVerifyCode_失敗`() = mainCoroutineRule.runTest {
+    fun `checkCellphoneBindingVerifyCode_失敗`() = testScope.runTest {
         val responseBodyJson = """
             {"Error":{"Code":9001,"Message":"新密碼不能為空"}}
         """.trimIndent()
@@ -390,7 +392,7 @@ class CellphoneWebImplTest {
     }
 
     @Test
-    fun `unbindCellphone_成功`() = mainCoroutineRule.runTest {
+    fun `unbindCellphone_成功`() = testScope.runTest {
         val responseBody = UnbindCellphoneResponseBodyWithError(isSuccess = true)
         coEvery {
             service.unbindCellphone(
@@ -408,7 +410,7 @@ class CellphoneWebImplTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `unbindCellphone_失敗_ServerException`() = mainCoroutineRule.runTest {
+    fun `unbindCellphone_失敗_ServerException`() = testScope.runTest {
         val responseBodyJson = """{"Error":{"Code":9001,"Message":"手機號碼轉換錯誤"}}"""
         val responseBody =
             gson.fromJson(responseBodyJson, UnbindCellphoneResponseBodyWithError::class.java)

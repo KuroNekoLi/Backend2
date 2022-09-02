@@ -10,6 +10,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.TestScope
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.Rule
 import org.junit.Test
@@ -31,9 +32,10 @@ class RecordApiLogCallAdapterFactoryTest {
         suspend fun method(): Response<Void>
     }
 
+    private val testScope = TestScope()
     @ExperimentalCoroutinesApi
     @get:Rule
-    val coroutineRule = CoroutineTestRule()
+    val mainCoroutineRule = CoroutineTestRule(testScope = testScope)
 
     @get:Rule
     val mockServer = MockWebServer()

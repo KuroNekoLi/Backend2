@@ -11,13 +11,15 @@ import com.cmoney.backend2.notification2.service.api.gethistorynotifyall.GetNoti
 import com.cmoney.backend2.notification2.service.api.getmainfcm.GetMainFCMResponseBody
 import com.cmoney.backend2.notification2.service.api.updatebranchfcmlistrequestbody.PushSetting
 import com.cmoney.core.CoroutineTestRule
-import com.cmoney.core.extension.runTest
+
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runTest
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Before
 import org.junit.Rule
@@ -31,8 +33,9 @@ import java.util.concurrent.TimeoutException
 @RunWith(RobolectricTestRunner::class)
 class UserSettingTest {
 
+    private val testScope = TestScope()
     @get:Rule
-    val mainCoroutineRule = CoroutineTestRule()
+    val mainCoroutineRule = CoroutineTestRule(testScope = testScope)
 
     @MockK
     private lateinit var service: Notification2Service
@@ -53,7 +56,7 @@ class UserSettingTest {
     }
 
     @Test(expected = TimeoutException::class)
-    fun `getHistoryNotifyAll_TimeoutException`() = mainCoroutineRule.runTest {
+    fun `getHistoryNotifyAll_TimeoutException`() = testScope.runTest {
         coEvery {
             service.getHistoryNotifyAll(
                 appId = any(), authorization = any()
@@ -67,7 +70,7 @@ class UserSettingTest {
     }
 
     @Test
-    fun `getHistoryNotifyAll_成功無資料_是空列表`() = mainCoroutineRule.runTest {
+    fun `getHistoryNotifyAll_成功無資料_是空列表`() = testScope.runTest {
         val response = listOf<GetNotifyAllResponseBody>()
         coEvery {
             service.getHistoryNotifyAll(
@@ -82,7 +85,7 @@ class UserSettingTest {
     }
 
     @Test
-    fun `getHistoryNotifyAll_成功有資料_不是空值`() = mainCoroutineRule.runTest {
+    fun `getHistoryNotifyAll_成功有資料_不是空值`() = testScope.runTest {
         val expect =
             GetNotifyAllResponseBody(
                 sn = null,
@@ -142,7 +145,7 @@ class UserSettingTest {
     }
 
     @Test
-    fun `getBranchFcm_成功`() = mainCoroutineRule.runTest {
+    fun `getBranchFcm_成功`() = testScope.runTest {
         val responseBody = listOf(
             BranchSettingRequestBody(
                 isNeedPush = true, pushSettingId = 6, settingName = "123"
@@ -163,7 +166,7 @@ class UserSettingTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `getBranchFcm_失敗_ServerException`() = mainCoroutineRule.runTest {
+    fun `getBranchFcm_失敗_ServerException`() = testScope.runTest {
         val errorBody = gson.toJson(
             CMoneyError(
                 detail = CMoneyError.Detail(
@@ -182,7 +185,7 @@ class UserSettingTest {
     }
 
     @Test
-    fun `updateBranchFcm_成功`() = mainCoroutineRule.runTest {
+    fun `updateBranchFcm_成功`() = testScope.runTest {
         val responseBody = "".toResponseBody()
         coEvery {
             service.updateBranchFcm(
@@ -198,7 +201,7 @@ class UserSettingTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `updateBranchFcm_失敗_ServerException`() = mainCoroutineRule.runTest {
+    fun `updateBranchFcm_失敗_ServerException`() = testScope.runTest {
         val errorBody = gson.toJson(
             CMoneyError(
                 detail = CMoneyError.Detail(
@@ -218,7 +221,7 @@ class UserSettingTest {
     }
 
     @Test
-    fun `updateBranchFcmMultipleSettings_成功204`() = mainCoroutineRule.runTest {
+    fun `updateBranchFcmMultipleSettings_成功204`() = testScope.runTest {
         coEvery {
             service.updateBranchFcmMultipleSettings(
                 authorization = any(),
@@ -238,7 +241,7 @@ class UserSettingTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `updateBranchFcmMultipleSettings_失敗_ServerException`() = mainCoroutineRule.runTest {
+    fun `updateBranchFcmMultipleSettings_失敗_ServerException`() = testScope.runTest {
         val errorBody = gson.toJson(
             CMoneyError(
                 detail = CMoneyError.Detail(
@@ -263,7 +266,7 @@ class UserSettingTest {
     }
 
     @Test
-    fun `getClubFcm_成功`() = mainCoroutineRule.runTest {
+    fun `getClubFcm_成功`() = testScope.runTest {
         val responseBody = listOf(
             ClubFcmSettingResponseBody(
                 isSelected = true,
@@ -286,7 +289,7 @@ class UserSettingTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `getClubFcm_失敗_ServerException`() = mainCoroutineRule.runTest {
+    fun `getClubFcm_失敗_ServerException`() = testScope.runTest {
         val errorBody = gson.toJson(
             CMoneyError(
                 detail = CMoneyError.Detail(
@@ -305,7 +308,7 @@ class UserSettingTest {
     }
 
     @Test
-    fun `updateClubFcm_成功`() = mainCoroutineRule.runTest {
+    fun `updateClubFcm_成功`() = testScope.runTest {
         val responseBody = "".toResponseBody()
         coEvery {
             service.updateClubFcm(
@@ -320,7 +323,7 @@ class UserSettingTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `updateClubFcm_失敗_ServerException`() = mainCoroutineRule.runTest {
+    fun `updateClubFcm_失敗_ServerException`() = testScope.runTest {
         val errorBody = gson.toJson(
             CMoneyError(
                 detail = CMoneyError.Detail(
@@ -339,7 +342,7 @@ class UserSettingTest {
     }
 
     @Test
-    fun `getMainFcm_成功`() = mainCoroutineRule.runTest {
+    fun `getMainFcm_成功`() = testScope.runTest {
         val responseBody = GetMainFCMResponseBody(isNeedPush = true)
         coEvery {
             service.getMainFcm(
@@ -354,7 +357,7 @@ class UserSettingTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `getMainFcm_失敗_ServerException`() = mainCoroutineRule.runTest {
+    fun `getMainFcm_失敗_ServerException`() = testScope.runTest {
         val errorBody = gson.toJson(
             CMoneyError(
                 detail = CMoneyError.Detail(
@@ -373,7 +376,7 @@ class UserSettingTest {
     }
 
     @Test
-    fun `updateMainFcm_成功`() = mainCoroutineRule.runTest {
+    fun `updateMainFcm_成功`() = testScope.runTest {
         val responseBody = "".toResponseBody()
         coEvery {
             service.updateMainFcm(
@@ -388,7 +391,7 @@ class UserSettingTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `updateMainFcm_失敗_ServerException`() = mainCoroutineRule.runTest {
+    fun `updateMainFcm_失敗_ServerException`() = testScope.runTest {
         val errorBody = gson.toJson(
             CMoneyError(
                 detail = CMoneyError.Detail(
