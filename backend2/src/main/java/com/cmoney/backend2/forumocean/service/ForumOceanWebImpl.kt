@@ -49,6 +49,10 @@ import com.cmoney.backend2.forumocean.service.api.rank.getcommodityrank.GetCommo
 import com.cmoney.backend2.forumocean.service.api.rank.getexpertmemberrank.GetExpertMemberRankResponseBody
 import com.cmoney.backend2.forumocean.service.api.rank.getfansmemberrank.FansMemberRankResponseBody
 import com.cmoney.backend2.forumocean.service.api.rank.getsolutionexpertrank.SolutionExpertRankResponseBody
+import com.cmoney.backend2.forumocean.service.api.rating.MemberRatingCounter
+import com.cmoney.backend2.forumocean.service.api.rating.OthersRatingComment
+import com.cmoney.backend2.forumocean.service.api.rating.RatingComment
+import com.cmoney.backend2.forumocean.service.api.rating.ReviewRequest
 import com.cmoney.backend2.forumocean.service.api.relationship.getdonate.DonateInfo
 import com.cmoney.backend2.forumocean.service.api.role.Role
 import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
@@ -62,6 +66,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.commentrespo
 import com.cmoney.backend2.forumocean.service.api.variable.response.groupresponse.GroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.ReactionInfo
 import com.cmoney.backend2.forumocean.service.api.vote.get.VoteInfo
+import com.cmoney.backend2.ocean.service.api.getevaluationlist.SortType
 import com.google.gson.Gson
 import com.google.gson.JsonParser
 import kotlinx.coroutines.withContext
@@ -365,6 +370,7 @@ class ForumOceanWebImpl(
             ).checkResponseBody(jsonParser)
         }
     }
+
     override suspend fun getComment(
         articleId: Long,
         commentId: Long?,
@@ -822,18 +828,19 @@ class ForumOceanWebImpl(
         offset: Int,
         fetch: Int,
         position: List<GroupPosition>
-    ): Result<List<com.cmoney.backend2.forumocean.service.api.group.getmember.GroupMember>> = withContext(dispatcher.io()) {
-        kotlin.runCatching {
-            service.getMembers(
-                path = serverName,
-                authorization = setting.accessToken.createAuthorizationBearer(),
-                groupId = groupId,
-                offset = offset,
-                fetch = fetch,
-                position = position.map { it.position }.sum()
-            ).checkResponseBody(jsonParser)
+    ): Result<List<com.cmoney.backend2.forumocean.service.api.group.getmember.GroupMember>> =
+        withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.getMembers(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    groupId = groupId,
+                    offset = offset,
+                    fetch = fetch,
+                    position = position.map { it.position }.sum()
+                ).checkResponseBody(jsonParser)
+            }
         }
-    }
 
     override suspend fun getApprovals(
         groupId: Long,
@@ -1247,7 +1254,7 @@ class ForumOceanWebImpl(
                     path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     articleId = articleId,
-                    reasonType =reasonType,
+                    reasonType = reasonType,
                     commentId = commentId
                 ).handleNoContent(jsonParser)
             }
@@ -1364,7 +1371,7 @@ class ForumOceanWebImpl(
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 roleId = roleId
             ).checkResponseBody(jsonParser)
-            response.memberIds?: listOf()
+            response.memberIds ?: listOf()
         }
     }
 
@@ -1855,6 +1862,63 @@ class ForumOceanWebImpl(
                         }
                     )
                 ).handleNoContent(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun getMemberRatingCounter(memberId: Long): Result<MemberRatingCounter> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.getMemberRatingCounter(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    memberId = memberId
+                ).checkResponseBody(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun getRatingComment(creatorId: Long, memberId: Long): Result<RatingComment> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.getRatingComment(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    creatorId = creatorId,
+                    memberId = memberId
+                ).checkResponseBody(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun getMemberRatingComments(
+        memberId: Long,
+        offset: Int,
+        fetch: Int,
+        sortType: SortType
+    ): Result<List<OthersRatingComment>> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.getMemberRatingComments(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    memberId = memberId,
+                    sortType = sortType.value,
+                    skipCount = offset,
+                    fetchCount = fetch
+                ).checkResponseBody(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun reviewUser(request: ReviewRequest): Result<String> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.reviewUser(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    body = request
+                ).checkResponseBody(jsonParser)
             }
         }
     }

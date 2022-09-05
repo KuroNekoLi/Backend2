@@ -37,6 +37,9 @@ import com.cmoney.backend2.forumocean.service.api.rank.getcommodityrank.GetCommo
 import com.cmoney.backend2.forumocean.service.api.rank.getexpertmemberrank.GetExpertMemberRankResponseBody
 import com.cmoney.backend2.forumocean.service.api.rank.getfansmemberrank.FansMemberRankResponseBody
 import com.cmoney.backend2.forumocean.service.api.rank.getsolutionexpertrank.SolutionExpertRankResponseBody
+import com.cmoney.backend2.forumocean.service.api.rating.MemberRatingCounter
+import com.cmoney.backend2.forumocean.service.api.rating.RatingComment
+import com.cmoney.backend2.forumocean.service.api.rating.ReviewRequest
 import com.cmoney.backend2.forumocean.service.api.relationship.getdonate.DonateInfo
 import com.cmoney.backend2.forumocean.service.api.role.GetMembersByRoleResponse
 import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
@@ -51,6 +54,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.commentrespo
 import com.cmoney.backend2.forumocean.service.api.variable.response.groupresponse.GroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.ReactionInfo
 import com.cmoney.backend2.forumocean.service.api.vote.get.VoteInfo
+import com.cmoney.backend2.ocean.service.api.getevaluationlist.SortType
 import com.google.common.truth.Truth.assertThat
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
@@ -4544,6 +4548,134 @@ class ForumOceanWebImplTest {
         val result = web.setGroupPushSetting(
             -1,
             PushType.NONE
+        )
+        assertThat(result.isFailure).isTrue()
+    }
+
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得會員的被評價資訊統計_success`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getMemberRatingCounter(
+                authorization = any(),
+                path = any(),
+                memberId = any()
+            )
+        } returns Response.success(MemberRatingCounter(rating = 0.0, reviewCount = 0))
+        val result = web.getMemberRatingCounter(1L)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得會員的被評價資訊統計_failed`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getMemberRatingCounter(
+                authorization = any(),
+                path = any(),
+                memberId = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getMemberRatingCounter(1L)
+        assertThat(result.isFailure).isTrue()
+    }
+
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得指定評價_success`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getRatingComment(
+                authorization = any(),
+                path = any(),
+                creatorId = any(),
+                memberId = any()
+            )
+        } returns Response.success(RatingComment("comment", 0, 0))
+        val result = web.getRatingComment(1L, 1L)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得指定評價_failed`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getRatingComment(
+                authorization = any(),
+                path = any(),
+                creatorId = any(),
+                memberId = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getRatingComment(-1, -1L)
+        assertThat(result.isFailure).isTrue()
+    }
+
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得指定會員的被評價清單_success`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getMemberRatingComments(
+                authorization = any(),
+                path = any(),
+                memberId = any(),
+                sortType = any(),
+                skipCount = any(),
+                fetchCount = any()
+            )
+        } returns Response.success(listOf())
+        val result = web.getMemberRatingComments(1L, 0, 10, SortType.LatestToOldest)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得指定會員的被評價清單_failed`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getMemberRatingComments(
+                authorization = any(),
+                path = any(),
+                memberId = any(),
+                sortType = any(),
+                skipCount = any(),
+                fetchCount = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getMemberRatingComments(1L, 0, 10, SortType.LatestToOldest)
+        assertThat(result.isFailure).isTrue()
+    }
+
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `評價_success`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.reviewUser(
+                authorization = any(),
+                path = any(),
+                body = any()
+            )
+        } returns Response.success("true")
+        val result = web.reviewUser(
+            ReviewRequest("comment", 1, 0L)
+        )
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `評價_failed`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.reviewUser(
+                authorization = any(),
+                path = any(),
+                body = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.reviewUser(
+            ReviewRequest("comment", 0, 0L)
         )
         assertThat(result.isFailure).isTrue()
     }

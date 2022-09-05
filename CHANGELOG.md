@@ -1,3 +1,18 @@
+#  (2022-09-05)
+
+
+
+# [5.37.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.36.0...5.37.0) (2022-09-05)
+
+
+### Features
+
+* ForumOcean 新增取得會員的被評價資訊統計
+* ForumOcean 新增取得指定評價
+* ForumOcean 新增取得指定會員的被評價清單
+* ForumOcean 新增評價會員
+
+
 #  (2022-08-25)
 
 
