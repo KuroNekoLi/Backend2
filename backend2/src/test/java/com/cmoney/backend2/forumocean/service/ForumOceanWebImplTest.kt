@@ -4592,7 +4592,7 @@ class ForumOceanWebImplTest {
                 creatorId = any(),
                 memberId = any()
             )
-        } returns Response.success(RatingComment("comment", 0))
+        } returns Response.success(RatingComment("comment", 0, 0))
         val result = web.getRatingComment(1L, 1L)
         assertThat(result.isSuccess).isTrue()
     }
