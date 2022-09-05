@@ -8,6 +8,7 @@ import com.google.gson.annotations.SerializedName
  *
  * @param comment 註解
  * @param score 評多少分
+ * @param reviewTime 什麼時候評分
  */
 data class RatingComment(
     @SerializedName("comment")
