@@ -1,17 +1,19 @@
 package com.cmoney.backend2.trial.service
 
-import com.cmoney.backend2.MainCoroutineRule
 import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.request.MemberApiParam
 import com.cmoney.backend2.trial.service.api.setquotause.SetQuotaUseResponseBody
+import com.cmoney.core.CoroutineTestRule
+
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runTest
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Before
@@ -27,8 +29,9 @@ import java.util.concurrent.TimeoutException
 @ExperimentalCoroutinesApi
 class SetQuotaUsageUseUnitTest {
 
+    private val testScope = TestScope()
     @get:Rule
-    val mainCoroutineRule = MainCoroutineRule()
+    val mainCoroutineRule = CoroutineTestRule(testScope = testScope)
 
     @MockK
     private lateinit var service: TrialService
@@ -45,7 +48,7 @@ class SetQuotaUsageUseUnitTest {
     }
 
     @Test(expected = TimeoutException::class)
-    fun setQuotaUsageUse_TimeoutException() = mainCoroutineRule.runBlockingTest {
+    fun setQuotaUsageUse_TimeoutException() = testScope.runTest {
         coEvery {
             service.setQuotaUsageUse(
                 appId = any(),
@@ -65,7 +68,7 @@ class SetQuotaUsageUseUnitTest {
     }
 
     @Test
-    fun `setQuotaUsageUse_失敗_無效的金鑰`() = mainCoroutineRule.runBlockingTest {
+    fun `setQuotaUsageUse_失敗_無效的金鑰`() = testScope.runTest {
         val errorJson = "{\"error\": {\"code\": 400,\"message\": \"無效的試用金鑰\"}}"
         val responseBody = errorJson.toResponseBody(mediaType)
         coEvery {
@@ -82,7 +85,7 @@ class SetQuotaUsageUseUnitTest {
     }
 
     @Test
-    fun `setQuotaUsageUse_成功_hasTrialAuth為true`() = mainCoroutineRule.runBlockingTest {
+    fun `setQuotaUsageUse_成功_hasTrialAuth為true`() = testScope.runTest {
         val responseBody =
             SetQuotaUseResponseBody(
                 true
@@ -101,7 +104,7 @@ class SetQuotaUsageUseUnitTest {
     }
 
     @Test
-    fun `setQuotaUsageUse_成功_hasTrialAuth為false`() = mainCoroutineRule.runBlockingTest {
+    fun `setQuotaUsageUse_成功_hasTrialAuth為false`() = testScope.runTest {
         val responseBody =
             SetQuotaUseResponseBody(
                 false

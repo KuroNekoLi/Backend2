@@ -1,6 +1,5 @@
 package com.cmoney.backend2.emilystock.service
 
-import com.cmoney.backend2.MainCoroutineRule
 import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.EmptyBodyException
@@ -14,6 +13,8 @@ import com.cmoney.backend2.emilystock.service.api.gettargetstockinfos.GetTargetS
 import com.cmoney.backend2.emilystock.service.api.gettargetstockinfos.StockInfo
 import com.cmoney.backend2.emilystock.service.api.gettrafficlightrecord.GetTrafficLightRecordWithError
 import com.cmoney.backend2.emilystock.service.api.gettrafficlightrecord.TrafficLightRecord
+import com.cmoney.core.CoroutineTestRule
+
 import com.google.common.truth.Truth
 import com.google.gson.Gson
 import io.mockk.MockKAnnotations
@@ -21,7 +22,8 @@ import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -32,8 +34,9 @@ import retrofit2.Response
 @ExperimentalCoroutinesApi
 @RunWith(RobolectricTestRunner::class)
 class EmilyWebImplTest {
+    private val testScope = TestScope()
     @get:Rule
-    val mainCoroutineRule = MainCoroutineRule()
+    val mainCoroutineRule = CoroutineTestRule(testScope = testScope)
 
     @MockK
     private val emilyService = mockk<EmilyService>()
@@ -47,7 +50,7 @@ class EmilyWebImplTest {
     }
 
     @Test
-    fun `getEmilyCommKeys_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getEmilyCommKeys_成功`() = testScope.runTest {
         val response = GetEmilyCommKeysResponse(
             listOf(
                 "0050",
@@ -75,7 +78,7 @@ class EmilyWebImplTest {
     }
 
     @Test(expected = EmptyBodyException::class)
-    fun `getEmilyCommKeys_沒資料`() = mainCoroutineRule.runBlockingTest {
+    fun `getEmilyCommKeys_沒資料`() = testScope.runTest {
         coEvery {
             emilyService.getEmilyCommKeys(
                 authorization = any(),
@@ -88,7 +91,7 @@ class EmilyWebImplTest {
     }
 
     @Test
-    fun `getStockInfos_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getStockInfos_成功`() = testScope.runTest {
         val response = GetStockInfosResponse(
             listOf(
                 GetStockInfosResponse.StockInfo(
@@ -122,7 +125,7 @@ class EmilyWebImplTest {
     }
 
     @Test(expected = EmptyBodyException::class)
-    fun `getStockInfos_沒資料`() = mainCoroutineRule.runBlockingTest {
+    fun `getStockInfos_沒資料`() = testScope.runTest {
         coEvery {
             emilyService.getStockInfos(
                 authorization = any(),
@@ -136,7 +139,7 @@ class EmilyWebImplTest {
     }
 
     @Test
-    fun `getTargetStockInfos_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getTargetStockInfos_成功`() = testScope.runTest {
         val response = GetTargetStockInfosWithError(
             listOf(
                 StockInfo(
@@ -172,7 +175,7 @@ class EmilyWebImplTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `getTargetStockInfos_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `getTargetStockInfos_失敗`() = testScope.runTest {
         val errorText = """
             {
                 "Error": {
@@ -200,7 +203,7 @@ class EmilyWebImplTest {
     }
 
     @Test(expected = EmptyBodyException::class)
-    fun `getTargetStockInfos_沒有值`() = mainCoroutineRule.runBlockingTest {
+    fun `getTargetStockInfos_沒有值`() = testScope.runTest {
         coEvery {
             emilyService.getTargetStockInfos(
                 authorization = any(),
@@ -216,7 +219,7 @@ class EmilyWebImplTest {
     }
 
     @Test
-    fun `getTargetConstitution_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getTargetConstitution_成功`() = testScope.runTest {
         val response = GetTargetConstitutionWithError(
             response = Constitution(
                 commKey = "2330",
@@ -297,7 +300,7 @@ class EmilyWebImplTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `getTargetConstitution_失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `getTargetConstitution_失敗`() = testScope.runTest {
         val errorText = """
             {
                 "Error": {
@@ -324,7 +327,7 @@ class EmilyWebImplTest {
     }
 
     @Test(expected = EmptyBodyException::class)
-    fun `getTargetConstitution_沒資料`() = mainCoroutineRule.runBlockingTest {
+    fun `getTargetConstitution_沒資料`() = testScope.runTest {
         coEvery {
             emilyService.getTargetConstitution(
                 authorization = any(),
@@ -339,7 +342,7 @@ class EmilyWebImplTest {
     }
 
     @Test
-    fun `getFilterCondition_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getFilterCondition_成功`() = testScope.runTest {
         val response = GetFilterConditionResponse(
             response = listOf(
                 GetFilterConditionResponse.FilterCondition(
@@ -365,7 +368,7 @@ class EmilyWebImplTest {
     }
 
     @Test(expected = EmptyBodyException::class)
-    fun `getFilterCondition_沒資料`() = mainCoroutineRule.runBlockingTest {
+    fun `getFilterCondition_沒資料`() = testScope.runTest {
         coEvery {
             emilyService.getFilterCondition(
                 authorization = any(),
@@ -378,7 +381,7 @@ class EmilyWebImplTest {
     }
 
     @Test
-    fun `getTrafficLightRecord_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getTrafficLightRecord_成功`() = testScope.runTest {
         val response = GetTrafficLightRecordWithError(
             listOf(
                 TrafficLightRecord(
@@ -405,7 +408,7 @@ class EmilyWebImplTest {
     }
 
     @Test(expected = EmptyBodyException::class)
-    fun `getTrafficLightRecord_沒資料`() = mainCoroutineRule.runBlockingTest {
+    fun `getTrafficLightRecord_沒資料`() = testScope.runTest {
         coEvery {
             emilyService.getTrafficLightRecord(
                 authorization = any(),
@@ -418,7 +421,7 @@ class EmilyWebImplTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `getTrafficLightRecord_錯誤`() = mainCoroutineRule.runBlockingTest {
+    fun `getTrafficLightRecord_錯誤`() = testScope.runTest {
         val errorText = """
             {
                 "Error": {
