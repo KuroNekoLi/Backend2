@@ -1,14 +1,16 @@
 package com.cmoney.backend2.mobileocean.service
 
-import com.cmoney.backend2.MainCoroutineRule
 import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.mobileocean.service.api.createarticletoocean.requestbody.SubmitAdviceParam
+import com.cmoney.core.CoroutineTestRule
+
 import io.mockk.MockKAnnotations
 import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -19,9 +21,10 @@ import org.robolectric.RobolectricTestRunner
 @RunWith(RobolectricTestRunner::class)
 class MobileOceanWebImplVerify {
 
+    private val testScope = TestScope()
     @ExperimentalCoroutinesApi
     @get:Rule
-    val mainCoroutineRule = MainCoroutineRule()
+    val mainCoroutineRule = CoroutineTestRule(testScope = testScope)
 
     @MockK
     private lateinit var service: MobileOceanService
@@ -39,7 +42,7 @@ class MobileOceanWebImplVerify {
     }
 
     @Test
-    fun `createArticleToOcean_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `createArticleToOcean_成功`() = testScope.runTest {
 
         webImpl.createArticleToOcean(
             SubmitAdviceParam(

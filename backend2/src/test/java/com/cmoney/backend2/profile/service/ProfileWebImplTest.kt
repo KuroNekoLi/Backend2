@@ -1,6 +1,5 @@
 package com.cmoney.backend2.profile.service
 
-import com.cmoney.backend2.MainCoroutineRule
 import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.setting.Setting
@@ -14,6 +13,8 @@ import com.cmoney.backend2.profile.service.api.queryotherprofile.RawOtherMemberP
 import com.cmoney.backend2.profile.service.api.signupcompletebyemail.SignUpCompleteByEmailResponseBody
 import com.cmoney.backend2.profile.service.api.signupcompletebyphone.SignUpCompleteByPhoneResponseBody
 import com.cmoney.backend2.profile.service.api.variable.GraphQLFieldDefinition
+import com.cmoney.core.CoroutineTestRule
+
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
@@ -21,7 +22,8 @@ import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runTest
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.After
 import org.junit.Before
@@ -35,8 +37,9 @@ import retrofit2.Response
 @ExperimentalCoroutinesApi
 @RunWith(RobolectricTestRunner::class)
 class ProfileWebImplTest {
+    private val testScope = TestScope()
     @get:Rule
-    val mainCoroutineRule = MainCoroutineRule()
+    val mainCoroutineRule = CoroutineTestRule(testScope = testScope)
 
     @MockK
     private lateinit var service: ProfileService
@@ -57,7 +60,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun getAccountTestSuccess() = mainCoroutineRule.runBlockingTest {
+    fun getAccountTestSuccess() = testScope.runTest {
         coEvery {
             service.getAccount(
                 authorization = any()
@@ -80,7 +83,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun getAccountTestError() = mainCoroutineRule.runBlockingTest {
+    fun getAccountTestError() = testScope.runTest {
         coEvery {
             service.getAccount(
                 authorization = any()
@@ -99,7 +102,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun sendVerificationEmailSuccess() = mainCoroutineRule.runBlockingTest {
+    fun sendVerificationEmailSuccess() = testScope.runTest {
         coEvery {
             service.sendVerificationEmail(
                 authorization = any(),
@@ -111,7 +114,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun sendVerificationEmailFailure() = mainCoroutineRule.runBlockingTest {
+    fun sendVerificationEmailFailure() = testScope.runTest {
         coEvery {
             service.sendVerificationEmail(
                 authorization = any(),
@@ -130,7 +133,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun sendForgotPasswordEmailSuccess() = mainCoroutineRule.runBlockingTest {
+    fun sendForgotPasswordEmailSuccess() = testScope.runTest {
         coEvery {
             service.sendForgotPasswordEmail(
                 authorization = any(),
@@ -142,7 +145,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun sendForgotPasswordEmailFailure() = mainCoroutineRule.runBlockingTest {
+    fun sendForgotPasswordEmailFailure() = testScope.runTest {
         coEvery {
             service.sendForgotPasswordEmail(
                 authorization = any(),
@@ -161,7 +164,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun sendVerificationSmsSuccess() = mainCoroutineRule.runBlockingTest {
+    fun sendVerificationSmsSuccess() = testScope.runTest {
         coEvery {
             service.sendVerificationSms(
                 authorization = any(),
@@ -173,7 +176,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun sendVerificationSmsFailure() = mainCoroutineRule.runBlockingTest {
+    fun sendVerificationSmsFailure() = testScope.runTest {
         coEvery {
             service.sendVerificationSms(
                 authorization = any(),
@@ -192,7 +195,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun checkCodeEmailSuccess() = mainCoroutineRule.runBlockingTest {
+    fun checkCodeEmailSuccess() = testScope.runTest {
         coEvery {
             service.checkCodeEmail(
                 authorization = any(),
@@ -204,7 +207,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun checkCodeEmailFailure() = mainCoroutineRule.runBlockingTest {
+    fun checkCodeEmailFailure() = testScope.runTest {
         coEvery {
             service.checkCodeEmail(
                 authorization = any(),
@@ -223,7 +226,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun checkCodeSmsSuccess() = mainCoroutineRule.runBlockingTest {
+    fun checkCodeSmsSuccess() = testScope.runTest {
         coEvery {
             service.checkCodeSms(
                 authorization = any(),
@@ -235,7 +238,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun checkCodeSmsFailure() = mainCoroutineRule.runBlockingTest {
+    fun checkCodeSmsFailure() = testScope.runTest {
         coEvery {
             service.checkCodeSms(
                 authorization = any(),
@@ -254,7 +257,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun linkEmailSuccess() = mainCoroutineRule.runBlockingTest {
+    fun linkEmailSuccess() = testScope.runTest {
         coEvery {
             service.linkEmail(
                 authorization = any(),
@@ -266,7 +269,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun linkEmailFailure() = mainCoroutineRule.runBlockingTest {
+    fun linkEmailFailure() = testScope.runTest {
         coEvery {
             service.linkEmail(
                 authorization = any(),
@@ -285,7 +288,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun linkPhoneSuccess() = mainCoroutineRule.runBlockingTest {
+    fun linkPhoneSuccess() = testScope.runTest {
         coEvery {
             service.linkPhone(
                 authorization = any(),
@@ -297,7 +300,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun linkPhoneFailure() = mainCoroutineRule.runBlockingTest {
+    fun linkPhoneFailure() = testScope.runTest {
         coEvery {
             service.linkPhone(
                 authorization = any(),
@@ -316,7 +319,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun linkFacebookSuccess() = mainCoroutineRule.runBlockingTest {
+    fun linkFacebookSuccess() = testScope.runTest {
         coEvery {
             service.linkFacebook(
                 authorization = any(),
@@ -328,7 +331,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun linkFacebookFailure() = mainCoroutineRule.runBlockingTest {
+    fun linkFacebookFailure() = testScope.runTest {
         coEvery {
             service.linkFacebook(
                 authorization = any(),
@@ -348,7 +351,7 @@ class ProfileWebImplTest {
 
 
     @Test
-    fun linkContactEmailSuccess() = mainCoroutineRule.runBlockingTest {
+    fun linkContactEmailSuccess() = testScope.runTest {
         coEvery {
             service.linkContactEmail(
                 authorization = any(),
@@ -360,7 +363,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun linkContactEmailFailure() = mainCoroutineRule.runBlockingTest {
+    fun linkContactEmailFailure() = testScope.runTest {
         coEvery {
             service.linkContactEmail(
                 authorization = any(),
@@ -380,7 +383,7 @@ class ProfileWebImplTest {
 
 
     @Test
-    fun convertGuestByEmailSuccess() = mainCoroutineRule.runBlockingTest {
+    fun convertGuestByEmailSuccess() = testScope.runTest {
         coEvery {
             service.convertGuestByEmail(
                 authorization = any(),
@@ -392,7 +395,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun convertGuestByEmailFailure() = mainCoroutineRule.runBlockingTest {
+    fun convertGuestByEmailFailure() = testScope.runTest {
         coEvery {
             service.convertGuestByEmail(
                 authorization = any(),
@@ -411,7 +414,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun convertGuestBySmsSuccess() = mainCoroutineRule.runBlockingTest {
+    fun convertGuestBySmsSuccess() = testScope.runTest {
         coEvery {
             service.convertGuestBySms(
                 authorization = any(),
@@ -423,7 +426,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun convertGuestBySmsFailure() = mainCoroutineRule.runBlockingTest {
+    fun convertGuestBySmsFailure() = testScope.runTest {
         coEvery {
             service.convertGuestBySms(
                 authorization = any(),
@@ -442,7 +445,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun changePasswordSuccess() = mainCoroutineRule.runBlockingTest {
+    fun changePasswordSuccess() = testScope.runTest {
         coEvery {
             service.changePassword(
                 authorization = any(),
@@ -454,7 +457,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun changePasswordFailure() = mainCoroutineRule.runBlockingTest {
+    fun changePasswordFailure() = testScope.runTest {
         coEvery {
             service.changePassword(
                 authorization = any(),
@@ -473,7 +476,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun resetPasswordByEmailSuccess() = mainCoroutineRule.runBlockingTest {
+    fun resetPasswordByEmailSuccess() = testScope.runTest {
         coEvery {
             service.resetPasswordByEmail(body = any())
         } returns Response.success(204, null as? Void)
@@ -482,7 +485,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun resetPasswordByEmailFailure() = mainCoroutineRule.runBlockingTest {
+    fun resetPasswordByEmailFailure() = testScope.runTest {
         coEvery {
             service.resetPasswordByEmail(body = any())
         } returns Response.error(
@@ -498,7 +501,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun resetPasswordBySmsSuccess() = mainCoroutineRule.runBlockingTest {
+    fun resetPasswordBySmsSuccess() = testScope.runTest {
         coEvery {
             service.resetPasswordBySms(body = any())
         } returns Response.success(204, null as? Void)
@@ -507,7 +510,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun resetPasswordBySmsFailure() = mainCoroutineRule.runBlockingTest {
+    fun resetPasswordBySmsFailure() = testScope.runTest {
         coEvery {
             service.resetPasswordBySms(body = any())
         } returns Response.error(
@@ -523,7 +526,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun signUpByEmail() = mainCoroutineRule.runBlockingTest {
+    fun signUpByEmail() = testScope.runTest {
         coEvery {
             service.signUpByEmail(body = any())
         } returns Response.success(204, null as? Void)
@@ -532,7 +535,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun signUpByEmailError() = mainCoroutineRule.runBlockingTest {
+    fun signUpByEmailError() = testScope.runTest {
         coEvery {
             service.signUpByEmail(body = any())
         } returns Response.error(
@@ -550,7 +553,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun signUpByPhone() = mainCoroutineRule.runBlockingTest {
+    fun signUpByPhone() = testScope.runTest {
         coEvery {
             service.signUpByPhone(body = any())
         } returns Response.success(204, null as? Void)
@@ -559,7 +562,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun signUpByPhoneFailure() = mainCoroutineRule.runBlockingTest {
+    fun signUpByPhoneFailure() = testScope.runTest {
         coEvery {
             service.signUpByPhone(body = any())
         } returns Response.error(
@@ -577,7 +580,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun getRegistrationCodeByEmail() = mainCoroutineRule.runBlockingTest {
+    fun getRegistrationCodeByEmail() = testScope.runTest {
         coEvery {
             service.getRegistrationCodeByEmail(body = any())
         } returns Response.success(
@@ -598,7 +601,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun getRegistrationCodeByEmailFailure() = mainCoroutineRule.runBlockingTest {
+    fun getRegistrationCodeByEmailFailure() = testScope.runTest {
         coEvery {
             service.getRegistrationCodeByEmail(body = any())
         } returns Response.error(
@@ -616,7 +619,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun getRegistrationCodeByPhone() = mainCoroutineRule.runBlockingTest {
+    fun getRegistrationCodeByPhone() = testScope.runTest {
         coEvery {
             service.getRegistrationCodeByPhone(body = any())
         } returns Response.success(
@@ -637,7 +640,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun getRegistrationCodeByPhoneFailure() = mainCoroutineRule.runBlockingTest {
+    fun getRegistrationCodeByPhoneFailure() = testScope.runTest {
         coEvery {
             service.getRegistrationCodeByPhone(body = any())
         } returns Response.error(
@@ -655,7 +658,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun signUpCompleteByEmail() = mainCoroutineRule.runBlockingTest {
+    fun signUpCompleteByEmail() = testScope.runTest {
         coEvery {
             service.signUpCompleteByEmail(body = any())
         } returns Response.success(
@@ -679,7 +682,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun signUpCompleteByEmailFailure() = mainCoroutineRule.runBlockingTest {
+    fun signUpCompleteByEmailFailure() = testScope.runTest {
         coEvery {
             service.signUpCompleteByEmail(body = any())
         } returns Response.error(
@@ -697,7 +700,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun signUpCompleteByPhone() = mainCoroutineRule.runBlockingTest {
+    fun signUpCompleteByPhone() = testScope.runTest {
         coEvery {
             service.signUpCompleteByPhone(body = any())
         } returns Response.success(
@@ -720,7 +723,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun signupCompleteByPhoneFailure() = mainCoroutineRule.runBlockingTest {
+    fun signupCompleteByPhoneFailure() = testScope.runTest {
         coEvery {
             service.signUpCompleteByPhone(body = any())
         } returns Response.error(
@@ -738,7 +741,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun `getMyUserGraphQlInfo 取得暱稱及頭像`() = mainCoroutineRule.runBlockingTest {
+    fun `getMyUserGraphQlInfo 取得暱稱及頭像`() = testScope.runTest {
         val responseBody =
             """{"nickname": "泰瑞瑞瑞瑞","image": "https://storage.googleapis.com/cmoney-image/1378ceeb-2f10-4ef5-8d38-cb63f8f97422"}""".toResponseBody()
         coEvery {
@@ -767,7 +770,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun `getMyUserGraphQlInfo 取得暱稱及頭像失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `getMyUserGraphQlInfo 取得暱稱及頭像失敗`() = testScope.runTest {
         coEvery {
             service.getMyUserGraphQlInfo(
                 authorization = any(),
@@ -796,7 +799,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun `getSelfMemberProfile 取得暱稱及頭像`() = mainCoroutineRule.runBlockingTest {
+    fun `getSelfMemberProfile 取得暱稱及頭像`() = testScope.runTest {
         val responseBody =
             """{"nickname": "泰瑞瑞瑞瑞","image": "https://storage.googleapis.com/cmoney-image/1378ceeb-2f10-4ef5-8d38-cb63f8f97422"}""".toResponseBody()
         coEvery {
@@ -822,7 +825,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun `getSelfMemberProfile 取得暱稱及頭像失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `getSelfMemberProfile 取得暱稱及頭像失敗`() = testScope.runTest {
         coEvery {
             service.getMyUserGraphQlInfo(
                 authorization = any(),
@@ -848,7 +851,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun `mutationMyUserGraphQlInfo 更新暱稱及頭像`() = mainCoroutineRule.runBlockingTest {
+    fun `mutationMyUserGraphQlInfo 更新暱稱及頭像`() = testScope.runTest {
         val responseBody =
             """{"nickname": "泰瑞瑞瑞瑞","image": "https://storage.googleapis.com/cmoney-image/1378ceeb-2f10-4ef5-8d38-cb63f8f97422"}""".toResponseBody()
         coEvery {
@@ -877,7 +880,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun `mutationMyUserGraphQlInfo 更新暱稱及頭像失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `mutationMyUserGraphQlInfo 更新暱稱及頭像失敗`() = testScope.runTest {
         coEvery {
             service.mutationMyUserGraphQlInfo(
                 authorization = any(),
@@ -906,7 +909,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun `mutateMemberProfile 更新暱稱及頭像`() = mainCoroutineRule.runBlockingTest {
+    fun `mutateMemberProfile 更新暱稱及頭像`() = testScope.runTest {
         val responseBody =
             """{"nickname": "泰瑞瑞瑞瑞","image": "https://storage.googleapis.com/cmoney-image/1378ceeb-2f10-4ef5-8d38-cb63f8f97422"}""".toResponseBody()
         coEvery {
@@ -929,7 +932,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun `mutateMemberProfile 更新暱稱及頭像失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `mutateMemberProfile 更新暱稱及頭像失敗`() = testScope.runTest {
         coEvery {
             service.mutationMyUserGraphQlInfo(
                 authorization = any(),
@@ -957,7 +960,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun `getNicknameAndAvatar 取得 id 清單的暱稱及頭像`() = mainCoroutineRule.runBlockingTest {
+    fun `getNicknameAndAvatar 取得 id 清單的暱稱及頭像`() = testScope.runTest {
         val responseBody =
             """[{"id": 1,"nickname": "泰瑞瑞瑞瑞","image": "https://storage.googleapis.com/cmoney-image/1378ceeb-2f10-4ef5-8d38-cb63f8f97422"}]""".toResponseBody()
         coEvery {
@@ -985,7 +988,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun `getNicknameAndAvatarFailure 取得 id 清單的暱稱及頭像失敗`() = mainCoroutineRule.runBlockingTest {
+    fun `getNicknameAndAvatarFailure 取得 id 清單的暱稱及頭像失敗`() = testScope.runTest {
         coEvery {
             service.getUserGraphQLInfo(
                 authorization = any(),
@@ -1012,7 +1015,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun `getOtherMemberProfiles_取得成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getOtherMemberProfiles_取得成功`() = testScope.runTest {
         val memberId = 1L
         val testNickName = "測試帳號"
         val rawOtherMemberProfile = RawOtherMemberProfile(
@@ -1050,7 +1053,7 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun `getOtherMemberProfiles_取得失敗_401`() = mainCoroutineRule.runBlockingTest {
+    fun `getOtherMemberProfiles_取得失敗_401`() = testScope.runTest {
         coEvery {
             service.getUserGraphQLInfo(
                 authorization = any(),

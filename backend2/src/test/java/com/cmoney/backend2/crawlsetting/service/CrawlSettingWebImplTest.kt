@@ -1,15 +1,16 @@
 package com.cmoney.backend2.crawlsetting.service
 
-import com.cmoney.backend2.MainCoroutineRule
 import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.core.CoroutineTestRule
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runTest
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Before
 import org.junit.Rule
@@ -22,8 +23,9 @@ import retrofit2.Response
 @RunWith(RobolectricTestRunner::class)
 class CrawlSettingWebImplTest {
 
+    private val testScope = TestScope()
     @get:Rule
-    val mainCoroutineRule = MainCoroutineRule()
+    val mainCoroutineRule = CoroutineTestRule(testScope = testScope)
 
     @MockK
     private lateinit var service: CrawlSettingService
@@ -45,7 +47,7 @@ class CrawlSettingWebImplTest {
     }
 
     @Test
-    fun getCathayCaStatus_success(): Unit = mainCoroutineRule.runBlockingTest {
+    fun getCathayCaStatus_success(): Unit = testScope.runTest {
         val responseBody = "1234"
         coEvery {
             service.getCathayCaStatus(
@@ -66,7 +68,7 @@ class CrawlSettingWebImplTest {
     }
 
     @Test
-    fun getCathayCaStatus_401_UNAUTHORIZATION(): Unit = mainCoroutineRule.runBlockingTest {
+    fun getCathayCaStatus_401_UNAUTHORIZATION(): Unit = testScope.runTest {
         coEvery {
             service.getCathayCaStatus(
                 url = any(),
@@ -86,7 +88,7 @@ class CrawlSettingWebImplTest {
     }
 
     @Test
-    fun getTaishinCaStatus_success(): Unit = mainCoroutineRule.runBlockingTest {
+    fun getTaishinCaStatus_success(): Unit = testScope.runTest {
         val responseBody = "1234"
         coEvery {
             service.getTaishinCaStatus(
@@ -107,7 +109,7 @@ class CrawlSettingWebImplTest {
     }
 
     @Test
-    fun getTaishinCaStatus_401_UNAUTHORIZATION(): Unit = mainCoroutineRule.runBlockingTest {
+    fun getTaishinCaStatus_401_UNAUTHORIZATION(): Unit = testScope.runTest {
         coEvery {
             service.getTaishinCaStatus(
                 url = any(),

@@ -1,6 +1,5 @@
 package com.cmoney.backend2.portal.service
 
-import com.cmoney.backend2.MainCoroutineRule
 import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.ServerException
@@ -8,6 +7,8 @@ import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.portal.service.api.getadditionalinfo.CmPortalAdditionWithError
 import com.cmoney.backend2.portal.service.api.getsignals.CmPortalSignalWithError
 import com.cmoney.backend2.portal.service.api.gettarget.CmPortalTargetWithError
+import com.cmoney.core.CoroutineTestRule
+
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
@@ -15,7 +16,8 @@ import io.mockk.MockKMatcherScope
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -29,8 +31,9 @@ import retrofit2.Response
 @Config(manifest = Config.NONE)
 class PortalWebImplTest {
 
+    private val testScope = TestScope()
     @get:Rule
-    val mainCoroutineRule = MainCoroutineRule()
+    val mainCoroutineRule = CoroutineTestRule(testScope = testScope)
 
     @MockK
     private lateinit var portalService: PortalService
@@ -59,7 +62,7 @@ class PortalWebImplTest {
     }
 
     @Test
-    fun `getTarget_response code is 1_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getTarget_response code is 1_成功`() = testScope.runTest {
         val responseBody = CmPortalTargetWithError(
             tseAndOtc = listOf("1101", "1102"),
             stockFutures = listOf("1101", "1102", "1103"),
@@ -88,7 +91,7 @@ class PortalWebImplTest {
     }
 
     @Test
-    fun `getTarget_response code is 100_參數錯誤`() = mainCoroutineRule.runBlockingTest {
+    fun `getTarget_response code is 100_參數錯誤`() = testScope.runTest {
         val responseBodyJson = """
             {"Error":{"Code":100,"Message":"參數錯誤"}}
         """.trimIndent()
@@ -105,7 +108,7 @@ class PortalWebImplTest {
     }
 
     @Test
-    fun `getTarget_response code is 101_身分驗證錯誤`() = mainCoroutineRule.runBlockingTest {
+    fun `getTarget_response code is 101_身分驗證錯誤`() = testScope.runTest {
         val responseBodyJson = """
             {"Error":{"Code":101,"Message":"身分驗證錯誤"}} 
         """.trimIndent()
@@ -122,7 +125,7 @@ class PortalWebImplTest {
     }
 
     @Test
-    fun `getSignals_response code is 1_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getSignals_response code is 1_成功`() = testScope.runTest {
         val responseBody = CmPortalSignalWithError(
             columns = listOf(
                 "CommKey",
@@ -196,7 +199,7 @@ class PortalWebImplTest {
     }
 
     @Test
-    fun `getSignals_response code is 100_參數錯誤`() = mainCoroutineRule.runBlockingTest {
+    fun `getSignals_response code is 100_參數錯誤`() = testScope.runTest {
         val responseBodyJson = """
             {"Error":{"Code":100,"Message":"參數錯誤"}}
         """.trimIndent()
@@ -215,7 +218,7 @@ class PortalWebImplTest {
     }
 
     @Test
-    fun `getSignals_response code is 101_身分驗證錯誤`() = mainCoroutineRule.runBlockingTest {
+    fun `getSignals_response code is 101_身分驗證錯誤`() = testScope.runTest {
         val responseBodyJson = """
             {"Error":{"Code":101,"Message":"身分驗證錯誤"}} 
         """.trimIndent()
@@ -232,7 +235,7 @@ class PortalWebImplTest {
     }
 
     @Test
-    fun `getAdditionalInfo_response code is 1_成功`() = mainCoroutineRule.runBlockingTest {
+    fun `getAdditionalInfo_response code is 1_成功`() = testScope.runTest {
         val responseBody = CmPortalAdditionWithError(
             columns = listOf("標的", "即時成交價", "漲跌幅", "總量", "五日均量"),
             rows = listOf(listOf("1301", "103", "-9.25", "26307", "8502.4"))
@@ -252,7 +255,7 @@ class PortalWebImplTest {
     }
 
     @Test
-    fun `getAdditionalInfo_response code is 100_參數錯誤`() = mainCoroutineRule.runBlockingTest {
+    fun `getAdditionalInfo_response code is 100_參數錯誤`() = testScope.runTest {
         val responseBodyJson = """
             {"Error":{"Code":100,"Message":"參數錯誤"}}
         """.trimIndent()
@@ -271,7 +274,7 @@ class PortalWebImplTest {
     }
 
     @Test
-    fun `getAdditionalInfo_response code is 101_身分驗證錯誤`() = mainCoroutineRule.runBlockingTest {
+    fun `getAdditionalInfo_response code is 101_身分驗證錯誤`() = testScope.runTest {
         val responseBodyJson = """
             {"Error":{"Code":101,"Message":"身分驗證錯誤"}} 
         """.trimIndent()
