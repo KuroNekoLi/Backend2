@@ -1,3 +1,19 @@
+#  (2022-09-07)
+
+
+
+# [5.38.0](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.38.0-beta02...5.38.0) (2022-09-07)
+
+
+### Features
+
+* 更新BuildSrc 中 Dependencies.kt, Versions.kt，
+* Kotlin升級至1.6.21，targetSdk升至32
+* 專案更新 Gradle Plugin to 7.1.3, 升級 Gradle to 7.2
+* 更新LogDataRecorder to 5.3.0
+* UnitTest 中 Coroutines Dispatchers.setMain 改為使用 utils-test 的 CoroutineTestRule 進行設定
+
+
 #  (2022-09-05)
 
 
