@@ -10,6 +10,7 @@ import com.cmoney.backend2.forumocean.service.api.article.getbanstate.GetBanStat
 import com.cmoney.backend2.forumocean.service.api.article.update.UpdateArticleRequestBody
 import com.cmoney.backend2.forumocean.service.api.channel.getchannelsarticlebyweight.GetChannelsArticleByWeightRequestBody
 import com.cmoney.backend2.forumocean.service.api.channel.getmemberstatistics.GetMemberStatisticsResponseBody
+import com.cmoney.backend2.forumocean.service.api.columnist.Columnist
 import com.cmoney.backend2.forumocean.service.api.columnist.GetColumnistVipGroupResponse
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentRequestBody
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBody
@@ -1472,4 +1473,11 @@ interface ForumOceanService {
         @Path("path") path: String,
         @Body body: ReviewRequest
     ): Response<String>
+
+    @RecordApi
+    @GET("{path}/api/Columnist/All")
+    suspend fun getColumnistAll(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String
+    ): Response<List<Columnist>>
 }
