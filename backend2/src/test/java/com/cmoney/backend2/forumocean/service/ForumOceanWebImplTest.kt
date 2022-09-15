@@ -4682,7 +4682,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `取得專欄作家清單_success`() = testScope.runTest {
+    fun `取得專欄作家清單_success`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.getColumnistAll(
                 authorization = any(),
@@ -4695,7 +4695,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `取得專欄作家清單_failed`() = testScope.runTest {
+    fun `取得專欄作家清單_failed`() = mainCoroutineRule.runBlockingTest {
         coEvery {
             forumOceanService.getColumnistAll(
                 authorization = any(),
