@@ -1401,4 +1401,9 @@ interface ForumOceanWeb {
      * 滿分為5, 評論字數不可多於200
      */
     suspend fun reviewUser(request: ReviewRequest): Result<String>
+
+    /**
+     * 取得專欄作家清單
+     */
+    suspend fun getColumnistAll(): Result<List<Long>>
 }

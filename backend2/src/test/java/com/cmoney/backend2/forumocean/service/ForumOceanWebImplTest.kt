@@ -4680,4 +4680,30 @@ class ForumOceanWebImplTest {
         )
         assertThat(result.isFailure).isTrue()
     }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得專欄作家清單_success`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getColumnistAll(
+                authorization = any(),
+                path = any()
+            )
+        } returns Response.success(listOf())
+        val result = web.getColumnistAll()
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得專欄作家清單_failed`() = mainCoroutineRule.runBlockingTest {
+        coEvery {
+            forumOceanService.getColumnistAll(
+                authorization = any(),
+                path = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getColumnistAll()
+        assertThat(result.isFailure).isTrue()
+    }
 }
