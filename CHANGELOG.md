@@ -1,9 +1,28 @@
+#  (2022-09-16)
+
+
+
+# [5.39.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.38.0...5.39.0) (2022-09-16)
+
+
+### Bug Fixes
+
+* Build ([35ef088](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/35ef088e671a223ad9135bbb763e4151f0bd00bf))
+
+
+### Features
+
+* ForumOceanWeb 新增 GetColumnistAll ([79d8332](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/79d83327ac3642b2c2bf3ef1aa157cf63cb6c8de))
+
+
+
 #  (2022-09-07)
 
 
 
-# [5.38.0](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.38.0-beta02...5.38.0) (2022-09-07)
+# [5.38.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.38.0-beta02...5.38.0) (2022-09-07)
 
+> support Kotlin 1.6.21
 
 ### Features
 
