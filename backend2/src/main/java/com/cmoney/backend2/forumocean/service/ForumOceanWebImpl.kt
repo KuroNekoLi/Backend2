@@ -1922,4 +1922,17 @@ class ForumOceanWebImpl(
             }
         }
     }
+
+    override suspend fun getColumnistAll(): Result<List<Long>> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.getColumnistAll(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer()
+                ).checkResponseBody(jsonParser).mapNotNull {
+                    it.memberId
+                }
+            }
+        }
+    }
 }

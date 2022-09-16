@@ -4680,4 +4680,30 @@ class ForumOceanWebImplTest {
         )
         assertThat(result.isFailure).isTrue()
     }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得專欄作家清單_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getColumnistAll(
+                authorization = any(),
+                path = any()
+            )
+        } returns Response.success(listOf())
+        val result = web.getColumnistAll()
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得專欄作家清單_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getColumnistAll(
+                authorization = any(),
+                path = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getColumnistAll()
+        assertThat(result.isFailure).isTrue()
+    }
 }
