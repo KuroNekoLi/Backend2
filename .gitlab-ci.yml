@@ -56,6 +56,7 @@ unit_test:
   stage: unit_test
   script:
     - ./gradlew backend2:testReleaseUnitTest
+    - ./gradlew koverMergedXmlReport
   tags:
     - mac_studio
 
