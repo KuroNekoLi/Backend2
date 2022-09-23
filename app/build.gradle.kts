@@ -51,10 +51,10 @@ dependencies {
     implementation(Dependencies.ANDROID_LIFECYCLE_LIVE_DATA_KTX)
     implementation(Dependencies.ANDROID_LIFECYCLE_RUNTIME_KTX)
     implementation(Dependencies.ANDROID_LIFECYCLE_VIEWMODEL_KTX)
-    implementation(Dependencies.KOIN_ANDROID_EXT)
-    implementation(Dependencies.KOIN_ANDROIDX_VIEWMODEL)
     implementation(Dependencies.GSON)
     implementation(Dependencies.COROUTINES_ANDROID)
+    //koin
+    implementation(Dependencies.KOIN_ANDROID)
 
     implementation(project(":backend2"))
     implementation(Dependencies.LOG_DATA_RECORDER_DATA)

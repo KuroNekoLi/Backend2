@@ -69,8 +69,7 @@ object Versions {
     const val LOGGER = "2.2.0"
     const val TIMBER = "5.0.1"
     // DI
-    // TODO has new version
-    const val KOIN = "2.2.3"
+    const val KOIN = "3.2.1"
     // UI
     const val GLIDE = "4.13.2"
     const val PHOTOVIEW = "2.3.0"
