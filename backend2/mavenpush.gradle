@@ -10,8 +10,8 @@ project.afterEvaluate {
         publications {
             //需要debug版本才需要
             mavenDebugAAR(MavenPublication) {
-                groupId POM_GROUP_ID
-                artifactId POM_ARTIFACT_ID_DEBUG
+                groupId ModuleConfig.POM_GROUP_ID
+                artifactId ModuleConfig.POM_ARTIFACT_ID_DEBUG
                 version ModuleConfig.PROJECT_VERSION
                 artifact bundleDebugAar
                 artifact androidSourcesJar
@@ -54,8 +54,8 @@ project.afterEvaluate {
                 }
             }
             mavenReleaseAAR(MavenPublication) {
-                groupId POM_GROUP_ID
-                artifactId POM_ARTIFACT_ID_RELEASE
+                groupId ModuleConfig.POM_GROUP_ID
+                artifactId ModuleConfig.POM_ARTIFACT_ID_RELEASE
                 version = ModuleConfig.PROJECT_VERSION
                 artifact bundleReleaseAar
 
@@ -101,11 +101,11 @@ project.afterEvaluate {
             maven {
                 name 'release'
 //                url "$buildDir/repository"//上傳之前可以先在Local的build看是否正確
-                url RELEASE_URL
+                url ModuleConfig.RELEASE_URL
                 setAllowInsecureProtocol(true)
                 credentials {
-                    username USER_NAME
-                    password USER_PASSWORD
+                    username ModuleConfig.USER_NAME
+                    password ModuleConfig.USER_PASSWORD
                 }
             }
         }
