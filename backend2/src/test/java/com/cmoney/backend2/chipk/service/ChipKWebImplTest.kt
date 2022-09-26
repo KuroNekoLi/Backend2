@@ -4,6 +4,7 @@ import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.response.dtno.DtnoWithError
+import com.cmoney.backend2.chipk.service.api.futuredaytradedtnodata.FutureDayTradeDtnoWithError
 import com.cmoney.backend2.chipk.service.api.getOfficialStockPickData.OfficialStock
 import com.cmoney.backend2.chipk.service.api.getOfficialStockPickData.OfficialStockInfoWithError
 import com.cmoney.backend2.chipk.service.api.internationalkchart.ProductType
@@ -740,6 +741,77 @@ class ChipKWebImplTest {
             )
         } returns Response.success(responseBody)
         val result = chipKWeb.getIndexCalculateRate("TWA00", 1)
+        Truth.assertThat(result.isSuccess).isFalse()
+    }
+
+    @Test
+    fun `getFutureDayTradeIndexAnalysis_success`() = testScope.runTest {
+        val response = FutureDayTradeDtnoWithError(
+            title = listOf(
+                "外資淨未平倉",
+                "外資期貨未平倉增減",
+                "散戶淨未平倉",
+                "散戶期貨未平倉增減",
+                "三大法人買賣超(億)",
+                "外資買賣超(億)",
+                "投信買賣超(億)",
+                "自營商買賣超(億)",
+                "官股買賣超(億)",
+                "融資變動(億)",
+                "融券變動(億)",
+                "盤勢多空"
+            ),
+            data = listOf(
+                "4661",
+                "-1522.00",
+                "14778",
+                "5568.00",
+                "-168.5",
+                "-140.5",
+                "1.0",
+                "-28.9",
+                "-2.71",
+                "-10.29",
+                "-1.12",
+                "強空"
+            )
+        )
+        coEvery {
+            chipKService.getFutureDayTradeIndexAnalysis(
+                authorization = any(),
+                appId = any(),
+                guid = any()
+            )
+        } returns Response.success(response)
+        val result = chipKWeb.getFutureDayTradeIndexAnalysis()
+        Truth.assertThat(result.isSuccess).isTrue()
+        val data = result.getOrThrow()
+        Truth.assertThat(data).isNotNull()
+    }
+
+    @Test
+    fun `getFutureDayTradeIndexAnalysis_failure`() = testScope.runTest {
+        val responseBodyJson = """
+            {
+                "error": {
+                    "Code": 3,
+                    "Message": "找不到對應的Dtno"
+                },
+                "Error": {
+                    "Code": 3,
+                    "Message": "找不到對應的Dtno"
+                }
+            }
+        """.trimIndent()
+        val responseBody = gson.fromJson(responseBodyJson, FutureDayTradeDtnoWithError::class.java)
+        coEvery {
+            chipKService.getFutureDayTradeIndexAnalysis(
+                authorization = any(),
+                appId = any(),
+                guid = any()
+            )
+        } returns Response.success(responseBody)
+        val result = chipKWeb.getFutureDayTradeIndexAnalysis()
         Truth.assertThat(result.isSuccess).isFalse()
     }
 }
