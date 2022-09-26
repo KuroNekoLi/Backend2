@@ -9,7 +9,7 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 
 val realtimeAfterMarketServiceModule = module {
-    single<RealTimeAfterMarketService> {
+    single {
         get<Retrofit>(BACKEND2_RETROFIT).create(RealTimeAfterMarketService::class.java)
     }
     single<RealTimeAfterMarketWeb> {

@@ -10,7 +10,7 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 
 val chipkServiceModule = module {
-    single<ChipKService> {
+    single {
         get<Retrofit>(BACKEND2_RETROFIT).create(ChipKService::class.java)
     }
     single<ChipKWeb> {

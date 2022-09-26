@@ -10,7 +10,7 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 
 val cellphoneServiceModule = module {
-    single<CellphoneService> {
+    single {
         get<Retrofit>(BACKEND2_RETROFIT).create(CellphoneService::class.java)
     }
     single<CellphoneWeb> {

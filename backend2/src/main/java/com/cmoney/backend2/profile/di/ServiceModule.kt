@@ -10,7 +10,7 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 
 val profileServiceModule = module {
-    single<ProfileService> {
+    single {
         get<Retrofit>(BACKEND2_RETROFIT).create(ProfileService::class.java)
     }
     single<ProfileWeb> {

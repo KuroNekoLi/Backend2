@@ -10,7 +10,7 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 
 val notification2ServiceModule = module {
-    single<Notification2Service> {
+    single {
         get<Retrofit>(BACKEND2_RETROFIT).create(Notification2Service::class.java)
     }
     single<Notification2Web> {

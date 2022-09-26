@@ -10,7 +10,7 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 
 val customGroup2ServiceModule = module {
-    single<CustomGroup2Service> {
+    single {
         get<Retrofit>(BACKEND2_RETROFIT).create(CustomGroup2Service::class.java)
     }
     single<CustomGroup2Web> {
