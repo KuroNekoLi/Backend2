@@ -8,6 +8,7 @@ import com.cmoney.backend2.base.model.request.Constant
 import com.cmoney.backend2.base.model.response.dtno.DtnoData
 import com.cmoney.backend2.base.model.response.error.CMoneyError
 import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.backend2.chipk.service.api.futuredaytradedtnodata.FutureDayTradeDtnoData
 import com.cmoney.backend2.chipk.service.api.getOfficialStockPickData.OfficialStockInfo
 import com.cmoney.backend2.chipk.service.api.internationalkchart.ProductType
 import com.cmoney.backend2.chipk.service.api.internationalkchart.TickInfoSet
@@ -83,7 +84,7 @@ class ChipKWebImpl(
     override suspend fun getInternationalKChart(
         id: String,
         productType: ProductType
-    ): Result<TickInfoSet> = withContext(dispatcher.io()){
+    ): Result<TickInfoSet> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             val response = service.getInternationalKData(
                 authorization = setting.accessToken.createAuthorizationBearer(),
@@ -215,5 +216,26 @@ class ChipKWebImpl(
             )
         }
     }
+
+    /**
+     * 期貨盤後資訊
+     * 服務 - 官股、融資
+     * 取得盤後官股、融資變動以及三大法人買賣超
+     */
+    override suspend fun getFutureDayTradeIndexAnalysis(): Result<FutureDayTradeDtnoData> =
+        withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                val response = service.getFutureDayTradeIndexAnalysis(
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    appId = setting.appId,
+                    guid = setting.identityToken.getMemberGuid()
+                )
+                response.checkIsSuccessful()
+                    .requireBody()
+                    .checkIWithError()
+                    .toRealResponse()
+            }
+        }
+
 }
 

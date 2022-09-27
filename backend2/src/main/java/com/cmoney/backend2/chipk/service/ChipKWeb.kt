@@ -1,6 +1,7 @@
 package com.cmoney.backend2.chipk.service
 
 import com.cmoney.backend2.base.model.response.dtno.DtnoData
+import com.cmoney.backend2.chipk.service.api.futuredaytradedtnodata.FutureDayTradeDtnoData
 import com.cmoney.backend2.chipk.service.api.getOfficialStockPickData.OfficialStockInfo
 import com.cmoney.backend2.chipk.service.api.internationalkchart.ProductType
 import com.cmoney.backend2.chipk.service.api.internationalkchart.TickInfoSet
@@ -108,4 +109,11 @@ interface ChipKWeb {
     suspend fun getOfficialStockPickTitle(
         type: Int
     ): Result<List<String>>
+
+    /**
+     * 期貨盤後資訊
+     * 服務 - 官股、融資
+     * 取得盤後官股、融資變動以及三大法人買賣超
+     */
+    suspend fun getFutureDayTradeIndexAnalysis(): Result<FutureDayTradeDtnoData>
 }

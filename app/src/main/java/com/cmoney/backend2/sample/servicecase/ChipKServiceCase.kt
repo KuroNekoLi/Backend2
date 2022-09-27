@@ -33,6 +33,9 @@ class ChipKServiceCase : ServiceCase {
 
             //服務6-11. 取得指數技術圖
             getIndexCalculateRate("TWA00", 1).logResponse("TAG_6-11")
+
+            //期貨盤後資訊 服務 - 官股、融資
+            getFutureDayTradeIndexAnalysis().logResponse("TAG")
         }
     }
 }
