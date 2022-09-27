@@ -2,11 +2,11 @@ package com.cmoney.backend2.forumocean.service.api.variable.response.articleresp
 
 /**
  * 請加入以下欄位
- * @SerializedName("interested")
+ * @SerializedName("interested", alternate = ["hasInterest"])
  * val interested : Any?
- * @SerializedName("@hash-interest")
+ * @SerializedName("@hash-interest", alternate = ["interestedCount"])
  * val interestCount : Int?
- * @SerializedName("RewardPoints")
+ * @SerializedName("rewardPoints")
  * val rewardPoints : Int?
  *
  */
@@ -15,7 +15,7 @@ interface QuestionInfo {
     /**
      * 是否感興趣，有此屬性代表感興趣
      */
-    val interested : Any?
+    val interested : Any? // TODO: Change this field to boolean after all api migrate to boolean type.
 
     /**
      * 感興趣的人總數

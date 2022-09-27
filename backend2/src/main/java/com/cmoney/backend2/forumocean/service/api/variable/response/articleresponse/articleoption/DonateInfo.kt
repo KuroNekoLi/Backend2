@@ -2,10 +2,8 @@ package com.cmoney.backend2.forumocean.service.api.variable.response.articleresp
 
 /**
  * 請加入以下欄位
- * @SerializedName("@vhash-donate")
+ * @SerializedName("@vhash-donate", alternate = ["donation"])
  * val donateCount : Int?
- * @SerializedName("donate")
- * val donate : Int?
  */
 interface DonateInfo {
 
@@ -13,9 +11,4 @@ interface DonateInfo {
      * 總打賞金額
      */
     val donateCount : Int?
-
-    /**
-     * 使用者對文章打賞的金額
-     */
-    val donate : Int?
 }

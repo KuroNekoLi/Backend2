@@ -5,7 +5,7 @@ package com.cmoney.backend2.forumocean.service.api.variable.response.articleresp
  * 請加入以下欄位
  * @SerializedName("@value-reportCount")
  * val totalReportCount: Int?
- * @SerializedName("report")
+ * @SerializedName("report", alternate = ["hasReport"])
  * val report: Any?
  *
  */
@@ -18,5 +18,5 @@ interface ReportInfo {
     /**
      * 是否檢舉
      */
-    val report: Any?
+    val report: Any? // TODO: Change this field to boolean after all api migrate to boolean type.
 }

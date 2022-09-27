@@ -11,6 +11,8 @@ import com.cmoney.backend2.forumocean.service.api.channel.channelname.IChannelNa
 import com.cmoney.backend2.forumocean.service.api.channel.getmemberstatistics.GetMemberStatisticsResponseBody
 import com.cmoney.backend2.forumocean.service.api.columnist.GetColumnistVipGroupResponse
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBody
+import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBodyV2
+import com.cmoney.backend2.forumocean.service.api.comment.hide.HideCommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.comment.update.IUpdateCommentHelper
 import com.cmoney.backend2.forumocean.service.api.group.create.CreateGroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.getapprovals.GroupPendingApproval
@@ -53,6 +55,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.request.ReactionType
 import com.cmoney.backend2.forumocean.service.api.variable.request.mediatype.MediaType
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBody
+import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBodyV2
 import com.cmoney.backend2.forumocean.service.api.variable.response.groupresponse.GroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.ReactionInfo
 import com.cmoney.backend2.forumocean.service.api.vote.get.VoteInfo
@@ -99,6 +102,7 @@ interface ForumOceanWeb {
      * @param articleId 文章Id
      * @return 文章資訊
      */
+    @Deprecated("請使用getArticleV2")
     suspend fun getArticle(articleId: Long): Result<ArticleResponseBody.GeneralArticleResponseBody>
 
     /**
@@ -107,6 +111,7 @@ interface ForumOceanWeb {
      * @param articleId 文章Id
      * @return 文章資訊
      */
+    @Deprecated("請使用getQuestionArticleV2")
     suspend fun getQuestionArticle(articleId: Long): Result<ArticleResponseBody.QuestionArticleResponseBody>
 
     /**
@@ -115,6 +120,7 @@ interface ForumOceanWeb {
      * @param articleId 文章Id
      * @return 文章資訊
      */
+    @Deprecated("請使用getGroupArticleV2")
     suspend fun getGroupArticle(articleId: Long): Result<ArticleResponseBody.GroupArticleResponseBody>
 
     /**
@@ -123,6 +129,7 @@ interface ForumOceanWeb {
      * @param articleId 文章Id
      * @return 文章資訊
      */
+    @Deprecated("請使用getSharedArticleV2")
     suspend fun getSharedArticle(articleId: Long): Result<ArticleResponseBody.SharedArticleResponseBody>
 
     /**
@@ -131,6 +138,7 @@ interface ForumOceanWeb {
      * @param articleId 文章Id
      * @return 文章資訊
      */
+    @Deprecated("請使用getSignalArticleV2")
     suspend fun getSignalArticle(articleId: Long): Result<ArticleResponseBody.SignalArticleResponseBody>
 
     /**
@@ -139,6 +147,7 @@ interface ForumOceanWeb {
      * @param articleId 文章Id
      * @return 文章資訊
      */
+    @Deprecated("請使用getNewsArticleV2")
     suspend fun getNewsArticle(articleId: Long): Result<ArticleResponseBody.NewsArticleResponseBody>
 
     /**
@@ -147,6 +156,7 @@ interface ForumOceanWeb {
      * @param articleId 文章Id
      * @return 文章資訊
      */
+    @Deprecated("請使用getPersonalArticleV2")
     suspend fun getPersonalArticle(articleId: Long): Result<ArticleResponseBody.PersonalArticleResponseBody>
 
     /**
@@ -155,7 +165,72 @@ interface ForumOceanWeb {
      * @param articleId 文章Id
      * @return 文章資訊
      */
+    @Deprecated("請使用getUnknownArticleV2")
     suspend fun getUnknownArticle(articleId: Long): Result<ArticleResponseBody.UnknownArticleResponseBody>
+
+    /**
+     * 取得一般文章v2
+     *
+     * @param articleId 文章Id
+     * @return 文章資訊
+     */
+    suspend fun getArticleV2(articleId: Long): Result<ArticleResponseBody.GeneralArticleResponseBody>
+
+    /**
+     * 取得問答文章v2
+     *
+     * @param articleId 文章Id
+     * @return 文章資訊
+     */
+    suspend fun getQuestionArticleV2(articleId: Long): Result<ArticleResponseBody.QuestionArticleResponseBody>
+
+    /**
+     * 取得社團文章v2
+     *
+     * @param articleId 文章Id
+     * @return 文章資訊
+     */
+    suspend fun getGroupArticleV2(articleId: Long): Result<ArticleResponseBody.GroupArticleResponseBody>
+
+    /**
+     * 取得轉推文章v2
+     *
+     * @param articleId 文章Id
+     * @return 文章資訊
+     */
+    suspend fun getSharedArticleV2(articleId: Long): Result<ArticleResponseBody.SharedArticleResponseBody>
+
+    /**
+     * 取得訊號文章v2
+     *
+     * @param articleId 文章Id
+     * @return 文章資訊
+     */
+    suspend fun getSignalArticleV2(articleId: Long): Result<ArticleResponseBody.SignalArticleResponseBody>
+
+    /**
+     * 取得新聞文章v2
+     *
+     * @param articleId 文章Id
+     * @return 文章資訊
+     */
+    suspend fun getNewsArticleV2(articleId: Long): Result<ArticleResponseBody.NewsArticleResponseBody>
+
+    /**
+     * 取得個人文章(專欄文章/筆記)v2
+     *
+     * @param articleId 文章Id
+     * @return 文章資訊
+     */
+    suspend fun getPersonalArticleV2(articleId: Long): Result<ArticleResponseBody.PersonalArticleResponseBody>
+
+    /**
+     * 取得文章(不確定文章類型)v2
+     *
+     * @param articleId 文章Id
+     * @return 文章資訊
+     */
+    suspend fun getUnknownArticleV2(articleId: Long): Result<ArticleResponseBody.UnknownArticleResponseBody>
 
     /**
      * 更新文章資訊
@@ -245,12 +320,26 @@ interface ForumOceanWeb {
      * @param position
      * @return 回文Id
      */
+    @Deprecated("請使用createCommentV2")
     suspend fun createComment(
         articleId: Long,
         text: String?,
         multiMedia: List<MediaType>?,
         position: Any?
     ): Result<CreateCommentResponseBody>
+
+    /**
+     * 對指定主文發一篇回文V2
+     * @param articleId 指定主文Id
+     * @param text content
+     * @param multiMedia ContentType
+     * @return 回文Id
+     */
+    suspend fun createCommentV2(
+        articleId: String,
+        text: String?,
+        multiMedia: List<MediaType>?
+    ): Result<CreateCommentResponseBodyV2>
 
     /**
      * 對指定Group主文發一篇回文
@@ -260,6 +349,7 @@ interface ForumOceanWeb {
      * @param position
      * @return 回文Id
      */
+    @Deprecated("請使用createCommentV2")
     suspend fun createGroupArticleComment(
         articleId: Long,
         text: String?,
@@ -275,6 +365,7 @@ interface ForumOceanWeb {
      * @param offsetCount 取得回文偏移數量
      * @return 回文清單
      */
+    @Deprecated("請使用getCommentV2")
     suspend fun getComment(
         articleId: Long,
         commentId: Long?,
@@ -282,16 +373,43 @@ interface ForumOceanWeb {
     ): Result<List<CommentResponseBody>>
 
     /**
-     * 取得指定主文的回文清單 使用回文Id指定取得清單
+     * 取得指定主文或回文的回文清單V2
+     *
+     * @param articleId 指定主文或回文Id
+     * @param startCommentId 起始回文index
+     * @param fetch 取得回文數量
+     * @return 回文清單
+     */
+    suspend fun getCommentV2(
+        articleId: String,
+        startCommentId: Long?,
+        fetch: Int?
+    ): Result<CommentResponseBodyV2>
+
+    /**
+     * 取得主文的指定回文清單
      *
      * @param articleId 指定主文Id
      * @param commentIds 回文Id清單
      * @return
      */
+    @Deprecated("請使用getCommentWithIdV2")
     suspend fun getCommentWithId(
         articleId: Long,
         commentIds: List<Long>
     ): Result<List<CommentResponseBody>>
+
+    /**
+     * 取得主文或回文的指定回文清單v2
+     *
+     * @param articleId 主文或回文Id
+     * @param commentIds 回文Id清單
+     * @return
+     */
+    suspend fun getCommentWithIdV2(
+        articleId: String,
+        commentIds: List<String>
+    ): Result<CommentResponseBodyV2>
 
     /**
      * 取得指定主文的社團管理員回文清單
@@ -1406,4 +1524,9 @@ interface ForumOceanWeb {
      * 取得專欄作家清單
      */
     suspend fun getColumnistAll(): Result<List<Long>>
+
+    /**
+     * 隱藏留言
+     */
+    suspend fun hideComment(articleId: String): Result<HideCommentResponseBody>
 }
