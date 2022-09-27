@@ -1,3 +1,16 @@
+#  (2022-09-27)
+
+
+
+# [5.40.0](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.39.0...5.40.0) (2022-09-26)
+
+
+### Features
+
+* 新增籌碼K服務-期貨指數分析 ([d574052](http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/d5740529085432b05652c19f2ed9dadec00c96ca))
+
+
+
 #  (2022-09-16)
 
 
