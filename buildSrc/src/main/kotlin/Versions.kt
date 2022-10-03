@@ -102,8 +102,8 @@ object Versions {
     const val HUAWEI_CONNECT_CORE = "1.6.0.300"
     const val HUAWEI_IAP = "5.3.0.300"
     // CMoney
-    const val LOG_DATA_RECORDER = "5.3.0"
-    const val CMONEY_BACKEND2 = "5.38.0"
+    const val LOG_DATA_RECORDER = "5.4.0"
+    const val CMONEY_BACKEND2 = "5.41.0"
     const val CMONEY_BROWSER = "5.0.0"
     const val CMONEY_CRM = "5.1.0-beta01"
     const val CMONEY_ANALYTICS_USER = "5.1.0"
@@ -127,5 +127,5 @@ object Versions {
     const val CMONEY_CORE = "5.0.0-beta03"
     const val CMONEY_LOG_CORE = "5.0.0-beta02"
     const val CMONEY_MEMBER = "5.0.1"
-    const val CMONEY_UTILS = "5.3.0"
+    const val CMONEY_UTILS = "5.4.0"
 }
