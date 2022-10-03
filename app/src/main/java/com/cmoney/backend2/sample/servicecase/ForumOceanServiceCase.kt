@@ -344,7 +344,9 @@ class ForumOceanServiceCase : ServiceCase {
         getChannelsArticleByWeight(
             channelNameBuilderList = listOf(
                 DefineChannelName.MemberNote(
-                    memberId = setting.identityToken.getMemberId().toLong()
+                    memberId = setting.identityToken.getMemberId().toLong(),
+                    commodityType = CommodityType.Stock.text,
+                    stockId = "1234"
                 )
             ),
             weight = Long.MAX_VALUE,
