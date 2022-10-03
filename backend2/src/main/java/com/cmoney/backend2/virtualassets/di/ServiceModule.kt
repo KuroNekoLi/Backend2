@@ -10,7 +10,7 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 
 val virtualAssetsServiceModule = module {
-    single<VirtualAssetsService> {
+    single {
         get<Retrofit>(BACKEND2_RETROFIT).create(VirtualAssetsService::class.java)
     }
     single<VirtualAssetsWeb> {

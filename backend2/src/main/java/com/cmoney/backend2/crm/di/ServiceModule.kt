@@ -10,7 +10,7 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 
 val crmServiceModule = module {
-    single<CrmService> {
+    single {
         get<Retrofit>(BACKEND2_RETROFIT).create(CrmService::class.java)
     }
     single<CrmWeb> {

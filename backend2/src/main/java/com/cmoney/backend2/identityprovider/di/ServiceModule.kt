@@ -10,7 +10,7 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 
 val identityProviderServiceModule = module {
-    single<IdentityProviderService> {
+    single {
         get<Retrofit>(BACKEND2_RETROFIT).create(IdentityProviderService::class.java)
     }
     single<IdentityProviderWeb> {

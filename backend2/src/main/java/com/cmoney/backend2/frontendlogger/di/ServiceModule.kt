@@ -12,8 +12,8 @@ import retrofit2.Retrofit
 import retrofit2.create
 
 val frontEndLoggerServiceModule = module {
-    single<FrontEndLoggerService> {
-        get<Retrofit>(BACKEND2_RETROFIT).create()
+    single {
+        get<Retrofit>(BACKEND2_RETROFIT).create(FrontEndLoggerService::class.java)
     }
     single<FrontEndLoggerWeb> {
         val setting: Setting = get(BACKEND2_SETTING)

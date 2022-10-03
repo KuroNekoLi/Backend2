@@ -48,11 +48,9 @@ dependencies {
     implementation(Dependencies.KOTLIN_STDLIB)
     implementation(Dependencies.ANDROID_KTX_CORE)
     implementation(Dependencies.ANDROID_APPCOMPAT)
-
     // coroutine
     implementation(Dependencies.COROUTINES_CORE)
     implementation(Dependencies.COROUTINES_ANDROID)
-
     //koin
     implementation(Dependencies.KOIN_ANDROID)
     //gson

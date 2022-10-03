@@ -10,7 +10,7 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 
 val commonServiceModule = module {
-    single<CommonService> {
+    single {
         get<Retrofit>(BACKEND2_RETROFIT).create(CommonService::class.java)
     }
     single<CommonWeb> {

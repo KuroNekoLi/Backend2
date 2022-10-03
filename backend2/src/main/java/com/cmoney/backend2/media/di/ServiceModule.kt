@@ -10,7 +10,7 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 
 val mediaServiceModule = module {
-    single<MediaService> {
+    single {
         get<Retrofit>(BACKEND2_RETROFIT).create(MediaService::class.java)
     }
     single<MediaWeb> {

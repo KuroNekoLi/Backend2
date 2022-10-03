@@ -10,7 +10,7 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 
 val authorizationServiceModule = module {
-    single<AuthorizationService> {
+    single {
         get<Retrofit>(BACKEND2_RETROFIT).create(AuthorizationService::class.java)
     }
     single<AuthorizationWeb> {

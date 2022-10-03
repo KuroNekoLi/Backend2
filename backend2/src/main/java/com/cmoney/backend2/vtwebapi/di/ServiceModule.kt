@@ -10,7 +10,7 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 
 val virtualTradeServiceModule = module {
-    single<VirtualTradeService> {
+    single {
         get<Retrofit>(BACKEND2_RETROFIT).create(VirtualTradeService::class.java)
     }
     single<VirtualTradeWeb> {

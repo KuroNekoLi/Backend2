@@ -114,8 +114,6 @@ object Dependencies {
     // DI
     const val KOIN_CORE = "io.insert-koin:koin-core:${Versions.KOIN}"
     const val KOIN_ANDROID = "io.insert-koin:koin-android:${Versions.KOIN}"
-    const val KOIN_ANDROID_EXT = "io.insert-koin:koin-android-ext:${Versions.KOIN}"
-    const val KOIN_ANDROIDX_VIEWMODEL = "io.insert-koin:koin-androidx-viewmodel:${Versions.KOIN}"
     const val KOIN_TEST = "io.insert-koin:koin-test:${Versions.KOIN}"
     // UI
     const val GLIDE = "com.github.bumptech.glide:glide:${Versions.GLIDE}"

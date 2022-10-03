@@ -10,7 +10,7 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 
 val productProvider = module {
-    single<ProductDataProviderService> {
+    single {
         get<Retrofit>(BACKEND2_RETROFIT).create(ProductDataProviderService::class.java)
     }
     single<ProductDataProviderWeb> {

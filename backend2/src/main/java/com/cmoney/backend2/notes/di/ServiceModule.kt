@@ -10,7 +10,7 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 
 val notesServiceModule = module {
-    single<NotesService> {
+    single {
         get<Retrofit>(BACKEND2_RETROFIT).create(NotesService::class.java)
     }
     single<NotesWeb> {

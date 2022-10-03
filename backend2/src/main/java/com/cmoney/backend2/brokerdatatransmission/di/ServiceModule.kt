@@ -11,7 +11,7 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 
 val brokerDataTransmissionServiceModule = module {
-    single<BrokerDataTransmissionService> {
+    single {
         get<Retrofit>(BACKEND2_RETROFIT).create(BrokerDataTransmissionService::class.java)
     }
     single<BrokerDataTransmissionWeb> {

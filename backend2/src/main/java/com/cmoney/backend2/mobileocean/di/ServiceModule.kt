@@ -9,7 +9,7 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 
 val mobileOceanServiceModule = module {
-    single<MobileOceanService> {
+    single {
         get<Retrofit>(BACKEND2_RETROFIT).create(MobileOceanService::class.java)
     }
     single<MobileOceanWeb> {

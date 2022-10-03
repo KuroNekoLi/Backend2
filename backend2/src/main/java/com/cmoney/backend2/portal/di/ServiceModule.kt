@@ -10,7 +10,7 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 
 val portalServiceModule = module {
-    single<PortalService> {
+    single {
         get<Retrofit>(BACKEND2_RETROFIT).create(PortalService::class.java)
     }
     single<PortalWeb> {
