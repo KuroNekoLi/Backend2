@@ -2,6 +2,7 @@ package com.cmoney.backend2.chipk.service
 
 import com.cmoney.backend2.base.model.calladapter.RecordApi
 import com.cmoney.backend2.base.model.response.dtno.DtnoWithError
+import com.cmoney.backend2.chipk.service.api.futuredaytradedtnodata.FutureDayTradeDtnoWithError
 import com.cmoney.backend2.chipk.service.api.getOfficialStockPickData.OfficialStockInfoWithError
 import com.cmoney.backend2.chipk.service.api.internationalkchart.TickInfoSetWithError
 import com.google.gson.JsonElement
@@ -173,4 +174,20 @@ interface ChipKService {
         @Field("guid") guid: String,
         @Field("type") type: Int
     ): Response<JsonElement>
+
+    /**
+     * 期貨盤後資訊
+     * 服務 - 官股、融資
+     * 取得盤後官股、融資變動以及三大法人買賣超
+     */
+    @RecordApi(cmoneyAction = "IndexAnalysis")
+    @FormUrlEncoded
+    @POST("chipk/ashx/GetDtnoData.ashx")
+    suspend fun getFutureDayTradeIndexAnalysis(
+        @Header("Authorization") authorization: String,
+        @Field("action") action: String = "IndexAnalysis",
+        @Field("appId") appId: Int,
+        @Field("guid") guid: String,
+        @Field("needLog") needLog: Boolean = true
+    ): Response<FutureDayTradeDtnoWithError>
 }

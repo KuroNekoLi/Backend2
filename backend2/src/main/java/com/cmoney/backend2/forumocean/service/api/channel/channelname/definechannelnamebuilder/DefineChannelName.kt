@@ -394,19 +394,25 @@ sealed class DefineChannelName : IChannelNameBuilder {
      * 個人筆記頻道
      *
      * @property memberId 會員id
+     * @property commodityType 商品類型
+     * @property stockId 股票代號
      */
-    data class MemberNote(val memberId: Long): DefineChannelName() {
+    data class MemberNote(
+        val memberId: Long,
+        val commodityType: String,
+        val stockId: String
+    ) : DefineChannelName() {
         override fun create(): String {
-            return "Note.$memberId"
+            return "Note.$memberId-$commodityType.$stockId"
         }
     }
 
     /**
      * 個人專欄文章頻道
      *
-     * @property memberId 會員id
+     * @property memberId 專欄作者id
      */
-    data class MemberColumnist(val memberId: Long): DefineChannelName() {
+    data class MemberColumnist(val memberId: Long) : DefineChannelName() {
         override fun create(): String {
             return "Member-Columnist.$memberId"
         }
@@ -415,7 +421,7 @@ sealed class DefineChannelName : IChannelNameBuilder {
     /**
      * 所有專欄文章頻道
      */
-    object Columnist: DefineChannelName() {
+    object Columnist : DefineChannelName() {
         override fun create(): String {
             return "Columnist"
         }

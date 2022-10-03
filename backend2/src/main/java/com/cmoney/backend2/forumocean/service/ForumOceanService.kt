@@ -83,7 +83,7 @@ interface ForumOceanService {
      * 發專欄文章
      */
     @RecordApi
-    @POST("{path}/api/article/{articleType}")
+    @POST("{path}/api/Article/{articleType}")
     suspend fun createPersonalArticle(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
@@ -95,7 +95,7 @@ interface ForumOceanService {
      * 發筆記文
      */
     @RecordApi
-    @POST("{path}/api/article/{articleType}")
+    @POST("{path}/api/Article/{articleType}")
     suspend fun createPersonalArticle(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
