@@ -44,9 +44,9 @@ android {
     }
 }
 dependecies {
-	implementation 'com.cmoney.backend2:backend2:5.40.0'
-	implementation("com.cmoney.logdatarecorder:logdatarecorder-data:5.3.0")
-	implementation("com.cmoney.logdatarecorder:logdatarecorder-domain:5.3.0")
+	implementation 'com.cmoney.backend2:backend2:5.42.0'
+	implementation("com.cmoney.logdatarecorder:logdatarecorder-data:5.4.0")
+	implementation("com.cmoney.logdatarecorder:logdatarecorder-domain:5.4.0")
 }
 ```
 
@@ -54,10 +54,10 @@ dependecies {
 
 ```groovy
 dependecies {
-	releaseImplementation 'com.cmoney.backend2:backend2:5.41.0'
-	debugImplementation 'com.cmoney.backend2:backend2-debug:5.41.0'
-	implementation("com.cmoney.logdatarecorder:logdatarecorder-data:5.3.0")
-	implementation("com.cmoney.logdatarecorder:logdatarecorder-domain:5.3.0")
+	releaseImplementation 'com.cmoney.backend2:backend2:5.42.0'
+	debugImplementation 'com.cmoney.backend2:backend2-debug:5.42.0'
+	implementation("com.cmoney.logdatarecorder:logdatarecorder-data:5.4.0")
+	implementation("com.cmoney.logdatarecorder:logdatarecorder-domain:5.4.0")
 }
 ```
 
@@ -131,8 +131,8 @@ class SampleApplication : Application() {
             androidContext(this@SampleApplication)
             loadKoinModules(
                 listOf(
-				    // 在此宣告需要的定義
-                    backendBaseModule
+				    // 在此宣告需要的定義 
+                    backendServicesModule
                 )
             )
         }
@@ -140,7 +140,9 @@ class SampleApplication : Application() {
 }
 ```
 
-##### 目前定義好的Module
+#### 目前定義好的Module
+
+backendServicesModule都包含以下定義，如果需要單一覆寫，可從下方找到。
 
 | 定義名稱                                   | 對應PackageName             |
 |-------------------------------------------|----------------------------|
