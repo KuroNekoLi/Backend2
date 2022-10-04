@@ -434,7 +434,7 @@ class ForumOceanWebImplTest {
         val successResponse = ArticleResponseBody.GeneralArticleResponseBody(
             articleContent = null,
             createTime = null,
-            id = articleId,
+            id = articleId.toString(),
             modifyTime = null,
             reactionState = null,
             myReaction = null,
@@ -450,7 +450,7 @@ class ForumOceanWebImplTest {
             weight = null,
             totalReportCount = null,
             report = null,
-            commentDeletedCount = null
+            commentDeletedCount = null,
         )
         coEvery {
             forumOceanService.getArticle(
@@ -486,7 +486,7 @@ class ForumOceanWebImplTest {
         val successResponse = ArticleResponseBody.QuestionArticleResponseBody(
             articleContent = null,
             createTime = null,
-            id = articleId,
+            id = articleId.toString(),
             modifyTime = null,
             reactionState = null,
             myReaction = null,
@@ -538,7 +538,7 @@ class ForumOceanWebImplTest {
         val successResponse = ArticleResponseBody.GroupArticleResponseBody(
             articleContent = null,
             createTime = null,
-            id = articleId,
+            id = articleId.toString(),
             modifyTime = null,
             reactionState = null,
             myReaction = null,
@@ -590,7 +590,7 @@ class ForumOceanWebImplTest {
         val successResponse = ArticleResponseBody.SharedArticleResponseBody(
             articleContent = null,
             createTime = null,
-            id = articleId,
+            id = articleId.toString(),
             modifyTime = null,
             reactionState = null,
             myReaction = null,
@@ -643,7 +643,7 @@ class ForumOceanWebImplTest {
         val successResponse = ArticleResponseBody.SignalArticleResponseBody(
             articleContent = null,
             createTime = null,
-            id = articleId,
+            id = articleId.toString(),
             modifyTime = null,
             reactionState = null,
             myReaction = null,
@@ -692,7 +692,7 @@ class ForumOceanWebImplTest {
         val successResponse = ArticleResponseBody.NewsArticleResponseBody(
             articleContent = null,
             createTime = null,
-            id = articleId,
+            id = articleId.toString(),
             modifyTime = null,
             reactionState = null,
             myReaction = null,
@@ -741,7 +741,7 @@ class ForumOceanWebImplTest {
         val successResponse = ArticleResponseBody.PersonalArticleResponseBody(
             articleContent = null,
             createTime = null,
-            id = articleId,
+            id = articleId.toString(),
             modifyTime = null,
             weight = null
         )
@@ -779,7 +779,7 @@ class ForumOceanWebImplTest {
         val successResponse = ArticleResponseBody.UnknownArticleResponseBody(
             articleContent = null,
             createTime = null,
-            id = articleId,
+            id = articleId.toString(),
             modifyTime = null,
             reactionState = null,
             myReaction = null,
@@ -835,7 +835,7 @@ class ForumOceanWebImplTest {
         val successResponse = ArticleResponseBody.GeneralArticleResponseBody(
             articleContent = null,
             createTime = null,
-            id = articleId,
+            id = articleId.toString(),
             modifyTime = null,
             reactionState = null,
             myReaction = null,
@@ -872,7 +872,7 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.getArticleV2(
                 authorization = any(),
-                articleId =  articleId.toString(),
+                articleId = articleId.toString(),
                 path = ""
             )
         } returns Response.error(403, "".toResponseBody())
@@ -887,7 +887,7 @@ class ForumOceanWebImplTest {
         val successResponse = ArticleResponseBody.QuestionArticleResponseBody(
             articleContent = null,
             createTime = null,
-            id = articleId,
+            id = articleId.toString(),
             modifyTime = null,
             reactionState = null,
             myReaction = null,
@@ -939,7 +939,7 @@ class ForumOceanWebImplTest {
         val successResponse = ArticleResponseBody.GroupArticleResponseBody(
             articleContent = null,
             createTime = null,
-            id = articleId,
+            id = articleId.toString(),
             modifyTime = null,
             reactionState = null,
             myReaction = null,
@@ -991,7 +991,7 @@ class ForumOceanWebImplTest {
         val successResponse = ArticleResponseBody.SharedArticleResponseBody(
             articleContent = null,
             createTime = null,
-            id = articleId,
+            id = articleId.toString(),
             modifyTime = null,
             reactionState = null,
             myReaction = null,
@@ -1044,7 +1044,7 @@ class ForumOceanWebImplTest {
         val successResponse = ArticleResponseBody.SignalArticleResponseBody(
             articleContent = null,
             createTime = null,
-            id = articleId,
+            id = articleId.toString(),
             modifyTime = null,
             reactionState = null,
             myReaction = null,
@@ -1078,7 +1078,7 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.getSignalArticleV2(
                 authorization = any(),
-                articleId =  articleId.toString(),
+                articleId = articleId.toString(),
                 path = ""
             )
         } returns Response.error(403, "".toResponseBody())
@@ -1093,7 +1093,7 @@ class ForumOceanWebImplTest {
         val successResponse = ArticleResponseBody.NewsArticleResponseBody(
             articleContent = null,
             createTime = null,
-            id = articleId,
+            id = articleId.toString(),
             modifyTime = null,
             reactionState = null,
             myReaction = null,
@@ -1127,7 +1127,7 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.getNewsArticleV2(
                 authorization = any(),
-                articleId =  articleId.toString(),
+                articleId = articleId.toString(),
                 path = ""
             )
         } returns Response.error(403, "".toResponseBody())
@@ -1142,7 +1142,7 @@ class ForumOceanWebImplTest {
         val successResponse = ArticleResponseBody.PersonalArticleResponseBody(
             articleContent = null,
             createTime = null,
-            id = articleId,
+            id = articleId.toString(),
             modifyTime = null,
             weight = null
         )
@@ -1150,7 +1150,7 @@ class ForumOceanWebImplTest {
             forumOceanService.getPersonalArticleV2(
                 authorization = any(),
                 path = "",
-                articleId =  articleId.toString()
+                articleId = articleId.toString()
             )
         } returns Response.success(successResponse)
         val result = web.getPersonalArticleV2(articleId)
@@ -1166,7 +1166,7 @@ class ForumOceanWebImplTest {
             forumOceanService.getPersonalArticleV2(
                 authorization = any(),
                 path = "",
-                articleId =  articleId.toString()
+                articleId = articleId.toString()
             )
         } returns Response.error(403, "".toResponseBody())
         val result = web.getPersonalArticleV2(articleId)
@@ -1180,7 +1180,7 @@ class ForumOceanWebImplTest {
         val successResponse = ArticleResponseBody.UnknownArticleResponseBody(
             articleContent = null,
             createTime = null,
-            id = articleId,
+            id = articleId.toString(),
             modifyTime = null,
             reactionState = null,
             myReaction = null,
@@ -1205,7 +1205,7 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.getUnknownArticleV2(
                 authorization = any(),
-                articleId =  articleId.toString(),
+                articleId = articleId.toString(),
                 path = ""
             )
         } returns Response.success(successResponse)
@@ -1582,7 +1582,7 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(403, "".toResponseBody())
         val result = web.createCommentV2(
-            articleId =  "123-1",
+            articleId = "123-1",
             text = null,
             multiMedia = listOf()
         )
@@ -1729,7 +1729,7 @@ class ForumOceanWebImplTest {
                 )
             )
         )
-        val result = web.getCommentWithId(10101, listOf(2, 3))
+        val result = web.getCommentsWithId(10101, listOf(2, 3))
         assertThat(result.isSuccess).isTrue()
         assertThat(result.getOrThrow()).hasSize(2)
     }
@@ -1745,7 +1745,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.error(403, "".toResponseBody())
-        val result = web.getCommentWithId(10101, listOf(2, 3))
+        val result = web.getCommentsWithId(10101, listOf(2, 3))
         assertThat(result.isSuccess).isFalse()
     }
 
@@ -5169,7 +5169,7 @@ class ForumOceanWebImplTest {
                 articleId = any()
             )
         } returns Response.success(HideCommentResponseBody(true))
-        val result = web.hideComment( "123-1")
+        val result = web.hideComment("123-1")
         assertThat(result.isSuccess).isTrue()
     }
 
@@ -5183,7 +5183,7 @@ class ForumOceanWebImplTest {
                 articleId = any()
             )
         } returns Response.error(500, "".toResponseBody())
-        val result = web.hideComment( "123-1")
+        val result = web.hideComment("123-1")
         assertThat(result.isFailure).isTrue()
     }
 }

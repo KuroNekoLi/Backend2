@@ -56,6 +56,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.request.mediatype.Med
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBodyV2
+import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.GetCommentsResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.groupresponse.GroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.ReactionInfo
 import com.cmoney.backend2.forumocean.service.api.vote.get.VoteInfo
@@ -232,6 +233,8 @@ interface ForumOceanWeb {
      */
     suspend fun getUnknownArticleV2(articleId: Long): Result<ArticleResponseBody.UnknownArticleResponseBody>
 
+
+
     /**
      * 更新文章資訊
      *
@@ -384,7 +387,7 @@ interface ForumOceanWeb {
         articleId: String,
         startCommentId: Long?,
         fetch: Int?
-    ): Result<CommentResponseBodyV2>
+    ): Result<GetCommentsResponseBody>
 
     /**
      * 取得主文的指定回文清單
@@ -394,7 +397,7 @@ interface ForumOceanWeb {
      * @return
      */
     @Deprecated("請使用getCommentWithIdV2")
-    suspend fun getCommentWithId(
+    suspend fun getCommentsWithId(
         articleId: Long,
         commentIds: List<Long>
     ): Result<List<CommentResponseBody>>
@@ -402,14 +405,14 @@ interface ForumOceanWeb {
     /**
      * 取得主文或回文的指定回文清單v2
      *
-     * @param articleId 主文或回文Id
-     * @param commentIds 回文Id清單
+     * @param articleOrCommentId 主文或回文Id
+     * @param commentIndices 回文index清單
      * @return
      */
-    suspend fun getCommentWithIdV2(
-        articleId: String,
-        commentIds: List<String>
-    ): Result<CommentResponseBodyV2>
+    suspend fun getCommentsWithIdV2(
+        articleOrCommentId: String,
+        commentIndices: List<Long>
+    ): Result<GetCommentsResponseBody>
 
     /**
      * 取得指定主文的社團管理員回文清單
@@ -1529,4 +1532,9 @@ interface ForumOceanWeb {
      * 隱藏留言
      */
     suspend fun hideComment(articleId: String): Result<HideCommentResponseBody>
+
+    /**
+     * 取得單一留言
+     */
+    suspend fun getSingleComment(commentId:String):Result<CommentResponseBodyV2>
 }

@@ -15,7 +15,7 @@ sealed class ArticleResponseBody(
     @Transient
     open val createTime: Long?,
     @Transient
-    open val id: Long?,
+    open val id: String?,
     @Transient
     open val modifyTime: Long?
 ){
@@ -49,7 +49,7 @@ sealed class ArticleResponseBody(
         @SerializedName("createTime")
         override val createTime: Long?,
         @SerializedName("id")
-        override val id: Long?,
+        override val id: String?,
         @SerializedName("modifyTime")
         override val modifyTime: Long?,
         @Deprecated("Use myReaction field instead.(make sure api do returns one)")
@@ -129,7 +129,7 @@ sealed class ArticleResponseBody(
         @SerializedName("createTime")
         override val createTime: Long?,
         @SerializedName("id")
-        override val id: Long?,
+        override val id: String?,
         @SerializedName("modifyTime")
         override val modifyTime: Long?,
         @Deprecated("Use myReaction field instead.(make sure api do returns one)")
@@ -197,7 +197,7 @@ sealed class ArticleResponseBody(
         @SerializedName("createTime")
         override val createTime: Long?,
         @SerializedName("id")
-        override val id: Long?,
+        override val id: String?,
         @SerializedName("modifyTime")
         override val modifyTime: Long?,
         @Deprecated("Use myReaction field instead.(make sure api do returns one)")
@@ -257,7 +257,7 @@ sealed class ArticleResponseBody(
         @SerializedName("createTime")
         override val createTime: Long?,
         @SerializedName("id")
-        override val id: Long?,
+        override val id: String?,
         @SerializedName("modifyTime")
         override val modifyTime: Long?,
         @Deprecated("Use myReaction field instead.(make sure api do returns one)")
@@ -319,7 +319,7 @@ sealed class ArticleResponseBody(
         @SerializedName("createTime")
         override val createTime: Long?,
         @SerializedName("id")
-        override val id: Long?,
+        override val id: String?,
         @SerializedName("modifyTime")
         override val modifyTime: Long?,
         @Deprecated("Use myReaction field instead.(make sure api do returns one)")
@@ -390,7 +390,7 @@ sealed class ArticleResponseBody(
         @SerializedName("createTime")
         override val createTime: Long?,
         @SerializedName("id")
-        override val id: Long?,
+        override val id: String?,
         @SerializedName("modifyTime")
         override val modifyTime: Long?,
         @Deprecated("Use myReaction field instead.(make sure api do returns one)")
@@ -464,7 +464,7 @@ sealed class ArticleResponseBody(
         @SerializedName("createTime")
         override val createTime: Long?,
         @SerializedName("id")
-        override val id: Long?,
+        override val id: String?,
         @SerializedName("modifyTime")
         override val modifyTime: Long?,
         @Deprecated("Use myReaction field instead.(make sure api do returns one)")
@@ -521,7 +521,7 @@ sealed class ArticleResponseBody(
         @SerializedName("createTime")
         override val createTime: Long?,
         @SerializedName("id")
-        override val id: Long?,
+        override val id: String?,
         @SerializedName("modifyTime")
         override val modifyTime: Long?,
         @SerializedName("weight")

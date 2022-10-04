@@ -67,6 +67,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.request.mediatype.Med
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBodyV2
+import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.GetCommentsResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.groupresponse.GroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.ReactionInfo
 import com.cmoney.backend2.forumocean.service.api.vote.get.VoteInfo
@@ -472,6 +473,7 @@ class ForumOceanWebImpl(
             }
         }
     }
+
     @Deprecated("請使用createCommentV2")
     override suspend fun createGroupArticleComment(
         articleId: Long,
@@ -513,7 +515,7 @@ class ForumOceanWebImpl(
         articleId: String,
         startCommentId: Long?,
         fetch: Int?
-    ): Result<CommentResponseBodyV2> {
+    ): Result<GetCommentsResponseBody> {
         return withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getCommentV2(
@@ -528,7 +530,7 @@ class ForumOceanWebImpl(
     }
 
     @Deprecated("請使用getCommentWithIdV2")
-    override suspend fun getCommentWithId(
+    override suspend fun getCommentsWithId(
         articleId: Long,
         commentIds: List<Long>
     ): Result<List<CommentResponseBody>> = withContext(dispatcher.io()) {
@@ -542,16 +544,16 @@ class ForumOceanWebImpl(
         }
     }
 
-    override suspend fun getCommentWithIdV2(
-        articleId: String,
-        commentIds: List<String>
-    ): Result<CommentResponseBodyV2> = withContext(dispatcher.io()) {
+    override suspend fun getCommentsWithIdV2(
+        articleOrCommentId: String,
+        commentIndices: List<Long>
+    ): Result<GetCommentsResponseBody> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getCommentWithIdV2(
                 path = serverName,
                 authorization = setting.accessToken.createAuthorizationBearer(),
-                articleId = articleId,
-                commentIds = commentIds.joinToString(",")
+                articleId = articleOrCommentId,
+                commentIds = commentIndices.joinToString(",")
             ).checkResponseBody(jsonParser)
         }
     }
@@ -2098,6 +2100,18 @@ class ForumOceanWebImpl(
                     path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     articleId = articleId
+                ).checkResponseBody(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun getSingleComment(commentId: String): Result<CommentResponseBodyV2> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.getSingleComment(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    articleId = commentId
                 ).checkResponseBody(jsonParser)
             }
         }

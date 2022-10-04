@@ -280,7 +280,7 @@ class ForumOceanServiceCase : ServiceCase {
             }
         )
 
-        getCommentWithId(articleId, commentIdList).logResponse(TAG)
+        getCommentsWithId(articleId, commentIdList).logResponse(TAG)
     }
 
     private suspend fun ForumOceanWeb.testCollection(articleId: Long) {

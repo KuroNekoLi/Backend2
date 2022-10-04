@@ -15,15 +15,15 @@ interface CommentInfo {
      * 被刪除的回文數
      */
     @Deprecated("v2之後由服務計算正確的回文數量，故不需要此欄位")
-    val commentDeletedCount : Int?
+    val commentDeletedCount: Int?
 
     /**
      * 我的回文位置
      */
-    val myCommentIndex : List<Int>?
+    val myCommentIndex: List<Int>?
 
     /**
      * 總回文數
      */
-    val commentCount : Int?
+    val commentCount: Int?
 }

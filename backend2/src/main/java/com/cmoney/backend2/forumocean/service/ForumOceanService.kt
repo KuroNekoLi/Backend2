@@ -59,6 +59,7 @@ import com.cmoney.backend2.forumocean.service.api.support.SearchMembersResponseB
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBodyV2
+import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.GetCommentsResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.groupresponse.GroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.ReactionInfo
 import com.cmoney.backend2.forumocean.service.api.vote.get.VoteInfo
@@ -1612,7 +1613,7 @@ interface ForumOceanService {
         @Path("articleId") articleId: String,
         @Query("startCommentId") startCommentId: Long?,
         @Query("fetch") fetch: Int?
-    ): Response<CommentResponseBodyV2>
+    ): Response<GetCommentsResponseBody>
 
     /**
      * 取得留言V2(不可訪客)
@@ -1625,7 +1626,7 @@ interface ForumOceanService {
         @Path("path") path: String,
         @Path("articleId") articleId: String,
         @Query("commentIds") commentIds: String
-    ): Response<CommentResponseBodyV2>
+    ): Response<GetCommentsResponseBody>
 
     /**
      * 發留言v2
@@ -1651,4 +1652,16 @@ interface ForumOceanService {
         @Path("path") path: String,
         @Path("articleId") articleId: String,
     ): Response<HideCommentResponseBody>
+
+    /**
+     * 取得單一留言
+     */
+    @RecordApi
+    @GET("{path}/api/Article/Get/{articleId}")
+    @Headers("X-Version: 2.0")
+    suspend fun getSingleComment(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("articleId") articleId: String
+    ): Response<CommentResponseBodyV2>
 }
