@@ -513,7 +513,7 @@ class ForumOceanWebImpl(
 
     override suspend fun getCommentV2(
         articleId: String,
-        startCommentId: Long?,
+        startCommentIndex: Long?,
         fetch: Int?
     ): Result<GetCommentsResponseBody> {
         return withContext(dispatcher.io()) {
@@ -522,7 +522,7 @@ class ForumOceanWebImpl(
                     path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     articleId = articleId,
-                    startCommentId = startCommentId,
+                    startCommentIndex = startCommentIndex,
                     fetch = fetch
                 ).checkResponseBody(jsonParser)
             }

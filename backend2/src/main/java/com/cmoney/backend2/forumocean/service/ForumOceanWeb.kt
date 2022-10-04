@@ -379,13 +379,13 @@ interface ForumOceanWeb {
      * 取得指定主文或回文的回文清單V2
      *
      * @param articleId 指定主文或回文Id
-     * @param startCommentId 起始回文index
+     * @param startCommentIndex 起始回文index
      * @param fetch 取得回文數量
      * @return 回文清單
      */
     suspend fun getCommentV2(
         articleId: String,
-        startCommentId: Long?,
+        startCommentIndex: Long?,
         fetch: Int?
     ): Result<GetCommentsResponseBody>
 

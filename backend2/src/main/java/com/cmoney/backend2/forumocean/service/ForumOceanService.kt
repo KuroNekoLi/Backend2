@@ -1611,7 +1611,7 @@ interface ForumOceanService {
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Path("articleId") articleId: String,
-        @Query("startCommentId") startCommentId: Long?,
+        @Query("startCommentIndex") startCommentIndex: Long?,
         @Query("fetch") fetch: Int?
     ): Response<GetCommentsResponseBody>
 
