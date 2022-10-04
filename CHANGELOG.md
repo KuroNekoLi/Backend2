@@ -1,3 +1,12 @@
+# 2022-10-04
+
+Features
+
+- 升級Koin到3.2.1
+- 升級CMoneyUtils到5.4.0
+- 升級LogDataRecorder->5.4.0
+- 將所有Service的DI引用合併
+
 #  (2022-10-03)
 
 
