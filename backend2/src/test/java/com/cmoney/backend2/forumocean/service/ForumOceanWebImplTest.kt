@@ -52,6 +52,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.GroupPositio
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentContent
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBody
+import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBodyV2
 import com.cmoney.backend2.forumocean.service.api.variable.response.groupresponse.GroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.ReactionInfo
 import com.cmoney.backend2.forumocean.service.api.vote.get.VoteInfo
@@ -461,7 +462,7 @@ class ForumOceanWebImplTest {
         } returns Response.success(successResponse)
         val result = web.getArticle(articleId)
         assertThat(result.isSuccess).isTrue()
-        assertThat(result.getOrThrow().id).isEqualTo(articleId)
+        assertThat(result.getOrThrow().id).isEqualTo(articleId.toString())
     }
 
     @ExperimentalCoroutinesApi
@@ -513,7 +514,7 @@ class ForumOceanWebImplTest {
         } returns Response.success(successResponse)
         val result = web.getQuestionArticle(articleId)
         assertThat(result.isSuccess).isTrue()
-        assertThat(result.getOrThrow().id).isEqualTo(articleId)
+        assertThat(result.getOrThrow().id).isEqualTo(articleId.toString())
     }
 
     @ExperimentalCoroutinesApi
@@ -565,7 +566,7 @@ class ForumOceanWebImplTest {
         } returns Response.success(successResponse)
         val result = web.getGroupArticle(articleId)
         assertThat(result.isSuccess).isTrue()
-        assertThat(result.getOrThrow().id).isEqualTo(articleId)
+        assertThat(result.getOrThrow().id).isEqualTo(articleId.toString())
     }
 
     @ExperimentalCoroutinesApi
@@ -618,7 +619,7 @@ class ForumOceanWebImplTest {
         } returns Response.success(successResponse)
         val result = web.getSharedArticle(articleId)
         assertThat(result.isSuccess).isTrue()
-        assertThat(result.getOrThrow().id).isEqualTo(articleId)
+        assertThat(result.getOrThrow().id).isEqualTo(articleId.toString())
     }
 
     @ExperimentalCoroutinesApi
@@ -667,7 +668,7 @@ class ForumOceanWebImplTest {
         } returns Response.success(successResponse)
         val result = web.getSignalArticle(articleId)
         assertThat(result.isSuccess).isTrue()
-        assertThat(result.getOrThrow().id).isEqualTo(articleId)
+        assertThat(result.getOrThrow().id).isEqualTo(articleId.toString())
     }
 
     @ExperimentalCoroutinesApi
@@ -716,7 +717,7 @@ class ForumOceanWebImplTest {
         } returns Response.success(successResponse)
         val result = web.getNewsArticle(articleId)
         assertThat(result.isSuccess).isTrue()
-        assertThat(result.getOrThrow().id).isEqualTo(articleId)
+        assertThat(result.getOrThrow().id).isEqualTo(articleId.toString())
     }
 
     @ExperimentalCoroutinesApi
@@ -754,7 +755,7 @@ class ForumOceanWebImplTest {
         } returns Response.success(successResponse)
         val result = web.getPersonalArticle(articleId)
         assertThat(result.isSuccess).isTrue()
-        assertThat(result.getOrThrow().id).isEqualTo(articleId)
+        assertThat(result.getOrThrow().id).isEqualTo(articleId.toString())
     }
 
     @ExperimentalCoroutinesApi
@@ -810,7 +811,7 @@ class ForumOceanWebImplTest {
         } returns Response.success(successResponse)
         val result = web.getUnknownArticle(articleId)
         assertThat(result.isSuccess).isTrue()
-        assertThat(result.getOrThrow().id).isEqualTo(articleId)
+        assertThat(result.getOrThrow().id).isEqualTo(articleId.toString())
     }
 
     @ExperimentalCoroutinesApi
@@ -862,7 +863,7 @@ class ForumOceanWebImplTest {
         } returns Response.success(successResponse)
         val result = web.getArticleV2(articleId)
         assertThat(result.isSuccess).isTrue()
-        assertThat(result.getOrThrow().id).isEqualTo(articleId)
+        assertThat(result.getOrThrow().id).isEqualTo(articleId.toString())
     }
 
     @ExperimentalCoroutinesApi
@@ -914,7 +915,7 @@ class ForumOceanWebImplTest {
         } returns Response.success(successResponse)
         val result = web.getQuestionArticleV2(articleId)
         assertThat(result.isSuccess).isTrue()
-        assertThat(result.getOrThrow().id).isEqualTo(articleId)
+        assertThat(result.getOrThrow().id).isEqualTo(articleId.toString())
     }
 
     @ExperimentalCoroutinesApi
@@ -966,7 +967,7 @@ class ForumOceanWebImplTest {
         } returns Response.success(successResponse)
         val result = web.getGroupArticleV2(articleId)
         assertThat(result.isSuccess).isTrue()
-        assertThat(result.getOrThrow().id).isEqualTo(articleId)
+        assertThat(result.getOrThrow().id).isEqualTo(articleId.toString())
     }
 
     @ExperimentalCoroutinesApi
@@ -1019,7 +1020,7 @@ class ForumOceanWebImplTest {
         } returns Response.success(successResponse)
         val result = web.getSharedArticleV2(articleId)
         assertThat(result.isSuccess).isTrue()
-        assertThat(result.getOrThrow().id).isEqualTo(articleId)
+        assertThat(result.getOrThrow().id).isEqualTo(articleId.toString())
     }
 
     @ExperimentalCoroutinesApi
@@ -1068,7 +1069,7 @@ class ForumOceanWebImplTest {
         } returns Response.success(successResponse)
         val result = web.getSignalArticleV2(articleId)
         assertThat(result.isSuccess).isTrue()
-        assertThat(result.getOrThrow().id).isEqualTo(articleId)
+        assertThat(result.getOrThrow().id).isEqualTo(articleId.toString())
     }
 
     @ExperimentalCoroutinesApi
@@ -1117,7 +1118,7 @@ class ForumOceanWebImplTest {
         } returns Response.success(successResponse)
         val result = web.getNewsArticleV2(articleId)
         assertThat(result.isSuccess).isTrue()
-        assertThat(result.getOrThrow().id).isEqualTo(articleId)
+        assertThat(result.getOrThrow().id).isEqualTo(articleId.toString())
     }
 
     @ExperimentalCoroutinesApi
@@ -1155,7 +1156,7 @@ class ForumOceanWebImplTest {
         } returns Response.success(successResponse)
         val result = web.getPersonalArticleV2(articleId)
         assertThat(result.isSuccess).isTrue()
-        assertThat(result.getOrThrow().id).isEqualTo(articleId)
+        assertThat(result.getOrThrow().id).isEqualTo(articleId.toString())
     }
 
     @ExperimentalCoroutinesApi
@@ -1211,7 +1212,7 @@ class ForumOceanWebImplTest {
         } returns Response.success(successResponse)
         val result = web.getUnknownArticleV2(articleId)
         assertThat(result.isSuccess).isTrue()
-        assertThat(result.getOrThrow().id).isEqualTo(articleId)
+        assertThat(result.getOrThrow().id).isEqualTo(articleId.toString())
     }
 
     @ExperimentalCoroutinesApi
@@ -5186,4 +5187,49 @@ class ForumOceanWebImplTest {
         val result = web.hideComment("123-1")
         assertThat(result.isFailure).isTrue()
     }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得單一留言_success`() = testScope.runTest {
+        val commentId = "123-1"
+        val response = CommentResponseBodyV2(
+            id = commentId,
+            commentIndex = null,
+            content = null,
+            createTime = null,
+            modifyTime = null,
+            isHidden = null,
+            myReaction = null,
+            reaction = null,
+            reactionCount = null,
+            myCommentIndex = null,
+            commentCount = null,
+            report = null
+        )
+        coEvery {
+            forumOceanService.getSingleComment(
+                authorization = any(),
+                path = any(),
+                articleId = any()
+            )
+        } returns Response.success(response)
+        val result = web.getSingleComment(commentId)
+        assertThat(result.isSuccess).isTrue()
+        assertThat(result.getOrThrow().id).isEqualTo(commentId)
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得單一留言_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getSingleComment(
+                authorization = any(),
+                path = any(),
+                articleId = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getSingleComment("123-1")
+        assertThat(result.isFailure).isTrue()
+    }
+
 }
