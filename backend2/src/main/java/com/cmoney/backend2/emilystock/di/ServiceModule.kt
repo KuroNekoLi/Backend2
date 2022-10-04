@@ -10,7 +10,7 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 
 val emilyServiceModule = module {
-    single<EmilyService> {
+    single {
         get<Retrofit>(BACKEND2_RETROFIT).create(EmilyService::class.java)
     }
     single<EmilyWeb> {

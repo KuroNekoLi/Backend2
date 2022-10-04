@@ -13,7 +13,7 @@ import retrofit2.Retrofit
 val BACKEND_ADDITION_INFORMATION_REVISIT_SERVICE = named("AdditionInformationRevisitService")
 
 val additionalInformationRevisitServiceModule = module {
-    single<AdditionalInformationRevisitService> {
+    single {
         get<Retrofit>(BACKEND2_RETROFIT).create(AdditionalInformationRevisitService::class.java)
     }
     single<AdditionalInformationRevisitWeb>(BACKEND_ADDITION_INFORMATION_REVISIT_SERVICE) { (servicePath: ServicePath) ->

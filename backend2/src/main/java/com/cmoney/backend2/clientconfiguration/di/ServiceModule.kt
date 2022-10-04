@@ -9,7 +9,7 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 
 val clientConfigurationModule = module {
-    single<ClientConfigurationService> {
+    single {
         get<Retrofit>(BACKEND2_RETROFIT).create(ClientConfigurationService::class.java)
     }
     single<ClientConfigurationWeb> {

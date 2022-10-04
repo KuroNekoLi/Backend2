@@ -10,7 +10,7 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 
 val dtnoServiceModule = module {
-    single<DtnoService> {
+    single {
         get<Retrofit>(BACKEND2_RETROFIT).create(DtnoService::class.java)
     }
     single<DtnoWeb> {

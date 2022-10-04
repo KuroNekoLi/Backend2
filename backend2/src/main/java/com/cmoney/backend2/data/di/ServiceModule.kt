@@ -31,7 +31,7 @@ fun dataServiceModule(retrofitProvider: RetrofitProvider) = module {
 private val DATA_RETROFIT = named("cmoney_backend_data_retrofit")
 
 val dataServiceModule = module {
-    single<Retrofit>(DATA_RETROFIT) {
+    single(DATA_RETROFIT) {
         val backend2Retrofit = get<Retrofit>(BACKEND2_RETROFIT)
         val retrofitBuilder = backend2Retrofit.newBuilder()
         // 移除動態切換Host Interceptor
@@ -39,7 +39,7 @@ val dataServiceModule = module {
             .callFactory(createChatOkHttpClient(backend2Retrofit.callFactory()))
             .build()
     }
-    single<DataService> {
+    single {
         get<Retrofit>(DATA_RETROFIT).create(DataService::class.java)
     }
     single<DataWeb> {

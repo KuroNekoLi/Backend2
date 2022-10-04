@@ -16,7 +16,7 @@ private const val ICHECKAPP_BASE_URL = "https://www.icheckapp.com.tw/podcast/"
 val BACKEND2_ICHECKAPP_RETROFIT = named("backend2_icheckapp_retrofit")
 
 val videoChannelServiceModule = module {
-    factory<Retrofit>(BACKEND2_ICHECKAPP_RETROFIT) {
+    factory(BACKEND2_ICHECKAPP_RETROFIT) {
         val backend2Retrofit = get<Retrofit>(BACKEND2_RETROFIT)
         val backend2RetrofitBuilder = backend2Retrofit.newBuilder()
         with(backend2RetrofitBuilder) {
@@ -26,7 +26,7 @@ val videoChannelServiceModule = module {
         backend2RetrofitBuilder.build()
     }
 
-    single<VideoChannelService> {
+    single {
         get<Retrofit>(BACKEND2_ICHECKAPP_RETROFIT).create(VideoChannelService::class.java)
     }
 

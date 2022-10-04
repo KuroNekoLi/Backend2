@@ -10,7 +10,7 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 
 val centralizedImageServiceModule = module {
-    single<CentralizedImageService> {
+    single {
         get<Retrofit>(BACKEND2_RETROFIT).create(CentralizedImageService::class.java)
     }
     single<CentralizedImageWeb> {
