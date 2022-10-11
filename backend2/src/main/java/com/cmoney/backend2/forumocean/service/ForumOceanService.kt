@@ -1503,7 +1503,7 @@ interface ForumOceanService {
      *
      */
     @RecordApi
-    @GET("{path}/api/Article/Get/{articleId}")
+    @GET("{path}/api/Article/{articleId}")
     @Headers("X-Version: 2.0")
     suspend fun getArticleV2(
         @Header("Authorization") authorization: String,
@@ -1516,7 +1516,7 @@ interface ForumOceanService {
      *
      */
     @RecordApi
-    @GET("{path}/api/Article/Get/{articleId}")
+    @GET("{path}/api/Article/{articleId}")
     @Headers("X-Version: 2.0")
     suspend fun getQuestionArticleV2(
         @Header("Authorization") authorization: String,
@@ -1529,7 +1529,7 @@ interface ForumOceanService {
      *
      */
     @RecordApi
-    @GET("{path}/api/Article/Get/{articleId}")
+    @GET("{path}/api/Article/{articleId}")
     @Headers("X-Version: 2.0")
     suspend fun getNewsArticleV2(
         @Header("Authorization") authorization: String,
@@ -1542,7 +1542,7 @@ interface ForumOceanService {
      *
      */
     @RecordApi
-    @GET("{path}/api/Article/Get/{articleId}")
+    @GET("{path}/api/Article/{articleId}")
     @Headers("X-Version: 2.0")
     suspend fun getSignalArticleV2(
         @Header("Authorization") authorization: String,
@@ -1555,7 +1555,7 @@ interface ForumOceanService {
      *
      */
     @RecordApi
-    @GET("{path}/api/Article/Get/{articleId}")
+    @GET("{path}/api/Article/{articleId}")
     @Headers("X-Version: 2.0")
     suspend fun getGroupArticleV2(
         @Header("Authorization") authorization: String,
@@ -1568,7 +1568,7 @@ interface ForumOceanService {
      *
      */
     @RecordApi
-    @GET("{path}/api/Article/Get/{articleId}")
+    @GET("{path}/api/Article/{articleId}")
     @Headers("X-Version: 2.0")
     suspend fun getSharedArticleV2(
         @Header("Authorization") authorization: String,
@@ -1580,7 +1580,7 @@ interface ForumOceanService {
      * 取得個人文章資訊(專欄文章/筆記)v2
      */
     @RecordApi
-    @GET("{path}/api/Article/Get/{articleId}")
+    @GET("{path}/api/Article/{articleId}")
     @Headers("X-Version: 2.0")
     suspend fun getPersonalArticleV2(
         @Header("Authorization") authorization: String,
@@ -1593,7 +1593,7 @@ interface ForumOceanService {
      *
      */
     @RecordApi
-    @GET("{path}/api/Article/Get/{articleId}")
+    @GET("{path}/api/Article/{articleId}")
     @Headers("X-Version: 2.0")
     suspend fun getUnknownArticleV2(
         @Header("Authorization") authorization: String,

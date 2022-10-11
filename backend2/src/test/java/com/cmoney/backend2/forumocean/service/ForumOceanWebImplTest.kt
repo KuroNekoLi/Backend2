@@ -5194,7 +5194,6 @@ class ForumOceanWebImplTest {
         val commentId = "123-1"
         val response = CommentResponseBodyV2(
             id = commentId,
-            commentIndex = null,
             content = null,
             createTime = null,
             modifyTime = null,

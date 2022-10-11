@@ -8,8 +8,6 @@ import com.google.gson.annotations.SerializedName
 data class CommentResponseBodyV2(
     @SerializedName("id")
     val id: String?,
-    @SerializedName("commentIndex")
-    val commentIndex: Long?,
     @SerializedName("content")
     val content: CommentContentV2?,
     @SerializedName("createTime")
