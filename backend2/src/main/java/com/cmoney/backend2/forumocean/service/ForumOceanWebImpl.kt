@@ -529,7 +529,7 @@ class ForumOceanWebImpl(
         }
     }
 
-    @Deprecated("請使用getCommentWithIdV2")
+    @Deprecated("請使用getCommentsByIndex")
     override suspend fun getCommentsWithId(
         articleId: Long,
         commentIds: List<Long>
@@ -544,16 +544,16 @@ class ForumOceanWebImpl(
         }
     }
 
-    override suspend fun getCommentsWithIdV2(
+    override suspend fun getCommentsByIndex(
         articleOrCommentId: String,
         commentIndices: List<Long>
     ): Result<GetCommentsResponseBody> = withContext(dispatcher.io()) {
         kotlin.runCatching {
-            service.getCommentWithIdV2(
+            service.getCommentsByIndex(
                 path = serverName,
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 articleId = articleOrCommentId,
-                commentIds = commentIndices.joinToString(",")
+                commentIndex = commentIndices.joinToString(",")
             ).checkResponseBody(jsonParser)
         }
     }

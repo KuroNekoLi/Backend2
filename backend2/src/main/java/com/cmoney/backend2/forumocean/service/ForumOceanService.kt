@@ -372,7 +372,7 @@ interface ForumOceanService {
     ): Response<List<CommentResponseBody>>
 
     @RecordApi
-    @Deprecated("請使用getCommentWithIdV2")
+    @Deprecated("請使用getCommentsByIndex")
     @GET("{path}/api/Comment/GetWithIds/{articleId}")
     suspend fun getCommentWithId(
         @Header("Authorization") authorization: String,
@@ -1616,16 +1616,16 @@ interface ForumOceanService {
     ): Response<GetCommentsResponseBody>
 
     /**
-     * 取得留言V2(不可訪客)
+     * 取得指定 index 的留言
      */
     @RecordApi
-    @GET("{path}/api/Comment/GetWithIds/{articleId}")
+    @GET("{path}/api/Article/CommentsByIndex")
     @Headers("X-Version: 2.0")
-    suspend fun getCommentWithIdV2(
+    suspend fun getCommentsByIndex(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
-        @Path("articleId") articleId: String,
-        @Query("commentIds") commentIds: String
+        @Query("articleId") articleId: String,
+        @Query("commentIndex") commentIndex: String
     ): Response<GetCommentsResponseBody>
 
     /**

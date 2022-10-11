@@ -403,13 +403,13 @@ interface ForumOceanWeb {
     ): Result<List<CommentResponseBody>>
 
     /**
-     * 取得主文或回文的指定回文清單v2
+     * 取得指定 index 的留言
      *
      * @param articleOrCommentId 主文或回文Id
      * @param commentIndices 回文index清單
      * @return
      */
-    suspend fun getCommentsWithIdV2(
+    suspend fun getCommentsByIndex(
         articleOrCommentId: String,
         commentIndices: List<Long>
     ): Result<GetCommentsResponseBody>
