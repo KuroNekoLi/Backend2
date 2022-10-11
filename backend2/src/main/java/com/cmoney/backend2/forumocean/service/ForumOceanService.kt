@@ -1657,7 +1657,7 @@ interface ForumOceanService {
      * 取得單一留言
      */
     @RecordApi
-    @GET("{path}/api/Article/Get/{articleId}")
+    @GET("{path}/api/Article/{articleId}")
     @Headers("X-Version: 2.0")
     suspend fun getSingleComment(
         @Header("Authorization") authorization: String,
