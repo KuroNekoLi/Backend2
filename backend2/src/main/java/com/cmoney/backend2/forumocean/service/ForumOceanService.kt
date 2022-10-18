@@ -450,12 +450,23 @@ interface ForumOceanService {
     ): Response<Void>
 
     @RecordApi
+    @Deprecated("請使用createReaction")
     @POST("{path}/api/Interactive/Reaction/{articleId}")
     suspend fun createArticleReaction(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Path("articleId") articleId: Long,
         @Query("reactionType") reactionType: Int
+    ): Response<Void>
+
+    @RecordApi
+    @Headers("X-Version: 2.0")
+    @POST("{path}/api/Article/{articleId}/Emoji/{emojiType}")
+    suspend fun createReaction(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("articleId") articleId: String,
+        @Path("emojiType") emojiType: Int
     ): Response<Void>
 
     @RecordApi

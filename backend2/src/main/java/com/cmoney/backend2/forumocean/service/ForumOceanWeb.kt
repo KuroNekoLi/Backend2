@@ -468,6 +468,7 @@ interface ForumOceanWeb {
      * @param reactionType 反應
      * @return
      */
+    @Deprecated("請使用createReaction")
     suspend fun reactionComment(
         articleId: Long,
         commentIndex: Long,
@@ -758,8 +759,21 @@ interface ForumOceanWeb {
      * @param type 反應類型
      * @return
      */
+    @Deprecated("請使用createReaction")
     suspend fun createArticleReaction(
         articleId: Long,
+        type: ReactionType
+    ): Result<Unit>
+
+    /**
+     * 對文章/回覆做出互動
+     *
+     * @param articleId 文章Id
+     * @param type 反應類型
+     * @return
+     */
+    suspend fun createReaction(
+        articleId: String,
         type: ReactionType
     ): Result<Unit>
 
