@@ -680,13 +680,13 @@ class ForumOceanWebImpl(
             }
         }
 
-    override suspend fun createReaction(articleId: String, type: ReactionType): Result<Unit> {
+    override suspend fun createReaction(id: String, type: ReactionType): Result<Unit> {
         return withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.createReaction(
                     path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
-                    articleId = articleId,
+                    articleId = id,
                     emojiType = type.value
                 ).handleNoContent(jsonParser)
             }

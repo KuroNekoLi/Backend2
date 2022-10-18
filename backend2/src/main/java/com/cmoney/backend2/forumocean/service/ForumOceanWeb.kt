@@ -767,14 +767,14 @@ interface ForumOceanWeb {
     ): Result<Unit>
 
     /**
-     * 對文章/回覆做出互動
+     * 對文章/留言做出互動
      *
-     * @param articleId 文章Id
+     * @param id 文章或留言id
      * @param type 反應類型
      * @return
      */
     suspend fun createReaction(
-        articleId: String,
+        id: String,
         type: ReactionType
     ): Result<Unit>
 
