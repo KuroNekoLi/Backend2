@@ -396,7 +396,7 @@ interface ForumOceanWeb {
      * @param commentIds 回文Id清單
      * @return
      */
-    @Deprecated("請使用getCommentWithIdV2")
+    @Deprecated("請使用getCommentsByIndex")
     suspend fun getCommentsWithId(
         articleId: Long,
         commentIds: List<Long>
@@ -445,7 +445,16 @@ interface ForumOceanWeb {
      * @param commentIndex 回文索引
      * @return
      */
+    @Deprecated("請使用deleteCommentV2")
     suspend fun deleteComment(articleId: Long, commentIndex: Long): Result<Unit>
+
+    /**
+     * 刪除回文
+     *
+     * @param commentId 回文Id
+     * @return
+     */
+    suspend fun deleteCommentV2(commentId: String): Result<Unit>
 
     //endregion
 

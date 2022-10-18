@@ -400,12 +400,22 @@ interface ForumOceanService {
     ): Response<Void>
 
     @RecordApi
+    @Deprecated("請使用deleteCommentV2")
     @DELETE("{path}/api/Comment/Delete/{articleId}/{commentIndex}")
     suspend fun deleteComment(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Path("articleId") articleId: Long,
         @Path("commentIndex") commentIndex: Long
+    ): Response<Void>
+
+    @RecordApi
+    @Headers("X-Version: 2.0")
+    @DELETE("{path}/api/Article/{articleId}/Comment")
+    suspend fun deleteCommentV2(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("articleId") articleId: String
     ): Response<Void>
 
     @RecordApi

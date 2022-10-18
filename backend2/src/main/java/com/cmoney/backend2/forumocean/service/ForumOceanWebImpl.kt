@@ -600,6 +600,18 @@ class ForumOceanWebImpl(
             }
         }
 
+    override suspend fun deleteCommentV2(commentId: String): Result<Unit> {
+       return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.deleteCommentV2(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    articleId = commentId
+                ).handleNoContent(jsonParser)
+            }
+        }
+    }
+
     override suspend fun reactionComment(
         articleId: Long,
         commentIndex: Long,
