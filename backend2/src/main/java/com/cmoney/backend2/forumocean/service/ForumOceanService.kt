@@ -441,6 +441,7 @@ interface ForumOceanService {
     ): Response<List<ReactionInfo>>
 
     @RecordApi
+    @Deprecated("請使用deleteReaction")
     @DELETE("{path}/api/CommentInteractive/RemoveReaction/{articleId}/{commentIndex}")
     suspend fun removeCommentReaction(
         @Header("Authorization") authorization: String,
@@ -490,11 +491,21 @@ interface ForumOceanService {
     ): Response<Void>
 
     @RecordApi
+    @Deprecated("請使用deleteReaction")
     @DELETE("{path}/api/Interactive/RemoveReaction/{articleId}")
     suspend fun deleteArticleReaction(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Path("articleId") articleId: Long
+    ): Response<Void>
+
+    @RecordApi
+    @Headers("X-Version: 2.0")
+    @DELETE("{path}/api/Article/{articleId}/Emoji")
+    suspend fun deleteReaction(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("articleId") articleId: String
     ): Response<Void>
 
     @RecordApi

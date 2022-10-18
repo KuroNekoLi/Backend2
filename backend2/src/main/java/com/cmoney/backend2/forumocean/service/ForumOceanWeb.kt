@@ -500,6 +500,7 @@ interface ForumOceanWeb {
      * @param commentIndex 回文索引
      * @return
      */
+    @Deprecated("請使用deleteReaction")
     suspend fun removeReactionComment(
         articleId: Long,
         commentIndex: Long
@@ -799,8 +800,19 @@ interface ForumOceanWeb {
      * @param articleId 文章Id
      * @return
      */
+    @Deprecated("請使用deleteReaction")
     suspend fun deleteArticleReaction(
         articleId: Long
+    ): Result<Unit>
+
+    /**
+     * 移除對文章/回覆的反應
+     *
+     * @param id 文章或留言Id
+     * @return
+     */
+    suspend fun deleteReaction(
+        id: String
     ): Result<Unit>
 
     /**
