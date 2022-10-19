@@ -19,14 +19,31 @@ class NotificationWebImpl(
     private val dispatcher: DispatcherProvider = DefaultDispatcherProvider()
 ) : NotificationWeb {
 
+    @Deprecated("Will remove in 2023/1/1", replaceWith = ReplaceWith("this.updateArriveCount(sn, pushToken, title, content, emptyList(), 0)"))
     override suspend fun updateArriveCount(
         sn: Long,
         pushToken: String,
         analyticsId: Long,
         title: String,
-        content: String
+        content: String,
+    ): Result<Unit> = updateArriveCount(
+        sn = sn,
+        pushToken = pushToken,
+        title = title,
+        content = content,
+        analyticsLabels = emptyList(),
+        createTime = 0L
+    )
+
+    override suspend fun updateArriveCount(
+        sn: Long,
+        pushToken: String,
+        title: String,
+        content: String,
+        analyticsLabels: List<String>,
+        createTime: Long
     ): Result<Unit> = withContext(dispatcher.io()) {
-        runCatching {
+        kotlin.runCatching {
             val response = service.updateArriveCount(
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 body = UpdateArrivedRequestBody(
@@ -36,21 +53,39 @@ class NotificationWebImpl(
                     title = title,
                     content = content,
                     platform = setting.platform.code,
-                    analyticsId = analyticsId
+                    analyticsLabels = analyticsLabels,
+                    createTime = createTime
                 )
             )
             response.handleNoContent(gson)
         }
     }
 
+    @Deprecated("Will remove in 2023/1/1", replaceWith = ReplaceWith("this.updateClickCount(sn, pushToken, title, content, emptyList(), 0)"))
     override suspend fun updateClickCount(
         sn: Long,
         pushToken: String,
         analyticsId: Long,
         title: String,
         content: String
+    ): Result<Unit> = updateClickCount(
+        sn = sn,
+        pushToken = pushToken,
+        title = title,
+        content = content,
+        analyticsLabels = emptyList(),
+        createTime = 0L
+    )
+
+    override suspend fun updateClickCount(
+        sn: Long,
+        pushToken: String,
+        title: String,
+        content: String,
+        analyticsLabels: List<String>,
+        createTime: Long
     ): Result<Unit> = withContext(dispatcher.io()) {
-        runCatching {
+        kotlin.runCatching {
             val response = service.updateClickCount(
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 body = UpdateClickedCountRequestBody(
@@ -60,7 +95,8 @@ class NotificationWebImpl(
                     title = title,
                     content = content,
                     platform = setting.platform.code,
-                    analyticsId = analyticsId
+                    analyticsLabels = analyticsLabels,
+                    createTime = createTime
                 )
             )
             response.handleNoContent(gson)
