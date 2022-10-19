@@ -1563,7 +1563,7 @@ class ForumOceanWebImplTest {
             CreateCommentResponseBodyV2(commentIndex)
         )
         val result = web.createCommentV2(
-            articleId = "123-1",
+            id = "123-1",
             text = null,
             multiMedia = listOf()
         )
@@ -1583,7 +1583,7 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(403, "".toResponseBody())
         val result = web.createCommentV2(
-            articleId = "123-1",
+            id = "123-1",
             text = null,
             multiMedia = listOf()
         )

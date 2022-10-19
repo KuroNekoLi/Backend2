@@ -455,7 +455,7 @@ class ForumOceanWebImpl(
     }
 
     override suspend fun createCommentV2(
-        articleId: String,
+        id: String,
         text: String?,
         multiMedia: List<MediaType>?
     ): Result<CreateCommentResponseBodyV2> {
@@ -464,7 +464,7 @@ class ForumOceanWebImpl(
                 service.createCommentV2(
                     path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
-                    articleId = articleId,
+                    articleId = id,
                     body = CreateCommentRequestBodyV2(
                         text = text,
                         multiMedia = multiMedia
@@ -545,14 +545,14 @@ class ForumOceanWebImpl(
     }
 
     override suspend fun getCommentsByIndex(
-        articleOrCommentId: String,
+        id: String,
         commentIndices: List<Long>
     ): Result<GetCommentsResponseBody> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getCommentsByIndex(
                 path = serverName,
                 authorization = setting.accessToken.createAuthorizationBearer(),
-                articleId = articleOrCommentId,
+                articleId = id,
                 commentIndex = commentIndices.joinToString(",")
             ).checkResponseBody(jsonParser)
         }

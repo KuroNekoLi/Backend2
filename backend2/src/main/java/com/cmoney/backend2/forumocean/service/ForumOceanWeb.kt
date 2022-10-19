@@ -332,14 +332,14 @@ interface ForumOceanWeb {
     ): Result<CreateCommentResponseBody>
 
     /**
-     * 對指定主文發一篇回文V2
-     * @param articleId 指定主文Id
+     * 對指定主文或留言發一篇回文
+     * @param id 主文或留言id
      * @param text content
      * @param multiMedia ContentType
      * @return 回文Id
      */
     suspend fun createCommentV2(
-        articleId: String,
+        id: String,
         text: String?,
         multiMedia: List<MediaType>?
     ): Result<CreateCommentResponseBodyV2>
@@ -405,12 +405,12 @@ interface ForumOceanWeb {
     /**
      * 取得指定 index 的留言
      *
-     * @param articleOrCommentId 主文或回文Id
+     * @param id 主文或回文Id
      * @param commentIndices 回文index清單
      * @return
      */
     suspend fun getCommentsByIndex(
-        articleOrCommentId: String,
+        id: String,
         commentIndices: List<Long>
     ): Result<GetCommentsResponseBody>
 

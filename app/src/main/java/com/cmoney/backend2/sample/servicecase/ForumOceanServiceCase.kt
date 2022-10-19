@@ -190,7 +190,7 @@ class ForumOceanServiceCase : ServiceCase {
     private suspend fun ForumOceanWeb.testComment(articleId: Long) {
         var commentId: Long? = null
         createCommentV2(
-            articleId = articleId.toString(),
+            id = articleId.toString(),
             text = null,
             multiMedia = listOf(
                 MediaType(
@@ -224,7 +224,7 @@ class ForumOceanServiceCase : ServiceCase {
 
         val commentIdList = mutableListOf<Long>()
         createCommentV2(
-            articleId = articleId.toString(),
+            id = articleId.toString(),
             text = null,
             multiMedia = listOf(
                 MediaType(
@@ -245,7 +245,7 @@ class ForumOceanServiceCase : ServiceCase {
             }
         )
         createCommentV2(
-            articleId = articleId.toString(),
+            id = articleId.toString(),
             text = "第二篇回文",
             multiMedia = listOf(
                 MediaType(
@@ -255,7 +255,7 @@ class ForumOceanServiceCase : ServiceCase {
             )
         ).logResponse(TAG)
         createCommentV2(
-            articleId = articleId.toString(),
+            id = articleId.toString(),
             text = "第204sadjskdj篇回文",
             multiMedia = listOf(
                 MediaType(
@@ -551,7 +551,7 @@ class ForumOceanServiceCase : ServiceCase {
 
         articleId?.also {
             val commentId = createCommentV2(
-                articleId = articleId.toString(),
+                id = articleId.toString(),
                 text = "需被檢舉的回文",
                 multiMedia = null
             ).getOrNull()
@@ -629,7 +629,7 @@ class ForumOceanServiceCase : ServiceCase {
 
             presidentGroupArticleId?.apply {
                 createCommentV2(
-                    articleId = this.toString(),
+                    id = this.toString(),
                     text = "社團回文應該失敗",
                     multiMedia = null
                 ).logResponse(TAG)
@@ -678,7 +678,7 @@ class ForumOceanServiceCase : ServiceCase {
 
             groupArticleId?.apply {
                 createCommentV2(
-                    articleId = this.toString(),
+                    id = this.toString(),
                     text = "社團回文",
                     multiMedia = listOf()
                 ).logResponse(TAG)
