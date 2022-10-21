@@ -50,6 +50,8 @@ import com.cmoney.backend2.forumocean.service.api.variable.request.PersonalArtic
 import com.cmoney.backend2.forumocean.service.api.variable.request.ReactionType
 import com.cmoney.backend2.forumocean.service.api.variable.response.GroupPositionInfo
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations.GetRecommendationResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentContent
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBodyV2
@@ -435,10 +437,9 @@ class ForumOceanWebImplTest {
         val successResponse = ArticleResponseBody.GeneralArticleResponseBody(
             articleContent = null,
             createTime = null,
-            id = articleId.toString(),
+            id = articleId,
             modifyTime = null,
             reactionState = null,
-            myReaction = null,
             reaction = mapOf(),
             reactionCount = null,
             collected = null,
@@ -452,6 +453,7 @@ class ForumOceanWebImplTest {
             totalReportCount = null,
             report = null,
             commentDeletedCount = null,
+            donate = null
         )
         coEvery {
             forumOceanService.getArticle(
@@ -487,10 +489,9 @@ class ForumOceanWebImplTest {
         val successResponse = ArticleResponseBody.QuestionArticleResponseBody(
             articleContent = null,
             createTime = null,
-            id = articleId.toString(),
+            id = articleId,
             modifyTime = null,
             reactionState = null,
-            myReaction = null,
             reaction = mapOf(),
             reactionCount = null,
             collected = null,
@@ -539,10 +540,9 @@ class ForumOceanWebImplTest {
         val successResponse = ArticleResponseBody.GroupArticleResponseBody(
             articleContent = null,
             createTime = null,
-            id = articleId.toString(),
+            id = articleId,
             modifyTime = null,
             reactionState = null,
-            myReaction = null,
             reaction = mapOf(),
             reactionCount = null,
             collected = null,
@@ -555,7 +555,8 @@ class ForumOceanWebImplTest {
             weight = null,
             totalReportCount = null,
             report = null,
-            commentDeletedCount = null
+            commentDeletedCount = null,
+            donate = null
         )
         coEvery {
             forumOceanService.getGroupArticle(
@@ -591,10 +592,9 @@ class ForumOceanWebImplTest {
         val successResponse = ArticleResponseBody.SharedArticleResponseBody(
             articleContent = null,
             createTime = null,
-            id = articleId.toString(),
+            id = articleId,
             modifyTime = null,
             reactionState = null,
-            myReaction = null,
             reaction = mapOf(),
             reactionCount = null,
             collected = null,
@@ -608,7 +608,8 @@ class ForumOceanWebImplTest {
             weight = null,
             totalReportCount = null,
             report = null,
-            commentDeletedCount = null
+            commentDeletedCount = null,
+            donate = null
         )
         coEvery {
             forumOceanService.getSharedArticle(
@@ -644,10 +645,9 @@ class ForumOceanWebImplTest {
         val successResponse = ArticleResponseBody.SignalArticleResponseBody(
             articleContent = null,
             createTime = null,
-            id = articleId.toString(),
+            id = articleId,
             modifyTime = null,
             reactionState = null,
-            myReaction = null,
             reaction = mapOf(),
             reactionCount = null,
             collected = null,
@@ -693,10 +693,9 @@ class ForumOceanWebImplTest {
         val successResponse = ArticleResponseBody.NewsArticleResponseBody(
             articleContent = null,
             createTime = null,
-            id = articleId.toString(),
+            id = articleId,
             modifyTime = null,
             reactionState = null,
-            myReaction = null,
             reaction = mapOf(),
             reactionCount = null,
             collected = null,
@@ -742,7 +741,7 @@ class ForumOceanWebImplTest {
         val successResponse = ArticleResponseBody.PersonalArticleResponseBody(
             articleContent = null,
             createTime = null,
-            id = articleId.toString(),
+            id = articleId,
             modifyTime = null,
             weight = null
         )
@@ -780,10 +779,9 @@ class ForumOceanWebImplTest {
         val successResponse = ArticleResponseBody.UnknownArticleResponseBody(
             articleContent = null,
             createTime = null,
-            id = articleId.toString(),
+            id = articleId,
             modifyTime = null,
             reactionState = null,
-            myReaction = null,
             reaction = mapOf(),
             reactionCount = null,
             collected = null,
@@ -800,7 +798,8 @@ class ForumOceanWebImplTest {
             weight = null,
             totalReportCount = null,
             report = null,
-            commentDeletedCount = null
+            commentDeletedCount = null,
+            donate = null
         )
         coEvery {
             forumOceanService.getUnknownArticle(
@@ -831,28 +830,30 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getArticleV2_取得一般文章成功`() = testScope.runTest {
+    fun `getArticleV2_取得未知型態文章成功測試`() = testScope.runTest {
         val articleId = 1000L
-        val successResponse = ArticleResponseBody.GeneralArticleResponseBody(
+        val successResponse = ArticleResponseBodyV2(
             articleContent = null,
             createTime = null,
             id = articleId.toString(),
+            creatorId = null,
             modifyTime = null,
-            reactionState = null,
-            myReaction = null,
-            reaction = mapOf(),
-            reactionCount = null,
+            myEmoji = null,
+            emojiCount = mapOf(),
             collected = null,
             collectCount = null,
             myCommentIndex = listOf(),
             commentCount = null,
+            shareCount = null,
+            interested = null,
+            interestCount = null,
+            rewardPoints = null,
             donateCount = null,
             voteCount = null,
             voteStatus = null,
-            weight = null,
             totalReportCount = null,
             report = null,
-            commentDeletedCount = null
+            isHidden = null
         )
         coEvery {
             forumOceanService.getArticleV2(
@@ -868,7 +869,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getArticleV2_取得一般文章失敗`() = testScope.runTest {
+    fun `getArticleV2_取得未知型態文章失敗測試`() = testScope.runTest {
         val articleId = 1000L
         coEvery {
             forumOceanService.getArticleV2(
@@ -878,355 +879,6 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(403, "".toResponseBody())
         val result = web.getArticleV2(articleId)
-        assertThat(result.isSuccess).isFalse()
-    }
-
-    @ExperimentalCoroutinesApi
-    @Test
-    fun `getQuestionArticleV2_取得問答文章成功測試`() = testScope.runTest {
-        val articleId = 1000L
-        val successResponse = ArticleResponseBody.QuestionArticleResponseBody(
-            articleContent = null,
-            createTime = null,
-            id = articleId.toString(),
-            modifyTime = null,
-            reactionState = null,
-            myReaction = null,
-            reaction = mapOf(),
-            reactionCount = null,
-            collected = null,
-            collectCount = null,
-            myCommentIndex = listOf(),
-            commentCount = null,
-            interested = null,
-            interestCount = null,
-            rewardPoints = null,
-            weight = null,
-            totalReportCount = null,
-            report = null,
-            commentDeletedCount = null
-        )
-        coEvery {
-            forumOceanService.getQuestionArticleV2(
-                authorization = any(),
-                articleId = articleId.toString(),
-                path = ""
-            )
-        } returns Response.success(successResponse)
-        val result = web.getQuestionArticleV2(articleId)
-        assertThat(result.isSuccess).isTrue()
-        assertThat(result.getOrThrow().id).isEqualTo(articleId.toString())
-    }
-
-    @ExperimentalCoroutinesApi
-    @Test
-    fun `getQuestionArticleV2_取得問答文章失敗測試`() = testScope.runTest {
-        val articleId = 1000L
-        coEvery {
-            forumOceanService.getQuestionArticleV2(
-                authorization = any(),
-                articleId = articleId.toString(),
-                path = ""
-            )
-        } returns Response.error(403, "".toResponseBody())
-        val result = web.getQuestionArticleV2(articleId)
-        assertThat(result.isSuccess).isFalse()
-    }
-
-    @ExperimentalCoroutinesApi
-    @Test
-    fun `getGroupArticleV2_取得社團文章成功測試`() = testScope.runTest {
-        val articleId = 1000L
-        val successResponse = ArticleResponseBody.GroupArticleResponseBody(
-            articleContent = null,
-            createTime = null,
-            id = articleId.toString(),
-            modifyTime = null,
-            reactionState = null,
-            myReaction = null,
-            reaction = mapOf(),
-            reactionCount = null,
-            collected = null,
-            collectCount = null,
-            myCommentIndex = listOf(),
-            commentCount = null,
-            donateCount = null,
-            voteCount = null,
-            voteStatus = null,
-            weight = null,
-            totalReportCount = null,
-            report = null,
-            commentDeletedCount = null
-        )
-        coEvery {
-            forumOceanService.getGroupArticleV2(
-                authorization = any(),
-                articleId = articleId.toString(),
-                path = ""
-            )
-        } returns Response.success(successResponse)
-        val result = web.getGroupArticleV2(articleId)
-        assertThat(result.isSuccess).isTrue()
-        assertThat(result.getOrThrow().id).isEqualTo(articleId.toString())
-    }
-
-    @ExperimentalCoroutinesApi
-    @Test
-    fun `getGroupArticleV2_取得社團文章失敗測試`() = testScope.runTest {
-        val articleId = 1000L
-        coEvery {
-            forumOceanService.getGroupArticleV2(
-                authorization = any(),
-                articleId = articleId.toString(),
-                path = ""
-            )
-        } returns Response.error(403, "".toResponseBody())
-        val result = web.getGroupArticleV2(articleId)
-        assertThat(result.isSuccess).isFalse()
-    }
-
-    @ExperimentalCoroutinesApi
-    @Test
-    fun `getSharedArticleV2_取得轉推文章成功測試`() = testScope.runTest {
-        val articleId = 1000L
-        val successResponse = ArticleResponseBody.SharedArticleResponseBody(
-            articleContent = null,
-            createTime = null,
-            id = articleId.toString(),
-            modifyTime = null,
-            reactionState = null,
-            myReaction = null,
-            reaction = mapOf(),
-            reactionCount = null,
-            collected = null,
-            collectCount = null,
-            myCommentIndex = listOf(),
-            commentCount = null,
-            shareCount = null,
-            donateCount = null,
-            voteCount = null,
-            voteStatus = null,
-            weight = null,
-            totalReportCount = null,
-            report = null,
-            commentDeletedCount = null
-        )
-        coEvery {
-            forumOceanService.getSharedArticleV2(
-                authorization = any(),
-                articleId = articleId.toString(),
-                path = ""
-            )
-        } returns Response.success(successResponse)
-        val result = web.getSharedArticleV2(articleId)
-        assertThat(result.isSuccess).isTrue()
-        assertThat(result.getOrThrow().id).isEqualTo(articleId.toString())
-    }
-
-    @ExperimentalCoroutinesApi
-    @Test
-    fun `getSharedArticleV2_取得轉推文章失敗測試`() = testScope.runTest {
-        val articleId = 1000L
-        coEvery {
-            forumOceanService.getSharedArticleV2(
-                authorization = any(),
-                articleId = articleId.toString(),
-                path = ""
-            )
-        } returns Response.error(403, "".toResponseBody())
-        val result = web.getSharedArticleV2(articleId)
-        assertThat(result.isSuccess).isFalse()
-    }
-
-    @ExperimentalCoroutinesApi
-    @Test
-    fun `getSignalArticleV2_取得訊號文章成功測試`() = testScope.runTest {
-        val articleId = 1000L
-        val successResponse = ArticleResponseBody.SignalArticleResponseBody(
-            articleContent = null,
-            createTime = null,
-            id = articleId.toString(),
-            modifyTime = null,
-            reactionState = null,
-            myReaction = null,
-            reaction = mapOf(),
-            reactionCount = null,
-            collected = null,
-            collectCount = null,
-            myCommentIndex = listOf(),
-            commentCount = null,
-            weight = null,
-            totalReportCount = null,
-            report = null,
-            commentDeletedCount = null
-        )
-        coEvery {
-            forumOceanService.getSignalArticleV2(
-                authorization = any(),
-                articleId = articleId.toString(),
-                path = ""
-            )
-        } returns Response.success(successResponse)
-        val result = web.getSignalArticleV2(articleId)
-        assertThat(result.isSuccess).isTrue()
-        assertThat(result.getOrThrow().id).isEqualTo(articleId.toString())
-    }
-
-    @ExperimentalCoroutinesApi
-    @Test
-    fun `getSignalArticleV2_取得訊號文章失敗測試`() = testScope.runTest {
-        val articleId = 1000L
-        coEvery {
-            forumOceanService.getSignalArticleV2(
-                authorization = any(),
-                articleId = articleId.toString(),
-                path = ""
-            )
-        } returns Response.error(403, "".toResponseBody())
-        val result = web.getSignalArticleV2(articleId)
-        assertThat(result.isSuccess).isFalse()
-    }
-
-    @ExperimentalCoroutinesApi
-    @Test
-    fun `getNewsArticleV2_取得新聞文章成功測試`() = testScope.runTest {
-        val articleId = 1000L
-        val successResponse = ArticleResponseBody.NewsArticleResponseBody(
-            articleContent = null,
-            createTime = null,
-            id = articleId.toString(),
-            modifyTime = null,
-            reactionState = null,
-            myReaction = null,
-            reaction = mapOf(),
-            reactionCount = null,
-            collected = null,
-            collectCount = null,
-            myCommentIndex = listOf(),
-            commentCount = null,
-            weight = null,
-            totalReportCount = null,
-            report = null,
-            commentDeletedCount = null
-        )
-        coEvery {
-            forumOceanService.getNewsArticleV2(
-                authorization = any(),
-                articleId = articleId.toString(),
-                path = ""
-            )
-        } returns Response.success(successResponse)
-        val result = web.getNewsArticleV2(articleId)
-        assertThat(result.isSuccess).isTrue()
-        assertThat(result.getOrThrow().id).isEqualTo(articleId.toString())
-    }
-
-    @ExperimentalCoroutinesApi
-    @Test
-    fun `getNewsArticleV2_取得新聞文章失敗測試`() = testScope.runTest {
-        val articleId = 1000L
-        coEvery {
-            forumOceanService.getNewsArticleV2(
-                authorization = any(),
-                articleId = articleId.toString(),
-                path = ""
-            )
-        } returns Response.error(403, "".toResponseBody())
-        val result = web.getNewsArticleV2(articleId)
-        assertThat(result.isSuccess).isFalse()
-    }
-
-    @ExperimentalCoroutinesApi
-    @Test
-    fun `getPersonalArticleV2_取得個人文章成功測試`() = testScope.runTest {
-        val articleId = 1000L
-        val successResponse = ArticleResponseBody.PersonalArticleResponseBody(
-            articleContent = null,
-            createTime = null,
-            id = articleId.toString(),
-            modifyTime = null,
-            weight = null
-        )
-        coEvery {
-            forumOceanService.getPersonalArticleV2(
-                authorization = any(),
-                path = "",
-                articleId = articleId.toString()
-            )
-        } returns Response.success(successResponse)
-        val result = web.getPersonalArticleV2(articleId)
-        assertThat(result.isSuccess).isTrue()
-        assertThat(result.getOrThrow().id).isEqualTo(articleId.toString())
-    }
-
-    @ExperimentalCoroutinesApi
-    @Test
-    fun `getPersonalArticleV2_取得個人文章失敗測試`() = testScope.runTest {
-        val articleId = 1000L
-        coEvery {
-            forumOceanService.getPersonalArticleV2(
-                authorization = any(),
-                path = "",
-                articleId = articleId.toString()
-            )
-        } returns Response.error(403, "".toResponseBody())
-        val result = web.getPersonalArticleV2(articleId)
-        assertThat(result.isSuccess).isFalse()
-    }
-
-    @ExperimentalCoroutinesApi
-    @Test
-    fun `getUnknownArticleV2_取得未知型態文章成功測試`() = testScope.runTest {
-        val articleId = 1000L
-        val successResponse = ArticleResponseBody.UnknownArticleResponseBody(
-            articleContent = null,
-            createTime = null,
-            id = articleId.toString(),
-            modifyTime = null,
-            reactionState = null,
-            myReaction = null,
-            reaction = mapOf(),
-            reactionCount = null,
-            collected = null,
-            collectCount = null,
-            myCommentIndex = listOf(),
-            commentCount = null,
-            shareCount = null,
-            interested = null,
-            interestCount = null,
-            rewardPoints = null,
-            donateCount = null,
-            voteCount = null,
-            voteStatus = null,
-            weight = null,
-            totalReportCount = null,
-            report = null,
-            commentDeletedCount = null
-        )
-        coEvery {
-            forumOceanService.getUnknownArticleV2(
-                authorization = any(),
-                articleId = articleId.toString(),
-                path = ""
-            )
-        } returns Response.success(successResponse)
-        val result = web.getUnknownArticleV2(articleId)
-        assertThat(result.isSuccess).isTrue()
-        assertThat(result.getOrThrow().id).isEqualTo(articleId.toString())
-    }
-
-    @ExperimentalCoroutinesApi
-    @Test
-    fun `getUnknownArticleV2_取得未知型態文章失敗測試`() = testScope.runTest {
-        val articleId = 1000L
-        coEvery {
-            forumOceanService.getUnknownArticleV2(
-                authorization = any(),
-                articleId = articleId.toString(),
-                path = ""
-            )
-        } returns Response.error(403, "".toResponseBody())
-        val result = web.getUnknownArticleV2(articleId)
         assertThat(result.isSuccess).isFalse()
     }
 
@@ -1396,7 +1048,6 @@ class ForumOceanWebImplTest {
                     id = null,
                     modifyTime = null,
                     reactionState = null,
-                    myReaction = null,
                     reaction = mapOf(),
                     reactionCount = null,
                     collected = null,
@@ -1413,7 +1064,8 @@ class ForumOceanWebImplTest {
                     weight = null,
                     totalReportCount = null,
                     report = null,
-                    commentDeletedCount = null
+                    commentDeletedCount = null,
+                    donate = null
                 )
             )
         )
@@ -5195,12 +4847,12 @@ class ForumOceanWebImplTest {
         val response = CommentResponseBodyV2(
             id = commentId,
             content = null,
+            creatorId = null,
             createTime = null,
             modifyTime = null,
             isHidden = null,
-            myReaction = null,
-            reaction = null,
-            reactionCount = null,
+            myEmoji = null,
+            emojiCount = null,
             myCommentIndex = null,
             commentCount = null,
             report = null
@@ -5228,6 +4880,36 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getSingleComment("123-1")
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `推薦_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getRecommendation(
+                authorization = any(),
+                path = any(),
+                offset = any(),
+                fetch = any()
+            )
+        } returns Response.success(GetRecommendationResponse(listOf(), true, 0))
+        val result = web.getRecommendation(0, 0)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `推薦_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getRecommendation(
+                authorization = any(),
+                path = any(),
+                offset = any(),
+                fetch = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getRecommendation(0, 0)
         assertThat(result.isFailure).isTrue()
     }
 

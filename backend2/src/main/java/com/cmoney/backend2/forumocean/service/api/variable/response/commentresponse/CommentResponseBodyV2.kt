@@ -8,6 +8,8 @@ import com.google.gson.annotations.SerializedName
 data class CommentResponseBodyV2(
     @SerializedName("id")
     val id: String?,
+    @SerializedName("creatorId")
+    val creatorId: Long?,
     @SerializedName("content")
     val content: CommentContentV2?,
     @SerializedName("createTime")
@@ -16,12 +18,10 @@ data class CommentResponseBodyV2(
     val modifyTime: Long?,
     @SerializedName("isHidden")
     val isHidden: Boolean?,
-    @SerializedName("myReaction")
-    val myReaction: String?,
-    @SerializedName("reaction")
-    val reaction: Map<String, Int>?,
-    @SerializedName("@list-reaction")
-    val reactionCount: Int?,
+    @SerializedName("myEmoji")
+    val myEmoji: String?,
+    @SerializedName("emojiCount")
+    val emojiCount: Map<String, Int>?,
     @SerializedName("myComments")
     val myCommentIndex: List<Int>?,
     @SerializedName("commentCount")

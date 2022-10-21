@@ -57,6 +57,8 @@ import com.cmoney.backend2.forumocean.service.api.role.GetMembersByRoleResponse
 import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
 import com.cmoney.backend2.forumocean.service.api.support.SearchMembersResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations.GetRecommendationResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBodyV2
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.GetCommentsResponseBody
@@ -184,7 +186,7 @@ interface ForumOceanService {
      *
      */
     @RecordApi
-    @Deprecated("請使用getQuestionArticleV2")
+    @Deprecated("請使用getArticleV2")
     @GET("{path}/api/Article/Get/{articleId}")
     suspend fun getQuestionArticle(
         @Header("Authorization") authorization: String,
@@ -197,7 +199,7 @@ interface ForumOceanService {
      *
      */
     @RecordApi
-    @Deprecated("請使用getNewsArticleV2")
+    @Deprecated("請使用getArticleV2")
     @GET("{path}/api/Article/Get/{articleId}")
     suspend fun getNewsArticle(
         @Header("Authorization") authorization: String,
@@ -210,7 +212,7 @@ interface ForumOceanService {
      *
      */
     @RecordApi
-    @Deprecated("請使用getSignalArticleV2")
+    @Deprecated("請使用getArticleV2")
     @GET("{path}/api/Article/Get/{articleId}")
     suspend fun getSignalArticle(
         @Header("Authorization") authorization: String,
@@ -223,7 +225,7 @@ interface ForumOceanService {
      *
      */
     @RecordApi
-    @Deprecated("請使用getGroupArticleV2")
+    @Deprecated("請使用getArticleV2")
     @GET("{path}/api/Article/Get/{articleId}")
     suspend fun getGroupArticle(
         @Header("Authorization") authorization: String,
@@ -236,7 +238,7 @@ interface ForumOceanService {
      *
      */
     @RecordApi
-    @Deprecated("請使用getSharedArticleV2")
+    @Deprecated("請使用getArticleV2")
     @GET("{path}/api/Article/Get/{articleId}")
     suspend fun getSharedArticle(
         @Header("Authorization") authorization: String,
@@ -248,7 +250,7 @@ interface ForumOceanService {
      * 取得個人文章資訊(專欄文章/筆記)
      */
     @RecordApi
-    @Deprecated("請使用getPersonalArticleV2")
+    @Deprecated("請使用getArticleV2")
     @GET("{path}/api/Article/Get/{articleId}")
     suspend fun getPersonalArticle(
         @Header("Authorization") authorization: String,
@@ -261,7 +263,7 @@ interface ForumOceanService {
      *
      */
     @RecordApi
-    @Deprecated("請使用getUnknownArticleV2")
+    @Deprecated("請使用getArticleV2")
     @GET("{path}/api/Article/Get/{articleId}")
     suspend fun getUnknownArticle(
         @Header("Authorization") authorization: String,
@@ -1530,9 +1532,9 @@ interface ForumOceanService {
         @Path("path") path: String
     ): Response<List<Columnist>>
 
+
     /**
      * 取得文章資訊v2
-     *
      */
     @RecordApi
     @GET("{path}/api/Article/{articleId}")
@@ -1541,97 +1543,7 @@ interface ForumOceanService {
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Path("articleId") articleId: String
-    ): Response<ArticleResponseBody.GeneralArticleResponseBody>
-
-    /**
-     * 取得問答文章資訊v2
-     *
-     */
-    @RecordApi
-    @GET("{path}/api/Article/{articleId}")
-    @Headers("X-Version: 2.0")
-    suspend fun getQuestionArticleV2(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: String
-    ): Response<ArticleResponseBody.QuestionArticleResponseBody>
-
-    /**
-     * 取得新聞文章資訊v2
-     *
-     */
-    @RecordApi
-    @GET("{path}/api/Article/{articleId}")
-    @Headers("X-Version: 2.0")
-    suspend fun getNewsArticleV2(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: String
-    ): Response<ArticleResponseBody.NewsArticleResponseBody>
-
-    /**
-     * 取得訊號文章資訊v2
-     *
-     */
-    @RecordApi
-    @GET("{path}/api/Article/{articleId}")
-    @Headers("X-Version: 2.0")
-    suspend fun getSignalArticleV2(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: String
-    ): Response<ArticleResponseBody.SignalArticleResponseBody>
-
-    /**
-     * 取得社團文章資訊v2
-     *
-     */
-    @RecordApi
-    @GET("{path}/api/Article/{articleId}")
-    @Headers("X-Version: 2.0")
-    suspend fun getGroupArticleV2(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: String
-    ): Response<ArticleResponseBody.GroupArticleResponseBody>
-
-    /**
-     * 取得轉推文章資訊v2
-     *
-     */
-    @RecordApi
-    @GET("{path}/api/Article/{articleId}")
-    @Headers("X-Version: 2.0")
-    suspend fun getSharedArticleV2(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: String
-    ): Response<ArticleResponseBody.SharedArticleResponseBody>
-
-    /**
-     * 取得個人文章資訊(專欄文章/筆記)v2
-     */
-    @RecordApi
-    @GET("{path}/api/Article/{articleId}")
-    @Headers("X-Version: 2.0")
-    suspend fun getPersonalArticleV2(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: String
-    ): Response<ArticleResponseBody.PersonalArticleResponseBody>
-
-    /**
-     * 取得未知文章資訊v2
-     *
-     */
-    @RecordApi
-    @GET("{path}/api/Article/{articleId}")
-    @Headers("X-Version: 2.0")
-    suspend fun getUnknownArticleV2(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: String
-    ): Response<ArticleResponseBody.UnknownArticleResponseBody>
+    ): Response<ArticleResponseBodyV2>
 
     /**
      * 取得留言V2(可訪客)
@@ -1696,4 +1608,13 @@ interface ForumOceanService {
         @Path("path") path: String,
         @Path("articleId") articleId: String
     ): Response<CommentResponseBodyV2>
+
+    @RecordApi
+    @GET("{path}/api/Channel/GetRecommendation/Recommendation")
+    suspend fun getRecommendation(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Query("offset") offset: Int,
+        @Query("fetch") fetch: Int
+    ): Response<GetRecommendationResponse>
 }

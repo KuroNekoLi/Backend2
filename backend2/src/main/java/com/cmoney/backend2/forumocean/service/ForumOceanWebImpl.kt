@@ -65,6 +65,8 @@ import com.cmoney.backend2.forumocean.service.api.variable.request.PersonalArtic
 import com.cmoney.backend2.forumocean.service.api.variable.request.ReactionType
 import com.cmoney.backend2.forumocean.service.api.variable.request.mediatype.MediaType
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations.GetRecommendationResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBodyV2
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.GetCommentsResponseBody
@@ -255,87 +257,10 @@ class ForumOceanWebImpl(
             }
         }
 
-    override suspend fun getArticleV2(articleId: Long): Result<ArticleResponseBody.GeneralArticleResponseBody> =
+    override suspend fun getArticleV2(articleId: Long): Result<ArticleResponseBodyV2> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getArticleV2(
-                    path = serverName,
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    articleId = articleId.toString()
-                ).checkResponseBody(jsonParser)
-            }
-        }
-
-    override suspend fun getQuestionArticleV2(articleId: Long): Result<ArticleResponseBody.QuestionArticleResponseBody> =
-        withContext(dispatcher.io()) {
-            kotlin.runCatching {
-                service.getQuestionArticleV2(
-                    path = serverName,
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    articleId = articleId.toString()
-                ).checkResponseBody(jsonParser)
-            }
-        }
-
-    override suspend fun getGroupArticleV2(articleId: Long): Result<ArticleResponseBody.GroupArticleResponseBody> =
-        withContext(dispatcher.io()) {
-            kotlin.runCatching {
-                service.getGroupArticleV2(
-                    path = serverName,
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    articleId = articleId.toString()
-                ).checkResponseBody(jsonParser)
-            }
-        }
-
-    override suspend fun getSharedArticleV2(articleId: Long): Result<ArticleResponseBody.SharedArticleResponseBody> =
-        withContext(dispatcher.io()) {
-            kotlin.runCatching {
-                service.getSharedArticleV2(
-                    path = serverName,
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    articleId = articleId.toString()
-                ).checkResponseBody(jsonParser)
-            }
-        }
-
-    override suspend fun getSignalArticleV2(articleId: Long): Result<ArticleResponseBody.SignalArticleResponseBody> =
-        withContext(dispatcher.io()) {
-            kotlin.runCatching {
-                service.getSignalArticleV2(
-                    path = serverName,
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    articleId = articleId.toString()
-                ).checkResponseBody(jsonParser)
-            }
-        }
-
-    override suspend fun getNewsArticleV2(articleId: Long): Result<ArticleResponseBody.NewsArticleResponseBody> =
-        withContext(dispatcher.io()) {
-            kotlin.runCatching {
-                service.getNewsArticleV2(
-                    path = serverName,
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    articleId = articleId.toString()
-                ).checkResponseBody(jsonParser)
-            }
-        }
-
-    override suspend fun getPersonalArticleV2(articleId: Long): Result<ArticleResponseBody.PersonalArticleResponseBody> =
-        withContext(dispatcher.io()) {
-            kotlin.runCatching {
-                service.getPersonalArticleV2(
-                    path = serverName,
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    articleId = articleId.toString()
-                ).checkResponseBody(jsonParser)
-            }
-        }
-
-    override suspend fun getUnknownArticleV2(articleId: Long): Result<ArticleResponseBody.UnknownArticleResponseBody> =
-        withContext(dispatcher.io()) {
-            kotlin.runCatching {
-                service.getUnknownArticleV2(
                     path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     articleId = articleId.toString()
@@ -2154,6 +2079,21 @@ class ForumOceanWebImpl(
                     path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     articleId = commentId
+                ).checkResponseBody(jsonParser)
+            }
+        }
+    }
+    override suspend fun getRecommendation(
+        offset: Int,
+        fetch: Int
+    ): Result<GetRecommendationResponse> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.getRecommendation(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    offset = offset,
+                    fetch = fetch
                 ).checkResponseBody(jsonParser)
             }
         }

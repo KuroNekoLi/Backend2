@@ -15,10 +15,10 @@ sealed class ArticleResponseBody(
     @Transient
     open val createTime: Long?,
     @Transient
-    open val id: String?,
+    open val id: Long?,
     @Transient
     open val modifyTime: Long?
-){
+) {
 
     /**
      * 未知文章類型 將所有資料都接收
@@ -42,6 +42,7 @@ sealed class ArticleResponseBody(
      * @property voteStatus 會員投票狀態(第幾個Index)
      * @property totalReportCount 總檢舉數
      * @property report 是否檢舉
+     * @property commentDeletedCount 被刪除的回文數
      */
     data class UnknownArticleResponseBody(
         @SerializedName("content")
@@ -49,47 +50,45 @@ sealed class ArticleResponseBody(
         @SerializedName("createTime")
         override val createTime: Long?,
         @SerializedName("id")
-        override val id: String?,
+        override val id: Long?,
         @SerializedName("modifyTime")
         override val modifyTime: Long?,
-        @Deprecated("Use myReaction field instead.(make sure api do returns one)")
         @SerializedName("reactionState")
         override val reactionState: Int?,
-        @SerializedName("myReaction")
-        override val myReaction: String?,
-        @SerializedName("reactions", alternate = ["reaction"])
+        @SerializedName("reactions")
         override val reaction: Map<String, Int>?,
         @SerializedName("@list-reaction")
         override val reactionCount: Int?,
-        @SerializedName("collected", alternate = ["hasCollect"])
+        @SerializedName("collected")
         override val collected: Any?,
-        @SerializedName("@hash-collect", alternate = ["collectedCount"])
+        @SerializedName("@hash-collect")
         override val collectCount: Int?,
-        @SerializedName("comment", alternate = ["myComments"])
+        @SerializedName("comment")
         override val myCommentIndex: List<Int>?,
-        @SerializedName("@list-comment", alternate = ["commentCount"])
+        @SerializedName("@list-comment")
         override val commentCount: Int?,
         @SerializedName("@hash-shared")
         override val shareCount: Int?,
-        @SerializedName("interested", alternate = ["hasInterest"])
+        @SerializedName("interested")
         override val interested: Any?,
-        @SerializedName("@hash-interest", alternate = ["interestedCount"])
+        @SerializedName("@hash-interest")
         override val interestCount: Int?,
         @SerializedName("rewardPoints")
         override val rewardPoints: Int?,
-        @SerializedName("@vhash-donate", alternate = ["donation"])
+        @SerializedName("@vhash-donate")
         override val donateCount: Int?,
+        @SerializedName("donate")
+        override val donate: Int?,
         @SerializedName("@list-vote")
-        override val voteCount : Int?,
+        override val voteCount: Int?,
         @SerializedName("voteStatus")
-        override val voteStatus : Int?,
+        override val voteStatus: Int?,
         @SerializedName("weight")
-        override val weight : Long?,
+        override val weight: Long?,
         @SerializedName("@value-reportCount")
         override val totalReportCount: Int?,
-        @SerializedName("report", alternate = ["hasReport"])
+        @SerializedName("report")
         override val report: Any?,
-        @Deprecated("v2之後由服務計算正確的回覆數量，故不需要此欄位")
         @SerializedName("@value-commentDeleted")
         override val commentDeletedCount: Int?
     ) : ArticleResponseBody(createTime, id, modifyTime),
@@ -129,39 +128,37 @@ sealed class ArticleResponseBody(
         @SerializedName("createTime")
         override val createTime: Long?,
         @SerializedName("id")
-        override val id: String?,
+        override val id: Long?,
         @SerializedName("modifyTime")
         override val modifyTime: Long?,
-        @Deprecated("Use myReaction field instead.(make sure api do returns one)")
         @SerializedName("reactionState")
         override val reactionState: Int?,
-        @SerializedName("myReaction")
-        override val myReaction: String?,
-        @SerializedName("reactions", alternate = ["reaction"])
+        @SerializedName("reactions")
         override val reaction: Map<String, Int>?,
         @SerializedName("@list-reaction")
         override val reactionCount: Int?,
-        @SerializedName("collected", alternate = ["hasCollect"])
+        @SerializedName("collected")
         override val collected: Any?,
-        @SerializedName("@hash-collect", alternate = ["collectedCount"])
+        @SerializedName("@hash-collect")
         override val collectCount: Int?,
-        @SerializedName("comment", alternate = ["myComments"])
+        @SerializedName("comment")
         override val myCommentIndex: List<Int>?,
-        @SerializedName("@list-comment", alternate = ["commentCount"])
+        @SerializedName("@list-comment")
         override val commentCount: Int?,
-        @SerializedName("@vhash-donate", alternate = ["donation"])
+        @SerializedName("@vhash-donate")
         override val donateCount: Int?,
+        @SerializedName("donate")
+        override val donate: Int?,
         @SerializedName("@list-vote")
-        override val voteCount : Int?,
+        override val voteCount: Int?,
         @SerializedName("voteStatus")
-        override val voteStatus : Int?,
+        override val voteStatus: Int?,
         @SerializedName("weight")
-        override val weight : Long?,
+        override val weight: Long?,
         @SerializedName("@value-reportCount")
         override val totalReportCount: Int?,
-        @SerializedName("report", alternate = ["hasReport"])
+        @SerializedName("report")
         override val report: Any?,
-        @Deprecated("v2之後由服務計算正確的回覆數量，故不需要此欄位")
         @SerializedName("@value-commentDeleted")
         override val commentDeletedCount: Int?
     ) : ArticleResponseBody(createTime, id, modifyTime),
@@ -197,33 +194,29 @@ sealed class ArticleResponseBody(
         @SerializedName("createTime")
         override val createTime: Long?,
         @SerializedName("id")
-        override val id: String?,
+        override val id: Long?,
         @SerializedName("modifyTime")
         override val modifyTime: Long?,
-        @Deprecated("Use myReaction field instead.(make sure api do returns one)")
         @SerializedName("reactionState")
         override val reactionState: Int?,
-        @SerializedName("myReaction")
-        override val myReaction: String?,
-        @SerializedName("reactions", alternate = ["reaction"])
+        @SerializedName("reactions")
         override val reaction: Map<String, Int>?,
         @SerializedName("@list-reaction")
         override val reactionCount: Int?,
-        @SerializedName("collected", alternate = ["hasCollect"])
+        @SerializedName("collected")
         override val collected: Any?,
-        @SerializedName("@hash-collect", alternate = ["collectedCount"])
+        @SerializedName("@hash-collect")
         override val collectCount: Int?,
-        @SerializedName("comment", alternate = ["myComments"])
+        @SerializedName("comment")
         override val myCommentIndex: List<Int>?,
-        @SerializedName("@list-comment", alternate = ["commentCount"])
+        @SerializedName("@list-comment")
         override val commentCount: Int?,
         @SerializedName("weight")
-        override val weight : Long?,
+        override val weight: Long?,
         @SerializedName("@value-reportCount")
         override val totalReportCount: Int?,
-        @SerializedName("report", alternate = ["hasReport"])
+        @SerializedName("report")
         override val report: Any?,
-        @Deprecated("v2之後由服務計算正確的回覆數量，故不需要此欄位")
         @SerializedName("@value-commentDeleted")
         override val commentDeletedCount: Int?
     ) : ArticleResponseBody(createTime, id, modifyTime),
@@ -257,33 +250,29 @@ sealed class ArticleResponseBody(
         @SerializedName("createTime")
         override val createTime: Long?,
         @SerializedName("id")
-        override val id: String?,
+        override val id: Long?,
         @SerializedName("modifyTime")
         override val modifyTime: Long?,
-        @Deprecated("Use myReaction field instead.(make sure api do returns one)")
         @SerializedName("reactionState")
         override val reactionState: Int?,
-        @SerializedName("myReaction")
-        override val myReaction: String?,
-        @SerializedName("reactions", alternate = ["reaction"])
+        @SerializedName("reactions")
         override val reaction: Map<String, Int>?,
         @SerializedName("@list-reaction")
         override val reactionCount: Int?,
-        @SerializedName("collected", alternate = ["hasCollect"])
+        @SerializedName("collected")
         override val collected: Any?,
-        @SerializedName("@hash-collect", alternate = ["collectedCount"])
+        @SerializedName("@hash-collect")
         override val collectCount: Int?,
-        @SerializedName("comment", alternate = ["myComments"])
+        @SerializedName("comment")
         override val myCommentIndex: List<Int>?,
-        @SerializedName("@list-comment", alternate = ["commentCount"])
+        @SerializedName("@list-comment")
         override val commentCount: Int?,
         @SerializedName("weight")
-        override val weight : Long?,
+        override val weight: Long?,
         @SerializedName("@value-reportCount")
         override val totalReportCount: Int?,
-        @SerializedName("report", alternate = ["hasReport"])
+        @SerializedName("report")
         override val report: Any?,
-        @Deprecated("v2之後由服務計算正確的回覆數量，故不需要此欄位")
         @SerializedName("@value-commentDeleted")
         override val commentDeletedCount: Int?
     ) : ArticleResponseBody(createTime, id, modifyTime),
@@ -319,39 +308,37 @@ sealed class ArticleResponseBody(
         @SerializedName("createTime")
         override val createTime: Long?,
         @SerializedName("id")
-        override val id: String?,
+        override val id: Long?,
         @SerializedName("modifyTime")
         override val modifyTime: Long?,
-        @Deprecated("Use myReaction field instead.(make sure api do returns one)")
         @SerializedName("reactionState")
         override val reactionState: Int?,
-        @SerializedName("myReaction")
-        override val myReaction: String?,
-        @SerializedName("reactions", alternate = ["reaction"])
+        @SerializedName("reactions")
         override val reaction: Map<String, Int>?,
         @SerializedName("@list-reaction")
         override val reactionCount: Int?,
-        @SerializedName("collected", alternate = ["hasCollect"])
+        @SerializedName("collected")
         override val collected: Any?,
-        @SerializedName("@hash-collect", alternate = ["collectedCount"])
+        @SerializedName("@hash-collect")
         override val collectCount: Int?,
-        @SerializedName("comment", alternate = ["myComments"])
+        @SerializedName("comment")
         override val myCommentIndex: List<Int>?,
-        @SerializedName("@list-comment", alternate = ["commentCount"])
+        @SerializedName("@list-comment")
         override val commentCount: Int?,
-        @SerializedName("@vhash-donate", alternate = ["donation"])
+        @SerializedName("@vhash-donate")
         override val donateCount: Int?,
+        @SerializedName("donate")
+        override val donate: Int?,
         @SerializedName("@list-vote")
-        override val voteCount : Int?,
+        override val voteCount: Int?,
         @SerializedName("voteStatus")
-        override val voteStatus : Int?,
+        override val voteStatus: Int?,
         @SerializedName("weight")
-        override val weight : Long?,
+        override val weight: Long?,
         @SerializedName("@value-reportCount")
         override val totalReportCount: Int?,
-        @SerializedName("report", alternate = ["hasReport"])
+        @SerializedName("report")
         override val report: Any?,
-        @Deprecated("v2之後由服務計算正確的回覆數量，故不需要此欄位")
         @SerializedName("@value-commentDeleted")
         override val commentDeletedCount: Int?
     ) : ArticleResponseBody(createTime, id, modifyTime),
@@ -390,41 +377,39 @@ sealed class ArticleResponseBody(
         @SerializedName("createTime")
         override val createTime: Long?,
         @SerializedName("id")
-        override val id: String?,
+        override val id: Long?,
         @SerializedName("modifyTime")
         override val modifyTime: Long?,
-        @Deprecated("Use myReaction field instead.(make sure api do returns one)")
         @SerializedName("reactionState")
         override val reactionState: Int?,
-        @SerializedName("myReaction")
-        override val myReaction: String?,
-        @SerializedName("reactions", alternate = ["reaction"])
+        @SerializedName("reactions")
         override val reaction: Map<String, Int>?,
         @SerializedName("@list-reaction")
         override val reactionCount: Int?,
-        @SerializedName("collected", alternate = ["hasCollect"])
+        @SerializedName("collected")
         override val collected: Any?,
-        @SerializedName("@hash-collect", alternate = ["collectedCount"])
+        @SerializedName("@hash-collect")
         override val collectCount: Int?,
-        @SerializedName("comment", alternate = ["myComments"])
+        @SerializedName("comment")
         override val myCommentIndex: List<Int>?,
-        @SerializedName("@list-comment", alternate = ["commentCount"])
+        @SerializedName("@list-comment")
         override val commentCount: Int?,
         @SerializedName("@hash-shared")
         override val shareCount: Int?,
-        @SerializedName("@vhash-donate", alternate = ["donation"])
+        @SerializedName("@vhash-donate")
         override val donateCount: Int?,
+        @SerializedName("donate")
+        override val donate: Int?,
         @SerializedName("@list-vote")
-        override val voteCount : Int?,
+        override val voteCount: Int?,
         @SerializedName("voteStatus")
-        override val voteStatus : Int?,
+        override val voteStatus: Int?,
         @SerializedName("weight")
-        override val weight : Long?,
+        override val weight: Long?,
         @SerializedName("@value-reportCount")
         override val totalReportCount: Int?,
-        @SerializedName("report", alternate = ["hasReport"])
+        @SerializedName("report")
         override val report: Any?,
-        @Deprecated("v2之後由服務計算正確的回覆數量，故不需要此欄位")
         @SerializedName("@value-commentDeleted")
         override val commentDeletedCount: Int?
     ) : ArticleResponseBody(createTime, id, modifyTime),
@@ -464,39 +449,35 @@ sealed class ArticleResponseBody(
         @SerializedName("createTime")
         override val createTime: Long?,
         @SerializedName("id")
-        override val id: String?,
+        override val id: Long?,
         @SerializedName("modifyTime")
         override val modifyTime: Long?,
-        @Deprecated("Use myReaction field instead.(make sure api do returns one)")
         @SerializedName("reactionState")
         override val reactionState: Int?,
-        @SerializedName("myReaction")
-        override val myReaction: String?,
-        @SerializedName("reactions", alternate = ["reaction"])
+        @SerializedName("reactions")
         override val reaction: Map<String, Int>?,
         @SerializedName("@list-reaction")
         override val reactionCount: Int?,
-        @SerializedName("collected", alternate = ["hasCollect"])
+        @SerializedName("collected")
         override val collected: Any?,
-        @SerializedName("@hash-collect", alternate = ["collectedCount"])
+        @SerializedName("@hash-collect")
         override val collectCount: Int?,
-        @SerializedName("comment", alternate = ["myComments"])
+        @SerializedName("comment")
         override val myCommentIndex: List<Int>?,
-        @SerializedName("@list-comment", alternate = ["commentCount"])
+        @SerializedName("@list-comment")
         override val commentCount: Int?,
-        @SerializedName("interested", alternate = ["hasInterest"])
+        @SerializedName("interested")
         override val interested: Any?,
-        @SerializedName("@hash-interest", alternate = ["interestedCount"])
+        @SerializedName("@hash-interest")
         override val interestCount: Int?,
         @SerializedName("rewardPoints")
         override val rewardPoints: Int?,
         @SerializedName("weight")
-        override val weight : Long?,
+        override val weight: Long?,
         @SerializedName("@value-reportCount")
         override val totalReportCount: Int?,
-        @SerializedName("report", alternate = ["hasReport"])
+        @SerializedName("report")
         override val report: Any?,
-        @Deprecated("v2之後由服務計算正確的回覆數量，故不需要此欄位")
         @SerializedName("@value-commentDeleted")
         override val commentDeletedCount: Int?
     ) : ArticleResponseBody(createTime, id, modifyTime),
@@ -521,11 +502,11 @@ sealed class ArticleResponseBody(
         @SerializedName("createTime")
         override val createTime: Long?,
         @SerializedName("id")
-        override val id: String?,
+        override val id: Long?,
         @SerializedName("modifyTime")
         override val modifyTime: Long?,
         @SerializedName("weight")
-        override val weight : Long?
+        override val weight: Long?
     ) : ArticleResponseBody(createTime, id, modifyTime),
         WeightInfo
 }

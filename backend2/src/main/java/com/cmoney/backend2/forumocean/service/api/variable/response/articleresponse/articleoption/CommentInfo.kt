@@ -14,7 +14,6 @@ interface CommentInfo {
     /**
      * 被刪除的回文數
      */
-    @Deprecated("v2之後由服務計算正確的回文數量，故不需要此欄位")
     val commentDeletedCount: Int?
 
     /**

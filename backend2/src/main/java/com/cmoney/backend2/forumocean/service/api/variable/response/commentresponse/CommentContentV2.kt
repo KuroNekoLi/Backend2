@@ -4,8 +4,6 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.mediatype.Me
 import com.google.gson.annotations.SerializedName
 
 data class CommentContentV2(
-    @SerializedName("creatorId")
-    val creatorId: Long?,
     @SerializedName("text")
     val text : String?,
     @SerializedName("multiMedia")
