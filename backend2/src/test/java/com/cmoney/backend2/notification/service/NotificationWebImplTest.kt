@@ -6,12 +6,13 @@ import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.response.error.CMoneyError
 import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.core.CoroutineTestRule
-
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
+import io.mockk.coVerifyOrder
 import io.mockk.impl.annotations.MockK
+import io.mockk.spyk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
@@ -60,7 +61,9 @@ class NotificationWebImplTest {
             sn = 0,
             pushToken = "",
             title = "",
-            content = "", analyticsId = 0
+            content = "",
+            analyticsLabels = listOf("test"),
+            createTime = 1001L
         )
         Truth.assertThat(result.isSuccess).isTrue()
         val data = result.getOrThrow()
@@ -85,7 +88,9 @@ class NotificationWebImplTest {
             sn = 0,
             pushToken = "",
             title = "",
-            content = "", analyticsId = 0
+            content = "",
+            analyticsLabels = listOf("test"),
+            createTime = 1001L
         )
         Truth.assertThat(result.isFailure).isTrue()
         result.getOrThrow()
@@ -102,7 +107,9 @@ class NotificationWebImplTest {
             sn = 0,
             pushToken = "",
             title = "",
-            content = "", analyticsId = 0
+            content = "",
+            analyticsLabels = listOf("test"),
+            createTime = 1001L
         )
         Truth.assertThat(result.isSuccess).isTrue()
         val data = result.getOrThrow()
@@ -127,7 +134,9 @@ class NotificationWebImplTest {
             sn = 0,
             pushToken = "",
             title = "",
-            content = "", analyticsId = 0
+            content = "",
+            analyticsLabels = listOf("test"),
+            createTime = 1001L
         )
         Truth.assertThat(result.isFailure).isTrue()
         result.getOrThrow()
@@ -195,5 +204,81 @@ class NotificationWebImplTest {
         val result = web.updateMemberPushToken(pushToken = "")
         Truth.assertThat(result.isFailure).isTrue()
         result.getOrThrow()
+    }
+
+    @Test
+    fun `deprecate updateArriveCount will invoke new function`() = testScope.runTest {
+        coEvery {
+            service.updateArriveCount(
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success<Void>(204, null)
+
+        val spyWeb = spyk(web)
+        val result = spyWeb.updateArriveCount(
+            sn = 0,
+            pushToken = "",
+            analyticsId = 0,
+            title = "",
+            content = ""
+        )
+
+        coVerifyOrder {
+            spyWeb.updateArriveCount(
+                sn = any(),
+                pushToken = any(),
+                analyticsId = any(),
+                title = any(),
+                content = any()
+            )
+            spyWeb.updateArriveCount(
+                sn = any(),
+                pushToken = any(),
+                title = any(),
+                content = any(),
+                analyticsLabels = any(),
+                createTime = any()
+            )
+        }
+        Truth.assertThat(result.isSuccess).isTrue()
+    }
+
+    @Test
+    fun `deprecate updateClickCount will invoke new function`() = testScope.runTest {
+        coEvery {
+            service.updateClickCount(
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success<Void>(204, null)
+
+        val spyWeb = spyk(web)
+        val result = spyWeb.updateClickCount(
+            sn = 0,
+            pushToken = "",
+            analyticsId = 0,
+            title = "",
+            content = ""
+        )
+
+        coVerifyOrder {
+            spyWeb.updateClickCount(
+                sn = any(),
+                pushToken = any(),
+                analyticsId = any(),
+                title = any(),
+                content = any()
+            )
+            spyWeb.updateClickCount(
+                sn = any(),
+                pushToken = any(),
+                title = any(),
+                content = any(),
+                analyticsLabels = any(),
+                createTime = any()
+            )
+        }
+        Truth.assertThat(result.isSuccess).isTrue()
     }
 }

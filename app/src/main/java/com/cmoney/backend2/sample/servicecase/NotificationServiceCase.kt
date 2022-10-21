@@ -13,16 +13,18 @@ class NotificationServiceCase : ServiceCase {
         notificationWeb.updateArriveCount(
             sn = 1,
             pushToken = pushToken,
-            analyticsId = 0,
             title = "title",
-            content = "content"
+            content = "content",
+            analyticsLabels = emptyList(),
+            createTime = 0
         ).logResponse(TAG)
         notificationWeb.updateClickCount(
             sn = 1,
             pushToken = pushToken,
-            analyticsId = 0,
             title = "title",
-            content = "content"
+            content = "content",
+            analyticsLabels = emptyList(),
+            createTime = 0
         ).logResponse(TAG)
         notificationWeb.updateGuestPushToken(
             pushToken = pushToken
