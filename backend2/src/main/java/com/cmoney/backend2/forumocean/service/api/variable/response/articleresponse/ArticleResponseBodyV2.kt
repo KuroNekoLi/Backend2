@@ -45,4 +45,6 @@ data class ArticleResponseBodyV2(
     val report: Any?,
     @SerializedName("isHidden")
     val isHidden: Boolean?,
+    @SerializedName("isAnonymous")
+    val anonymous: Boolean?,
 )

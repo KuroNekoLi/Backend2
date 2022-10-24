@@ -12,8 +12,6 @@ data class ArticleContentV2(
     val multiMedia: List<MediaTypeInfo>?,
     @SerializedName("commodityTags", alternate = ["CommodityTags"])
     val commodityTags: List<CommodityTagInfo>?,
-    @SerializedName("anonymous", alternate = ["Anonymous"])
-    val anonymous: Any?,
     @SerializedName("appId", alternate = ["AppId"])
     val appId: Int?,
     @SerializedName("topics", alternate = ["Topics"])
