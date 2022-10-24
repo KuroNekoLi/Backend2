@@ -413,7 +413,7 @@ interface ForumOceanService {
 
     @RecordApi
     @Headers("X-Version: 2.0")
-    @DELETE("{path}/api/Article/{articleId}/Comment")
+    @DELETE("{path}/api/Article/{articleId}")
     suspend fun deleteCommentV2(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
@@ -1609,6 +1609,9 @@ interface ForumOceanService {
         @Path("articleId") articleId: String
     ): Response<CommentResponseBodyV2>
 
+    /**
+     * 取得個人化推薦文章
+     */
     @RecordApi
     @GET("{path}/api/Channel/GetRecommendation/Recommendation")
     suspend fun getRecommendation(
