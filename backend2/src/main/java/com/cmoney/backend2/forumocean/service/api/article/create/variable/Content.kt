@@ -13,6 +13,7 @@ sealed class Content(
         /**
          * 一般文章
          *
+         * @property title 文章標題
          * @property text 文章內容
          * @property multiMedia 多媒體資訊
          * @property commodityTags 股票tag資訊
@@ -21,6 +22,8 @@ sealed class Content(
          * @property topics 標籤
          */
         data class General(
+            @SerializedName("title")
+            val title: String?,
             @SerializedName("text")
             override val text: String?,
             @SerializedName("multiMedia")
