@@ -80,6 +80,7 @@ import retrofit2.Response
 @Config(manifest = Config.NONE)
 class ForumOceanWebImplTest {
     private val testScope = TestScope()
+
     @ExperimentalCoroutinesApi
     @get:Rule
     val mainCoroutineRule = CoroutineTestRule(testScope = testScope)
@@ -198,6 +199,7 @@ class ForumOceanWebImplTest {
     fun `createArticle_發一般文章成功測試`() = testScope.runTest {
         val responseBody = CreateArticleResponseBody(articleId = 1)
         val createContent = Content.Article.General(
+            title = "文章標題",
             text = "發表文章",
             multiMedia = null,
             commodityTags = null,
@@ -225,6 +227,7 @@ class ForumOceanWebImplTest {
     fun `createArticle_發一般文章失敗測試`() = testScope.runTest {
         val responseBody = CreateArticleResponseBody(articleId = 1)
         val createContent = Content.Article.General(
+            title = "文章標題",
             text = "發表文章",
             multiMedia = null,
             commodityTags = null,
@@ -4385,7 +4388,7 @@ class ForumOceanWebImplTest {
         } returns Response.success(CreateArticleResponseBody(0L))
         val result = web.createGroupArticle(
             1L,
-            Content.Article.General(null, null, null, null, null, null, null)
+            Content.Article.General(null, null, null, null, null, null, null, null)
         )
         assertThat(result.isSuccess).isTrue()
     }
@@ -4403,7 +4406,7 @@ class ForumOceanWebImplTest {
         } returns Response.error(500, "".toResponseBody())
         val result = web.createGroupArticle(
             1L,
-            Content.Article.General(null, null, null, null, null, null, null)
+            Content.Article.General(null, null, null, null, null, null, null, null)
         )
         assertThat(result.isFailure).isTrue()
     }
