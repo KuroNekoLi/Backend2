@@ -47,6 +47,7 @@ class ForumOceanServiceCase : ServiceCase {
 
             val articleId = createArticle(
                 Content.Article.General(
+                    title = "測試發文標題",
                     text = "測試發文設計",
                     multiMedia = listOf(
                         MediaType(
@@ -88,6 +89,7 @@ class ForumOceanServiceCase : ServiceCase {
             articleId?.apply {
                 createArticle(
                     Content.Article.General(
+                        title = "測試發文標題",
                         text = "補一篇文章為了看刪除文章被夾在中間",
                         multiMedia = listOf(
                             MediaType(
@@ -540,6 +542,7 @@ class ForumOceanServiceCase : ServiceCase {
     private suspend fun ForumOceanWeb.testReport() {
         val articleId = createArticle(
             Content.Article.General(
+                title = "測試發文標題",
                 text = "需被檢舉文章",
                 multiMedia = null,
                 commodityTags = null,
@@ -571,6 +574,7 @@ class ForumOceanServiceCase : ServiceCase {
     private suspend fun ForumOceanWeb.testVote() {
         val articleId = createArticle(
             Content.Article.General(
+                title = "測試發文標題",
                 text = "投票文章測試",
                 multiMedia = null,
                 commodityTags = null,
@@ -713,6 +717,7 @@ class ForumOceanServiceCase : ServiceCase {
         var articleId: Long? = null
         createArticle(
             Content.Article.General(
+                title = "測試發文標題",
                 text = "測試回文被阻擋用主文",
                 multiMedia = listOf(),
                 commodityTags = listOf(),
