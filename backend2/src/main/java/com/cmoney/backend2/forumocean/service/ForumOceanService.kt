@@ -464,7 +464,7 @@ interface ForumOceanService {
 
     @RecordApi
     @Headers("X-Version: 2.0")
-    @POST("{path}/api/Article/{articleId}/Emoji/{emojiType}")
+    @PUT("{path}/api/Article/{articleId}/Emoji/{emojiType}")
     suspend fun createReaction(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
