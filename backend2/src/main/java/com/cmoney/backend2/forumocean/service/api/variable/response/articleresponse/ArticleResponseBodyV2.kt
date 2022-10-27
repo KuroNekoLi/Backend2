@@ -47,4 +47,6 @@ data class ArticleResponseBodyV2(
     val isHidden: Boolean?,
     @SerializedName("isAnonymous")
     val anonymous: Boolean?,
+    @SerializedName("authType")
+    val authType: String?,
 )

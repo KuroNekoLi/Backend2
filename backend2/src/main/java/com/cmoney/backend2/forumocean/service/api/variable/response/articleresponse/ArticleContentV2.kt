@@ -40,8 +40,6 @@ data class ArticleContentV2(
     val askPoint: Int?,
     @SerializedName("bestAnswerCommentId", alternate = ["BestAnswerCommentId"])
     val bestAnswerCommentId: Long?,
-    @SerializedName("authType", alternate = ["AuthType"])
-    val authType: String?,
     @SerializedName("pCoin", alternate = ["PCoin"])
     val pCoin: Long?,
     @SerializedName("exchangeCount", alternate = ["ExchangeCount"])
