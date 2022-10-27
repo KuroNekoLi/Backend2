@@ -168,8 +168,7 @@ class ForumOceanServiceCase : ServiceCase {
         ).getOrNull()?.articleId
 
         sharedArticleId?.let {
-            getUnknownArticleV2(it).logResponse(TAG)
-            getSharedArticleV2(it).logResponse(TAG)
+            getArticleV2(it).logResponse(TAG)
             deleteArticle(it).logResponse(TAG)
         }
     }
@@ -305,7 +304,6 @@ class ForumOceanServiceCase : ServiceCase {
     private suspend fun ForumOceanWeb.testArticle(articleId: Long) {
         testShareArticle(articleId)
 
-        getUnknownArticleV2(articleId).logResponse(TAG)
         getArticleV2(articleId).logResponse(TAG)
 
         val helper = UpdateArticleHelper()
@@ -352,8 +350,7 @@ class ForumOceanServiceCase : ServiceCase {
         ).logResponse(TAG)
 
         articleId?.apply {
-            getUnknownArticleV2(this).logResponse(TAG)
-            getPersonalArticleV2(this).logResponse(TAG)
+            getArticleV2(this).logResponse(TAG)
 
             val updateArticleHelper = UpdateArticleHelper()
             updateArticleHelper.setText("測試更新筆記文")
@@ -387,10 +384,7 @@ class ForumOceanServiceCase : ServiceCase {
         ).getOrNull()?.articleId
 
         questionId?.apply {
-
-            getUnknownArticleV2(this).logResponse(TAG)
-            getQuestionArticleV2(this).logResponse(TAG)
-
+            getArticleV2(this).logResponse(TAG)
             deleteArticle(this).logResponse(TAG)
         }
     }
