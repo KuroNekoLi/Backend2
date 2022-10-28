@@ -63,6 +63,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.commentrespo
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBodyV2
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.GetCommentsResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.groupresponse.GroupResponseBody
+import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.MemberEmojis
 import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.ReactionInfo
 import com.cmoney.backend2.forumocean.service.api.vote.get.VoteInfo
 import okhttp3.ResponseBody
@@ -444,6 +445,7 @@ interface ForumOceanService {
     ): Response<Void>
 
     @RecordApi
+    @Deprecated("請使用getReactionDetailV2")
     @GET("{path}/api/CommentInteractive/GetReactionDetail/{articleId}/{commentIndex}")
     suspend fun getReactionDetail(
         @Header("Authorization") authorization: String,
@@ -454,6 +456,18 @@ interface ForumOceanService {
         @Query("skipCount") skipCount: Int,
         @Query("takeCount") takeCount: Int
     ): Response<List<ReactionInfo>>
+
+    @RecordApi
+    @Headers("X-Version: 2.0")
+    @GET("{path}/api/Article/{articleId}/Emoji/Detail")
+    suspend fun getReactionDetailV2(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("articleId") articleId: String,
+        @Query("emojiTypes") emojiTypes: String,
+        @Query("offset") offset: Int,
+        @Query("fetch") fetch: Int
+    ): Response<MemberEmojis>
 
     @RecordApi
     @Deprecated("請使用deleteReaction")

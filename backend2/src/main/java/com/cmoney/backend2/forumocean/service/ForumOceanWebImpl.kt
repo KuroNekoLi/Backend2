@@ -71,6 +71,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.commentrespo
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBodyV2
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.GetCommentsResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.groupresponse.GroupResponseBody
+import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.MemberEmojis
 import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.ReactionInfo
 import com.cmoney.backend2.forumocean.service.api.vote.get.VoteInfo
 import com.cmoney.backend2.ocean.service.api.getevaluationlist.SortType
@@ -570,6 +571,7 @@ class ForumOceanWebImpl(
     }
 
 
+    @Deprecated("請使用getReactionDetailV2")
     override suspend fun getReactionDetail(
         articleId: Long,
         commentIndex: Long,
@@ -587,6 +589,26 @@ class ForumOceanWebImpl(
                 skipCount = skipCount,
                 takeCount = takeCount
             ).checkResponseBody(jsonParser)
+        }
+    }
+
+    override suspend fun getReactionDetailV2(
+        id: String,
+        reactions: List<ReactionType>,
+        offset: Int,
+        fetch: Int
+    ): Result<MemberEmojis> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.getReactionDetailV2(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    articleId = id,
+                    emojiTypes = reactions.joinToString { it.value.toString() },
+                    offset = offset,
+                    fetch = fetch
+                ).checkResponseBody(jsonParser)
+            }
         }
     }
 

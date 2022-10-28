@@ -199,14 +199,14 @@ class ForumOceanServiceCase : ServiceCase {
             )
         ).fold(
             {
-                commentIndex =it.commentIndex
+                commentIndex = it.commentIndex
                 Log.d(TAG, "response: $it")
             },
             {
                 it.printStackTrace()
             }
         )
-        val commentId= "${articleId}-${commentIndex}"
+        val commentId = "${articleId}-${commentIndex}"
         commentIndex?.apply {
             getCommentV2(articleId.toString(), this, null).logResponse(TAG)
             val updateCommentHelper = UpdateCommentHelper()
@@ -216,7 +216,7 @@ class ForumOceanServiceCase : ServiceCase {
             getCommentV2(articleId.toString(), this, 20).logResponse(TAG)
             createReaction(commentId, ReactionType.LIKE).logResponse(TAG)
             createReaction(commentId, ReactionType.DISLIKE).logResponse(TAG)
-            getReactionDetail(articleId, 1, ReactionType.values().toList(), 0, 20).logResponse(TAG)
+            getReactionDetailV2(commentId, ReactionType.values().toList(), 0, 20).logResponse(TAG)
             deleteReaction(commentId).logResponse(TAG)
             deleteCommentV2(commentId).logResponse(TAG)
             getCommentV2(articleId.toString(), this, 20).logResponse(TAG)

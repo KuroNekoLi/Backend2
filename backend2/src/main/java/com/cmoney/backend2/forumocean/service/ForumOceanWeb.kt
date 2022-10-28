@@ -60,7 +60,9 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.commentrespo
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBodyV2
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.GetCommentsResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.groupresponse.GroupResponseBody
+import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.MemberEmojis
 import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.ReactionInfo
+import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.ReactionInfoV2
 import com.cmoney.backend2.forumocean.service.api.vote.get.VoteInfo
 import com.cmoney.backend2.ocean.service.api.getevaluationlist.SortType
 
@@ -440,6 +442,7 @@ interface ForumOceanWeb {
      * @param takeCount 取得的數項(選項)
      * @return 反應 對照 做此反應會員清單
      */
+    @Deprecated("請使用getReactionDetailV2")
     suspend fun getReactionDetail(
         articleId: Long,
         commentIndex: Long,
@@ -447,6 +450,22 @@ interface ForumOceanWeb {
         skipCount: Int,
         takeCount: Int
     ): Result<List<ReactionInfo>>
+
+    /**
+     * 取得指定回文的反應明細V2
+     *
+     * @param id 文章或留言
+     * @param reactions 需要取得的反應
+     * @param offset 跳過的數量(選項)
+     * @param fetch 取得的數項(選項)
+     * @return 反應 對照 做此反應會員清單
+     */
+    suspend fun getReactionDetailV2(
+        id: String,
+        reactions: List<ReactionType>,
+        offset: Int,
+        fetch: Int
+    ): Result<MemberEmojis>
 
     /**
      * 移除對回文的反應

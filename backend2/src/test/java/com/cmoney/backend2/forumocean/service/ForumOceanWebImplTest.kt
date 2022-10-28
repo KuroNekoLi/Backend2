@@ -56,7 +56,9 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.commentrespo
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBodyV2
 import com.cmoney.backend2.forumocean.service.api.variable.response.groupresponse.GroupResponseBody
+import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.MemberEmojis
 import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.ReactionInfo
+import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.ReactionInfoV2
 import com.cmoney.backend2.forumocean.service.api.vote.get.VoteInfo
 import com.cmoney.backend2.ocean.service.api.getevaluationlist.SortType
 import com.cmoney.core.CoroutineTestRule
@@ -1637,7 +1639,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getReactionDetail_取得反映詳細資料成功測試`() = testScope.runTest {
+    fun `getReactionDetail_取得反應詳細資料成功測試`() = testScope.runTest {
         val reactionTypeList = listOf(ReactionType.LIKE, ReactionType.DISLIKE)
         coEvery {
             forumOceanService.getReactionDetail(
@@ -1669,7 +1671,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getReactionDetail_取得反映詳細資料失敗測試`() = testScope.runTest {
+    fun `getReactionDetail_取得反應詳細資料失敗測試`() = testScope.runTest {
         val reactionTypeList = listOf(ReactionType.LIKE, ReactionType.DISLIKE)
         coEvery {
             forumOceanService.getReactionDetail(
@@ -1683,6 +1685,55 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getReactionDetail(1010, 2000, reactionTypeList, 0, 20)
+        assertThat(result.isSuccess).isFalse()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `getReactionDetailV2_取得反應詳細資料成功測試`() = testScope.runTest {
+        val reactionTypeList = listOf(ReactionType.LIKE, ReactionType.DISLIKE)
+        coEvery {
+            forumOceanService.getReactionDetailV2(
+                authorization = any(),
+                articleId = any(),
+                emojiTypes = reactionTypeList.joinToString { it.value.toString() },
+                offset = any(),
+                fetch = any(),
+                path = ""
+            )
+        } returns Response.success(
+            MemberEmojis(
+                listOf(
+                    ReactionInfoV2(
+                        memberId = 67, emoji = 1
+                    ),
+                    ReactionInfoV2(
+                        memberId = 68, emoji = 2
+                    )
+                )
+            )
+        )
+        val result = web.getReactionDetailV2("123-1", reactionTypeList, 0, 20)
+        assertThat(result.isSuccess).isTrue()
+        assertThat(result.getOrThrow().memberEmojis).hasSize(2)
+    }
+
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `getReactionDetailV2_取得反應詳細資料失敗測試`() = testScope.runTest {
+        val reactionTypeList = listOf(ReactionType.LIKE, ReactionType.DISLIKE)
+        coEvery {
+            forumOceanService.getReactionDetailV2(
+                authorization = any(),
+                articleId = any(),
+                emojiTypes = reactionTypeList.joinToString { it.value.toString() },
+                offset = any(),
+                fetch = any(),
+                path = ""
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getReactionDetailV2("123-1", reactionTypeList, 0, 20)
         assertThat(result.isSuccess).isFalse()
     }
 
