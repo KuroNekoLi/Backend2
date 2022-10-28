@@ -109,7 +109,7 @@ class ForumOceanServiceCase : ServiceCase {
                         openGraph = null
                     )
                 ).logResponse(TAG)
-                deleteArticle(this)
+                deleteArticleV2(this.toString())
                 getArticleV2(this).fold(
                     {
                         Log.d(TAG, "response: $it")
@@ -169,25 +169,25 @@ class ForumOceanServiceCase : ServiceCase {
 
         sharedArticleId?.let {
             getArticleV2(it).logResponse(TAG)
-            deleteArticle(it).logResponse(TAG)
+            deleteArticleV2(it.toString()).logResponse(TAG)
         }
     }
 
     private suspend fun ForumOceanWeb.testInteractive(articleId: Long) {
-        createArticleReaction(articleId, ReactionType.LIKE).logResponse(TAG)
+        createReaction(articleId.toString(), ReactionType.LIKE).logResponse(TAG)
         getArticleReactionDetail(articleId, listOf(ReactionType.LIKE), 0, 20).logResponse(TAG)
-        createArticleReaction(articleId, ReactionType.DISLIKE).logResponse(TAG)
+        createReaction(articleId.toString(), ReactionType.DISLIKE).logResponse(TAG)
         getArticleReactionDetail(
             articleId,
             listOf(ReactionType.LIKE, ReactionType.DISLIKE),
             0,
             20
         ).logResponse(TAG)
-        deleteArticleReaction(articleId).logResponse(TAG)
+        deleteReaction(articleId.toString()).logResponse(TAG)
     }
 
     private suspend fun ForumOceanWeb.testComment(articleId: Long) {
-        var commentId: Long? = null
+        var commentIndex: Long? = null
         createCommentV2(
             id = articleId.toString(),
             text = null,
@@ -199,25 +199,26 @@ class ForumOceanServiceCase : ServiceCase {
             )
         ).fold(
             {
-                commentId = it.commentIndex
+                commentIndex =it.commentIndex
                 Log.d(TAG, "response: $it")
             },
             {
                 it.printStackTrace()
             }
         )
-        commentId?.apply {
+        val commentId= "${articleId}-${commentIndex}"
+        commentIndex?.apply {
             getCommentV2(articleId.toString(), this, null).logResponse(TAG)
             val updateCommentHelper = UpdateCommentHelper()
             updateCommentHelper.setText("我修改回復了")
             updateCommentHelper.deleteMultiMedia()
             updateComment(articleId, this, updateCommentHelper).logResponse(TAG)
             getCommentV2(articleId.toString(), this, 20).logResponse(TAG)
-            reactionComment(articleId, 1, ReactionType.LIKE).logResponse(TAG)
-            reactionComment(articleId, 1, ReactionType.DISLIKE).logResponse(TAG)
+            createReaction(commentId, ReactionType.LIKE).logResponse(TAG)
+            createReaction(commentId, ReactionType.DISLIKE).logResponse(TAG)
             getReactionDetail(articleId, 1, ReactionType.values().toList(), 0, 20).logResponse(TAG)
-            removeReactionComment(articleId, 1).logResponse(TAG)
-            deleteComment(articleId, 1).logResponse(TAG)
+            deleteReaction(commentId).logResponse(TAG)
+            deleteCommentV2(commentId).logResponse(TAG)
             getCommentV2(articleId.toString(), this, 20).logResponse(TAG)
         }
 
@@ -367,7 +368,7 @@ class ForumOceanServiceCase : ServiceCase {
                 updateHelper = updateArticleHelper
             ).logResponse(TAG)
 
-            deleteArticle(this).logResponse(TAG)
+            deleteArticleV2(this.toString()).logResponse(TAG)
         }
     }
 
@@ -385,7 +386,7 @@ class ForumOceanServiceCase : ServiceCase {
 
         questionId?.apply {
             getArticleV2(this).logResponse(TAG)
-            deleteArticle(this).logResponse(TAG)
+            deleteArticleV2(this.toString()).logResponse(TAG)
         }
     }
 
@@ -467,7 +468,7 @@ class ForumOceanServiceCase : ServiceCase {
             user1.changeUser(setting)
 
             if (groupArticleId != null) {
-                deleteArticle(groupArticleId).logResponse(TAG)
+                deleteArticleV2(groupArticleId.toString()).logResponse(TAG)
             }
 
             updateGroup(
@@ -579,7 +580,7 @@ class ForumOceanServiceCase : ServiceCase {
             createVote(articleId, 0).logResponse(TAG)
             getCurrentVote(articleId).logResponse(TAG)
             getArticleV2(articleId).logResponse(TAG)
-            deleteArticle(articleId).logResponse(TAG)
+            deleteArticleV2(articleId.toString()).logResponse(TAG)
         }
     }
 
@@ -725,7 +726,7 @@ class ForumOceanServiceCase : ServiceCase {
             block(user2MemberId).logResponse(TAG)
             getCommentV2(this.toString(), null, null).logResponse(TAG)
             unblock(user2MemberId).logResponse(TAG)
-            deleteArticle(this)
+            deleteArticleV2(this.toString())
         }
     }
 }
