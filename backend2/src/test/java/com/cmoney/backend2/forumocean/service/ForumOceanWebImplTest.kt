@@ -42,6 +42,7 @@ import com.cmoney.backend2.forumocean.service.api.rating.MemberRatingCounter
 import com.cmoney.backend2.forumocean.service.api.rating.RatingComment
 import com.cmoney.backend2.forumocean.service.api.rating.ReviewRequest
 import com.cmoney.backend2.forumocean.service.api.relationship.getdonate.DonateInfo
+import com.cmoney.backend2.forumocean.service.api.report.ReportRequestBody
 import com.cmoney.backend2.forumocean.service.api.role.GetMembersByRoleResponse
 import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
 import com.cmoney.backend2.forumocean.service.api.support.SearchMembersResponseBody
@@ -3190,7 +3191,7 @@ class ForumOceanWebImplTest {
             forumOceanService.createReportV2(
                 authorization = any(),
                 articleId = any(),
-                reasonType = any(),
+                body = ReportRequestBody(0),
                 path = ""
             )
         } returns Response.success<Void>(204, null)
@@ -3205,7 +3206,7 @@ class ForumOceanWebImplTest {
             forumOceanService.createReportV2(
                 authorization = any(),
                 articleId = any(),
-                reasonType = any(),
+                body = ReportRequestBody(0),
                 path = ""
             )
         } returns Response.error(500, "".toResponseBody())
