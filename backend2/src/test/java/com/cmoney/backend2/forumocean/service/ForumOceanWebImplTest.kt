@@ -986,6 +986,52 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
+    fun `deleteArticleV2_刪除文章成功測試`() = testScope.runTest {
+        coEvery {
+            forumOceanService.deleteArticleV2(
+                authorization = any(),
+                articleId = any(),
+                path = ""
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.deleteArticleV2("100")
+
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `deleteArticleV2_刪除文章失敗測試`() = testScope.runTest {
+        coEvery {
+            forumOceanService.deleteArticleV2(
+                authorization = any(),
+                articleId = any(),
+                path = ""
+            )
+        } returns Response.error(403, "".toResponseBody())
+        val result = web.deleteArticleV2("100")
+
+        assertThat(result.isSuccess).isFalse()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `deleteArticleV2_刪除文章_遇到文章不存在的情況`() = testScope.runTest {
+        coEvery {
+            forumOceanService.deleteArticleV2(
+                authorization = any(),
+                articleId = any(),
+                path = ""
+            )
+        } returns Response.error(404, "".toResponseBody())
+        val result = web.deleteArticleV2("132434")
+
+        assertThat(result.isSuccess).isFalse()
+        assertThat(result.exceptionOrNull()).isInstanceOf(HttpException::class.java)
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
     fun `getMemberStatistics_取得指定使用者的統計資訊成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getMemberStatistics(
@@ -1527,6 +1573,35 @@ class ForumOceanWebImplTest {
         val result = web.deleteComment(1000, 2000)
         assertThat(result.isSuccess).isFalse()
     }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `deleteCommentV2_刪除回覆成功測試`() = testScope.runTest {
+        coEvery {
+            forumOceanService.deleteCommentV2(
+                authorization = any(),
+                articleId = any(),
+                path = ""
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.deleteCommentV2("123-1")
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `deleteCommentV2_刪除回覆失敗測試`() = testScope.runTest {
+        coEvery {
+            forumOceanService.deleteCommentV2(
+                authorization = any(),
+                articleId = any(),
+                path = ""
+            )
+        } returns Response.error(403, "".toResponseBody())
+        val result = web.deleteCommentV2("123-1")
+        assertThat(result.isSuccess).isFalse()
+    }
+
 
     @ExperimentalCoroutinesApi
     @Test

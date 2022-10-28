@@ -287,11 +287,24 @@ interface ForumOceanService {
      * 刪除文章
      */
     @RecordApi
+    @Deprecated("待服務實作完成，使用deleteArticleV2")
     @DELETE("{path}/api/Article/Delete/{articleId}")
     suspend fun deleteArticle(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Path("articleId") articleId: Long
+    ): Response<Void>
+
+    /**
+     * 刪除文章V2
+     */
+    @RecordApi
+    @Headers("X-Version: 2.0")
+    @DELETE("{path}/api/Article/{articleId}")
+    suspend fun deleteArticleV2(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("articleId") articleId: String
     ): Response<Void>
 
     @RecordApi
@@ -1428,11 +1441,12 @@ interface ForumOceanService {
     ): Response<CreateArticleResponseBody>
 
     /**
-     * 對社團看板發文
+     * 刪除社團文章
      */
     @RecordApi
     @DELETE("{path}/api/GroupArticle/{articleId}")
     @Headers("X-Version: 2.0")
+    @Deprecated("待服務實作完成後，請使用deleteArticleV2")
     suspend fun deleteGroupArticle(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
@@ -1445,6 +1459,7 @@ interface ForumOceanService {
     @RecordApi
     @DELETE("{path}/api/GroupArticle/{articleId}/Comment/{commentId}")
     @Headers("X-Version: 2.0")
+    @Deprecated("請使用deleteCommentV2")
     suspend fun deleteGroupArticleComment(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,

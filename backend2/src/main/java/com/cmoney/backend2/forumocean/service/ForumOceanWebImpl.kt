@@ -283,6 +283,7 @@ class ForumOceanWebImpl(
             }
         }
 
+    @Deprecated("待服務實作完成，使用deleteArticleV2")
     override suspend fun deleteArticle(articleId: Long): Result<Unit> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
@@ -293,6 +294,19 @@ class ForumOceanWebImpl(
                 ).handleNoContent(jsonParser)
             }
         }
+
+    override suspend fun deleteArticleV2(articleId: String): Result<Unit> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.deleteArticleV2(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    articleId = articleId
+                ).handleNoContent(jsonParser)
+            }
+        }
+    }
+
 
     //endregion
 

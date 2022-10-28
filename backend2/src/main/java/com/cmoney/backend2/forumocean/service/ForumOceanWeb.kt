@@ -192,12 +192,21 @@ interface ForumOceanWeb {
 
 
     /**
-     * 移除文章
+     * 刪除文章
      *
      * @param articleId 文章Id
      * @return 成功不回傳任何資訊
      */
+    @Deprecated("待服務實作完成，使用deleteArticleV2")
     suspend fun deleteArticle(articleId: Long): Result<Unit>
+
+    /**
+     * 刪除文章V2
+     *
+     * @param articleId 文章Id
+     * @return
+     */
+    suspend fun deleteArticleV2(articleId: String): Result<Unit>
 
     //endregion
 
