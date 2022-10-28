@@ -181,7 +181,6 @@ interface ForumOceanWeb {
     suspend fun getArticleV2(articleId: Long): Result<ArticleResponseBodyV2>
 
 
-
     /**
      * 更新文章資訊
      *
@@ -1139,7 +1138,17 @@ interface ForumOceanWeb {
      * @param commentId 回文Id
      * @return
      */
+    @Deprecated("檢舉留言請使用createReportV2，檢舉主文仍暫時使用這個，待服務實作後遷移")
     suspend fun createReport(articleId: Long, reasonType: Int, commentId: Long?): Result<Unit>
+
+    /**
+     * 使用者檢舉文章/留言
+     *
+     * @param id 文章或留言ID(目前僅支援留言)
+     * @param reasonType 檢舉原因 [對照表(Report) -> http://outpost.cmoney.net.tw/ForumOcean/swagger/index.html]
+     * @return
+     */
+    suspend fun createReportV2(id: String, reasonType: Int): Result<Unit>
 
     /**
      * 刪除指定使用者檢舉文章的記錄
@@ -1518,7 +1527,7 @@ interface ForumOceanWeb {
     /**
      * 取得單一留言
      */
-    suspend fun getSingleComment(commentId:String):Result<CommentResponseBodyV2>
+    suspend fun getSingleComment(commentId: String): Result<CommentResponseBodyV2>
 
     /**
      * 取得推薦文章

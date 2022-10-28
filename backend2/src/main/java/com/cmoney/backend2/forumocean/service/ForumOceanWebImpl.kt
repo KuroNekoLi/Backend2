@@ -1367,6 +1367,7 @@ class ForumOceanWebImpl(
             }
         }
 
+    @Deprecated("檢舉留言請使用createReportV2，檢舉主文仍暫時使用這個，待服務實作後遷移")
     override suspend fun createReport(
         articleId: Long,
         reasonType: Int,
@@ -1380,6 +1381,21 @@ class ForumOceanWebImpl(
                     articleId = articleId,
                     reasonType = reasonType,
                     commentId = commentId
+                ).handleNoContent(jsonParser)
+            }
+        }
+
+    override suspend fun createReportV2(
+        id: String,
+        reasonType: Int
+    ): Result<Unit> =
+        withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.createReportV2(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    articleId = id,
+                    reasonType = reasonType
                 ).handleNoContent(jsonParser)
             }
         }
@@ -2083,6 +2099,7 @@ class ForumOceanWebImpl(
             }
         }
     }
+
     override suspend fun getRecommendation(
         offset: Int,
         fetch: Int

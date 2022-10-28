@@ -862,6 +862,7 @@ interface ForumOceanService {
     ): Response<List<RelationshipWithMe>>
 
     @RecordApi
+    @Deprecated("檢舉留言請使用createReportV2，檢舉主文仍暫時使用這道，待服務實作後遷移")
     @POST("{path}/api/Report/Create/{articleId}")
     suspend fun createReport(
         @Header("Authorization") authorization: String,
@@ -869,6 +870,15 @@ interface ForumOceanService {
         @Path("articleId") articleId: Long,
         @Query("reasonType") reasonType: Int,
         @Query("commentId") commentId: Long?
+    ): Response<Void>
+
+    @RecordApi
+    @POST("{path}/api/Article/{articleId}/Report")
+    suspend fun createReportV2(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("articleId") articleId: String,
+        @Query("reasonType") reasonType: Int
     ): Response<Void>
 
     @RecordApi

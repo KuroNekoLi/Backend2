@@ -3059,6 +3059,36 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
+    fun `createReportV2_檢舉文章成功測試`() = testScope.runTest {
+        coEvery {
+            forumOceanService.createReportV2(
+                authorization = any(),
+                articleId = any(),
+                reasonType = any(),
+                path = ""
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.createReportV2("123-1", 1)
+        assertThat(result.isSuccess)
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `createReportV2_檢舉文章失敗測試`() = testScope.runTest {
+        coEvery {
+            forumOceanService.createReportV2(
+                authorization = any(),
+                articleId = any(),
+                reasonType = any(),
+                path = ""
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.createReportV2("123-1", 1)
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
     fun `deleteReport_刪除檢舉成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.deleteReport(
