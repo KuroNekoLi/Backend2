@@ -500,6 +500,7 @@ interface ForumOceanService {
     ): Response<Void>
 
     @RecordApi
+    @Deprecated("請使用getReactionDetailV2")
     @GET("{path}/api/Interactive/GetReactionDetail/{articleId}")
     suspend fun getArticleReactionDetail(
         @Header("Authorization") authorization: String,

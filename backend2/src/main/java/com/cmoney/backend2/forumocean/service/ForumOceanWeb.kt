@@ -761,6 +761,7 @@ interface ForumOceanWeb {
      * @param count 取得數量
      * @return 互動 對應 做此互動的會員清單
      */
+    @Deprecated("請使用getReactionDetailV2")
     suspend fun getArticleReactionDetail(
         articleId: Long,
         reactionTypeList: List<ReactionType>,

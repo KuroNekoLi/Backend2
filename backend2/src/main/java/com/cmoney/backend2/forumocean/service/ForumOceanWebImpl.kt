@@ -653,7 +653,7 @@ class ForumOceanWebImpl(
             }
         }
     }
-
+    @Deprecated("請使用getReactionDetailV2")
     override suspend fun getArticleReactionDetail(
         articleId: Long,
         reactionTypeList: List<ReactionType>,
