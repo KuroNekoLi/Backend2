@@ -62,7 +62,6 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.commentrespo
 import com.cmoney.backend2.forumocean.service.api.variable.response.groupresponse.GroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.MemberEmojis
 import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.ReactionInfo
-import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.ReactionInfoV2
 import com.cmoney.backend2.forumocean.service.api.vote.get.VoteInfo
 import com.cmoney.backend2.ocean.service.api.getevaluationlist.SortType
 
@@ -1549,9 +1548,9 @@ interface ForumOceanWeb {
     suspend fun getColumnistAll(): Result<List<Long>>
 
     /**
-     * 隱藏留言
+     * 隱藏/取消隱藏留言
      */
-    suspend fun hideComment(articleId: String): Result<HideCommentResponseBody>
+    suspend fun changeCommentHideState(id: String, isHide: Boolean): Result<HideCommentResponseBody>
 
     /**
      * 取得單一留言

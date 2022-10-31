@@ -16,6 +16,7 @@ import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentRe
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentRequestBodyV2
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBodyV2
+import com.cmoney.backend2.forumocean.service.api.comment.hide.HideCommentRequestBody
 import com.cmoney.backend2.forumocean.service.api.comment.hide.HideCommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.comment.update.UpdateCommentRequestBody
 import com.cmoney.backend2.forumocean.service.api.group.create.CreateGroupResponseBody
@@ -1628,15 +1629,16 @@ interface ForumOceanService {
     ): Response<CreateCommentResponseBodyV2>
 
     /**
-     * 隱藏留言
+     * 隱藏/取消隱藏留言
      */
     @RecordApi
     @PUT("{path}/api/Article/{articleId}/Hide")
     @Headers("X-Version: 2.0")
-    suspend fun hideComment(
+    suspend fun changeCommentHideState(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Path("articleId") articleId: String,
+        @Body body:HideCommentRequestBody
     ): Response<HideCommentResponseBody>
 
     /**
