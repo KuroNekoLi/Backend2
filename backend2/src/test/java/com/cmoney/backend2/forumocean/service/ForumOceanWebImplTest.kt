@@ -1706,10 +1706,10 @@ class ForumOceanWebImplTest {
             MemberEmojis(
                 listOf(
                     ReactionInfoV2(
-                        memberId = 67, emoji = 1
+                        memberId = 67, emoji = ""
                     ),
                     ReactionInfoV2(
-                        memberId = 68, emoji = 2
+                        memberId = 68, emoji = ""
                     )
                 )
             )

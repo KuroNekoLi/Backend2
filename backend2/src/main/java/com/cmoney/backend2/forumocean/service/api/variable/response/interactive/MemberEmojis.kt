@@ -4,12 +4,12 @@ import com.google.gson.annotations.SerializedName
 
 data class MemberEmojis(
     @SerializedName("memberEmojis")
-    val memberEmojis: List<ReactionInfoV2>?,
+    val memberEmojis: List<ReactionInfoV2>,
 )
 
 data class ReactionInfoV2(
     @SerializedName("memberId")
     val memberId: Long?,
     @SerializedName("emoji")
-    val emoji: Int?,
+    val emoji: String?,
 )
