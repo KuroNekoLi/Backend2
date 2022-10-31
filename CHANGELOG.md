@@ -1,3 +1,16 @@
+#  (2022-10-31)
+
+
+
+# [5.44.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.43.0...5.44.0) (2022-10-31)
+
+
+### Features
+
+* 發文新增title欄位 ([5f44694](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/5f4469464cff807b3db89818fba1e8f6427930a1))
+
+
+
 #  (2022-10-21)
 
 
