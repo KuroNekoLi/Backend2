@@ -17,7 +17,6 @@ import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentRe
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBodyV2
 import com.cmoney.backend2.forumocean.service.api.comment.hide.HideCommentRequestBody
-import com.cmoney.backend2.forumocean.service.api.comment.hide.HideCommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.comment.update.UpdateCommentRequestBody
 import com.cmoney.backend2.forumocean.service.api.group.create.CreateGroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.getapprovals.GroupPendingApproval
@@ -1639,7 +1638,7 @@ interface ForumOceanService {
         @Path("path") path: String,
         @Path("articleId") articleId: String,
         @Body body:HideCommentRequestBody
-    ): Response<HideCommentResponseBody>
+    ): Response<Void>
 
     /**
      * 取得單一留言

@@ -23,7 +23,6 @@ import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentRe
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBodyV2
 import com.cmoney.backend2.forumocean.service.api.comment.hide.HideCommentRequestBody
-import com.cmoney.backend2.forumocean.service.api.comment.hide.HideCommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.comment.update.IUpdateCommentHelper
 import com.cmoney.backend2.forumocean.service.api.group.create.CreateGroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.getapprovals.GroupPendingApproval
@@ -2115,7 +2114,7 @@ class ForumOceanWebImpl(
         }
     }
 
-    override suspend fun changeCommentHideState(id: String, isHide: Boolean): Result<HideCommentResponseBody> {
+    override suspend fun changeCommentHideState(id: String, isHide: Boolean): Result<Unit> {
         return withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.changeCommentHideState(
@@ -2123,7 +2122,7 @@ class ForumOceanWebImpl(
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     articleId = id,
                     body = HideCommentRequestBody(isHide)
-                ).checkResponseBody(jsonParser)
+                ).handleNoContent(jsonParser)
             }
         }
     }

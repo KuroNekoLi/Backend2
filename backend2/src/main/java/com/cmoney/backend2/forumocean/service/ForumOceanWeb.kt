@@ -12,7 +12,6 @@ import com.cmoney.backend2.forumocean.service.api.channel.getmemberstatistics.Ge
 import com.cmoney.backend2.forumocean.service.api.columnist.GetColumnistVipGroupResponse
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBodyV2
-import com.cmoney.backend2.forumocean.service.api.comment.hide.HideCommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.comment.update.IUpdateCommentHelper
 import com.cmoney.backend2.forumocean.service.api.group.create.CreateGroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.getapprovals.GroupPendingApproval
@@ -1550,7 +1549,7 @@ interface ForumOceanWeb {
     /**
      * 隱藏/取消隱藏留言
      */
-    suspend fun changeCommentHideState(id: String, isHide: Boolean): Result<HideCommentResponseBody>
+    suspend fun changeCommentHideState(id: String, isHide: Boolean): Result<Unit>
 
     /**
      * 取得單一留言
