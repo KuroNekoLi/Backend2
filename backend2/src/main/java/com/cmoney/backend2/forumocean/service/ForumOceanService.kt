@@ -903,6 +903,7 @@ interface ForumOceanService {
 
     @RecordApi
     @POST("{path}/api/Article/{articleId}/Report")
+    @Headers("X-Version: 2.0")
     suspend fun createReportV2(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
