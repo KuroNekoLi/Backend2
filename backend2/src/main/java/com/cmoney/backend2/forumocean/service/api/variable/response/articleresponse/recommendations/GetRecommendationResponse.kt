@@ -1,10 +1,10 @@
 package com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations
 
-import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
 import com.google.gson.annotations.SerializedName
 
 /**
- * Response object: GetRecomendation
+ * Response object: GetRecommendation
  *
  * @property articles 文章清單
  * @property hasNext 有下頁
@@ -13,7 +13,7 @@ import com.google.gson.annotations.SerializedName
  */
 data class GetRecommendationResponse(
     @SerializedName("articles")
-    val articles: List<ArticleResponseBodyV2>,
+    val articles: List<ArticleResponseBody.UnknownArticleResponseBody>,
     @SerializedName("hasNext")
     val hasNext: Boolean,
     @SerializedName("nextOffset")
