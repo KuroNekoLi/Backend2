@@ -259,7 +259,7 @@ class ForumOceanWebImpl(
             }
         }
 
-    override suspend fun getArticleV2(articleId: Long): Result<ArticleResponseBodyV2> =
+    override suspend fun getArticleV2(articleId: Long): Result<ArticleResponseBody.UnknownArticleResponseBody> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getArticleV2(

@@ -178,7 +178,7 @@ interface ForumOceanWeb {
      * @param articleId 文章Id
      * @return 文章資訊
      */
-    suspend fun getArticleV2(articleId: Long): Result<ArticleResponseBodyV2>
+    suspend fun getArticleV2(articleId: Long): Result<ArticleResponseBody.UnknownArticleResponseBody>
 
 
     /**

@@ -1585,7 +1585,7 @@ interface ForumOceanService {
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Path("articleId") articleId: String
-    ): Response<ArticleResponseBodyV2>
+    ): Response<ArticleResponseBody.UnknownArticleResponseBody>
 
     /**
      * 取得留言V2(可訪客)
