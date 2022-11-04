@@ -27,5 +27,5 @@ data class CommentResponseBodyV2(
     @SerializedName("commentCount")
     val commentCount: Int?,
     @SerializedName("hasReport")
-    val report: Any?,
+    val hasReport: Boolean?,
 )

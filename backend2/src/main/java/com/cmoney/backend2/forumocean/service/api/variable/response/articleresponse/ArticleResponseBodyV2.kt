@@ -18,7 +18,7 @@ data class ArticleResponseBodyV2(
     @SerializedName("emojiCount")
     val emojiCount: Map<String, Int>?,
     @SerializedName("hasCollect")
-    val collected: Any?,
+    val collected: Boolean?,
     @SerializedName("collectedCount")
     val collectCount: Int?,
     @SerializedName("myComments")
@@ -28,7 +28,7 @@ data class ArticleResponseBodyV2(
     @SerializedName("@hash-shared")
     val shareCount: Int?,
     @SerializedName("hasInterest")
-    val interested: Any?,
+    val interested: Boolean?,
     @SerializedName("interestedCount")
     val interestCount: Int?,
     @SerializedName("rewardPoints")
@@ -42,7 +42,7 @@ data class ArticleResponseBodyV2(
     @SerializedName("@value-reportCount")
     val totalReportCount: Int?,
     @SerializedName("hasReport")
-    val report: Any?,
+    val hasReport: Boolean?,
     @SerializedName("isHidden")
     val isHidden: Boolean?,
     @SerializedName("isAnonymous")

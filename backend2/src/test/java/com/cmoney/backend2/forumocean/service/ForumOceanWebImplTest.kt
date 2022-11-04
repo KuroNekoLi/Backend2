@@ -854,7 +854,7 @@ class ForumOceanWebImplTest {
             voteCount = null,
             voteStatus = null,
             totalReportCount = null,
-            report = null,
+            hasReport = null,
             isHidden = null,
             anonymous = null,
             authType = null
@@ -5013,7 +5013,7 @@ class ForumOceanWebImplTest {
             emojiCount = null,
             myCommentIndex = null,
             commentCount = null,
-            report = null
+            hasReport = null
         )
         coEvery {
             forumOceanService.getSingleComment(
