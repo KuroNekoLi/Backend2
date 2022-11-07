@@ -21,6 +21,12 @@ class UserBehaviorServiceCase : ServiceCase {
                         descriptions = mapOf("Unit Test" to "Unit Test"),
                         name = "Unit Test",
                         time = System.currentTimeMillis(),
+                        duration = null
+                    ),
+                    Event(
+                        descriptions = mapOf("Unit Test" to "Unit Test"),
+                        name = "Unit Test",
+                        time = System.currentTimeMillis(),
                         duration = 0
                     )
                 ),

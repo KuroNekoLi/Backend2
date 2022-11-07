@@ -1,3 +1,16 @@
+#  (2022-11-07)
+
+
+
+## [5.44.1](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.44.0...5.44.1) (2022-11-07)
+
+
+### Bug Fixes
+
+* 修正使用者分析上傳的事件持續時間應可空值 ([bbfaea4](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/bbfaea483dd423f9c11a6f838212e5c09b57e48a))
+
+
+
 #  (2022-10-31)
 
 
