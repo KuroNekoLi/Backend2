@@ -1612,7 +1612,7 @@ interface ForumOceanService {
         @Path("path") path: String,
         @Query("articleId") articleId: String,
         @Query("commentIndex") commentIndex: String
-    ): Response<GetCommentsResponseBody>
+    ): Response<List<CommentResponseBodyV2>>
 
     /**
      * 發留言v2

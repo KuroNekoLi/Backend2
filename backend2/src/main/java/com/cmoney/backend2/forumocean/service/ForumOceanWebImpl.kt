@@ -488,7 +488,7 @@ class ForumOceanWebImpl(
     override suspend fun getCommentsByIndex(
         id: String,
         commentIndices: List<Long>
-    ): Result<GetCommentsResponseBody> = withContext(dispatcher.io()) {
+    ): Result<List<CommentResponseBodyV2>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getCommentsByIndex(
                 path = serverName,

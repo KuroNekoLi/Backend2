@@ -367,7 +367,7 @@ interface ForumOceanWeb {
     suspend fun getCommentsByIndex(
         id: String,
         commentIndices: List<Long>
-    ): Result<GetCommentsResponseBody>
+    ): Result<List<CommentResponseBodyV2>>
 
     /**
      * 取得指定主文的社團管理員回文清單
