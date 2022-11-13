@@ -12,6 +12,7 @@ import com.cmoney.backend2.forumocean.service.api.channel.getmemberstatistics.Ge
 import com.cmoney.backend2.forumocean.service.api.columnist.GetColumnistVipGroupResponse
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBodyV2
+import com.cmoney.backend2.forumocean.service.api.comment.hide.HideCommentRequestBody
 import com.cmoney.backend2.forumocean.service.api.comment.update.UpdateCommentHelper
 import com.cmoney.backend2.forumocean.service.api.group.create.CreateGroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.getapprovals.GroupPendingApproval
@@ -4974,13 +4975,14 @@ class ForumOceanWebImplTest {
     @Test
     fun `隱藏留言_success`() = testScope.runTest {
         coEvery {
-            forumOceanService.hideComment(
+            forumOceanService.changeCommentHideState(
                 authorization = any(),
                 path = any(),
-                articleId = any()
+                articleId = any(),
+                body = any()
             )
-        } returns Response.success(HideCommentResponseBody(true))
-        val result = web.hideComment("123-1")
+        } returns Response.success<Void>(200, null)
+        val result = web.changeCommentHideState("123-1", true)
         assertThat(result.isSuccess).isTrue()
     }
 
@@ -4988,13 +4990,14 @@ class ForumOceanWebImplTest {
     @Test
     fun `隱藏留言_failed`() = testScope.runTest {
         coEvery {
-            forumOceanService.hideComment(
+            forumOceanService.changeCommentHideState(
                 authorization = any(),
                 path = any(),
-                articleId = any()
+                articleId = any(),
+                body = HideCommentRequestBody(true)
             )
         } returns Response.error(500, "".toResponseBody())
-        val result = web.hideComment("123-1")
+        val result = web.changeCommentHideState("123-1" ,true)
         assertThat(result.isFailure).isTrue()
     }
 
