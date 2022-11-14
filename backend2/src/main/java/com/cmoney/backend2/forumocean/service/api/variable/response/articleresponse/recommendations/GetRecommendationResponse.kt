@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName
  *
  * @property articles 文章清單
  * @property hasNext 有下頁
- * @property nextOffset 下頁長度
+ * @property nextOffset 取下一頁的Key
  *
  */
 data class GetRecommendationResponse(

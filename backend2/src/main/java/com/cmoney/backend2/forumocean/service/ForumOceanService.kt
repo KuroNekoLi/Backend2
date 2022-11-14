@@ -59,6 +59,7 @@ import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
 import com.cmoney.backend2.forumocean.service.api.support.SearchMembersResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations.GetRecommendationResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBodyV2
@@ -1637,7 +1638,7 @@ interface ForumOceanService {
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Path("articleId") articleId: String,
-        @Body body:HideCommentRequestBody
+        @Body body: HideCommentRequestBody
     ): Response<Void>
 
     /**
@@ -1663,4 +1664,26 @@ interface ForumOceanService {
         @Query("offset") offset: Int,
         @Query("fetch") fetch: Int
     ): Response<GetRecommendationResponse>
+
+    /**
+     * 取得置頂精選文章清單
+     */
+    @RecordApi
+    @GET("{path}/api/PromotedArticle/Pin")
+    suspend fun getPinPromotedArticles(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String
+    ): Response<List<ArticleResponseBodyV2>>
+
+    /**
+     * 取得精選文章清單
+     */
+    @RecordApi
+    @GET("{path}/api/PromotedArticle")
+    suspend fun getPromotedArticles(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Query("startWeight") startWeight: Long,
+        @Query("fetch") fetch: Int
+    ): Response<GetPromotedArticlesResponse>
 }

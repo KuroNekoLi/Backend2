@@ -54,6 +54,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.request.ReactionType
 import com.cmoney.backend2.forumocean.service.api.variable.request.mediatype.MediaType
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations.GetRecommendationResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBodyV2
@@ -1563,4 +1564,17 @@ interface ForumOceanWeb {
         offset: Int,
         fetch: Int
     ): Result<GetRecommendationResponse>
+
+    /**
+     * 取得置頂精選文章清單
+     */
+    suspend fun getPinPromotedArticles(): Result<List<ArticleResponseBodyV2>>
+
+    /**
+     * 取得精選文章清單
+     */
+    suspend fun getPromotedArticles(
+        startWeight: Long,
+        fetch: Int
+    ): Result<GetPromotedArticlesResponse>
 }

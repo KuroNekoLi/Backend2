@@ -67,6 +67,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.request.ReactionType
 import com.cmoney.backend2.forumocean.service.api.variable.request.mediatype.MediaType
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations.GetRecommendationResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBodyV2
@@ -2149,6 +2150,33 @@ class ForumOceanWebImpl(
                     path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     offset = offset,
+                    fetch = fetch
+                ).checkResponseBody(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun getPinPromotedArticles(): Result<List<ArticleResponseBodyV2>> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.getPinPromotedArticles(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                ).checkResponseBody(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun getPromotedArticles(
+        startWeight: Long,
+        fetch: Int
+    ): Result<GetPromotedArticlesResponse> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.getPromotedArticles(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    startWeight = startWeight,
                     fetch = fetch
                 ).checkResponseBody(jsonParser)
             }

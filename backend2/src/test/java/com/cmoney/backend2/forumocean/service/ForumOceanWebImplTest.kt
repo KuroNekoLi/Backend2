@@ -52,6 +52,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.request.ReactionType
 import com.cmoney.backend2.forumocean.service.api.variable.response.GroupPositionInfo
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations.GetRecommendationResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentContent
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBody
@@ -4997,7 +4998,7 @@ class ForumOceanWebImplTest {
                 body = HideCommentRequestBody(true)
             )
         } returns Response.error(500, "".toResponseBody())
-        val result = web.changeCommentHideState("123-1" ,true)
+        val result = web.changeCommentHideState("123-1", true)
         assertThat(result.isFailure).isTrue()
     }
 
@@ -5071,6 +5072,62 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getRecommendation(0, 0)
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得置頂精選文章清單_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getPinPromotedArticles(
+                authorization = any(),
+                path = any()
+            )
+        } returns Response.success(listOf())
+        val result = web.getPinPromotedArticles()
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得置頂精選文章清單_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getPinPromotedArticles(
+                authorization = any(),
+                path = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getPinPromotedArticles()
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得精選文章清單_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getPromotedArticles(
+                authorization = any(),
+                path = any(),
+                startWeight = any(),
+                fetch = any()
+            )
+        } returns Response.success(GetPromotedArticlesResponse(listOf(), true, 0))
+        val result = web.getPromotedArticles(0, 0)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得精選文章清單_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getPromotedArticles(
+                authorization = any(),
+                path = any(),
+                startWeight = any(),
+                fetch = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getPromotedArticles(0, 0)
         assertThat(result.isFailure).isTrue()
     }
 
