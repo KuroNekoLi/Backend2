@@ -49,4 +49,8 @@ data class ArticleResponseBodyV2(
     val anonymous: Boolean?,
     @SerializedName("authType")
     val authType: String?,
+    @SerializedName("isPromotedArticle")
+    val isPromotedArticle: Boolean?,
+    @SerializedName("isPinnedPromotedArticle")
+    val isPinnedPromotedArticle: Boolean?
 )

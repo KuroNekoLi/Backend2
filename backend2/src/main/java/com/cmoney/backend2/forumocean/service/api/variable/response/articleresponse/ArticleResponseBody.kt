@@ -90,7 +90,11 @@ sealed class ArticleResponseBody(
         @SerializedName("report")
         override val report: Any?,
         @SerializedName("@value-commentDeleted")
-        override val commentDeletedCount: Int?
+        override val commentDeletedCount: Int?,
+        @SerializedName("isPromotedArticle")
+        val isPromotedArticle: Boolean?,
+        @SerializedName("isPinnedPromotedArticle")
+        val isPinnedPromotedArticle: Boolean?
     ) : ArticleResponseBody(createTime, id, modifyTime),
         ReactionInfo,
         CollectedInfo,

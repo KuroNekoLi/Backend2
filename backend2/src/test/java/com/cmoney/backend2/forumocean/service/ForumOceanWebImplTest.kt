@@ -859,7 +859,9 @@ class ForumOceanWebImplTest {
             hasReport = null,
             isHidden = null,
             anonymous = null,
-            authType = null
+            authType = null,
+            isPinnedPromotedArticle = null,
+            isPromotedArticle = null
         )
         coEvery {
             forumOceanService.getArticleV2(
