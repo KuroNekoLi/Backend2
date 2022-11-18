@@ -77,12 +77,12 @@ class UserBehaviorRemoteDataSourceTest {
 
         val result = web.uploadReport(
             events = listOf(),
-            processId = "",
+            processId = null,
             appId = 0,
             platform = 0,
             version = "",
-            os = "",
-            device = ""
+            os = null,
+            device = null
         ).getOrThrow()
         Truth.assertThat(result).isEqualTo(Unit)
     }

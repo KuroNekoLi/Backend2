@@ -1,3 +1,13 @@
+#  (2022-11-18)
+
+## [5.44.2](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.44.1...5.44.2)
+
+### Bug Fixes
+
+- 修正使用者分析上傳的事件無法被正確記錄在ELK
+	- processID os device需要可以傳Null，並且是Null情況時，不應該傳遞Key在Json
+
+
 #  (2022-11-07)
 
 

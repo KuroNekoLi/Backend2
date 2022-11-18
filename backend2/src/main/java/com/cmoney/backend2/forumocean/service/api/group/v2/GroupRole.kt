@@ -2,7 +2,6 @@ package com.cmoney.backend2.forumocean.service.api.group.v2
 
 
 import com.google.gson.annotations.SerializedName
-import androidx.annotation.Keep
 
 /**
  * 社團角色
@@ -27,7 +26,13 @@ data class GroupRole(
      * 角色類別
      */
     @SerializedName("type")
-    val type: String?
+    val type: String?,
+
+    /**
+     * 訂閱商品類別
+     */
+    @SerializedName("subscriptionType")
+    val subscriptionType: String?
 ) {
     /**
      * The type enum for the type of this role.
@@ -40,5 +45,17 @@ data class GroupRole(
             Role.NORMAL_MEMBER.value -> Role.NORMAL_MEMBER
             else -> Role.NON_MEMBER
         }
+    }
+
+    /**
+     * 取得訂閱商品對應enum
+     */
+    fun subscriptionType(): SubscriptionType {
+        SubscriptionType.values().forEach { type ->
+            if (type.value == subscriptionType) {
+                return type
+            }
+        }
+        return  SubscriptionType.NONE
     }
 }
