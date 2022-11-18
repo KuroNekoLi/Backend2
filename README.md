@@ -44,7 +44,7 @@ android {
     }
 }
 dependecies {
-	implementation 'com.cmoney.backend2:backend2:5.44.1'
+	implementation 'com.cmoney.backend2:backend2:5.44.2'
 	implementation("com.cmoney.logdatarecorder:logdatarecorder-data:5.4.0")
 	implementation("com.cmoney.logdatarecorder:logdatarecorder-domain:5.4.0")
 }
@@ -54,8 +54,8 @@ dependecies {
 
 ```groovy
 dependecies {
-	releaseImplementation 'com.cmoney.backend2:backend2:5.44.1'
-	debugImplementation 'com.cmoney.backend2:backend2-debug:5.44.1'
+	releaseImplementation 'com.cmoney.backend2:backend2:5.44.2'
+	debugImplementation 'com.cmoney.backend2:backend2-debug:5.44.2'
 	implementation("com.cmoney.logdatarecorder:logdatarecorder-data:5.4.0")
 	implementation("com.cmoney.logdatarecorder:logdatarecorder-domain:5.4.0")
 }
@@ -105,15 +105,23 @@ class SampleApplication : Application() {
 
 ```kotlin
 val BACKEND2_GSON = named("backend2_gson")
+val BACKEND2_GSON_NON_SERIALIZE_NULLS = named("backend2_gson_non_serialize_nulls")
 val BACKEND2_RETROFIT = named("backend2_retrofit")
+val BACKEND2_RETROFIT_WITH_GSON_NON_SERIALIZE_NULLS = named("backend2_retrofit_with_gson_non_serialize_nulls")
 val BACKEND2_SETTING = named("backend2_setting")
+
 ```
 
 #### 已被定義好的Class
 
-* Gson(BACKEND2_GSON)
-* Retrofit(BACKEND2_RETROFIT)
-* Setting(BACKEND2_SETTING)
+- Gson
+	- `BACKEND2_GSON`：預設的Gson
+	- `BACKEND2_GSON_NON_SERIALIZE_NULLS`：不會將Josn的Null傳出去。
+- Retrofit
+	- `BACKEND2_RETROFIT`：預設的Retrofit
+	- `BACKEND2_RETROFIT_WITH_GSON_NON_SERIALIZE_NULLS`：Retrofit的Gson設定(不會將Josn的Null傳出去)。
+- Setting
+	- `BACKEND2_SETTING`：設定檔
 
 #### 取得定義好的Module
 
