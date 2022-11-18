@@ -7,12 +7,12 @@ interface UserBehaviorWeb {
 
     suspend fun uploadReport(
         events: List<Event>,
-        processId: String,
+        processId: String?,
         appId: Int,
         platform: Int,
         version: String,
-        os: String,
-        device: String
+        os: String?,
+        device: String?
     ): Result<Unit>
 
 }

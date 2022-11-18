@@ -18,24 +18,30 @@ class UserBehaviorServiceCase : ServiceCase {
             uploadReport(
                 events = listOf(
                     Event(
-                        descriptions = mapOf("Unit Test" to "Unit Test"),
-                        name = "Unit Test",
+                        descriptions = null,
+                        name = "Test Event Key Without Info",
                         time = System.currentTimeMillis(),
                         duration = null
                     ),
                     Event(
-                        descriptions = mapOf("Unit Test" to "Unit Test"),
-                        name = "Unit Test",
+                        descriptions = mapOf("I Should not be logged" to "我不應該被紀錄，因為我沒有被定義在Info"),
+                        name = "Test Event Key With Error Info",
+                        time = System.currentTimeMillis(),
+                        duration = null
+                    ),
+                    Event(
+                        descriptions = mapOf("test" to true),
+                        name = "Test Event Key With Info",
                         time = System.currentTimeMillis(),
                         duration = 0
                     )
                 ),
-                processId = "Unit Test",
-                appId = -1,
-                platform = -1,
+                processId = null,
+                appId = 2,
+                platform = 2,
                 version = "Unit Test",
-                os = "Unit Test",
-                device = "Unit Test"
+                os = null,
+                device = null
             ).logResponse(TAG)
         }
     }
