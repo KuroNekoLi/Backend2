@@ -7,7 +7,7 @@ data class LogRequestBody(
     @SerializedName("userEvents")
     val events: List<Event>,
     @SerializedName("processId")
-    val serializedId: String,
+    val serializedId: String?,
     @SerializedName("appId")
     val appId: Int,
     @SerializedName("platform")
@@ -15,7 +15,7 @@ data class LogRequestBody(
     @SerializedName("version")
     val version: String,
     @SerializedName("os")
-    val os: String,
+    val os: String?,
     @SerializedName("device")
-    val device: String
+    val device: String?
 )

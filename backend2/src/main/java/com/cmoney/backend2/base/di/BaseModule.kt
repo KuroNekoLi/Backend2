@@ -32,6 +32,7 @@ private const val DEFAULT_URL = "https://www.cmoney.tw/"
 val BACKEND2_GSON = named("backend2_gson")
 val BACKEND2_GSON_NON_SERIALIZE_NULLS = named("backend2_gson_non_serialize_nulls")
 val BACKEND2_RETROFIT = named("backend2_retrofit")
+val BACKEND2_RETROFIT_WITH_GSON_NON_SERIALIZE_NULLS = named("backend2_retrofit_with_gson_non_serialize_nulls")
 val BACKEND2_SETTING = named("backend2_setting")
 
 val backendBaseModule = module {
@@ -64,6 +65,19 @@ val backendBaseModule = module {
             .baseUrl(DEFAULT_URL)
             .client(createOkHttpClient())
             .addConverterFactory(GsonConverterFactory.create(get(BACKEND2_GSON)))
+            .addCallAdapterFactory(
+                RecordApiLogCallAdapterFactory(
+                    setting = get(BACKEND2_SETTING),
+                    logDataRecorder = LogDataRecorder.getInstance()
+                )
+            )
+            .build()
+    }
+    single<Retrofit>(BACKEND2_RETROFIT_WITH_GSON_NON_SERIALIZE_NULLS) {
+        Retrofit.Builder()
+            .baseUrl(DEFAULT_URL)
+            .client(createOkHttpClient())
+            .addConverterFactory(GsonConverterFactory.create(get(BACKEND2_GSON_NON_SERIALIZE_NULLS)))
             .addCallAdapterFactory(
                 RecordApiLogCallAdapterFactory(
                     setting = get(BACKEND2_SETTING),
