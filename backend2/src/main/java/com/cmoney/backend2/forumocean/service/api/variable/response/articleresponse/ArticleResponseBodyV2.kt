@@ -7,6 +7,8 @@ data class ArticleResponseBodyV2(
     val id: String?,
     @SerializedName("creatorId")
     val creatorId: Long?,
+    @SerializedName("promotedArticleTitle")
+    val promotedArticleTitle: String?,
     @SerializedName("content")
     val articleContent: ArticleContentV2?,
     @SerializedName("createTime")

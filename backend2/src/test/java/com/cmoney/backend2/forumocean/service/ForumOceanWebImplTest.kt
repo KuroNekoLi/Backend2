@@ -842,6 +842,7 @@ class ForumOceanWebImplTest {
             articleContent = null,
             createTime = null,
             id = articleId.toString(),
+            promotedArticleTitle = null,
             creatorId = null,
             modifyTime = null,
             myEmoji = null,
