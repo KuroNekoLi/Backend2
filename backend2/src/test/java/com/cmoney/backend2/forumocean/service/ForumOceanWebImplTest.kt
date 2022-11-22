@@ -803,7 +803,9 @@ class ForumOceanWebImplTest {
             totalReportCount = null,
             report = null,
             commentDeletedCount = null,
-            donate = null
+            donate = null,
+            isPromotedArticle = null,
+            isPinnedPromotedArticle = null
         )
         coEvery {
             forumOceanService.getUnknownArticle(
@@ -1119,7 +1121,9 @@ class ForumOceanWebImplTest {
                     totalReportCount = null,
                     report = null,
                     commentDeletedCount = null,
-                    donate = null
+                    donate = null,
+                    isPromotedArticle = null,
+                    isPinnedPromotedArticle = null
                 )
             )
         )
