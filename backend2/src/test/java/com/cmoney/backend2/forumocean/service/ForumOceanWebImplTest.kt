@@ -4989,7 +4989,7 @@ class ForumOceanWebImplTest {
                 articleId = any(),
                 body = any()
             )
-        } returns Response.success<Void>(200, null)
+        } returns Response.success<Void>(204, null)
         val result = web.changeCommentHideState("123-1", true)
         assertThat(result.isSuccess).isTrue()
     }
