@@ -68,6 +68,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.request.mediatype.Med
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.PromotedArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations.GetRecommendationResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBodyV2
@@ -2156,7 +2157,7 @@ class ForumOceanWebImpl(
         }
     }
 
-    override suspend fun getPinPromotedArticles(): Result<List<ArticleResponseBodyV2>> {
+    override suspend fun getPinPromotedArticles(): Result<List<PromotedArticleResponseBody>> {
         return withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getPinPromotedArticles(

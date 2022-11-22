@@ -60,6 +60,7 @@ import com.cmoney.backend2.forumocean.service.api.support.SearchMembersResponseB
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.PromotedArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations.GetRecommendationResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBodyV2
@@ -1673,7 +1674,7 @@ interface ForumOceanService {
     suspend fun getPinPromotedArticles(
         @Header("Authorization") authorization: String,
         @Path("path") path: String
-    ): Response<List<ArticleResponseBodyV2>>
+    ): Response<List<PromotedArticleResponseBody>>
 
     /**
      * 取得精選文章清單
