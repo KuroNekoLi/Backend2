@@ -11,6 +11,7 @@ import com.cmoney.backend2.forumocean.service.api.channel.channelname.IChannelNa
 import com.cmoney.backend2.forumocean.service.api.channel.getmemberstatistics.GetMemberStatisticsResponseBody
 import com.cmoney.backend2.forumocean.service.api.columnist.GetColumnistVipGroupResponse
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBody
+import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBodyV2
 import com.cmoney.backend2.forumocean.service.api.comment.update.IUpdateCommentHelper
 import com.cmoney.backend2.forumocean.service.api.group.create.CreateGroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.getapprovals.GroupPendingApproval
@@ -52,8 +53,15 @@ import com.cmoney.backend2.forumocean.service.api.variable.request.GroupPosition
 import com.cmoney.backend2.forumocean.service.api.variable.request.ReactionType
 import com.cmoney.backend2.forumocean.service.api.variable.request.mediatype.MediaType
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.PromotedArticleResponseBody
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations.GetRecommendationResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBody
+import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBodyV2
+import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.GetCommentsResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.groupresponse.GroupResponseBody
+import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.MemberEmojis
 import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.ReactionInfo
 import com.cmoney.backend2.forumocean.service.api.vote.get.VoteInfo
 import com.cmoney.backend2.ocean.service.api.getevaluationlist.SortType
@@ -99,6 +107,7 @@ interface ForumOceanWeb {
      * @param articleId 文章Id
      * @return 文章資訊
      */
+    @Deprecated("請使用getArticleV2")
     suspend fun getArticle(articleId: Long): Result<ArticleResponseBody.GeneralArticleResponseBody>
 
     /**
@@ -107,6 +116,7 @@ interface ForumOceanWeb {
      * @param articleId 文章Id
      * @return 文章資訊
      */
+    @Deprecated("請使用getArticleV2")
     suspend fun getQuestionArticle(articleId: Long): Result<ArticleResponseBody.QuestionArticleResponseBody>
 
     /**
@@ -115,6 +125,7 @@ interface ForumOceanWeb {
      * @param articleId 文章Id
      * @return 文章資訊
      */
+    @Deprecated("請使用getArticleV2")
     suspend fun getGroupArticle(articleId: Long): Result<ArticleResponseBody.GroupArticleResponseBody>
 
     /**
@@ -123,6 +134,7 @@ interface ForumOceanWeb {
      * @param articleId 文章Id
      * @return 文章資訊
      */
+    @Deprecated("請使用getArticleV2")
     suspend fun getSharedArticle(articleId: Long): Result<ArticleResponseBody.SharedArticleResponseBody>
 
     /**
@@ -131,6 +143,7 @@ interface ForumOceanWeb {
      * @param articleId 文章Id
      * @return 文章資訊
      */
+    @Deprecated("請使用getArticleV2")
     suspend fun getSignalArticle(articleId: Long): Result<ArticleResponseBody.SignalArticleResponseBody>
 
     /**
@@ -139,6 +152,7 @@ interface ForumOceanWeb {
      * @param articleId 文章Id
      * @return 文章資訊
      */
+    @Deprecated("請使用getArticleV2")
     suspend fun getNewsArticle(articleId: Long): Result<ArticleResponseBody.NewsArticleResponseBody>
 
     /**
@@ -147,6 +161,7 @@ interface ForumOceanWeb {
      * @param articleId 文章Id
      * @return 文章資訊
      */
+    @Deprecated("請使用getArticleV2")
     suspend fun getPersonalArticle(articleId: Long): Result<ArticleResponseBody.PersonalArticleResponseBody>
 
     /**
@@ -155,7 +170,18 @@ interface ForumOceanWeb {
      * @param articleId 文章Id
      * @return 文章資訊
      */
+    @Deprecated("請使用getArticleV2")
     suspend fun getUnknownArticle(articleId: Long): Result<ArticleResponseBody.UnknownArticleResponseBody>
+
+
+    /**
+     * 取得文章(不確定文章類型)v2
+     *
+     * @param articleId 文章Id
+     * @return 文章資訊
+     */
+    suspend fun getArticleV2(articleId: Long): Result<ArticleResponseBodyV2>
+
 
     /**
      * 更新文章資訊
@@ -168,12 +194,21 @@ interface ForumOceanWeb {
 
 
     /**
-     * 移除文章
+     * 刪除文章
      *
      * @param articleId 文章Id
      * @return 成功不回傳任何資訊
      */
+    @Deprecated("待服務實作完成，使用deleteArticleV2")
     suspend fun deleteArticle(articleId: Long): Result<Unit>
+
+    /**
+     * 刪除文章V2
+     *
+     * @param articleId 文章Id
+     * @return
+     */
+    suspend fun deleteArticleV2(articleId: String): Result<Unit>
 
     //endregion
 
@@ -245,12 +280,26 @@ interface ForumOceanWeb {
      * @param position
      * @return 回文Id
      */
+    @Deprecated("請使用createCommentV2")
     suspend fun createComment(
         articleId: Long,
         text: String?,
         multiMedia: List<MediaType>?,
         position: Any?
     ): Result<CreateCommentResponseBody>
+
+    /**
+     * 對指定主文或留言發一篇回文
+     * @param id 主文或留言id
+     * @param text content
+     * @param multiMedia ContentType
+     * @return 回文Id
+     */
+    suspend fun createCommentV2(
+        id: String,
+        text: String?,
+        multiMedia: List<MediaType>?
+    ): Result<CreateCommentResponseBodyV2>
 
     /**
      * 對指定Group主文發一篇回文
@@ -260,6 +309,7 @@ interface ForumOceanWeb {
      * @param position
      * @return 回文Id
      */
+    @Deprecated("請使用createCommentV2")
     suspend fun createGroupArticleComment(
         articleId: Long,
         text: String?,
@@ -275,6 +325,7 @@ interface ForumOceanWeb {
      * @param offsetCount 取得回文偏移數量
      * @return 回文清單
      */
+    @Deprecated("請使用getCommentV2")
     suspend fun getComment(
         articleId: Long,
         commentId: Long?,
@@ -282,16 +333,43 @@ interface ForumOceanWeb {
     ): Result<List<CommentResponseBody>>
 
     /**
-     * 取得指定主文的回文清單 使用回文Id指定取得清單
+     * 取得指定主文或回文的回文清單V2
+     *
+     * @param articleId 指定主文或回文Id
+     * @param startCommentIndex 起始回文index
+     * @param fetch 取得回文數量
+     * @return 回文清單
+     */
+    suspend fun getCommentV2(
+        articleId: String,
+        startCommentIndex: Long?,
+        fetch: Int?
+    ): Result<GetCommentsResponseBody>
+
+    /**
+     * 取得主文的指定回文清單
      *
      * @param articleId 指定主文Id
      * @param commentIds 回文Id清單
      * @return
      */
-    suspend fun getCommentWithId(
+    @Deprecated("請使用getCommentsByIndex")
+    suspend fun getCommentsWithId(
         articleId: Long,
         commentIds: List<Long>
     ): Result<List<CommentResponseBody>>
+
+    /**
+     * 取得指定 index 的留言
+     *
+     * @param id 主文或回文Id
+     * @param commentIndices 回文index清單
+     * @return
+     */
+    suspend fun getCommentsByIndex(
+        id: String,
+        commentIndices: List<Long>
+    ): Result<List<CommentResponseBodyV2>>
 
     /**
      * 取得指定主文的社團管理員回文清單
@@ -324,7 +402,16 @@ interface ForumOceanWeb {
      * @param commentIndex 回文索引
      * @return
      */
+    @Deprecated("請使用deleteCommentV2")
     suspend fun deleteComment(articleId: Long, commentIndex: Long): Result<Unit>
+
+    /**
+     * 刪除回文
+     *
+     * @param commentId 回文Id
+     * @return
+     */
+    suspend fun deleteCommentV2(commentId: String): Result<Unit>
 
     //endregion
 
@@ -338,6 +425,7 @@ interface ForumOceanWeb {
      * @param reactionType 反應
      * @return
      */
+    @Deprecated("請使用createReaction")
     suspend fun reactionComment(
         articleId: Long,
         commentIndex: Long,
@@ -354,6 +442,7 @@ interface ForumOceanWeb {
      * @param takeCount 取得的數項(選項)
      * @return 反應 對照 做此反應會員清單
      */
+    @Deprecated("請使用getReactionDetailV2")
     suspend fun getReactionDetail(
         articleId: Long,
         commentIndex: Long,
@@ -363,12 +452,29 @@ interface ForumOceanWeb {
     ): Result<List<ReactionInfo>>
 
     /**
+     * 取得指定回文的反應明細V2
+     *
+     * @param id 文章或留言
+     * @param reactions 需要取得的反應
+     * @param offset 跳過的數量(選項)
+     * @param fetch 取得的數項(選項)
+     * @return 反應 對照 做此反應會員清單
+     */
+    suspend fun getReactionDetailV2(
+        id: String,
+        reactions: List<ReactionType>,
+        offset: Int,
+        fetch: Int
+    ): Result<MemberEmojis>
+
+    /**
      * 移除對回文的反應
      *
      * @param articleId 指定主文Id
      * @param commentIndex 回文索引
      * @return
      */
+    @Deprecated("請使用deleteReaction")
     suspend fun removeReactionComment(
         articleId: Long,
         commentIndex: Long
@@ -628,8 +734,21 @@ interface ForumOceanWeb {
      * @param type 反應類型
      * @return
      */
+    @Deprecated("請使用createReaction")
     suspend fun createArticleReaction(
         articleId: Long,
+        type: ReactionType
+    ): Result<Unit>
+
+    /**
+     * 對文章/留言做出互動
+     *
+     * @param id 文章或留言id
+     * @param type 反應類型
+     * @return
+     */
+    suspend fun createReaction(
+        id: String,
         type: ReactionType
     ): Result<Unit>
 
@@ -642,6 +761,7 @@ interface ForumOceanWeb {
      * @param count 取得數量
      * @return 互動 對應 做此互動的會員清單
      */
+    @Deprecated("請使用getReactionDetailV2")
     suspend fun getArticleReactionDetail(
         articleId: Long,
         reactionTypeList: List<ReactionType>,
@@ -655,8 +775,19 @@ interface ForumOceanWeb {
      * @param articleId 文章Id
      * @return
      */
+    @Deprecated("請使用deleteReaction")
     suspend fun deleteArticleReaction(
         articleId: Long
+    ): Result<Unit>
+
+    /**
+     * 移除對文章/回覆的反應
+     *
+     * @param id 文章或留言Id
+     * @return
+     */
+    suspend fun deleteReaction(
+        id: String
     ): Result<Unit>
 
     /**
@@ -1036,7 +1167,17 @@ interface ForumOceanWeb {
      * @param commentId 回文Id
      * @return
      */
+    @Deprecated("檢舉留言請使用createReportV2，檢舉主文仍暫時使用這個，待服務實作後遷移")
     suspend fun createReport(articleId: Long, reasonType: Int, commentId: Long?): Result<Unit>
+
+    /**
+     * 使用者檢舉文章/留言
+     *
+     * @param id 文章或留言ID(目前僅支援留言)
+     * @param reasonType 檢舉原因 [對照表(Report) -> http://outpost.cmoney.net.tw/ForumOcean/swagger/index.html]
+     * @return
+     */
+    suspend fun createReportV2(id: String, reasonType: Int): Result<Unit>
 
     /**
      * 刪除指定使用者檢舉文章的記錄
@@ -1406,4 +1547,35 @@ interface ForumOceanWeb {
      * 取得專欄作家清單
      */
     suspend fun getColumnistAll(): Result<List<Long>>
+
+    /**
+     * 隱藏/取消隱藏留言
+     */
+    suspend fun changeCommentHideState(id: String, isHide: Boolean): Result<Unit>
+
+    /**
+     * 取得單一留言
+     */
+    suspend fun getSingleComment(commentId: String): Result<CommentResponseBodyV2>
+
+    /**
+     * 取得推薦文章
+     */
+    suspend fun getRecommendation(
+        offset: Int,
+        fetch: Int
+    ): Result<GetRecommendationResponse>
+
+    /**
+     * 取得置頂精選文章清單
+     */
+    suspend fun getPinPromotedArticles(): Result<List<PromotedArticleResponseBody>>
+
+    /**
+     * 取得精選文章清單
+     */
+    suspend fun getPromotedArticles(
+        startWeight: Long,
+        fetch: Int
+    ): Result<GetPromotedArticlesResponse>
 }

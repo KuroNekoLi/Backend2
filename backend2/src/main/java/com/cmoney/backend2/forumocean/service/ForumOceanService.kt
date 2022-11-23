@@ -13,7 +13,10 @@ import com.cmoney.backend2.forumocean.service.api.channel.getmemberstatistics.Ge
 import com.cmoney.backend2.forumocean.service.api.columnist.Columnist
 import com.cmoney.backend2.forumocean.service.api.columnist.GetColumnistVipGroupResponse
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentRequestBody
+import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentRequestBodyV2
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBody
+import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBodyV2
+import com.cmoney.backend2.forumocean.service.api.comment.hide.HideCommentRequestBody
 import com.cmoney.backend2.forumocean.service.api.comment.update.UpdateCommentRequestBody
 import com.cmoney.backend2.forumocean.service.api.group.create.CreateGroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.getapprovals.GroupPendingApproval
@@ -23,8 +26,8 @@ import com.cmoney.backend2.forumocean.service.api.group.v2.Admins
 import com.cmoney.backend2.forumocean.service.api.group.v2.Approval
 import com.cmoney.backend2.forumocean.service.api.group.v2.AvailableBoardIds
 import com.cmoney.backend2.forumocean.service.api.group.v2.Board
-import com.cmoney.backend2.forumocean.service.api.group.v2.BoardSingle
 import com.cmoney.backend2.forumocean.service.api.group.v2.BoardManipulation
+import com.cmoney.backend2.forumocean.service.api.group.v2.BoardSingle
 import com.cmoney.backend2.forumocean.service.api.group.v2.Group
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupManipulation
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupMember2
@@ -45,17 +48,25 @@ import com.cmoney.backend2.forumocean.service.api.rank.getexpertmemberrank.GetEx
 import com.cmoney.backend2.forumocean.service.api.rank.getfansmemberrank.FansMemberRankResponseBody
 import com.cmoney.backend2.forumocean.service.api.rank.getsolutionexpertrank.SolutionExpertRankResponseBody
 import com.cmoney.backend2.forumocean.service.api.rating.MemberRatingCounter
-import com.cmoney.backend2.forumocean.service.api.rating.RatingComment
 import com.cmoney.backend2.forumocean.service.api.rating.OthersRatingComment
+import com.cmoney.backend2.forumocean.service.api.rating.RatingComment
 import com.cmoney.backend2.forumocean.service.api.rating.ReviewRequest
 import com.cmoney.backend2.forumocean.service.api.relationship.getdonate.DonateInfo
 import com.cmoney.backend2.forumocean.service.api.relationship.getrelationshipwithme.RelationshipWithMe
+import com.cmoney.backend2.forumocean.service.api.report.ReportRequestBody
 import com.cmoney.backend2.forumocean.service.api.role.GetMembersByRoleResponse
 import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
 import com.cmoney.backend2.forumocean.service.api.support.SearchMembersResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.PromotedArticleResponseBody
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations.GetRecommendationResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBody
+import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBodyV2
+import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.GetCommentsResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.groupresponse.GroupResponseBody
+import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.MemberEmojis
 import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.ReactionInfo
 import com.cmoney.backend2.forumocean.service.api.vote.get.VoteInfo
 import okhttp3.ResponseBody
@@ -166,6 +177,7 @@ interface ForumOceanService {
      *
      */
     @RecordApi
+    @Deprecated("請使用getArticleV2")
     @GET("{path}/api/Article/Get/{articleId}")
     suspend fun getArticle(
         @Header("Authorization") authorization: String,
@@ -178,6 +190,7 @@ interface ForumOceanService {
      *
      */
     @RecordApi
+    @Deprecated("請使用getArticleV2")
     @GET("{path}/api/Article/Get/{articleId}")
     suspend fun getQuestionArticle(
         @Header("Authorization") authorization: String,
@@ -190,6 +203,7 @@ interface ForumOceanService {
      *
      */
     @RecordApi
+    @Deprecated("請使用getArticleV2")
     @GET("{path}/api/Article/Get/{articleId}")
     suspend fun getNewsArticle(
         @Header("Authorization") authorization: String,
@@ -202,6 +216,7 @@ interface ForumOceanService {
      *
      */
     @RecordApi
+    @Deprecated("請使用getArticleV2")
     @GET("{path}/api/Article/Get/{articleId}")
     suspend fun getSignalArticle(
         @Header("Authorization") authorization: String,
@@ -214,6 +229,7 @@ interface ForumOceanService {
      *
      */
     @RecordApi
+    @Deprecated("請使用getArticleV2")
     @GET("{path}/api/Article/Get/{articleId}")
     suspend fun getGroupArticle(
         @Header("Authorization") authorization: String,
@@ -226,6 +242,7 @@ interface ForumOceanService {
      *
      */
     @RecordApi
+    @Deprecated("請使用getArticleV2")
     @GET("{path}/api/Article/Get/{articleId}")
     suspend fun getSharedArticle(
         @Header("Authorization") authorization: String,
@@ -237,6 +254,7 @@ interface ForumOceanService {
      * 取得個人文章資訊(專欄文章/筆記)
      */
     @RecordApi
+    @Deprecated("請使用getArticleV2")
     @GET("{path}/api/Article/Get/{articleId}")
     suspend fun getPersonalArticle(
         @Header("Authorization") authorization: String,
@@ -249,6 +267,7 @@ interface ForumOceanService {
      *
      */
     @RecordApi
+    @Deprecated("請使用getArticleV2")
     @GET("{path}/api/Article/Get/{articleId}")
     suspend fun getUnknownArticle(
         @Header("Authorization") authorization: String,
@@ -272,11 +291,24 @@ interface ForumOceanService {
      * 刪除文章
      */
     @RecordApi
+    @Deprecated("待服務實作完成，使用deleteArticleV2")
     @DELETE("{path}/api/Article/Delete/{articleId}")
     suspend fun deleteArticle(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Path("articleId") articleId: Long
+    ): Response<Void>
+
+    /**
+     * 刪除文章V2
+     */
+    @RecordApi
+    @Headers("X-Version: 2.0")
+    @DELETE("{path}/api/Article/{articleId}")
+    suspend fun deleteArticleV2(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("articleId") articleId: String
     ): Response<Void>
 
     @RecordApi
@@ -327,6 +359,7 @@ interface ForumOceanService {
     ): Response<Void>
 
     @RecordApi
+    @Deprecated("請使用createCommentV2")
     @POST("{path}/api/Comment/Create/{articleId}")
     suspend fun createComment(
         @Header("Authorization") authorization: String,
@@ -336,6 +369,7 @@ interface ForumOceanService {
     ): Response<CreateCommentResponseBody>
 
     @RecordApi
+    @Deprecated("請使用createCommentV2")
     @POST("{path}/api/GroupArticle/{articleId}/Comment")
     @Headers("X-Version: 2.0")
     suspend fun createGroupArticleComment(
@@ -346,6 +380,7 @@ interface ForumOceanService {
     ): Response<CreateCommentResponseBody>
 
     @RecordApi
+    @Deprecated("請使用getCommentV2")
     @GET("{path}/api/Comment/Get/{articleId}")
     suspend fun getComment(
         @Header("Authorization") authorization: String,
@@ -356,6 +391,7 @@ interface ForumOceanService {
     ): Response<List<CommentResponseBody>>
 
     @RecordApi
+    @Deprecated("請使用getCommentsByIndex")
     @GET("{path}/api/Comment/GetWithIds/{articleId}")
     suspend fun getCommentWithId(
         @Header("Authorization") authorization: String,
@@ -383,12 +419,22 @@ interface ForumOceanService {
     ): Response<Void>
 
     @RecordApi
+    @Deprecated("請使用deleteCommentV2")
     @DELETE("{path}/api/Comment/Delete/{articleId}/{commentIndex}")
     suspend fun deleteComment(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Path("articleId") articleId: Long,
         @Path("commentIndex") commentIndex: Long
+    ): Response<Void>
+
+    @RecordApi
+    @Headers("X-Version: 2.0")
+    @DELETE("{path}/api/Article/{articleId}")
+    suspend fun deleteCommentV2(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("articleId") articleId: String
     ): Response<Void>
 
     @RecordApi
@@ -402,6 +448,7 @@ interface ForumOceanService {
     ): Response<Void>
 
     @RecordApi
+    @Deprecated("請使用getReactionDetailV2")
     @GET("{path}/api/CommentInteractive/GetReactionDetail/{articleId}/{commentIndex}")
     suspend fun getReactionDetail(
         @Header("Authorization") authorization: String,
@@ -414,6 +461,19 @@ interface ForumOceanService {
     ): Response<List<ReactionInfo>>
 
     @RecordApi
+    @Headers("X-Version: 2.0")
+    @GET("{path}/api/Article/{articleId}/Emoji/Detail")
+    suspend fun getReactionDetailV2(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("articleId") articleId: String,
+        @Query("emojiTypes") emojiTypes: String,
+        @Query("offset") offset: Int,
+        @Query("fetch") fetch: Int
+    ): Response<MemberEmojis>
+
+    @RecordApi
+    @Deprecated("請使用deleteReaction")
     @DELETE("{path}/api/CommentInteractive/RemoveReaction/{articleId}/{commentIndex}")
     suspend fun removeCommentReaction(
         @Header("Authorization") authorization: String,
@@ -423,6 +483,7 @@ interface ForumOceanService {
     ): Response<Void>
 
     @RecordApi
+    @Deprecated("請使用createReaction")
     @POST("{path}/api/Interactive/Reaction/{articleId}")
     suspend fun createArticleReaction(
         @Header("Authorization") authorization: String,
@@ -432,6 +493,17 @@ interface ForumOceanService {
     ): Response<Void>
 
     @RecordApi
+    @Headers("X-Version: 2.0")
+    @PUT("{path}/api/Article/{articleId}/Emoji/{emojiType}")
+    suspend fun createReaction(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("articleId") articleId: String,
+        @Path("emojiType") emojiType: Int
+    ): Response<Void>
+
+    @RecordApi
+    @Deprecated("請使用getReactionDetailV2")
     @GET("{path}/api/Interactive/GetReactionDetail/{articleId}")
     suspend fun getArticleReactionDetail(
         @Header("Authorization") authorization: String,
@@ -452,11 +524,21 @@ interface ForumOceanService {
     ): Response<Void>
 
     @RecordApi
+    @Deprecated("請使用deleteReaction")
     @DELETE("{path}/api/Interactive/RemoveReaction/{articleId}")
     suspend fun deleteArticleReaction(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Path("articleId") articleId: Long
+    ): Response<Void>
+
+    @RecordApi
+    @Headers("X-Version: 2.0")
+    @DELETE("{path}/api/Article/{articleId}/Emoji")
+    suspend fun deleteReaction(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("articleId") articleId: String
     ): Response<Void>
 
     @RecordApi
@@ -811,6 +893,7 @@ interface ForumOceanService {
     ): Response<List<RelationshipWithMe>>
 
     @RecordApi
+    @Deprecated("檢舉留言請使用createReportV2，檢舉主文仍暫時使用這道，待服務實作後遷移")
     @POST("{path}/api/Report/Create/{articleId}")
     suspend fun createReport(
         @Header("Authorization") authorization: String,
@@ -818,6 +901,16 @@ interface ForumOceanService {
         @Path("articleId") articleId: Long,
         @Query("reasonType") reasonType: Int,
         @Query("commentId") commentId: Long?
+    ): Response<Void>
+
+    @RecordApi
+    @POST("{path}/api/Article/{articleId}/Report")
+    @Headers("X-Version: 2.0")
+    suspend fun createReportV2(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("articleId") articleId: String,
+        @Body body: ReportRequestBody
     ): Response<Void>
 
     @RecordApi
@@ -1367,11 +1460,12 @@ interface ForumOceanService {
     ): Response<CreateArticleResponseBody>
 
     /**
-     * 對社團看板發文
+     * 刪除社團文章
      */
     @RecordApi
     @DELETE("{path}/api/GroupArticle/{articleId}")
     @Headers("X-Version: 2.0")
+    @Deprecated("待服務實作完成後，請使用deleteArticleV2")
     suspend fun deleteGroupArticle(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
@@ -1384,6 +1478,7 @@ interface ForumOceanService {
     @RecordApi
     @DELETE("{path}/api/GroupArticle/{articleId}/Comment/{commentId}")
     @Headers("X-Version: 2.0")
+    @Deprecated("請使用deleteCommentV2")
     suspend fun deleteGroupArticleComment(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
@@ -1480,4 +1575,116 @@ interface ForumOceanService {
         @Header("Authorization") authorization: String,
         @Path("path") path: String
     ): Response<List<Columnist>>
+
+
+    /**
+     * 取得文章資訊v2
+     */
+    @RecordApi
+    @GET("{path}/api/Article/{articleId}")
+    @Headers("X-Version: 2.0")
+    suspend fun getArticleV2(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("articleId") articleId: String
+    ): Response<ArticleResponseBodyV2>
+
+    /**
+     * 取得留言V2(可訪客)
+     */
+    @RecordApi
+    @GET("{path}/api/Article/{articleId}/Comments")
+    @Headers("X-Version: 2.0")
+    suspend fun getCommentV2(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("articleId") articleId: String,
+        @Query("startCommentIndex") startCommentIndex: Long?,
+        @Query("fetch") fetch: Int?
+    ): Response<GetCommentsResponseBody>
+
+    /**
+     * 取得指定 index 的留言
+     */
+    @RecordApi
+    @GET("{path}/api/Article/CommentsByIndex")
+    @Headers("X-Version: 2.0")
+    suspend fun getCommentsByIndex(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Query("articleId") articleId: String,
+        @Query("commentIndex") commentIndex: String
+    ): Response<List<CommentResponseBodyV2>>
+
+    /**
+     * 發留言v2
+     */
+    @RecordApi
+    @POST("{path}/api/Article/{articleId}/Comment")
+    @Headers("X-Version: 2.0")
+    suspend fun createCommentV2(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("articleId") articleId: String,
+        @Body body: CreateCommentRequestBodyV2
+    ): Response<CreateCommentResponseBodyV2>
+
+    /**
+     * 隱藏/取消隱藏留言
+     */
+    @RecordApi
+    @PUT("{path}/api/Article/{articleId}/Hide")
+    @Headers("X-Version: 2.0")
+    suspend fun changeCommentHideState(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("articleId") articleId: String,
+        @Body body: HideCommentRequestBody
+    ): Response<Void>
+
+    /**
+     * 取得單一留言
+     */
+    @RecordApi
+    @GET("{path}/api/Article/{articleId}")
+    @Headers("X-Version: 2.0")
+    suspend fun getSingleComment(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("articleId") articleId: String
+    ): Response<CommentResponseBodyV2>
+
+    /**
+     * 取得個人化推薦文章
+     */
+    @RecordApi
+    @GET("{path}/api/Channel/GetRecommendation/Recommendation")
+    suspend fun getRecommendation(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Query("offset") offset: Int,
+        @Query("fetch") fetch: Int
+    ): Response<GetRecommendationResponse>
+
+    /**
+     * 取得置頂精選文章清單
+     */
+    @RecordApi
+    @GET("{path}/api/PromotedArticle/Pin")
+    suspend fun getPinPromotedArticles(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String
+    ): Response<List<PromotedArticleResponseBody>>
+
+    /**
+     * 取得精選文章清單
+     */
+    @RecordApi
+    @GET("{path}/api/PromotedArticle")
+    suspend fun getPromotedArticles(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Query("startWeight") startWeight: Long,
+        @Query("fetch") fetch: Int
+    ): Response<GetPromotedArticlesResponse>
 }

@@ -109,8 +109,8 @@ class ForumOceanServiceCase : ServiceCase {
                         openGraph = null
                     )
                 ).logResponse(TAG)
-                deleteArticle(this)
-                getArticle(this).fold(
+                deleteArticleV2(this.toString())
+                getArticleV2(this).fold(
                     {
                         Log.d(TAG, "response: $it")
                     },
@@ -168,72 +168,70 @@ class ForumOceanServiceCase : ServiceCase {
         ).getOrNull()?.articleId
 
         sharedArticleId?.let {
-            getUnknownArticle(it).logResponse(TAG)
-            getSharedArticle(it).logResponse(TAG)
-            deleteArticle(it).logResponse(TAG)
+            getArticleV2(it).logResponse(TAG)
+            deleteArticleV2(it.toString()).logResponse(TAG)
         }
     }
 
     private suspend fun ForumOceanWeb.testInteractive(articleId: Long) {
-        createArticleReaction(articleId, ReactionType.LIKE).logResponse(TAG)
+        createReaction(articleId.toString(), ReactionType.LIKE).logResponse(TAG)
         getArticleReactionDetail(articleId, listOf(ReactionType.LIKE), 0, 20).logResponse(TAG)
-        createArticleReaction(articleId, ReactionType.DISLIKE).logResponse(TAG)
+        createReaction(articleId.toString(), ReactionType.DISLIKE).logResponse(TAG)
         getArticleReactionDetail(
             articleId,
             listOf(ReactionType.LIKE, ReactionType.DISLIKE),
             0,
             20
         ).logResponse(TAG)
-        deleteArticleReaction(articleId).logResponse(TAG)
+        deleteReaction(articleId.toString()).logResponse(TAG)
     }
 
     private suspend fun ForumOceanWeb.testComment(articleId: Long) {
-        var commentId: Long? = null
-        createComment(
-            articleId,
-            null,
-            listOf(
+        var commentIndex: Long? = null
+        createCommentV2(
+            id = articleId.toString(),
+            text = null,
+            multiMedia = listOf(
                 MediaType(
                     Type.IMAGE,
                     "https://zh.wikipedia.org/wiki/Google_Chrome#/media/File:Google_Chrome_icon_(September_2014).svg"
                 )
-            ),
-            null
+            )
         ).fold(
             {
-                commentId = it.commentIndex
+                commentIndex = it.commentIndex
                 Log.d(TAG, "response: $it")
             },
             {
                 it.printStackTrace()
             }
         )
-        commentId?.apply {
-            getComment(articleId, this, null).logResponse(TAG)
+        val commentId = "${articleId}-${commentIndex}"
+        commentIndex?.apply {
+            getCommentV2(articleId.toString(), this, null).logResponse(TAG)
             val updateCommentHelper = UpdateCommentHelper()
             updateCommentHelper.setText("我修改回復了")
             updateCommentHelper.deleteMultiMedia()
             updateComment(articleId, this, updateCommentHelper).logResponse(TAG)
-            getComment(articleId, this, 20).logResponse(TAG)
-            reactionComment(articleId, 1, ReactionType.LIKE).logResponse(TAG)
-            reactionComment(articleId, 1, ReactionType.DISLIKE).logResponse(TAG)
-            getReactionDetail(articleId, 1, ReactionType.values().toList(), 0, 20).logResponse(TAG)
-            removeReactionComment(articleId, 1).logResponse(TAG)
-            deleteComment(articleId, 1).logResponse(TAG)
-            getComment(articleId, this, 20).logResponse(TAG)
+            getCommentV2(articleId.toString(), this, 20).logResponse(TAG)
+            createReaction(commentId, ReactionType.LIKE).logResponse(TAG)
+            createReaction(commentId, ReactionType.DISLIKE).logResponse(TAG)
+            getReactionDetailV2(commentId, ReactionType.values().toList(), 0, 20).logResponse(TAG)
+            deleteReaction(commentId).logResponse(TAG)
+            deleteCommentV2(commentId).logResponse(TAG)
+            getCommentV2(articleId.toString(), this, 20).logResponse(TAG)
         }
 
         val commentIdList = mutableListOf<Long>()
-        createComment(
-            articleId,
-            null,
-            listOf(
+        createCommentV2(
+            id = articleId.toString(),
+            text = null,
+            multiMedia = listOf(
                 MediaType(
                     Type.IMAGE,
                     "https://zh.wikipedia.org/wiki/Google_Chrome#/media/File:Google_Chrome_icon_(September_2014).svg"
                 )
-            ),
-            null
+            )
         ).fold(
             {
                 val firstCommentId = it.commentIndex
@@ -246,27 +244,25 @@ class ForumOceanServiceCase : ServiceCase {
                 it.printStackTrace()
             }
         )
-        createComment(
-            articleId,
-            "第二篇回文",
-            listOf(
+        createCommentV2(
+            id = articleId.toString(),
+            text = "第二篇回文",
+            multiMedia = listOf(
                 MediaType(
                     Type.IMAGE,
                     "https://zh.wikipedia.org/wiki/Google_Chrome#/media/File:Google_Chrome_icon_(September_2014).svg"
                 )
-            ),
-            null
+            )
         ).logResponse(TAG)
-        createComment(
-            articleId,
-            "第204sadjskdj篇回文",
-            listOf(
+        createCommentV2(
+            id = articleId.toString(),
+            text = "第204sadjskdj篇回文",
+            multiMedia = listOf(
                 MediaType(
                     Type.IMAGE,
                     "https://zh.wikipedia.org/wiki/Google_Chrome#/media/File:Google_Chrome_icon_(September_2014).svg"
                 )
-            ),
-            null
+            )
         ).fold(
             {
                 val thirdCommentId = it.commentIndex
@@ -280,7 +276,7 @@ class ForumOceanServiceCase : ServiceCase {
             }
         )
 
-        getCommentWithId(articleId, commentIdList).logResponse(TAG)
+        getCommentsByIndex(articleId.toString(), commentIdList).logResponse(TAG)
     }
 
     private suspend fun ForumOceanWeb.testCollection(articleId: Long) {
@@ -309,15 +305,14 @@ class ForumOceanServiceCase : ServiceCase {
     private suspend fun ForumOceanWeb.testArticle(articleId: Long) {
         testShareArticle(articleId)
 
-        getUnknownArticle(articleId).logResponse(TAG)
-        getArticle(articleId).logResponse(TAG)
+        getArticleV2(articleId).logResponse(TAG)
 
         val helper = UpdateArticleHelper()
         helper.setText("我修改了文章")
         helper.deleteMultiMedia()
         updateArticle(articleId, helper).logResponse(TAG)
 
-        getArticle(articleId).logResponse(TAG)
+        getArticleV2(articleId).logResponse(TAG)
     }
 
     private suspend fun ForumOceanWeb.testPersonalArticle() {
@@ -356,8 +351,7 @@ class ForumOceanServiceCase : ServiceCase {
         ).logResponse(TAG)
 
         articleId?.apply {
-            getUnknownArticle(this).logResponse(TAG)
-            getPersonalArticle(this).logResponse(TAG)
+            getArticleV2(this).logResponse(TAG)
 
             val updateArticleHelper = UpdateArticleHelper()
             updateArticleHelper.setText("測試更新筆記文")
@@ -374,7 +368,7 @@ class ForumOceanServiceCase : ServiceCase {
                 updateHelper = updateArticleHelper
             ).logResponse(TAG)
 
-            deleteArticle(this).logResponse(TAG)
+            deleteArticleV2(this.toString()).logResponse(TAG)
         }
     }
 
@@ -391,11 +385,8 @@ class ForumOceanServiceCase : ServiceCase {
         ).getOrNull()?.articleId
 
         questionId?.apply {
-
-            getUnknownArticle(this).logResponse(TAG)
-            getQuestionArticle(this).logResponse(TAG)
-
-            deleteArticle(this).logResponse(TAG)
+            getArticleV2(this).logResponse(TAG)
+            deleteArticleV2(this.toString()).logResponse(TAG)
         }
     }
 
@@ -477,7 +468,7 @@ class ForumOceanServiceCase : ServiceCase {
             user1.changeUser(setting)
 
             if (groupArticleId != null) {
-                deleteArticle(groupArticleId).logResponse(TAG)
+                deleteArticleV2(groupArticleId.toString()).logResponse(TAG)
             }
 
             updateGroup(
@@ -554,19 +545,18 @@ class ForumOceanServiceCase : ServiceCase {
         ).getOrNull()?.articleId
 
         articleId?.also {
-            val commentId = createComment(
-                articleId = articleId,
+            val commentId = createCommentV2(
+                id = articleId.toString(),
                 text = "需被檢舉的回文",
-                multiMedia = null,
-                position = null
+                multiMedia = null
             ).getOrNull()
             createReport(articleId, 1, commentId?.commentIndex).logResponse(TAG)
-            getComment(articleId, null, null).logResponse(TAG)
+            getCommentV2(articleId.toString(), null, null).logResponse(TAG)
         }
 
         articleId?.apply {
             createReport(articleId, 1, null).logResponse(TAG)
-            getArticle(articleId).logResponse(TAG)
+            getArticleV2(articleId).logResponse(TAG)
             deleteReport(articleId, null).logResponse(TAG)
         }
     }
@@ -586,11 +576,11 @@ class ForumOceanServiceCase : ServiceCase {
         ).getOrNull()?.articleId
 
         articleId?.apply {
-            getArticle(articleId).logResponse(TAG)
+            getArticleV2(articleId).logResponse(TAG)
             createVote(articleId, 0).logResponse(TAG)
             getCurrentVote(articleId).logResponse(TAG)
-            getArticle(articleId).logResponse(TAG)
-            deleteArticle(articleId).logResponse(TAG)
+            getArticleV2(articleId).logResponse(TAG)
+            deleteArticleV2(articleId.toString()).logResponse(TAG)
         }
     }
 
@@ -633,11 +623,10 @@ class ForumOceanServiceCase : ServiceCase {
             join(groupId, "測試").logResponse(TAG)
 
             presidentGroupArticleId?.apply {
-                createComment(
-                    articleId = this,
+                createCommentV2(
+                    id = this.toString(),
                     text = "社團回文應該失敗",
-                    multiMedia = null,
-                    position = Any()
+                    multiMedia = null
                 ).logResponse(TAG)
             }
 
@@ -683,11 +672,10 @@ class ForumOceanServiceCase : ServiceCase {
             }
 
             groupArticleId?.apply {
-                createComment(
-                    articleId = this,
+                createCommentV2(
+                    id = this.toString(),
                     text = "社團回文",
-                    multiMedia = listOf(),
-                    position = Any()
+                    multiMedia = listOf()
                 ).logResponse(TAG)
                 getGroupManagerComments(this).logResponse(TAG)
             }
@@ -732,13 +720,13 @@ class ForumOceanServiceCase : ServiceCase {
         articleId?.apply {
             user2.changeUser(setting)
             val user2MemberId = setting.identityToken.getMemberId().toLong()
-            createComment(this, "使用者二的回文", multiMedia = listOf(), position = null).logResponse(TAG)
+            createCommentV2(this.toString(), "使用者二的回文", multiMedia = listOf()).logResponse(TAG)
 
             user1.changeUser(setting)
             block(user2MemberId).logResponse(TAG)
-            getComment(this, null, null).logResponse(TAG)
+            getCommentV2(this.toString(), null, null).logResponse(TAG)
             unblock(user2MemberId).logResponse(TAG)
-            deleteArticle(this)
+            deleteArticleV2(this.toString())
         }
     }
 }
