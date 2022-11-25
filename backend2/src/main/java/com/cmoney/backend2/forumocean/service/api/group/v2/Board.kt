@@ -2,7 +2,6 @@ package com.cmoney.backend2.forumocean.service.api.group.v2
 
 
 import com.google.gson.annotations.SerializedName
-import androidx.annotation.Keep
 
 /**
  * 一個看板
@@ -34,5 +33,10 @@ data class Board(
      * 有權限的角色
      */
     @SerializedName("rolesAuth")
-    val rolesAuth: List<RolesAuth>?
+    val rolesAuth: List<RolesAuth>?,
+    /**
+     * 未讀資訊
+     */
+    @SerializedName("readInfo")
+    val readInfo: BoardReadInfo?
 )

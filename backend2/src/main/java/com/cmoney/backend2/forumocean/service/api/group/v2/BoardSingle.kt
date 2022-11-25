@@ -36,5 +36,10 @@ data class BoardSingle(
      * 角色權限
      */
     @SerializedName("rolesAuth")
-    val rolesAuth: List<RolesAuth>?
+    val rolesAuth: List<RolesAuth>?,
+    /**
+     * 未讀資訊
+     */
+    @SerializedName("readInfo")
+    val readInfo: BoardReadInfo?
 )
