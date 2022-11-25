@@ -4827,6 +4827,68 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
+    fun `取得社團看板推播_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getGroupBoardPushSetting(
+                authorization = any(),
+                path = "",
+                boardId = any()
+            )
+        } returns Response.success(GroupPushSetting(""))
+        val result = web.getGroupBoardPushSetting(1L)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得社團看板推播_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getGroupBoardPushSetting(
+                authorization = any(),
+                path = "",
+                boardId = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getGroupBoardPushSetting(1L)
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `設定社團看板推播_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.setGroupBoardPushSetting(
+                authorization = any(),
+                path = any(),
+                body = any()
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.setGroupBoardPushSetting(
+            1L,
+            PushType.NONE
+        )
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `設定社團看板推播_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.setGroupBoardPushSetting(
+                authorization = any(),
+                path = any(),
+                body = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.setGroupBoardPushSetting(
+            -1,
+            PushType.NONE
+        )
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
     fun `取得會員的被評價資訊統計_success`() = testScope.runTest {
         coEvery {
             forumOceanService.getMemberRatingCounter(

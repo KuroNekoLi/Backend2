@@ -2009,6 +2009,7 @@ class ForumOceanWebImpl(
         }
     }
 
+    @Deprecated("推播層級已由社團改至看板，請使用getGroupBoardPushSetting")
     override suspend fun getGroupPushSetting(groupId: Long): Result<PushType> {
         return withContext(dispatcher.io()) {
             kotlin.runCatching {
@@ -2017,16 +2018,12 @@ class ForumOceanWebImpl(
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     groupId = groupId
                 ).checkResponseBody(jsonParser)
-                when (result.pushType) {
-                    "all" -> PushType.ALL
-                    "admin" -> PushType.ADMIN
-                    "none" -> PushType.NONE
-                    else -> PushType.NONE
-                }
+                PushType.values().find { it.value == result.pushType } ?: PushType.NONE
             }
         }
     }
 
+    @Deprecated("推播層級已由社團改至看板，請使用setGroupBoardPushSetting")
     override suspend fun setGroupPushSetting(groupId: Long, pushType: PushType): Result<Unit> {
         return withContext(dispatcher.io()) {
             kotlin.runCatching {
@@ -2035,11 +2032,36 @@ class ForumOceanWebImpl(
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     body = GroupPushSettingRequest(
                         groupId,
-                        when (pushType) {
-                            PushType.ALL -> "all"
-                            PushType.ADMIN -> "admin"
-                            PushType.NONE -> "none"
-                        }
+                        pushType.value
+                    )
+                ).handleNoContent(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun getGroupBoardPushSetting(boardId: Long): Result<PushType> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                val result = service.getGroupBoardPushSetting(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    boardId = boardId
+                ).checkResponseBody(jsonParser)
+
+                PushType.values().find { it.value == result.pushType } ?: PushType.NONE
+            }
+        }
+    }
+
+    override suspend fun setGroupBoardPushSetting(boardId: Long, pushType: PushType): Result<Unit> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.setGroupBoardPushSetting(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    body = GroupPushSettingRequest(
+                        boardId,
+                        pushType.value
                     )
                 ).handleNoContent(jsonParser)
             }

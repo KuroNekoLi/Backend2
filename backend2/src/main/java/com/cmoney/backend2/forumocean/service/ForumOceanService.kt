@@ -1503,6 +1503,7 @@ interface ForumOceanService {
     @RecordApi
     @GET("{path}/api/GroupNotification/PushSetting/Group/{groupId}")
     @Headers("X-Version: 2.0")
+    @Deprecated("推播層級已由社團改至看板，請使用getGroupBoardPushSetting")
     suspend fun getGroupPushSetting(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
@@ -1515,7 +1516,32 @@ interface ForumOceanService {
     @RecordApi
     @PUT("{path}/api/GroupNotification/PushSetting")
     @Headers("X-Version: 2.0")
+    @Deprecated("推播層級已由社團改至看板，請使用setGroupBoardPushSetting")
     suspend fun setGroupPushSetting(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Body body: GroupPushSettingRequest
+    ): Response<Void>
+
+    /**
+     * 取得會員在社團看板的推播設定
+     */
+    @RecordApi
+    @GET("{path}/api/GroupNotification/Board/{boardId}/PushSetting")
+    @Headers("X-Version: 2.0")
+    suspend fun getGroupBoardPushSetting(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("boardId") boardId: Long
+    ): Response<GroupPushSetting>
+
+    /**
+     * 設定會員在社團看板的推播
+     */
+    @RecordApi
+    @PUT("{path}/api/GroupNotification/Board/{boardId}/PushSetting")
+    @Headers("X-Version: 2.0")
+    suspend fun setGroupBoardPushSetting(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Body body: GroupPushSettingRequest

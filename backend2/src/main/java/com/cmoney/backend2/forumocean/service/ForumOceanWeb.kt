@@ -1508,12 +1508,24 @@ interface ForumOceanWeb {
     /**
      * 取得社團推播
      */
+    @Deprecated("推播層級已由社團改至看板，請使用getGroupBoardPushSetting")
     suspend fun getGroupPushSetting(groupId: Long): Result<PushType>
 
     /**
      * 設定社團推播
      */
+    @Deprecated("推播層級已由社團改至看板，請使用setGroupBoardPushSetting")
     suspend fun setGroupPushSetting(groupId: Long, pushType: PushType): Result<Unit>
+
+    /**
+     * 取得社團推播
+     */
+    suspend fun getGroupBoardPushSetting(boardId: Long): Result<PushType>
+
+    /**
+     * 設定社團推播
+     */
+    suspend fun setGroupBoardPushSetting(boardId: Long, pushType: PushType): Result<Unit>
 
     /**
      * 取得會員的被評價資訊統計
