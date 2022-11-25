@@ -10,10 +10,10 @@ data class BoardReadInfo(
      * 未讀數
      */
     @SerializedName("unreadCount")
-    val unreadCount: Boolean?,
+    val unreadCount: Int?,
     /**
      * 取下篇文章權重
      */
     @SerializedName("nextStartWeight")
-    val nextStartWeight: Int?
+    val nextStartWeight: Long?
 )
