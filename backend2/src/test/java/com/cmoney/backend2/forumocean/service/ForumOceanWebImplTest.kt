@@ -4226,7 +4226,7 @@ class ForumOceanWebImplTest {
                 path = "",
                 boardId = 1L
             )
-        } returns Response.success(BoardSingle(null, null, null, null, null, null))
+        } returns Response.success(BoardSingle(null, null, null, null, null, null, null))
         val result = web.getGroupBoard(1)
         assertThat(result.isSuccess).isTrue()
     }
