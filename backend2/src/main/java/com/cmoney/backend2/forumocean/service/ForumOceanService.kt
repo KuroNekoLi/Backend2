@@ -29,6 +29,7 @@ import com.cmoney.backend2.forumocean.service.api.group.v2.Board
 import com.cmoney.backend2.forumocean.service.api.group.v2.BoardManipulation
 import com.cmoney.backend2.forumocean.service.api.group.v2.BoardSingle
 import com.cmoney.backend2.forumocean.service.api.group.v2.Group
+import com.cmoney.backend2.forumocean.service.api.group.v2.GroupBoardPushSettingRequestBody
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupManipulation
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupMember2
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupPushSetting
@@ -1544,7 +1545,8 @@ interface ForumOceanService {
     suspend fun setGroupBoardPushSetting(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
-        @Body body: GroupPushSettingRequest
+        @Path("boardId") boardId: Long,
+        @Body body: GroupBoardPushSettingRequestBody
     ): Response<Void>
 
     /**

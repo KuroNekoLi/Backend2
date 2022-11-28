@@ -4860,6 +4860,7 @@ class ForumOceanWebImplTest {
             forumOceanService.setGroupBoardPushSetting(
                 authorization = any(),
                 path = any(),
+                boardId = any(),
                 body = any()
             )
         } returns Response.success<Void>(204, null)
@@ -4877,6 +4878,7 @@ class ForumOceanWebImplTest {
             forumOceanService.setGroupBoardPushSetting(
                 authorization = any(),
                 path = any(),
+                boardId = any(),
                 body = any()
             )
         } returns Response.error(500, "".toResponseBody())

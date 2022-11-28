@@ -33,6 +33,7 @@ import com.cmoney.backend2.forumocean.service.api.group.v2.Board
 import com.cmoney.backend2.forumocean.service.api.group.v2.BoardManipulation
 import com.cmoney.backend2.forumocean.service.api.group.v2.BoardSingle
 import com.cmoney.backend2.forumocean.service.api.group.v2.Group
+import com.cmoney.backend2.forumocean.service.api.group.v2.GroupBoardPushSettingRequestBody
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupManipulation
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupMember2
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupPushSettingRequest
@@ -2058,9 +2059,9 @@ class ForumOceanWebImpl(
             kotlin.runCatching {
                 service.setGroupBoardPushSetting(
                     path = serverName,
+                    boardId=boardId,
                     authorization = setting.accessToken.createAuthorizationBearer(),
-                    body = GroupPushSettingRequest(
-                        boardId,
+                    body = GroupBoardPushSettingRequestBody(
                         pushType.value
                     )
                 ).handleNoContent(jsonParser)
