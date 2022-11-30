@@ -1692,12 +1692,14 @@ class ForumOceanWebImpl(
 
     override suspend fun createGroupBoard(
         groupId: Long,
+        isChatRoom: Boolean,
         board: BoardManipulation
     ): Result<Long> {
         return withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.createGroupBoard(
                     path = serverName,
+                    isChatRoom = isChatRoom,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     groupId = groupId,
                     body = board
@@ -2059,7 +2061,7 @@ class ForumOceanWebImpl(
             kotlin.runCatching {
                 service.setGroupBoardPushSetting(
                     path = serverName,
-                    boardId=boardId,
+                    boardId = boardId,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     body = GroupBoardPushSettingRequestBody(
                         pushType.value

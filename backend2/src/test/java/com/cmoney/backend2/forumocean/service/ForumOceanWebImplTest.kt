@@ -4137,10 +4137,11 @@ class ForumOceanWebImplTest {
                 authorization = any(),
                 path = "",
                 groupId = 1L,
-                body = any()
+                body = any(),
+                isChatRoom = false
             )
         } returns Response.success(InsertedId(-1))
-        val result = web.createGroupBoard(1, BoardManipulation(null, null))
+        val result = web.createGroupBoard(1,false, BoardManipulation(null, null))
         assertThat(result.isSuccess).isTrue()
     }
 
@@ -4152,10 +4153,11 @@ class ForumOceanWebImplTest {
                 authorization = any(),
                 path = "",
                 groupId = 1L,
-                body = any()
+                body = any(),
+                isChatRoom = false
             )
         } returns Response.error(500, "".toResponseBody())
-        val result = web.createGroupBoard(1, BoardManipulation(null, null))
+        val result = web.createGroupBoard(1,false, BoardManipulation(null, null))
         assertThat(result.isFailure).isTrue()
     }
 
@@ -4226,7 +4228,7 @@ class ForumOceanWebImplTest {
                 path = "",
                 boardId = 1L
             )
-        } returns Response.success(BoardSingle(null, null, null, null, null, null, null))
+        } returns Response.success(BoardSingle(null, null, null, null, null, null, null, null))
         val result = web.getGroupBoard(1)
         assertThat(result.isSuccess).isTrue()
     }

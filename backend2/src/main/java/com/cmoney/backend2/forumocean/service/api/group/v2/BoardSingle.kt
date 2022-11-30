@@ -28,6 +28,11 @@ data class BoardSingle(
     @SerializedName("isDefault")
     val isDefault: Boolean?,
     /**
+     * 是否為聊天室
+     */
+    @SerializedName("isChatroom")
+    val isChatroom: Boolean?,
+    /**
      * 看板名稱
      */
     @SerializedName("name")

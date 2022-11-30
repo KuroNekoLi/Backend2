@@ -1343,7 +1343,7 @@ interface ForumOceanWeb {
      * GroupV2
      * @return Id of inserted board
      */
-    suspend fun createGroupBoard(groupId: Long, board: BoardManipulation): Result<Long>
+    suspend fun createGroupBoard(groupId: Long, isChatRoom:Boolean, board: BoardManipulation): Result<Long>
 
     /**
      * 修改看板
