@@ -1232,9 +1232,9 @@ interface ForumOceanService {
     @Headers("X-Version: 2.0")
     suspend fun createGroupBoard(
         @Header("Authorization") authorization: String,
-        @Query("isChatRoom")isChatRoom:Boolean,
         @Path("path") path: String,
         @Path("groupId") groupId: Long,
+        @Query("isChatRoom")isChatRoom:Boolean,
         @Body body: BoardManipulation
     ): Response<InsertedId>
 
