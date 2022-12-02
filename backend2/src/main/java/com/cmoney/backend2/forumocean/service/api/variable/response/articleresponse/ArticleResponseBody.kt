@@ -78,19 +78,23 @@ sealed class ArticleResponseBody(
         @SerializedName("@vhash-donate")
         override val donateCount: Int?,
         @SerializedName("donate")
-        override val donate : Int?,
+        override val donate: Int?,
         @SerializedName("@list-vote")
-        override val voteCount : Int?,
+        override val voteCount: Int?,
         @SerializedName("voteStatus")
-        override val voteStatus : Int?,
+        override val voteStatus: Int?,
         @SerializedName("weight")
-        override val weight : Long?,
+        override val weight: Long?,
         @SerializedName("@value-reportCount")
         override val totalReportCount: Int?,
         @SerializedName("report")
         override val report: Any?,
         @SerializedName("@value-commentDeleted")
-        override val commentDeletedCount: Int?
+        override val commentDeletedCount: Int?,
+        @SerializedName("isPromotedArticle")
+        val isPromotedArticle: Boolean?,
+        @SerializedName("isPinnedPromotedArticle")
+        val isPinnedPromotedArticle: Boolean?
     ) : ArticleResponseBody(createTime, id, modifyTime),
         ReactionInfo,
         CollectedInfo,
@@ -148,13 +152,13 @@ sealed class ArticleResponseBody(
         @SerializedName("@vhash-donate")
         override val donateCount: Int?,
         @SerializedName("donate")
-        override val donate : Int?,
+        override val donate: Int?,
         @SerializedName("@list-vote")
-        override val voteCount : Int?,
+        override val voteCount: Int?,
         @SerializedName("voteStatus")
-        override val voteStatus : Int?,
+        override val voteStatus: Int?,
         @SerializedName("weight")
-        override val weight : Long?,
+        override val weight: Long?,
         @SerializedName("@value-reportCount")
         override val totalReportCount: Int?,
         @SerializedName("report")
@@ -212,7 +216,7 @@ sealed class ArticleResponseBody(
         @SerializedName("@list-comment")
         override val commentCount: Int?,
         @SerializedName("weight")
-        override val weight : Long?,
+        override val weight: Long?,
         @SerializedName("@value-reportCount")
         override val totalReportCount: Int?,
         @SerializedName("report")
@@ -268,7 +272,7 @@ sealed class ArticleResponseBody(
         @SerializedName("@list-comment")
         override val commentCount: Int?,
         @SerializedName("weight")
-        override val weight : Long?,
+        override val weight: Long?,
         @SerializedName("@value-reportCount")
         override val totalReportCount: Int?,
         @SerializedName("report")
@@ -328,13 +332,13 @@ sealed class ArticleResponseBody(
         @SerializedName("@vhash-donate")
         override val donateCount: Int?,
         @SerializedName("donate")
-        override val donate : Int?,
+        override val donate: Int?,
         @SerializedName("@list-vote")
-        override val voteCount : Int?,
+        override val voteCount: Int?,
         @SerializedName("voteStatus")
-        override val voteStatus : Int?,
+        override val voteStatus: Int?,
         @SerializedName("weight")
-        override val weight : Long?,
+        override val weight: Long?,
         @SerializedName("@value-reportCount")
         override val totalReportCount: Int?,
         @SerializedName("report")
@@ -399,13 +403,13 @@ sealed class ArticleResponseBody(
         @SerializedName("@vhash-donate")
         override val donateCount: Int?,
         @SerializedName("donate")
-        override val donate : Int?,
+        override val donate: Int?,
         @SerializedName("@list-vote")
-        override val voteCount : Int?,
+        override val voteCount: Int?,
         @SerializedName("voteStatus")
-        override val voteStatus : Int?,
+        override val voteStatus: Int?,
         @SerializedName("weight")
-        override val weight : Long?,
+        override val weight: Long?,
         @SerializedName("@value-reportCount")
         override val totalReportCount: Int?,
         @SerializedName("report")
@@ -473,7 +477,7 @@ sealed class ArticleResponseBody(
         @SerializedName("rewardPoints")
         override val rewardPoints: Int?,
         @SerializedName("weight")
-        override val weight : Long?,
+        override val weight: Long?,
         @SerializedName("@value-reportCount")
         override val totalReportCount: Int?,
         @SerializedName("report")
@@ -506,7 +510,7 @@ sealed class ArticleResponseBody(
         @SerializedName("modifyTime")
         override val modifyTime: Long?,
         @SerializedName("weight")
-        override val weight : Long?
+        override val weight: Long?
     ) : ArticleResponseBody(createTime, id, modifyTime),
         WeightInfo
 }

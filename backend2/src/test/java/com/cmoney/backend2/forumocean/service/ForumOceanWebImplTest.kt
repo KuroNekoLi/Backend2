@@ -11,6 +11,8 @@ import com.cmoney.backend2.forumocean.service.api.article.update.UpdateArticleHe
 import com.cmoney.backend2.forumocean.service.api.channel.getmemberstatistics.GetMemberStatisticsResponseBody
 import com.cmoney.backend2.forumocean.service.api.columnist.GetColumnistVipGroupResponse
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBody
+import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBodyV2
+import com.cmoney.backend2.forumocean.service.api.comment.hide.HideCommentRequestBody
 import com.cmoney.backend2.forumocean.service.api.comment.update.UpdateCommentHelper
 import com.cmoney.backend2.forumocean.service.api.group.create.CreateGroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.getapprovals.GroupPendingApproval
@@ -40,6 +42,7 @@ import com.cmoney.backend2.forumocean.service.api.rating.MemberRatingCounter
 import com.cmoney.backend2.forumocean.service.api.rating.RatingComment
 import com.cmoney.backend2.forumocean.service.api.rating.ReviewRequest
 import com.cmoney.backend2.forumocean.service.api.relationship.getdonate.DonateInfo
+import com.cmoney.backend2.forumocean.service.api.report.ReportRequestBody
 import com.cmoney.backend2.forumocean.service.api.role.GetMembersByRoleResponse
 import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
 import com.cmoney.backend2.forumocean.service.api.support.SearchMembersResponseBody
@@ -48,10 +51,16 @@ import com.cmoney.backend2.forumocean.service.api.variable.request.PersonalArtic
 import com.cmoney.backend2.forumocean.service.api.variable.request.ReactionType
 import com.cmoney.backend2.forumocean.service.api.variable.response.GroupPositionInfo
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations.GetRecommendationResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentContent
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBody
+import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBodyV2
 import com.cmoney.backend2.forumocean.service.api.variable.response.groupresponse.GroupResponseBody
+import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.MemberEmojis
 import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.ReactionInfo
+import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.ReactionInfoV2
 import com.cmoney.backend2.forumocean.service.api.vote.get.VoteInfo
 import com.cmoney.backend2.ocean.service.api.getevaluationlist.SortType
 import com.cmoney.core.CoroutineTestRule
@@ -447,8 +456,8 @@ class ForumOceanWebImplTest {
             weight = null,
             totalReportCount = null,
             report = null,
-            donate = null,
-            commentDeletedCount = null
+            commentDeletedCount = null,
+            donate = null
         )
         coEvery {
             forumOceanService.getArticle(
@@ -550,8 +559,8 @@ class ForumOceanWebImplTest {
             weight = null,
             totalReportCount = null,
             report = null,
-            donate = null,
-            commentDeletedCount = null
+            commentDeletedCount = null,
+            donate = null
         )
         coEvery {
             forumOceanService.getGroupArticle(
@@ -603,8 +612,8 @@ class ForumOceanWebImplTest {
             weight = null,
             totalReportCount = null,
             report = null,
-            donate = null,
-            commentDeletedCount = null
+            commentDeletedCount = null,
+            donate = null
         )
         coEvery {
             forumOceanService.getSharedArticle(
@@ -793,8 +802,10 @@ class ForumOceanWebImplTest {
             weight = null,
             totalReportCount = null,
             report = null,
+            commentDeletedCount = null,
             donate = null,
-            commentDeletedCount = null
+            isPromotedArticle = null,
+            isPinnedPromotedArticle = null
         )
         coEvery {
             forumOceanService.getUnknownArticle(
@@ -820,6 +831,64 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(403, "".toResponseBody())
         val result = web.getUnknownArticle(articleId)
+        assertThat(result.isSuccess).isFalse()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `getArticleV2_取得未知型態文章成功測試`() = testScope.runTest {
+        val articleId = 1000L
+        val successResponse = ArticleResponseBodyV2(
+            articleContent = null,
+            createTime = null,
+            id = articleId.toString(),
+            creatorId = null,
+            modifyTime = null,
+            myEmoji = null,
+            emojiCount = mapOf(),
+            collected = null,
+            collectCount = null,
+            myCommentIndex = listOf(),
+            commentCount = null,
+            shareCount = null,
+            interested = null,
+            interestCount = null,
+            rewardPoints = null,
+            donateCount = null,
+            voteCount = null,
+            voteStatus = null,
+            totalReportCount = null,
+            hasReport = null,
+            isHidden = null,
+            anonymous = null,
+            authType = null,
+            isPinnedPromotedArticle = null,
+            isPromotedArticle = null
+        )
+        coEvery {
+            forumOceanService.getArticleV2(
+                authorization = any(),
+                articleId = articleId.toString(),
+                path = ""
+            )
+        } returns Response.success(successResponse)
+        val result = web.getArticleV2(articleId)
+        assertThat(result.isSuccess).isTrue()
+        assertThat(result.getOrThrow().id).isEqualTo(articleId.toString())
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `getArticleV2_取得未知型態文章失敗測試`() = testScope.runTest {
+        val articleId = 1000L
+        coEvery {
+            forumOceanService.getArticleV2(
+                authorization = any(),
+                articleId = articleId.toString(),
+                path = ""
+            )
+        } returns Response.error(403, "".toResponseBody())
+        val result = web.getArticleV2(articleId)
         assertThat(result.isSuccess).isFalse()
     }
 
@@ -925,6 +994,52 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
+    fun `deleteArticleV2_刪除文章成功測試`() = testScope.runTest {
+        coEvery {
+            forumOceanService.deleteArticleV2(
+                authorization = any(),
+                articleId = any(),
+                path = ""
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.deleteArticleV2("100")
+
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `deleteArticleV2_刪除文章失敗測試`() = testScope.runTest {
+        coEvery {
+            forumOceanService.deleteArticleV2(
+                authorization = any(),
+                articleId = any(),
+                path = ""
+            )
+        } returns Response.error(403, "".toResponseBody())
+        val result = web.deleteArticleV2("100")
+
+        assertThat(result.isSuccess).isFalse()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `deleteArticleV2_刪除文章_遇到文章不存在的情況`() = testScope.runTest {
+        coEvery {
+            forumOceanService.deleteArticleV2(
+                authorization = any(),
+                articleId = any(),
+                path = ""
+            )
+        } returns Response.error(404, "".toResponseBody())
+        val result = web.deleteArticleV2("132434")
+
+        assertThat(result.isSuccess).isFalse()
+        assertThat(result.exceptionOrNull()).isInstanceOf(HttpException::class.java)
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
     fun `getMemberStatistics_取得指定使用者的統計資訊成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getMemberStatistics(
@@ -1005,8 +1120,10 @@ class ForumOceanWebImplTest {
                     weight = null,
                     totalReportCount = null,
                     report = null,
+                    commentDeletedCount = null,
                     donate = null,
-                    commentDeletedCount = null
+                    isPromotedArticle = null,
+                    isPinnedPromotedArticle = null
                 )
             )
         )
@@ -1097,7 +1214,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `createComment_回復文章成功測試`() = testScope.runTest {
+    fun `createComment_回覆文章成功測試`() = testScope.runTest {
         val commentId = 123L
         coEvery {
             forumOceanService.createComment(
@@ -1122,7 +1239,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `createComment_回復文章失敗測試`() = testScope.runTest {
+    fun `createComment_回覆文章失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.createComment(
                 authorization = any(),
@@ -1142,7 +1259,50 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `createGroupArticleComment_回復文章成功測試`() = testScope.runTest {
+    fun `createCommentV2_回覆文章成功測試`() = testScope.runTest {
+        val commentIndex = 1L
+        coEvery {
+            forumOceanService.createCommentV2(
+                authorization = any(),
+                articleId = any(),
+                body = any(),
+                path = ""
+            )
+        } returns Response.success<CreateCommentResponseBodyV2>(
+            200,
+            CreateCommentResponseBodyV2(commentIndex)
+        )
+        val result = web.createCommentV2(
+            id = "123-1",
+            text = null,
+            multiMedia = listOf()
+        )
+        assertThat(result.isSuccess).isTrue()
+        assertThat(result.getOrThrow().commentIndex == commentIndex)
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `createCommentV2_回覆文章失敗測試`() = testScope.runTest {
+        coEvery {
+            forumOceanService.createCommentV2(
+                authorization = any(),
+                articleId = any(),
+                body = any(),
+                path = ""
+            )
+        } returns Response.error(403, "".toResponseBody())
+        val result = web.createCommentV2(
+            id = "123-1",
+            text = null,
+            multiMedia = listOf()
+        )
+        assertThat(result.isSuccess).isFalse()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `createGroupArticleComment_回覆文章成功測試`() = testScope.runTest {
         val commentId = 123L
         coEvery {
             forumOceanService.createGroupArticleComment(
@@ -1167,7 +1327,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `createGroupArticleComment_回復文章失敗測試`() = testScope.runTest {
+    fun `createGroupArticleComment_回覆文章失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.createGroupArticleComment(
                 authorization = any(),
@@ -1187,7 +1347,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getComment_取得回復清單成功測試`() = testScope.runTest {
+    fun `getComment_取得回覆清單成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getComment(
                 authorization = any(),
@@ -1222,7 +1382,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getComment_取得回復清單失敗測試`() = testScope.runTest {
+    fun `getComment_取得回覆清單失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.getComment(
                 authorization = any(),
@@ -1280,7 +1440,7 @@ class ForumOceanWebImplTest {
                 )
             )
         )
-        val result = web.getCommentWithId(10101, listOf(2, 3))
+        val result = web.getCommentsWithId(10101, listOf(2, 3))
         assertThat(result.isSuccess).isTrue()
         assertThat(result.getOrThrow()).hasSize(2)
     }
@@ -1296,7 +1456,7 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.error(403, "".toResponseBody())
-        val result = web.getCommentWithId(10101, listOf(2, 3))
+        val result = web.getCommentsWithId(10101, listOf(2, 3))
         assertThat(result.isSuccess).isFalse()
     }
 
@@ -1396,7 +1556,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `deleteComment_刪除回復成功測試`() = testScope.runTest {
+    fun `deleteComment_刪除回覆成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.deleteComment(
                 authorization = any(),
@@ -1411,7 +1571,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `deleteComment_刪除回復失敗測試`() = testScope.runTest {
+    fun `deleteComment_刪除回覆失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.deleteComment(
                 authorization = any(),
@@ -1426,7 +1586,36 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `reactionComment_對回復做反應成功測試`() = testScope.runTest {
+    fun `deleteCommentV2_刪除回覆成功測試`() = testScope.runTest {
+        coEvery {
+            forumOceanService.deleteCommentV2(
+                authorization = any(),
+                articleId = any(),
+                path = ""
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.deleteCommentV2("123-1")
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `deleteCommentV2_刪除回覆失敗測試`() = testScope.runTest {
+        coEvery {
+            forumOceanService.deleteCommentV2(
+                authorization = any(),
+                articleId = any(),
+                path = ""
+            )
+        } returns Response.error(403, "".toResponseBody())
+        val result = web.deleteCommentV2("123-1")
+        assertThat(result.isSuccess).isFalse()
+    }
+
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `reactionComment_對回覆做反應成功測試`() = testScope.runTest {
         coEvery {
             forumOceanService.reactComment(
                 authorization = any(),
@@ -1442,7 +1631,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `reactionComment_對回復做反應失敗測試`() = testScope.runTest {
+    fun `reactionComment_對回覆做反應失敗測試`() = testScope.runTest {
         coEvery {
             forumOceanService.reactComment(
                 authorization = any(),
@@ -1458,7 +1647,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getReactionDetail_取得反映詳細資料成功測試`() = testScope.runTest {
+    fun `getReactionDetail_取得反應詳細資料成功測試`() = testScope.runTest {
         val reactionTypeList = listOf(ReactionType.LIKE, ReactionType.DISLIKE)
         coEvery {
             forumOceanService.getReactionDetail(
@@ -1490,7 +1679,7 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getReactionDetail_取得反映詳細資料失敗測試`() = testScope.runTest {
+    fun `getReactionDetail_取得反應詳細資料失敗測試`() = testScope.runTest {
         val reactionTypeList = listOf(ReactionType.LIKE, ReactionType.DISLIKE)
         coEvery {
             forumOceanService.getReactionDetail(
@@ -1504,6 +1693,55 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getReactionDetail(1010, 2000, reactionTypeList, 0, 20)
+        assertThat(result.isSuccess).isFalse()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `getReactionDetailV2_取得反應詳細資料成功測試`() = testScope.runTest {
+        val reactionTypeList = listOf(ReactionType.LIKE, ReactionType.DISLIKE)
+        coEvery {
+            forumOceanService.getReactionDetailV2(
+                authorization = any(),
+                articleId = any(),
+                emojiTypes = reactionTypeList.joinToString { it.value.toString() },
+                offset = any(),
+                fetch = any(),
+                path = ""
+            )
+        } returns Response.success(
+            MemberEmojis(
+                listOf(
+                    ReactionInfoV2(
+                        memberId = 67, emoji = ""
+                    ),
+                    ReactionInfoV2(
+                        memberId = 68, emoji = ""
+                    )
+                )
+            )
+        )
+        val result = web.getReactionDetailV2("123-1", reactionTypeList, 0, 20)
+        assertThat(result.isSuccess).isTrue()
+        assertThat(result.getOrThrow().memberEmojis).hasSize(2)
+    }
+
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `getReactionDetailV2_取得反應詳細資料失敗測試`() = testScope.runTest {
+        val reactionTypeList = listOf(ReactionType.LIKE, ReactionType.DISLIKE)
+        coEvery {
+            forumOceanService.getReactionDetailV2(
+                authorization = any(),
+                articleId = any(),
+                emojiTypes = reactionTypeList.joinToString { it.value.toString() },
+                offset = any(),
+                fetch = any(),
+                path = ""
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getReactionDetailV2("123-1", reactionTypeList, 0, 20)
         assertThat(result.isSuccess).isFalse()
     }
 
@@ -2950,6 +3188,36 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.createReport(231321, 1, null)
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `createReportV2_檢舉文章成功測試`() = testScope.runTest {
+        coEvery {
+            forumOceanService.createReportV2(
+                authorization = any(),
+                articleId = any(),
+                body = ReportRequestBody(0),
+                path = ""
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.createReportV2("123-1", 1)
+        assertThat(result.isSuccess)
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `createReportV2_檢舉文章失敗測試`() = testScope.runTest {
+        coEvery {
+            forumOceanService.createReportV2(
+                authorization = any(),
+                articleId = any(),
+                body = ReportRequestBody(0),
+                path = ""
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.createReportV2("123-1", 1)
         assertThat(result.isFailure).isTrue()
     }
 
@@ -4709,4 +4977,164 @@ class ForumOceanWebImplTest {
         val result = web.getColumnistAll()
         assertThat(result.isFailure).isTrue()
     }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `隱藏留言_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.changeCommentHideState(
+                authorization = any(),
+                path = any(),
+                articleId = any(),
+                body = any()
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.changeCommentHideState("123-1", true)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `隱藏留言_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.changeCommentHideState(
+                authorization = any(),
+                path = any(),
+                articleId = any(),
+                body = HideCommentRequestBody(true)
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.changeCommentHideState("123-1", true)
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得單一留言_success`() = testScope.runTest {
+        val commentId = "123-1"
+        val response = CommentResponseBodyV2(
+            id = commentId,
+            content = null,
+            creatorId = null,
+            createTime = null,
+            modifyTime = null,
+            isHidden = null,
+            myEmoji = null,
+            emojiCount = null,
+            myCommentIndex = null,
+            commentCount = null,
+            hasReport = null
+        )
+        coEvery {
+            forumOceanService.getSingleComment(
+                authorization = any(),
+                path = any(),
+                articleId = any()
+            )
+        } returns Response.success(response)
+        val result = web.getSingleComment(commentId)
+        assertThat(result.isSuccess).isTrue()
+        assertThat(result.getOrThrow().id).isEqualTo(commentId)
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得單一留言_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getSingleComment(
+                authorization = any(),
+                path = any(),
+                articleId = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getSingleComment("123-1")
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `推薦_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getRecommendation(
+                authorization = any(),
+                path = any(),
+                offset = any(),
+                fetch = any()
+            )
+        } returns Response.success(GetRecommendationResponse(listOf(), true, 0))
+        val result = web.getRecommendation(0, 0)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `推薦_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getRecommendation(
+                authorization = any(),
+                path = any(),
+                offset = any(),
+                fetch = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getRecommendation(0, 0)
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得置頂精選文章清單_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getPinPromotedArticles(
+                authorization = any(),
+                path = any()
+            )
+        } returns Response.success(listOf())
+        val result = web.getPinPromotedArticles()
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得置頂精選文章清單_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getPinPromotedArticles(
+                authorization = any(),
+                path = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getPinPromotedArticles()
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得精選文章清單_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getPromotedArticles(
+                authorization = any(),
+                path = any(),
+                startWeight = any(),
+                fetch = any()
+            )
+        } returns Response.success(GetPromotedArticlesResponse(listOf(), true, 0))
+        val result = web.getPromotedArticles(0, 0)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得精選文章清單_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getPromotedArticles(
+                authorization = any(),
+                path = any(),
+                startWeight = any(),
+                fetch = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getPromotedArticles(0, 0)
+        assertThat(result.isFailure).isTrue()
+    }
+
 }

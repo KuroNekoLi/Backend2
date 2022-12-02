@@ -19,7 +19,10 @@ import com.cmoney.backend2.forumocean.service.api.channel.channelname.IChannelNa
 import com.cmoney.backend2.forumocean.service.api.channel.getchannelsarticlebyweight.GetChannelsArticleByWeightRequestBody
 import com.cmoney.backend2.forumocean.service.api.columnist.GetColumnistVipGroupResponse
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentRequestBody
+import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentRequestBodyV2
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBody
+import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBodyV2
+import com.cmoney.backend2.forumocean.service.api.comment.hide.HideCommentRequestBody
 import com.cmoney.backend2.forumocean.service.api.comment.update.IUpdateCommentHelper
 import com.cmoney.backend2.forumocean.service.api.group.create.CreateGroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.group.getapprovals.GroupPendingApproval
@@ -29,8 +32,8 @@ import com.cmoney.backend2.forumocean.service.api.group.v2.Admins
 import com.cmoney.backend2.forumocean.service.api.group.v2.Approval
 import com.cmoney.backend2.forumocean.service.api.group.v2.AvailableBoardIds
 import com.cmoney.backend2.forumocean.service.api.group.v2.Board
-import com.cmoney.backend2.forumocean.service.api.group.v2.BoardSingle
 import com.cmoney.backend2.forumocean.service.api.group.v2.BoardManipulation
+import com.cmoney.backend2.forumocean.service.api.group.v2.BoardSingle
 import com.cmoney.backend2.forumocean.service.api.group.v2.Group
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupManipulation
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupMember2
@@ -54,6 +57,7 @@ import com.cmoney.backend2.forumocean.service.api.rating.OthersRatingComment
 import com.cmoney.backend2.forumocean.service.api.rating.RatingComment
 import com.cmoney.backend2.forumocean.service.api.rating.ReviewRequest
 import com.cmoney.backend2.forumocean.service.api.relationship.getdonate.DonateInfo
+import com.cmoney.backend2.forumocean.service.api.report.ReportRequestBody
 import com.cmoney.backend2.forumocean.service.api.role.Role
 import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
 import com.cmoney.backend2.forumocean.service.api.support.SearchMembersResponseBody
@@ -62,8 +66,15 @@ import com.cmoney.backend2.forumocean.service.api.variable.request.PersonalArtic
 import com.cmoney.backend2.forumocean.service.api.variable.request.ReactionType
 import com.cmoney.backend2.forumocean.service.api.variable.request.mediatype.MediaType
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.PromotedArticleResponseBody
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations.GetRecommendationResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBody
+import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBodyV2
+import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.GetCommentsResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.groupresponse.GroupResponseBody
+import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.MemberEmojis
 import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.ReactionInfo
 import com.cmoney.backend2.forumocean.service.api.vote.get.VoteInfo
 import com.cmoney.backend2.ocean.service.api.getevaluationlist.SortType
@@ -154,6 +165,7 @@ class ForumOceanWebImpl(
             }
         }
 
+    @Deprecated("請使用getArticleV2")
     override suspend fun getArticle(articleId: Long): Result<ArticleResponseBody.GeneralArticleResponseBody> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
@@ -165,6 +177,7 @@ class ForumOceanWebImpl(
             }
         }
 
+    @Deprecated("請使用getQuestionArticleV2")
     override suspend fun getQuestionArticle(articleId: Long): Result<ArticleResponseBody.QuestionArticleResponseBody> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
@@ -176,6 +189,7 @@ class ForumOceanWebImpl(
             }
         }
 
+    @Deprecated("請使用getGroupArticleV2")
     override suspend fun getGroupArticle(articleId: Long): Result<ArticleResponseBody.GroupArticleResponseBody> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
@@ -187,6 +201,7 @@ class ForumOceanWebImpl(
             }
         }
 
+    @Deprecated("請使用getSharedArticleV2")
     override suspend fun getSharedArticle(articleId: Long): Result<ArticleResponseBody.SharedArticleResponseBody> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
@@ -198,6 +213,7 @@ class ForumOceanWebImpl(
             }
         }
 
+    @Deprecated("請使用getSignalArticleV2")
     override suspend fun getSignalArticle(articleId: Long): Result<ArticleResponseBody.SignalArticleResponseBody> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
@@ -209,6 +225,7 @@ class ForumOceanWebImpl(
             }
         }
 
+    @Deprecated("請使用getNewsArticleV2")
     override suspend fun getNewsArticle(articleId: Long): Result<ArticleResponseBody.NewsArticleResponseBody> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
@@ -220,6 +237,7 @@ class ForumOceanWebImpl(
             }
         }
 
+    @Deprecated("請使用getPersonalArticleV2")
     override suspend fun getPersonalArticle(articleId: Long): Result<ArticleResponseBody.PersonalArticleResponseBody> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
@@ -231,6 +249,7 @@ class ForumOceanWebImpl(
             }
         }
 
+    @Deprecated("請使用getUnknownArticleV2")
     override suspend fun getUnknownArticle(articleId: Long): Result<ArticleResponseBody.UnknownArticleResponseBody> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
@@ -238,6 +257,17 @@ class ForumOceanWebImpl(
                     path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     articleId = articleId
+                ).checkResponseBody(jsonParser)
+            }
+        }
+
+    override suspend fun getArticleV2(articleId: Long): Result<ArticleResponseBodyV2> =
+        withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.getArticleV2(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    articleId = articleId.toString()
                 ).checkResponseBody(jsonParser)
             }
         }
@@ -257,6 +287,7 @@ class ForumOceanWebImpl(
             }
         }
 
+    @Deprecated("待服務實作完成，使用deleteArticleV2")
     override suspend fun deleteArticle(articleId: Long): Result<Unit> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
@@ -267,6 +298,19 @@ class ForumOceanWebImpl(
                 ).handleNoContent(jsonParser)
             }
         }
+
+    override suspend fun deleteArticleV2(articleId: String): Result<Unit> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.deleteArticleV2(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    articleId = articleId
+                ).handleNoContent(jsonParser)
+            }
+        }
+    }
+
 
     //endregion
 
@@ -333,6 +377,7 @@ class ForumOceanWebImpl(
             }
         }
 
+    @Deprecated("請使用createCommentV2")
     override suspend fun createComment(
         articleId: Long,
         text: String?,
@@ -352,6 +397,27 @@ class ForumOceanWebImpl(
         }
     }
 
+    override suspend fun createCommentV2(
+        id: String,
+        text: String?,
+        multiMedia: List<MediaType>?
+    ): Result<CreateCommentResponseBodyV2> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.createCommentV2(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    articleId = id,
+                    body = CreateCommentRequestBodyV2(
+                        text = text,
+                        multiMedia = multiMedia
+                    )
+                ).checkResponseBody(jsonParser)
+            }
+        }
+    }
+
+    @Deprecated("請使用createCommentV2")
     override suspend fun createGroupArticleComment(
         articleId: Long,
         text: String?,
@@ -371,6 +437,7 @@ class ForumOceanWebImpl(
         }
     }
 
+    @Deprecated("請使用getCommentV2")
     override suspend fun getComment(
         articleId: Long,
         commentId: Long?,
@@ -387,7 +454,26 @@ class ForumOceanWebImpl(
         }
     }
 
-    override suspend fun getCommentWithId(
+    override suspend fun getCommentV2(
+        articleId: String,
+        startCommentIndex: Long?,
+        fetch: Int?
+    ): Result<GetCommentsResponseBody> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.getCommentV2(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    articleId = articleId,
+                    startCommentIndex = startCommentIndex,
+                    fetch = fetch
+                ).checkResponseBody(jsonParser)
+            }
+        }
+    }
+
+    @Deprecated("請使用getCommentsByIndex")
+    override suspend fun getCommentsWithId(
         articleId: Long,
         commentIds: List<Long>
     ): Result<List<CommentResponseBody>> = withContext(dispatcher.io()) {
@@ -397,6 +483,20 @@ class ForumOceanWebImpl(
                 authorization = setting.accessToken.createAuthorizationBearer(),
                 articleId = articleId,
                 commentIds = commentIds.joinToString(",")
+            ).checkResponseBody(jsonParser)
+        }
+    }
+
+    override suspend fun getCommentsByIndex(
+        id: String,
+        commentIndices: List<Long>
+    ): Result<List<CommentResponseBodyV2>> = withContext(dispatcher.io()) {
+        kotlin.runCatching {
+            service.getCommentsByIndex(
+                path = serverName,
+                authorization = setting.accessToken.createAuthorizationBearer(),
+                articleId = id,
+                commentIndex = commentIndices.joinToString(",")
             ).checkResponseBody(jsonParser)
         }
     }
@@ -431,6 +531,7 @@ class ForumOceanWebImpl(
         }
 
 
+    @Deprecated("請使用deleteCommentV2")
     override suspend fun deleteComment(articleId: Long, commentIndex: Long): Result<Unit> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
@@ -443,6 +544,19 @@ class ForumOceanWebImpl(
             }
         }
 
+    override suspend fun deleteCommentV2(commentId: String): Result<Unit> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.deleteCommentV2(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    articleId = commentId
+                ).handleNoContent(jsonParser)
+            }
+        }
+    }
+
+    @Deprecated("請使用createReaction")
     override suspend fun reactionComment(
         articleId: Long,
         commentIndex: Long,
@@ -460,6 +574,7 @@ class ForumOceanWebImpl(
     }
 
 
+    @Deprecated("請使用getReactionDetailV2")
     override suspend fun getReactionDetail(
         articleId: Long,
         commentIndex: Long,
@@ -480,7 +595,28 @@ class ForumOceanWebImpl(
         }
     }
 
+    override suspend fun getReactionDetailV2(
+        id: String,
+        reactions: List<ReactionType>,
+        offset: Int,
+        fetch: Int
+    ): Result<MemberEmojis> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.getReactionDetailV2(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    articleId = id,
+                    emojiTypes = reactions.joinToString { it.value.toString() },
+                    offset = offset,
+                    fetch = fetch
+                ).checkResponseBody(jsonParser)
+            }
+        }
+    }
 
+
+    @Deprecated("請使用deleteReaction")
     override suspend fun removeReactionComment(
         articleId: Long,
         commentIndex: Long
@@ -495,6 +631,7 @@ class ForumOceanWebImpl(
         }
     }
 
+    @Deprecated("請使用createReaction")
     override suspend fun createArticleReaction(articleId: Long, type: ReactionType): Result<Unit> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
@@ -507,6 +644,20 @@ class ForumOceanWebImpl(
             }
         }
 
+    override suspend fun createReaction(id: String, type: ReactionType): Result<Unit> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.createReaction(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    articleId = id,
+                    emojiType = type.value
+                ).handleNoContent(jsonParser)
+            }
+        }
+    }
+
+    @Deprecated("請使用getReactionDetailV2")
     override suspend fun getArticleReactionDetail(
         articleId: Long,
         reactionTypeList: List<ReactionType>,
@@ -525,6 +676,7 @@ class ForumOceanWebImpl(
         }
     }
 
+    @Deprecated("請使用deleteReaction")
     override suspend fun deleteArticleReaction(articleId: Long): Result<Unit> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
@@ -535,6 +687,18 @@ class ForumOceanWebImpl(
                 ).handleNoContent(jsonParser)
             }
         }
+
+    override suspend fun deleteReaction(id: String): Result<Unit> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.deleteReaction(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    articleId = id
+                ).handleNoContent(jsonParser)
+            }
+        }
+    }
 
     override suspend fun createArticleInterest(articleId: Long): Result<Unit> =
         withContext(dispatcher.io()) {
@@ -1243,6 +1407,7 @@ class ForumOceanWebImpl(
             }
         }
 
+    @Deprecated("檢舉留言請使用createReportV2，檢舉主文仍暫時使用這個，待服務實作後遷移")
     override suspend fun createReport(
         articleId: Long,
         reasonType: Int,
@@ -1256,6 +1421,21 @@ class ForumOceanWebImpl(
                     articleId = articleId,
                     reasonType = reasonType,
                     commentId = commentId
+                ).handleNoContent(jsonParser)
+            }
+        }
+
+    override suspend fun createReportV2(
+        id: String,
+        reasonType: Int
+    ): Result<Unit> =
+        withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.createReportV2(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    articleId = id,
+                    body = ReportRequestBody(reasonType)
                 ).handleNoContent(jsonParser)
             }
         }
@@ -1932,6 +2112,74 @@ class ForumOceanWebImpl(
                 ).checkResponseBody(jsonParser).mapNotNull {
                     it.memberId
                 }
+            }
+        }
+    }
+
+    override suspend fun changeCommentHideState(id: String, isHide: Boolean): Result<Unit> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.changeCommentHideState(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    articleId = id,
+                    body = HideCommentRequestBody(isHide)
+                ).handleNoContent(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun getSingleComment(commentId: String): Result<CommentResponseBodyV2> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.getSingleComment(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    articleId = commentId
+                ).checkResponseBody(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun getRecommendation(
+        offset: Int,
+        fetch: Int
+    ): Result<GetRecommendationResponse> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.getRecommendation(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    offset = offset,
+                    fetch = fetch
+                ).checkResponseBody(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun getPinPromotedArticles(): Result<List<PromotedArticleResponseBody>> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.getPinPromotedArticles(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                ).checkResponseBody(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun getPromotedArticles(
+        startWeight: Long,
+        fetch: Int
+    ): Result<GetPromotedArticlesResponse> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.getPromotedArticles(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    startWeight = startWeight,
+                    fetch = fetch
+                ).checkResponseBody(jsonParser)
             }
         }
     }
