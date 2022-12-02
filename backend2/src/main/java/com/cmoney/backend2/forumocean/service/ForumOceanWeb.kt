@@ -54,6 +54,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.request.ReactionType
 import com.cmoney.backend2.forumocean.service.api.variable.request.mediatype.MediaType
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetGroupBoardArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.PromotedArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations.GetRecommendationResponse
@@ -1343,7 +1344,11 @@ interface ForumOceanWeb {
      * GroupV2
      * @return Id of inserted board
      */
-    suspend fun createGroupBoard(groupId: Long, isChatRoom:Boolean, board: BoardManipulation): Result<Long>
+    suspend fun createGroupBoard(
+        groupId: Long,
+        isChatRoom: Boolean,
+        board: BoardManipulation
+    ): Result<Long>
 
     /**
      * 修改看板
@@ -1549,6 +1554,12 @@ interface ForumOceanWeb {
         fetch: Int,
         sortType: SortType
     ): Result<List<OthersRatingComment>>
+
+    suspend fun getBoardArticles(
+        boardId: Long,
+        startWeight: Long,
+        fetch: Int
+    ): Result<GetGroupBoardArticlesResponse>
 
     /**
      * 滿分為5, 評論字數不可多於200

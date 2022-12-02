@@ -51,6 +51,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.request.ReactionType
 import com.cmoney.backend2.forumocean.service.api.variable.response.GroupPositionInfo
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetGroupBoardArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations.GetRecommendationResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentContent
@@ -5200,6 +5201,38 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getPromotedArticles(0, 0)
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得指定看板文章_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getBoardArticles(
+                authorization = any(),
+                path = any(),
+                boardId = any(),
+                startWeight = any(),
+                fetch = any()
+            )
+        } returns Response.success(GetGroupBoardArticlesResponse(listOf(), true, 0))
+        val result = web.getBoardArticles(0, 0, 0)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得指定看板文章_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getBoardArticles(
+                authorization = any(),
+                path = any(),
+                boardId = any(),
+                startWeight = any(),
+                fetch = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getBoardArticles(0, 0, 0)
         assertThat(result.isFailure).isTrue()
     }
 

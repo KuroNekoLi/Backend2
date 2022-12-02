@@ -60,6 +60,7 @@ import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
 import com.cmoney.backend2.forumocean.service.api.support.SearchMembersResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetGroupBoardArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.PromotedArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations.GetRecommendationResponse
@@ -1460,6 +1461,20 @@ interface ForumOceanService {
         @Path("boardId") boardId: Long,
         @Body requestBody: Content.Article.General
     ): Response<CreateArticleResponseBody>
+
+    /**
+     * 取得指定看板文章
+     */
+    @RecordApi
+    @GET("{path}/api/GroupArticle/Board/{boardId}")
+    @Headers("X-Version: 2.0")
+    suspend fun getBoardArticles(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("boardId") boardId: Long,
+        @Query("startWeight") startWeight: Long,
+        @Query("fetch") fetch: Int
+    ): Response<GetGroupBoardArticlesResponse>
 
     /**
      * 刪除社團文章

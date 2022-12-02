@@ -66,6 +66,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.request.ReactionType
 import com.cmoney.backend2.forumocean.service.api.variable.request.mediatype.MediaType
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetGroupBoardArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.PromotedArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations.GetRecommendationResponse
@@ -1971,6 +1972,24 @@ class ForumOceanWebImpl(
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     boardId = boardId,
                     requestBody = content
+                ).checkResponseBody(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun getBoardArticles(
+        boardId: Long,
+        startWeight: Long,
+        fetch: Int
+    ): Result<GetGroupBoardArticlesResponse> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.getBoardArticles(
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    path = serverName,
+                    boardId,
+                    startWeight,
+                    fetch
                 ).checkResponseBody(jsonParser)
             }
         }
