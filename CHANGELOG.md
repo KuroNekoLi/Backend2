@@ -1,3 +1,51 @@
+#  (2022-12-02)
+
+
+
+# [5.45.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.44.2...5.45.0) (2022-12-02)
+
+
+### Bug Fixes
+
+* api version of createReportV2 ([51ac80f](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/51ac80f4b448088b96b00065235943ae4de128d4))
+* ForumOcean ServiceCase ([627f563](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/627f5630b5352b80cbcfbf8b1f071946f5ef52ab))
+* ForumOceanWebImplTest ([4cabc75](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/4cabc75e9b29e53b36526dccd5c35fa527f71ce8))
+* mistaken response type of getCommentsByIndex. ([ebf4a6b](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/ebf4a6b94a4e0c19658562ddabaa71a79e6f9b98))
+* PUT method for emoji ([193a648](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/193a648b38ccfdf32832bdb23284dfb71accd80d))
+* Responses spec for recommendation ([37db5e6](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/37db5e6628cd24a160284a23b65447c76d93124a))
+
+
+### Features
+
+* article v2 ([366da05](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/366da0575a6711ba6cc4b6688789b90916ec50aa))
+  * article_v2 api調整 ([c2c20ca](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/c2c20ca27071cff9a1d3e49cd4bd0206f7e79b65))
+  * authType 欄位位置更動 ([9f357e3](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/9f357e3e375ca65662a11dbbde8d379972d1ed41))
+  * createReaction ([5ab59b2](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/5ab59b2e8deec506ca795121314ce444b61b7626))
+  * createReportV2 request body ([6af6153](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/6af615363a34b8b0263a557ff90582801df254c5))
+  * deleteCommentV2 ([b845e02](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/b845e02603fe32348768f4cd58e3f923a6c43671))
+  * deleteReaction ([29b59be](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/29b59be7f0be5dcd04b01a8fe2b594cd7ce65db7))
+  * ForumOceanServiceCase 使用v2 api ([36eacd6](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/36eacd630ae5a7497c968b7e2ef2032c2e88b8d6))
+  * getCommentsByIndex ([f2ac12c](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/f2ac12ce4989a37058780a165981ef45f512dc0a))
+  * getReactionDetailV2 ([9f84607](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/9f84607e94a682926b472753402ba283a8e34c45))
+  * isAnonymous 欄位位置更動 ([647bd8a](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/647bd8a991a1a6ba95d5a2306e88eaea7cd7ef3a))
+  * update getSingleComment path ([4844c5c](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/4844c5c2aefd7f64666f446e30a33336d5feb266))
+  * 刪除文章/留言 v2 ([2b23c75](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/2b23c758fa2b6a58d6ca5161197d9a9da20d2d1a))
+  * 刪除留言api path 更新 ([d2d96e2](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/d2d96e22a63e6d3da20024fa32fba7747bbf79c7))
+  * 取得留言列表 startCommentId -> startCommentIndex ([83c051a](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/83c051ac0471ca9836b257d6725021ede7a99d2d))
+  * 將v2 article拆分 並修改部分欄位名稱 ([84dd4fa](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/84dd4fa557b94908a2e2ce62f3a2842a208624f8))
+  * 將v2部分物件欄位從Any->Boolean ([7f396e6](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/7f396e6870fb117028cfa2dbbfa73d2359a6441e))
+  * 將精選response與文章v2分開 ([5444b50](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/5444b50d5480b99f9e3ec2b23d3bc7b7cc478736))
+  * 新增判斷精選文章欄位 ([82c8587](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/82c858793e3543095391e9d051b51c2f93f9194f))
+  * 新增取單篇留言測試 ([27459a6](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/27459a6e8c57b652ba94a645061c96dc2b68baa0))
+  * 新增官方下標欄位 ([cb51865](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/cb51865cf2838e79fea932979236106b9261be96))
+  * 更新ForumOceanServiceCase ([9f4f6cf](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/9f4f6cf6d1dbd31318720f347a6077e6ab9329cd))
+  * 檢舉留言 ([c2419ed](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/c2419edf60c1d42a17d339a6b6fae25c509b1287))
+  * 移除留言commentIndex欄位 ([9994bf4](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/9994bf46f9c5d0b3bbbf05f7cc7c1e0f5d04512e))
+  * 精選文章清單 ([8a58537](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/8a58537f611ea0c9a71b01724e01bad06b953aee))
+  * 隱藏/取消隱藏留言 ([8e5c349](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/8e5c349e2b24420c27bfacdb8f8a914810d4ac1c))
+
+
+
 #  (2022-11-18)
 
 ## [5.44.2](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.44.1...5.44.2)

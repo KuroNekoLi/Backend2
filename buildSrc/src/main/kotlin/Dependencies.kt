@@ -202,8 +202,8 @@ object Dependencies {
     const val CMONEY_ADDITIONAL_INFORMATION_DATA_DEBUG = "com.cmoney.additionalinformation:additionalinformation-data-debug:${Versions.CMONEY_ADDITIONAL_INFORMATION}"
     const val CMONEY_ADDITIONAL_INFORMATION_DOMAIN = "com.cmoney.additionalinformation:additionalinformation-domain:${Versions.CMONEY_ADDITIONAL_INFORMATION}"
     const val CMONEY_ADDITIONAL_INFORMATION_COMPILER_RXJAVA = ("com.cmoney.additionalinformation:additionalinformation-compiler-rxjava:${Versions.CMONEY_ADDITIONAL_INFORMATION_RXJAVA}")
-    const val CMONEY_ADDITIONAL_INFORMATION_RUNTIME_RXJAVA = "com.cmoney.additionalinformation:additionalinformation-runtime-rxjava-debug:${Versions.CMONEY_ADDITIONAL_INFORMATION_RXJAVA}"
-    const val CMONEY_ADDITIONAL_INFORMATION_RUNTIME_RXJAVA_DEBUG = "com.cmoney.additionalinformation:additionalinformation-runtime-rxjava:${Versions.CMONEY_ADDITIONAL_INFORMATION_RXJAVA}"
+    const val CMONEY_ADDITIONAL_INFORMATION_RUNTIME_RXJAVA = "com.cmoney.additionalinformation:additionalinformation-runtime-rxjava:${Versions.CMONEY_ADDITIONAL_INFORMATION_RXJAVA}"
+    const val CMONEY_ADDITIONAL_INFORMATION_RUNTIME_RXJAVA_DEBUG = "com.cmoney.additionalinformation:additionalinformation-runtime-rxjava-debug:${Versions.CMONEY_ADDITIONAL_INFORMATION_RXJAVA}"
     const val CMONEY_CORE = "com.cmoney.core:core:${Versions.CMONEY_CORE}"
     const val CMONEY_CORE_TEST = "com.cmoney.core:core-test:${Versions.CMONEY_CORE}"
     const val CMONEY_LOG_CORE = "com.cmoney.log:core:${Versions.CMONEY_LOG_CORE}"
@@ -213,4 +213,10 @@ object Dependencies {
     const val CMONEY_UTILS = "com.cmoney.utils:utils:${Versions.CMONEY_UTILS}"
     const val CMONEY_UTILS_ANDROID = "com.cmoney.utils:utils-android:${Versions.CMONEY_UTILS}"
     const val CMONEY_UTILS_TEST = "com.cmoney.utils:utils-test:${Versions.CMONEY_UTILS}"
+    const val CMONEY_FIREBASE_EXT = "com.cmoney.firebase-ext:firebase-ext:${Versions.CMONEY_FIREBASE_EXT}"
+    const val CMONEY_FIREBASE_EXT_DEBUG = "com.cmoney.firebase-ext:firebase-ext-debug:${Versions.CMONEY_FIREBASE_EXT}"
+    const val CMONEY_INTEGRATION = "com.cmoney.integration:integration:${Versions.CMONEY_INTEGRATION}"
+    const val CMONEY_INTEGRATION_ANDROID = "com.cmoney.integration:integration-android:${Versions.CMONEY_INTEGRATION}"
+    const val CMONEY_INTEGRATION_ANDROID_DEBUG = "com.cmoney.integration:integration-android-debug:${Versions.CMONEY_INTEGRATION}"
+    const val CMONEY_INTEGRATION_ADDITIONAL_INFORMATION_COMPILER = "com.cmoney.integration:additionalinformation-compiler:${Versions.CMONEY_INTEGRATION}"
 }
