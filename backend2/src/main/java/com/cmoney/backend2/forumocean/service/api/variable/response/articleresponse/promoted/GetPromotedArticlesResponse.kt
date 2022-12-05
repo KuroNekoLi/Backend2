@@ -11,9 +11,9 @@ import com.google.gson.annotations.SerializedName
  */
 data class GetPromotedArticlesResponse(
     @SerializedName("articles")
-    val articles: List<PromotedArticleResponseBody>,
+    val articles: List<PromotedArticleResponseBody>?,
     @SerializedName("hasNext")
-    val hasNext: Boolean,
+    val hasNext: Boolean?,
     @SerializedName("nextStartWeight")
-    val nextStartWeight: Long
+    val nextStartWeight: Long?
 )

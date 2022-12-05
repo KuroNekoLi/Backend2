@@ -10,9 +10,9 @@ import com.google.gson.annotations.SerializedName
  */
 data class GetGroupBoardArticlesResponse(
     @SerializedName("articles")
-    val articles: List<GroupArticlesResponseBody>,
+    val articles: List<GroupArticlesResponseBody>?,
     @SerializedName("hasNext")
-    val hasNext: Boolean,
+    val hasNext: Boolean?,
     @SerializedName("nextStartWeight")
-    val nextStartWeight: Long
+    val nextStartWeight: Long?
 )
