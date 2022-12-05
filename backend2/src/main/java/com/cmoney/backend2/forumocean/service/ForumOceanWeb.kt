@@ -1557,7 +1557,7 @@ interface ForumOceanWeb {
 
     suspend fun getBoardArticles(
         boardId: Long,
-        startWeight: Long,
+        startWeight: Long?,
         fetch: Int
     ): Result<GetGroupBoardArticlesResponse>
 

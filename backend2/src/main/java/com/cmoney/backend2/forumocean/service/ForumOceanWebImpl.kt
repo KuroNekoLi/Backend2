@@ -1979,7 +1979,7 @@ class ForumOceanWebImpl(
 
     override suspend fun getBoardArticles(
         boardId: Long,
-        startWeight: Long,
+        startWeight: Long?, // Optional
         fetch: Int
     ): Result<GetGroupBoardArticlesResponse> {
         return withContext(dispatcher.io()) {

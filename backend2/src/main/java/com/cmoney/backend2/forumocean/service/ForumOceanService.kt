@@ -1472,7 +1472,7 @@ interface ForumOceanService {
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Path("boardId") boardId: Long,
-        @Query("startWeight") startWeight: Long,
+        @Query("startWeight") startWeight: Long?, // Optional.
         @Query("fetch") fetch: Int
     ): Response<GetGroupBoardArticlesResponse>
 
