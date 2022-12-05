@@ -5236,4 +5236,31 @@ class ForumOceanWebImplTest {
         assertThat(result.isFailure).isTrue()
     }
 
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `收回自己的訊息_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.unsendArticle(
+                authorization = any(),
+                path = any(),
+                articleId = any(),
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.unsendArticle(0)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `收回自己的訊息_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.unsendArticle(
+                authorization = any(),
+                path = any(),
+                articleId = any(),
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.unsendArticle(0)
+        assertThat(result.isFailure).isTrue()
+    }
 }

@@ -1601,4 +1601,11 @@ interface ForumOceanWeb {
         startWeight: Long,
         fetch: Int
     ): Result<GetPromotedArticlesResponse>
+
+    /**
+     * 聊天室: 收回自己的訊息
+     */
+    suspend fun unsendArticle(
+        articleId: Long
+    ): Result<Unit>
 }

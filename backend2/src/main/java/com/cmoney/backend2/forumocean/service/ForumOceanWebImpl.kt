@@ -2227,4 +2227,16 @@ class ForumOceanWebImpl(
             }
         }
     }
+
+    override suspend fun unsendArticle(articleId: Long): Result<Unit> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.unsendArticle(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    articleId = articleId
+                ).handleNoContent(jsonParser)
+            }
+        }
+    }
 }

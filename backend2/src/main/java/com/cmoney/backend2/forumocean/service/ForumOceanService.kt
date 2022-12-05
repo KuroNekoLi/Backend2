@@ -1504,6 +1504,18 @@ interface ForumOceanService {
     ): Response<Void>
 
     /**
+     * 聊天室: 收回自己的訊息
+     */
+    @RecordApi
+    @GET("{path}/api/GroupArticle/{articleId}/Unsend")
+    @Headers("X-Version: 2.0")
+    suspend fun unsendArticle(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("articleId") articleId: Long,
+    ): Response<Void>
+
+    /**
      * 取得用戶可以進入的所有看板 id
      */
     @RecordApi
