@@ -4142,7 +4142,7 @@ class ForumOceanWebImplTest {
                 isChatRoom = false
             )
         } returns Response.success(InsertedId(-1))
-        val result = web.createGroupBoard(1,false, BoardManipulation(null, null))
+        val result = web.createGroupBoard(1, false, BoardManipulation(null, null))
         assertThat(result.isSuccess).isTrue()
     }
 
@@ -4158,7 +4158,7 @@ class ForumOceanWebImplTest {
                 isChatRoom = false
             )
         } returns Response.error(500, "".toResponseBody())
-        val result = web.createGroupBoard(1,false, BoardManipulation(null, null))
+        val result = web.createGroupBoard(1, false, BoardManipulation(null, null))
         assertThat(result.isFailure).isTrue()
     }
 
@@ -5261,6 +5261,32 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.unsendArticle(0)
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得聊天室清單_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getChatRoomList(
+                authorization = any(),
+                path = any()
+            )
+        } returns Response.success(listOf())
+        val result = web.getChatRoomList()
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得聊天室清單_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getChatRoomList(
+                authorization = any(),
+                path = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getChatRoomList()
         assertThat(result.isFailure).isTrue()
     }
 }

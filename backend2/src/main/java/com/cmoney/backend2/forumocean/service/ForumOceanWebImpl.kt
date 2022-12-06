@@ -66,6 +66,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.request.ReactionType
 import com.cmoney.backend2.forumocean.service.api.variable.request.mediatype.MediaType
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetChatRoomListResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetGroupBoardArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.PromotedArticleResponseBody
@@ -2236,6 +2237,17 @@ class ForumOceanWebImpl(
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     articleId = articleId
                 ).handleNoContent(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun getChatRoomList(): Result<List<GetChatRoomListResponse>> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.getChatRoomList(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                ).checkResponseBody(jsonParser)
             }
         }
     }
