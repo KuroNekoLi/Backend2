@@ -60,7 +60,7 @@ import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
 import com.cmoney.backend2.forumocean.service.api.support.SearchMembersResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
-import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetChatRoomListResponse
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetAllChatRoomResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetGroupBoardArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.PromotedArticleResponseBody
@@ -1751,9 +1751,9 @@ interface ForumOceanService {
     @RecordApi
     @GET("{path}/api/Group/Chatroom/All")
     @Headers("X-Version: 2.0")
-    suspend fun getChatRoomList(
+    suspend fun getAllChatRoom(
         @Header("Authorization") authorization: String,
         @Path("path") path: String
-    ): Response<List<GetChatRoomListResponse>>
+    ): Response<List<GetAllChatRoomResponse>>
 }
 

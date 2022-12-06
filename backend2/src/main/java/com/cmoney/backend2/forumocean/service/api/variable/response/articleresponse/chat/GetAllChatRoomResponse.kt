@@ -3,17 +3,17 @@ package com.cmoney.backend2.forumocean.service.api.variable.response.articleresp
 import com.cmoney.backend2.forumocean.service.api.group.v2.BoardReadInfo
 import com.google.gson.annotations.SerializedName
 
-data class GetChatRoomListResponse(
+data class GetAllChatRoomResponse(
     /**
      * 社團資訊
      */
     @SerializedName("groupInfo")
-    val groupInfo: GetChatRoomListResponseGroupInfo?,
+    val groupInfo: GetAllChatRoomResponseGroupInfo?,
     /**
      * 看板資訊
      */
     @SerializedName("boardInfo")
-    val boardInfo: GetChatRoomListResponseBoardInfo?,
+    val boardInfo: GetAllChatRoomResponseBoardInfo?,
     /**
      * 未讀資訊
      */
@@ -24,10 +24,10 @@ data class GetChatRoomListResponse(
      * 最後一則訊息資訊
      */
     @SerializedName("lastArticle")
-    val lastArticle: GetChatRoomListResponseLastArticle?
+    val lastArticle: GetAllChatRoomResponseLastArticle?
 )
 
-data class GetChatRoomListResponseGroupInfo(
+data class GetAllChatRoomResponseGroupInfo(
     /**
      * 社團id
      */
@@ -45,7 +45,7 @@ data class GetChatRoomListResponseGroupInfo(
     val imageUrl: String?,
 )
 
-data class GetChatRoomListResponseBoardInfo(
+data class GetAllChatRoomResponseBoardInfo(
     /**
      * 社團id
      */
@@ -61,7 +61,7 @@ data class GetChatRoomListResponseBoardInfo(
 /**
  * 聊天室最後一則訊息資訊
  */
-data class GetChatRoomListResponseLastArticle(
+data class GetAllChatRoomResponseLastArticle(
     /**
      * 訊息內文
      */

@@ -54,7 +54,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.request.ReactionType
 import com.cmoney.backend2.forumocean.service.api.variable.request.mediatype.MediaType
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
-import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetChatRoomListResponse
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetAllChatRoomResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetGroupBoardArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.PromotedArticleResponseBody
@@ -1613,5 +1613,5 @@ interface ForumOceanWeb {
     /**
      * 取得聊天室列表
      */
-    suspend fun getChatRoomList(): Result<List<GetChatRoomListResponse>>
+    suspend fun getChatRoomList(): Result<List<GetAllChatRoomResponse>>
 }

@@ -5268,7 +5268,7 @@ class ForumOceanWebImplTest {
     @Test
     fun `取得聊天室清單_success`() = testScope.runTest {
         coEvery {
-            forumOceanService.getChatRoomList(
+            forumOceanService.getAllChatRoom(
                 authorization = any(),
                 path = any()
             )
@@ -5281,7 +5281,7 @@ class ForumOceanWebImplTest {
     @Test
     fun `取得聊天室清單_failed`() = testScope.runTest {
         coEvery {
-            forumOceanService.getChatRoomList(
+            forumOceanService.getAllChatRoom(
                 authorization = any(),
                 path = any()
             )
