@@ -1613,5 +1613,5 @@ interface ForumOceanWeb {
     /**
      * 取得聊天室列表
      */
-    suspend fun getChatRoomList(): Result<List<GetAllChatRoomResponse>>
+    suspend fun getAllChatRoom(): Result<List<GetAllChatRoomResponse>>
 }

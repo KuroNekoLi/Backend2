@@ -2241,7 +2241,7 @@ class ForumOceanWebImpl(
         }
     }
 
-    override suspend fun getChatRoomList(): Result<List<GetAllChatRoomResponse>> {
+    override suspend fun getAllChatRoom(): Result<List<GetAllChatRoomResponse>> {
         return withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getAllChatRoom(
