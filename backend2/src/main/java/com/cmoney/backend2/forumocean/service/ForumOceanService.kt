@@ -1508,7 +1508,7 @@ interface ForumOceanService {
      * 聊天室: 收回自己的訊息
      */
     @RecordApi
-    @GET("{path}/api/GroupArticle/{articleId}/Unsend")
+    @PUT("{path}/api/GroupArticle/{articleId}/Unsend")
     @Headers("X-Version: 2.0")
     suspend fun unsendArticle(
         @Header("Authorization") authorization: String,
