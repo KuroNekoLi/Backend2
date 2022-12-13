@@ -1773,6 +1773,7 @@ interface ForumOceanService {
      */
     @RecordApi
     @PUT("{path}/api/Group/Chatroom/UncheckChatroomCount")
+    @Headers("X-Version: 2.0")
     suspend fun resetUncheckChatRoomCount(
         @Path("path") path: String,
         @Header("Authorization") authorization: String
