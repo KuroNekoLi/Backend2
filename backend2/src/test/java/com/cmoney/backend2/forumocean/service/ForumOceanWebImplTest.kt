@@ -8,6 +8,7 @@ import com.cmoney.backend2.forumocean.service.api.article.createpersonal.CreateP
 import com.cmoney.backend2.forumocean.service.api.article.createquestion.CreateQuestionResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.update.UpdateArticleHelper
 import com.cmoney.backend2.forumocean.service.api.channel.getmemberstatistics.GetMemberStatisticsResponseBody
+import com.cmoney.backend2.forumocean.service.api.chatroom.GetUncheckChatRoomCountResponse
 import com.cmoney.backend2.forumocean.service.api.columnist.GetColumnistVipGroupResponse
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBodyV2
@@ -5273,7 +5274,7 @@ class ForumOceanWebImplTest {
                 path = any()
             )
         } returns Response.success(listOf())
-        val result = web.getChatRoomList()
+        val result = web.getAllChatRoom()
         assertThat(result.isSuccess).isTrue()
     }
 
@@ -5286,7 +5287,59 @@ class ForumOceanWebImplTest {
                 path = any()
             )
         } returns Response.error(500, "".toResponseBody())
-        val result = web.getChatRoomList()
+        val result = web.getAllChatRoom()
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得使用者未檢查的聊天室看板數_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getUncheckChatRoomCount(
+                authorization = any(),
+                path = any()
+            )
+        } returns Response.success(GetUncheckChatRoomCountResponse(0))
+        val result = web.getUncheckChatRoomCount()
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得使用者未檢查的聊天室看板數_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getUncheckChatRoomCount(
+                authorization = any(),
+                path = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getUncheckChatRoomCount()
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `重設使用者未檢查的聊天室看板數_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.resetUncheckChatRoomCount(
+                authorization = any(),
+                path = any()
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.resetUncheckChatRoomCount()
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `重設使用者未檢查的聊天室看板數_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.resetUncheckChatRoomCount(
+                authorization = any(),
+                path = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.resetUncheckChatRoomCount()
         assertThat(result.isFailure).isTrue()
     }
 }

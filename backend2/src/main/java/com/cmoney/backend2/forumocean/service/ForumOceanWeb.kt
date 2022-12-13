@@ -9,6 +9,7 @@ import com.cmoney.backend2.forumocean.service.api.article.getbanstate.GetBanStat
 import com.cmoney.backend2.forumocean.service.api.article.update.IUpdateArticleHelper
 import com.cmoney.backend2.forumocean.service.api.channel.channelname.IChannelNameBuilder
 import com.cmoney.backend2.forumocean.service.api.channel.getmemberstatistics.GetMemberStatisticsResponseBody
+import com.cmoney.backend2.forumocean.service.api.chatroom.GetUncheckChatRoomCountResponse
 import com.cmoney.backend2.forumocean.service.api.columnist.GetColumnistVipGroupResponse
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBodyV2
@@ -1614,4 +1615,14 @@ interface ForumOceanWeb {
      * 取得聊天室列表
      */
     suspend fun getAllChatRoom(): Result<List<GetAllChatRoomResponse>>
+
+    /**
+     * 取得使用者未檢查的聊天室看板數
+     */
+    suspend fun getUncheckChatRoomCount(): Result<GetUncheckChatRoomCountResponse>
+
+    /**
+     * 重設使用者未檢查的聊天室看板數
+     */
+    suspend fun resetUncheckChatRoomCount(): Result<Unit>
 }

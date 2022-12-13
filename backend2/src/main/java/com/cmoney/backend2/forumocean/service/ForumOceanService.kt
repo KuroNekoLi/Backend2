@@ -10,6 +10,7 @@ import com.cmoney.backend2.forumocean.service.api.article.getbanstate.GetBanStat
 import com.cmoney.backend2.forumocean.service.api.article.update.UpdateArticleRequestBody
 import com.cmoney.backend2.forumocean.service.api.channel.getchannelsarticlebyweight.GetChannelsArticleByWeightRequestBody
 import com.cmoney.backend2.forumocean.service.api.channel.getmemberstatistics.GetMemberStatisticsResponseBody
+import com.cmoney.backend2.forumocean.service.api.chatroom.GetUncheckChatRoomCountResponse
 import com.cmoney.backend2.forumocean.service.api.columnist.Columnist
 import com.cmoney.backend2.forumocean.service.api.columnist.GetColumnistVipGroupResponse
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentRequestBody
@@ -1236,7 +1237,7 @@ interface ForumOceanService {
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Path("groupId") groupId: Long,
-        @Query("isChatRoom")isChatRoom:Boolean,
+        @Query("isChatRoom") isChatRoom: Boolean,
         @Body body: BoardManipulation
     ): Response<InsertedId>
 
@@ -1755,5 +1756,26 @@ interface ForumOceanService {
         @Header("Authorization") authorization: String,
         @Path("path") path: String
     ): Response<List<GetAllChatRoomResponse>>
+
+    /**
+     * 取得使用者未檢查的聊天室看板數
+     */
+    @RecordApi
+    @GET("{path}/api/Group/Chatroom/UncheckChatroomCount")
+    @Headers("X-Version: 2.0")
+    suspend fun getUncheckChatRoomCount(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String
+    ): Response<GetUncheckChatRoomCountResponse>
+
+    /**
+     * 重設使用者未檢查的聊天室看板數
+     */
+    @RecordApi
+    @PUT("{path}/api/Group/Chatroom/UncheckChatroomCount")
+    suspend fun resetUncheckChatRoomCount(
+        @Path("path") path: String,
+        @Header("Authorization") authorization: String
+    ): Response<Void>
 }
 
