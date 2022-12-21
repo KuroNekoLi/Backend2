@@ -1,8 +1,6 @@
 package com.cmoney.backend2.brokerdatatransmission.service
 
-import com.cmoney.backend2.base.extension.checkResponseBody
-import com.cmoney.backend2.base.extension.createAuthorizationBearer
-import com.cmoney.backend2.base.extension.handleNoContent
+import com.cmoney.backend2.base.extension.*
 import com.cmoney.backend2.base.model.dispatcher.DefaultDispatcherProvider
 import com.cmoney.backend2.base.model.dispatcher.DispatcherProvider
 import com.cmoney.backend2.base.model.exception.ServerException
@@ -15,6 +13,9 @@ import com.cmoney.backend2.brokerdatatransmission.service.api.brokers.BrokerResp
 import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.delete.DeleteBrokerStockDataRequest
 import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.get.BrokerStockDataResponse
 import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.get.GetBrokerStockDataRequest
+import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.imagerecognition.ImageRecognitionData
+import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.imagerecognition.ImageRecognitionRequest
+import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.imagerecognition.ImageRecognitionResponse
 import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.put.BrokerData
 import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.put.PutBrokerStockDataRequest
 import com.cmoney.backend2.brokerdatatransmission.service.api.consents.Consent
@@ -127,6 +128,35 @@ class BrokerDataTransmissionWebImpl(
                     .toJsonArrayWithErrorResponse()
             }
         }
+
+    override suspend fun getBrokerStockDataByImageRecognition(
+        country: Country,
+        imageRecognitionData: ImageRecognitionData,
+        host: String
+    ): Result<ImageRecognitionResponse> = withContext(dispatcher.io()) {
+        kotlin.runCatching {
+            val requestUrl = "${host}BrokerDataTransmission/api/brokerstockdata/imagerecongnition"
+            service.getBrokerStockDataByImageRecognition(
+                url = requestUrl,
+                body = ImageRecognitionRequest(
+                    countryISOCode = country.isoCode,
+                    brokerId = imageRecognitionData.brokerId,
+                    subBrokerId = imageRecognitionData.subBrokerId,
+                    encryptedStockDataImages = imageRecognitionData.encryptedStockDataImages,
+                    encryptedAesKey = imageRecognitionData.encryptedAesKey,
+                    encryptedAesIv = imageRecognitionData.encryptedAesIv
+                ),
+                authToken = setting.accessToken.createAuthorizationBearer()
+            ).let { response ->
+                when (response.code()) {
+                    200 -> ImageRecognitionResponse.AllRecognition(response.requireBody())
+                    206 -> ImageRecognitionResponse.PartialRecognition(response.requireBody())
+                    400 -> throw response.parseServerException(gson)
+                    else -> throw HttpException(response)
+                }
+            }
+        }
+    }
 
     override suspend fun putBrokerStockData(
         country: Country,

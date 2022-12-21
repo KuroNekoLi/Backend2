@@ -4,6 +4,8 @@ import com.cmoney.backend2.brokerdatatransmission.service.api.BrokerAccount
 import com.cmoney.backend2.brokerdatatransmission.service.api.Country
 import com.cmoney.backend2.brokerdatatransmission.service.api.brokers.BrokerResponse
 import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.get.BrokerStockDataResponse
+import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.imagerecognition.ImageRecognitionData
+import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.imagerecognition.ImageRecognitionResponse
 import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.put.BrokerData
 import com.cmoney.backend2.brokerdatatransmission.service.api.consents.Consent
 import com.cmoney.backend2.brokerdatatransmission.service.api.encryptionkey.GetEncryptionKeyResponse
@@ -45,6 +47,21 @@ interface BrokerDataTransmissionWeb {
         country: Country,
         host: String = this.baseHost
     ): Result<List<BrokerStockDataResponse>>
+
+    /**
+     * 傳送 [imageRecognitionData] 取得用戶在 [country] 下的指定券商庫存資料
+     * (不論正確或錯誤，24小時內最多傳送三次)
+     *
+     * @throws 400 圖片無法辨識/辨識失敗
+     *         406 超出圖片上限5張
+     *         429 超出使用上限
+     *         503 Google API 目前不可用
+     */
+    suspend fun getBrokerStockDataByImageRecognition(
+        country: Country,
+        imageRecognitionData: ImageRecognitionData,
+        host: String = this.baseHost
+    ): Result<ImageRecognitionResponse>
 
     /**
      * 以 [brokerData] 更新用戶在 [country] 下的庫存資料
