@@ -396,6 +396,11 @@ class BrokerDataTransmissionWebImplTest {
             )
         )
         Truth.assertThat(result.isSuccess).isFalse()
+
+        val exception = result.exceptionOrNull()
+        Truth.assertThat(exception).isNotNull()
+        Truth.assertThat(exception).isInstanceOf(HttpException::class.java)
+        Truth.assertThat((exception as HttpException).code()).isEqualTo(406)
     }
 
     @Test
