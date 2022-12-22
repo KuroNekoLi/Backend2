@@ -1,3 +1,16 @@
+#  (2022-12-22)
+
+
+
+# [5.46.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.45.0...5.46.0) (2022-12-22)
+
+
+### Features
+
+* BrokerDataTransmissionWeb 新增庫存圖片辨識 ([6bbb2d2](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/6bbb2d22de61d44742e819d12aab5742f1c792e9))
+
+
+
 #  (2022-12-02)
 
 
