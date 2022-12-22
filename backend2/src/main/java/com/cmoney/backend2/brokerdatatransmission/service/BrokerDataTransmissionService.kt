@@ -3,7 +3,9 @@ package com.cmoney.backend2.brokerdatatransmission.service
 import com.cmoney.backend2.base.model.calladapter.RecordApi
 import com.cmoney.backend2.brokerdatatransmission.service.api.brokers.BrokerResponseWithError
 import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.delete.DeleteBrokerStockDataRequest
+import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.get.BrokerStockDataResponse
 import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.get.GetBrokerStockDataRequest
+import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.imagerecognition.ImageRecognitionRequest
 import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.put.PutBrokerStockDataRequest
 import com.cmoney.backend2.brokerdatatransmission.service.api.encryptionkey.GetEncryptionKeyResponseWithError
 import com.cmoney.backend2.brokerdatatransmission.service.api.transactionhistory.FetchTransactionHistoryRequest
@@ -59,6 +61,14 @@ interface BrokerDataTransmissionService {
         @Body body: GetBrokerStockDataRequest,
         @Header("Authorization") authToken: String
     ): Response<JsonElement>
+
+    @RecordApi
+    @POST
+    suspend fun getBrokerStockDataByImageRecognition(
+        @Url url: String,
+        @Body body: ImageRecognitionRequest,
+        @Header("Authorization") authToken: String
+    ): Response<BrokerStockDataResponse>
 
     @RecordApi
     @PUT

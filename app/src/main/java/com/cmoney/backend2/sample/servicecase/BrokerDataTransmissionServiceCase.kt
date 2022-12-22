@@ -4,6 +4,7 @@ import com.cmoney.backend2.brokerdatatransmission.service.BrokerDataTransmission
 import com.cmoney.backend2.brokerdatatransmission.service.api.BrokerAccount
 import com.cmoney.backend2.brokerdatatransmission.service.api.Country
 import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.TradeType
+import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.imagerecognition.ImageRecognitionData
 import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.put.BrokerData
 import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.put.StockData
 import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.put.StockInfo
@@ -41,6 +42,17 @@ class BrokerDataTransmissionServiceCase : ServiceCase {
         web.deleteBrokerStockData(
             Country.TW,
             listOf("9800")
+        )
+            .logResponse(TAG)
+        web.getBrokerStockDataByImageRecognition(
+            country = Country.TW,
+            imageRecognitionData = ImageRecognitionData(
+                brokerId = "9800",
+                subBrokerId = "",
+                encryptedStockDataImages = emptyList(),
+                encryptedAesKey = "",
+                encryptedAesIv = ""
+            )
         )
             .logResponse(TAG)
         web.getConsents(Country.TW)
