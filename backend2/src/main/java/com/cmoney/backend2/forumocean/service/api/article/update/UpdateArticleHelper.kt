@@ -1,5 +1,6 @@
 package com.cmoney.backend2.forumocean.service.api.article.update
 
+import com.cmoney.backend2.forumocean.service.api.article.OpenGraph
 import com.cmoney.backend2.forumocean.service.api.variable.request.mediatype.MediaType
 import com.google.gson.annotations.SerializedName
 
@@ -49,6 +50,24 @@ class UpdateArticleHelper : IUpdateArticleHelper {
     }
 
     /**
+     * 修改OpenGraph
+     *
+     */
+    fun setOpenGraph(openGraph: OpenGraph) {
+        editArticle.openGraph = openGraph
+        deletePropertyList.remove(DeleteArticleProperty.OpenGraph)
+    }
+
+    /**
+     * 刪除OpenGraph
+     *
+     */
+    fun deleteOpenGraph() {
+        editArticle.openGraph = null
+        deletePropertyList.add(DeleteArticleProperty.OpenGraph)
+    }
+
+    /**
      * 刪除標籤
      *
      */
@@ -71,6 +90,7 @@ class UpdateArticleHelper : IUpdateArticleHelper {
      * @property title 標題
      * @property text 內文
      * @property multiMedia 多媒體
+     * @property openGraph og
      */
     private inner class EditArticle(
         @SerializedName("title")
@@ -78,6 +98,8 @@ class UpdateArticleHelper : IUpdateArticleHelper {
         @SerializedName("text")
         var text: String? = null,
         @SerializedName("multiMedia")
-        var multiMedia: List<MediaType>? = null
+        var multiMedia: List<MediaType>? = null,
+        @SerializedName("openGraph")
+        var openGraph: OpenGraph? = null
     )
 }
