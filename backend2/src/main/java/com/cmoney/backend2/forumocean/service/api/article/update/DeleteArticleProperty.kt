@@ -16,5 +16,10 @@ enum class DeleteArticleProperty(val value : String) {
      * 標籤
      *
      */
-    Topics("topics")
+    Topics("topics"),
+
+    /**
+     *OG
+     */
+    OpenGraph("openGraph")
 }

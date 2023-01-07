@@ -1,3 +1,20 @@
+#  (2023-01-07)
+
+
+
+# [5.47.0](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.46.0...5.47.0) (2023-01-07)
+
+
+### Features
+
+* 新增編輯文章openGraph接口 ([ad66fcc](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/ad66fccf7206f4d7910d16d6187885967e5c7c31))
+
+
+### Bug Fixes
+
+* BrokerDataTransmission 圖片辨識回傳欄位解析名稱調整
+
+
 #  (2022-12-22)
 
 
