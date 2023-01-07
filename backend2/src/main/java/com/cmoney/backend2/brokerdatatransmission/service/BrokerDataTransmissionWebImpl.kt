@@ -143,8 +143,8 @@ class BrokerDataTransmissionWebImpl(
                     brokerId = imageRecognitionData.brokerId,
                     subBrokerId = imageRecognitionData.subBrokerId,
                     encryptedStockDataImages = imageRecognitionData.encryptedStockDataImages,
-                    encryptedAesKey = imageRecognitionData.encryptedAesKey,
-                    encryptedAesIv = imageRecognitionData.encryptedAesIv
+                    encryptedAesKey = imageRecognitionData.encryptedAesKey.urlEncode(),
+                    encryptedAesIv = imageRecognitionData.encryptedAesIv.urlEncode()
                 ),
                 authToken = setting.accessToken.createAuthorizationBearer()
             ).let { response ->

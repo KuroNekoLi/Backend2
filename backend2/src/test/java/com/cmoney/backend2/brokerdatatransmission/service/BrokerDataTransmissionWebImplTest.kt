@@ -9,9 +9,8 @@ import com.cmoney.backend2.brokerdatatransmission.service.api.BrokerAccount
 import com.cmoney.backend2.brokerdatatransmission.service.api.Country
 import com.cmoney.backend2.brokerdatatransmission.service.api.brokers.BrokerResponseWithError
 import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.TradeType
-import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.get.BrokerStockDataResponse
+import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.imagerecognition.ImageRecognitionResponseBody
 import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.imagerecognition.ImageRecognitionData
-import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.imagerecognition.ImageRecognitionRequest
 import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.imagerecognition.ImageRecognitionResponse
 import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.put.BrokerData
 import com.cmoney.backend2.brokerdatatransmission.service.api.encryptionkey.GetEncryptionKeyResponseWithError
@@ -268,8 +267,8 @@ class BrokerDataTransmissionWebImplTest {
     @Test
     fun `getBrokerStockDataByImageRecognition 全部解析成功`() = testScope.runTest {
         val body = gson.fromJson(
-            """{"brokerId":"9800","brokerShortName":"元大","subBrokerId":"","updateTimeOfUnixTimeSeconds":1640167278,"inStockData":[{"stockID":"2330","stockInfos":[{"tradeType":0,"amount":1000,"tradeTotalCost":600000.0000}]}]}""",
-            BrokerStockDataResponse::class.java
+            """{"BrokerId":"9800","BrokerShortName":"元大","SubBrokerId":"","UpdateTimeOfUnixTimeSeconds":1640167278,"InStockData":[{"StockID":"2330","StockInfos":[{"TradeType":0,"Amount":1000,"TradeTotalCost":600000.0000}]}]}""",
+            ImageRecognitionResponseBody::class.java
         )
 
         coEvery {
@@ -323,8 +322,8 @@ class BrokerDataTransmissionWebImplTest {
     @Test
     fun `getBrokerStockDataByImageRecognition 部分解析成功`() = testScope.runTest {
         val body = gson.fromJson(
-            """{"brokerId":"9800","brokerShortName":"元大","subBrokerId":"","updateTimeOfUnixTimeSeconds":1640167278,"inStockData":[{"stockID":"2330","stockInfos":[{"tradeType":0,"amount":1000,"tradeTotalCost":600000.0000}]}]}""",
-            BrokerStockDataResponse::class.java
+            """{"BrokerId":"9800","BrokerShortName":"元大","SubBrokerId":"","UpdateTimeOfUnixTimeSeconds":1640167278,"InStockData":[{"StockID":"2330","StockInfos":[{"TradeType":0,"Amount":1000,"TradeTotalCost":600000.0000}]}]}""",
+            ImageRecognitionResponseBody::class.java
         )
 
         coEvery {
