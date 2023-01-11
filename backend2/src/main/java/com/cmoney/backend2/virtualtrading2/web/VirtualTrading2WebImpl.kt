@@ -4,8 +4,11 @@ import com.cmoney.backend2.base.extension.checkResponseBody
 import com.cmoney.backend2.virtualtrading2.model.requestconfig.VirtualTradingRequestConfig
 import com.cmoney.backend2.virtualtrading2.service.VirtualTrading2Service
 import com.cmoney.backend2.virtualtrading2.service.api.createaccount.CreateAccountRequestBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.createdelegate.CreateDelegateRequestBody
 import com.cmoney.backend2.virtualtrading2.web.createaccount.CreateAccountRequest
 import com.cmoney.backend2.virtualtrading2.web.createaccount.CreateAccountResponse
+import com.cmoney.backend2.virtualtrading2.web.tseotc.createdelegate.CreateDelegateRequest
+import com.cmoney.backend2.virtualtrading2.web.tseotc.createdelegate.CreateDelegateResponse
 import com.cmoney.core.DefaultDispatcherProvider
 import com.cmoney.core.DispatcherProvider
 import com.google.gson.Gson
@@ -49,7 +52,11 @@ class VirtualTrading2WebImpl(
                 createTime = response.createTime,
                 updateTime = response.updateTime,
                 viewTime = response.viewTime,
-                accountPayType = response.accountPayType?.let { CreateAccountResponse.AccountPayType.valueOf(it)},
+                accountPayType = response.accountPayType?.let {
+                    CreateAccountResponse.AccountPayType.valueOf(
+                        it
+                    )
+                },
                 maxReadSn = response.maxReadSn,
                 isEmail = response.isEmail,
                 averageTradingCountInMonth = response.averageTradingCountInMonth,
@@ -63,6 +70,32 @@ class VirtualTrading2WebImpl(
                 borrowFunds = response.borrowFunds,
                 borrowLimit = response.borrowLimit
             )
+        }
+    }
+
+    override suspend fun createTseOtcDelegate(
+        domain: String,
+        url: String,
+        request: CreateDelegateRequest
+    ): Result<CreateDelegateResponse> = withContext(dispatcher.io()) {
+        runCatching {
+            val requestBody = CreateDelegateRequestBody(
+                accountId = request.accountId,
+                buySellType = request.buySellType.code,
+                commodityId = request.commodityId,
+                subsistingType = request.subsistingType.code,
+                groupId = request.groupId,
+                delegatePrice = request.delegatePrice.toDouble(),
+                delegateVolume = request.delegateVolume.toLong(),
+                marketUnit = request.marketUnit.code,
+                transactionType = request.transactionType.code
+            )
+            val response = service.createTseOtcDelegate(
+                url = url,
+                authorization = requestConfig.getBearerToken(),
+                body = requestBody
+            ).checkResponseBody(gson)
+            CreateDelegateResponse(delegateId = response.delegateId)
         }
     }
 }

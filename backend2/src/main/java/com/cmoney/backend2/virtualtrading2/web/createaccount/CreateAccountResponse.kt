@@ -1,11 +1,9 @@
 package com.cmoney.backend2.virtualtrading2.web.createaccount
 
-import com.google.gson.annotations.SerializedName
-
 /**
  * 建立帳號回應
  *
- * @property accountId 帳戶資訊
+ * @property accountId 帳戶編號
  * @property name 名稱
  * @property groupId 競技場編號
  * @property memberId 會員編號
@@ -66,32 +64,32 @@ data class CreateAccountResponse(
     val borrowLimit: Double?
 ) {
     sealed class AccountPayType(
-        val value: Int
+        val code: Int
     ) {
         /**
          * 免費帳號
          */
-        object Free : AccountPayType(value = 0)
+        object Free : AccountPayType(code = 0)
 
         /**
          * 道具卡租用
          */
-        object CardInUse : AccountPayType(value = 1)
+        object CardInUse : AccountPayType(code = 1)
 
         /**
          * 道具卡租用到期
          */
-        object CardExpired : AccountPayType(value = 2)
+        object CardExpired : AccountPayType(code = 2)
 
         /**
          * 競技帳戶
          */
-        object Sports : AccountPayType(value = 3)
+        object Sports : AccountPayType(code = 3)
 
         /**
          * 競技帳戶凍結
          */
-        object SportsFreeze : AccountPayType(value = 4)
+        object SportsFreeze : AccountPayType(code = 4)
 
         companion object {
 
@@ -105,9 +103,9 @@ data class CreateAccountResponse(
                 )
             }
 
-            fun valueOf(value: Int): AccountPayType? {
+            fun valueOf(code: Int): AccountPayType? {
                 return getAll().find {
-                    it.value == value
+                    it.code == code
                 }
             }
         }
