@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import com.cmoney.backend2.virtualtrading2.getCreateAccountSuccess
 import com.cmoney.backend2.virtualtrading2.getCreateTseOtcDelegateSuccess
+import com.cmoney.backend2.virtualtrading2.getDeleteTseOtcDelegateSuccess
 import com.cmoney.backend2.virtualtrading2.model.requestconfig.VirtualTradingRequestConfig
 import com.cmoney.backend2.virtualtrading2.service.VirtualTrading2Service
 import com.cmoney.backend2.virtualtrading2.service.api.createaccount.CreateAccountRequestBody
@@ -11,6 +12,7 @@ import com.cmoney.backend2.virtualtrading2.service.api.tseotc.createdelegate.Cre
 import com.cmoney.backend2.virtualtrading2.web.createaccount.CreateAccountRequest
 import com.cmoney.backend2.virtualtrading2.web.createaccount.CreateAccountResponse
 import com.cmoney.backend2.virtualtrading2.web.tseotc.createdelegate.CreateDelegateRequest
+import com.cmoney.backend2.virtualtrading2.web.tseotc.deletedelegate.DeleteDelegateRequest
 import com.cmoney.core.CoroutineTestRule
 import com.cmoney.core.TestDispatcherProvider
 import com.google.common.truth.Truth
@@ -137,7 +139,8 @@ class VirtualTrading2WebImplTest {
                 accountInvestType = CreateAccountRequest.AccountInvestType.Stock
             )
         ).getOrThrow()
-        Truth.assertThat(result.accountPayType).isEqualTo(CreateAccountResponse.AccountPayType.CardInUse)
+        Truth.assertThat(result.accountPayType)
+            .isEqualTo(CreateAccountResponse.AccountPayType.CardInUse)
         Truth.assertThat(result.accountPayType?.code).isEqualTo(1)
     }
 
@@ -156,7 +159,8 @@ class VirtualTrading2WebImplTest {
                 accountInvestType = CreateAccountRequest.AccountInvestType.Stock
             )
         ).getOrThrow()
-        Truth.assertThat(result.accountPayType).isEqualTo(CreateAccountResponse.AccountPayType.CardExpired)
+        Truth.assertThat(result.accountPayType)
+            .isEqualTo(CreateAccountResponse.AccountPayType.CardExpired)
         Truth.assertThat(result.accountPayType?.code).isEqualTo(2)
     }
 
@@ -176,7 +180,8 @@ class VirtualTrading2WebImplTest {
                 accountInvestType = CreateAccountRequest.AccountInvestType.Stock
             )
         ).getOrThrow()
-        Truth.assertThat(result.accountPayType).isEqualTo(CreateAccountResponse.AccountPayType.Sports)
+        Truth.assertThat(result.accountPayType)
+            .isEqualTo(CreateAccountResponse.AccountPayType.Sports)
         Truth.assertThat(result.accountPayType?.code).isEqualTo(3)
     }
 
@@ -195,9 +200,11 @@ class VirtualTrading2WebImplTest {
                 accountInvestType = CreateAccountRequest.AccountInvestType.Stock
             )
         ).getOrThrow()
-        Truth.assertThat(result.accountPayType).isEqualTo(CreateAccountResponse.AccountPayType.SportsFreeze)
+        Truth.assertThat(result.accountPayType)
+            .isEqualTo(CreateAccountResponse.AccountPayType.SportsFreeze)
         Truth.assertThat(result.accountPayType?.code).isEqualTo(4)
     }
+
     @Test
     fun `createTseOtcDelegate_輸入的BuySellType是Buy_Code是66`() = testScope.runTest {
         val responseBody = getCreateTseOtcDelegateSuccess()
@@ -442,73 +449,96 @@ class VirtualTrading2WebImplTest {
     }
 
     @Test
-    fun `createTseOtcDelegate_輸入的delegatePrice隨機的產生String的Decimal_轉成Double是一樣的`() = testScope.runTest {
-        val except = listOf(
-            0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0,
-            1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0,
-            1.11, 1.21, 1.31, 1.41, 1.51, 1.61, 1.71, 1.81, 1.91, 2.01
-        )
-        listOf(
-            "0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7", "0.8", "0.9", "1.0",
-            "1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "1.9", "2.0",
-            "1.11", "1.21", "1.31", "1.41", "1.51", "1.61", "1.71", "1.81", "1.91", "2.01"
-        ).forEachIndexed { index, price ->
-            val responseBody = getCreateTseOtcDelegateSuccess()
-            val requestBodySlot = slot<CreateDelegateRequestBody>()
-            coEvery {
-                service.createTseOtcDelegate(
-                    url = any(),
-                    authorization = any(),
-                    body = capture(requestBodySlot)
-                )
-            } returns Response.success(responseBody)
-            web.createTseOtcDelegate(
-                request = CreateDelegateRequest(
-                    accountId = 0,
-                    buySellType = CreateDelegateRequest.BuySellType.Buy,
-                    commodityId = "",
-                    subsistingType = CreateDelegateRequest.SubsistingType.Rod,
-                    groupId = 0,
-                    delegatePrice = price.toBigDecimal(),
-                    delegateVolume = "0".toBigDecimal(),
-                    marketUnit = CreateDelegateRequest.TradingMarketUnit.BoardLot,
-                    transactionType = CreateDelegateRequest.TransactionType.ShortSale
-                )
-            ).getOrThrow()
-            Truth.assertThat(requestBodySlot.captured.delegatePrice).isEqualTo(except[index])
+    fun `createTseOtcDelegate_輸入的delegatePrice隨機的產生String的Decimal_轉成Double是一樣的`() =
+        testScope.runTest {
+            val except = listOf(
+                0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0,
+                1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0,
+                1.11, 1.21, 1.31, 1.41, 1.51, 1.61, 1.71, 1.81, 1.91, 2.01
+            )
+            listOf(
+                "0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7", "0.8", "0.9", "1.0",
+                "1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "1.9", "2.0",
+                "1.11", "1.21", "1.31", "1.41", "1.51", "1.61", "1.71", "1.81", "1.91", "2.01"
+            ).forEachIndexed { index, price ->
+                val responseBody = getCreateTseOtcDelegateSuccess()
+                val requestBodySlot = slot<CreateDelegateRequestBody>()
+                coEvery {
+                    service.createTseOtcDelegate(
+                        url = any(),
+                        authorization = any(),
+                        body = capture(requestBodySlot)
+                    )
+                } returns Response.success(responseBody)
+                web.createTseOtcDelegate(
+                    request = CreateDelegateRequest(
+                        accountId = 0,
+                        buySellType = CreateDelegateRequest.BuySellType.Buy,
+                        commodityId = "",
+                        subsistingType = CreateDelegateRequest.SubsistingType.Rod,
+                        groupId = 0,
+                        delegatePrice = price.toBigDecimal(),
+                        delegateVolume = "0".toBigDecimal(),
+                        marketUnit = CreateDelegateRequest.TradingMarketUnit.BoardLot,
+                        transactionType = CreateDelegateRequest.TransactionType.ShortSale
+                    )
+                ).getOrThrow()
+                Truth.assertThat(requestBodySlot.captured.delegatePrice).isEqualTo(except[index])
+            }
         }
-    }
+
     @Test
-    fun `createTseOtcDelegate_輸入的delegateVolume隨機的產生String的Decimal_轉成Long是一樣的`() = testScope.runTest {
-        val except = listOf(
-            1, 2, 3, 4, 5, 6, 7, 8, 9, 0
-        )
-        listOf(
-            1, 2, 3, 4, 5, 6, 7, 8, 9, 0
-        ).forEachIndexed { index, volume ->
-            val responseBody = getCreateTseOtcDelegateSuccess()
-            val requestBodySlot = slot<CreateDelegateRequestBody>()
-            coEvery {
-                service.createTseOtcDelegate(
-                    url = any(),
-                    authorization = any(),
-                    body = capture(requestBodySlot)
-                )
-            } returns Response.success(responseBody)
-            web.createTseOtcDelegate(
-                request = CreateDelegateRequest(
-                    accountId = 0,
-                    buySellType = CreateDelegateRequest.BuySellType.Buy,
-                    commodityId = "",
-                    subsistingType = CreateDelegateRequest.SubsistingType.Rod,
-                    groupId = 0,
-                    delegatePrice = "0".toBigDecimal(),
-                    delegateVolume = volume.toBigDecimal(),
-                    marketUnit = CreateDelegateRequest.TradingMarketUnit.BoardLot,
-                    transactionType = CreateDelegateRequest.TransactionType.ShortSale
-                )
-            ).getOrThrow()
-            Truth.assertThat(requestBodySlot.captured.delegateVolume).isEqualTo(except[index])
+    fun `createTseOtcDelegate_輸入的delegateVolume隨機的產生String的Decimal_轉成Long是一樣的`() =
+        testScope.runTest {
+            val except = listOf(
+                1, 2, 3, 4, 5, 6, 7, 8, 9, 0
+            )
+            listOf(
+                1, 2, 3, 4, 5, 6, 7, 8, 9, 0
+            ).forEachIndexed { index, volume ->
+                val responseBody = getCreateTseOtcDelegateSuccess()
+                val requestBodySlot = slot<CreateDelegateRequestBody>()
+                coEvery {
+                    service.createTseOtcDelegate(
+                        url = any(),
+                        authorization = any(),
+                        body = capture(requestBodySlot)
+                    )
+                } returns Response.success(responseBody)
+                web.createTseOtcDelegate(
+                    request = CreateDelegateRequest(
+                        accountId = 0,
+                        buySellType = CreateDelegateRequest.BuySellType.Buy,
+                        commodityId = "",
+                        subsistingType = CreateDelegateRequest.SubsistingType.Rod,
+                        groupId = 0,
+                        delegatePrice = "0".toBigDecimal(),
+                        delegateVolume = volume.toBigDecimal(),
+                        marketUnit = CreateDelegateRequest.TradingMarketUnit.BoardLot,
+                        transactionType = CreateDelegateRequest.TransactionType.ShortSale
+                    )
+                ).getOrThrow()
+                Truth.assertThat(requestBodySlot.captured.delegateVolume).isEqualTo(except[index])
+            }
         }
+
+    @Test
+    fun `deleteTseOtcDelegate_成功`() = testScope.runTest {
+        val responseBody = getDeleteTseOtcDelegateSuccess()
+        coEvery {
+            service.deleteTseOtcDelegate(
+                url = any(),
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success(responseBody)
+        val result = web.deleteTseOtcDelegate(
+            request = DeleteDelegateRequest(
+                accountId = 0,
+                groupId = 0,
+                delegateId = 1
+            )
+        )
+        Truth.assertThat(result.isSuccess).isTrue()
     }
 }

@@ -5,10 +5,13 @@ import com.cmoney.backend2.virtualtrading2.model.requestconfig.VirtualTradingReq
 import com.cmoney.backend2.virtualtrading2.service.VirtualTrading2Service
 import com.cmoney.backend2.virtualtrading2.service.api.createaccount.CreateAccountRequestBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.createdelegate.CreateDelegateRequestBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.deletedelagate.DeleteDelegateRequestBody
 import com.cmoney.backend2.virtualtrading2.web.createaccount.CreateAccountRequest
 import com.cmoney.backend2.virtualtrading2.web.createaccount.CreateAccountResponse
 import com.cmoney.backend2.virtualtrading2.web.tseotc.createdelegate.CreateDelegateRequest
 import com.cmoney.backend2.virtualtrading2.web.tseotc.createdelegate.CreateDelegateResponse
+import com.cmoney.backend2.virtualtrading2.web.tseotc.deletedelegate.DeleteDelegateRequest
+import com.cmoney.backend2.virtualtrading2.web.tseotc.deletedelegate.DeleteDelegateResponse
 import com.cmoney.core.DefaultDispatcherProvider
 import com.cmoney.core.DispatcherProvider
 import com.google.gson.Gson
@@ -96,6 +99,26 @@ class VirtualTrading2WebImpl(
                 body = requestBody
             ).checkResponseBody(gson)
             CreateDelegateResponse(delegateId = response.delegateId)
+        }
+    }
+
+    override suspend fun deleteTseOtcDelegate(
+        domain: String,
+        url: String,
+        request: DeleteDelegateRequest
+    ): Result<DeleteDelegateResponse> = withContext(dispatcher.io()) {
+        runCatching {
+            val requestBody = DeleteDelegateRequestBody(
+                accountId = request.accountId,
+                groupId = request.groupId,
+                delegateId = request.delegateId
+            )
+            val response = service.deleteTseOtcDelegate(
+                url = url,
+                authorization = requestConfig.getBearerToken(),
+                body = requestBody
+            ).checkResponseBody(gson)
+            DeleteDelegateResponse(delegateId = response.delegateId)
         }
     }
 }

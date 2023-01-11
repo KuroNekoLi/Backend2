@@ -3,6 +3,7 @@ package com.cmoney.backend2.sample.servicecase
 import com.cmoney.backend2.sample.extension.logResponse
 import com.cmoney.backend2.virtualtrading2.web.VirtualTrading2Web
 import com.cmoney.backend2.virtualtrading2.web.tseotc.createdelegate.CreateDelegateRequest
+import com.cmoney.backend2.virtualtrading2.web.tseotc.deletedelegate.DeleteDelegateRequest
 import org.koin.core.component.inject
 
 class VirtualTrading2ServiceCase : ServiceCase {
@@ -18,7 +19,7 @@ class VirtualTrading2ServiceCase : ServiceCase {
 //        ).logResponse(TAG)
         // TODO 取得帳號資訊
         val accountId = 2076L
-        web.createTseOtcDelegate(
+        val createDelegate = web.createTseOtcDelegate(
             request = CreateDelegateRequest(
                 accountId = accountId,
                 buySellType = CreateDelegateRequest.BuySellType.Buy,
@@ -30,7 +31,18 @@ class VirtualTrading2ServiceCase : ServiceCase {
                 marketUnit = CreateDelegateRequest.TradingMarketUnit.BoardLot,
                 transactionType = CreateDelegateRequest.TransactionType.MoneyStock
             )
-        ).logResponse(TAG)
+        )
+        createDelegate.logResponse(TAG)
+        createDelegate.onSuccess { response ->
+            val delegateId = response.delegateId ?: return@onSuccess
+            web.deleteTseOtcDelegate(
+                request = DeleteDelegateRequest(
+                    accountId = accountId,
+                    groupId = 0,
+                    delegateId = delegateId,
+                )
+            ).logResponse(TAG)
+        }
     }
 
     companion object {

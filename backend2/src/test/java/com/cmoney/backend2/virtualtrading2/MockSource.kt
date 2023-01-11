@@ -2,6 +2,7 @@ package com.cmoney.backend2.virtualtrading2
 
 import com.cmoney.backend2.virtualtrading2.service.api.createaccount.CreateAccountResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.createdelegate.CreateDelegateResponseBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.deletedelagate.DeleteDelegateResponseBody
 import com.google.gson.GsonBuilder
 
 private val gson = GsonBuilder().setLenient().setPrettyPrinting().create()
@@ -54,4 +55,20 @@ fun getCreateTseOtcDelegateSuccess() =
     """
         .let {
             gson.fromJson(it, CreateDelegateResponseBody::class.java)
+        }
+
+/**
+ * 取得刪除上市上櫃委託單成功回應
+ *
+ */
+fun getDeleteTseOtcDelegateSuccess() =
+    """
+    {
+        "orderNo": 2060183,
+        "message": "",
+        "isSuccess": true
+    }
+    """
+        .let {
+            gson.fromJson(it, DeleteDelegateResponseBody::class.java)
         }
