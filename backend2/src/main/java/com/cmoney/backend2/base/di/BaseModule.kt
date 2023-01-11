@@ -29,10 +29,12 @@ import java.util.concurrent.TimeUnit
  * DI的模組定義
  */
 private const val DEFAULT_URL = "https://www.cmoney.tw/"
+val BACKEND2_OKHTTP = named("backend2_okhttp")
 val BACKEND2_GSON = named("backend2_gson")
 val BACKEND2_GSON_NON_SERIALIZE_NULLS = named("backend2_gson_non_serialize_nulls")
 val BACKEND2_RETROFIT = named("backend2_retrofit")
-val BACKEND2_RETROFIT_WITH_GSON_NON_SERIALIZE_NULLS = named("backend2_retrofit_with_gson_non_serialize_nulls")
+val BACKEND2_RETROFIT_WITH_GSON_NON_SERIALIZE_NULLS =
+    named("backend2_retrofit_with_gson_non_serialize_nulls")
 val BACKEND2_SETTING = named("backend2_setting")
 
 val backendBaseModule = module {
@@ -46,6 +48,18 @@ val backendBaseModule = module {
     }
     single<Setting>(BACKEND2_SETTING) {
         DefaultSetting(backendSettingSharedPreference = get())
+    }
+    single(BACKEND2_OKHTTP) {
+        OkHttpClient.Builder()
+            .connectionSpecs(listOf(COMPATIBLE_TLS, ConnectionSpec.CLEARTEXT))
+            .addChangeDomainInterceptor()
+            .addCMoneyApiTraceContextInterceptor()
+            .addLogInterceptor()
+            .connectTimeout(30L, TimeUnit.SECONDS)
+            .callTimeout(30L, TimeUnit.SECONDS)
+            .readTimeout(30L, TimeUnit.SECONDS)
+            .writeTimeout(30L, TimeUnit.SECONDS)
+            .build()
     }
     single<Gson>(BACKEND2_GSON) {
         GsonBuilder()
@@ -63,7 +77,7 @@ val backendBaseModule = module {
     single<Retrofit>(BACKEND2_RETROFIT) {
         Retrofit.Builder()
             .baseUrl(DEFAULT_URL)
-            .client(createOkHttpClient())
+            .client(get(BACKEND2_OKHTTP))
             .addConverterFactory(GsonConverterFactory.create(get(BACKEND2_GSON)))
             .addCallAdapterFactory(
                 RecordApiLogCallAdapterFactory(
@@ -76,7 +90,7 @@ val backendBaseModule = module {
     single<Retrofit>(BACKEND2_RETROFIT_WITH_GSON_NON_SERIALIZE_NULLS) {
         Retrofit.Builder()
             .baseUrl(DEFAULT_URL)
-            .client(createOkHttpClient())
+            .client(get(BACKEND2_OKHTTP))
             .addConverterFactory(GsonConverterFactory.create(get(BACKEND2_GSON_NON_SERIALIZE_NULLS)))
             .addCallAdapterFactory(
                 RecordApiLogCallAdapterFactory(
@@ -86,21 +100,6 @@ val backendBaseModule = module {
             )
             .build()
     }
-}
-
-/**
- * 創建預設的OkHttpClient
- */
-private fun createOkHttpClient(): OkHttpClient {
-    return OkHttpClient.Builder()
-        .connectionSpecs(listOf(COMPATIBLE_TLS, ConnectionSpec.CLEARTEXT))
-        .addUrlInterceptor()
-        .addLogInterceptor()
-        .connectTimeout(30L, TimeUnit.SECONDS)
-        .callTimeout(30L, TimeUnit.SECONDS)
-        .readTimeout(30L, TimeUnit.SECONDS)
-        .writeTimeout(30L, TimeUnit.SECONDS)
-        .build()
 }
 
 /**
@@ -115,19 +114,32 @@ internal fun OkHttpClient.Builder.addLogInterceptor() = apply {
 }
 
 /**
- * 替換URL並加上Header的Log參數
+ * 加入替換Domain攔截器，在Runtime時可以隨時替換Domain。
  */
-private fun OkHttpClient.Builder.addUrlInterceptor() = apply {
-    val setting = getKoin().get<Setting>(BACKEND2_SETTING)
-    val gson = getKoin().get<Gson>(BACKEND2_GSON)
+internal fun OkHttpClient.Builder.addChangeDomainInterceptor() = apply {
     addInterceptor { chain ->
+        val setting = getKoin().get<Setting>(BACKEND2_SETTING)
         val request: Request = chain.request()
-        val domainUrl = setting.domainUrl
-        val httpUrl = domainUrl.toHttpUrl()
+        val httpUrl = setting.domainUrl.toHttpUrl()
         val newUrl = request.url.newBuilder()
             .scheme(httpUrl.scheme)
             .host(httpUrl.host)
             .build()
+        val newRequest = request.newBuilder()
+            .url(newUrl)
+            .build()
+        chain.proceed(newRequest)
+    }
+}
+
+/**
+ * 加入CMoney的Header紀錄。
+ */
+internal fun OkHttpClient.Builder.addCMoneyApiTraceContextInterceptor() = apply {
+    val setting = getKoin().get<Setting>(BACKEND2_SETTING)
+    val gson = getKoin().get<Gson>(BACKEND2_GSON)
+    addInterceptor { chain ->
+        val request: Request = chain.request()
         val apiLogJson = ApiLog.create(
             appId = setting.appId,
             platform = setting.platform.code,
@@ -140,9 +152,7 @@ private fun OkHttpClient.Builder.addUrlInterceptor() = apply {
         }
         val newRequest = request.newBuilder()
             .addHeader("cmoneyapi-trace-context", apiLogJson)
-            .url(newUrl)
             .build()
         chain.proceed(newRequest)
     }
 }
-
