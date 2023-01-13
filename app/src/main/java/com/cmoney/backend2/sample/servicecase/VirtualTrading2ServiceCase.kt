@@ -43,6 +43,78 @@ class VirtualTrading2ServiceCase : ServiceCase {
                 )
             ).logResponse(TAG)
         }
+        web.getAllAccount(
+            query = """
+              {
+                allAccountInfo {
+                    account
+                    accountPayType
+                    accountType
+                    avgMonthOrderCount
+                    borrowFunds
+                    borrowLimit
+                    canWatch
+                    createTime
+                    defaultFunds
+                    extendFunds
+                    funds
+                    groupId
+                    isDefault
+                    isDelete
+                    isEmail
+                    maxReadSn
+                    memberId
+                    name
+                    needFee
+                    needTax
+                    optIncomeLoss
+                    stockIncomeLoss
+                    tmxIncomeLoss
+                    totalPunishment
+                    tradedWarrantDate
+                    updateTime
+                    viewTime
+                    warrantIncomeLoss
+                }
+            }
+        """.trimIndent()
+        ).logResponse(TAG)
+
+        web.getAccount(
+            query = """
+            {
+              accountInfo(accountId: ${accountId}) {
+                account
+                accountPayType
+                accountType
+                avgMonthOrderCount
+                borrowFunds
+                borrowLimit
+                canWatch
+                createTime
+                defaultFunds
+                extendFunds
+                funds
+                groupId
+                isDefault
+                isEmail
+                maxReadSn
+                memberId
+                name
+                needFee
+                needTax
+                optIncomeLoss
+                stockIncomeLoss
+                tmxIncomeLoss
+                totalPunishment
+                tradedWarrantDate
+                updateTime
+                viewTime
+                warrantIncomeLoss
+              }
+            }
+        """.trimIndent()
+        ).logResponse(TAG)
     }
 
     companion object {

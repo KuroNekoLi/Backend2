@@ -4,6 +4,10 @@ import com.cmoney.backend2.base.extension.checkResponseBody
 import com.cmoney.backend2.virtualtrading2.model.requestconfig.VirtualTradingRequestConfig
 import com.cmoney.backend2.virtualtrading2.service.VirtualTrading2Service
 import com.cmoney.backend2.virtualtrading2.service.api.createaccount.CreateAccountRequestBody
+import com.cmoney.backend2.virtualtrading2.service.api.getaccount.GetAccountRequestBody
+import com.cmoney.backend2.virtualtrading2.service.api.getaccount.GetAccountResponseBody
+import com.cmoney.backend2.virtualtrading2.service.api.getallaccount.GetAllAccountRequestBody
+import com.cmoney.backend2.virtualtrading2.service.api.getallaccount.GetAllAccountResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.createdelegate.CreateDelegateRequestBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.deletedelagate.DeleteDelegateRequestBody
 import com.cmoney.backend2.virtualtrading2.web.createaccount.CreateAccountRequest
@@ -34,44 +38,44 @@ class VirtualTrading2WebImpl(
                 accountInvestType = request.accountInvestType.value,
                 cardSn = request.cardSn
             )
-            val response = service.createAccount(
+            val responseBody = service.createAccount(
                 url = url,
                 authorization = requestConfig.getBearerToken(),
                 body = requestBody
             ).checkResponseBody(gson)
             CreateAccountResponse(
-                accountId = response.accountId,
-                name = response.name,
-                groupId = response.groupId,
-                memberId = response.memberId,
-                defaultFunds = response.defaultFunds,
-                funds = response.funds,
-                isNeedFee = response.isNeedFee,
-                isNeedTax = response.isNeedTax,
-                canWatch = response.canWatch,
-                isDefault = response.isDefault,
-                isDelete = response.isDelete,
-                accountType = response.accountType,
-                createTime = response.createTime,
-                updateTime = response.updateTime,
-                viewTime = response.viewTime,
-                accountPayType = response.accountPayType?.let {
+                accountId = responseBody.accountId,
+                name = responseBody.name,
+                groupId = responseBody.groupId,
+                memberId = responseBody.memberId,
+                defaultFunds = responseBody.defaultFunds,
+                funds = responseBody.funds,
+                isNeedFee = responseBody.isNeedFee,
+                isNeedTax = responseBody.isNeedTax,
+                canWatch = responseBody.canWatch,
+                isDefault = responseBody.isDefault,
+                isDelete = responseBody.isDelete,
+                accountType = responseBody.accountType,
+                createTime = responseBody.createTime,
+                updateTime = responseBody.updateTime,
+                viewTime = responseBody.viewTime,
+                accountPayType = responseBody.accountPayType?.let {
                     CreateAccountResponse.AccountPayType.valueOf(
                         it
                     )
                 },
-                maxReadSn = response.maxReadSn,
-                isEmail = response.isEmail,
-                averageTradingCountInMonth = response.averageTradingCountInMonth,
-                totalPunishment = response.totalPunishment,
-                tradedWarrantDate = response.tradedWarrantDate,
-                extendFunds = response.extendFunds,
-                stockIncomeLoss = response.stockIncomeLoss,
-                warrantIncomeLoss = response.warrantIncomeLoss,
-                futureIncomeLoss = response.futureIncomeLoss,
-                optionIncomeLoss = response.optionIncomeLoss,
-                borrowFunds = response.borrowFunds,
-                borrowLimit = response.borrowLimit
+                maxReadSn = responseBody.maxReadSn,
+                isEmail = responseBody.isEmail,
+                averageTradingCountInMonth = responseBody.averageTradingCountInMonth,
+                totalPunishment = responseBody.totalPunishment,
+                tradedWarrantDate = responseBody.tradedWarrantDate,
+                extendFunds = responseBody.extendFunds,
+                stockIncomeLoss = responseBody.stockIncomeLoss,
+                warrantIncomeLoss = responseBody.warrantIncomeLoss,
+                futureIncomeLoss = responseBody.futureIncomeLoss,
+                optionIncomeLoss = responseBody.optionIncomeLoss,
+                borrowFunds = responseBody.borrowFunds,
+                borrowLimit = responseBody.borrowLimit
             )
         }
     }
@@ -93,12 +97,12 @@ class VirtualTrading2WebImpl(
                 marketUnit = request.marketUnit.code,
                 transactionType = request.transactionType.code
             )
-            val response = service.createTseOtcDelegate(
+            val responseBody = service.createTseOtcDelegate(
                 url = url,
                 authorization = requestConfig.getBearerToken(),
                 body = requestBody
             ).checkResponseBody(gson)
-            CreateDelegateResponse(delegateId = response.delegateId)
+            CreateDelegateResponse(delegateId = responseBody.delegateId)
         }
     }
 
@@ -119,6 +123,40 @@ class VirtualTrading2WebImpl(
                 body = requestBody
             ).checkResponseBody(gson)
             DeleteDelegateResponse(delegateId = response.delegateId)
+        }
+    }
+
+    override suspend fun getAccount(
+        domain: String,
+        url: String,
+        query: String
+    ): Result<GetAccountResponseBody> = withContext(dispatcher.io()) {
+        runCatching {
+            val requestBody = GetAccountRequestBody(
+                query = query
+            )
+            service.getAccount(
+                url = url,
+                authorization = requestConfig.getBearerToken(),
+                body = requestBody
+            ).checkResponseBody(gson)
+        }
+    }
+
+    override suspend fun getAllAccount(
+        domain: String,
+        url: String,
+        query: String
+    ): Result<GetAllAccountResponseBody> = withContext(dispatcher.io()) {
+        runCatching {
+            val requestBody = GetAllAccountRequestBody(
+                query = query
+            )
+            service.getAllAccount(
+                url = url,
+                authorization = requestConfig.getBearerToken(),
+                body = requestBody
+            ).checkResponseBody(gson)
         }
     }
 }
