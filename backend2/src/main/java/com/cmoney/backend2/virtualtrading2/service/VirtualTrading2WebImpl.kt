@@ -1,9 +1,9 @@
-package com.cmoney.backend2.virtualtrading2.web
+package com.cmoney.backend2.virtualtrading2.service
 
 import com.cmoney.backend2.base.extension.checkResponseBody
 import com.cmoney.backend2.virtualtrading2.model.requestconfig.VirtualTradingRequestConfig
-import com.cmoney.backend2.virtualtrading2.service.VirtualTrading2Service
 import com.cmoney.backend2.virtualtrading2.service.api.createaccount.CreateAccountRequestBody
+import com.cmoney.backend2.virtualtrading2.service.api.createaccount.CreateAccountResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.getaccount.GetAccountRequestBody
 import com.cmoney.backend2.virtualtrading2.service.api.getaccount.GetAccountResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.getaccountratio.GetAccountRatioRequestBody
@@ -11,13 +11,9 @@ import com.cmoney.backend2.virtualtrading2.service.api.getaccountratio.GetAccoun
 import com.cmoney.backend2.virtualtrading2.service.api.getallaccount.GetAllAccountRequestBody
 import com.cmoney.backend2.virtualtrading2.service.api.getallaccount.GetAllAccountResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.createdelegate.CreateDelegateRequestBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.createdelegate.CreateDelegateResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.deletedelagate.DeleteDelegateRequestBody
-import com.cmoney.backend2.virtualtrading2.web.createaccount.CreateAccountRequest
-import com.cmoney.backend2.virtualtrading2.web.createaccount.CreateAccountResponse
-import com.cmoney.backend2.virtualtrading2.web.tseotc.createdelegate.CreateDelegateRequest
-import com.cmoney.backend2.virtualtrading2.web.tseotc.createdelegate.CreateDelegateResponse
-import com.cmoney.backend2.virtualtrading2.web.tseotc.deletedelegate.DeleteDelegateRequest
-import com.cmoney.backend2.virtualtrading2.web.tseotc.deletedelegate.DeleteDelegateResponse
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.deletedelagate.DeleteDelegateResponseBody
 import com.cmoney.core.DefaultDispatcherProvider
 import com.cmoney.core.DispatcherProvider
 import com.google.gson.Gson
@@ -33,98 +29,73 @@ class VirtualTrading2WebImpl(
     override suspend fun createAccount(
         domain: String,
         url: String,
-        request: CreateAccountRequest
-    ): Result<CreateAccountResponse> = withContext(dispatcher.io()) {
+        accountInvestType: Int,
+        cardSn: Long
+    ): Result<CreateAccountResponseBody> = withContext(dispatcher.io()) {
         runCatching {
             val requestBody = CreateAccountRequestBody(
-                accountInvestType = request.accountInvestType.value,
-                cardSn = request.cardSn
+                accountInvestType = accountInvestType,
+                cardSn = cardSn
             )
-            val responseBody = service.createAccount(
+            service.createAccount(
                 url = url,
                 authorization = requestConfig.getBearerToken(),
                 body = requestBody
             ).checkResponseBody(gson)
-            CreateAccountResponse(
-                accountId = responseBody.accountId,
-                name = responseBody.name,
-                groupId = responseBody.groupId,
-                memberId = responseBody.memberId,
-                defaultFunds = responseBody.defaultFunds,
-                funds = responseBody.funds,
-                isNeedFee = responseBody.isNeedFee,
-                isNeedTax = responseBody.isNeedTax,
-                canWatch = responseBody.canWatch,
-                isDefault = responseBody.isDefault,
-                isDelete = responseBody.isDelete,
-                accountType = responseBody.accountType,
-                createTime = responseBody.createTime,
-                updateTime = responseBody.updateTime,
-                viewTime = responseBody.viewTime,
-                accountPayType = responseBody.accountPayType?.let {
-                    CreateAccountResponse.AccountPayType.valueOf(
-                        it
-                    )
-                },
-                maxReadSn = responseBody.maxReadSn,
-                isEmail = responseBody.isEmail,
-                averageTradingCountInMonth = responseBody.averageTradingCountInMonth,
-                totalPunishment = responseBody.totalPunishment,
-                tradedWarrantDate = responseBody.tradedWarrantDate,
-                extendFunds = responseBody.extendFunds,
-                stockIncomeLoss = responseBody.stockIncomeLoss,
-                warrantIncomeLoss = responseBody.warrantIncomeLoss,
-                futureIncomeLoss = responseBody.futureIncomeLoss,
-                optionIncomeLoss = responseBody.optionIncomeLoss,
-                borrowFunds = responseBody.borrowFunds,
-                borrowLimit = responseBody.borrowLimit
-            )
         }
     }
 
     override suspend fun createTseOtcDelegate(
         domain: String,
         url: String,
-        request: CreateDelegateRequest
-    ): Result<CreateDelegateResponse> = withContext(dispatcher.io()) {
+        accountId: Long,
+        buySellType: Int,
+        commodityId: String,
+        subsistingType: Int,
+        groupId: Long,
+        delegatePrice: Double,
+        delegateVolume: Long,
+        marketUnit: Int,
+        transactionType: Int
+    ): Result<CreateDelegateResponseBody> = withContext(dispatcher.io()) {
         runCatching {
             val requestBody = CreateDelegateRequestBody(
-                accountId = request.accountId,
-                buySellType = request.buySellType.code,
-                commodityId = request.commodityId,
-                subsistingType = request.subsistingType.code,
-                groupId = request.groupId,
-                delegatePrice = request.delegatePrice.toDouble(),
-                delegateVolume = request.delegateVolume.toLong(),
-                marketUnit = request.marketUnit.code,
-                transactionType = request.transactionType.code
+                accountId = accountId,
+                buySellType = buySellType,
+                commodityId = commodityId,
+                subsistingType = subsistingType,
+                groupId = groupId,
+                delegatePrice = delegatePrice,
+                delegateVolume = delegateVolume,
+                marketUnit = marketUnit,
+                transactionType = transactionType
             )
-            val responseBody = service.createTseOtcDelegate(
+            service.createTseOtcDelegate(
                 url = url,
                 authorization = requestConfig.getBearerToken(),
                 body = requestBody
             ).checkResponseBody(gson)
-            CreateDelegateResponse(delegateId = responseBody.delegateId)
         }
     }
 
     override suspend fun deleteTseOtcDelegate(
         domain: String,
         url: String,
-        request: DeleteDelegateRequest
-    ): Result<DeleteDelegateResponse> = withContext(dispatcher.io()) {
+        accountId: Long,
+        groupId: Long,
+        delegateId: Long
+    ): Result<DeleteDelegateResponseBody> = withContext(dispatcher.io()) {
         runCatching {
             val requestBody = DeleteDelegateRequestBody(
-                accountId = request.accountId,
-                groupId = request.groupId,
-                delegateId = request.delegateId
+                accountId = accountId,
+                groupId = groupId,
+                delegateId = delegateId
             )
-            val response = service.deleteTseOtcDelegate(
+            service.deleteTseOtcDelegate(
                 url = url,
                 authorization = requestConfig.getBearerToken(),
                 body = requestBody
             ).checkResponseBody(gson)
-            DeleteDelegateResponse(delegateId = response.delegateId)
         }
     }
 

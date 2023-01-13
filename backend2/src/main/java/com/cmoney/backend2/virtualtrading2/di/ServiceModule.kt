@@ -4,8 +4,8 @@ import com.cmoney.backend2.base.di.*
 import com.cmoney.backend2.virtualtrading2.model.requestconfig.VirtualTradingRequestConfig
 import com.cmoney.backend2.virtualtrading2.model.requestconfig.VirtualTradingRequestConfigImpl
 import com.cmoney.backend2.virtualtrading2.service.VirtualTrading2Service
-import com.cmoney.backend2.virtualtrading2.web.VirtualTrading2Web
-import com.cmoney.backend2.virtualtrading2.web.VirtualTrading2WebImpl
+import com.cmoney.backend2.virtualtrading2.service.VirtualTrading2Web
+import com.cmoney.backend2.virtualtrading2.service.VirtualTrading2WebImpl
 import okhttp3.ConnectionSpec
 import okhttp3.OkHttpClient
 import org.koin.core.qualifier.named

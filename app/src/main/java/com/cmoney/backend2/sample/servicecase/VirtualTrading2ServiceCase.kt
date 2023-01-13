@@ -1,9 +1,7 @@
 package com.cmoney.backend2.sample.servicecase
 
 import com.cmoney.backend2.sample.extension.logResponse
-import com.cmoney.backend2.virtualtrading2.web.VirtualTrading2Web
-import com.cmoney.backend2.virtualtrading2.web.tseotc.createdelegate.CreateDelegateRequest
-import com.cmoney.backend2.virtualtrading2.web.tseotc.deletedelegate.DeleteDelegateRequest
+import com.cmoney.backend2.virtualtrading2.service.VirtualTrading2Web
 import org.koin.core.component.inject
 
 class VirtualTrading2ServiceCase : ServiceCase {
@@ -12,35 +10,29 @@ class VirtualTrading2ServiceCase : ServiceCase {
 
     override suspend fun testAll() {
         // 目前還沒有刪除帳號功能，並且一個CMoney帳號只能建立3個
-//        web.createAccount(
-//            request = CreateAccountRequest(
-//                accountInvestType = CreateAccountRequest.AccountInvestType.Stock
-//            )
-//        ).logResponse(TAG)
-        // TODO 取得帳號資訊
+        web.createAccount(
+            accountInvestType = 1,
+            cardSn = 0
+        ).logResponse(TAG)
         val accountId = 2076L
         val createDelegate = web.createTseOtcDelegate(
-            request = CreateDelegateRequest(
-                accountId = accountId,
-                buySellType = CreateDelegateRequest.BuySellType.Buy,
-                commodityId = "2890",
-                subsistingType = CreateDelegateRequest.SubsistingType.Rod,
-                groupId = 0,
-                delegatePrice = "17.2".toBigDecimal(),
-                delegateVolume = "1000".toBigDecimal(),
-                marketUnit = CreateDelegateRequest.TradingMarketUnit.BoardLot,
-                transactionType = CreateDelegateRequest.TransactionType.MoneyStock
-            )
+            accountId = accountId,
+            buySellType = 66,
+            commodityId = "2890",
+            subsistingType = 82,
+            groupId = 0,
+            delegatePrice = 17.2,
+            delegateVolume = 1000,
+            marketUnit = 1,
+            transactionType = 1
         )
         createDelegate.logResponse(TAG)
         createDelegate.onSuccess { response ->
             val delegateId = response.delegateId ?: return@onSuccess
             web.deleteTseOtcDelegate(
-                request = DeleteDelegateRequest(
-                    accountId = accountId,
-                    groupId = 0,
-                    delegateId = delegateId,
-                )
+                accountId = accountId,
+                groupId = 0,
+                delegateId = delegateId
             ).logResponse(TAG)
         }
         web.getAllAccount(
