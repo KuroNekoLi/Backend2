@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 /**
  * 帳號資訊
  *
- * @property accountId 帳戶資訊
+ * @property accountId 帳戶編號
  * @property name 名稱
  * @property groupId 競技場編號
  * @property memberId 會員編號

@@ -115,6 +115,21 @@ class VirtualTrading2ServiceCase : ServiceCase {
             }
         """.trimIndent()
         ).logResponse(TAG)
+
+        web.getAccountRatio(
+            query = """
+          {
+              accountRatios(accountId: $accountId, mkType: 1, dateCount: 360) {
+                account
+                dataDe
+                funds
+                inventoryValues
+                isWeekend
+                ratio
+              }
+            }
+        """.trimIndent()
+        ).logResponse(TAG)
     }
 
     companion object {

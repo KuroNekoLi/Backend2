@@ -2,6 +2,7 @@ package com.cmoney.backend2.virtualtrading2.web
 
 import com.cmoney.backend2.virtualtrading2.model.requestconfig.VirtualTradingRequestConfig
 import com.cmoney.backend2.virtualtrading2.service.api.getaccount.GetAccountResponseBody
+import com.cmoney.backend2.virtualtrading2.service.api.getaccountratio.GetAccountRatioResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.getallaccount.GetAllAccountResponseBody
 import com.cmoney.backend2.virtualtrading2.web.createaccount.CreateAccountRequest
 import com.cmoney.backend2.virtualtrading2.web.createaccount.CreateAccountResponse
@@ -148,4 +149,24 @@ interface VirtualTrading2Web {
         url: String = "${domain}account-api/graphql",
         query: String
     ): Result<GetAllAccountResponseBody>
+
+    /**
+     * 取得帳號報酬率
+     *
+    {
+        accountRatios(accountId: $id, mkType: $type, dateCount: $count) {
+            account
+            dataDe
+            funds
+            inventoryValues
+            isWeekend
+            ratio
+        }
+    }
+     */
+    suspend fun getAccountRatio(
+        domain: String = requestConfig.getDomain(),
+        url: String = "${domain}account-api/graphql",
+        query: String
+    ): Result<GetAccountRatioResponseBody>
 }

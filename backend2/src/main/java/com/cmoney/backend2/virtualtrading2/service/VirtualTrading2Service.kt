@@ -5,6 +5,8 @@ import com.cmoney.backend2.virtualtrading2.service.api.createaccount.CreateAccou
 import com.cmoney.backend2.virtualtrading2.service.api.createaccount.CreateAccountResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.getaccount.GetAccountRequestBody
 import com.cmoney.backend2.virtualtrading2.service.api.getaccount.GetAccountResponseBody
+import com.cmoney.backend2.virtualtrading2.service.api.getaccountratio.GetAccountRatioRequestBody
+import com.cmoney.backend2.virtualtrading2.service.api.getaccountratio.GetAccountRatioResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.getallaccount.GetAllAccountRequestBody
 import com.cmoney.backend2.virtualtrading2.service.api.getallaccount.GetAllAccountResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.createdelegate.CreateDelegateRequestBody
@@ -69,4 +71,15 @@ interface VirtualTrading2Service {
         @Header("Authorization") authorization: String,
         @Body body: GetAllAccountRequestBody
     ): Response<GetAllAccountResponseBody>
+
+    /**
+     * 取得帳號報酬率
+     */
+    @RecordApi
+    @POST
+    suspend fun getAccountRatio(
+        @Url url: String,
+        @Header("Authorization") authorization: String,
+        @Body body: GetAccountRatioRequestBody
+    ): Response<GetAccountRatioResponseBody>
 }

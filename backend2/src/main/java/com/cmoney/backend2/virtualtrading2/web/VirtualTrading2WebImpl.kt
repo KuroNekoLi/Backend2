@@ -6,6 +6,8 @@ import com.cmoney.backend2.virtualtrading2.service.VirtualTrading2Service
 import com.cmoney.backend2.virtualtrading2.service.api.createaccount.CreateAccountRequestBody
 import com.cmoney.backend2.virtualtrading2.service.api.getaccount.GetAccountRequestBody
 import com.cmoney.backend2.virtualtrading2.service.api.getaccount.GetAccountResponseBody
+import com.cmoney.backend2.virtualtrading2.service.api.getaccountratio.GetAccountRatioRequestBody
+import com.cmoney.backend2.virtualtrading2.service.api.getaccountratio.GetAccountRatioResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.getallaccount.GetAllAccountRequestBody
 import com.cmoney.backend2.virtualtrading2.service.api.getallaccount.GetAllAccountResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.createdelegate.CreateDelegateRequestBody
@@ -153,6 +155,23 @@ class VirtualTrading2WebImpl(
                 query = query
             )
             service.getAllAccount(
+                url = url,
+                authorization = requestConfig.getBearerToken(),
+                body = requestBody
+            ).checkResponseBody(gson)
+        }
+    }
+
+    override suspend fun getAccountRatio(
+        domain: String,
+        url: String,
+        query: String
+    ): Result<GetAccountRatioResponseBody> = withContext(dispatcher.io()) {
+        runCatching {
+            val requestBody = GetAccountRatioRequestBody(
+                query = query
+            )
+            service.getAccountRatio(
                 url = url,
                 authorization = requestConfig.getBearerToken(),
                 body = requestBody
