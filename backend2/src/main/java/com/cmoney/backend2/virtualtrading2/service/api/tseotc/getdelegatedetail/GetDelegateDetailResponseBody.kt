@@ -1,27 +1,27 @@
-package com.cmoney.backend2.virtualtrading2.service.api.tseotc.getalldelegate
+package com.cmoney.backend2.virtualtrading2.service.api.tseotc.getdelegatedetail
 
 
 import com.cmoney.backend2.virtualtrading2.service.api.data.tseotc.delegate.DelegateOrder
 import com.google.gson.annotations.SerializedName
 
 /**
- * 取得上市上櫃所有委託單回應
+ * 取得上市上櫃委託單細節回應
  *
  * @property content 資料
  *
  */
-data class GetAllDelegateResponseBody(
+data class GetDelegateDetailResponseBody(
     @SerializedName("data")
     val content: Data?
 ) {
     /**
      * 資料
      *
-     * @property delegateList 委託單列表
+     * @property delegate 委託單
      *
      */
     data class Data(
-        @SerializedName("tseOtcOrderByCustomPeriod")
-        val delegateList: List<DelegateOrder>?
+        @SerializedName("tseOtcOrder")
+        val delegate: DelegateOrder?
     )
 }

@@ -15,6 +15,8 @@ import com.cmoney.backend2.virtualtrading2.service.api.tseotc.deletedelagate.Del
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.deletedelagate.DeleteDelegateResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getalldelegate.GetAllDelegateRequestBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getalldelegate.GetAllDelegateResponseBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getdelegatedetail.GetDelegateDetailRequestBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getdelegatedetail.GetDelegateDetailResponseBody
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -86,7 +88,7 @@ interface VirtualTrading2Service {
     ): Response<GetAccountRatioResponseBody>
 
     /**
-     * 取得上市櫃的委託紀錄
+     * 取得上市櫃所有的委託單
      */
     @RecordApi
     @POST
@@ -95,4 +97,14 @@ interface VirtualTrading2Service {
         @Header("Authorization") authorization: String,
         @Body body: GetAllDelegateRequestBody
     ): Response<GetAllDelegateResponseBody>
+    /**
+     * 取得上市櫃的委託單細節
+     */
+    @RecordApi
+    @POST
+    suspend fun getTseOtcDelegateDetail(
+        @Url url: String,
+        @Header("Authorization") authorization: String,
+        @Body body: GetDelegateDetailRequestBody
+    ): Response<GetDelegateDetailResponseBody>
 }

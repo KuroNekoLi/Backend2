@@ -122,6 +122,85 @@ class VirtualTrading2ServiceCase : ServiceCase {
             }
         """.trimIndent()
         ).logResponse(TAG)
+        val allDelegate = web.getTseOtcAllDelegate(
+            query = """
+                    {
+                    tseOtcOrderByCustomPeriod(
+                    accountId: $accountId,
+                    beginTime: "2023/01/01",
+                    endTime: "2023/12/31",
+                    tradeType: 1
+                    ) {
+                    ordNo
+                    targetOrdNo
+                    account
+                    groupId
+                    tradeTime
+                    status
+                    ordType
+                    condition
+                    tradeType
+                    stockMarketType
+                    buySellType
+                    commKey
+                    ordPr
+                    ordQty
+                    dealAvgPr
+                    dealQty
+                    avQty
+                    cutQty
+                    prePayment
+                    serverRcvTe
+                    serverRcvNo
+                    marginCredit
+                    marginOwn
+                    shortSellingCollateral
+                    shortSellingEntrust
+                    memo
+                    noteId
+                    modifyTime
+                    }
+                    }
+        """.trimIndent()
+        )
+        allDelegate.logResponse(TAG)
+        val delegateId = allDelegate.getOrNull()?.content?.delegateList?.firstOrNull()?.delegateId
+        web.getTseOtcDelegateDetail(
+            query = """
+                    {
+                    tseOtcOrder(accountId: $accountId, orderNo: $delegateId) {    
+                    ordNo
+                    targetOrdNo
+                    account
+                    groupId
+                    tradeTime
+                    status
+                    ordType
+                    condition
+                    tradeType
+                    stockMarketType
+                    buySellType
+                    commKey
+                    ordPr
+                    ordQty
+                    dealAvgPr
+                    dealQty
+                    avQty
+                    cutQty
+                    prePayment
+                    serverRcvTe
+                    serverRcvNo
+                    marginCredit
+                    marginOwn
+                    shortSellingCollateral
+                    shortSellingEntrust
+                    memo
+                    noteId
+                    modifyTime
+                    }
+                    }
+        """.trimIndent()
+        ).logResponse(TAG)
     }
 
     companion object {

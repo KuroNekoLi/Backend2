@@ -16,6 +16,8 @@ import com.cmoney.backend2.virtualtrading2.service.api.tseotc.deletedelagate.Del
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.deletedelagate.DeleteDelegateResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getalldelegate.GetAllDelegateRequestBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getalldelegate.GetAllDelegateResponseBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getdelegatedetail.GetDelegateDetailRequestBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getdelegatedetail.GetDelegateDetailResponseBody
 import com.cmoney.core.DefaultDispatcherProvider
 import com.cmoney.core.DispatcherProvider
 import com.google.gson.Gson
@@ -169,4 +171,20 @@ class VirtualTrading2WebImpl(
         }
     }
 
+    override suspend fun getTseOtcDelegateDetail(
+        domain: String,
+        url: String,
+        query: String
+    ): Result<GetDelegateDetailResponseBody> = withContext(dispatcher.io()) {
+        runCatching {
+            val requestBody = GetDelegateDetailRequestBody(
+                query = query
+            )
+            service.getTseOtcDelegateDetail(
+                url = url,
+                authorization = requestConfig.getBearerToken(),
+                body = requestBody
+            ).checkResponseBody(gson)
+        }
+    }
 }

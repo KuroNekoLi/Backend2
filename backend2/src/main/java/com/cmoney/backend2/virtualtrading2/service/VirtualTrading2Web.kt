@@ -1,5 +1,6 @@
 package com.cmoney.backend2.virtualtrading2.service
 
+import com.cmoney.backend2.base.model.calladapter.RecordApi
 import com.cmoney.backend2.virtualtrading2.model.requestconfig.VirtualTradingRequestConfig
 import com.cmoney.backend2.virtualtrading2.service.api.createaccount.CreateAccountResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.getaccount.GetAccountResponseBody
@@ -8,6 +9,8 @@ import com.cmoney.backend2.virtualtrading2.service.api.getallaccount.GetAllAccou
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.createdelegate.CreateDelegateResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.deletedelagate.DeleteDelegateResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getalldelegate.GetAllDelegateResponseBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getdelegatedetail.GetDelegateDetailResponseBody
+import retrofit2.http.POST
 
 interface VirtualTrading2Web {
 
@@ -194,7 +197,7 @@ interface VirtualTrading2Web {
     ): Result<GetAccountRatioResponseBody>
 
     /**
-     * 取得上市櫃委託紀錄
+     * 取得上市櫃所有的委託單
      *
     {
     tseOtcOrderByCustomPeriod(
@@ -239,4 +242,48 @@ interface VirtualTrading2Web {
         url: String = "${domain}trading-api/graphql",
         query: String
     ): Result<GetAllDelegateResponseBody>
+
+    /**
+     * 取得上市櫃的委託單細節
+     *
+    {
+    tseOtcOrder(accountId: $accountId, orderNo: $delegateId) {
+    ordNo
+    targetOrdNo
+    account
+    groupId
+    tradeTime
+    status
+    ordType
+    condition
+    tradeType
+    stockMarketType
+    buySellType
+    commKey
+    ordPr
+    ordQty
+    dealAvgPr
+    dealQty
+    avQty
+    cutQty
+    prePayment
+    serverRcvTe
+    serverRcvNo
+    marginCredit
+    marginOwn
+    shortSellingCollateral
+    shortSellingEntrust
+    memo
+    noteId
+    modifyTime
+    }
+    }
+     */
+    @RecordApi
+    @POST
+    suspend fun getTseOtcDelegateDetail(
+        domain: String = requestConfig.getDomain(),
+        url: String = "${domain}trading-api/graphql",
+        query: String
+    ): Result<GetDelegateDetailResponseBody>
 }
