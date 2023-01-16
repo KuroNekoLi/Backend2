@@ -7,6 +7,7 @@ import com.cmoney.backend2.virtualtrading2.service.api.getaccountratio.GetAccoun
 import com.cmoney.backend2.virtualtrading2.service.api.getallaccount.GetAllAccountResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.createdelegate.CreateDelegateResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.deletedelagate.DeleteDelegateResponseBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getalldelegate.GetAllDelegateResponseBody
 
 interface VirtualTrading2Web {
 
@@ -191,4 +192,51 @@ interface VirtualTrading2Web {
         url: String = "${domain}account-api/graphql",
         query: String
     ): Result<GetAccountRatioResponseBody>
+
+    /**
+     * 取得上市櫃委託紀錄
+     *
+    {
+    tseOtcOrderByCustomPeriod(
+    accountId: $id,
+    beginTime: "yyyy/MM/dd",
+    endTime: "yyyy/MM/dd",
+    tradeType: $type
+    ) {
+    ordNo
+    targetOrdNo
+    account
+    groupId
+    tradeTime
+    status
+    ordType
+    condition
+    tradeType
+    stockMarketType
+    buySellType
+    commKey
+    ordPr
+    ordQty
+    dealAvgPr
+    dealQty
+    avQty
+    cutQty
+    prePayment
+    serverRcvTe
+    serverRcvNo
+    marginCredit
+    marginOwn
+    shortSellingCollateral
+    shortSellingEntrust
+    memo
+    noteId
+    modifyTime
+    }
+    }
+     */
+    suspend fun getTseOtcAllDelegate(
+        domain: String = requestConfig.getDomain(),
+        url: String = "${domain}trading-api/graphql",
+        query: String
+    ): Result<GetAllDelegateResponseBody>
 }
