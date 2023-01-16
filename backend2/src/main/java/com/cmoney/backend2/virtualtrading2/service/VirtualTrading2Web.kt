@@ -9,6 +9,7 @@ import com.cmoney.backend2.virtualtrading2.service.api.getallaccount.GetAllAccou
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.createdelegate.CreateDelegateResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.deletedelagate.DeleteDelegateResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getalldelegate.GetAllDelegateResponseBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getallsuccessdeal.GetAllSuccessDealResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getdelegatedetail.GetDelegateDetailResponseBody
 import retrofit2.http.POST
 
@@ -286,4 +287,46 @@ interface VirtualTrading2Web {
         url: String = "${domain}trading-api/graphql",
         query: String
     ): Result<GetDelegateDetailResponseBody>
+
+    /**
+     * 取得上市櫃所有的成交單
+     *
+    {
+    tseOtcDealByCustomPeriod(
+    accountId: $id,
+    beginTime: "yyyy/MM/dd",
+    endTime: "yyyy/MM/dd",
+    tradeType: $type
+    ) {
+    te
+    account
+    ordNo
+    stockMarketType
+    tradeType
+    buySellType
+    commKey
+    dealPr
+    dealQty
+    fee
+    tax
+    dealTno
+    flag
+    sn
+    shortSellingFee
+    memo
+    actualCost
+    borrow
+    bsAvgPr
+    remainQty
+    isSuccess
+    }
+    }
+     */
+    @RecordApi
+    @POST
+    suspend fun getTseOtcAllSuccessDeal(
+        domain: String = requestConfig.getDomain(),
+        url: String = "${domain}trading-api/graphql",
+        query: String
+    ): Result<GetAllSuccessDealResponseBody>
 }

@@ -21,13 +21,13 @@ import com.google.gson.annotations.SerializedName
  * @property marginPurchaseAmount 融資金額
  * @property marginPurchaseDownPayment 融資自備款
  * @property memo 備忘錄
- * @property lastModifyDate 最後修改時間
+ * @property lastModifyTime 最後修改時間
  * @property noteId 筆記編號
  * @property delegatePrice 委託價
  * @property delegateVolume 委託數量
  * @property delegateBehavior 委託單的行為，新增委託單: 73 / 刪除委託單: 68 / 修改委託單: 67
  * @property deliveryPayment 交割款
- * @property serverReceiveDate 服務收到請求時間
+ * @property serverReceiveTime 服務收到請求時間
  * @property serverReceiveId 服務收到請求編號
  * @property shortSaleCollateral 融券擔保品
  * @property shortSellDeposit 融券保證金
@@ -39,10 +39,10 @@ import com.google.gson.annotations.SerializedName
 預約單部份取消 : 22 / 委託結束 : 50 / 減量失敗，無此委託書號 : 151 / 刪單失敗，無此委託書號 : 152
 減量失敗，減量股數大於未成交股數 : 157 / 委託失敗，委託書號重覆 : 160 / 刪單失敗，無剩餘未成交股數 : 161
 預約單轉換錯誤：254 / 系統錯誤，委託失敗 : 255
- * @property marketUnit 整股：1
+ * @property marketUnit 市場交易單位，整股：1
  * @property targetDelegateId 目標單號
- * @property delegateDate 委託時間
- * @property transactionType 現股: 1 / 融資: 2 / 融券: 3
+ * @property delegateTime 委託時間
+ * @property transactionType 交易類型，現股: 1 / 融資: 2 / 融券: 3
  *
  */
 data class DelegateOrder(
@@ -73,7 +73,7 @@ data class DelegateOrder(
     @SerializedName("memo")
     val memo: String?,
     @SerializedName("modifyTime")
-    val lastModifyDate: String?,
+    val lastModifyTime: String?,
     @SerializedName("noteId")
     val noteId: Long?,
     @SerializedName("ordPr")
@@ -85,7 +85,7 @@ data class DelegateOrder(
     @SerializedName("prePayment")
     val deliveryPayment: Double?,
     @SerializedName("serverRcvNo")
-    val serverReceiveDate: Int?,
+    val serverReceiveTime: Int?,
     @SerializedName("serverRcvTe")
     val serverReceiveId: String?,
     @SerializedName("shortSellingCollateral")
@@ -99,7 +99,7 @@ data class DelegateOrder(
     @SerializedName("targetOrdNo")
     val targetDelegateId: Long?,
     @SerializedName("tradeTime")
-    val delegateDate: String?,
+    val delegateTime: String?,
     @SerializedName("tradeType")
     val transactionType: Int?
 )

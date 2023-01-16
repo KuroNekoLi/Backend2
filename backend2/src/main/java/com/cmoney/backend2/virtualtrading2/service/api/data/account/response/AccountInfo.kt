@@ -25,7 +25,7 @@ import com.google.gson.annotations.SerializedName
  * @property isEmail 是否要接收Email
  * @property averageTradingCountInMonth 月平均交易數
  * @property totalPunishment 帳戶懲罰
- * @property tradedWarrantDate 最初交易權證時間
+ * @property tradedWarrantTime 最初交易權證時間
  * @property extendFunds 擴充現金
  * @property stockIncomeLoss 股票損益
  * @property warrantIncomeLoss 權證損益
@@ -77,7 +77,7 @@ data class AccountInfo(
     @SerializedName("totalPunishment")
     val totalPunishment: Double?,
     @SerializedName("tradedWarrantDate")
-    val tradedWarrantDate: Int?,
+    val tradedWarrantTime: Int?,
     @SerializedName("extendFunds")
     val extendFunds: Double?,
     @SerializedName("stockIncomeLoss")

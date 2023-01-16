@@ -201,6 +201,40 @@ class VirtualTrading2ServiceCase : ServiceCase {
                     }
         """.trimIndent()
         ).logResponse(TAG)
+        val allSuccessDeal = web.getTseOtcAllSuccessDeal(
+            query = """
+                {
+                    tseOtcDealByCustomPeriod(
+                        accountId: $accountId,
+                        beginTime: "2023/01/01",
+                        endTime: "2023/12/31",
+                        tradeType: 1
+                    ) {
+                        te
+                        account
+                        ordNo
+                        stockMarketType
+                        tradeType
+                        buySellType
+                        commKey
+                        dealPr
+                        dealQty
+                        fee
+                        tax
+                        dealTno
+                        flag
+                        sn
+                        shortSellingFee
+                        memo
+                        actualCost
+                        borrow
+                        bsAvgPr
+                        remainQty
+                        isSuccess
+                    }
+                }
+        """.trimIndent()
+        ).logResponse(TAG)
     }
 
     companion object {

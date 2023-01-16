@@ -15,6 +15,8 @@ import com.cmoney.backend2.virtualtrading2.service.api.tseotc.deletedelagate.Del
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.deletedelagate.DeleteDelegateResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getalldelegate.GetAllDelegateRequestBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getalldelegate.GetAllDelegateResponseBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getallsuccessdeal.GetAllSuccessDealRequestBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getallsuccessdeal.GetAllSuccessDealResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getdelegatedetail.GetDelegateDetailRequestBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getdelegatedetail.GetDelegateDetailResponseBody
 import retrofit2.Response
@@ -97,6 +99,7 @@ interface VirtualTrading2Service {
         @Header("Authorization") authorization: String,
         @Body body: GetAllDelegateRequestBody
     ): Response<GetAllDelegateResponseBody>
+
     /**
      * 取得上市櫃的委託單細節
      */
@@ -107,4 +110,16 @@ interface VirtualTrading2Service {
         @Header("Authorization") authorization: String,
         @Body body: GetDelegateDetailRequestBody
     ): Response<GetDelegateDetailResponseBody>
+
+    /**
+     * 取得上市櫃所有的成交單
+     */
+    @RecordApi
+    @POST
+    suspend fun getTseOtcAllSuccessDeal(
+        @Url url: String,
+        @Header("Authorization") authorization: String,
+        @Body body: GetAllSuccessDealRequestBody
+    ): Response<GetAllSuccessDealResponseBody>
+
 }
