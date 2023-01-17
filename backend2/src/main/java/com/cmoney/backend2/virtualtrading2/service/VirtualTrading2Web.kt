@@ -1,6 +1,5 @@
 package com.cmoney.backend2.virtualtrading2.service
 
-import com.cmoney.backend2.base.model.calladapter.RecordApi
 import com.cmoney.backend2.virtualtrading2.model.requestconfig.VirtualTradingRequestConfig
 import com.cmoney.backend2.virtualtrading2.service.api.createaccount.CreateAccountResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.getaccount.GetAccountResponseBody
@@ -11,7 +10,7 @@ import com.cmoney.backend2.virtualtrading2.service.api.tseotc.deletedelagate.Del
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getalldelegate.GetAllDelegateResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getallsuccessdeal.GetAllSuccessDealResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getdelegatedetail.GetDelegateDetailResponseBody
-import retrofit2.http.POST
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getsuccessdealdetail.GetSuccessDealDetailResponseBody
 
 interface VirtualTrading2Web {
 
@@ -280,8 +279,6 @@ interface VirtualTrading2Web {
     }
     }
      */
-    @RecordApi
-    @POST
     suspend fun getTseOtcDelegateDetail(
         domain: String = requestConfig.getDomain(),
         url: String = "${domain}trading-api/graphql",
@@ -322,11 +319,47 @@ interface VirtualTrading2Web {
     }
     }
      */
-    @RecordApi
-    @POST
     suspend fun getTseOtcAllSuccessDeal(
         domain: String = requestConfig.getDomain(),
         url: String = "${domain}trading-api/graphql",
         query: String
     ): Result<GetAllSuccessDealResponseBody>
+
+    /**
+     * 取得上市櫃的成交單細節
+     *
+    {
+    tseOtcDeal(
+    accountId: $accountId,
+    orderNo: $delegateId
+    ) {
+    te
+    account
+    ordNo
+    stockMarketType
+    tradeType
+    buySellType
+    commKey
+    dealPr
+    dealQty
+    fee
+    tax
+    dealTno
+    flag
+    sn
+    shortSellingFee
+    memo
+    actualCost
+    borrow
+    bsAvgPr
+    remainQty
+    isSuccess
+    }
+    }
+     */
+    suspend fun getTseOtcSuccessDealDetail(
+        domain: String = requestConfig.getDomain(),
+        url: String = "${domain}trading-api/graphql",
+        query: String
+    ): Result<GetSuccessDealDetailResponseBody>
 }

@@ -20,6 +20,8 @@ import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getallsuccessdeal.
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getallsuccessdeal.GetAllSuccessDealResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getdelegatedetail.GetDelegateDetailRequestBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getdelegatedetail.GetDelegateDetailResponseBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getsuccessdealdetail.GetSuccessDealDetailRequestBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getsuccessdealdetail.GetSuccessDealDetailResponseBody
 import com.cmoney.core.DefaultDispatcherProvider
 import com.cmoney.core.DispatcherProvider
 import com.google.gson.Gson
@@ -194,12 +196,29 @@ class VirtualTrading2WebImpl(
         domain: String,
         url: String,
         query: String
-    ): Result<GetAllSuccessDealResponseBody>  = withContext(dispatcher.io()) {
+    ): Result<GetAllSuccessDealResponseBody> = withContext(dispatcher.io()) {
         runCatching {
             val requestBody = GetAllSuccessDealRequestBody(
                 query = query
             )
             service.getTseOtcAllSuccessDeal(
+                url = url,
+                authorization = requestConfig.getBearerToken(),
+                body = requestBody
+            ).checkResponseBody(gson)
+        }
+    }
+
+    override suspend fun getTseOtcSuccessDealDetail(
+        domain: String,
+        url: String,
+        query: String
+    ): Result<GetSuccessDealDetailResponseBody> = withContext(dispatcher.io()) {
+        runCatching {
+            val requestBody = GetSuccessDealDetailRequestBody(
+                query = query
+            )
+            service.getTseOtcSuccessDealDetail(
                 url = url,
                 authorization = requestConfig.getBearerToken(),
                 body = requestBody

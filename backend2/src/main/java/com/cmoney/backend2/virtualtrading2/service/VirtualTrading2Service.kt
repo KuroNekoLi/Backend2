@@ -19,6 +19,8 @@ import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getallsuccessdeal.
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getallsuccessdeal.GetAllSuccessDealResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getdelegatedetail.GetDelegateDetailRequestBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getdelegatedetail.GetDelegateDetailResponseBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getsuccessdealdetail.GetSuccessDealDetailRequestBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getsuccessdealdetail.GetSuccessDealDetailResponseBody
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -121,5 +123,16 @@ interface VirtualTrading2Service {
         @Header("Authorization") authorization: String,
         @Body body: GetAllSuccessDealRequestBody
     ): Response<GetAllSuccessDealResponseBody>
+
+    /**
+     * 取得上市櫃的成交單細節
+     */
+    @RecordApi
+    @POST
+    suspend fun getTseOtcSuccessDealDetail(
+        @Url url: String,
+        @Header("Authorization") authorization: String,
+        @Body body: GetSuccessDealDetailRequestBody
+    ): Response<GetSuccessDealDetailResponseBody>
 
 }

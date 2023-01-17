@@ -234,6 +234,40 @@ class VirtualTrading2ServiceCase : ServiceCase {
                     }
                 }
         """.trimIndent()
+        )
+        allSuccessDeal.logResponse(TAG)
+        val successDealId = allSuccessDeal.getOrNull()?.content?.successDealList?.firstOrNull()?.delegateId
+        web.getTseOtcSuccessDealDetail(
+            query = """
+               {
+                tseOtcDeal(
+                accountId: $accountId,
+                orderNo: $successDealId
+                ) {
+                te
+                account
+                ordNo
+                stockMarketType
+                tradeType
+                buySellType
+                commKey
+                dealPr
+                dealQty
+                fee
+                tax
+                dealTno
+                flag
+                sn
+                shortSellingFee
+                memo
+                actualCost
+                borrow
+                bsAvgPr
+                remainQty
+                isSuccess
+                }
+                }
+        """.trimIndent()
         ).logResponse(TAG)
     }
 
