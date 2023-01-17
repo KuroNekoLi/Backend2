@@ -19,6 +19,8 @@ import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getallsuccessdeal.
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getallsuccessdeal.GetAllSuccessDealResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getdelegatedetail.GetDelegateDetailRequestBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getdelegatedetail.GetDelegateDetailResponseBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getinventory.GetInventoryRequestBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getinventory.GetInventoryResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getsuccessdealdetail.GetSuccessDealDetailRequestBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getsuccessdealdetail.GetSuccessDealDetailResponseBody
 import retrofit2.Response
@@ -135,4 +137,14 @@ interface VirtualTrading2Service {
         @Body body: GetSuccessDealDetailRequestBody
     ): Response<GetSuccessDealDetailResponseBody>
 
+    /**
+     * 取得上市櫃的庫存
+     */
+    @RecordApi
+    @POST
+    suspend fun getTseOtcInventory(
+        @Url url: String,
+        @Header("Authorization") authorization: String,
+        @Body body: GetInventoryRequestBody
+    ): Response<GetInventoryResponseBody>
 }

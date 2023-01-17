@@ -20,6 +20,8 @@ import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getallsuccessdeal.
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getallsuccessdeal.GetAllSuccessDealResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getdelegatedetail.GetDelegateDetailRequestBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getdelegatedetail.GetDelegateDetailResponseBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getinventory.GetInventoryRequestBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getinventory.GetInventoryResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getsuccessdealdetail.GetSuccessDealDetailRequestBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getsuccessdealdetail.GetSuccessDealDetailResponseBody
 import com.cmoney.core.DefaultDispatcherProvider
@@ -219,6 +221,23 @@ class VirtualTrading2WebImpl(
                 query = query
             )
             service.getTseOtcSuccessDealDetail(
+                url = url,
+                authorization = requestConfig.getBearerToken(),
+                body = requestBody
+            ).checkResponseBody(gson)
+        }
+    }
+
+    override suspend fun getTseOtcInventory(
+        domain: String,
+        url: String,
+        query: String
+    ): Result<GetInventoryResponseBody> = withContext(dispatcher.io()) {
+        runCatching {
+            val requestBody = GetInventoryRequestBody(
+                query = query
+            )
+            service.getTseOtcInventory(
                 url = url,
                 authorization = requestConfig.getBearerToken(),
                 body = requestBody

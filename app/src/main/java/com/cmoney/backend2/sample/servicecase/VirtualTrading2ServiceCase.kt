@@ -269,6 +269,33 @@ class VirtualTrading2ServiceCase : ServiceCase {
                 }
         """.trimIndent()
         ).logResponse(TAG)
+        web.getTseOtcInventory(
+            query = """
+                {
+                tseOtcPosition(accountId: $accountId) {
+                account
+                bs
+                canOrdQty
+                commKey
+                commName
+                cost
+                createTime
+                dealAvgPr
+                incomeLoss
+                incomeLossWithoutPreFee
+                inventoryQty
+                nowPr
+                ratio
+                shortSellingFee
+                showCost
+                taxCost
+                todayInventoryQty
+                tradeName
+                tradeType
+                }
+                }
+        """.trimIndent()
+        ).logResponse(TAG)
     }
 
     companion object {

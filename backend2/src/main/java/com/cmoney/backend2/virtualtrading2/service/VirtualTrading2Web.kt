@@ -10,6 +10,7 @@ import com.cmoney.backend2.virtualtrading2.service.api.tseotc.deletedelagate.Del
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getalldelegate.GetAllDelegateResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getallsuccessdeal.GetAllSuccessDealResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getdelegatedetail.GetDelegateDetailResponseBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getinventory.GetInventoryResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getsuccessdealdetail.GetSuccessDealDetailResponseBody
 
 interface VirtualTrading2Web {
@@ -199,6 +200,9 @@ interface VirtualTrading2Web {
     /**
      * 取得上市櫃所有的委託單
      *
+     * @param domain 網域名稱
+     * @param url 完整的Url，預設使用[domain]當作網域名稱
+     * @param query 查詢內容
     {
     tseOtcOrderByCustomPeriod(
     accountId: $id,
@@ -246,6 +250,9 @@ interface VirtualTrading2Web {
     /**
      * 取得上市櫃的委託單細節
      *
+     * @param domain 網域名稱
+     * @param url 完整的Url，預設使用[domain]當作網域名稱
+     * @param query 查詢內容
     {
     tseOtcOrder(accountId: $accountId, orderNo: $delegateId) {
     ordNo
@@ -288,6 +295,9 @@ interface VirtualTrading2Web {
     /**
      * 取得上市櫃所有的成交單
      *
+     * @param domain 網域名稱
+     * @param url 完整的Url，預設使用[domain]當作網域名稱
+     * @param query 查詢內容
     {
     tseOtcDealByCustomPeriod(
     accountId: $id,
@@ -328,6 +338,9 @@ interface VirtualTrading2Web {
     /**
      * 取得上市櫃的成交單細節
      *
+     * @param domain 網域名稱
+     * @param url 完整的Url，預設使用[domain]當作網域名稱
+     * @param query 查詢內容
     {
     tseOtcDeal(
     accountId: $accountId,
@@ -362,4 +375,40 @@ interface VirtualTrading2Web {
         url: String = "${domain}trading-api/graphql",
         query: String
     ): Result<GetSuccessDealDetailResponseBody>
+
+    /**
+     * 取得上市櫃的庫存
+     *
+     * @param domain 網域名稱
+     * @param url 完整的Url，預設使用[domain]當作網域名稱
+     * @param query 查詢內容
+    {
+    tseOtcPosition(accountId: $accountId) {
+    account
+    bs
+    canOrdQty
+    commKey
+    commName
+    cost
+    createTime
+    dealAvgPr
+    incomeLoss
+    incomeLossWithoutPreFee
+    inventoryQty
+    nowPr
+    ratio
+    shortSellingFee
+    showCost
+    taxCost
+    todayInventoryQty
+    tradeName
+    tradeType
+    }
+    }
+     */
+    suspend fun getTseOtcInventory(
+        domain: String = requestConfig.getDomain(),
+        url: String = "${domain}trading-api/graphql",
+        query: String
+    ): Result<GetInventoryResponseBody>
 }
