@@ -21,22 +21,22 @@ import com.google.gson.annotations.SerializedName
  *
  */
 data class CreateDelegateRequestBody(
-    @SerializedName("accountId")
+    @SerializedName("AccountId")
     val accountId: Long,
-    @SerializedName("buySellType")
+    @SerializedName("BuySellType")
     val buySellType: Int,
-    @SerializedName("commKey")
+    @SerializedName("CommKey")
     val commodityId: String,
-    @SerializedName("condition")
+    @SerializedName("Condition")
     val subsistingType: Int,
-    @SerializedName("groupId")
+    @SerializedName("GroupId")
     val groupId: Long,
-    @SerializedName("ordPr")
+    @SerializedName("OrdPr")
     val delegatePrice: Double,
-    @SerializedName("ordQty")
+    @SerializedName("OrdQty")
     val delegateVolume: Long,
-    @SerializedName("stkTradeType")
+    @SerializedName("StkTradeType")
     val marketUnit: Int,
-    @SerializedName("tradeType")
+    @SerializedName("TradeType")
     val transactionType: Int
 )

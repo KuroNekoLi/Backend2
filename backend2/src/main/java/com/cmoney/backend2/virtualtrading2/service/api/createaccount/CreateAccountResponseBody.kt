@@ -36,60 +36,60 @@ import com.google.gson.annotations.SerializedName
  *
  */
 data class CreateAccountResponseBody(
-    @SerializedName("account")
+    @SerializedName("Account")
     val accountId: Long?,
-    @SerializedName("name")
+    @SerializedName("Name")
     val name: String?,
-    @SerializedName("groupId")
+    @SerializedName("GroupId")
     val groupId: Long?,
-    @SerializedName("memberId")
+    @SerializedName("MemberId")
     val memberId: Long?,
-    @SerializedName("defaultFunds")
+    @SerializedName("DefaultFunds")
     val defaultFunds: Double?,
-    @SerializedName("funds")
+    @SerializedName("Funds")
     val funds: Double?,
-    @SerializedName("needFee")
+    @SerializedName("NeedFee")
     val isNeedFee: Boolean?,
-    @SerializedName("needTax")
+    @SerializedName("NeedTax")
     val isNeedTax: Boolean?,
-    @SerializedName("canWatch")
+    @SerializedName("CanWatch")
     val canWatch: Boolean?,
-    @SerializedName("isDefault")
+    @SerializedName("IsDefault")
     val isDefault: Boolean?,
-    @SerializedName("isDelete")
+    @SerializedName("IsDelete")
     val isDelete: Boolean?,
-    @SerializedName("accountType")
+    @SerializedName("AccountType")
     val accountType: Int?,
-    @SerializedName("createTime")
+    @SerializedName("CreateTime")
     val createTime: String?,
-    @SerializedName("updateTime")
+    @SerializedName("UpdateTime")
     val updateTime: String?,
-    @SerializedName("viewTime")
+    @SerializedName("ViewTime")
     val viewTime: String?,
-    @SerializedName("accountPayType")
+    @SerializedName("AccountPayType")
     val accountPayType: Int?,
-    @SerializedName("maxReadSn")
+    @SerializedName("MaxReadSn")
     val maxReadSn: Long?,
-    @SerializedName("isEmail")
+    @SerializedName("IsEmail")
     val isEmail: Boolean?,
-    @SerializedName("avgMonthOrderCount")
+    @SerializedName("AvgMonthOrderCount")
     val averageTradingCountInMonth: Double?,
-    @SerializedName("totalPunishment")
+    @SerializedName("TotalPunishment")
     val totalPunishment: Double?,
-    @SerializedName("tradedWarrantDate")
+    @SerializedName("TradedWarrantDate")
     val tradedWarrantDate: Int?,
-    @SerializedName("extendFunds")
+    @SerializedName("ExtendFunds")
     val extendFunds: Double?,
-    @SerializedName("stockIncomeLoss")
+    @SerializedName("StockIncomeLoss")
     val stockIncomeLoss: Double?,
-    @SerializedName("warrantIncomeLoss")
+    @SerializedName("WarrantIncomeLoss")
     val warrantIncomeLoss: Double?,
-    @SerializedName("tmxIncomeLoss")
+    @SerializedName("TmxIncomeLoss")
     val futureIncomeLoss: Double?,
-    @SerializedName("optIncomeLoss")
+    @SerializedName("OptIncomeLoss")
     val optionIncomeLoss: Double?,
-    @SerializedName("borrowFunds")
+    @SerializedName("BorrowFunds")
     val borrowFunds: Double?,
-    @SerializedName("borrowLimit")
+    @SerializedName("BorrowLimit")
     val borrowLimit: Double?
 )

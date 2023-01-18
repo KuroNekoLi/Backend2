@@ -11,10 +11,10 @@ import com.google.gson.annotations.SerializedName
  *
  */
 data class DeleteDelegateResponseBody(
-    @SerializedName("isSuccess")
+    @SerializedName("IsSuccess")
     val isSuccess: Boolean?,
-    @SerializedName("message")
+    @SerializedName("Message")
     val message: String?,
-    @SerializedName("orderNo")
+    @SerializedName("OrderNo")
     val delegateId: Long?
 )

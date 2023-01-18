@@ -10,8 +10,8 @@ import com.google.gson.annotations.SerializedName
  *
  */
 data class CreateAccountRequestBody(
-    @SerializedName("accountInvestType")
+    @SerializedName("AccountInvestType")
     val accountInvestType: Int,
-    @SerializedName("cardSn")
+    @SerializedName("CardSn")
     val cardSn: Long
 )
