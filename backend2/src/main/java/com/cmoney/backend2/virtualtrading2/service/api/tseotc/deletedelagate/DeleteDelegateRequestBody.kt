@@ -13,9 +13,9 @@ import com.google.gson.annotations.SerializedName
  */
 data class DeleteDelegateRequestBody(
     @SerializedName("AccountId")
-    val accountId: Long?,
+    val accountId: Long,
     @SerializedName("GroupId")
-    val groupId: Long?,
+    val groupId: Long,
     @SerializedName("TargetOrdNo")
-    val delegateId: Long?
+    val delegateId: Long
 )
