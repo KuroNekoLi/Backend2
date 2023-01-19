@@ -61,13 +61,13 @@ data class GetInventoryResponseBody(
             @SerializedName("cost")
             val cost: Double?,
             @SerializedName("createTime")
-            val createTime: String?,
+            val createTime: Long?,
             @SerializedName("dealAvgPr")
             val successDealAveragePrice: Double?,
             @SerializedName("incomeLoss")
-            val gainLoss: Int?,
+            val gainLoss: Double?,
             @SerializedName("incomeLossWithoutPreFee")
-            val gainLossWithoutFee: Int?,
+            val gainLossWithoutFee: Double?,
             @SerializedName("inventoryQty")
             val inventoryVolume: Int?,
             @SerializedName("nowPr")
@@ -75,11 +75,11 @@ data class GetInventoryResponseBody(
             @SerializedName("ratio")
             val ror: Double?,
             @SerializedName("shortSellingFee")
-            val shortSaleFee: Int?,
+            val shortSaleFee: Double?,
             @SerializedName("showCost")
             val totalDownPayment: Double?,
             @SerializedName("taxCost")
-            val transactionTax: Int?,
+            val transactionTax: Double?,
             @SerializedName("todayInventoryQty")
             val todaySuccessDealInventoryVolume: Int?,
             @SerializedName("tradeName")

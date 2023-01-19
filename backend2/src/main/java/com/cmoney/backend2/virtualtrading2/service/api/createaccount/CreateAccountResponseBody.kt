@@ -61,11 +61,11 @@ data class CreateAccountResponseBody(
     @SerializedName("AccountType")
     val accountType: Int?,
     @SerializedName("CreateTime")
-    val createTime: String?,
+    val createTime: Long?,
     @SerializedName("UpdateTime")
-    val updateTime: String?,
+    val updateTime: Long?,
     @SerializedName("ViewTime")
-    val viewTime: String?,
+    val viewTime: Long?,
     @SerializedName("AccountPayType")
     val accountPayType: Int?,
     @SerializedName("MaxReadSn")
@@ -77,7 +77,7 @@ data class CreateAccountResponseBody(
     @SerializedName("TotalPunishment")
     val totalPunishment: Double?,
     @SerializedName("TradedWarrantDate")
-    val tradedWarrantDate: Int?,
+    val tradedWarrantDate: Long?,
     @SerializedName("ExtendFunds")
     val extendFunds: Double?,
     @SerializedName("StockIncomeLoss")

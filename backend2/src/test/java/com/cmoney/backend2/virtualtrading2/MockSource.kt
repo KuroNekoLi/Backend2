@@ -97,7 +97,7 @@ fun getAccountSuccess() =
             "borrowFunds": 0.0000,
             "borrowLimit": 100100000.0000,
             "canWatch": true,
-            "createTime": "2022-12-29T17:55:14.998Z",
+            "createTime": 1672336514,
             "defaultFunds": 200000000.0000,
             "extendFunds": 0.0000,
             "funds": 199944122.0000,
@@ -113,10 +113,10 @@ fun getAccountSuccess() =
             "optIncomeLoss": 0.0000,
             "stockIncomeLoss": 0.0000,
             "tmxIncomeLoss": 0.0000,
-            "totalPunishment": 18,
+            "totalPunishment": 20,
             "tradedWarrantDate": 0,
-            "updateTime": "2022-12-29T17:55:14.998Z",
-            "viewTime": null,
+            "updateTime": 1672336514,
+            "viewTime": 0,
             "warrantIncomeLoss": 0.0000
         }
     }
@@ -136,93 +136,33 @@ fun getAllAccountSuccess() =
     "data": {
         "allAccountInfo": [
             {
-                "account": 2076,
-                "accountPayType": 0,
-                "accountType": 7,
-                "avgMonthOrderCount": 1.3,
-                "borrowFunds": 0.0000,
-                "borrowLimit": 100100000.0000,
-                "canWatch": true,
-                "createTime": "2022-12-29T17:55:14.998Z",
-                "defaultFunds": 200000000.0000,
-                "extendFunds": 0.0000,
-                "funds": 199944122.0000,
-                "groupId": 0,
-                "isDefault": false,
-                "isDelete": false,
-                "isEmail": true,
-                "maxReadSn": 0,
-                "memberId": 123347,
-                "name": "小資族",
-                "needFee": true,
-                "needTax": true,
-                "optIncomeLoss": 0.0000,
-                "stockIncomeLoss": 0.0000,
-                "tmxIncomeLoss": 0.0000,
-                "totalPunishment": 18,
-                "tradedWarrantDate": 0,
-                "updateTime": "2022-12-29T17:55:14.998Z",
-                "viewTime": null,
-                "warrantIncomeLoss": 0.0000
-            },
-            {
-                "account": 2078,
+                "account": 2088,
                 "accountPayType": 0,
                 "accountType": 7,
                 "avgMonthOrderCount": 0,
                 "borrowFunds": 0.0000,
-                "borrowLimit": 100000000.0000,
+                "borrowLimit": 1000000.0000,
                 "canWatch": true,
-                "createTime": "2023-01-07T08:13:32.287Z",
-                "defaultFunds": 200000000.0000,
+                "createTime": 1674111295,
+                "defaultFunds": 2000000.0000,
                 "extendFunds": 0.0000,
-                "funds": 200000000.0000,
-                "groupId": 0,
-                "isDefault": false,
-                "isDelete": false,
-                "isEmail": true,
-                "maxReadSn": 0,
-                "memberId": 123347,
-                "name": "小資族",
-                "needFee": true,
-                "needTax": true,
-                "optIncomeLoss": 0.0000,
-                "stockIncomeLoss": 0.0000,
-                "tmxIncomeLoss": 0.0000,
-                "totalPunishment": 10,
-                "tradedWarrantDate": 0,
-                "updateTime": "2023-01-07T08:13:32.287Z",
-                "viewTime": null,
-                "warrantIncomeLoss": 0.0000
-            },
-            {
-                "account": 2079,
-                "accountPayType": 0,
-                "accountType": 7,
-                "avgMonthOrderCount": 0,
-                "borrowFunds": 0.0000,
-                "borrowLimit": 100000000.0000,
-                "canWatch": true,
-                "createTime": "2023-01-09T06:06:23.821Z",
-                "defaultFunds": 200000000.0000,
-                "extendFunds": 0.0000,
-                "funds": 200000000.0000,
+                "funds": 2000000.0000,
                 "groupId": 0,
                 "isDefault": true,
                 "isDelete": false,
                 "isEmail": true,
                 "maxReadSn": 0,
-                "memberId": 123347,
+                "memberId": 1517203,
                 "name": "小資族",
                 "needFee": true,
                 "needTax": true,
                 "optIncomeLoss": 0.0000,
                 "stockIncomeLoss": 0.0000,
                 "tmxIncomeLoss": 0.0000,
-                "totalPunishment": 9,
+                "totalPunishment": 1,
                 "tradedWarrantDate": 0,
-                "updateTime": "2023-01-09T06:06:23.821Z",
-                "viewTime": null,
+                "updateTime": 1674111295,
+                "viewTime": 0,
                 "warrantIncomeLoss": 0.0000
             }
         ]
@@ -243,9 +183,9 @@ fun getAccountRatioSuccess() =
         "accountRatios": [
             {
                 "account": 2076,
-                "dataDe": "2023-01-17T00:00:00.000Z",
+                "dataDe": 1674086400,
                 "funds": 0.0000,
-                "inventoryValues": -906.0000,
+                "inventoryValues": 1583.0000,
                 "isWeekend": false,
                 "ratio": 0
             }
@@ -266,12 +206,12 @@ fun getTseOtcAllDelegateSuccess() =
 {
     "data": {
         "tseOtcOrderByCustomPeriod": [
-            {
+                      {
                 "ordNo": 2060115,
                 "targetOrdNo": 2060115,
                 "account": 2076,
                 "groupId": 0,
-                "tradeTime": "2023-01-09T01:46:15.583Z",
+                "tradeTime": 1673228775,
                 "status": 12,
                 "ordType": 73,
                 "condition": 0,
@@ -294,14 +234,14 @@ fun getTseOtcAllDelegateSuccess() =
                 "shortSellingEntrust": 0.0000,
                 "memo": "",
                 "noteId": 0,
-                "modifyTime": "2023-01-09T09:48:44.403Z"
+                "modifyTime": 1673257724
             },
             {
                 "ordNo": 2060116,
                 "targetOrdNo": 2060116,
                 "account": 2076,
                 "groupId": 0,
-                "tradeTime": "2023-01-09T01:50:32.484Z",
+                "tradeTime": 1673229032,
                 "status": 12,
                 "ordType": 73,
                 "condition": 0,
@@ -324,7 +264,37 @@ fun getTseOtcAllDelegateSuccess() =
                 "shortSellingEntrust": 0.0000,
                 "memo": "",
                 "noteId": 0,
-                "modifyTime": "2023-01-09T09:53:01.183Z"
+                "modifyTime": 1673257981
+            },
+            {
+                "ordNo": 2060117,
+                "targetOrdNo": 2060117,
+                "account": 2076,
+                "groupId": 0,
+                "tradeTime": 1673229057,
+                "status": 50,
+                "ordType": 73,
+                "condition": 0,
+                "tradeType": 1,
+                "stockMarketType": 1,
+                "buySellType": 66,
+                "commKey": "2883",
+                "ordPr": 13.0000,
+                "ordQty": 1000,
+                "dealAvgPr": 13.0000,
+                "dealQty": 1000,
+                "avQty": 0,
+                "cutQty": 0,
+                "prePayment": 0.0000,
+                "serverRcvTe": "2023-01-09T01:50:57.000Z",
+                "serverRcvNo": 10004,
+                "marginCredit": 0.0000,
+                "marginOwn": 0.0000,
+                "shortSellingCollateral": 0.0000,
+                "shortSellingEntrust": 0.0000,
+                "memo": "",
+                "noteId": 0,
+                "modifyTime": 1673258006
             }
         ]
     }
@@ -348,7 +318,7 @@ fun getTseOtcDelegateDetailSuccess() =
             "targetOrdNo": 2060107,
             "account": 2076,
             "groupId": 0,
-            "tradeTime": "2023-01-09T08:33:28.229Z",
+            "tradeTime": 1673253208,
             "status": 12,
             "ordType": 73,
             "condition": 0,
@@ -371,7 +341,7 @@ fun getTseOtcDelegateDetailSuccess() =
             "shortSellingEntrust": 0.0000,
             "memo": "",
             "noteId": 0,
-            "modifyTime": "2023-01-07T17:36:28.807Z"
+            "modifyTime": 1673112988
         }
     }
 }
@@ -390,7 +360,7 @@ fun getTseOtcAllSuccessDealSuccess() =
     "data": {
         "tseOtcDealByCustomPeriod": [
             {
-                "te": "2023-01-09T09:53:36.000Z",
+                "te": 1673258016,
                 "account": 2076,
                 "ordNo": 2060117,
                 "stockMarketType": 1,
@@ -429,7 +399,7 @@ fun getTseOtcSuccessDealDetailSuccess() =
 {
     "data": {
         "tseOtcDeal": {
-            "te": "2023-01-09T11:03:10.000Z",
+            "te": 1673262190,
             "account": 2076,
             "ordNo": 2060128,
             "stockMarketType": 1,
@@ -473,7 +443,7 @@ fun getTseOtcInventorySuccess() =
                 "commKey": "2303",
                 "commName": "聯電",
                 "cost": 90200.0000,
-                "createTime": "2023-01-12T13:41:00.818Z",
+                "createTime": 1673530860,
                 "dealAvgPr": 45.1000,
                 "incomeLoss": -926,
                 "incomeLossWithoutPreFee": -529,
@@ -483,48 +453,6 @@ fun getTseOtcInventorySuccess() =
                 "shortSellingFee": 0,
                 "showCost": 90200.0000,
                 "taxCost": 269,
-                "todayInventoryQty": 0,
-                "tradeName": "現股買進",
-                "tradeType": 1
-            },
-            {
-                "account": 2076,
-                "bs": 66,
-                "canOrdQty": 2000,
-                "commKey": "2883",
-                "commName": "開發金",
-                "cost": 13000.0000,
-                "createTime": "2023-01-09T01:55:07.724Z",
-                "dealAvgPr": 13.0000,
-                "incomeLoss": -78,
-                "incomeLossWithoutPreFee": -19,
-                "inventoryQty": 1000,
-                "nowPr": 13,
-                "ratio": -0.6,
-                "shortSellingFee": 0,
-                "showCost": 13000.0000,
-                "taxCost": 39,
-                "todayInventoryQty": 0,
-                "tradeName": "現股買進",
-                "tradeType": 1
-            },
-            {
-                "account": 2076,
-                "bs": 66,
-                "canOrdQty": 11000,
-                "commKey": "2890",
-                "commName": "永豐金",
-                "cost": 17200.0000,
-                "createTime": "2023-01-09T03:00:52.960Z",
-                "dealAvgPr": 17.2000,
-                "incomeLoss": 98,
-                "incomeLossWithoutPreFee": 175,
-                "inventoryQty": 1000,
-                "nowPr": 17.4,
-                "ratio": 0.57,
-                "shortSellingFee": 0,
-                "showCost": 17200.0000,
-                "taxCost": 52,
                 "todayInventoryQty": 0,
                 "tradeName": "現股買進",
                 "tradeType": 1

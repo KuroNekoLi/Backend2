@@ -73,7 +73,7 @@ data class DelegateOrder(
     @SerializedName("memo")
     val memo: String?,
     @SerializedName("modifyTime")
-    val lastModifyTime: String?,
+    val lastModifyTime: Long?,
     @SerializedName("noteId")
     val noteId: Long?,
     @SerializedName("ordPr")
@@ -85,7 +85,7 @@ data class DelegateOrder(
     @SerializedName("prePayment")
     val deliveryPayment: Double?,
     @SerializedName("serverRcvNo")
-    val serverReceiveTime: Int?,
+    val serverReceiveTime: Long?,
     @SerializedName("serverRcvTe")
     val serverReceiveId: String?,
     @SerializedName("shortSellingCollateral")
@@ -99,7 +99,7 @@ data class DelegateOrder(
     @SerializedName("targetOrdNo")
     val targetDelegateId: Long?,
     @SerializedName("tradeTime")
-    val delegateTime: String?,
+    val delegateTime: Long?,
     @SerializedName("tradeType")
     val transactionType: Int?
 )

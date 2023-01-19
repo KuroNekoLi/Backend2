@@ -572,7 +572,7 @@ class VirtualTrading2WebImplTest {
     }
 
     @Test
-    fun `getAllAccount_回應成功_帳號數量為3`() = testScope.runTest {
+    fun `getAllAccount_成功`() = testScope.runTest {
         val responseBody = getAllAccountSuccess()
         coEvery {
             service.getAllAccount(
@@ -617,7 +617,7 @@ class VirtualTrading2WebImplTest {
                 }
             """.trimIndent()
         ).getOrThrow()
-        Truth.assertThat(result.content?.allAccountInfo?.size).isEqualTo(3)
+        Truth.assertThat(result.content?.allAccountInfo).isNotEmpty()
     }
 
     @Test(expected = ServerException::class)

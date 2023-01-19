@@ -68,7 +68,7 @@ data class SuccessDealOrder(
     @SerializedName("tax")
     val transactionTax: Double?,
     @SerializedName("te")
-    val successDealTime: String?,
+    val successDealTime: Long?,
     @SerializedName("tradeType")
     val transactionType: Int?
 )

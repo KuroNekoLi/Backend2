@@ -61,11 +61,11 @@ data class AccountInfo(
     @SerializedName("accountType")
     val accountType: Int?,
     @SerializedName("createTime")
-    val createTime: String?,
+    val createTime: Long?,
     @SerializedName("updateTime")
-    val updateTime: String?,
+    val updateTime: Long?,
     @SerializedName("viewTime")
-    val viewTime: String?,
+    val viewTime: Long?,
     @SerializedName("accountPayType")
     val accountPayType: Int?,
     @SerializedName("maxReadSn")
@@ -77,7 +77,7 @@ data class AccountInfo(
     @SerializedName("totalPunishment")
     val totalPunishment: Double?,
     @SerializedName("tradedWarrantDate")
-    val tradedWarrantTime: Int?,
+    val tradedWarrantTime: Long?,
     @SerializedName("extendFunds")
     val extendFunds: Double?,
     @SerializedName("stockIncomeLoss")

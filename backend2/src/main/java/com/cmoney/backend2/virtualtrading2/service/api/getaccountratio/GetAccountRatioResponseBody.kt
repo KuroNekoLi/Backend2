@@ -27,7 +27,7 @@ data class GetAccountRatioResponseBody(
          * 帳號報酬率
          *
          * @property accountId 帳號編號
-         * @property date 日期
+         * @property time 日期
          * @property funds 現金資產
          * @property inventoryValues 庫存資產
          * @property isWeekend 是否為週末日
@@ -36,9 +36,9 @@ data class GetAccountRatioResponseBody(
          */
         data class AccountRatio(
             @SerializedName("account")
-            val accountId: Int?,
+            val accountId: Long?,
             @SerializedName("dataDe")
-            val date: String?,
+            val time: Long?,
             @SerializedName("funds")
             val funds: Double?,
             @SerializedName("inventoryValues")
