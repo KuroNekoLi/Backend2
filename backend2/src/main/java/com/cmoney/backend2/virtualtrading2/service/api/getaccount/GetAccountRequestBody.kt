@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
  * 取得特定帳號請求
  *
  * @property query 請求內容
- *
+ * accountId：指定帳號
  *
 {
     accountInfo(accountId: $id) {

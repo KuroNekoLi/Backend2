@@ -1,7 +1,7 @@
 object ModuleConfig {
-    const val PROJECT_VERSION = "5.47.0"
+    const val PROJECT_VERSION = "5.47.0.virtualtrading-SNAPSHOT"
     // Maven Upload Properties
-    const val RELEASE_URL = "http://192.168.99.70:8081/repository/maven-releases/"
+    const val RELEASE_URL = "http://192.168.99.70:8081/repository/maven-snapshots/"
     const val USER_NAME = "uploader"
     const val USER_PASSWORD = "g.3ruyj3"
     // Publish Config

@@ -208,7 +208,7 @@ interface VirtualTrading2Web {
     accountId: $id,
     beginTime: "yyyy/MM/dd",
     endTime: "yyyy/MM/dd",
-    tradeType: $type
+    tradeType: $type，ALL : 0 / 現股: 1 / 融資: 2 / 融券: 3
     ) {
     ordNo
     targetOrdNo
@@ -303,7 +303,7 @@ interface VirtualTrading2Web {
     accountId: $id,
     beginTime: "yyyy/MM/dd",
     endTime: "yyyy/MM/dd",
-    tradeType: $type
+    tradeType: $type，ALL : 0 / 現股: 1 / 融資: 2 / 融券: 3
     ) {
     te
     account

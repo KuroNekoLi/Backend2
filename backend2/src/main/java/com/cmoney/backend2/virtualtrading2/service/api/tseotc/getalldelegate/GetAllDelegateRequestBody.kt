@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName
  *
  * @property query 請求內容
  *
- *
+ * tradeType：ALL : 0 / 現股: 1 / 融資: 2 / 融券: 3
 {
     tseOtcOrderByCustomPeriod(
         accountId: $id,
