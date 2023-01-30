@@ -2,13 +2,13 @@ package com.cmoney.backend2.notification.service
 
 import com.cmoney.backend2.base.extension.createAuthorizationBearer
 import com.cmoney.backend2.base.extension.handleNoContent
-import com.cmoney.backend2.base.model.dispatcher.DefaultDispatcherProvider
-import com.cmoney.backend2.base.model.dispatcher.DispatcherProvider
 import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.notification.service.api.devicetoken.updateguesttoken.UpdateGuestTokenRequestBody
 import com.cmoney.backend2.notification.service.api.devicetoken.updatemembertoken.UpdateMemberTokenRequestBody
 import com.cmoney.backend2.notification.service.api.statistics.updatearrived.UpdateArrivedRequestBody
 import com.cmoney.backend2.notification.service.api.statistics.updateclickcount.UpdateClickedCountRequestBody
+import com.cmoney.core.DefaultDispatcherProvider
+import com.cmoney.core.DispatcherProvider
 import com.google.gson.Gson
 import kotlinx.coroutines.withContext
 
@@ -16,7 +16,7 @@ class NotificationWebImpl(
     private val gson: Gson,
     private val service: NotificationService,
     private val setting: Setting,
-    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider()
+    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider
 ) : NotificationWeb {
 
     @Deprecated("Will remove in 2023/1/1", replaceWith = ReplaceWith("this.updateArriveCount(sn, pushToken, title, content, emptyList(), 0)"))

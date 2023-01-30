@@ -1,6 +1,5 @@
 package com.cmoney.backend2.cellphone.service
 
-import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.setting.Setting
@@ -15,6 +14,7 @@ import com.cmoney.backend2.cellphone.service.api.register.CellphoneRegisterWithE
 import com.cmoney.backend2.cellphone.service.api.unbindcellphone.UnbindCellphoneResponseBodyWithError
 import com.cmoney.backend2.cellphone.service.api.updatepassword.UpdatePasswordResponseBodyWithError
 import com.cmoney.core.CoroutineTestRule
+import com.cmoney.core.TestDispatcherProvider
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
@@ -53,7 +53,7 @@ class CellphoneWebImplTest {
             gson = gson,
             service = service,
             setting = setting,
-            dispatcher = TestDispatcher()
+            dispatcher = TestDispatcherProvider()
         )
     }
 

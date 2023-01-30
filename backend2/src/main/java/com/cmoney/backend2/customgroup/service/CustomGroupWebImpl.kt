@@ -1,8 +1,10 @@
 package com.cmoney.backend2.customgroup.service
 
-import com.cmoney.backend2.base.extension.*
-import com.cmoney.backend2.base.model.dispatcher.DefaultDispatcherProvider
-import com.cmoney.backend2.base.model.dispatcher.DispatcherProvider
+import com.cmoney.backend2.base.extension.checkIWithError
+import com.cmoney.backend2.base.extension.checkIsSuccessful
+import com.cmoney.backend2.base.extension.checkResponseBody
+import com.cmoney.backend2.base.extension.createAuthorizationBearer
+import com.cmoney.backend2.base.extension.requireBody
 import com.cmoney.backend2.base.model.request.MemberApiParam
 import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.customgroup.service.api.addcustomgroup.NewCustomGroup
@@ -12,6 +14,8 @@ import com.cmoney.backend2.customgroup.service.api.getcustomgroupwithorderandlis
 import com.cmoney.backend2.customgroup.service.api.searchstocks.SearchStocksRequestBody
 import com.cmoney.backend2.customgroup.service.api.searchstocks.SearchStocksResponseBody
 import com.cmoney.backend2.customgroup.service.api.updatecustomgrouporder.UpdateCustomGroupOrderComplete
+import com.cmoney.core.DefaultDispatcherProvider
+import com.cmoney.core.DispatcherProvider
 import com.google.gson.Gson
 import kotlinx.coroutines.withContext
 
@@ -19,7 +23,7 @@ class CustomGroupWebImpl(
     private val gson: Gson,
     private val service: CustomGroupService,
     private val setting: Setting,
-    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider()
+    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider
 ) : CustomGroupWeb {
 
     override suspend fun getCustomGroupListIncludeOrder(groupType: CustomGroupType): Result<List<SingleGroupWithOrder>> =

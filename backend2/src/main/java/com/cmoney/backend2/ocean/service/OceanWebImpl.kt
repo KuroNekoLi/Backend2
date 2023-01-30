@@ -2,8 +2,6 @@ package com.cmoney.backend2.ocean.service
 
 import androidx.annotation.IntRange
 import com.cmoney.backend2.base.extension.*
-import com.cmoney.backend2.base.model.dispatcher.DefaultDispatcherProvider
-import com.cmoney.backend2.base.model.dispatcher.DispatcherProvider
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.request.Constant
 import com.cmoney.backend2.base.model.request.MemberApiParam
@@ -103,8 +101,6 @@ import com.cmoney.backend2.ocean.service.api.hadphoneauthentication.HadPhoneAuth
 import com.cmoney.backend2.ocean.service.api.impeacharticle.ImpeachArticleBody
 import com.cmoney.backend2.ocean.service.api.invite.InviteRequestBody
 import com.cmoney.backend2.ocean.service.api.invite.InviteResponseBody
-import com.cmoney.backend2.ocean.service.api.isinwhitelist.IsInCreateArticleWhiteListRequestBody
-import com.cmoney.backend2.ocean.service.api.isinwhitelist.IsInCreateArticleWhiteListResponseBody
 import com.cmoney.backend2.ocean.service.api.joinclub.JoinClubRequestBody
 import com.cmoney.backend2.ocean.service.api.joinclub.JoinClubResponseBody
 import com.cmoney.backend2.ocean.service.api.leaveclub.LeaveClubRequestBody
@@ -124,6 +120,8 @@ import com.cmoney.backend2.ocean.service.api.updateclubdescription.UpdateClubDes
 import com.cmoney.backend2.ocean.service.api.uploadchannelimage.UploadChannelImageResponseBody
 import com.cmoney.backend2.ocean.service.api.variable.*
 import com.cmoney.backend2.ocean.service.api.variable.channelinfo.ChannelInfo
+import com.cmoney.core.DefaultDispatcherProvider
+import com.cmoney.core.DispatcherProvider
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.JsonSyntaxException
@@ -139,7 +137,7 @@ class OceanWebImpl(
     private val gson: Gson,
     private val oceanService: OceanService,
     private val setting: Setting,
-    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider()
+    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider
 ) : OceanWeb {
 
     /**

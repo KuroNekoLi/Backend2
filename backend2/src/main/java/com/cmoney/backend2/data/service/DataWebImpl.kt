@@ -5,18 +5,18 @@ import com.cmoney.backend2.base.extension.checkIWithError
 import com.cmoney.backend2.base.extension.checkIsSuccessful
 import com.cmoney.backend2.base.extension.createAuthorizationBearer
 import com.cmoney.backend2.base.extension.requireBody
-import com.cmoney.backend2.base.model.dispatcher.DefaultDispatcherProvider
-import com.cmoney.backend2.base.model.dispatcher.DispatcherProvider
 import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.data.extension.checkApiError
 import com.cmoney.backend2.data.service.api.FundIdData
+import com.cmoney.core.DefaultDispatcherProvider
+import com.cmoney.core.DispatcherProvider
 import kotlinx.coroutines.withContext
 
 class DataWebImpl(
     private val service: DataService,
     private val setting: Setting,
     override val baseHost: String = DEFAULT_HOST,
-    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider()
+    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider
 ) : DataWeb {
 
     override suspend fun getFundIdData(

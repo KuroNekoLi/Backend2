@@ -1,8 +1,6 @@
 package com.cmoney.backend2.common.service
 
 import com.cmoney.backend2.base.extension.*
-import com.cmoney.backend2.base.model.dispatcher.DefaultDispatcherProvider
-import com.cmoney.backend2.base.model.dispatcher.DispatcherProvider
 import com.cmoney.backend2.base.model.exception.EmptyBodyException
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.log.XApiLog
@@ -28,6 +26,8 @@ import com.cmoney.backend2.common.service.api.pausetrialtiming.TrialPauseStatus
 import com.cmoney.backend2.common.service.api.registeraccount.EmailRegister
 import com.cmoney.backend2.common.service.api.starttrialtiming.TrialBeginStatus
 import com.cmoney.backend2.common.service.api.updateisneedpushcomplete.UpdateIsNeedPushComplete
+import com.cmoney.core.DefaultDispatcherProvider
+import com.cmoney.core.DispatcherProvider
 import com.google.gson.Gson
 import kotlinx.coroutines.withContext
 import okhttp3.MultipartBody
@@ -40,7 +40,7 @@ class CommonWebImpl(
     private val service: CommonService,
     private val gson: Gson,
     private val setting: Setting,
-    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider()
+    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider
 ) : CommonWeb {
 
     override suspend fun getAppConfig(): Result<GetConfigResponseBody> =

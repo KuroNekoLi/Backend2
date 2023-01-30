@@ -1,6 +1,5 @@
 package com.cmoney.backend2.notification2.service
 
-import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.response.error.CMoneyError
@@ -8,7 +7,7 @@ import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.notification2.service.api.getmonitor.GetMonitorResponseBody
 import com.cmoney.backend2.notification2.service.api.getmonitorhistory.GetMonitorHistoryResponseBody
 import com.cmoney.core.CoroutineTestRule
-
+import com.cmoney.core.TestDispatcherProvider
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
@@ -47,7 +46,7 @@ class MonitorTest {
             gson = gson,
             service = service,
             setting = setting,
-            dispatcher = TestDispatcher()
+            dispatcher = TestDispatcherProvider()
         )
     }
 

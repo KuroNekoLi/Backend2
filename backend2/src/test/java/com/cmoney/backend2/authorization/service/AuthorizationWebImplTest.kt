@@ -2,7 +2,6 @@ package com.cmoney.backend2.authorization.service
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
-import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.authorization.service.api.getexpiredtime.ExpiredTime
 import com.cmoney.backend2.authorization.service.api.getexpiredtime.Type
@@ -12,6 +11,7 @@ import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.response.error.CMoneyError
 import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.core.CoroutineTestRule
+import com.cmoney.core.TestDispatcherProvider
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
@@ -58,7 +58,7 @@ class AuthorizationWebImplTest {
             gson = gson,
             service = service,
             setting = setting,
-            dispatcher = TestDispatcher()
+            dispatcher = TestDispatcherProvider()
         )
     }
 

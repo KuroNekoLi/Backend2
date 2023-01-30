@@ -1,6 +1,5 @@
 package com.cmoney.backend2.chipk.service
 
-import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.response.dtno.DtnoWithError
@@ -11,6 +10,7 @@ import com.cmoney.backend2.chipk.service.api.internationalkchart.ProductType
 import com.cmoney.backend2.chipk.service.api.internationalkchart.TickInfo
 import com.cmoney.backend2.chipk.service.api.internationalkchart.TickInfoSetWithError
 import com.cmoney.core.CoroutineTestRule
+import com.cmoney.core.TestDispatcherProvider
 import com.google.common.truth.Truth
 import com.google.gson.Gson
 import com.google.gson.JsonArray
@@ -45,7 +45,7 @@ class ChipKWebImplTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        chipKWeb = ChipKWebImpl(TestSetting(), chipKService, gson, TestDispatcher())
+        chipKWeb = ChipKWebImpl(TestSetting(), chipKService, gson, TestDispatcherProvider())
     }
 
     @Test

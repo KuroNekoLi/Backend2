@@ -3,8 +3,6 @@ package com.cmoney.backend2.notification2.service
 import com.cmoney.backend2.base.extension.checkResponseBody
 import com.cmoney.backend2.base.extension.createAuthorizationBearer
 import com.cmoney.backend2.base.extension.handleNoContent
-import com.cmoney.backend2.base.model.dispatcher.DefaultDispatcherProvider
-import com.cmoney.backend2.base.model.dispatcher.DispatcherProvider
 import com.cmoney.backend2.base.model.request.MemberApiParam
 import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.notification2.service.api.deletemonitor.DeleteMonitorRequestBody
@@ -25,6 +23,8 @@ import com.cmoney.backend2.notification2.service.api.updateclubfcm.UpdateClubFcm
 import com.cmoney.backend2.notification2.service.api.updatemainfcm.UpdateMainFcmRequestBody
 import com.cmoney.backend2.notification2.service.api.updatemonitorpushnotification.UpdateMonitorPushNotificationRequestBody
 import com.cmoney.backend2.notification2.service.api.updatemroptionlist.UpdateMrOptionConditionRequestBody
+import com.cmoney.core.DefaultDispatcherProvider
+import com.cmoney.core.DispatcherProvider
 import com.google.gson.Gson
 import kotlinx.coroutines.withContext
 
@@ -32,7 +32,7 @@ class Notification2WebImpl(
     private val gson: Gson,
     private val service: Notification2Service,
     private val setting: Setting,
-    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider()
+    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider
 ) : Notification2Web {
 
     override suspend fun <T> getNotifyHistory(appId: Int, parameterClass: Class<T>): Result<List<GetNotifyAllResponseBody>> =

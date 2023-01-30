@@ -1,9 +1,9 @@
 package com.cmoney.backend2.cmtalk.service
 
-import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.base.model.request.MemberApiParam
 import com.cmoney.backend2.cmtalk.service.api.TargetMediaListInfo
 import com.cmoney.core.CoroutineTestRule
+import com.cmoney.core.TestDispatcherProvider
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
@@ -38,7 +38,7 @@ class CMTalkWebImplTest {
     fun setUp() {
         apiParam = MemberApiParam(99, UUID.randomUUID().toString(), UUID.randomUUID().toString())
         MockKAnnotations.init(this)
-        webImpl = CMTalkWebImpl(service, TestDispatcher())
+        webImpl = CMTalkWebImpl(service, TestDispatcherProvider())
     }
 
     @Test

@@ -2,11 +2,11 @@ package com.cmoney.backend2.centralizedimage.service
 
 import com.cmoney.backend2.base.extension.checkResponseBody
 import com.cmoney.backend2.base.extension.createAuthorizationBearer
-import com.cmoney.backend2.base.model.dispatcher.DefaultDispatcherProvider
-import com.cmoney.backend2.base.model.dispatcher.DispatcherProvider
 import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.centralizedimage.service.api.upload.GenreAndSubGenre
 import com.cmoney.backend2.centralizedimage.service.api.upload.UploadResponseBody
+import com.cmoney.core.DefaultDispatcherProvider
+import com.cmoney.core.DispatcherProvider
 import com.google.gson.Gson
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
@@ -18,7 +18,7 @@ class CentralizedImageWebImpl(
     private val service: CentralizedImageService,
     private val setting: Setting,
     private val jsonParser: Gson,
-    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider()
+    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider
 ) : CentralizedImageWeb {
 
     override suspend fun upload(

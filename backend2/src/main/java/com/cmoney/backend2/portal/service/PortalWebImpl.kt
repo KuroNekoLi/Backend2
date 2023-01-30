@@ -4,8 +4,6 @@ import com.cmoney.backend2.base.extension.checkIWithError
 import com.cmoney.backend2.base.extension.checkIsSuccessful
 import com.cmoney.backend2.base.extension.createAuthorizationBearer
 import com.cmoney.backend2.base.extension.requireBody
-import com.cmoney.backend2.base.model.dispatcher.DefaultDispatcherProvider
-import com.cmoney.backend2.base.model.dispatcher.DispatcherProvider
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.request.Constant
 import com.cmoney.backend2.base.model.request.MemberApiParam
@@ -36,6 +34,8 @@ import com.cmoney.backend2.portal.service.api.gettarget.CmPortalTarget
 import com.cmoney.backend2.portal.service.api.gettarget.GetTargetRequestBody
 import com.cmoney.backend2.portal.service.api.joinactivity.JoinActivity
 import com.cmoney.backend2.portal.service.api.joinactivity.JoinActivityRequestBody
+import com.cmoney.core.DefaultDispatcherProvider
+import com.cmoney.core.DispatcherProvider
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.JsonSyntaxException
@@ -46,7 +46,7 @@ class PortalWebImpl(
     private val gson: Gson,
     private val service: PortalService,
     private val setting: Setting,
-    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider()
+    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider
 ) : PortalWeb {
 
     /**
