@@ -1,8 +1,6 @@
 package com.cmoney.backend2.media.service
 
 import com.cmoney.backend2.base.extension.*
-import com.cmoney.backend2.base.model.dispatcher.DefaultDispatcherProvider
-import com.cmoney.backend2.base.model.dispatcher.DispatcherProvider
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.request.Constant
 import com.cmoney.backend2.base.model.request.MemberApiParam
@@ -16,6 +14,8 @@ import com.cmoney.backend2.media.service.api.getpaidlivelist.PaidLiveListInfo
 import com.cmoney.backend2.media.service.api.getpaidmedialist.PaidMediaListInfo
 import com.cmoney.backend2.media.service.api.getpaidmedialistofmember.BoughtMediaListInfo
 import com.cmoney.backend2.media.service.api.getpaidmedialistofmemberbyappid.Media
+import com.cmoney.core.DefaultDispatcherProvider
+import com.cmoney.core.DispatcherProvider
 import com.google.gson.Gson
 import com.google.gson.JsonParser
 import com.google.gson.reflect.TypeToken
@@ -25,7 +25,7 @@ class MediaWebImpl(
     private val setting: Setting,
     private val service: MediaService,
     private val gson: Gson,
-    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider()
+    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider
 ) : MediaWeb {
 
     override suspend fun getMediaList(

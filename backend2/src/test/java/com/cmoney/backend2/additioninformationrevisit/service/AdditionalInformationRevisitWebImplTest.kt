@@ -1,10 +1,10 @@
 package com.cmoney.backend2.additioninformationrevisit.service
 
-import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.additioninformationrevisit.service.testing.CandleChartRequest
 import com.cmoney.backend2.additioninformationrevisit.service.testing.SomeTickRequest
 import com.cmoney.core.CoroutineTestRule
+import com.cmoney.core.TestDispatcherProvider
 import com.google.common.truth.Truth
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -47,7 +47,7 @@ class AdditionalInformationRevisitWebImplTest : KoinTest {
         webImpl = AdditionalInformationRevisitWebImpl(
             setting = TestSetting(),
             service = service,
-            dispatcher = TestDispatcher()
+            dispatcher = TestDispatcherProvider()
         )
     }
 

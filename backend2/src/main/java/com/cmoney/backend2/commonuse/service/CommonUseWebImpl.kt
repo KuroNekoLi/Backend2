@@ -2,13 +2,13 @@ package com.cmoney.backend2.commonuse.service
 
 import com.cmoney.backend2.base.extension.checkResponseBody
 import com.cmoney.backend2.base.extension.createAuthorizationBearer
-import com.cmoney.backend2.base.model.dispatcher.DefaultDispatcherProvider
-import com.cmoney.backend2.base.model.dispatcher.DispatcherProvider
 import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.commonuse.service.api.historyevent.HistoryEvents
 import com.cmoney.backend2.commonuse.service.api.investmentpreference.InvestmentPreference
 import com.cmoney.backend2.commonuse.service.api.investmentpreference.InvestmentPreferenceType
 import com.cmoney.backend2.commonuse.service.api.query.QueryParam
+import com.cmoney.core.DefaultDispatcherProvider
+import com.cmoney.core.DispatcherProvider
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.withContext
@@ -18,7 +18,7 @@ class CommonUseWebImpl(
     private val commonUseService: CommonUseService,
     private val setting: Setting,
     private val gson: Gson,
-    private val dispatcherProvider: DispatcherProvider = DefaultDispatcherProvider()
+    private val dispatcherProvider: DispatcherProvider = DefaultDispatcherProvider
 ) : CommonUseWeb {
 
     companion object {

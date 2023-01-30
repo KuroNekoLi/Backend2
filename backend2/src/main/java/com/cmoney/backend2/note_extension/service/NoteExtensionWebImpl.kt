@@ -3,13 +3,13 @@ package com.cmoney.backend2.note_extension.service
 import com.cmoney.backend2.base.extension.checkResponseBody
 import com.cmoney.backend2.base.extension.createAuthorizationBearer
 import com.cmoney.backend2.base.extension.handleNoContent
-import com.cmoney.backend2.base.model.dispatcher.DefaultDispatcherProvider
-import com.cmoney.backend2.base.model.dispatcher.DispatcherProvider
 import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.note_extension.service.api.createreply.CreateCommentRequestBody
 import com.cmoney.backend2.note_extension.service.api.createreply.CreateCommentResponseBody
 import com.cmoney.backend2.note_extension.service.api.getnotecommentcount.GetCommentCountByNoteIdsResponseBody
 import com.cmoney.backend2.note_extension.service.api.getreplylistbyid.GetCommentListByNoteIdResponseBody
+import com.cmoney.core.DefaultDispatcherProvider
+import com.cmoney.core.DispatcherProvider
 import com.google.gson.Gson
 import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
@@ -18,7 +18,7 @@ class NoteExtensionWebImpl(
     private val service: NoteExtensionService,
     private val setting: Setting,
     private val gson: Gson,
-    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider()
+    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider
 ) : NoteExtensionWeb {
 
     override suspend fun createComment(

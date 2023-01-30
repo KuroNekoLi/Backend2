@@ -1,8 +1,6 @@
 package com.cmoney.backend2.brokerdatatransmission.service
 
 import com.cmoney.backend2.base.extension.*
-import com.cmoney.backend2.base.model.dispatcher.DefaultDispatcherProvider
-import com.cmoney.backend2.base.model.dispatcher.DispatcherProvider
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.request.Constant
 import com.cmoney.backend2.base.model.response.error.CMoneyError
@@ -21,6 +19,8 @@ import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.pu
 import com.cmoney.backend2.brokerdatatransmission.service.api.consents.Consent
 import com.cmoney.backend2.brokerdatatransmission.service.api.encryptionkey.GetEncryptionKeyResponse
 import com.cmoney.backend2.brokerdatatransmission.service.api.transactionhistory.FetchTransactionHistoryRequest
+import com.cmoney.core.DefaultDispatcherProvider
+import com.cmoney.core.DispatcherProvider
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
@@ -36,7 +36,7 @@ class BrokerDataTransmissionWebImpl(
     private val service: BrokerDataTransmissionService,
     private val setting: Setting,
     private val gson: Gson,
-    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider()
+    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider
 ) : BrokerDataTransmissionWeb {
 
     override suspend fun getBrokers(country: Country, host: String): Result<BrokerResponse> =

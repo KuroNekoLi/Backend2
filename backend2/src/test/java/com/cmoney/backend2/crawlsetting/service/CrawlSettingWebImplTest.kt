@@ -1,9 +1,9 @@
 package com.cmoney.backend2.crawlsetting.service
 
-import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.core.CoroutineTestRule
+import com.cmoney.core.TestDispatcherProvider
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
@@ -42,7 +42,7 @@ class CrawlSettingWebImplTest {
             setting = setting,
             service = service,
             gson = gson,
-            dispatcherProvider = TestDispatcher()
+            dispatcherProvider = TestDispatcherProvider()
         )
     }
 

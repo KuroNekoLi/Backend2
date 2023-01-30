@@ -1,11 +1,11 @@
 package com.cmoney.backend2.data.service
 
-import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.data.service.api.FundIdWithError
 import com.cmoney.core.CoroutineTestRule
+import com.cmoney.core.TestDispatcherProvider
 import com.google.common.truth.Truth
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
@@ -41,7 +41,7 @@ class DataWebImplTest {
         dataWeb = DataWebImpl(
             service = service,
             setting = setting,
-            dispatcher = TestDispatcher()
+            dispatcher = TestDispatcherProvider()
         )
     }
 

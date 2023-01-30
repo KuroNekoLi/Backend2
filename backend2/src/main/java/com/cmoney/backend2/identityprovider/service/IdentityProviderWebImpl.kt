@@ -2,12 +2,12 @@ package com.cmoney.backend2.identityprovider.service
 
 import com.cmoney.backend2.base.extension.checkResponseBody
 import com.cmoney.backend2.base.extension.createAuthorizationBearer
-import com.cmoney.backend2.base.model.dispatcher.DefaultDispatcherProvider
-import com.cmoney.backend2.base.model.dispatcher.DispatcherProvider
 import com.cmoney.backend2.base.model.log.XApiLog
 import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.identityprovider.service.api.gettoken.GetTokenResponseBody
 import com.cmoney.backend2.identityprovider.service.api.revoke.RevokeResponseBody
+import com.cmoney.core.DefaultDispatcherProvider
+import com.cmoney.core.DispatcherProvider
 import com.google.gson.Gson
 import kotlinx.coroutines.withContext
 
@@ -15,7 +15,7 @@ class IdentityProviderWebImpl(
     private val service: IdentityProviderService,
     private val gson: Gson,
     private val setting: Setting,
-    private val dispatcherProvider: DispatcherProvider = DefaultDispatcherProvider()
+    private val dispatcherProvider: DispatcherProvider = DefaultDispatcherProvider
 ) : IdentityProviderWeb {
 
     override suspend fun isTokenLatest(): Result<Boolean> = withContext(dispatcherProvider.io()) {

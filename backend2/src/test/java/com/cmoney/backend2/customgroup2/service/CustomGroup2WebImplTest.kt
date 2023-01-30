@@ -1,6 +1,5 @@
 package com.cmoney.backend2.customgroup2.service
 
-import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.request.Language
 import com.cmoney.backend2.base.model.setting.Setting
@@ -16,6 +15,7 @@ import com.cmoney.backend2.customgroup2.service.api.data.StockV2
 import com.cmoney.backend2.customgroup2.service.api.data.UserConfigurationDocument
 import com.cmoney.backend2.customgroup2.service.api.getcustomgroup.Documents
 import com.cmoney.core.CoroutineTestRule
+import com.cmoney.core.TestDispatcherProvider
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
@@ -57,7 +57,7 @@ class CustomGroup2WebImplTest {
             setting = setting,
             gson = gson,
             service = service,
-            dispatcher = TestDispatcher()
+            dispatcher = TestDispatcherProvider()
         )
     }
 

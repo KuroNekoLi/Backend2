@@ -348,7 +348,7 @@ class IdentityProviderWebImpl(
     private val service: IdentityProviderService,
     private val gson: Gson,
     private val setting: Setting,
-    private val dispatcherProvider: DispatcherProvider = DefaultDispatcherProvider()
+    private val dispatcherProvider: DispatcherProvider = DefaultDispatcherProvider
 ) : IdentityProviderWeb {
 	// ...
 }

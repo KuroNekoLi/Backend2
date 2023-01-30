@@ -1,12 +1,12 @@
 package com.cmoney.backend2.media.service
 
-import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.media.service.api.getmediadetail.GetMediaDetailResponseWithError
 import com.cmoney.backend2.media.service.api.getmediainfo.MediaInfoWithError
 import com.cmoney.backend2.media.service.api.getmediaurl.GetMediaUrlResponseBody
 import com.cmoney.core.CoroutineTestRule
+import com.cmoney.core.TestDispatcherProvider
 import com.google.common.truth.Truth
 import com.google.gson.Gson
 import io.mockk.MockKAnnotations
@@ -39,7 +39,7 @@ class MediaWebImplTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        mediaWeb = MediaWebImpl(TestSetting(), mediaService, gson, TestDispatcher())
+        mediaWeb = MediaWebImpl(TestSetting(), mediaService, gson, TestDispatcherProvider())
     }
 
     @Test

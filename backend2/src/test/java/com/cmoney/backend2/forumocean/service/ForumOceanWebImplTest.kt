@@ -1,6 +1,5 @@
 package com.cmoney.backend2.forumocean.service
 
-import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.forumocean.service.api.article.ExchangeCount
 import com.cmoney.backend2.forumocean.service.api.article.create.CreateArticleResponseBody
@@ -64,6 +63,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.
 import com.cmoney.backend2.forumocean.service.api.vote.get.VoteInfo
 import com.cmoney.backend2.ocean.service.api.getevaluationlist.SortType
 import com.cmoney.core.CoroutineTestRule
+import com.cmoney.core.TestDispatcherProvider
 import com.google.common.truth.Truth.assertThat
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
@@ -99,7 +99,7 @@ class ForumOceanWebImplTest {
     private val jsonParser =
         GsonBuilder().serializeNulls().setLenient().setPrettyPrinting().create()
     private val web: ForumOceanWeb =
-        ForumOceanWebImpl(forumOceanService, TestSetting(), jsonParser, "", TestDispatcher())
+        ForumOceanWebImpl(forumOceanService, TestSetting(), jsonParser, "", TestDispatcherProvider())
 
     @Before
     fun setUp() {
