@@ -63,8 +63,8 @@ class VirtualTrading2WebImpl(
         commodityId: String,
         subsistingType: Int,
         groupId: Long,
-        delegatePrice: Double,
-        delegateVolume: Long,
+        delegatePrice: String,
+        delegateVolume: Int,
         marketUnit: Int,
         transactionType: Int
     ): Result<CreateDelegateResponseBody> = withContext(dispatcher.io()) {

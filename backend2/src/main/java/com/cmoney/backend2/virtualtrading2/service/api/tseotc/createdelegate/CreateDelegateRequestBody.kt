@@ -32,9 +32,9 @@ data class CreateDelegateRequestBody(
     @SerializedName("GroupId")
     val groupId: Long,
     @SerializedName("OrdPr")
-    val delegatePrice: Double,
+    val delegatePrice: String,
     @SerializedName("OrdQty")
-    val delegateVolume: Long,
+    val delegateVolume: Int,
     @SerializedName("StkTradeType")
     val marketUnit: Int,
     @SerializedName("TradeType")
