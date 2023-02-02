@@ -45,9 +45,9 @@ data class AccountInfo(
     @SerializedName("memberId")
     val memberId: Long?,
     @SerializedName("defaultFunds")
-    val defaultFunds: Double?,
+    val defaultFunds: String?,
     @SerializedName("funds")
-    val funds: Double?,
+    val funds: String?,
     @SerializedName("needFee")
     val isNeedFee: Boolean?,
     @SerializedName("needTax")
@@ -73,23 +73,23 @@ data class AccountInfo(
     @SerializedName("isEmail")
     val isEmail: Boolean?,
     @SerializedName("avgMonthOrderCount")
-    val averageTradingCountInMonth: Double?,
+    val averageTradingCountInMonth: String?,
     @SerializedName("totalPunishment")
     val totalPunishment: Double?,
     @SerializedName("tradedWarrantDate")
     val tradedWarrantTime: Long?,
     @SerializedName("extendFunds")
-    val extendFunds: Double?,
+    val extendFunds: String?,
     @SerializedName("stockIncomeLoss")
-    val stockIncomeLoss: Double?,
+    val stockIncomeLoss: String?,
     @SerializedName("warrantIncomeLoss")
-    val warrantIncomeLoss: Double?,
+    val warrantIncomeLoss: String?,
     @SerializedName("tmxIncomeLoss")
-    val futureIncomeLoss: Double?,
+    val futureIncomeLoss: String?,
     @SerializedName("optIncomeLoss")
-    val optionIncomeLoss: Double?,
+    val optionIncomeLoss: String?,
     @SerializedName("borrowFunds")
-    val borrowFunds: Double?,
+    val borrowFunds: String?,
     @SerializedName("borrowLimit")
-    val borrowLimit: Double?
+    val borrowLimit: String?
 )

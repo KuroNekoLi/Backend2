@@ -40,9 +40,9 @@ data class GetAccountRatioResponseBody(
             @SerializedName("dataDe")
             val time: Long?,
             @SerializedName("funds")
-            val funds: Double?,
+            val funds: String?,
             @SerializedName("inventoryValues")
-            val inventoryValues: Double?,
+            val inventoryValues: String?,
             @SerializedName("isWeekend")
             val isWeekend: Boolean?,
             @SerializedName("ratio")

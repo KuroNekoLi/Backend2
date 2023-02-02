@@ -61,15 +61,15 @@ data class DelegateOrder(
     @SerializedName("cutQty")
     val reduceVolume: Int?,
     @SerializedName("dealAvgPr")
-    val successDealAveragePrice: Double?,
+    val successDealAveragePrice: String?,
     @SerializedName("dealQty")
     val successDealVolume: Int?,
     @SerializedName("groupId")
     val groupId: Long?,
     @SerializedName("marginCredit")
-    val marginPurchaseAmount: Double?,
+    val marginPurchaseAmount: String?,
     @SerializedName("marginOwn")
-    val marginPurchaseDownPayment: Double?,
+    val marginPurchaseDownPayment: String?,
     @SerializedName("memo")
     val memo: String?,
     @SerializedName("modifyTime")
@@ -77,21 +77,21 @@ data class DelegateOrder(
     @SerializedName("noteId")
     val noteId: Long?,
     @SerializedName("ordPr")
-    val delegatePrice: Double?,
+    val delegatePrice: String?,
     @SerializedName("ordQty")
     val delegateVolume: Int?,
     @SerializedName("ordType")
     val delegateBehavior: Int?,
     @SerializedName("prePayment")
-    val deliveryPayment: Double?,
+    val deliveryPayment: String?,
     @SerializedName("serverRcvNo")
     val serverReceiveTime: Long?,
     @SerializedName("serverRcvTe")
     val serverReceiveId: String?,
     @SerializedName("shortSellingCollateral")
-    val shortSaleCollateral: Double?,
+    val shortSaleCollateral: String?,
     @SerializedName("shortSellingEntrust")
-    val shortSellDeposit: Double?,
+    val shortSellDeposit: String?,
     @SerializedName("status")
     val delegateStatus: Int?,
     @SerializedName("stockMarketType")
