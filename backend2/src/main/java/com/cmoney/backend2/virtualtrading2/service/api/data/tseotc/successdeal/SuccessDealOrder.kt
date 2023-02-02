@@ -32,23 +32,23 @@ data class SuccessDealOrder(
     @SerializedName("account")
     val accountId: Long?,
     @SerializedName("actualCost")
-    val actualCost: Double?,
+    val actualCost: String?,
     @SerializedName("borrow")
-    val debitAndCreditCost: Double?,
+    val debitAndCreditCost: String?,
     @SerializedName("bsAvgPr")
-    val commodityAveragePrice: Double?,
+    val commodityAveragePrice: String?,
     @SerializedName("buySellType")
     val buySellType: Int?,
     @SerializedName("commKey")
     val commodityId: String?,
     @SerializedName("dealPr")
-    val successDealPrice: Double?,
+    val successDealPrice: String?,
     @SerializedName("dealQty")
     val successDealVolume: Int?,
     @SerializedName("dealTno")
     val tradingNo: Int?,
     @SerializedName("fee")
-    val handingFee: Double?,
+    val handingFee: String?,
     @SerializedName("flag")
     val isEnteredAccount: Boolean?,
     @SerializedName("isSuccess")
@@ -60,13 +60,13 @@ data class SuccessDealOrder(
     @SerializedName("remainQty")
     val remainVolume: Int?,
     @SerializedName("shortSellingFee")
-    val shortSaleFee: Double?,
+    val shortSaleFee: String?,
     @SerializedName("sn")
     val successDealSerialNumber: Long?,
     @SerializedName("stockMarketType")
     val marketUnit: Int?,
     @SerializedName("tax")
-    val transactionTax: Double?,
+    val transactionTax: String?,
     @SerializedName("te")
     val successDealTime: Long?,
     @SerializedName("tradeType")

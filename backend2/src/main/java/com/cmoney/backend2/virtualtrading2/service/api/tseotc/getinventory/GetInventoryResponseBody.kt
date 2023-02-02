@@ -21,7 +21,7 @@ data class GetInventoryResponseBody(
      */
     data class Data(
         @SerializedName("tseOtcPosition")
-        val inventoryList: List<RealtimeInventory>?
+        val inventoryList: List<Inventory>?
     ) {
         /**
          * 即時庫存
@@ -47,7 +47,7 @@ data class GetInventoryResponseBody(
          * @property transactionType 交易類型，現股: 1 / 融資: 2 / 融券: 3
          *
          */
-        data class RealtimeInventory(
+        data class Inventory(
             @SerializedName("account")
             val accountId: Long?,
             @SerializedName("bs")
@@ -59,27 +59,27 @@ data class GetInventoryResponseBody(
             @SerializedName("commName")
             val commodityName: String?,
             @SerializedName("cost")
-            val cost: Double?,
+            val cost: String?,
             @SerializedName("createTime")
             val createTime: Long?,
             @SerializedName("dealAvgPr")
-            val successDealAveragePrice: Double?,
+            val successDealAveragePrice: String?,
             @SerializedName("incomeLoss")
-            val gainLoss: Double?,
+            val gainLoss: String?,
             @SerializedName("incomeLossWithoutPreFee")
-            val gainLossWithoutFee: Double?,
+            val gainLossWithoutFee: String?,
             @SerializedName("inventoryQty")
             val inventoryVolume: Int?,
             @SerializedName("nowPr")
-            val nowPrice: Double?,
+            val nowPrice: String?,
             @SerializedName("ratio")
-            val ror: Double?,
+            val ror: String?,
             @SerializedName("shortSellingFee")
-            val shortSaleFee: Double?,
+            val shortSaleFee: String?,
             @SerializedName("showCost")
-            val totalDownPayment: Double?,
+            val totalDownPayment: String?,
             @SerializedName("taxCost")
-            val transactionTax: Double?,
+            val transactionTax: String?,
             @SerializedName("todayInventoryQty")
             val todaySuccessDealInventoryVolume: Int?,
             @SerializedName("tradeName")
