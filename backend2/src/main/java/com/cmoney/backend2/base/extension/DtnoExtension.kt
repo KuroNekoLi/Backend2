@@ -39,11 +39,15 @@ inline fun <reified T> DtnoData.toListOfSomething(gson: Gson): List<T> {
     return gson.fromJson(toJsonArrayString(), object : TypeToken<List<T>>() {}.type)
 }
 
-@Throws(
-    IllegalArgumentException::class,
-    JsonSyntaxException::class,
-    JsonParseException::class
-)
+/**
+ * 將原始資料轉換為資料物件
+ * 需要設定 [SerializedName] 來定義物件欄位與原始資料的關係
+ *
+ * @param T 要轉換的類型
+ * @param gson 轉換欄位的物件
+ * @return 資料物件的集合
+ */
+@Throws(IllegalArgumentException::class, JsonParseException::class)
 inline fun <reified T: Any> DtnoData.toListOfType(gson: Gson): List<T> {
     val titleIndexMap = getTitleIndexMapping()
     val type = T::class
