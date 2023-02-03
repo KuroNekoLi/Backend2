@@ -39,28 +39,40 @@ inline fun <reified T> DtnoData.toListOfSomething(gson: Gson): List<T> {
     return gson.fromJson(toJsonArrayString(), object : TypeToken<List<T>>() {}.type)
 }
 
+@Throws(
+    IllegalArgumentException::class,
+    JsonSyntaxException::class,
+    JsonParseException::class
+)
 inline fun <reified T: Any> DtnoData.toListOfType(gson: Gson): List<T> {
     val titleIndexMap = getTitleIndexMapping()
     val type = T::class
-    val primaryConstructor = type.primaryConstructor!!
-    val constructorParameterMap = primaryConstructor.parameters.associateBy {
-        it.name
+    val primaryConstructor = requireNotNull(type.primaryConstructor)
+    val memberPropertyMap = type.memberProperties.associateBy { property ->
+        property.name
     }
     return data?.map { items ->
-        val parameterWithArgs = type.memberProperties.mapNotNull { property ->
-            val parameter = constructorParameterMap[property.name] ?: return@mapNotNull null
-            val serializedName = property.javaField?.annotations?.filterIsInstance<SerializedName>()
-                ?.first()
-                ?.value
-            val argument = items?.getOrNull(titleIndexMap[serializedName] ?: 0)
+        val constructorArgs = primaryConstructor.parameters.map argMap@ { parameter ->
+            // 取得建構式參數名稱相同之欄位
+            val property = memberPropertyMap[parameter.name] ?: return@argMap null
+            val serializedName = property.javaField?.let { field ->
+                val annotation = field.annotations.filterIsInstance<SerializedName>()
+                    .firstOrNull()
+                requireNotNull(annotation) {
+                    "Field ${field.name} not set the @SerializedName."
+                }
+                annotation.value
+            } ?: return@argMap null
+            // 若物件的序列化名稱在資料中不存在則回傳原始資料為 null
+            val argument = titleIndexMap[serializedName]?.let { index ->
+                items?.getOrNull(index)
+            }
             val kClass = parameter.type.jvmErasure
             val jvmClass = kClass.java
             val value = when (kClass) {
                 String::class -> {
-                    if (argument == null) {
-                        null
-                    } else if (argument.isEmpty()) {
-                        ""
+                    if (argument.isNullOrEmpty()) {
+                        argument
                     } else {
                         gson.fromJson(argument, jvmClass)
                     }
@@ -69,8 +81,8 @@ inline fun <reified T: Any> DtnoData.toListOfType(gson: Gson): List<T> {
                     gson.fromJson(argument, jvmClass)
                 }
             }
-            parameter to value
-        }.toMap()
-        primaryConstructor.callBy(parameterWithArgs)
+            value
+        }
+        primaryConstructor.call(*constructorArgs.toTypedArray())
     }.orEmpty()
 }

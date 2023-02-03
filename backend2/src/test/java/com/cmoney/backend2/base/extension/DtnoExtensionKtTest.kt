@@ -4,8 +4,12 @@ import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import com.cmoney.backend2.base.DTNO_DATA_COMPLICATED
 import com.cmoney.backend2.base.DTNO_DATA_LESS
+import com.cmoney.backend2.base.extension.data.ComplicatedDao
+import com.cmoney.backend2.base.extension.data.ComplicatedDaoLackAnnotation
+import com.cmoney.backend2.base.extension.data.ComplicatedDaoWithOtherField
 import com.cmoney.backend2.base.model.response.dtno.DtnoData
 import com.cmoney.backend2.base.model.response.dtno.DtnoWithError
+import com.google.common.truth.Truth
 import com.google.common.truth.Truth.assertThat
 import com.google.gson.GsonBuilder
 import org.junit.After
@@ -87,8 +91,7 @@ class DtnoExtensionKtTest {
     }
 
     @Test
-    fun toListOfTypeTest() {
-
+    fun toListOfType_all_has_value_success() {
         val complicatedDtnoDataJson = context.assets.open(DTNO_DATA_COMPLICATED)
             .bufferedReader()
             .use {
@@ -114,5 +117,91 @@ class DtnoExtensionKtTest {
         )
         val actual = complicatedDtnoData.toListOfType<ComplicatedDao>(gson)
         assertThat(actual).isEqualTo(expect)
+    }
+
+    @Test
+    fun toListOfType_all_field_is_null_success() {
+        val testDtnoData = DtnoData(
+            title = listOf(
+                "名稱",
+                "漲跌幅",
+                "時間",
+                "是否顯示",
+                "時間2"
+            ),
+            data = listOf(
+                emptyList(),
+                emptyList()
+            )
+        )
+        val expected = listOf(
+            ComplicatedDao(name = null, upAndDown = null, time = null, time2 = null, isShow = null),
+            ComplicatedDao(name = null, upAndDown = null, time = null, time2 = null, isShow = null)
+        )
+        val actual = testDtnoData.toListOfType<ComplicatedDao>(gson)
+        Truth.assertThat(actual).isEqualTo(expected)
+    }
+
+    @Test
+    fun toListOfType_raw_data_field_is_not_the_same_to_type_success() {
+        val testDtnoData = DtnoData(
+            title = listOf(
+                "名稱",
+                "漲跌幅",
+                "時間",
+                "時間2"
+            ),
+            data = listOf(
+                emptyList(),
+                emptyList()
+            )
+        )
+        val expected = listOf(
+            ComplicatedDao(name = null, upAndDown = null, time = null, time2 = null, isShow = null),
+            ComplicatedDao(name = null, upAndDown = null, time = null, time2 = null, isShow = null)
+        )
+        val actual = testDtnoData.toListOfType<ComplicatedDao>(gson)
+        Truth.assertThat(actual).isEqualTo(expected)
+    }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun toListOfType_field_lack_annotation_exception() {
+        val testDtnoData = DtnoData(
+            title = listOf(
+                "名稱",
+                "漲跌幅",
+                "時間",
+                "是否顯示",
+                "時間2"
+            ),
+            data = listOf(
+                emptyList(),
+                emptyList()
+            )
+        )
+        testDtnoData.toListOfType<ComplicatedDaoLackAnnotation>(gson)
+    }
+
+    @Test
+    fun toListOfType_type_with_non_constructor_field_is_null_success() {
+        val testDtnoData = DtnoData(
+            title = listOf(
+                "名稱",
+                "漲跌幅",
+                "時間",
+                "是否顯示",
+                "時間2"
+            ),
+            data = listOf(
+                emptyList(),
+                emptyList()
+            )
+        )
+        val expected = listOf(
+            ComplicatedDaoWithOtherField(name = null, upAndDown = null, time = null, time2 = null, isShow = null),
+            ComplicatedDaoWithOtherField(name = null, upAndDown = null, time = null, time2 = null, isShow = null)
+        )
+        val actual = testDtnoData.toListOfType<ComplicatedDaoWithOtherField>(gson)
+        Truth.assertThat(actual).isEqualTo(expected)
     }
 }
