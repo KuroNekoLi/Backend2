@@ -1,0 +1,61 @@
+package com.cmoney.backend2.base.extension
+
+import android.content.Context
+import androidx.benchmark.junit4.BenchmarkRule
+import androidx.benchmark.junit4.measureRepeated
+import androidx.test.core.app.ApplicationProvider
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.cmoney.backend2.base.model.response.dtno.DtnoData
+import com.google.gson.GsonBuilder
+import com.google.gson.stream.JsonReader
+import org.junit.Rule
+import org.junit.Test
+import org.junit.runner.RunWith
+import java.io.InputStreamReader
+
+/**
+ * Benchmark, which will execute on an Android device.
+ *
+ * The body of [BenchmarkRule.measureRepeated] is measured in a loop, and Studio will
+ * output the result. Modify your code to see how it affects performance.
+ */
+@RunWith(AndroidJUnit4::class)
+class DtnoExtensionKtBenchmark {
+
+    @get:Rule
+    val benchmarkRule = BenchmarkRule()
+    private val context = ApplicationProvider.getApplicationContext<Context>()
+    private val gson = GsonBuilder().serializeNulls().setLenient().create()
+
+    @Test
+    fun toListOfSomething() {
+        benchmarkRule.measureRepeated {
+            val dtnoData = runWithTimingDisabled {
+                context.assets.open("dtno_4210983.json")
+                    .use { inputStream ->
+                        gson.fromJson<DtnoData>(
+                            JsonReader(InputStreamReader(inputStream)),
+                            DtnoData::class.java
+                        )
+                    }
+            }
+            dtnoData.toListOfSomething<CommodityInformation>(gson)
+        }
+    }
+
+    @Test
+    fun toListOfType() {
+        benchmarkRule.measureRepeated {
+            val dtnoData = runWithTimingDisabled {
+                context.assets.open("dtno_4210983.json")
+                    .use { inputStream ->
+                        gson.fromJson<DtnoData>(
+                            JsonReader(InputStreamReader(inputStream)),
+                            DtnoData::class.java
+                        )
+                    }
+            }
+            dtnoData.toListOfType<CommodityInformation>(gson)
+        }
+    }
+}
