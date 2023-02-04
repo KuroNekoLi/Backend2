@@ -55,31 +55,27 @@ inline fun <reified T: Any> DtnoData.toListOfType(gson: Gson): List<T> {
     val memberPropertyMap = type.memberProperties.associateBy { property ->
         property.name
     }
-    return data?.map { items ->
-        val constructorArgs = primaryConstructor.parameters.map argMap@ { parameter ->
-            // 取得建構式參數名稱相同之欄位
-            val property = memberPropertyMap[parameter.name] ?: return@argMap null
-            val serializedName = property.javaField?.let { field ->
-                val annotation = field.annotations.filterIsInstance<SerializedName>()
-                    .firstOrNull()
-                requireNotNull(annotation) {
-                    "Field ${field.name} not set the @SerializedName."
-                }
-                annotation.value
-            } ?: return@argMap null
-            // 若物件的序列化名稱在資料中不存在則回傳原始資料為 null
-            val argument = titleIndexMap[serializedName]?.let { index ->
-                items?.getOrNull(index)
+    val typeWithItemIndexList = primaryConstructor.parameters.mapNotNull paramMap@ { parameter ->
+        // 取得建構式參數名稱相同之欄位
+        val property = memberPropertyMap[parameter.name] ?: return@paramMap null
+        val serializedName = property.javaField?.let { field ->
+            val annotation = field.annotations.filterIsInstance<SerializedName>()
+                .firstOrNull()
+            requireNotNull(annotation) {
+                "Field ${field.name} not set the @SerializedName."
             }
-            val kClass = parameter.type.jvmErasure
+            annotation.value
+        } ?: return@paramMap null
+        // 取得對應序列化名稱之資料索引位置，若不存在則回傳 -1
+        parameter.type.jvmErasure to (titleIndexMap[serializedName] ?: -1)
+    }
+    return data?.map { items ->
+        val constructorArgs = typeWithItemIndexList.map argMap@ { (kClass, index) ->
+            val argument = items?.getOrNull(index)
             val jvmClass = kClass.java
             val value = when (kClass) {
                 String::class -> {
-                    if (argument.isNullOrEmpty()) {
-                        argument
-                    } else {
-                        gson.fromJson(argument, jvmClass)
-                    }
+                    argument
                 }
                 else -> {
                     gson.fromJson(argument, jvmClass)
