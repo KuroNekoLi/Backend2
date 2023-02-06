@@ -28,7 +28,23 @@ class DtnoExtensionKtBenchmark {
     private val gson = GsonBuilder().serializeNulls().setLenient().create()
 
     @Test
-    fun toListOfSomething() {
+    fun toListOfSomething_23445586() {
+        benchmarkRule.measureRepeated {
+            val dtnoData = runWithTimingDisabled {
+                context.assets.open("dtno_23445586.json")
+                    .use { inputStream ->
+                        gson.fromJson<DtnoData>(
+                            JsonReader(InputStreamReader(inputStream)),
+                            DtnoData::class.java
+                        )
+                    }
+            }
+            dtnoData.toListOfSomething<UsaCompanyInformation>(gson)
+        }
+    }
+
+    @Test
+    fun toListOfSomething_4210983() {
         benchmarkRule.measureRepeated {
             val dtnoData = runWithTimingDisabled {
                 context.assets.open("dtno_4210983.json")
@@ -44,7 +60,23 @@ class DtnoExtensionKtBenchmark {
     }
 
     @Test
-    fun toListOfType() {
+    fun toListOfType_23445586() {
+        benchmarkRule.measureRepeated {
+            val dtnoData = runWithTimingDisabled {
+                context.assets.open("dtno_23445586.json")
+                    .use { inputStream ->
+                        gson.fromJson<DtnoData>(
+                            JsonReader(InputStreamReader(inputStream)),
+                            DtnoData::class.java
+                        )
+                    }
+            }
+            dtnoData.toListOfType<UsaCompanyInformation>(gson)
+        }
+    }
+
+    @Test
+    fun toListOfType_4210983() {
         benchmarkRule.measureRepeated {
             val dtnoData = runWithTimingDisabled {
                 context.assets.open("dtno_4210983.json")
