@@ -46,6 +46,7 @@ android {
 
 dependencies {
     implementation(Dependencies.KOTLIN_STDLIB)
+    implementation(Dependencies.KOTLIN_REFLECT)
     implementation(Dependencies.ANDROID_KTX_CORE)
     implementation(Dependencies.ANDROID_APPCOMPAT)
     // coroutine
