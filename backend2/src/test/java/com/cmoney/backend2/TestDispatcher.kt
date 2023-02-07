@@ -6,8 +6,7 @@ import kotlinx.coroutines.Dispatchers
 
 @Deprecated(
     message = "Use com.cmoney.core.TestDispatcherProvider",
-    replaceWith = ReplaceWith("", "com.cmoney.core.TestDispatcherProvider"),
-    level = DeprecationLevel.ERROR
+    replaceWith = ReplaceWith("", "com.cmoney.core.TestDispatcherProvider")
 )
 class TestDispatcher : DispatcherProvider {
     override fun main(): CoroutineDispatcher {
