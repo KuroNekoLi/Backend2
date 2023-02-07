@@ -20,8 +20,8 @@ import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getallsuccessdeal.
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getallsuccessdeal.GetAllSuccessDealResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getdelegatedetail.GetDelegateDetailRequestBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getdelegatedetail.GetDelegateDetailResponseBody
-import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getinventory.GetInventoryRequestBody
-import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getinventory.GetInventoryResponseBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getinventory.GetAllInventoryRequestBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getinventory.GetAllInventoryResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getsuccessdealdetail.GetSuccessDealDetailRequestBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getsuccessdealdetail.GetSuccessDealDetailResponseBody
 import com.cmoney.core.DefaultDispatcherProvider
@@ -64,7 +64,7 @@ class VirtualTrading2WebImpl(
         subsistingType: Int,
         groupId: Long,
         delegatePrice: String,
-        delegateVolume: Int,
+        delegateVolume: String,
         marketUnit: Int,
         transactionType: Int
     ): Result<CreateDelegateResponseBody> = withContext(dispatcher.io()) {
@@ -228,16 +228,16 @@ class VirtualTrading2WebImpl(
         }
     }
 
-    override suspend fun getTseOtcInventory(
+    override suspend fun getTseOtcAllInventory(
         domain: String,
         url: String,
         query: String
-    ): Result<GetInventoryResponseBody> = withContext(dispatcher.io()) {
+    ): Result<GetAllInventoryResponseBody> = withContext(dispatcher.io()) {
         runCatching {
-            val requestBody = GetInventoryRequestBody(
+            val requestBody = GetAllInventoryRequestBody(
                 query = query
             )
-            service.getTseOtcInventory(
+            service.getTseOtcAllInventory(
                 url = url,
                 authorization = requestConfig.getBearerToken(),
                 body = requestBody

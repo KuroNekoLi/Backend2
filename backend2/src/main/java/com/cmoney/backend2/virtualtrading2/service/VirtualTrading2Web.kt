@@ -10,7 +10,7 @@ import com.cmoney.backend2.virtualtrading2.service.api.tseotc.deletedelagate.Del
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getalldelegate.GetAllDelegateResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getallsuccessdeal.GetAllSuccessDealResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getdelegatedetail.GetDelegateDetailResponseBody
-import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getinventory.GetInventoryResponseBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getinventory.GetAllInventoryResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getsuccessdealdetail.GetSuccessDealDetailResponseBody
 
 interface VirtualTrading2Web {
@@ -64,7 +64,7 @@ interface VirtualTrading2Web {
         subsistingType: Int,
         groupId: Long,
         delegatePrice: String,
-        delegateVolume: Int,
+        delegateVolume: String,
         marketUnit: Int,
         transactionType: Int
     ): Result<CreateDelegateResponseBody>
@@ -406,9 +406,9 @@ interface VirtualTrading2Web {
     }
     }
      */
-    suspend fun getTseOtcInventory(
+    suspend fun getTseOtcAllInventory(
         domain: String = requestConfig.getDomain(),
         url: String = "${domain}trading-api/graphql",
         query: String
-    ): Result<GetInventoryResponseBody>
+    ): Result<GetAllInventoryResponseBody>
 }

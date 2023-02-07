@@ -34,7 +34,7 @@ data class CreateDelegateRequestBody(
     @SerializedName("OrdPr")
     val delegatePrice: String,
     @SerializedName("OrdQty")
-    val delegateVolume: Int,
+    val delegateVolume: String,
     @SerializedName("StkTradeType")
     val marketUnit: Int,
     @SerializedName("TradeType")

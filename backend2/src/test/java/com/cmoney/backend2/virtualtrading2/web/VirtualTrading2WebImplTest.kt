@@ -205,7 +205,7 @@ class VirtualTrading2WebImplTest {
             subsistingType = 82,
             groupId = 0,
             delegatePrice = "0",
-            delegateVolume = 0,
+            delegateVolume = "0",
             marketUnit = 1,
             transactionType = 1
         ).getOrThrow()
@@ -230,7 +230,7 @@ class VirtualTrading2WebImplTest {
             subsistingType = 82,
             groupId = 0,
             delegatePrice = "0",
-            delegateVolume = 0,
+            delegateVolume = "0",
             marketUnit = 1,
             transactionType = 1
         ).getOrThrow()
@@ -255,7 +255,7 @@ class VirtualTrading2WebImplTest {
             subsistingType = 82,
             groupId = 0,
             delegatePrice = "0",
-            delegateVolume = 0,
+            delegateVolume = "0",
             marketUnit = 1,
             transactionType = 1
         ).getOrThrow()
@@ -280,7 +280,7 @@ class VirtualTrading2WebImplTest {
             subsistingType = 73,
             groupId = 0,
             delegatePrice = "0",
-            delegateVolume = 0,
+            delegateVolume = "0",
             marketUnit = 1,
             transactionType = 1
         ).getOrThrow()
@@ -305,7 +305,7 @@ class VirtualTrading2WebImplTest {
             subsistingType = 70,
             groupId = 0,
             delegatePrice = "0",
-            delegateVolume = 0,
+            delegateVolume = "0",
             marketUnit = 1,
             transactionType = 1
         ).getOrThrow()
@@ -330,7 +330,7 @@ class VirtualTrading2WebImplTest {
             subsistingType = 82,
             groupId = 0,
             delegatePrice = "0",
-            delegateVolume = 0,
+            delegateVolume = "0",
             marketUnit = 1,
             transactionType = 1
         ).getOrThrow()
@@ -355,7 +355,7 @@ class VirtualTrading2WebImplTest {
             subsistingType = 82,
             groupId = 0,
             delegatePrice = "0",
-            delegateVolume = 0,
+            delegateVolume = "0",
             marketUnit = 1,
             transactionType = 1
         ).getOrThrow()
@@ -380,7 +380,7 @@ class VirtualTrading2WebImplTest {
             subsistingType = 82,
             groupId = 0,
             delegatePrice = "0",
-            delegateVolume = 0,
+            delegateVolume = "0",
             marketUnit = 1,
             transactionType = 2
         ).getOrThrow()
@@ -405,7 +405,7 @@ class VirtualTrading2WebImplTest {
             subsistingType = 82,
             groupId = 0,
             delegatePrice = "0",
-            delegateVolume = 0,
+            delegateVolume = "0",
             marketUnit = 1,
             transactionType = 3
         ).getOrThrow()
@@ -443,7 +443,7 @@ class VirtualTrading2WebImplTest {
                     subsistingType = 82,
                     groupId = 0,
                     delegatePrice = price,
-                    delegateVolume = 0,
+                    delegateVolume = "0",
                     marketUnit = 1,
                     transactionType = 1
                 ).getOrThrow()
@@ -452,13 +452,17 @@ class VirtualTrading2WebImplTest {
         }
 
     @Test
-    fun `createTseOtcDelegate_輸入的delegateVolume隨機的產生String的Decimal_轉成Long是一樣的`() =
+    fun `createTseOtcDelegate_輸入的delegateVolume隨機的產生String_轉成Decimal是一樣的`() =
         testScope.runTest {
             val except = listOf(
-                1, 2, 3, 4, 5, 6, 7, 8, 9, 0
+                "0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7", "0.8", "0.9", "1.0",
+                "1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "1.9", "2.0",
+                "1.11", "1.21", "1.31", "1.41", "1.51", "1.61", "1.71", "1.81", "1.91", "2.01"
             )
             listOf(
-                1, 2, 3, 4, 5, 6, 7, 8, 9, 0
+                "0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7", "0.8", "0.9", "1.0",
+                "1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "1.9", "2.0",
+                "1.11", "1.21", "1.31", "1.41", "1.51", "1.61", "1.71", "1.81", "1.91", "2.01"
             ).forEachIndexed { index, volume ->
                 val responseBody = getCreateTseOtcDelegateSuccess()
                 val requestBodySlot = slot<CreateDelegateRequestBody>()
@@ -994,13 +998,13 @@ class VirtualTrading2WebImplTest {
     fun `getTseOtcInventory_成功`() = testScope.runTest {
         val responseBody = getTseOtcInventorySuccess()
         coEvery {
-            service.getTseOtcInventory(
+            service.getTseOtcAllInventory(
                 url = any(),
                 authorization = any(),
                 body = any()
             )
         } returns Response.success(responseBody)
-        val result = web.getTseOtcInventory(
+        val result = web.getTseOtcAllInventory(
             query = """
                 {
                   tseOtcPosition(accountId: 1234) {
@@ -1035,13 +1039,13 @@ class VirtualTrading2WebImplTest {
         val error = CMoneyError(message = "")
         val responseBody = gson.toJson(error, CMoneyError::class.java).toResponseBody()
         coEvery {
-            service.getTseOtcInventory(
+            service.getTseOtcAllInventory(
                 url = any(),
                 authorization = any(),
                 body = any()
             )
         } returns Response.error(400, responseBody)
-        web.getTseOtcInventory(
+        web.getTseOtcAllInventory(
             query = """
                 {
                   tseOtcPosition(accountId: 1234) {

@@ -19,8 +19,8 @@ import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getallsuccessdeal.
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getallsuccessdeal.GetAllSuccessDealResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getdelegatedetail.GetDelegateDetailRequestBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getdelegatedetail.GetDelegateDetailResponseBody
-import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getinventory.GetInventoryRequestBody
-import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getinventory.GetInventoryResponseBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getinventory.GetAllInventoryRequestBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getinventory.GetAllInventoryResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getsuccessdealdetail.GetSuccessDealDetailRequestBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getsuccessdealdetail.GetSuccessDealDetailResponseBody
 import retrofit2.Response
@@ -142,9 +142,9 @@ interface VirtualTrading2Service {
      */
     @RecordApi
     @POST
-    suspend fun getTseOtcInventory(
+    suspend fun getTseOtcAllInventory(
         @Url url: String,
         @Header("Authorization") authorization: String,
-        @Body body: GetInventoryRequestBody
-    ): Response<GetInventoryResponseBody>
+        @Body body: GetAllInventoryRequestBody
+    ): Response<GetAllInventoryResponseBody>
 }

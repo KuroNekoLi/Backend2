@@ -51,7 +51,7 @@ data class DelegateOrder(
     @SerializedName("account")
     val accountId: Long?,
     @SerializedName("avQty")
-    val remainDelegateVolume: Int?,
+    val remainDelegateVolume: String?,
     @SerializedName("buySellType")
     val buySellType: Int?,
     @SerializedName("commKey")
@@ -59,11 +59,11 @@ data class DelegateOrder(
     @SerializedName("condition")
     val subsistingType: Int?,
     @SerializedName("cutQty")
-    val reduceVolume: Int?,
+    val reduceVolume: String?,
     @SerializedName("dealAvgPr")
     val successDealAveragePrice: String?,
     @SerializedName("dealQty")
-    val successDealVolume: Int?,
+    val successDealVolume: String?,
     @SerializedName("groupId")
     val groupId: Long?,
     @SerializedName("marginCredit")
@@ -79,7 +79,7 @@ data class DelegateOrder(
     @SerializedName("ordPr")
     val delegatePrice: String?,
     @SerializedName("ordQty")
-    val delegateVolume: Int?,
+    val delegateVolume: String?,
     @SerializedName("ordType")
     val delegateBehavior: Int?,
     @SerializedName("prePayment")

@@ -22,7 +22,7 @@ class VirtualTrading2ServiceCase : ServiceCase {
             subsistingType = 82,
             groupId = 0,
             delegatePrice = "17.2",
-            delegateVolume = 1000,
+            delegateVolume = "1000",
             marketUnit = 1,
             transactionType = 1
         )
@@ -269,7 +269,7 @@ class VirtualTrading2ServiceCase : ServiceCase {
                 }
         """.trimIndent()
         ).logResponse(TAG)
-        web.getTseOtcInventory(
+        web.getTseOtcAllInventory(
             query = """
                 {
                 tseOtcPosition(accountId: $accountId) {

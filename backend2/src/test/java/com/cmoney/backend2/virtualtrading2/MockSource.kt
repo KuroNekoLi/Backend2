@@ -9,7 +9,7 @@ import com.cmoney.backend2.virtualtrading2.service.api.tseotc.deletedelagate.Del
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getalldelegate.GetAllDelegateResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getallsuccessdeal.GetAllSuccessDealResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getdelegatedetail.GetDelegateDetailResponseBody
-import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getinventory.GetInventoryResponseBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getinventory.GetAllInventoryResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getsuccessdealdetail.GetSuccessDealDetailResponseBody
 import com.google.gson.GsonBuilder
 
@@ -53,7 +53,7 @@ fun getCreateAccountSuccess(accountPayType: Int = 0) = CreateAccountResponseBody
  * 取得建立上市上櫃委託單成功回應
  *
  */
-fun getCreateTseOtcDelegateSuccess() =
+fun getCreateTseOtcDelegateSuccess(): CreateDelegateResponseBody =
     """
     {
         "orderNo": 2060183
@@ -67,7 +67,7 @@ fun getCreateTseOtcDelegateSuccess() =
  * 取得刪除上市上櫃委託單成功回應
  *
  */
-fun getDeleteTseOtcDelegateSuccess() =
+fun getDeleteTseOtcDelegateSuccess(): DeleteDelegateResponseBody =
     """
     {
         "orderNo": 2060183
@@ -81,7 +81,7 @@ fun getDeleteTseOtcDelegateSuccess() =
  * 取得特定帳號成功回應
  *
  */
-fun getAccountSuccess() =
+fun getAccountSuccess(): GetAccountResponseBody =
     """
 {
     "data": {
@@ -126,7 +126,7 @@ fun getAccountSuccess() =
  * 取得所有帳號成功回應
  *
  */
-fun getAllAccountSuccess() =
+fun getAllAccountSuccess(): GetAllAccountResponseBody =
     """
 {
     "data": {
@@ -232,7 +232,7 @@ fun getAllAccountSuccess() =
  * 取得特定帳戶報酬率成功回應
  *
  */
-fun getAccountRatioSuccess() =
+fun getAccountRatioSuccess(): GetAccountRatioResponseBody =
     """
 {
     "data": {
@@ -257,7 +257,7 @@ fun getAccountRatioSuccess() =
  * 取得上市上櫃所有委託單成功回應
  *
  */
-fun getTseOtcAllDelegateSuccess() =
+fun getTseOtcAllDelegateSuccess(): GetAllDelegateResponseBody =
     """
 {
     "data": {
@@ -270,19 +270,19 @@ fun getTseOtcAllDelegateSuccess() =
                 "tradeTime": 1673228775,
                 "status": 12,
                 "ordType": 73,
-                "condition": 0,
+                "condition": 82,
                 "tradeType": 1,
                 "stockMarketType": 1,
                 "buySellType": 66,
                 "commKey": "2883",
                 "ordPr": "16.0000",
-                "ordQty": 1000,
+                "ordQty": "1000",
                 "dealAvgPr": "0.0000",
-                "dealQty": 0,
-                "avQty": 0,
-                "cutQty": 0,
+                "dealQty": "0",
+                "avQty": "0",
+                "cutQty": "0",
                 "prePayment": "0.0000",
-                "serverRcvTe": -62135596800,
+                "serverRcvTe": 0,
                 "serverRcvNo": 0,
                 "marginCredit": "0.0000",
                 "marginOwn": "0.0000",
@@ -300,19 +300,19 @@ fun getTseOtcAllDelegateSuccess() =
                 "tradeTime": 1673229032,
                 "status": 12,
                 "ordType": 73,
-                "condition": 0,
+                "condition": 82,
                 "tradeType": 1,
                 "stockMarketType": 1,
                 "buySellType": 66,
                 "commKey": "2883",
                 "ordPr": "16.0000",
-                "ordQty": 1000,
+                "ordQty": "1000",
                 "dealAvgPr": "0.0000",
-                "dealQty": 0,
-                "avQty": 0,
-                "cutQty": 0,
+                "dealQty": "0",
+                "avQty": "0",
+                "cutQty": "0",
                 "prePayment": "0.0000",
-                "serverRcvTe": -62135596800,
+                "serverRcvTe": 0,
                 "serverRcvNo": 0,
                 "marginCredit": "0.0000",
                 "marginOwn": "0.0000",
@@ -321,36 +321,6 @@ fun getTseOtcAllDelegateSuccess() =
                 "memo": "",
                 "noteId": 0,
                 "modifyTime": 1673257981
-            },
-            {
-                "ordNo": 2060117,
-                "targetOrdNo": 2060117,
-                "account": 2076,
-                "groupId": 0,
-                "tradeTime": 1673229057,
-                "status": 50,
-                "ordType": 73,
-                "condition": 0,
-                "tradeType": 1,
-                "stockMarketType": 1,
-                "buySellType": 66,
-                "commKey": "2883",
-                "ordPr": "13.0000",
-                "ordQty": 1000,
-                "dealAvgPr": "13.0000",
-                "dealQty": 1000,
-                "avQty": 0,
-                "cutQty": 0,
-                "prePayment": "0.0000",
-                "serverRcvTe": 1673229057,
-                "serverRcvNo": 10004,
-                "marginCredit": "0.0000",
-                "marginOwn": "0.0000",
-                "shortSellingCollateral": "0.0000",
-                "shortSellingEntrust": "0.0000",
-                "memo": "",
-                "noteId": 0,
-                "modifyTime": 1673258006
             }
         ]
     }
@@ -365,7 +335,7 @@ fun getTseOtcAllDelegateSuccess() =
  * 取得上市上櫃委託單細節成功回應
  *
  */
-fun getTseOtcDelegateDetailSuccess() =
+fun getTseOtcDelegateDetailSuccess(): GetDelegateDetailResponseBody =
     """
 {
     "data": {
@@ -377,19 +347,19 @@ fun getTseOtcDelegateDetailSuccess() =
             "tradeTime": 1673253208,
             "status": 12,
             "ordType": 73,
-            "condition": 0,
+            "condition": 82,
             "tradeType": 1,
             "stockMarketType": 1,
             "buySellType": 66,
             "commKey": "2883",
             "ordPr": "16.0000",
-            "ordQty": 1000,
+            "ordQty": "1000",
             "dealAvgPr": "0.0000",
-            "dealQty": 0,
-            "avQty": 0,
-            "cutQty": 0,
+            "dealQty": "0",
+            "avQty": "0",
+            "cutQty": "0",
             "prePayment": "0.0000",
-            "serverRcvTe": -62135596800,
+            "serverRcvTe": 0,
             "serverRcvNo": 0,
             "marginCredit": "0.0000",
             "marginOwn": "0.0000",
@@ -410,7 +380,7 @@ fun getTseOtcDelegateDetailSuccess() =
  * 取得上市上櫃成交單成功回應
  *
  */
-fun getTseOtcAllSuccessDealSuccess() =
+fun getTseOtcAllSuccessDealSuccess(): GetAllSuccessDealResponseBody =
     """
 {
     "data": {
@@ -423,19 +393,19 @@ fun getTseOtcAllSuccessDealSuccess() =
                 "tradeType": 1,
                 "buySellType": 66,
                 "commKey": "2883",
-                "dealPr": 13.0000,
-                "dealQty": 1000,
-                "fee": 20.0000,
-                "tax": 0.0000,
+                "dealPr": "13.0000",
+                "dealQty": "1000",
+                "fee": "20.0000",
+                "tax": "0.0000",
                 "dealTno": 10005,
                 "flag": true,
                 "sn": 225837,
-                "shortSellingFee": 0.0000,
+                "shortSellingFee": "0.0000",
                 "memo": "",
-                "actualCost": 13020.0000,
-                "borrow": 0.0000,
-                "bsAvgPr": 0.0000,
-                "remainQty": 1000,
+                "actualCost": "13020.0000",
+                "borrow": "0.0000",
+                "bsAvgPr": "0.0000",
+                "remainQty": "1000",
                 "isSuccess": true
             }
         ]
@@ -450,7 +420,7 @@ fun getTseOtcAllSuccessDealSuccess() =
  * 取得上市上櫃成交單細節成功回應
  *
  */
-fun getTseOtcSuccessDealDetailSuccess() =
+fun getTseOtcSuccessDealDetailSuccess(): GetSuccessDealDetailResponseBody =
     """
 {
     "data": {
@@ -462,19 +432,19 @@ fun getTseOtcSuccessDealDetailSuccess() =
             "tradeType": 1,
             "buySellType": 66,
             "commKey": "2890",
-            "dealPr": 17.2000,
-            "dealQty": 1000,
-            "fee": 25.0000,
-            "tax": 0.0000,
+            "dealPr": "17.2000",
+            "dealQty": "1000",
+            "fee": "25.0000",
+            "tax": "0.0000",
             "dealTno": 10021,
             "flag": true,
             "sn": 225838,
-            "shortSellingFee": 0.0000,
+            "shortSellingFee": "0.0000",
             "memo": "",
-            "actualCost": 17225.0000,
-            "borrow": 0.0000,
-            "bsAvgPr": 0.0000,
-            "remainQty": 1000,
+            "actualCost": "17225.0000",
+            "borrow": "0.0000",
+            "bsAvgPr": "0.0000",
+            "remainQty": "1000",
             "isSuccess": true
         }
     }
@@ -487,29 +457,29 @@ fun getTseOtcSuccessDealDetailSuccess() =
 /**
  * 取得上市上櫃庫存成功回應
  */
-fun getTseOtcInventorySuccess() =
+fun getTseOtcInventorySuccess(): GetAllInventoryResponseBody =
     """
 {
     "data": {
         "tseOtcPosition": [
             {
                 "account": 2076,
-                "bs": 0,
-                "canOrdQty": 2000,
-                "commKey": "2303",
-                "commName": "聯電",
-                "cost": 90200.0000,
-                "createTime": 1673530860,
-                "dealAvgPr": 45.1000,
-                "incomeLoss": -926,
-                "incomeLossWithoutPreFee": -529,
-                "inventoryQty": 2000,
-                "nowPr": 44.9,
-                "ratio": -1.03,
-                "shortSellingFee": 0,
-                "showCost": 90200.0000,
-                "taxCost": 269,
-                "todayInventoryQty": 0,
+                "bs": 66,
+                "canOrdQty": "6000",
+                "commKey": "1444",
+                "commName": "力麗",
+                "cost": "62800.0000",
+                "createTime": 1675213118,
+                "dealAvgPr": "10.4700",
+                "incomeLoss": "-1063",
+                "incomeLossWithoutPreFee": "-789",
+                "inventoryQty": "6000",
+                "nowPr": "10.35",
+                "ratio": "-1.69",
+                "shortSellingFee": "0",
+                "showCost": "62800.0000",
+                "taxCost": "186",
+                "todayInventoryQty": "0",
                 "tradeName": "現股買進",
                 "tradeType": 1
             }
@@ -518,5 +488,5 @@ fun getTseOtcInventorySuccess() =
 }
     """
         .let {
-            gson.fromJson(it, GetInventoryResponseBody::class.java)
+            gson.fromJson(it, GetAllInventoryResponseBody::class.java)
         }

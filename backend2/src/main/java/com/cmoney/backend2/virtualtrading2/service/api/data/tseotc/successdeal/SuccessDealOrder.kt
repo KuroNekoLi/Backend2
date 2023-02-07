@@ -44,7 +44,7 @@ data class SuccessDealOrder(
     @SerializedName("dealPr")
     val successDealPrice: String?,
     @SerializedName("dealQty")
-    val successDealVolume: Int?,
+    val successDealVolume: String?,
     @SerializedName("dealTno")
     val tradingNo: Int?,
     @SerializedName("fee")
@@ -58,7 +58,7 @@ data class SuccessDealOrder(
     @SerializedName("ordNo")
     val delegateId: Long?,
     @SerializedName("remainQty")
-    val remainVolume: Int?,
+    val remainVolume: String?,
     @SerializedName("shortSellingFee")
     val shortSaleFee: String?,
     @SerializedName("sn")

@@ -31,7 +31,7 @@ import com.google.gson.annotations.SerializedName
     }
 }
  */
-data class GetInventoryRequestBody(
+data class GetAllInventoryRequestBody(
     @SerializedName("query")
     val query: String
 )
