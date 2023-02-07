@@ -2,6 +2,14 @@
 
 
 
+## [5.48.1](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.48.0...5.48.1) (2023-02-07)
+
+
+### Changes
+
+- 調整 DispatcherProvider 實作 - DefaultDispatcherProvider 棄用層級為 Warning
+
+
 # [5.48.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.47.0...5.48.0) (2023-02-07)
 
 

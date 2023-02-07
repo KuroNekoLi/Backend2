@@ -8,8 +8,7 @@ import kotlinx.coroutines.Dispatchers
  */
 @Deprecated(
     message = "Use com.cmoney.core.DefaultDispatcherProvider instead.",
-    replaceWith = ReplaceWith("", "com.cmoney.core.DefaultDispatcherProvider"),
-    level = DeprecationLevel.ERROR
+    replaceWith = ReplaceWith("", "com.cmoney.core.DefaultDispatcherProvider")
 )
 class DefaultDispatcherProvider : DispatcherProvider {
     override fun main(): CoroutineDispatcher {
