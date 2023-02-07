@@ -1,13 +1,26 @@
-#  (2023-01-07)
+#  (2023-02-07)
 
 
 
-# [5.47.0](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.46.0...5.47.0) (2023-01-07)
+# [5.48.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.47.0...5.48.0) (2023-02-07)
 
 
 ### Features
 
-* 新增編輯文章openGraph接口 ([ad66fcc](http://192.168.10.147:10022/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/ad66fccf7206f4d7910d16d6187885967e5c7c31))
+- 新增 DtnoData(FundIdData).toListOfType 減少資源的消耗與增加轉換效率
+- DispatcherProvider 改為使用 utils 中定義，並調整對應之預設實作及測試用實作
+
+
+#  (2023-01-07)
+
+
+
+# [5.47.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.46.0...5.47.0) (2023-01-07)
+
+
+### Features
+
+* 新增編輯文章openGraph接口 ([ad66fcc](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/commits/ad66fccf7206f4d7910d16d6187885967e5c7c31))
 
 
 ### Bug Fixes
