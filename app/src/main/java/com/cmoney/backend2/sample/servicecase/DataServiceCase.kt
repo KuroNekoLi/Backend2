@@ -2,6 +2,7 @@ package com.cmoney.backend2.sample.servicecase
 
 import com.cmoney.backend2.base.di.BACKEND2_GSON
 import com.cmoney.backend2.data.extension.toListOfSomething
+import com.cmoney.backend2.data.extension.toListOfType
 import com.cmoney.backend2.data.service.DataWeb
 import com.cmoney.backend2.sample.extension.logResponse
 import com.google.gson.Gson
@@ -17,6 +18,12 @@ class DataServiceCase : ServiceCase {
         dataWeb.getFundIdData(fundId = 190, params = "1")
             .mapCatching { data ->
                 data.toListOfSomething<FundId190Response>(gson)
+            }
+            .logResponse(TAG)
+
+        dataWeb.getFundIdData(fundId = 190, params = "1")
+            .mapCatching { data ->
+                data.toListOfType<FundId190Response>(gson)
             }
             .logResponse(TAG)
     }
