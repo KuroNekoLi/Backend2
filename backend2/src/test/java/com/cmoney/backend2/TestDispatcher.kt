@@ -4,6 +4,11 @@ import com.cmoney.backend2.base.model.dispatcher.DispatcherProvider
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 
+@Deprecated(
+    message = "Use com.cmoney.core.TestDispatcherProvider",
+    replaceWith = ReplaceWith("", "com.cmoney.core.TestDispatcherProvider"),
+    level = DeprecationLevel.ERROR
+)
 class TestDispatcher : DispatcherProvider {
     override fun main(): CoroutineDispatcher {
         return Dispatchers.Main

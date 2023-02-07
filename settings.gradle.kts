@@ -23,3 +23,4 @@ dependencyResolutionManagement {
 rootProject.name = "Backend2"
 include(":backend2")
 include(":app")
+include(":benchmark")

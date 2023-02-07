@@ -1,6 +1,5 @@
 package com.cmoney.backend2.portal.service
 
-import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.setting.Setting
@@ -8,7 +7,7 @@ import com.cmoney.backend2.portal.service.api.getadditionalinfo.CmPortalAddition
 import com.cmoney.backend2.portal.service.api.getsignals.CmPortalSignalWithError
 import com.cmoney.backend2.portal.service.api.gettarget.CmPortalTargetWithError
 import com.cmoney.core.CoroutineTestRule
-
+import com.cmoney.core.TestDispatcherProvider
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
@@ -50,7 +49,7 @@ class PortalWebImplTest {
             gson = gson,
             service = portalService,
             setting = setting,
-            dispatcher = TestDispatcher()
+            dispatcher = TestDispatcherProvider()
         )
     }
 

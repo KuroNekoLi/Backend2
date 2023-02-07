@@ -1,6 +1,7 @@
 package com.cmoney.backend2.data.extension
 
 import com.cmoney.backend2.base.extension.toListOfSomething
+import com.cmoney.backend2.base.extension.toListOfType
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.request.Constant
 import com.cmoney.backend2.base.model.response.dtno.DtnoData
@@ -25,4 +26,15 @@ internal fun FundIdWithError.checkApiError(): FundIdWithError {
 
 inline fun <reified T> FundIdData.toListOfSomething(gson: Gson): List<T> {
     return DtnoData(title, data).toListOfSomething(gson)
+}
+
+/**
+ * 將 Table 類型資料轉換為目標資料類型
+ *
+ * @param T 資料物件類型
+ * @param gson 轉譯資料類型物件
+ * @return 資料集合
+ */
+inline fun <reified T: Any> FundIdData.toListOfType(gson: Gson): List<T> {
+    return DtnoData(title = title, data = data).toListOfType(gson = gson)
 }

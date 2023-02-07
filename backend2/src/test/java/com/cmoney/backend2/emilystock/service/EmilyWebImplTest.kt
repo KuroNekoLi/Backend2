@@ -1,6 +1,5 @@
 package com.cmoney.backend2.emilystock.service
 
-import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.EmptyBodyException
 import com.cmoney.backend2.base.model.exception.ServerException
@@ -14,7 +13,7 @@ import com.cmoney.backend2.emilystock.service.api.gettargetstockinfos.StockInfo
 import com.cmoney.backend2.emilystock.service.api.gettrafficlightrecord.GetTrafficLightRecordWithError
 import com.cmoney.backend2.emilystock.service.api.gettrafficlightrecord.TrafficLightRecord
 import com.cmoney.core.CoroutineTestRule
-
+import com.cmoney.core.TestDispatcherProvider
 import com.google.common.truth.Truth
 import com.google.gson.Gson
 import io.mockk.MockKAnnotations
@@ -46,7 +45,7 @@ class EmilyWebImplTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        emilyWeb = EmilyWebImpl(TestSetting(), emilyService, gson, TestDispatcher())
+        emilyWeb = EmilyWebImpl(TestSetting(), emilyService, gson, TestDispatcherProvider())
     }
 
     @Test

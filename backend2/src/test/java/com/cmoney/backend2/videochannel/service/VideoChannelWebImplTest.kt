@@ -1,8 +1,7 @@
 package com.cmoney.backend2.videochannel.service
 
-import com.cmoney.backend2.TestDispatcher
 import com.cmoney.core.CoroutineTestRule
-
+import com.cmoney.core.TestDispatcherProvider
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
@@ -37,7 +36,7 @@ class VideoChannelWebImplTest {
         videoChannelWeb = VideoChannelWebImpl(
             service = videoChannelService,
             gson = gson,
-            dispatcher = TestDispatcher()
+            dispatcher = TestDispatcherProvider()
         )
     }
 

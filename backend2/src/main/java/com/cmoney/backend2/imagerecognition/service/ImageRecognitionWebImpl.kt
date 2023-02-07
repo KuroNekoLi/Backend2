@@ -3,12 +3,12 @@ package com.cmoney.backend2.imagerecognition.service
 import android.util.Base64
 import com.cmoney.backend2.base.extension.checkResponseBody
 import com.cmoney.backend2.base.extension.createAuthorizationBearer
-import com.cmoney.backend2.base.model.dispatcher.DefaultDispatcherProvider
-import com.cmoney.backend2.base.model.dispatcher.DispatcherProvider
 import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.imagerecognition.service.api.getpicturewords.PictureWordsRequestBody
 import com.cmoney.backend2.imagerecognition.service.api.getpicturewords.PictureWordsResponseBody
 import com.cmoney.backend2.imagerecognition.service.api.getpicturewords.UsingService
+import com.cmoney.core.DefaultDispatcherProvider
+import com.cmoney.core.DispatcherProvider
 import com.google.gson.Gson
 import kotlinx.coroutines.withContext
 
@@ -17,7 +17,7 @@ class ImageRecognitionWebImpl(
     private val setting: Setting,
     private val service: ImageRecognitionService,
     private val gson: Gson,
-    private val dispatcherProvider: DispatcherProvider = DefaultDispatcherProvider()
+    private val dispatcherProvider: DispatcherProvider = DefaultDispatcherProvider
 ) : ImageRecognitionWeb {
 
     override suspend fun getPictureWords(

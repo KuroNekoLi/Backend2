@@ -4,8 +4,6 @@ import com.cmoney.backend2.base.extension.checkIsSuccessful
 import com.cmoney.backend2.base.extension.checkResponseBody
 import com.cmoney.backend2.base.extension.createAuthorizationBearer
 import com.cmoney.backend2.base.extension.requireBody
-import com.cmoney.backend2.base.model.dispatcher.DefaultDispatcherProvider
-import com.cmoney.backend2.base.model.dispatcher.DispatcherProvider
 import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.chat.service.api.chatroomsetting.request.ChatRoomSettingUpdateProperties
 import com.cmoney.backend2.chat.service.api.chatroomsetting.response.ChatRoomSettingResponseBody
@@ -19,6 +17,8 @@ import com.cmoney.backend2.chat.service.api.updateuserprofile.response.UpdateUse
 import com.cmoney.backend2.chat.service.api.variable.Role
 import com.cmoney.backend2.chat.service.api.variable.RuleSet
 import com.cmoney.backend2.chat.service.api.variable.Subject
+import com.cmoney.core.DefaultDispatcherProvider
+import com.cmoney.core.DispatcherProvider
 import com.google.gson.Gson
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
@@ -31,7 +31,7 @@ class ChatRoomWebImpl(
     private val chatRoomService: ChatRoomService,
     private val setting: Setting,
     private val gson: Gson,
-    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider()
+    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider
 ) : ChatRoomWeb {
 
     override suspend fun getUserCurrentSubjectRoles(

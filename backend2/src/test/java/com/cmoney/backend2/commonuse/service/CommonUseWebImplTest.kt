@@ -1,12 +1,12 @@
 package com.cmoney.backend2.commonuse.service
 
-import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.commonuse.service.api.historyevent.HistoryEvents
 import com.cmoney.backend2.commonuse.service.api.investmentpreference.InvestmentPreference
 import com.cmoney.backend2.commonuse.service.api.investmentpreference.InvestmentPreferenceType
 import com.cmoney.core.CoroutineTestRule
+import com.cmoney.core.TestDispatcherProvider
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
@@ -47,7 +47,7 @@ class CommonUseWebImplTest {
             service,
             setting,
             gson,
-            dispatcherProvider = TestDispatcher()
+            dispatcherProvider = TestDispatcherProvider()
         )
     }
 

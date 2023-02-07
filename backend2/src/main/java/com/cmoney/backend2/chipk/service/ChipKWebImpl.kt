@@ -1,8 +1,6 @@
 package com.cmoney.backend2.chipk.service
 
 import com.cmoney.backend2.base.extension.*
-import com.cmoney.backend2.base.model.dispatcher.DefaultDispatcherProvider
-import com.cmoney.backend2.base.model.dispatcher.DispatcherProvider
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.request.Constant
 import com.cmoney.backend2.base.model.response.dtno.DtnoData
@@ -12,6 +10,8 @@ import com.cmoney.backend2.chipk.service.api.futuredaytradedtnodata.FutureDayTra
 import com.cmoney.backend2.chipk.service.api.getOfficialStockPickData.OfficialStockInfo
 import com.cmoney.backend2.chipk.service.api.internationalkchart.ProductType
 import com.cmoney.backend2.chipk.service.api.internationalkchart.TickInfoSet
+import com.cmoney.core.DefaultDispatcherProvider
+import com.cmoney.core.DispatcherProvider
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.JsonSyntaxException
@@ -22,7 +22,7 @@ class ChipKWebImpl(
     private val setting: Setting,
     private val service: ChipKService,
     private val gson: Gson,
-    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider()
+    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider
 ) : ChipKWeb {
 
     override suspend fun getData(commKey: String, type: Int): Result<DtnoData> =

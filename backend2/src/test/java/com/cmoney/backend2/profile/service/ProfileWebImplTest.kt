@@ -1,6 +1,5 @@
 package com.cmoney.backend2.profile.service
 
-import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.profile.data.GetNicknameAndAvatarResponse
@@ -14,7 +13,7 @@ import com.cmoney.backend2.profile.service.api.signupcompletebyemail.SignUpCompl
 import com.cmoney.backend2.profile.service.api.signupcompletebyphone.SignUpCompleteByPhoneResponseBody
 import com.cmoney.backend2.profile.service.api.variable.GraphQLFieldDefinition
 import com.cmoney.core.CoroutineTestRule
-
+import com.cmoney.core.TestDispatcherProvider
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
@@ -55,7 +54,7 @@ class ProfileWebImplTest {
             gson = gson,
             service = service,
             setting = setting,
-            dispatcher = TestDispatcher()
+            dispatcher = TestDispatcherProvider()
         )
     }
 

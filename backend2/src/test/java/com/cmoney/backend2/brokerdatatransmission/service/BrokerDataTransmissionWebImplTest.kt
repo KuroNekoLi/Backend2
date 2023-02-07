@@ -1,6 +1,5 @@
 package com.cmoney.backend2.brokerdatatransmission.service
 
-import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.request.Constant
@@ -9,12 +8,13 @@ import com.cmoney.backend2.brokerdatatransmission.service.api.BrokerAccount
 import com.cmoney.backend2.brokerdatatransmission.service.api.Country
 import com.cmoney.backend2.brokerdatatransmission.service.api.brokers.BrokerResponseWithError
 import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.TradeType
-import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.imagerecognition.ImageRecognitionResponseBody
 import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.imagerecognition.ImageRecognitionData
 import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.imagerecognition.ImageRecognitionResponse
+import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.imagerecognition.ImageRecognitionResponseBody
 import com.cmoney.backend2.brokerdatatransmission.service.api.brokerstockdata.put.BrokerData
 import com.cmoney.backend2.brokerdatatransmission.service.api.encryptionkey.GetEncryptionKeyResponseWithError
 import com.cmoney.core.CoroutineTestRule
+import com.cmoney.core.TestDispatcherProvider
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonElement
@@ -59,7 +59,7 @@ class BrokerDataTransmissionWebImplTest {
             gson = gson,
             service = service,
             setting = setting,
-            dispatcher = TestDispatcher()
+            dispatcher = TestDispatcherProvider()
         )
     }
 

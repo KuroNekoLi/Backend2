@@ -1,10 +1,9 @@
 package com.cmoney.backend2.mobileocean.service
 
-import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.mobileocean.service.api.createarticletoocean.requestbody.SubmitAdviceParam
 import com.cmoney.core.CoroutineTestRule
-
+import com.cmoney.core.TestDispatcherProvider
 import io.mockk.MockKAnnotations
 import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
@@ -33,7 +32,7 @@ class MobileOceanWebImplVerify {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        webImpl = MobileOceanWebImpl(service, TestSetting(), TestDispatcher())
+        webImpl = MobileOceanWebImpl(service, TestSetting(), TestDispatcherProvider())
     }
 
     @After

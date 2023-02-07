@@ -1,13 +1,12 @@
 package com.cmoney.backend2.note_extension.service
 
-import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.note_extension.service.api.createreply.CreateCommentResponseBody
 import com.cmoney.backend2.note_extension.service.api.getnotecommentcount.GetCommentCountByNoteIdsResponseBody
 import com.cmoney.backend2.note_extension.service.api.getreplylistbyid.GetCommentListByNoteIdResponseBody
 import com.cmoney.core.CoroutineTestRule
-
+import com.cmoney.core.TestDispatcherProvider
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
@@ -43,7 +42,7 @@ class NotesExtensionWebImplTest {
         noteExtensionWeb = NoteExtensionWebImpl(
             service = noteExtensionService,
             setting = setting,
-            dispatcher = TestDispatcher(),
+            dispatcher = TestDispatcherProvider(),
             gson = gson
         )
     }

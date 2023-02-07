@@ -1,6 +1,5 @@
 package com.cmoney.backend2.vtwebapi.service
 
-import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.vtwebapi.service.api.createaccount.AccountType
 import com.cmoney.backend2.vtwebapi.service.api.createaccount.CreateAccountRequestBody
@@ -12,7 +11,7 @@ import com.cmoney.backend2.vtwebapi.service.api.getstockinventorylist.GetStockIn
 import com.cmoney.backend2.vtwebapi.service.api.purchaseproductcard.PurchaseProductCardRequestBody
 import com.cmoney.backend2.vtwebapi.service.api.purchaseproductcard.PurchaseProductCardResponseBody
 import com.cmoney.core.CoroutineTestRule
-
+import com.cmoney.core.TestDispatcherProvider
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
@@ -50,7 +49,7 @@ class VirtualTradeWebImplTest {
         webImpl = VirtualTradeWebImpl(
             setting = TestSetting(),
             service = service,
-            dispatcher = TestDispatcher(),
+            dispatcher = TestDispatcherProvider(),
             gson = gson
         )
     }

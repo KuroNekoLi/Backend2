@@ -29,6 +29,7 @@ object Versions {
     const val ANDROIDX_NAVIGATION = "2.5.0"
     const val ANDROID_BIOMETRIC = "1.1.0"
     const val ANDROID_SECURITY = "1.0.0"
+    const val ANDROID_BENCHMARK = "1.1.1"
     // Android Compose
     const val ANDROID_COMPOSE = "1.2.0-rc02"
     const val ANDROID_COMPOSE_ACTIVITY = "1.5.0"

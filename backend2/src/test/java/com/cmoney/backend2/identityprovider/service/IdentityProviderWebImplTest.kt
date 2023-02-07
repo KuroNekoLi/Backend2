@@ -1,6 +1,5 @@
 package com.cmoney.backend2.identityprovider.service
 
-import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.response.error.CMoneyError
@@ -9,6 +8,7 @@ import com.cmoney.backend2.identityprovider.service.api.gettoken.GetTokenRespons
 import com.cmoney.backend2.identityprovider.service.api.islatest.IsLatestResponseBodyWithError
 import com.cmoney.backend2.identityprovider.service.api.revoke.RevokeResponseBodyWithError
 import com.cmoney.core.CoroutineTestRule
+import com.cmoney.core.TestDispatcherProvider
 import com.google.common.truth.Truth.assertThat
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
@@ -49,7 +49,7 @@ class IdentityProviderWebImplTest {
             service = service,
             gson = gson,
             setting = setting,
-            dispatcherProvider = TestDispatcher()
+            dispatcherProvider = TestDispatcherProvider()
         )
     }
 

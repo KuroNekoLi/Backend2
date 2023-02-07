@@ -1,11 +1,10 @@
 package com.cmoney.backend2.trial.service
 
-import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.request.MemberApiParam
 import com.cmoney.backend2.trial.service.api.setquotause.SetQuotaUseResponseBody
 import com.cmoney.core.CoroutineTestRule
-
+import com.cmoney.core.TestDispatcherProvider
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
@@ -44,7 +43,7 @@ class SetQuotaUsageUseUnitTest {
     fun setUp() {
         apiParam = MemberApiParam(99, UUID.randomUUID().toString(), UUID.randomUUID().toString())
         MockKAnnotations.init(this)
-        trialWeb = TrialWebImpl(gson, TestSetting(), service, TestDispatcher())
+        trialWeb = TrialWebImpl(gson, TestSetting(), service, TestDispatcherProvider())
     }
 
     @Test(expected = TimeoutException::class)
