@@ -41,7 +41,7 @@ import com.cmoney.backend2.trial.di.trialServiceModule
 import com.cmoney.backend2.userbehavior.di.userBehaviorServiceModule
 import com.cmoney.backend2.videochannel.di.videoChannelServiceModule
 import com.cmoney.backend2.virtualassets.di.virtualAssetsServiceModule
-import com.cmoney.backend2.virtualtrading2.di.virtualTradingServiceModule
+import com.cmoney.backend2.virtualtrading2.di.virtualTrading2ServiceModule
 import com.cmoney.backend2.vtwebapi.di.virtualTradeServiceModule
 import org.koin.core.module.Module
 import org.koin.dsl.module
@@ -94,6 +94,6 @@ val backendServicesModule: Module = module {
         videoChannelServiceModule,
         virtualAssetsServiceModule,
         virtualTradeServiceModule,
-        virtualTradingServiceModule
+        virtualTrading2ServiceModule
     )
 }

@@ -23,13 +23,15 @@ interface VirtualTrading2Web {
     /**
      * 建立帳號
      *
+     * @param authorization 授權
      * @param domain 網域名稱
-     * @param url 完整的Url，預設使用[domain]當作網域名稱
+     * @param url 完整的Url
      * @param accountInvestType 投資帳戶類型 (現股 : 1 / 期權 : 2)
      * @param cardSn 道具卡序號，沒有道具卡填0(免費創建)
      *
      */
     suspend fun createAccount(
+        authorization: String = requestConfig.getBearerToken(),
         domain: String = requestConfig.getDomain(),
         url: String = "${domain}account-api/Account",
         accountInvestType: Int,
@@ -39,6 +41,7 @@ interface VirtualTrading2Web {
     /**
      * 建立上市上櫃委託
      *
+     * @param authorization 授權
      * @param domain 網域名稱
      * @param url 完整的Url，預設使用[domain]當作網域名稱
      * @param accountId 帳號編號
@@ -56,6 +59,7 @@ interface VirtualTrading2Web {
      *
      */
     suspend fun createTseOtcDelegate(
+        authorization: String = requestConfig.getBearerToken(),
         domain: String = requestConfig.getDomain(),
         url: String = "${domain}trading-api/Trading/TseOtc/NewOrder",
         accountId: Long,
@@ -72,6 +76,7 @@ interface VirtualTrading2Web {
     /**
      * 刪除上市上櫃委託
      *
+     * @param authorization 授權
      * @param domain 網域名稱
      * @param url 完整的Url，預設使用[domain]當作網域名稱
      * @param accountId 帳號編號
@@ -80,6 +85,7 @@ interface VirtualTrading2Web {
      *
      */
     suspend fun deleteTseOtcDelegate(
+        authorization: String = requestConfig.getBearerToken(),
         domain: String = requestConfig.getDomain(),
         url: String = "${domain}trading-api/Trading/TseOtc/CancelOrder",
         accountId: Long,
@@ -90,6 +96,7 @@ interface VirtualTrading2Web {
     /**
      * 取得帳號
      *
+     * @param authorization 授權
      * @param domain 網域名稱
      * @param url 完整的Url，預設使用[domain]當作網域名稱
      * @param query 查詢內容
@@ -127,6 +134,7 @@ interface VirtualTrading2Web {
     }
      */
     suspend fun getAccount(
+        authorization: String = requestConfig.getBearerToken(),
         domain: String = requestConfig.getDomain(),
         url: String = "${domain}account-api/graphql",
         query: String
@@ -135,6 +143,7 @@ interface VirtualTrading2Web {
     /**
      * 取得所有帳號
      *
+     * @param authorization 授權
      * @param domain 網域名稱
      * @param url 完整的Url，預設使用[domain]當作網域名稱
      * @param query 查詢內容
@@ -172,6 +181,7 @@ interface VirtualTrading2Web {
     }
      */
     suspend fun getAllAccount(
+        authorization: String = requestConfig.getBearerToken(),
         domain: String = requestConfig.getDomain(),
         url: String = "${domain}account-api/graphql",
         query: String
@@ -192,6 +202,7 @@ interface VirtualTrading2Web {
     }
      */
     suspend fun getAccountRatio(
+        authorization: String = requestConfig.getBearerToken(),
         domain: String = requestConfig.getDomain(),
         url: String = "${domain}account-api/graphql",
         query: String
@@ -200,6 +211,7 @@ interface VirtualTrading2Web {
     /**
      * 取得上市櫃所有的委託單
      *
+     * @param authorization 授權
      * @param domain 網域名稱
      * @param url 完整的Url，預設使用[domain]當作網域名稱
      * @param query 查詢內容
@@ -242,6 +254,7 @@ interface VirtualTrading2Web {
     }
      */
     suspend fun getTseOtcAllDelegate(
+        authorization: String = requestConfig.getBearerToken(),
         domain: String = requestConfig.getDomain(),
         url: String = "${domain}trading-api/graphql",
         query: String
@@ -250,6 +263,7 @@ interface VirtualTrading2Web {
     /**
      * 取得上市櫃的委託單細節
      *
+     * @param authorization 授權
      * @param domain 網域名稱
      * @param url 完整的Url，預設使用[domain]當作網域名稱
      * @param query 查詢內容
@@ -287,6 +301,7 @@ interface VirtualTrading2Web {
     }
      */
     suspend fun getTseOtcDelegateDetail(
+        authorization: String = requestConfig.getBearerToken(),
         domain: String = requestConfig.getDomain(),
         url: String = "${domain}trading-api/graphql",
         query: String
@@ -295,6 +310,7 @@ interface VirtualTrading2Web {
     /**
      * 取得上市櫃所有的成交單
      *
+     * @param authorization 授權
      * @param domain 網域名稱
      * @param url 完整的Url，預設使用[domain]當作網域名稱
      * @param query 查詢內容
@@ -330,6 +346,7 @@ interface VirtualTrading2Web {
     }
      */
     suspend fun getTseOtcAllSuccessDeal(
+        authorization: String = requestConfig.getBearerToken(),
         domain: String = requestConfig.getDomain(),
         url: String = "${domain}trading-api/graphql",
         query: String
@@ -338,6 +355,7 @@ interface VirtualTrading2Web {
     /**
      * 取得上市櫃的成交單細節
      *
+     * @param authorization 授權
      * @param domain 網域名稱
      * @param url 完整的Url，預設使用[domain]當作網域名稱
      * @param query 查詢內容
@@ -371,6 +389,7 @@ interface VirtualTrading2Web {
     }
      */
     suspend fun getTseOtcSuccessDealDetail(
+        authorization: String = requestConfig.getBearerToken(),
         domain: String = requestConfig.getDomain(),
         url: String = "${domain}trading-api/graphql",
         query: String
@@ -379,6 +398,7 @@ interface VirtualTrading2Web {
     /**
      * 取得上市櫃的庫存
      *
+     * @param authorization 授權
      * @param domain 網域名稱
      * @param url 完整的Url，預設使用[domain]當作網域名稱
      * @param query 查詢內容
@@ -407,6 +427,7 @@ interface VirtualTrading2Web {
     }
      */
     suspend fun getTseOtcAllInventory(
+        authorization: String = requestConfig.getBearerToken(),
         domain: String = requestConfig.getDomain(),
         url: String = "${domain}trading-api/graphql",
         query: String

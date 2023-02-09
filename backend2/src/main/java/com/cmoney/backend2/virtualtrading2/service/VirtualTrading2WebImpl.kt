@@ -37,6 +37,7 @@ class VirtualTrading2WebImpl(
 ) : VirtualTrading2Web {
 
     override suspend fun createAccount(
+        authorization: String,
         domain: String,
         url: String,
         accountInvestType: Int,
@@ -49,13 +50,14 @@ class VirtualTrading2WebImpl(
             )
             service.createAccount(
                 url = url,
-                authorization = requestConfig.getBearerToken(),
+                authorization = authorization,
                 body = requestBody
             ).checkResponseBody(gson)
         }
     }
 
     override suspend fun createTseOtcDelegate(
+        authorization: String,
         domain: String,
         url: String,
         accountId: Long,
@@ -82,13 +84,14 @@ class VirtualTrading2WebImpl(
             )
             service.createTseOtcDelegate(
                 url = url,
-                authorization = requestConfig.getBearerToken(),
+                authorization = authorization,
                 body = requestBody
             ).checkResponseBody(gson)
         }
     }
 
     override suspend fun deleteTseOtcDelegate(
+        authorization: String,
         domain: String,
         url: String,
         accountId: Long,
@@ -103,13 +106,14 @@ class VirtualTrading2WebImpl(
             )
             service.deleteTseOtcDelegate(
                 url = url,
-                authorization = requestConfig.getBearerToken(),
+                authorization = authorization,
                 body = requestBody
             ).checkResponseBody(gson)
         }
     }
 
     override suspend fun getAccount(
+        authorization: String,
         domain: String,
         url: String,
         query: String
@@ -120,13 +124,14 @@ class VirtualTrading2WebImpl(
             )
             service.getAccount(
                 url = url,
-                authorization = requestConfig.getBearerToken(),
+                authorization = authorization,
                 body = requestBody
             ).checkResponseBody(gson)
         }
     }
 
     override suspend fun getAllAccount(
+        authorization: String,
         domain: String,
         url: String,
         query: String
@@ -137,13 +142,14 @@ class VirtualTrading2WebImpl(
             )
             service.getAllAccount(
                 url = url,
-                authorization = requestConfig.getBearerToken(),
+                authorization = authorization,
                 body = requestBody
             ).checkResponseBody(gson)
         }
     }
 
     override suspend fun getAccountRatio(
+        authorization: String,
         domain: String,
         url: String,
         query: String
@@ -154,13 +160,14 @@ class VirtualTrading2WebImpl(
             )
             service.getAccountRatio(
                 url = url,
-                authorization = requestConfig.getBearerToken(),
+                authorization = authorization,
                 body = requestBody
             ).checkResponseBody(gson)
         }
     }
 
     override suspend fun getTseOtcAllDelegate(
+        authorization: String,
         domain: String,
         url: String,
         query: String
@@ -171,13 +178,14 @@ class VirtualTrading2WebImpl(
             )
             service.getTseOtcAllDelegate(
                 url = url,
-                authorization = requestConfig.getBearerToken(),
+                authorization = authorization,
                 body = requestBody
             ).checkResponseBody(gson)
         }
     }
 
     override suspend fun getTseOtcDelegateDetail(
+        authorization: String,
         domain: String,
         url: String,
         query: String
@@ -188,13 +196,14 @@ class VirtualTrading2WebImpl(
             )
             service.getTseOtcDelegateDetail(
                 url = url,
-                authorization = requestConfig.getBearerToken(),
+                authorization = authorization,
                 body = requestBody
             ).checkResponseBody(gson)
         }
     }
 
     override suspend fun getTseOtcAllSuccessDeal(
+        authorization: String,
         domain: String,
         url: String,
         query: String
@@ -205,13 +214,14 @@ class VirtualTrading2WebImpl(
             )
             service.getTseOtcAllSuccessDeal(
                 url = url,
-                authorization = requestConfig.getBearerToken(),
+                authorization = authorization,
                 body = requestBody
             ).checkResponseBody(gson)
         }
     }
 
     override suspend fun getTseOtcSuccessDealDetail(
+        authorization: String,
         domain: String,
         url: String,
         query: String
@@ -222,13 +232,14 @@ class VirtualTrading2WebImpl(
             )
             service.getTseOtcSuccessDealDetail(
                 url = url,
-                authorization = requestConfig.getBearerToken(),
+                authorization = authorization,
                 body = requestBody
             ).checkResponseBody(gson)
         }
     }
 
     override suspend fun getTseOtcAllInventory(
+        authorization: String,
         domain: String,
         url: String,
         query: String
@@ -239,7 +250,7 @@ class VirtualTrading2WebImpl(
             )
             service.getTseOtcAllInventory(
                 url = url,
-                authorization = requestConfig.getBearerToken(),
+                authorization = authorization,
                 body = requestBody
             ).checkResponseBody(gson)
         }

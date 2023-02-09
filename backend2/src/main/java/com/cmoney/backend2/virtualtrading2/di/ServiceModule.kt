@@ -18,7 +18,7 @@ val BACKEND2_VIRTUAL_TRADING2_OKHTTP = named("backend2_virtual_trading2_okhttp")
 val BACKEND2_VIRTUAL_TRADING2_RETROFIT = named("backend2_virtual_trading2_retrofit")
 val BACKEND2_VIRTUAL_TRADING2_REQUEST_CONFIG = named("backend2_virtual_trading2_request_config")
 
-val virtualTradingServiceModule = module {
+val virtualTrading2ServiceModule = module {
     single(BACKEND2_VIRTUAL_TRADING2_OKHTTP) {
         OkHttpClient.Builder()
             .connectionSpecs(listOf(ConnectionSpec.COMPATIBLE_TLS, ConnectionSpec.CLEARTEXT))
@@ -30,7 +30,7 @@ val virtualTradingServiceModule = module {
             .addLogInterceptor()
             .build()
     }
-    single<Retrofit>(BACKEND2_VIRTUAL_TRADING2_RETROFIT) {
+    single(BACKEND2_VIRTUAL_TRADING2_RETROFIT) {
         Retrofit.Builder()
             .baseUrl("http://localhost/")
             .client(get(BACKEND2_VIRTUAL_TRADING2_OKHTTP))

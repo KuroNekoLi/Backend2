@@ -1,7 +1,5 @@
 package com.cmoney.backend2.virtualtrading2.web
 
-import android.content.Context
-import androidx.test.core.app.ApplicationProvider
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.response.error.CMoneyError
 import com.cmoney.backend2.virtualtrading2.*
@@ -38,8 +36,6 @@ class VirtualTrading2WebImplTest {
 
     @get:Rule
     val mainCoroutineRule = CoroutineTestRule(testScope = testScope)
-
-    private val context = ApplicationProvider.getApplicationContext<Context>()
 
     @MockK
     private lateinit var service: VirtualTrading2Service
