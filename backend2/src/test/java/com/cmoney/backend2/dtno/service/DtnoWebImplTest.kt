@@ -1,6 +1,5 @@
 package com.cmoney.backend2.dtno.service
 
-import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.response.dtno.DtnoWithError
@@ -8,7 +7,7 @@ import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.dtno.service.api.getLatestBasicInfo.BasicInfoData
 import com.cmoney.backend2.dtno.service.api.getLatestBasicInfo.BasicInfoResponseBodyWithError
 import com.cmoney.core.CoroutineTestRule
-
+import com.cmoney.core.TestDispatcherProvider
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
@@ -47,7 +46,7 @@ class DtnoWebImplTest {
             gson = gson,
             service = service,
             setting = setting,
-            dispatcherProvider = TestDispatcher()
+            dispatcherProvider = TestDispatcherProvider()
         )
     }
 

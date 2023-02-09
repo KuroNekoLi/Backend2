@@ -5,9 +5,9 @@ import com.cmoney.backend2.authorization.service.api.getexpiredtime.Type
 import com.cmoney.backend2.authorization.service.api.hasauth.Auth
 import com.cmoney.backend2.base.extension.checkResponseBody
 import com.cmoney.backend2.base.extension.createAuthorizationBearer
-import com.cmoney.backend2.base.model.dispatcher.DefaultDispatcherProvider
-import com.cmoney.backend2.base.model.dispatcher.DispatcherProvider
 import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.core.DefaultDispatcherProvider
+import com.cmoney.core.DispatcherProvider
 import com.google.gson.Gson
 import kotlinx.coroutines.withContext
 
@@ -15,7 +15,7 @@ class AuthorizationWebImpl(
     private val gson: Gson,
     private val service: AuthorizationService,
     override val setting: Setting,
-    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider()
+    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider
 ) : AuthorizationWeb {
     override suspend fun getExpiredTime(type: Type, subjectId: Long): Result<ExpiredTime> =
         withContext(dispatcher.io()) {

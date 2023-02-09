@@ -1,13 +1,12 @@
 package com.cmoney.backend2.virtualassets.service
 
-import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.virtualassets.service.api.getexchangeproductlist.GetExchangeProductListResponseBody
 import com.cmoney.backend2.virtualassets.service.api.getexchangeproductlist.ProductInfo
 import com.cmoney.backend2.virtualassets.service.api.getgrouplastexchangetime.GetGroupLastExchangeTimeResponseBody
 import com.cmoney.core.CoroutineTestRule
-
+import com.cmoney.core.TestDispatcherProvider
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
@@ -47,7 +46,7 @@ class VirtualAssetsWebImplTest {
                 TestSetting(),
                 gson,
                 virtualAssetsService,
-                TestDispatcher()
+                TestDispatcherProvider()
             )
     }
 

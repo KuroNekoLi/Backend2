@@ -1,6 +1,5 @@
 package com.cmoney.backend2.realtimeaftermarket.service
 
-import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.EmptyBodyException
 import com.cmoney.backend2.base.model.exception.ServerException
@@ -31,7 +30,7 @@ import com.cmoney.backend2.realtimeaftermarket.service.api.getstocksinindex.Stoc
 import com.cmoney.backend2.realtimeaftermarket.service.api.searchstock.ResultEntry
 import com.cmoney.backend2.realtimeaftermarket.service.api.searchustock.UsResultEntry
 import com.cmoney.core.CoroutineTestRule
-
+import com.cmoney.core.TestDispatcherProvider
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
@@ -70,7 +69,7 @@ class RealTimeAfterMarketWebImplTest {
         webImpl = RealTimeAfterMarketWebImpl(
             service = service,
             setting = setting,
-            dispatcher = TestDispatcher()
+            dispatcher = TestDispatcherProvider()
         )
     }
 

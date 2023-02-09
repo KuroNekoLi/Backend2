@@ -45,6 +45,7 @@ object Dependencies {
     const val ANDROID_NAVIGATION_FRAGMENT = "androidx.navigation:navigation-fragment-ktx:${Versions.ANDROIDX_NAVIGATION}"
     const val ANDROID_NAVIGATION_UI = "androidx.navigation:navigation-ui-ktx:${Versions.ANDROIDX_NAVIGATION}"
     const val ANDROID_BIOMETRIC = "androidx.biometric:biometric:${Versions.ANDROID_BIOMETRIC}"
+    const val ANDROID_BENCHMARK_JUNIT = "androidx.benchmark:benchmark-junit4:${Versions.ANDROID_BENCHMARK}"
     // Android Compose
     const val ANDROID_COMPOSE_UI = "androidx.compose.ui:ui:${Versions.ANDROID_COMPOSE}"
     const val ANDROID_COMPOSE_MATERIAL = "androidx.compose.material:material:${Versions.ANDROID_COMPOSE}"

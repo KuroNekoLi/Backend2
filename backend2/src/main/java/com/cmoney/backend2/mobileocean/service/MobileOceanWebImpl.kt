@@ -2,8 +2,6 @@ package com.cmoney.backend2.mobileocean.service
 
 import android.text.TextUtils
 import com.cmoney.backend2.base.extension.*
-import com.cmoney.backend2.base.model.dispatcher.DefaultDispatcherProvider
-import com.cmoney.backend2.base.model.dispatcher.DispatcherProvider
 import com.cmoney.backend2.base.model.request.ApiParam
 import com.cmoney.backend2.base.model.request.MemberApiParam
 import com.cmoney.backend2.base.model.setting.Setting
@@ -50,6 +48,8 @@ import com.cmoney.backend2.mobileocean.service.api.leavechannel.LeaveChannelResp
 import com.cmoney.backend2.mobileocean.service.api.likearticle.LikeArticleResponse
 import com.cmoney.backend2.mobileocean.service.api.replyarticle.ReplyArticleResponse
 import com.cmoney.backend2.mobileocean.service.api.updatechanneldescription.UpdateChannelIdDescriptionResponse
+import com.cmoney.core.DefaultDispatcherProvider
+import com.cmoney.core.DispatcherProvider
 import kotlinx.coroutines.withContext
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -58,7 +58,7 @@ import java.io.File
 class MobileOceanWebImpl(
     private val service: MobileOceanService,
     private val setting: Setting,
-    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider()
+    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider
 ) : MobileOceanWeb {
 
     /**

@@ -1,8 +1,8 @@
 package com.cmoney.backend2.clientconfiguration.service
 
-import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.clientconfiguration.service.api.ClientConfigResponseBody
 import com.cmoney.core.CoroutineTestRule
+import com.cmoney.core.TestDispatcherProvider
 import com.google.common.truth.Truth
 import com.google.gson.Gson
 import io.mockk.MockKAnnotations
@@ -37,7 +37,7 @@ class ClientConfigurationWebImplTest {
     fun setUp() {
         MockKAnnotations.init(this)
         clientConfigurationWeb =
-            ClientConfigurationWebImpl(clientConfigurationService, gson, TestDispatcher())
+            ClientConfigurationWebImpl(clientConfigurationService, gson, TestDispatcherProvider())
     }
 
     @ExperimentalCoroutinesApi

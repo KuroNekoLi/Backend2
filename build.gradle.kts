@@ -5,6 +5,7 @@ plugins {
     id("com.android.library") version "7.2.2" apply false
     id("org.jetbrains.kotlin.android") version Versions.KOTLIN apply false
     id("org.jetbrains.kotlinx.kover") version "0.6.0"
+    id("androidx.benchmark") version Versions.ANDROID_BENCHMARK apply false
 }
 
 tasks.register<Delete>("clean") {
@@ -16,7 +17,7 @@ koverMerged {
 
     filters {
         projects {
-            excludes += listOf(":app")
+            excludes += listOf(":app", ":benchmark")
         }
     }
 }

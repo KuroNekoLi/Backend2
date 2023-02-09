@@ -1,6 +1,5 @@
 package com.cmoney.backend2.ocean.service
 
-import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.ocean.service.api.changememberstatus.ChangeMemberStatusResponseBodyWithError
@@ -60,6 +59,7 @@ import com.cmoney.backend2.ocean.service.api.variable.Relation
 import com.cmoney.backend2.ocean.service.api.variable.SuccessResultWithError
 import com.cmoney.backend2.ocean.service.api.variable.channelinfo.ChannelInfo
 import com.cmoney.core.CoroutineTestRule
+import com.cmoney.core.TestDispatcherProvider
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
@@ -95,7 +95,7 @@ class OceanWebImplTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        service = OceanWebImpl(gson, oceanService, TestSetting(), TestDispatcher())
+        service = OceanWebImpl(gson, oceanService, TestSetting(), TestDispatcherProvider())
     }
 
     @After

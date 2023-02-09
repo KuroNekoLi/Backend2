@@ -1,8 +1,10 @@
 package com.cmoney.backend2.realtimeaftermarket.service
 
-import com.cmoney.backend2.base.extension.*
-import com.cmoney.backend2.base.model.dispatcher.DefaultDispatcherProvider
-import com.cmoney.backend2.base.model.dispatcher.DispatcherProvider
+import com.cmoney.backend2.base.extension.checkISuccess
+import com.cmoney.backend2.base.extension.checkIWithError
+import com.cmoney.backend2.base.extension.checkIsSuccessful
+import com.cmoney.backend2.base.extension.createAuthorizationBearer
+import com.cmoney.backend2.base.extension.requireBody
 import com.cmoney.backend2.base.model.request.ApiParam
 import com.cmoney.backend2.base.model.request.MemberApiParam
 import com.cmoney.backend2.base.model.response.dtno.DtnoData
@@ -17,12 +19,14 @@ import com.cmoney.backend2.realtimeaftermarket.service.api.getnewtickinfo.NewTic
 import com.cmoney.backend2.realtimeaftermarket.service.api.getsinglenewtick.SingleStockNewTick
 import com.cmoney.backend2.realtimeaftermarket.service.api.getstocksinindex.GetStocksInIndexResponseBody
 import com.cmoney.backend2.realtimeaftermarket.service.api.searchstock.ResultEntry
+import com.cmoney.core.DefaultDispatcherProvider
+import com.cmoney.core.DispatcherProvider
 import kotlinx.coroutines.withContext
 
 class RealTimeAfterMarketWebImpl(
     private val service: RealTimeAfterMarketService,
     private val setting: Setting,
-    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider()
+    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider
 ) : RealTimeAfterMarketWeb {
 
     override suspend fun getCommList(areaIds: List<String>) = withContext(dispatcher.io()) {

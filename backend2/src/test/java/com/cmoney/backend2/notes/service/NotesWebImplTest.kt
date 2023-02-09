@@ -1,6 +1,5 @@
 package com.cmoney.backend2.notes.service
 
-import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.EmptyBodyException
 import com.cmoney.backend2.base.model.exception.ServerException
@@ -12,7 +11,7 @@ import com.cmoney.backend2.notes.service.api.getpopularandpaynotes.GetPopularAnd
 import com.cmoney.backend2.notes.service.api.notesapi.getnotes.GetNotesResponseBodyWithError
 import com.cmoney.backend2.notes.service.api.notesapi.getnotesbytags.GetNotesByTagsResponseBodyWithError
 import com.cmoney.core.CoroutineTestRule
-
+import com.cmoney.core.TestDispatcherProvider
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
@@ -48,7 +47,7 @@ class NotesWebImplTest {
         noteWeb = NotesWebImpl(
             service = noteService,
             setting = setting,
-            dispatcher = TestDispatcher(),
+            dispatcher = TestDispatcherProvider(),
             gson = gson
         )
     }

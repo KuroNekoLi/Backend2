@@ -2,14 +2,14 @@ package com.cmoney.backend2.cmtalk.service
 
 import com.cmoney.backend2.base.extension.checkIsSuccessful
 import com.cmoney.backend2.base.extension.requireBody
-import com.cmoney.backend2.base.model.dispatcher.DefaultDispatcherProvider
-import com.cmoney.backend2.base.model.dispatcher.DispatcherProvider
 import com.cmoney.backend2.cmtalk.service.api.TargetMediaListInfo
+import com.cmoney.core.DefaultDispatcherProvider
+import com.cmoney.core.DispatcherProvider
 import kotlinx.coroutines.withContext
 
 class CMTalkWebImpl(
     private val service: CMTalkService,
-    private val dispatcherProvider: DispatcherProvider = DefaultDispatcherProvider()
+    private val dispatcherProvider: DispatcherProvider = DefaultDispatcherProvider
 ) : CMTalkWeb {
 
     override suspend fun getTargetMediaList(

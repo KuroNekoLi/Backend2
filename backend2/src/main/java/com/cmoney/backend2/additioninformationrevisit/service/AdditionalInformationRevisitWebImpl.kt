@@ -7,17 +7,17 @@ import com.cmoney.backend2.additioninformationrevisit.service.api.request.Reques
 import com.cmoney.backend2.base.extension.checkIsSuccessful
 import com.cmoney.backend2.base.extension.createAuthorizationBearer
 import com.cmoney.backend2.base.extension.requireBody
-import com.cmoney.backend2.base.model.dispatcher.DefaultDispatcherProvider
-import com.cmoney.backend2.base.model.dispatcher.DispatcherProvider
 import com.cmoney.backend2.base.model.request.MemberApiParam
 import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.core.DefaultDispatcherProvider
+import com.cmoney.core.DispatcherProvider
 import kotlinx.coroutines.withContext
 
 class AdditionalInformationRevisitWebImpl(
     override val setting: Setting,
     private val service: AdditionalInformationRevisitService,
     override val servicePath: ServicePath = ServicePath(),
-    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider()
+    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider
 ) : AdditionalInformationRevisitWeb {
 
     override suspend fun getAll(

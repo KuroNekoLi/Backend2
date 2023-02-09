@@ -44,7 +44,7 @@ android {
     }
 }
 dependecies {
-	implementation 'com.cmoney.backend2:backend2:5.47.0'
+	implementation 'com.cmoney.backend2:backend2:5.48.1'
 	implementation("com.cmoney.logdatarecorder:logdatarecorder-data:5.4.0")
 	implementation("com.cmoney.logdatarecorder:logdatarecorder-domain:5.4.0")
 }
@@ -54,8 +54,8 @@ dependecies {
 
 ```groovy
 dependecies {
-	releaseImplementation 'com.cmoney.backend2:backend2:5.47.0'
-	debugImplementation 'com.cmoney.backend2:backend2-debug:5.47.0'
+	releaseImplementation 'com.cmoney.backend2:backend2:5.48.1'
+	debugImplementation 'com.cmoney.backend2:backend2-debug:5.48.1'
 	implementation("com.cmoney.logdatarecorder:logdatarecorder-data:5.4.0")
 	implementation("com.cmoney.logdatarecorder:logdatarecorder-domain:5.4.0")
 }
@@ -348,7 +348,7 @@ class IdentityProviderWebImpl(
     private val service: IdentityProviderService,
     private val gson: Gson,
     private val setting: Setting,
-    private val dispatcherProvider: DispatcherProvider = DefaultDispatcherProvider()
+    private val dispatcherProvider: DispatcherProvider = DefaultDispatcherProvider
 ) : IdentityProviderWeb {
 	// ...
 }

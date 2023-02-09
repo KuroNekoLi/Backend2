@@ -1,12 +1,11 @@
 package com.cmoney.backend2.productdataprovider
 
-import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.productdataprovider.service.ProductDataProviderService
 import com.cmoney.backend2.productdataprovider.service.ProductDataProviderWeb
 import com.cmoney.backend2.productdataprovider.service.ProductDataProviderWebImpl
 import com.cmoney.core.CoroutineTestRule
-
+import com.cmoney.core.TestDispatcherProvider
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
@@ -42,7 +41,7 @@ class ProductDataProviderWebImplTest {
             gson = gson,
             service = service,
             setting = TestSetting(),
-            dispatcher = TestDispatcher()
+            dispatcher = TestDispatcherProvider()
         )
     }
 

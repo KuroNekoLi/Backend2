@@ -1,7 +1,6 @@
 package com.cmoney.backend2.mobileocean.service
 
 import android.text.TextUtils
-import com.cmoney.backend2.TestDispatcher
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.mobileocean.service.api.activefollow.ActiveFollowResponseWithError
@@ -51,7 +50,7 @@ import com.cmoney.backend2.mobileocean.service.api.likearticle.LikeArticleRespon
 import com.cmoney.backend2.mobileocean.service.api.replyarticle.ReplyArticleResponse
 import com.cmoney.backend2.mobileocean.service.api.updatechanneldescription.UpdateChannelIdDescriptionResponseWithError
 import com.cmoney.core.CoroutineTestRule
-
+import com.cmoney.core.TestDispatcherProvider
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
@@ -86,7 +85,7 @@ class MobileOceanWebImplTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        webImpl = MobileOceanWebImpl(service, TestSetting(), TestDispatcher())
+        webImpl = MobileOceanWebImpl(service, TestSetting(), TestDispatcherProvider())
     }
 
     @After
