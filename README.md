@@ -402,8 +402,6 @@ suspend fun getAccountInfo(
 ): Response<AccountInfoWithError>
 ```
 
-請新創建的service要在[RecordApiTest](./backend2/src/test/java/com/cmoney/backend2/base/model/calladapter/RecordApiTest.kt)中加入集合中成為測試案例
-
 ## Unsigned Data Type 支援
 
 某些服務回傳可能會遇到 Unsigned 的型別，目前模組預設提供的`Gson`有包含`ULong`轉換的支援。如果需要客製化的 Gson，註冊`ULongTypeAdapter`即可支援`ULong`。

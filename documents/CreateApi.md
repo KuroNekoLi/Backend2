@@ -5,10 +5,11 @@
 建立一個新的API，會有以下步驟：
 
 1. 建立Retrofit介面
-1. 建立xxxWeb介面
-1. 實作xxxWebImpl
-1. 撰寫xxxWeb的單元測試
-1. 在App的應用層，驗證API
+2. 建立xxxWeb介面
+3. 實作xxxWebImpl
+4. 撰寫xxxWeb的單元測試
+5. 加入RecordApi的單元測試
+6. 在App的應用層，驗證API
 
 ### 1.建立Retrofit介面
 
@@ -401,7 +402,11 @@ data class GetAccountResponseWithError(
 
 這邊請看範例的test資料夾
 
-### 5.在App的應用層，驗證API
+### 5.加入RecordApi的單元測試
+
+新創建的Retrofit Service要在[RecordApiTest](./backend2/src/test/java/com/cmoney/backend2/base/model/calladapter/RecordApiTest.kt)中加入集合中成為測試案例
+
+### 6.在App的應用層，驗證API
 
 位置：app/src/main/java/com/cmoney/backend2/sample/servicecase/
 
