@@ -4,6 +4,7 @@ import com.cmoney.backend2.activity.di.activityServiceModule
 import com.cmoney.backend2.additioninformationrevisit.di.additionalInformationRevisitServiceModule
 import com.cmoney.backend2.authorization.di.authorizationServiceModule
 import com.cmoney.backend2.base.di.backendBaseModule
+import com.cmoney.backend2.base.di.backendBaseModuleV2
 import com.cmoney.backend2.billing.di.billingServiceModule
 import com.cmoney.backend2.brokerdatatransmission.di.brokerDataTransmissionServiceModule
 import com.cmoney.backend2.cellphone.di.cellphoneServiceModule
@@ -53,6 +54,7 @@ import org.koin.dsl.module
 val backendServicesModule: Module = module {
     includes(
         backendBaseModule,
+        backendBaseModuleV2,
         activityServiceModule,
         additionalInformationRevisitServiceModule,
         authorizationServiceModule,

@@ -1,9 +1,7 @@
 package com.cmoney.backend2.base.di
 
 import android.content.Context
-import com.cmoney.backend2.BuildConfig
 import com.cmoney.backend2.base.model.calladapter.RecordApiLogCallAdapterFactory
-import com.cmoney.backend2.base.model.log.ApiLog
 import com.cmoney.backend2.base.model.setting.BackendSettingSharedPreference
 import com.cmoney.backend2.base.model.setting.DefaultSetting
 import com.cmoney.backend2.base.model.setting.Setting
@@ -13,14 +11,10 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import okhttp3.ConnectionSpec
 import okhttp3.ConnectionSpec.Companion.COMPATIBLE_TLS
-import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import org.koin.java.KoinJavaComponent.getKoin
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
@@ -99,60 +93,5 @@ val backendBaseModule = module {
                 )
             )
             .build()
-    }
-}
-
-/**
- * 加入Http Body Log
- */
-internal fun OkHttpClient.Builder.addLogInterceptor() = apply {
-    if (BuildConfig.DEBUG) {
-        val interceptor = HttpLoggingInterceptor()
-        interceptor.level = HttpLoggingInterceptor.Level.BODY
-        addInterceptor(interceptor)
-    }
-}
-
-/**
- * 加入替換Domain攔截器，在Runtime時可以隨時替換Domain。
- */
-internal fun OkHttpClient.Builder.addChangeDomainInterceptor() = apply {
-    addInterceptor { chain ->
-        val setting = getKoin().get<Setting>(BACKEND2_SETTING)
-        val request: Request = chain.request()
-        val httpUrl = setting.domainUrl.toHttpUrl()
-        val newUrl = request.url.newBuilder()
-            .scheme(httpUrl.scheme)
-            .host(httpUrl.host)
-            .build()
-        val newRequest = request.newBuilder()
-            .url(newUrl)
-            .build()
-        chain.proceed(newRequest)
-    }
-}
-
-/**
- * 加入CMoney的Header紀錄。
- */
-internal fun OkHttpClient.Builder.addCMoneyApiTraceContextInterceptor() = apply {
-    val setting = getKoin().get<Setting>(BACKEND2_SETTING)
-    val gson = getKoin().get<Gson>(BACKEND2_GSON)
-    addInterceptor { chain ->
-        val request: Request = chain.request()
-        val apiLogJson = ApiLog.create(
-            appId = setting.appId,
-            platform = setting.platform.code,
-            appVersion = setting.appVersion,
-            manufacturer = setting.manufacturer,
-            model = setting.model,
-            osVersion = setting.osVersion
-        ).let { apiLog ->
-            gson.toJson(apiLog)
-        }
-        val newRequest = request.newBuilder()
-            .addHeader("cmoneyapi-trace-context", apiLogJson)
-            .build()
-        chain.proceed(newRequest)
     }
 }

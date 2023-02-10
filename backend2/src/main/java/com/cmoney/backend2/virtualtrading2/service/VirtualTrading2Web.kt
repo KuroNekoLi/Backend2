@@ -1,6 +1,6 @@
 package com.cmoney.backend2.virtualtrading2.service
 
-import com.cmoney.backend2.virtualtrading2.model.requestconfig.VirtualTradingRequestConfig
+import com.cmoney.backend2.virtualtrading2.model.requestadapter.VirtualTradingRequestAdapter
 import com.cmoney.backend2.virtualtrading2.service.api.createaccount.CreateAccountResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.getaccount.GetAccountResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.getaccountratio.GetAccountRatioResponseBody
@@ -16,9 +16,9 @@ import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getsuccessdealdeta
 interface VirtualTrading2Web {
 
     /**
-     * 虛擬交易請求設定
+     * 虛擬交易請求轉接器
      */
-    val requestConfig: VirtualTradingRequestConfig
+    val requestAdapter: VirtualTradingRequestAdapter
 
     /**
      * 建立帳號
@@ -31,8 +31,8 @@ interface VirtualTrading2Web {
      *
      */
     suspend fun createAccount(
-        authorization: String = requestConfig.getBearerToken(),
-        domain: String = requestConfig.getDomain(),
+        authorization: String = requestAdapter.getBearerToken(),
+        domain: String = requestAdapter.getDomain(),
         url: String = "${domain}account-api/Account",
         accountInvestType: Int,
         cardSn: Long
@@ -59,8 +59,8 @@ interface VirtualTrading2Web {
      *
      */
     suspend fun createTseOtcDelegate(
-        authorization: String = requestConfig.getBearerToken(),
-        domain: String = requestConfig.getDomain(),
+        authorization: String = requestAdapter.getBearerToken(),
+        domain: String = requestAdapter.getDomain(),
         url: String = "${domain}trading-api/Trading/TseOtc/NewOrder",
         accountId: Long,
         buySellType: Int,
@@ -85,8 +85,8 @@ interface VirtualTrading2Web {
      *
      */
     suspend fun deleteTseOtcDelegate(
-        authorization: String = requestConfig.getBearerToken(),
-        domain: String = requestConfig.getDomain(),
+        authorization: String = requestAdapter.getBearerToken(),
+        domain: String = requestAdapter.getDomain(),
         url: String = "${domain}trading-api/Trading/TseOtc/CancelOrder",
         accountId: Long,
         groupId: Long,
@@ -134,8 +134,8 @@ interface VirtualTrading2Web {
     }
      */
     suspend fun getAccount(
-        authorization: String = requestConfig.getBearerToken(),
-        domain: String = requestConfig.getDomain(),
+        authorization: String = requestAdapter.getBearerToken(),
+        domain: String = requestAdapter.getDomain(),
         url: String = "${domain}account-api/graphql",
         query: String
     ): Result<GetAccountResponseBody>
@@ -181,8 +181,8 @@ interface VirtualTrading2Web {
     }
      */
     suspend fun getAllAccount(
-        authorization: String = requestConfig.getBearerToken(),
-        domain: String = requestConfig.getDomain(),
+        authorization: String = requestAdapter.getBearerToken(),
+        domain: String = requestAdapter.getDomain(),
         url: String = "${domain}account-api/graphql",
         query: String
     ): Result<GetAllAccountResponseBody>
@@ -202,8 +202,8 @@ interface VirtualTrading2Web {
     }
      */
     suspend fun getAccountRatio(
-        authorization: String = requestConfig.getBearerToken(),
-        domain: String = requestConfig.getDomain(),
+        authorization: String = requestAdapter.getBearerToken(),
+        domain: String = requestAdapter.getDomain(),
         url: String = "${domain}account-api/graphql",
         query: String
     ): Result<GetAccountRatioResponseBody>
@@ -254,8 +254,8 @@ interface VirtualTrading2Web {
     }
      */
     suspend fun getTseOtcAllDelegate(
-        authorization: String = requestConfig.getBearerToken(),
-        domain: String = requestConfig.getDomain(),
+        authorization: String = requestAdapter.getBearerToken(),
+        domain: String = requestAdapter.getDomain(),
         url: String = "${domain}trading-api/graphql",
         query: String
     ): Result<GetAllDelegateResponseBody>
@@ -301,8 +301,8 @@ interface VirtualTrading2Web {
     }
      */
     suspend fun getTseOtcDelegateDetail(
-        authorization: String = requestConfig.getBearerToken(),
-        domain: String = requestConfig.getDomain(),
+        authorization: String = requestAdapter.getBearerToken(),
+        domain: String = requestAdapter.getDomain(),
         url: String = "${domain}trading-api/graphql",
         query: String
     ): Result<GetDelegateDetailResponseBody>
@@ -346,8 +346,8 @@ interface VirtualTrading2Web {
     }
      */
     suspend fun getTseOtcAllSuccessDeal(
-        authorization: String = requestConfig.getBearerToken(),
-        domain: String = requestConfig.getDomain(),
+        authorization: String = requestAdapter.getBearerToken(),
+        domain: String = requestAdapter.getDomain(),
         url: String = "${domain}trading-api/graphql",
         query: String
     ): Result<GetAllSuccessDealResponseBody>
@@ -389,8 +389,8 @@ interface VirtualTrading2Web {
     }
      */
     suspend fun getTseOtcSuccessDealDetail(
-        authorization: String = requestConfig.getBearerToken(),
-        domain: String = requestConfig.getDomain(),
+        authorization: String = requestAdapter.getBearerToken(),
+        domain: String = requestAdapter.getDomain(),
         url: String = "${domain}trading-api/graphql",
         query: String
     ): Result<GetSuccessDealDetailResponseBody>
@@ -427,8 +427,8 @@ interface VirtualTrading2Web {
     }
      */
     suspend fun getTseOtcAllInventory(
-        authorization: String = requestConfig.getBearerToken(),
-        domain: String = requestConfig.getDomain(),
+        authorization: String = requestAdapter.getBearerToken(),
+        domain: String = requestAdapter.getDomain(),
         url: String = "${domain}trading-api/graphql",
         query: String
     ): Result<GetAllInventoryResponseBody>

@@ -1,11 +1,11 @@
-package com.cmoney.backend2.virtualtrading2.model.requestconfig
+package com.cmoney.backend2.virtualtrading2.model.requestadapter
 
 import com.cmoney.backend2.base.extension.createAuthorizationBearer
 import com.cmoney.backend2.base.model.setting.Setting
 
-class VirtualTradingRequestConfigImpl(
+class VirtualTradingRequestAdapterImpl(
     private val setting: Setting
-) : VirtualTradingRequestConfig {
+) : VirtualTradingRequestAdapter {
 
     override fun getDomain(): String {
         // TODO 改成正式機

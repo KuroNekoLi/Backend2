@@ -3,7 +3,7 @@ package com.cmoney.backend2.virtualtrading2.web
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.response.error.CMoneyError
 import com.cmoney.backend2.virtualtrading2.*
-import com.cmoney.backend2.virtualtrading2.model.requestconfig.VirtualTradingRequestConfig
+import com.cmoney.backend2.virtualtrading2.model.requestadapter.VirtualTradingRequestAdapter
 import com.cmoney.backend2.virtualtrading2.service.VirtualTrading2Service
 import com.cmoney.backend2.virtualtrading2.service.VirtualTrading2Web
 import com.cmoney.backend2.virtualtrading2.service.VirtualTrading2WebImpl
@@ -48,7 +48,7 @@ class VirtualTrading2WebImplTest {
         web = VirtualTrading2WebImpl(
             dispatcher = TestDispatcherProvider(),
             gson = gson,
-            requestConfig = object : VirtualTradingRequestConfig {
+            requestAdapter = object : VirtualTradingRequestAdapter {
                 override fun getDomain(): String {
                     return ""
                 }

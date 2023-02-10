@@ -1,7 +1,7 @@
 package com.cmoney.backend2.virtualtrading2.service
 
 import com.cmoney.backend2.base.extension.checkResponseBody
-import com.cmoney.backend2.virtualtrading2.model.requestconfig.VirtualTradingRequestConfig
+import com.cmoney.backend2.virtualtrading2.model.requestadapter.VirtualTradingRequestAdapter
 import com.cmoney.backend2.virtualtrading2.service.api.createaccount.CreateAccountRequestBody
 import com.cmoney.backend2.virtualtrading2.service.api.createaccount.CreateAccountResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.getaccount.GetAccountRequestBody
@@ -30,7 +30,7 @@ import com.google.gson.Gson
 import kotlinx.coroutines.withContext
 
 class VirtualTrading2WebImpl(
-    override val requestConfig: VirtualTradingRequestConfig,
+    override val requestAdapter: VirtualTradingRequestAdapter,
     private val service: VirtualTrading2Service,
     private val gson: Gson,
     private val dispatcher: DispatcherProvider = DefaultDispatcherProvider

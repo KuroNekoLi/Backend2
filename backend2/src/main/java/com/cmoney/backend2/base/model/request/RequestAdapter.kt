@@ -1,9 +1,6 @@
-package com.cmoney.backend2.virtualtrading2.model.requestconfig
+package com.cmoney.backend2.base.model.request
 
-/**
- * 所有Request的設定
- */
-interface VirtualTradingRequestConfig {
+interface RequestAdapter {
     /**
      * 取得網域名稱
      */
