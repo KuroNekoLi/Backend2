@@ -1,9 +1,9 @@
-package com.cmoney.backend2.virtualtrading2.service.api.tseotc.getsuccessdealdetail
+package com.cmoney.backend2.virtualtrading2.service.api.tseotc.getsuccessdealbyid
 
 import com.google.gson.annotations.SerializedName
 
 /**
- * 取得上市上櫃成交單細節請求
+ * 取得上市上櫃特定成交單請求
  *
  * @property query 請求內容
  *
@@ -36,7 +36,7 @@ import com.google.gson.annotations.SerializedName
     }
 }
  */
-data class GetSuccessDealDetailRequestBody(
+data class GetSuccessDealByIdRequestBody(
     @SerializedName("query")
     val query: String
 )

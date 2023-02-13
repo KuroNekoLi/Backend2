@@ -7,11 +7,11 @@ import com.cmoney.backend2.virtualtrading2.service.api.getaccountratio.GetAccoun
 import com.cmoney.backend2.virtualtrading2.service.api.getallaccount.GetAllAccountResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.createdelegate.CreateDelegateResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.deletedelagate.DeleteDelegateResponseBody
-import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getalldelegate.GetAllDelegateResponseBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.gethistoryalldelegate.GetHistoryAllDelegateResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getallsuccessdeal.GetAllSuccessDealResponseBody
-import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getdelegatedetail.GetDelegateDetailResponseBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getdelegatebyid.GetDelegateByIdResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getinventory.GetAllInventoryResponseBody
-import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getsuccessdealdetail.GetSuccessDealDetailResponseBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getsuccessdealbyid.GetSuccessDealByIdResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.gettodayalldelegate.GetTodayAllDelegateResponseBody
 
 interface VirtualTrading2Web {
@@ -210,7 +210,7 @@ interface VirtualTrading2Web {
     ): Result<GetAccountRatioResponseBody>
 
     /**
-     * 取得上市櫃所有的委託單
+     * 取得上市櫃歷史所有的委託單
      *
      * @param authorization 授權
      * @param domain 網域名稱
@@ -254,15 +254,15 @@ interface VirtualTrading2Web {
     }
     }
      */
-    suspend fun getTseOtcAllDelegate(
+    suspend fun getTseOtcHistoryAllDelegate(
         authorization: String = requestAdapter.getBearerToken(),
         domain: String = requestAdapter.getDomain(),
         url: String = "${domain}trading-api/graphql",
         query: String
-    ): Result<GetAllDelegateResponseBody>
+    ): Result<GetHistoryAllDelegateResponseBody>
 
     /**
-     * 取得上市櫃的委託單細節
+     * 取得上市櫃特定委託單
      *
      * @param authorization 授權
      * @param domain 網域名稱
@@ -301,12 +301,12 @@ interface VirtualTrading2Web {
     }
     }
      */
-    suspend fun getTseOtcDelegateDetail(
+    suspend fun getTseOtcDelegateById(
         authorization: String = requestAdapter.getBearerToken(),
         domain: String = requestAdapter.getDomain(),
         url: String = "${domain}trading-api/graphql",
         query: String
-    ): Result<GetDelegateDetailResponseBody>
+    ): Result<GetDelegateByIdResponseBody>
 
     /**
      * 取得上市櫃今日所有的委託單
@@ -404,7 +404,7 @@ interface VirtualTrading2Web {
     ): Result<GetAllSuccessDealResponseBody>
 
     /**
-     * 取得上市櫃的成交單細節
+     * 取得上市櫃特定成交單
      *
      * @param authorization 授權
      * @param domain 網域名稱
@@ -439,12 +439,12 @@ interface VirtualTrading2Web {
     }
     }
      */
-    suspend fun getTseOtcSuccessDealDetail(
+    suspend fun getTseOtcSuccessDealById(
         authorization: String = requestAdapter.getBearerToken(),
         domain: String = requestAdapter.getDomain(),
         url: String = "${domain}trading-api/graphql",
         query: String
-    ): Result<GetSuccessDealDetailResponseBody>
+    ): Result<GetSuccessDealByIdResponseBody>
 
     /**
      * 取得上市櫃的庫存

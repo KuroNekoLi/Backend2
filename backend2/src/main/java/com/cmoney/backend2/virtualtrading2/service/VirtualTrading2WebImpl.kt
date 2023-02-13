@@ -14,16 +14,16 @@ import com.cmoney.backend2.virtualtrading2.service.api.tseotc.createdelegate.Cre
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.createdelegate.CreateDelegateResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.deletedelagate.DeleteDelegateRequestBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.deletedelagate.DeleteDelegateResponseBody
-import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getalldelegate.GetAllDelegateRequestBody
-import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getalldelegate.GetAllDelegateResponseBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.gethistoryalldelegate.GetHistoryAllDelegateRequestBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.gethistoryalldelegate.GetHistoryAllDelegateResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getallsuccessdeal.GetAllSuccessDealRequestBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getallsuccessdeal.GetAllSuccessDealResponseBody
-import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getdelegatedetail.GetDelegateDetailRequestBody
-import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getdelegatedetail.GetDelegateDetailResponseBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getdelegatebyid.GetDelegateByIdRequestBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getdelegatebyid.GetDelegateByIdResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getinventory.GetAllInventoryRequestBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getinventory.GetAllInventoryResponseBody
-import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getsuccessdealdetail.GetSuccessDealDetailRequestBody
-import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getsuccessdealdetail.GetSuccessDealDetailResponseBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getsuccessdealbyid.GetSuccessDealByIdRequestBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getsuccessdealbyid.GetSuccessDealByIdResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.gettodayalldelegate.GetTodayAllDelegateRequestBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.gettodayalldelegate.GetTodayAllDelegateResponseBody
 import com.cmoney.core.DefaultDispatcherProvider
@@ -168,17 +168,17 @@ class VirtualTrading2WebImpl(
         }
     }
 
-    override suspend fun getTseOtcAllDelegate(
+    override suspend fun getTseOtcHistoryAllDelegate(
         authorization: String,
         domain: String,
         url: String,
         query: String
-    ): Result<GetAllDelegateResponseBody> = withContext(dispatcher.io()) {
+    ): Result<GetHistoryAllDelegateResponseBody> = withContext(dispatcher.io()) {
         runCatching {
-            val requestBody = GetAllDelegateRequestBody(
+            val requestBody = GetHistoryAllDelegateRequestBody(
                 query = query
             )
-            service.getTseOtcAllDelegate(
+            service.getTseOtcHistoryAllDelegate(
                 url = url,
                 authorization = authorization,
                 body = requestBody
@@ -186,17 +186,17 @@ class VirtualTrading2WebImpl(
         }
     }
 
-    override suspend fun getTseOtcDelegateDetail(
+    override suspend fun getTseOtcDelegateById(
         authorization: String,
         domain: String,
         url: String,
         query: String
-    ): Result<GetDelegateDetailResponseBody> = withContext(dispatcher.io()) {
+    ): Result<GetDelegateByIdResponseBody> = withContext(dispatcher.io()) {
         runCatching {
-            val requestBody = GetDelegateDetailRequestBody(
+            val requestBody = GetDelegateByIdRequestBody(
                 query = query
             )
-            service.getTseOtcDelegateDetail(
+            service.getTseOtcDelegateById(
                 url = url,
                 authorization = authorization,
                 body = requestBody
@@ -240,17 +240,17 @@ class VirtualTrading2WebImpl(
         }
     }
 
-    override suspend fun getTseOtcSuccessDealDetail(
+    override suspend fun getTseOtcSuccessDealById(
         authorization: String,
         domain: String,
         url: String,
         query: String
-    ): Result<GetSuccessDealDetailResponseBody> = withContext(dispatcher.io()) {
+    ): Result<GetSuccessDealByIdResponseBody> = withContext(dispatcher.io()) {
         runCatching {
-            val requestBody = GetSuccessDealDetailRequestBody(
+            val requestBody = GetSuccessDealByIdRequestBody(
                 query = query
             )
-            service.getTseOtcSuccessDealDetail(
+            service.getTseOtcSuccessDealById(
                 url = url,
                 authorization = authorization,
                 body = requestBody

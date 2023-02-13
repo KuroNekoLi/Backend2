@@ -122,7 +122,7 @@ class VirtualTrading2ServiceCase : ServiceCase {
             }
         """.trimIndent()
         ).logResponse(TAG)
-        val allDelegate = web.getTseOtcAllDelegate(
+        val historyAllDelegate = web.getTseOtcHistoryAllDelegate(
             query = """
                     {
                     tseOtcOrderByCustomPeriod(
@@ -163,8 +163,8 @@ class VirtualTrading2ServiceCase : ServiceCase {
                     }
         """.trimIndent()
         )
-        allDelegate.logResponse(TAG)
-        val delegateId = allDelegate.getOrNull()?.content?.delegateList?.firstOrNull()?.delegateId
+        historyAllDelegate.logResponse(TAG)
+        val delegateId = historyAllDelegate.getOrNull()?.content?.delegateList?.firstOrNull()?.delegateId
         web.getTseOtcDelegateDetail(
             query = """
                     {

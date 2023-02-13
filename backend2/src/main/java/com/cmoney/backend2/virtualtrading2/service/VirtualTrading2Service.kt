@@ -13,16 +13,16 @@ import com.cmoney.backend2.virtualtrading2.service.api.tseotc.createdelegate.Cre
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.createdelegate.CreateDelegateResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.deletedelagate.DeleteDelegateRequestBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.deletedelagate.DeleteDelegateResponseBody
-import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getalldelegate.GetAllDelegateRequestBody
-import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getalldelegate.GetAllDelegateResponseBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.gethistoryalldelegate.GetHistoryAllDelegateRequestBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.gethistoryalldelegate.GetHistoryAllDelegateResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getallsuccessdeal.GetAllSuccessDealRequestBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getallsuccessdeal.GetAllSuccessDealResponseBody
-import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getdelegatedetail.GetDelegateDetailRequestBody
-import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getdelegatedetail.GetDelegateDetailResponseBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getdelegatebyid.GetDelegateByIdRequestBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getdelegatebyid.GetDelegateByIdResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getinventory.GetAllInventoryRequestBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getinventory.GetAllInventoryResponseBody
-import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getsuccessdealdetail.GetSuccessDealDetailRequestBody
-import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getsuccessdealdetail.GetSuccessDealDetailResponseBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getsuccessdealbyid.GetSuccessDealByIdRequestBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getsuccessdealbyid.GetSuccessDealByIdResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.gettodayalldelegate.GetTodayAllDelegateRequestBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.gettodayalldelegate.GetTodayAllDelegateResponseBody
 import retrofit2.Response
@@ -96,15 +96,15 @@ interface VirtualTrading2Service {
     ): Response<GetAccountRatioResponseBody>
 
     /**
-     * 取得上市櫃所有的委託單
+     * 取得上市櫃歷史所有的委託單
      */
     @RecordApi
     @POST
-    suspend fun getTseOtcAllDelegate(
+    suspend fun getTseOtcHistoryAllDelegate(
         @Url url: String,
         @Header("Authorization") authorization: String,
-        @Body body: GetAllDelegateRequestBody
-    ): Response<GetAllDelegateResponseBody>
+        @Body body: GetHistoryAllDelegateRequestBody
+    ): Response<GetHistoryAllDelegateResponseBody>
 
     /**
      * 取得上市櫃今日的委託單
@@ -119,15 +119,15 @@ interface VirtualTrading2Service {
 
 
     /**
-     * 取得上市櫃的委託單細節
+     * 取得上市櫃特定委託單
      */
     @RecordApi
     @POST
-    suspend fun getTseOtcDelegateDetail(
+    suspend fun getTseOtcDelegateById(
         @Url url: String,
         @Header("Authorization") authorization: String,
-        @Body body: GetDelegateDetailRequestBody
-    ): Response<GetDelegateDetailResponseBody>
+        @Body body: GetDelegateByIdRequestBody
+    ): Response<GetDelegateByIdResponseBody>
 
     /**
      * 取得上市櫃所有的成交單
@@ -141,15 +141,15 @@ interface VirtualTrading2Service {
     ): Response<GetAllSuccessDealResponseBody>
 
     /**
-     * 取得上市櫃的成交單細節
+     * 取得上市櫃特定成交單
      */
     @RecordApi
     @POST
-    suspend fun getTseOtcSuccessDealDetail(
+    suspend fun getTseOtcSuccessDealById(
         @Url url: String,
         @Header("Authorization") authorization: String,
-        @Body body: GetSuccessDealDetailRequestBody
-    ): Response<GetSuccessDealDetailResponseBody>
+        @Body body: GetSuccessDealByIdRequestBody
+    ): Response<GetSuccessDealByIdResponseBody>
 
     /**
      * 取得上市櫃的庫存

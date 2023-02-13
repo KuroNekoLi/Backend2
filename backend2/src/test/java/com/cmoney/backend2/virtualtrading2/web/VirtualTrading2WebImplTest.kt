@@ -694,16 +694,16 @@ class VirtualTrading2WebImplTest {
     }
 
     @Test
-    fun `getTseOtcAllDelegate_成功`() = testScope.runTest {
-        val responseBody = getTseOtcAllDelegateSuccess()
+    fun `getTseOtcHistoryAllDelegate_成功`() = testScope.runTest {
+        val responseBody = getTseOtcHistoryAllDelegateSuccess()
         coEvery {
-            service.getTseOtcAllDelegate(
+            service.getTseOtcHistoryAllDelegate(
                 url = any(),
                 authorization = any(),
                 body = any()
             )
         } returns Response.success(responseBody)
-        val result = web.getTseOtcAllDelegate(
+        val result = web.getTseOtcHistoryAllDelegate(
             query = """
                 {
                     tseOtcOrderByCustomPeriod(
@@ -748,17 +748,17 @@ class VirtualTrading2WebImplTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `getTseOtcAllDelegate_失敗_ServerException`() = testScope.runTest {
+    fun `getTseOtcHistoryAllDelegate_失敗_ServerException`() = testScope.runTest {
         val error = CMoneyError(message = "")
         val responseBody = gson.toJson(error, CMoneyError::class.java).toResponseBody()
         coEvery {
-            service.getTseOtcAllDelegate(
+            service.getTseOtcHistoryAllDelegate(
                 url = any(),
                 authorization = any(),
                 body = any()
             )
         } returns Response.error(400, responseBody)
-        web.getTseOtcAllDelegate(
+        web.getTseOtcHistoryAllDelegate(
             query = """
                 {
                     tseOtcOrderByCustomPeriod(
@@ -852,16 +852,16 @@ class VirtualTrading2WebImplTest {
     }
 
     @Test
-    fun `getTseOtcDelegateDetail_成功`() = testScope.runTest {
-        val responseBody = getTseOtcDelegateDetailSuccess()
+    fun `getTseOtcHistoryDelegateById_成功`() = testScope.runTest {
+        val responseBody = getTseOtcDelegateByIdSuccess()
         coEvery {
-            service.getTseOtcDelegateDetail(
+            service.getTseOtcDelegateById(
                 url = any(),
                 authorization = any(),
                 body = any()
             )
         } returns Response.success(responseBody)
-        val result = web.getTseOtcDelegateDetail(
+        val result = web.getTseOtcDelegateById(
             query = """
             {
                 tseOtcOrder(accountId: 1234, orderNo: 1234) {
@@ -901,17 +901,17 @@ class VirtualTrading2WebImplTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `getTseOtcDelegateDetail_失敗_ServerException`() = testScope.runTest {
+    fun `getTseOtcHistoryDelegateById_失敗_ServerException`() = testScope.runTest {
         val error = CMoneyError(message = "")
         val responseBody = gson.toJson(error, CMoneyError::class.java).toResponseBody()
         coEvery {
-            service.getTseOtcDelegateDetail(
+            service.getTseOtcDelegateById(
                 url = any(),
                 authorization = any(),
                 body = any()
             )
         } returns Response.error(400, responseBody)
-        web.getTseOtcDelegateDetail(
+        web.getTseOtcDelegateById(
             query = """
             {
                 tseOtcOrder(accountId: 1234, orderNo: 1234) {
@@ -998,16 +998,16 @@ class VirtualTrading2WebImplTest {
     }
 
     @Test
-    fun `getTseOtcSuccessDealDetail_成功`() = testScope.runTest {
-        val responseBody = getTseOtcSuccessDealDetailSuccess()
+    fun `getTseOtcSuccessDealById_成功`() = testScope.runTest {
+        val responseBody = getTseOtcSuccessDealByIdSuccess()
         coEvery {
-            service.getTseOtcSuccessDealDetail(
+            service.getTseOtcSuccessDealById(
                 url = any(),
                 authorization = any(),
                 body = any()
             )
         } returns Response.success(responseBody)
-        val result = web.getTseOtcSuccessDealDetail(
+        val result = web.getTseOtcSuccessDealById(
             query = """
                 {
                   tseOtcDeal(
@@ -1039,21 +1039,21 @@ class VirtualTrading2WebImplTest {
                 }
             """.trimIndent()
         ).getOrThrow()
-        Truth.assertThat(result.content?.delegate).isNotNull()
+        Truth.assertThat(result.content?.successDealOrder).isNotNull()
     }
 
     @Test(expected = ServerException::class)
-    fun `getTseOtcSuccessDealDetail_失敗_ServerException`() = testScope.runTest {
+    fun `getTseOtcSuccessDealById_失敗_ServerException`() = testScope.runTest {
         val error = CMoneyError(message = "")
         val responseBody = gson.toJson(error, CMoneyError::class.java).toResponseBody()
         coEvery {
-            service.getTseOtcSuccessDealDetail(
+            service.getTseOtcSuccessDealById(
                 url = any(),
                 authorization = any(),
                 body = any()
             )
         } returns Response.error(400, responseBody)
-        web.getTseOtcSuccessDealDetail(
+        web.getTseOtcSuccessDealById(
             query = """
                 {
                     tseOtcDeal(

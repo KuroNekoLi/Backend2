@@ -6,11 +6,11 @@ import com.cmoney.backend2.virtualtrading2.service.api.getaccountratio.GetAccoun
 import com.cmoney.backend2.virtualtrading2.service.api.getallaccount.GetAllAccountResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.createdelegate.CreateDelegateResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.deletedelagate.DeleteDelegateResponseBody
-import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getalldelegate.GetAllDelegateResponseBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.gethistoryalldelegate.GetHistoryAllDelegateResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getallsuccessdeal.GetAllSuccessDealResponseBody
-import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getdelegatedetail.GetDelegateDetailResponseBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getdelegatebyid.GetDelegateByIdResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getinventory.GetAllInventoryResponseBody
-import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getsuccessdealdetail.GetSuccessDealDetailResponseBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getsuccessdealbyid.GetSuccessDealByIdResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.gettodayalldelegate.GetTodayAllDelegateResponseBody
 import com.google.gson.GsonBuilder
 
@@ -256,10 +256,10 @@ fun getAccountRatioSuccess(): GetAccountRatioResponseBody =
         }
 
 /**
- * 取得上市上櫃所有委託單成功回應
+ * 取得上市上櫃歷史所有委託單成功回應
  *
  */
-fun getTseOtcAllDelegateSuccess(): GetAllDelegateResponseBody =
+fun getTseOtcHistoryAllDelegateSuccess(): GetHistoryAllDelegateResponseBody =
     """
 {
     "data": {
@@ -329,7 +329,7 @@ fun getTseOtcAllDelegateSuccess(): GetAllDelegateResponseBody =
 }
     """
         .let {
-            gson.fromJson(it, GetAllDelegateResponseBody::class.java)
+            gson.fromJson(it, GetHistoryAllDelegateResponseBody::class.java)
         }
 
 
@@ -415,7 +415,7 @@ fun getTseOtcTodayAllDelegateSuccess(): GetTodayAllDelegateResponseBody =
  * 取得上市上櫃委託單細節成功回應
  *
  */
-fun getTseOtcDelegateDetailSuccess(): GetDelegateDetailResponseBody =
+fun getTseOtcDelegateByIdSuccess(): GetDelegateByIdResponseBody =
     """
 {
     "data": {
@@ -453,7 +453,7 @@ fun getTseOtcDelegateDetailSuccess(): GetDelegateDetailResponseBody =
 }
     """
         .let {
-            gson.fromJson(it, GetDelegateDetailResponseBody::class.java)
+            gson.fromJson(it, GetDelegateByIdResponseBody::class.java)
         }
 
 /**
@@ -497,10 +497,10 @@ fun getTseOtcAllSuccessDealSuccess(): GetAllSuccessDealResponseBody =
         }
 
 /**
- * 取得上市上櫃成交單細節成功回應
+ * 取得上市上櫃特定成交單成功回應
  *
  */
-fun getTseOtcSuccessDealDetailSuccess(): GetSuccessDealDetailResponseBody =
+fun getTseOtcSuccessDealByIdSuccess(): GetSuccessDealByIdResponseBody =
     """
 {
     "data": {
@@ -531,7 +531,7 @@ fun getTseOtcSuccessDealDetailSuccess(): GetSuccessDealDetailResponseBody =
 }
     """
         .let {
-            gson.fromJson(it, GetSuccessDealDetailResponseBody::class.java)
+            gson.fromJson(it, GetSuccessDealByIdResponseBody::class.java)
         }
 
 /**

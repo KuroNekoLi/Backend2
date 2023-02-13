@@ -1,15 +1,20 @@
-package com.cmoney.backend2.virtualtrading2.service.api.tseotc.getdelegatedetail
+package com.cmoney.backend2.virtualtrading2.service.api.tseotc.gethistoryalldelegate
 
 import com.google.gson.annotations.SerializedName
 
 /**
- * 取得上市上櫃委託單細節請求
+ * 取得上市上櫃歷史所有委託單
  *
  * @property query 請求內容
  *
- *
+ * tradeType：ALL : 0 / 現股: 1 / 融資: 2 / 融券: 3
 {
-    tseOtcOrder(accountId: $accountId, orderNo: $delegateId) {
+    tseOtcOrderByCustomPeriod(
+        accountId: $id,
+        beginTime: "yyyy/MM/dd",
+        endTime: "yyyy/MM/dd",
+        tradeType: $type
+    ) {
         ordNo
         targetOrdNo
         account
@@ -41,7 +46,7 @@ import com.google.gson.annotations.SerializedName
     }
 }
  */
-data class GetDelegateDetailRequestBody(
+data class GetHistoryAllDelegateRequestBody(
     @SerializedName("query")
     val query: String
 )
