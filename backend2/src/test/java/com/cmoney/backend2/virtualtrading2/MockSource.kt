@@ -11,6 +11,7 @@ import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getallsuccessdeal.
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getdelegatedetail.GetDelegateDetailResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getinventory.GetAllInventoryResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getsuccessdealdetail.GetSuccessDealDetailResponseBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.gettodayalldelegate.GetTodayAllDelegateResponseBody
 import com.google.gson.GsonBuilder
 
 private val gson = GsonBuilder().setLenient().setPrettyPrinting().create()
@@ -228,6 +229,7 @@ fun getAllAccountSuccess(): GetAllAccountResponseBody =
         .let {
             gson.fromJson(it, GetAllAccountResponseBody::class.java)
         }
+
 /**
  * 取得特定帳戶報酬率成功回應
  *
@@ -328,6 +330,84 @@ fun getTseOtcAllDelegateSuccess(): GetAllDelegateResponseBody =
     """
         .let {
             gson.fromJson(it, GetAllDelegateResponseBody::class.java)
+        }
+
+
+/**
+ * 取得上市上櫃所有委託單成功回應
+ *
+ */
+fun getTseOtcTodayAllDelegateSuccess(): GetTodayAllDelegateResponseBody =
+    """
+{
+    "data": {
+        "todayTseOtcOrder": [
+            {
+                "ordNo": 2060657,
+                "targetOrdNo": 2060657,
+                "account": 2076,
+                "groupId": 0,
+                "tradeTime": 1676270807,
+                "status": 20,
+                "ordType": 73,
+                "condition": 82,
+                "tradeType": 1,
+                "stockMarketType": 1,
+                "buySellType": 66,
+                "commKey": "2890",
+                "ordPr": "17.2000",
+                "ordQty": "1000",
+                "dealAvgPr": "0.0000",
+                "dealQty": "0",
+                "avQty": "0",
+                "cutQty": "0",
+                "prePayment": "0.0000",
+                "serverRcvTe": 0,
+                "serverRcvNo": 0,
+                "marginCredit": "0.0000",
+                "marginOwn": "0.0000",
+                "shortSellingCollateral": "0.0000",
+                "shortSellingEntrust": "0.0000",
+                "memo": "",
+                "noteId": 0,
+                "modifyTime": 1676299607
+            },
+            {
+                "ordNo": 2060403,
+                "targetOrdNo": 2060403,
+                "account": 2076,
+                "groupId": 2076,
+                "tradeTime": 1675235667,
+                "status": 20,
+                "ordType": 73,
+                "condition": 82,
+                "tradeType": 1,
+                "stockMarketType": 1,
+                "buySellType": 66,
+                "commKey": "2890",
+                "ordPr": "17.0000",
+                "ordQty": "1000",
+                "dealAvgPr": "0.0000",
+                "dealQty": "0",
+                "avQty": "0",
+                "cutQty": "0",
+                "prePayment": "0.0000",
+                "serverRcvTe": 0,
+                "serverRcvNo": 0,
+                "marginCredit": "0.0000",
+                "marginOwn": "0.0000",
+                "shortSellingCollateral": "0.0000",
+                "shortSellingEntrust": "0.0000",
+                "memo": "",
+                "noteId": 0,
+                "modifyTime": 1675264656
+            }
+        ]
+    }
+}
+    """.trimIndent()
+        .let {
+            gson.fromJson(it, GetTodayAllDelegateResponseBody::class.java)
         }
 
 

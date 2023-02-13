@@ -137,7 +137,7 @@ class MainActivity : AppCompatActivity() {
 //                ClientConfigurationServiceCase(),
 //                ImageRecognitionServiceCase()
 //                VirtualTradeServiceCase(),
-                VirtualTrading2ServiceCase()
+//                VirtualTrading2ServiceCase()
             ).map { serviceCase ->
                 async {
                     serviceCase.testAll()

@@ -12,6 +12,7 @@ import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getallsuccessdeal.
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getdelegatedetail.GetDelegateDetailResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getinventory.GetAllInventoryResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getsuccessdealdetail.GetSuccessDealDetailResponseBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.gettodayalldelegate.GetTodayAllDelegateResponseBody
 
 interface VirtualTrading2Web {
 
@@ -306,6 +307,56 @@ interface VirtualTrading2Web {
         url: String = "${domain}trading-api/graphql",
         query: String
     ): Result<GetDelegateDetailResponseBody>
+
+    /**
+     * 取得上市櫃今日所有的委託單
+     *
+     * @param authorization 授權
+     * @param domain 網域名稱
+     * @param url 完整的Url，預設使用[domain]當作網域名稱
+     * @param query 查詢內容
+    {
+    todayTseOtcOrder(
+    accountId: $id,
+    tradeType: $type，ALL : 0 / 現股: 1 / 融資: 2 / 融券: 3
+    ) {
+    ordNo
+    targetOrdNo
+    account
+    groupId
+    tradeTime
+    status
+    ordType
+    condition
+    tradeType
+    stockMarketType
+    buySellType
+    commKey
+    ordPr
+    ordQty
+    dealAvgPr
+    dealQty
+    avQty
+    cutQty
+    prePayment
+    serverRcvTe
+    serverRcvNo
+    marginCredit
+    marginOwn
+    shortSellingCollateral
+    shortSellingEntrust
+    memo
+    noteId
+    modifyTime
+    }
+    }
+     */
+    suspend fun getTseOtcTodayAllDelegate(
+        authorization: String = requestAdapter.getBearerToken(),
+        domain: String = requestAdapter.getDomain(),
+        url: String = "${domain}trading-api/graphql",
+        query: String
+    ): Result<GetTodayAllDelegateResponseBody>
 
     /**
      * 取得上市櫃所有的成交單

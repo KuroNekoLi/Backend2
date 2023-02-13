@@ -128,8 +128,8 @@ class VirtualTrading2ServiceCase : ServiceCase {
                     tseOtcOrderByCustomPeriod(
                     accountId: $accountId,
                     beginTime: "2023/01/01",
-                    endTime: "2023/12/31",
-                    tradeType: 1
+                    endTime: "2023/01/31",
+                    tradeType: 0
                     ) {
                     ordNo
                     targetOrdNo
@@ -201,14 +201,54 @@ class VirtualTrading2ServiceCase : ServiceCase {
                     }
         """.trimIndent()
         ).logResponse(TAG)
+        val todayAllDelegate = web.getTseOtcTodayAllDelegate(
+            query = """
+                    {
+                    todayTseOtcOrder(
+                    accountId: $accountId,
+                    tradeType: 0
+                    ) {
+                    ordNo
+                    targetOrdNo
+                    account
+                    groupId
+                    tradeTime
+                    status
+                    ordType
+                    condition
+                    tradeType
+                    stockMarketType
+                    buySellType
+                    commKey
+                    ordPr
+                    ordQty
+                    dealAvgPr
+                    dealQty
+                    avQty
+                    cutQty
+                    prePayment
+                    serverRcvTe
+                    serverRcvNo
+                    marginCredit
+                    marginOwn
+                    shortSellingCollateral
+                    shortSellingEntrust
+                    memo
+                    noteId
+                    modifyTime
+                    }
+                    }
+        """.trimIndent()
+        )
+        todayAllDelegate.logResponse(TAG)
         val allSuccessDeal = web.getTseOtcAllSuccessDeal(
             query = """
                 {
                     tseOtcDealByCustomPeriod(
                         accountId: $accountId,
                         beginTime: "2023/01/01",
-                        endTime: "2023/12/31",
-                        tradeType: 1
+                        endTime: "2023/01/31",
+                        tradeType: 0
                     ) {
                         te
                         account

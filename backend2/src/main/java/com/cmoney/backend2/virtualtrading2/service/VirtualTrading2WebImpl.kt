@@ -24,6 +24,8 @@ import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getinventory.GetAl
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getinventory.GetAllInventoryResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getsuccessdealdetail.GetSuccessDealDetailRequestBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getsuccessdealdetail.GetSuccessDealDetailResponseBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.gettodayalldelegate.GetTodayAllDelegateRequestBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.gettodayalldelegate.GetTodayAllDelegateResponseBody
 import com.cmoney.core.DefaultDispatcherProvider
 import com.cmoney.core.DispatcherProvider
 import com.google.gson.Gson
@@ -195,6 +197,24 @@ class VirtualTrading2WebImpl(
                 query = query
             )
             service.getTseOtcDelegateDetail(
+                url = url,
+                authorization = authorization,
+                body = requestBody
+            ).checkResponseBody(gson)
+        }
+    }
+
+    override suspend fun getTseOtcTodayAllDelegate(
+        authorization: String,
+        domain: String,
+        url: String,
+        query: String
+    ): Result<GetTodayAllDelegateResponseBody> = withContext(dispatcher.io()) {
+        runCatching {
+            val requestBody = GetTodayAllDelegateRequestBody(
+                query = query
+            )
+            service.getTseOtcTodayAllDelegate(
                 url = url,
                 authorization = authorization,
                 body = requestBody

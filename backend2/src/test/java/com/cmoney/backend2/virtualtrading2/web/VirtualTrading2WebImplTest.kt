@@ -762,9 +762,86 @@ class VirtualTrading2WebImplTest {
             query = """
                 {
                     tseOtcOrderByCustomPeriod(
-                        accountId: acountId,
+                        accountId: 1234,
                         beginTime: "2023/01/01",
                         endTime: "2023/01/31",
+                        tradeType: 1
+                    ) {
+                        ordNo
+                    }
+                }
+            """.trimIndent()
+        ).getOrThrow()
+    }
+
+    @Test
+    fun `getTseOtcTodayAllDelegate_成功`() = testScope.runTest {
+        val responseBody = getTseOtcTodayAllDelegateSuccess()
+        coEvery {
+            service.getTseOtcTodayAllDelegate(
+                url = any(),
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success(responseBody)
+        val result = web.getTseOtcTodayAllDelegate(
+            query = """
+                {
+                    todayTseOtcOrder(
+                        accountId: 1234,
+                        tradeType: 1
+                ) {
+                    ordNo
+                    targetOrdNo
+                    account
+                    groupId
+                    tradeTime
+                    status
+                    ordType
+                    condition
+                    tradeType
+                    stockMarketType
+                    buySellType
+                    commKey
+                    ordPr
+                    ordQty
+                    dealAvgPr
+                    dealQty
+                    avQty
+                    cutQty
+                    prePayment
+                    serverRcvTe
+                    serverRcvNo
+                    marginCredit
+                    marginOwn
+                    shortSellingCollateral
+                    shortSellingEntrust
+                    memo
+                    noteId
+                    modifyTime
+                }
+            }
+            """.trimIndent()
+        ).getOrThrow()
+        Truth.assertThat(result.content?.delegateList).isNotEmpty()
+    }
+
+    @Test(expected = ServerException::class)
+    fun `getTseOtcTodayAllDelegate_失敗_ServerException`() = testScope.runTest {
+        val error = CMoneyError(message = "")
+        val responseBody = gson.toJson(error, CMoneyError::class.java).toResponseBody()
+        coEvery {
+            service.getTseOtcTodayAllDelegate(
+                url = any(),
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.error(400, responseBody)
+        web.getTseOtcTodayAllDelegate(
+            query = """
+                {
+                    todayTseOtcOrder(
+                        accountId: 1234,
                         tradeType: 1
                     ) {
                         ordNo
