@@ -62,6 +62,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.articlerespo
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.PromotedArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations.GetRecommendationResponse
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.spacepin.GetSpaceBoardPinArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBodyV2
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.GetCommentsResponseBody
@@ -1687,4 +1688,40 @@ interface ForumOceanService {
         @Query("startWeight") startWeight: Long,
         @Query("fetch") fetch: Int
     ): Response<GetPromotedArticlesResponse>
+
+    /**
+     * 釘選社團看板文章
+     */
+    @RecordApi
+    @POST("{path}/api/GroupArticle/{articleId}/Pin")
+    @Headers("X-Version: 2.0")
+    suspend fun pinSpaceBoardArticle(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("articleId") articleId: String
+    ): Response<Void>
+
+    /**
+     * 取消釘選社團看板文章
+     */
+    @RecordApi
+    @POST("{path}/api/GroupArticle/{articleId}/Unpin")
+    @Headers("X-Version: 2.0")
+    suspend fun unpinSpaceBoardArticle(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("articleId") articleId: String
+    ): Response<Void>
+
+    /**
+     * 取得社團看板置頂文章列表
+     */
+    @RecordApi
+    @GET("{path}/api/GroupArticle/Board/{boardId}/Pin")
+    @Headers("X-Version: 2.0")
+    suspend fun getSpaceBoardPinArticles(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("boardId") boardId: Long
+    ): Response<GetSpaceBoardPinArticlesResponse>
 }

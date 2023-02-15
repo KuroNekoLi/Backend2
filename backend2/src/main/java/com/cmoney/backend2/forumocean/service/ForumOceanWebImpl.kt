@@ -68,6 +68,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.articlerespo
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.PromotedArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations.GetRecommendationResponse
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.spacepin.GetSpaceBoardPinArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBodyV2
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.GetCommentsResponseBody
@@ -2179,6 +2180,42 @@ class ForumOceanWebImpl(
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     startWeight = startWeight,
                     fetch = fetch
+                ).checkResponseBody(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun pinSpaceBoardArticle(articleId: String): Result<Unit> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.pinSpaceBoardArticle(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    articleId = articleId
+                ).handleNoContent(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun unpinSpaceBoardArticle(articleId: String): Result<Unit> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.unpinSpaceBoardArticle(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    articleId = articleId
+                ).handleNoContent(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun getSpaceBoardPinArticles(boardId: Long): Result<GetSpaceBoardPinArticlesResponse> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.getSpaceBoardPinArticles(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    boardId = boardId
                 ).checkResponseBody(jsonParser)
             }
         }
