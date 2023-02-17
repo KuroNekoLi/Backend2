@@ -78,7 +78,7 @@ dependecies {
 </manifest>
 ```
 
-## 初始化LogDataRecorder.
+## 初始化LogDataRecorder
 
 為了紀錄Api行為，需要在Application加入初始化設定。
 

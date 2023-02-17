@@ -9,15 +9,15 @@
 |    +--- di
 |        +--- ServiceModule.kt
 |    +--- model
-|        +--- requestadapter
-|            +--- xxxRequestAdapter.kt
+|        +--- settingadapter
+|            +--- xxxSettingAdapter.kt
 |    +--- service
 |        +--- xxxService.kt
 |        +--- xxxWeb.kt
 ```
 
 - di：放置依賴注入相關定義
-- model. requestadapter：放置API設定相關定義
+- model.settingadapter：放置API設定相關定義
 - service：放置Retrofit的Service和轉接成Web的相關定義
 
 ### 在模組專案加入混淆設定

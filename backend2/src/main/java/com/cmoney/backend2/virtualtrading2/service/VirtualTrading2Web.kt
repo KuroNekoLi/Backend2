@@ -1,15 +1,15 @@
 package com.cmoney.backend2.virtualtrading2.service
 
-import com.cmoney.backend2.virtualtrading2.model.requestadapter.VirtualTradingRequestAdapter
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.virtualtrading2.service.api.createaccount.CreateAccountResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.getaccount.GetAccountResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.getaccountratio.GetAccountRatioResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.getallaccount.GetAllAccountResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.createdelegate.CreateDelegateResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.deletedelagate.DeleteDelegateResponseBody
-import com.cmoney.backend2.virtualtrading2.service.api.tseotc.gethistoryalldelegate.GetHistoryAllDelegateResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getallsuccessdeal.GetAllSuccessDealResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getdelegatebyid.GetDelegateByIdResponseBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.gethistoryalldelegate.GetHistoryAllDelegateResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getinventory.GetAllInventoryResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getsuccessdealbyid.GetSuccessDealByIdResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.gettodayalldelegate.GetTodayAllDelegateResponseBody
@@ -17,14 +17,13 @@ import com.cmoney.backend2.virtualtrading2.service.api.tseotc.gettodayalldelegat
 interface VirtualTrading2Web {
 
     /**
-     * 虛擬交易請求轉接器
+     * Backend2管理者
      */
-    val requestAdapter: VirtualTradingRequestAdapter
+    val globalBackend2Manager: GlobalBackend2Manager
 
     /**
      * 建立帳號
      *
-     * @param authorization 授權
      * @param domain 網域名稱
      * @param url 完整的Url
      * @param accountInvestType 投資帳戶類型 (現股 : 1 / 期權 : 2)
@@ -32,8 +31,7 @@ interface VirtualTrading2Web {
      *
      */
     suspend fun createAccount(
-        authorization: String = requestAdapter.getBearerToken(),
-        domain: String = requestAdapter.getDomain(),
+        domain: String = globalBackend2Manager.getVirtualTrading2SettingAdapter().getDomain(),
         url: String = "${domain}account-api/Account",
         accountInvestType: Int,
         cardSn: Long
@@ -42,7 +40,6 @@ interface VirtualTrading2Web {
     /**
      * 建立上市上櫃委託
      *
-     * @param authorization 授權
      * @param domain 網域名稱
      * @param url 完整的Url，預設使用[domain]當作網域名稱
      * @param accountId 帳號編號
@@ -60,8 +57,7 @@ interface VirtualTrading2Web {
      *
      */
     suspend fun createTseOtcDelegate(
-        authorization: String = requestAdapter.getBearerToken(),
-        domain: String = requestAdapter.getDomain(),
+        domain: String = globalBackend2Manager.getVirtualTrading2SettingAdapter().getDomain(),
         url: String = "${domain}trading-api/Trading/TseOtc/NewOrder",
         accountId: Long,
         buySellType: Int,
@@ -77,7 +73,6 @@ interface VirtualTrading2Web {
     /**
      * 刪除上市上櫃委託
      *
-     * @param authorization 授權
      * @param domain 網域名稱
      * @param url 完整的Url，預設使用[domain]當作網域名稱
      * @param accountId 帳號編號
@@ -86,8 +81,7 @@ interface VirtualTrading2Web {
      *
      */
     suspend fun deleteTseOtcDelegate(
-        authorization: String = requestAdapter.getBearerToken(),
-        domain: String = requestAdapter.getDomain(),
+        domain: String = globalBackend2Manager.getVirtualTrading2SettingAdapter().getDomain(),
         url: String = "${domain}trading-api/Trading/TseOtc/CancelOrder",
         accountId: Long,
         groupId: Long,
@@ -97,7 +91,6 @@ interface VirtualTrading2Web {
     /**
      * 取得帳號
      *
-     * @param authorization 授權
      * @param domain 網域名稱
      * @param url 完整的Url，預設使用[domain]當作網域名稱
      * @param query 查詢內容
@@ -135,8 +128,7 @@ interface VirtualTrading2Web {
     }
      */
     suspend fun getAccount(
-        authorization: String = requestAdapter.getBearerToken(),
-        domain: String = requestAdapter.getDomain(),
+        domain: String = globalBackend2Manager.getVirtualTrading2SettingAdapter().getDomain(),
         url: String = "${domain}account-api/graphql",
         query: String
     ): Result<GetAccountResponseBody>
@@ -144,7 +136,6 @@ interface VirtualTrading2Web {
     /**
      * 取得所有帳號
      *
-     * @param authorization 授權
      * @param domain 網域名稱
      * @param url 完整的Url，預設使用[domain]當作網域名稱
      * @param query 查詢內容
@@ -182,8 +173,7 @@ interface VirtualTrading2Web {
     }
      */
     suspend fun getAllAccount(
-        authorization: String = requestAdapter.getBearerToken(),
-        domain: String = requestAdapter.getDomain(),
+        domain: String = globalBackend2Manager.getVirtualTrading2SettingAdapter().getDomain(),
         url: String = "${domain}account-api/graphql",
         query: String
     ): Result<GetAllAccountResponseBody>
@@ -203,8 +193,7 @@ interface VirtualTrading2Web {
     }
      */
     suspend fun getAccountRatio(
-        authorization: String = requestAdapter.getBearerToken(),
-        domain: String = requestAdapter.getDomain(),
+        domain: String = globalBackend2Manager.getVirtualTrading2SettingAdapter().getDomain(),
         url: String = "${domain}account-api/graphql",
         query: String
     ): Result<GetAccountRatioResponseBody>
@@ -212,7 +201,6 @@ interface VirtualTrading2Web {
     /**
      * 取得上市櫃歷史所有的委託單
      *
-     * @param authorization 授權
      * @param domain 網域名稱
      * @param url 完整的Url，預設使用[domain]當作網域名稱
      * @param query 查詢內容
@@ -255,8 +243,7 @@ interface VirtualTrading2Web {
     }
      */
     suspend fun getTseOtcHistoryAllDelegate(
-        authorization: String = requestAdapter.getBearerToken(),
-        domain: String = requestAdapter.getDomain(),
+        domain: String = globalBackend2Manager.getVirtualTrading2SettingAdapter().getDomain(),
         url: String = "${domain}trading-api/graphql",
         query: String
     ): Result<GetHistoryAllDelegateResponseBody>
@@ -264,7 +251,6 @@ interface VirtualTrading2Web {
     /**
      * 取得上市櫃特定委託單
      *
-     * @param authorization 授權
      * @param domain 網域名稱
      * @param url 完整的Url，預設使用[domain]當作網域名稱
      * @param query 查詢內容
@@ -302,8 +288,7 @@ interface VirtualTrading2Web {
     }
      */
     suspend fun getTseOtcDelegateById(
-        authorization: String = requestAdapter.getBearerToken(),
-        domain: String = requestAdapter.getDomain(),
+        domain: String = globalBackend2Manager.getVirtualTrading2SettingAdapter().getDomain(),
         url: String = "${domain}trading-api/graphql",
         query: String
     ): Result<GetDelegateByIdResponseBody>
@@ -311,7 +296,6 @@ interface VirtualTrading2Web {
     /**
      * 取得上市櫃今日所有的委託單
      *
-     * @param authorization 授權
      * @param domain 網域名稱
      * @param url 完整的Url，預設使用[domain]當作網域名稱
      * @param query 查詢內容
@@ -352,8 +336,7 @@ interface VirtualTrading2Web {
     }
      */
     suspend fun getTseOtcTodayAllDelegate(
-        authorization: String = requestAdapter.getBearerToken(),
-        domain: String = requestAdapter.getDomain(),
+        domain: String = globalBackend2Manager.getVirtualTrading2SettingAdapter().getDomain(),
         url: String = "${domain}trading-api/graphql",
         query: String
     ): Result<GetTodayAllDelegateResponseBody>
@@ -361,7 +344,6 @@ interface VirtualTrading2Web {
     /**
      * 取得上市櫃所有的成交單
      *
-     * @param authorization 授權
      * @param domain 網域名稱
      * @param url 完整的Url，預設使用[domain]當作網域名稱
      * @param query 查詢內容
@@ -397,8 +379,7 @@ interface VirtualTrading2Web {
     }
      */
     suspend fun getTseOtcAllSuccessDeal(
-        authorization: String = requestAdapter.getBearerToken(),
-        domain: String = requestAdapter.getDomain(),
+        domain: String = globalBackend2Manager.getVirtualTrading2SettingAdapter().getDomain(),
         url: String = "${domain}trading-api/graphql",
         query: String
     ): Result<GetAllSuccessDealResponseBody>
@@ -406,7 +387,6 @@ interface VirtualTrading2Web {
     /**
      * 取得上市櫃特定成交單
      *
-     * @param authorization 授權
      * @param domain 網域名稱
      * @param url 完整的Url，預設使用[domain]當作網域名稱
      * @param query 查詢內容
@@ -440,8 +420,7 @@ interface VirtualTrading2Web {
     }
      */
     suspend fun getTseOtcSuccessDealById(
-        authorization: String = requestAdapter.getBearerToken(),
-        domain: String = requestAdapter.getDomain(),
+        domain: String = globalBackend2Manager.getVirtualTrading2SettingAdapter().getDomain(),
         url: String = "${domain}trading-api/graphql",
         query: String
     ): Result<GetSuccessDealByIdResponseBody>
@@ -449,7 +428,6 @@ interface VirtualTrading2Web {
     /**
      * 取得上市櫃的庫存
      *
-     * @param authorization 授權
      * @param domain 網域名稱
      * @param url 完整的Url，預設使用[domain]當作網域名稱
      * @param query 查詢內容
@@ -478,8 +456,7 @@ interface VirtualTrading2Web {
     }
      */
     suspend fun getTseOtcAllInventory(
-        authorization: String = requestAdapter.getBearerToken(),
-        domain: String = requestAdapter.getDomain(),
+        domain: String = globalBackend2Manager.getVirtualTrading2SettingAdapter().getDomain(),
         url: String = "${domain}trading-api/graphql",
         query: String
     ): Result<GetAllInventoryResponseBody>

@@ -1,14 +1,18 @@
 package com.cmoney.backend2.base.di
 
 import com.cmoney.backend2.BuildConfig
+import com.cmoney.backend2.base.model.calladapter.RecordApiLogCallAdapterFactoryV2
 import com.cmoney.backend2.base.model.log.ApiLog
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.data_logdatarecorder.recorder.LogDataRecorder
 import com.google.gson.Gson
 import okhttp3.ConnectionSpec
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
+import org.koin.android.ext.koin.androidContext
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import org.koin.java.KoinJavaComponent.getKoin
@@ -25,9 +29,14 @@ private const val DEFAULT_URL = "http://localhost/"
  * V2不會透過Setting來替換Domain，由每一個服務的RequestConfig進行轉接。
  */
 val BACKEND2_OKHTTP_V2 = named("backend2_okhttp_v2")
-val BACKEND2_RETROFIT_WITH_GSON_NON_SERIALIZE_NULLS_V2 = named("backend2_retrofit_with_gson_non_serialize_nulls_v2")
+val BACKEND2_RETROFIT_WITH_GSON_NON_SERIALIZE_NULLS_V2 =
+    named("backend2_retrofit_with_gson_non_serialize_nulls_v2")
 
 val backendBaseModuleV2 = module {
+    single {
+        GlobalBackend2Manager.Builder(context = androidContext())
+            .build()
+    }
     single(BACKEND2_OKHTTP_V2) {
         OkHttpClient.Builder()
             .connectionSpecs(listOf(ConnectionSpec.COMPATIBLE_TLS, ConnectionSpec.CLEARTEXT))
@@ -45,7 +54,12 @@ val backendBaseModuleV2 = module {
             .baseUrl(DEFAULT_URL)
             .client(get(BACKEND2_OKHTTP_V2))
             .addConverterFactory(GsonConverterFactory.create(get(BACKEND2_GSON_NON_SERIALIZE_NULLS)))
-            //TODO 修正 API LOG 攔截器的Domain錯誤
+            .addCallAdapterFactory(
+                RecordApiLogCallAdapterFactoryV2(
+                    setting = get(BACKEND2_SETTING),
+                    logDataRecorder = LogDataRecorder.getInstance()
+                )
+            )
             .build()
     }
 }

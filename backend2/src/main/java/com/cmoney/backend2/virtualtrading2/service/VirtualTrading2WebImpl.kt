@@ -1,7 +1,8 @@
 package com.cmoney.backend2.virtualtrading2.service
 
 import com.cmoney.backend2.base.extension.checkResponseBody
-import com.cmoney.backend2.virtualtrading2.model.requestadapter.VirtualTradingRequestAdapter
+import com.cmoney.backend2.base.extension.createAuthorizationBearer
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.virtualtrading2.service.api.createaccount.CreateAccountRequestBody
 import com.cmoney.backend2.virtualtrading2.service.api.createaccount.CreateAccountResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.getaccount.GetAccountRequestBody
@@ -14,12 +15,12 @@ import com.cmoney.backend2.virtualtrading2.service.api.tseotc.createdelegate.Cre
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.createdelegate.CreateDelegateResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.deletedelagate.DeleteDelegateRequestBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.deletedelagate.DeleteDelegateResponseBody
-import com.cmoney.backend2.virtualtrading2.service.api.tseotc.gethistoryalldelegate.GetHistoryAllDelegateRequestBody
-import com.cmoney.backend2.virtualtrading2.service.api.tseotc.gethistoryalldelegate.GetHistoryAllDelegateResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getallsuccessdeal.GetAllSuccessDealRequestBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getallsuccessdeal.GetAllSuccessDealResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getdelegatebyid.GetDelegateByIdRequestBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getdelegatebyid.GetDelegateByIdResponseBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.gethistoryalldelegate.GetHistoryAllDelegateRequestBody
+import com.cmoney.backend2.virtualtrading2.service.api.tseotc.gethistoryalldelegate.GetHistoryAllDelegateResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getinventory.GetAllInventoryRequestBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getinventory.GetAllInventoryResponseBody
 import com.cmoney.backend2.virtualtrading2.service.api.tseotc.getsuccessdealbyid.GetSuccessDealByIdRequestBody
@@ -32,14 +33,13 @@ import com.google.gson.Gson
 import kotlinx.coroutines.withContext
 
 class VirtualTrading2WebImpl(
-    override val requestAdapter: VirtualTradingRequestAdapter,
+    override val globalBackend2Manager: GlobalBackend2Manager,
     private val service: VirtualTrading2Service,
     private val gson: Gson,
-    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider
+    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider,
 ) : VirtualTrading2Web {
 
     override suspend fun createAccount(
-        authorization: String,
         domain: String,
         url: String,
         accountInvestType: Int,
@@ -52,14 +52,13 @@ class VirtualTrading2WebImpl(
             )
             service.createAccount(
                 url = url,
-                authorization = authorization,
+                authorization = globalBackend2Manager.getAccessToken().createAuthorizationBearer(),
                 body = requestBody
             ).checkResponseBody(gson)
         }
     }
 
     override suspend fun createTseOtcDelegate(
-        authorization: String,
         domain: String,
         url: String,
         accountId: Long,
@@ -86,14 +85,13 @@ class VirtualTrading2WebImpl(
             )
             service.createTseOtcDelegate(
                 url = url,
-                authorization = authorization,
+                authorization = globalBackend2Manager.getAccessToken().createAuthorizationBearer(),
                 body = requestBody
             ).checkResponseBody(gson)
         }
     }
 
     override suspend fun deleteTseOtcDelegate(
-        authorization: String,
         domain: String,
         url: String,
         accountId: Long,
@@ -108,14 +106,13 @@ class VirtualTrading2WebImpl(
             )
             service.deleteTseOtcDelegate(
                 url = url,
-                authorization = authorization,
+                authorization = globalBackend2Manager.getAccessToken().createAuthorizationBearer(),
                 body = requestBody
             ).checkResponseBody(gson)
         }
     }
 
     override suspend fun getAccount(
-        authorization: String,
         domain: String,
         url: String,
         query: String
@@ -126,14 +123,13 @@ class VirtualTrading2WebImpl(
             )
             service.getAccount(
                 url = url,
-                authorization = authorization,
+                authorization = globalBackend2Manager.getAccessToken().createAuthorizationBearer(),
                 body = requestBody
             ).checkResponseBody(gson)
         }
     }
 
     override suspend fun getAllAccount(
-        authorization: String,
         domain: String,
         url: String,
         query: String
@@ -144,14 +140,13 @@ class VirtualTrading2WebImpl(
             )
             service.getAllAccount(
                 url = url,
-                authorization = authorization,
+                authorization = globalBackend2Manager.getAccessToken().createAuthorizationBearer(),
                 body = requestBody
             ).checkResponseBody(gson)
         }
     }
 
     override suspend fun getAccountRatio(
-        authorization: String,
         domain: String,
         url: String,
         query: String
@@ -162,14 +157,13 @@ class VirtualTrading2WebImpl(
             )
             service.getAccountRatio(
                 url = url,
-                authorization = authorization,
+                authorization = globalBackend2Manager.getAccessToken().createAuthorizationBearer(),
                 body = requestBody
             ).checkResponseBody(gson)
         }
     }
 
     override suspend fun getTseOtcHistoryAllDelegate(
-        authorization: String,
         domain: String,
         url: String,
         query: String
@@ -180,14 +174,13 @@ class VirtualTrading2WebImpl(
             )
             service.getTseOtcHistoryAllDelegate(
                 url = url,
-                authorization = authorization,
+                authorization = globalBackend2Manager.getAccessToken().createAuthorizationBearer(),
                 body = requestBody
             ).checkResponseBody(gson)
         }
     }
 
     override suspend fun getTseOtcDelegateById(
-        authorization: String,
         domain: String,
         url: String,
         query: String
@@ -198,14 +191,13 @@ class VirtualTrading2WebImpl(
             )
             service.getTseOtcDelegateById(
                 url = url,
-                authorization = authorization,
+                authorization = globalBackend2Manager.getAccessToken().createAuthorizationBearer(),
                 body = requestBody
             ).checkResponseBody(gson)
         }
     }
 
     override suspend fun getTseOtcTodayAllDelegate(
-        authorization: String,
         domain: String,
         url: String,
         query: String
@@ -216,14 +208,13 @@ class VirtualTrading2WebImpl(
             )
             service.getTseOtcTodayAllDelegate(
                 url = url,
-                authorization = authorization,
+                authorization = globalBackend2Manager.getAccessToken().createAuthorizationBearer(),
                 body = requestBody
             ).checkResponseBody(gson)
         }
     }
 
     override suspend fun getTseOtcAllSuccessDeal(
-        authorization: String,
         domain: String,
         url: String,
         query: String
@@ -234,14 +225,13 @@ class VirtualTrading2WebImpl(
             )
             service.getTseOtcAllSuccessDeal(
                 url = url,
-                authorization = authorization,
+                authorization = globalBackend2Manager.getAccessToken().createAuthorizationBearer(),
                 body = requestBody
             ).checkResponseBody(gson)
         }
     }
 
     override suspend fun getTseOtcSuccessDealById(
-        authorization: String,
         domain: String,
         url: String,
         query: String
@@ -252,14 +242,13 @@ class VirtualTrading2WebImpl(
             )
             service.getTseOtcSuccessDealById(
                 url = url,
-                authorization = authorization,
+                authorization = globalBackend2Manager.getAccessToken().createAuthorizationBearer(),
                 body = requestBody
             ).checkResponseBody(gson)
         }
     }
 
     override suspend fun getTseOtcAllInventory(
-        authorization: String,
         domain: String,
         url: String,
         query: String
@@ -270,7 +259,7 @@ class VirtualTrading2WebImpl(
             )
             service.getTseOtcAllInventory(
                 url = url,
-                authorization = authorization,
+                authorization = globalBackend2Manager.getAccessToken().createAuthorizationBearer(),
                 body = requestBody
             ).checkResponseBody(gson)
         }

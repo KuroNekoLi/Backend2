@@ -1,9 +1,10 @@
 package com.cmoney.backend2.virtualtrading2.web
 
 import com.cmoney.backend2.base.model.exception.ServerException
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.base.model.response.error.CMoneyError
 import com.cmoney.backend2.virtualtrading2.*
-import com.cmoney.backend2.virtualtrading2.model.requestadapter.VirtualTradingRequestAdapter
+import com.cmoney.backend2.virtualtrading2.model.settingadapter.VirtualTrading2SettingAdapter
 import com.cmoney.backend2.virtualtrading2.service.VirtualTrading2Service
 import com.cmoney.backend2.virtualtrading2.service.VirtualTrading2Web
 import com.cmoney.backend2.virtualtrading2.service.VirtualTrading2WebImpl
@@ -39,6 +40,8 @@ class VirtualTrading2WebImplTest {
 
     @MockK
     private lateinit var service: VirtualTrading2Service
+    @MockK(relaxed = true)
+    private lateinit var manager: GlobalBackend2Manager
     private lateinit var web: VirtualTrading2Web
     private val gson = GsonBuilder().setLenient().setPrettyPrinting().create()
 
@@ -48,15 +51,7 @@ class VirtualTrading2WebImplTest {
         web = VirtualTrading2WebImpl(
             dispatcher = TestDispatcherProvider(),
             gson = gson,
-            requestAdapter = object : VirtualTradingRequestAdapter {
-                override fun getDomain(): String {
-                    return ""
-                }
-
-                override fun getBearerToken(): String {
-                    return ""
-                }
-            },
+            globalBackend2Manager = manager,
             service = service
         )
     }

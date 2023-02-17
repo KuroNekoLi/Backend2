@@ -47,32 +47,27 @@ interface VirtualTrading2Web {
  	...
 }
 ```
-- 加入 `RequestConfig`
+- 加入 `GlobalBackend2Manager`
 
 ```
 interface VirtualTrading2Web {
- 	val requestConfig: VirtualTradingRequestConfig
+ 	 val globalBackend2Manager: GlobalBackend2Manager
 }
 ```
 
 ```
 /**
- * 所有Request的設定
+ * 虛擬下單相關的設定轉接
  */
-interface VirtualTradingRequestConfig {
+interface VirtualTrading2SettingAdapter {
     /**
      * 取得網域名稱
      */
     fun getDomain(): String
-
-    /**
-     * 取得BearerToken
-     */
-    fun getBearerToken(): String
 }
 ```
 
-可以看到 `VirtualTradingRequestConfig ` ，不同的服務，內容定義不同。基本上至少會有兩個變數 `Domain` 和 `BearerToken` ，分別是設定服務的Domain和授權Token。
+可以看到 `VirtualTrading2SettingAdapter` ，不同的服務，內容定義不同。
 
 - 加入API方法
 
@@ -81,7 +76,6 @@ interface VirtualTrading2Web {
     /**
      * 建立帳號
      *
-     * @param authorization 授權
      * @param domain 網域名稱
      * @param url 完整的Url，預設使用[domain]當作網域名稱
      * @param accountInvestType 投資帳戶類型 (現股 : 1 / 期權 : 2)
@@ -89,8 +83,7 @@ interface VirtualTrading2Web {
      *
      */
     suspend fun createAccount(
-        authorization: String = requestConfig.getBearerToken(),
-        domain: String = requestConfig.getDomain(),
+        domain: String = globalBackend2Manager.getVirtualTrading2SettingAdapter().getDomain(),
         url: String = "${domain}account-api/Account",
         accountInvestType: Int,
         cardSn: Long
@@ -98,9 +91,7 @@ interface VirtualTrading2Web {
 }
 ```
 
-參數 `authorization`：預設會從 `requestConfig.getBearerToken()` 取得。
-
-參數 `domain`：預設會從 `requestConfig.getDomain()` 取得。
+參數 `domain`：預設會從 `globalBackend2Manager.getVirtualTrading2SettingAdapter()` 取得。
 
 參數url：預設會根據`domain`和Path進行字串的組合，`"${domain}account-api/Account"`。
 
@@ -114,12 +105,11 @@ interface VirtualTrading2Web {
     /**
      * 虛擬交易請求轉接器
      */
-    val requestAdapter: VirtualTradingRequestAdapter
+    val globalBackend2Manager: GlobalBackend2Manager
 
     /**
      * 建立帳號
      *
-     * @param authorization 授權
      * @param domain 網域名稱
      * @param url 完整的Url
      * @param accountInvestType 投資帳戶類型 (現股 : 1 / 期權 : 2)
@@ -127,8 +117,7 @@ interface VirtualTrading2Web {
      *
      */
     suspend fun createAccount(
-        authorization: String = requestAdapter.getBearerToken(),
-        domain: String = requestAdapter.getDomain(),
+        domain: String = globalBackend2Manager.getVirtualTrading2SettingAdapter().getDomain(),
         url: String = "${domain}account-api/Account",
         accountInvestType: Int,
         cardSn: Long
@@ -142,16 +131,10 @@ interface VirtualTrading2Web {
 - 實作VirtualTrading的RequestAdapter
 
 ```
-class VirtualTradingRequestAdapterImpl(
-    private val setting: Setting
-) : VirtualTradingRequestAdapter {
+class VirtualTradingRequestAdapterImpl : VirtualTradingRequestAdapter {
 
     override fun getDomain(): String {
-        return "https://virtualtrade-testing.cmoney.tw/"
-    }
-
-    override fun getBearerToken(): String {
-        return setting.accessToken.createAuthorizationBearer()
+        return "https://virtualtrade.cmoney.tw/"
     }
 }
 ```
@@ -160,14 +143,13 @@ class VirtualTradingRequestAdapterImpl(
 
 ```
 class VirtualTrading2WebImpl(
-    override val requestAdapter: VirtualTradingRequestAdapter,
+    override val globalBackend2Manager: GlobalBackend2Manager,
     private val service: VirtualTrading2Service,
     private val gson: Gson,
     private val dispatcher: DispatcherProvider = DefaultDispatcherProvider
 ) : VirtualTrading2Web {
 
     override suspend fun createAccount(
-        authorization: String,
         domain: String,
         url: String,
         accountInvestType: Int,
@@ -180,7 +162,7 @@ class VirtualTrading2WebImpl(
             )
             service.createAccount(
                 url = url,
-                authorization = authorization,
+                authorization = globalBackend2Manager.getAccessToken().createAuthorizationBearer(),
                 body = requestBody
             ).checkResponseBody(gson)
         }

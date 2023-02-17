@@ -165,7 +165,7 @@ class VirtualTrading2ServiceCase : ServiceCase {
         )
         historyAllDelegate.logResponse(TAG)
         val delegateId = historyAllDelegate.getOrNull()?.content?.delegateList?.firstOrNull()?.delegateId
-        web.getTseOtcDelegateDetail(
+        web.getTseOtcDelegateById(
             query = """
                     {
                     tseOtcOrder(accountId: $accountId, orderNo: $delegateId) {    
@@ -277,7 +277,7 @@ class VirtualTrading2ServiceCase : ServiceCase {
         )
         allSuccessDeal.logResponse(TAG)
         val successDealId = allSuccessDeal.getOrNull()?.content?.successDealList?.firstOrNull()?.delegateId
-        web.getTseOtcSuccessDealDetail(
+        web.getTseOtcSuccessDealById(
             query = """
                {
                 tseOtcDeal(
