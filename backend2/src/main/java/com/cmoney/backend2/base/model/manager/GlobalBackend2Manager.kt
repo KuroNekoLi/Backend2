@@ -141,7 +141,7 @@ class GlobalBackend2Manager(
         var virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter =
             VirtualTrading2SettingAdapterImpl()
 
-        fun build() = GlobalBackend2Manager(this)
+        fun build(): GlobalBackend2Manager = GlobalBackend2Manager(this)
 
         companion object {
             inline fun build(

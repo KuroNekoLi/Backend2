@@ -12,6 +12,7 @@
 |        +--- settingadapter
 |            +--- xxxSettingAdapter.kt
 |    +--- service
+|        +--- api
 |        +--- xxxService.kt
 |        +--- xxxWeb.kt
 ```
