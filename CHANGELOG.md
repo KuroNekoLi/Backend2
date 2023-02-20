@@ -1,8 +1,11 @@
-#  (2023-02-09)
+#  (2023-02-20)
+ 
+## [5.49.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.48.1...5.49.0) (2023-02-07)
 
 
 ### Features
 
+- 新增全域的Backend2管理者(目前能控制虛擬下單Domain)
 - 新增可以變更Domain和特定Path的物件，詳看VirtualTradingV2資料夾
 
 #### 虛擬下單
