@@ -35,6 +35,7 @@ import com.cmoney.backend2.tickdata.service.TickDataService
 import com.cmoney.backend2.trial.service.TrialService
 import com.cmoney.backend2.videochannel.service.VideoChannelService
 import com.cmoney.backend2.virtualassets.service.VirtualAssetsService
+import com.cmoney.backend2.virtualtrading2.service.VirtualTrading2Service
 import com.cmoney.backend2.vtwebapi.service.VirtualTradeService
 import com.google.common.truth.Truth
 import org.junit.Test
@@ -102,7 +103,8 @@ class RecordApiTest(
                 arrayOf<Any?>(ImageRecognitionService::class),
                 arrayOf<Any?>(BrokerDataTransmissionService::class),
                 arrayOf<Any?>(FrontEndLoggerService::class),
-                arrayOf<Any?>(VirtualTradeService::class)
+                arrayOf<Any?>(VirtualTradeService::class),
+                arrayOf<Any?>(VirtualTrading2Service::class)
             )
         }
     }

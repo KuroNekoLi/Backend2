@@ -57,6 +57,7 @@
 -keep class com.cmoney.backend2.productdataprovider.service.api.** { *; }
 -keep class com.cmoney.backend2.commonuse.service.api.** { *; }
 -keep class com.cmoney.backend2.crawlsetting.service.api.** { *; }
+-keep class com.cmoney.backend2.virtualtrading2.service.api.** { *; }
 
 # Prevent proguard from stripping interface information from TypeAdapterFactory,
 # JsonSerializer, JsonDeserializer instances (so they can be used in @JsonAdapter)
