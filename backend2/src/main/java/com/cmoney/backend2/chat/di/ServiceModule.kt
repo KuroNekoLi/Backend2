@@ -15,8 +15,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 private const val RELEASE_CHAT_URL = "https://talk.cmoney.tw/"
-private const val DEBUG_CHAT_URL = "http://192.168.10.103/"
-private val BACKEND2_CHAT_RETROFIT = named("backend2_chat_retrofit")
+private const val DEBUG_CHAT_URL = "http://192.168.99.103/"
+val BACKEND2_CHAT_RETROFIT = named("backend2_chat_retrofit")
 val BACKEND2_CHAT_DEBUG = named("backend2_chat_debug")
 val BACKEND2_CHAT_RELEASE = named("backend2_chat_release")
 
