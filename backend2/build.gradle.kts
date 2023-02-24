@@ -40,7 +40,9 @@ android {
     }
     kotlinOptions {
         jvmTarget = "11"
-        freeCompilerArgs = freeCompilerArgs + listOf("-module-name", "backend2")
+        freeCompilerArgs = freeCompilerArgs +
+            listOf("-module-name", "backend2") +
+            listOf("-Xopt-in=kotlin.RequiresOptIn")
     }
 }
 
