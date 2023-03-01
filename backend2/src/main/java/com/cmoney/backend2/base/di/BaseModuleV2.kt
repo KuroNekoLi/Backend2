@@ -4,7 +4,14 @@ import com.cmoney.backend2.BuildConfig
 import com.cmoney.backend2.base.model.calladapter.RecordApiLogCallAdapterFactoryV2
 import com.cmoney.backend2.base.model.log.ApiLog
 import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
-import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.backend2.base.model.setting.backend.BackendSetting
+import com.cmoney.backend2.base.model.setting.backend.BackendSettingImpl
+import com.cmoney.backend2.base.model.setting.backend.localdatasource.BackendSettingLocalDataSource
+import com.cmoney.backend2.base.model.setting.backend.localdatasource.BackendSettingLocalDataSourceImpl
+import com.cmoney.backend2.base.model.setting.jwt.JwtSetting
+import com.cmoney.backend2.base.model.setting.jwt.JwtSettingImpl
+import com.cmoney.backend2.base.model.setting.jwt.localdatasource.JwtSettingLocalDataSource
+import com.cmoney.backend2.base.model.setting.jwt.localdatasource.JwtSettingLocalDataSourceImpl
 import com.cmoney.data_logdatarecorder.recorder.LogDataRecorder
 import com.google.gson.Gson
 import okhttp3.ConnectionSpec
@@ -33,9 +40,34 @@ val BACKEND2_RETROFIT_WITH_GSON_NON_SERIALIZE_NULLS_V2 =
     named("backend2_retrofit_with_gson_non_serialize_nulls_v2")
 
 val backendBaseModuleV2 = module {
+    factory<BackendSettingLocalDataSource> {
+        BackendSettingLocalDataSourceImpl(
+            context = androidContext()
+        )
+    }
+    factory<BackendSetting> {
+        BackendSettingImpl(
+            context = androidContext(),
+            localDataSource = get()
+        )
+    }
+    factory<JwtSettingLocalDataSource> {
+        JwtSettingLocalDataSourceImpl(
+            context = androidContext()
+        )
+    }
+    factory<JwtSetting> {
+        JwtSettingImpl(
+            localDataSource = get()
+        )
+    }
     single {
-        GlobalBackend2Manager.Builder(context = androidContext())
-            .build()
+        GlobalBackend2Manager.Builder.build(
+            backendSetting = get(),
+            jwtSetting = get()
+        ) {
+
+        }
     }
     single(BACKEND2_OKHTTP_V2) {
         OkHttpClient.Builder()
@@ -56,7 +88,7 @@ val backendBaseModuleV2 = module {
             .addConverterFactory(GsonConverterFactory.create(get(BACKEND2_GSON_NON_SERIALIZE_NULLS)))
             .addCallAdapterFactory(
                 RecordApiLogCallAdapterFactoryV2(
-                    setting = get(BACKEND2_SETTING),
+                    manager = get(),
                     logDataRecorder = LogDataRecorder.getInstance()
                 )
             )
@@ -80,9 +112,9 @@ internal fun OkHttpClient.Builder.addLogInterceptor() = apply {
  */
 internal fun OkHttpClient.Builder.addChangeDomainInterceptor() = apply {
     addInterceptor { chain ->
-        val setting = getKoin().get<Setting>(BACKEND2_SETTING)
+        val manager = getKoin().get<GlobalBackend2Manager>()
         val request: Request = chain.request()
-        val httpUrl = setting.domainUrl.toHttpUrl()
+        val httpUrl = manager.getGlobalDomainUrl().toHttpUrl()
         val newUrl = request.url.newBuilder()
             .scheme(httpUrl.scheme)
             .host(httpUrl.host)
@@ -98,17 +130,17 @@ internal fun OkHttpClient.Builder.addChangeDomainInterceptor() = apply {
  * 加入CMoney的Header紀錄。
  */
 internal fun OkHttpClient.Builder.addCMoneyApiTraceContextInterceptor() = apply {
-    val setting = getKoin().get<Setting>(BACKEND2_SETTING)
+    val manager = getKoin().get<GlobalBackend2Manager>()
     val gson = getKoin().get<Gson>(BACKEND2_GSON)
     addInterceptor { chain ->
         val request: Request = chain.request()
         val apiLogJson = ApiLog.create(
-            appId = setting.appId,
-            platform = setting.platform.code,
-            appVersion = setting.appVersion,
-            manufacturer = setting.manufacturer,
-            model = setting.model,
-            osVersion = setting.osVersion
+            appId = manager.getAppId(),
+            platform = manager.getPlatform().code,
+            appVersion = manager.getAppVersionName(),
+            manufacturer = manager.getManufacturer(),
+            model = manager.getModel(),
+            osVersion = manager.getOsVersion()
         ).let { apiLog ->
             gson.toJson(apiLog)
         }

@@ -20,12 +20,13 @@ import com.cmoney.backend2.base.model.request.IdentityToken
  * @property identityToken JWT的[IdentityToken]
  * @property refreshToken JWT的RefreshToken
  */
+@Deprecated("使用GlobalBackend2Manager代替", replaceWith = ReplaceWith("GlobalBackend2Manager", "com.cmoney.backend2.base.model.manager"))
 interface Setting {
     var domainUrl: String
     var appId: Int
     var clientId: String
-    var appVersionCode: Int
-    var appVersion: String
+    val appVersionCode: Int
+    val appVersion: String
     val manufacturer: String
     val model: String
     val osVersion: String

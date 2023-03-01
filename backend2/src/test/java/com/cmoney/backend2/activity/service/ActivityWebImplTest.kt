@@ -4,6 +4,7 @@ import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.activity.service.api.getdaycount.GetDayCountResponseBody
 import com.cmoney.backend2.activity.service.api.getreferralcount.GetReferralCountResponseBody
 import com.cmoney.backend2.base.model.exception.ServerException
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.core.CoroutineTestRule
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
@@ -25,31 +26,28 @@ import org.robolectric.RobolectricTestRunner
 import retrofit2.HttpException
 import retrofit2.Response
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
 class ActivityWebImplTest {
     private val testScope = TestScope()
-    @ExperimentalCoroutinesApi
     @get:Rule
     val mainCoroutineRule = CoroutineTestRule(testScope = testScope)
-
+    @MockK(relaxed = true)
+    private lateinit var manager: GlobalBackend2Manager
     @MockK
-    private val activityService = mockk<ActivityService>()
+    private lateinit var activityService: ActivityService
     private val gson = GsonBuilder().serializeNulls().setLenient().setPrettyPrinting().create()
-    private val service: ActivityWeb = ActivityWebImpl(
-        TestSetting(),
-        gson,
-        activityService,
-        Dispatchers.Main
-    )
+    private lateinit var service: ActivityWeb
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-    }
-
-    @After
-    fun tearDown() {
-
+        service = ActivityWebImpl(
+            manager,
+            gson,
+            activityService,
+            Dispatchers.Main
+        )
     }
 
     @Test

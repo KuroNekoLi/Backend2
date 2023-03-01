@@ -11,8 +11,8 @@ import com.cmoney.backend2.sample.databinding.ActivityMainBinding
 import com.cmoney.backend2.sample.extension.lockWindows
 import com.cmoney.backend2.sample.extension.toast
 import com.cmoney.backend2.sample.extension.unlockWindows
+import com.cmoney.backend2.sample.servicecase.ActivityServiceCase
 import com.cmoney.backend2.sample.servicecase.ServiceCase
-import com.cmoney.backend2.sample.servicecase.VirtualTrading2ServiceCase
 import com.cmoney.backend2.sample.view.main.data.LoginEvent
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -99,7 +99,7 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val deferredList = listOf<ServiceCase>(
                 // 要測試記得取消註解
-//                ActivityServiceCase(),
+                ActivityServiceCase(),
 //                AuthorizationServiceCase(),
 //                AdditionalInformationRevisitTestCase(hasSignal = true),
 //                BillingServiceCase()

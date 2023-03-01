@@ -4,7 +4,6 @@ import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.base.model.response.error.CMoneyError
 import com.cmoney.backend2.virtualtrading2.*
-import com.cmoney.backend2.virtualtrading2.model.settingadapter.VirtualTrading2SettingAdapter
 import com.cmoney.backend2.virtualtrading2.service.VirtualTrading2Service
 import com.cmoney.backend2.virtualtrading2.service.VirtualTrading2Web
 import com.cmoney.backend2.virtualtrading2.service.VirtualTrading2WebImpl
