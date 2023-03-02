@@ -3,7 +3,7 @@ package com.cmoney.backend2.forumocean.service.api.variable.response.articleresp
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
 import com.google.gson.annotations.SerializedName
 
-data class GetSpaceBoardPinArticlesResponse(
+data class GetSpaceBoardPinArticlesResponseBody(
     @SerializedName("articles")
     val articles: List<ArticleResponseBodyV2>
 )

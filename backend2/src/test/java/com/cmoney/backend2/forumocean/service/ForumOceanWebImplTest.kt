@@ -53,7 +53,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.articlerespo
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations.GetRecommendationResponse
-import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.spacepin.GetSpaceBoardPinArticlesResponse
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.spacepin.GetSpaceBoardPinArticlesResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentContent
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBodyV2
@@ -5209,7 +5209,7 @@ class ForumOceanWebImplTest {
                 path = any(),
                 boardId = any()
             )
-        } returns Response.success(GetSpaceBoardPinArticlesResponse(listOf()))
+        } returns Response.success(GetSpaceBoardPinArticlesResponseBody(listOf()))
         val result = web.getSpaceBoardPinArticles(1L)
         assertThat(result.isSuccess).isTrue()
     }
