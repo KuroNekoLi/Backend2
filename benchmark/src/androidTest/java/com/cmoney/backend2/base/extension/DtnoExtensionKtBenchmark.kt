@@ -39,7 +39,7 @@ class DtnoExtensionKtBenchmark {
                         )
                     }
             }
-            dtnoData.toListOfSomething<UsaCompanyInformation>(gson)
+            dtnoData.toListOfType<UsaCompanyInformation>(gson = gson)
         }
     }
 
@@ -55,7 +55,7 @@ class DtnoExtensionKtBenchmark {
                         )
                     }
             }
-            dtnoData.toListOfSomething<CommodityInformation>(gson)
+            dtnoData.toListOfType<CommodityInformation>(gson = gson)
         }
     }
 
