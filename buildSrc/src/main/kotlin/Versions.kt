@@ -104,7 +104,7 @@ object Versions {
     const val HUAWEI_IAP = "5.3.0.300"
     // CMoney
     const val LOG_DATA_RECORDER = "5.4.0"
-    const val CMONEY_BACKEND2 = "5.44.2"
+    const val CMONEY_BACKEND2 = "5.50.0"
     const val CMONEY_BROWSER = "5.0.0"
     const val CMONEY_CRM = "5.2.0"
     const val CMONEY_ANALYTICS_USER = "5.1.0"

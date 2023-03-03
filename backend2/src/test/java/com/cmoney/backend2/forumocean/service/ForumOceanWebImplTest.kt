@@ -53,6 +53,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.articlerespo
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations.GetRecommendationResponse
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.spacepin.GetSpaceBoardPinArticlesResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentContent
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBodyV2
@@ -99,7 +100,13 @@ class ForumOceanWebImplTest {
     private val jsonParser =
         GsonBuilder().serializeNulls().setLenient().setPrettyPrinting().create()
     private val web: ForumOceanWeb =
-        ForumOceanWebImpl(forumOceanService, TestSetting(), jsonParser, "", TestDispatcherProvider())
+        ForumOceanWebImpl(
+            forumOceanService,
+            TestSetting(),
+            jsonParser,
+            "",
+            TestDispatcherProvider()
+        )
 
     @Before
     fun setUp() {
@@ -5134,6 +5141,90 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getPromotedArticles(0, 0)
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `置頂社團看板文章_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.pinSpaceBoardArticle(
+                authorization = any(),
+                path = any(),
+                articleId = any()
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.pinSpaceBoardArticle("123")
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `置頂社團看板文章_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.pinSpaceBoardArticle(
+                authorization = any(),
+                path = any(),
+                articleId = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.pinSpaceBoardArticle("123")
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取消置頂社團看板文章_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.unpinSpaceBoardArticle(
+                authorization = any(),
+                path = any(),
+                articleId = any()
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.unpinSpaceBoardArticle("123")
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取消置頂社團看板文章_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.unpinSpaceBoardArticle(
+                authorization = any(),
+                path = any(),
+                articleId = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.unpinSpaceBoardArticle("123")
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得社團看板置頂文章清單_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getSpaceBoardPinArticles(
+                authorization = any(),
+                path = any(),
+                boardId = any()
+            )
+        } returns Response.success(GetSpaceBoardPinArticlesResponseBody(listOf()))
+        val result = web.getSpaceBoardPinArticles(1L)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得社團看板置頂文章清單_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getSpaceBoardPinArticles(
+                authorization = any(),
+                path = any(),
+                boardId = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getSpaceBoardPinArticles(1L)
         assertThat(result.isFailure).isTrue()
     }
 
