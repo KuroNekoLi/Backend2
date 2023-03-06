@@ -1,8 +1,6 @@
 package com.cmoney.backend2.base.di
 
-import android.content.Context
 import com.cmoney.backend2.base.model.calladapter.RecordApiLogCallAdapterFactory
-import com.cmoney.backend2.base.model.setting.BackendSettingSharedPreference
 import com.cmoney.backend2.base.model.setting.DefaultSetting
 import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.base.model.typeadapter.ULongTypeAdapter
@@ -12,7 +10,6 @@ import com.google.gson.GsonBuilder
 import okhttp3.ConnectionSpec
 import okhttp3.ConnectionSpec.Companion.COMPATIBLE_TLS
 import okhttp3.OkHttpClient
-import org.koin.android.ext.koin.androidContext
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -32,16 +29,8 @@ val BACKEND2_RETROFIT_WITH_GSON_NON_SERIALIZE_NULLS =
 val BACKEND2_SETTING = named("backend2_setting")
 
 val backendBaseModule = module {
-    single {
-        BackendSettingSharedPreference(
-            androidContext().getSharedPreferences(
-                BackendSettingSharedPreference.TAG,
-                Context.MODE_PRIVATE
-            )
-        )
-    }
     single<Setting>(BACKEND2_SETTING) {
-        DefaultSetting(backendSettingSharedPreference = get())
+        DefaultSetting(manager = get())
     }
     single(BACKEND2_OKHTTP) {
         OkHttpClient.Builder()
@@ -75,7 +64,7 @@ val backendBaseModule = module {
             .addConverterFactory(GsonConverterFactory.create(get(BACKEND2_GSON)))
             .addCallAdapterFactory(
                 RecordApiLogCallAdapterFactory(
-                    setting = get(BACKEND2_SETTING),
+                    manager = get(),
                     logDataRecorder = LogDataRecorder.getInstance()
                 )
             )
@@ -88,7 +77,7 @@ val backendBaseModule = module {
             .addConverterFactory(GsonConverterFactory.create(get(BACKEND2_GSON_NON_SERIALIZE_NULLS)))
             .addCallAdapterFactory(
                 RecordApiLogCallAdapterFactory(
-                    setting = get(BACKEND2_SETTING),
+                    manager = get(),
                     logDataRecorder = LogDataRecorder.getInstance()
                 )
             )

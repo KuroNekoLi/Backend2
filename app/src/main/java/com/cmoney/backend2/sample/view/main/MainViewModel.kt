@@ -3,9 +3,9 @@ package com.cmoney.backend2.sample.view.main
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.base.model.request.AccessToken
 import com.cmoney.backend2.base.model.request.IdentityToken
-import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.identityprovider.service.IdentityProviderWeb
 import com.cmoney.backend2.sample.model.SingleLiveEvent
 import com.cmoney.backend2.sample.model.WindowsLock
@@ -17,7 +17,7 @@ import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 
 class MainViewModel(
-    private val backendSetting: Setting,
+    private val manager: GlobalBackend2Manager,
     private val identityProviderWeb: IdentityProviderWeb
 ) : ViewModel() {
 
@@ -32,15 +32,15 @@ class MainViewModel(
     val loginEvent: LiveData<LoginEvent> = _loginEvent
 
     fun setAppId(id: Int) {
-        backendSetting.appId = id
+        manager.setAppId(id)
     }
 
     fun setClientId(id: String) {
-        backendSetting.clientId = id
+        manager.setClientId(id)
     }
 
     fun setDomain(domain: String) {
-        backendSetting.domainUrl = domain
+        manager.setGlobalDomainUrl(domain)
     }
 
     fun login(account: String, password: String) {
@@ -57,9 +57,15 @@ class MainViewModel(
             val result = identityProviderWeb.loginByEmail(account, md5edPassword)
             _windowsLock.value = WindowsLock.Unlock
             result.fold({ body ->
-                backendSetting.accessToken = AccessToken(body.accessToken.orEmpty())
-                backendSetting.identityToken = IdentityToken(body.idToken.orEmpty())
-                backendSetting.refreshToken = body.refreshToken.orEmpty()
+                manager.setAccessToken(
+                    AccessToken(body.accessToken.orEmpty())
+                )
+                manager.setIdentityToken(
+                    IdentityToken(body.idToken.orEmpty())
+                )
+                manager.setRefreshToken(
+                    body.refreshToken.orEmpty()
+                )
                 _loginEvent.value = LoginEvent.Success
             }, {
                 _error.value = it.message

@@ -15,7 +15,6 @@ android {
 
     defaultConfig {
         minSdk = ModuleConfig.MIN_SDK
-        targetSdk = ModuleConfig.TARGET_SDK
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFile("consumer-rules.pro")
     }
@@ -51,6 +50,7 @@ dependencies {
     implementation(Dependencies.KOTLIN_REFLECT)
     implementation(Dependencies.ANDROID_KTX_CORE)
     implementation(Dependencies.ANDROID_APPCOMPAT)
+    implementation(Dependencies.ANDROID_SECURITY_CRYPTO)
     // coroutine
     implementation(Dependencies.COROUTINES_CORE)
     implementation(Dependencies.COROUTINES_ANDROID)
