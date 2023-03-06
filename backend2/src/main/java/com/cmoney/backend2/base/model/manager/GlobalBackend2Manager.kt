@@ -10,6 +10,15 @@ import com.cmoney.backend2.virtualtrading2.model.settingadapter.VirtualTrading2S
 import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdapter
 import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdapterImpl
 
+/**
+ * Backend模組經常變動設定的管理者。
+ *
+ * @property backendSetting Backend設定
+ * @property jwtSetting Jwt設定
+ * @property virtualTradeSettingAdapter 虛擬下單V1轉接器
+ * @property virtualTrading2SettingAdapter 虛擬下單V2轉接器
+ *
+ */
 class GlobalBackend2Manager(
     private val backendSetting: BackendSetting,
     private val jwtSetting: JwtSetting,
@@ -30,6 +39,9 @@ class GlobalBackend2Manager(
         return backendSetting.getDomainUrl()
     }
 
+    /**
+     * 設定全域的DomainUrl
+     */
     fun setGlobalDomainUrl(domainUrl: String) {
         backendSetting.setDomainUrl(domainUrl)
     }
@@ -41,6 +53,9 @@ class GlobalBackend2Manager(
         return backendSetting.getAppId()
     }
 
+    /**
+     * 設定App編號
+     */
     fun setAppId(appId: Int) {
         backendSetting.setAppId(appId)
     }
@@ -52,6 +67,9 @@ class GlobalBackend2Manager(
         return backendSetting.getClientId()
     }
 
+    /**
+     * 設定客戶端編號
+     */
     fun setClientId(clientId: String) {
         backendSetting.setClientId(clientId)
     }
@@ -98,39 +116,51 @@ class GlobalBackend2Manager(
         return backendSetting.getPlatform()
     }
 
+    /**
+     * 設定平台
+     */
     fun setPlatform(platform: Platform) {
         backendSetting.setPlatform(platform)
     }
 
     /**
-     * 取得授權連接Token
+     * 取得Jwt的AccessToken
      */
     fun getAccessToken(): AccessToken {
         return jwtSetting.getAccessToken()
     }
 
+    /**
+     * 設定Jwt的AccessToken
+     */
     fun setAccessToken(accessToken: AccessToken) {
         jwtSetting.setAccessToken(accessToken)
     }
 
     /**
-     * 取得會員資訊辨識Token
+     * 取得Jwt的IdentityToken
      */
     fun getIdentityToken(): IdentityToken {
         return jwtSetting.getIdentityToken()
     }
 
+    /**
+     * 設定Jwt的IdentityToken
+     */
     fun setIdentityToken(identityToken: IdentityToken) {
         jwtSetting.setIdentityToken(identityToken)
     }
 
     /**
-     * 取得刷新Token
+     * 取得Jwt的RefreshToken
      */
     fun getRefreshToken(): String {
         return jwtSetting.getRefreshToken()
     }
 
+    /**
+     * 設定Jwt的RefreshToken
+     */
     fun setRefreshToken(refreshToken: String) {
         jwtSetting.setRefreshToken(refreshToken)
     }
