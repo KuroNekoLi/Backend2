@@ -1,6 +1,6 @@
 package com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations
 
-import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
 import com.google.gson.annotations.SerializedName
 
 /**
@@ -13,7 +13,7 @@ import com.google.gson.annotations.SerializedName
  */
 data class GetRecommendationResponse(
     @SerializedName("articles")
-    val articles: List<ArticleResponseBody.UnknownArticleResponseBody>,
+    val articles: List<ArticleResponseBodyV2>,
     @SerializedName("hasNext")
     val hasNext: Boolean,
     @SerializedName("nextOffset")
