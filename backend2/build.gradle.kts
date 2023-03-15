@@ -12,7 +12,7 @@ apply {
 android {
     compileSdk = ModuleConfig.COMPILE_SDK
     buildToolsVersion = ModuleConfig.BUILD_TOOLS_VERSION
-
+    namespace = "com.cmoney.backend2"
     defaultConfig {
         minSdk = ModuleConfig.MIN_SDK
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
