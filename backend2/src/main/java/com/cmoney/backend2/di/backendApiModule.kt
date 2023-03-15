@@ -4,6 +4,7 @@ import com.cmoney.backend2.activity.di.activityServiceModule
 import com.cmoney.backend2.additioninformationrevisit.di.additionalInformationRevisitServiceModule
 import com.cmoney.backend2.authorization.di.authorizationServiceModule
 import com.cmoney.backend2.base.di.backendBaseModule
+import com.cmoney.backend2.base.di.backendBaseModuleV2
 import com.cmoney.backend2.billing.di.billingServiceModule
 import com.cmoney.backend2.brokerdatatransmission.di.brokerDataTransmissionServiceModule
 import com.cmoney.backend2.cellphone.di.cellphoneServiceModule
@@ -41,6 +42,7 @@ import com.cmoney.backend2.trial.di.trialServiceModule
 import com.cmoney.backend2.userbehavior.di.userBehaviorServiceModule
 import com.cmoney.backend2.videochannel.di.videoChannelServiceModule
 import com.cmoney.backend2.virtualassets.di.virtualAssetsServiceModule
+import com.cmoney.backend2.virtualtrading2.di.virtualTrading2ServiceModule
 import com.cmoney.backend2.vtwebapi.di.virtualTradeServiceModule
 import org.koin.core.module.Module
 import org.koin.dsl.module
@@ -52,6 +54,7 @@ import org.koin.dsl.module
 val backendServicesModule: Module = module {
     includes(
         backendBaseModule,
+        backendBaseModuleV2,
         activityServiceModule,
         additionalInformationRevisitServiceModule,
         authorizationServiceModule,
@@ -92,6 +95,7 @@ val backendServicesModule: Module = module {
         userBehaviorServiceModule,
         videoChannelServiceModule,
         virtualAssetsServiceModule,
-        virtualTradeServiceModule
+        virtualTradeServiceModule,
+        virtualTrading2ServiceModule
     )
 }

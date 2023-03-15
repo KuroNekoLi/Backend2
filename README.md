@@ -1,12 +1,12 @@
 ## Backend2
 
-## 新API資料夾教學
+## 建立資料夾說明
 
-[教學參考](./documents/CreateNewApiService.md)
+[參考](./documents/CreateFolder.md)
 
-## 現有API加入教學
+## 建立API說明
 
-[教學參考](./documents/CreateOldApi.md)
+[參考](./documents/CreateApi.md)
 
 
 ## MIGRATE
@@ -44,7 +44,7 @@ android {
     }
 }
 dependecies {
-	implementation 'com.cmoney.backend2:backend2:5.48.1'
+	implementation("com.cmoney.backend2:backend2:5.50.0")
 	implementation("com.cmoney.logdatarecorder:logdatarecorder-data:5.4.0")
 	implementation("com.cmoney.logdatarecorder:logdatarecorder-domain:5.4.0")
 }
@@ -54,8 +54,8 @@ dependecies {
 
 ```groovy
 dependecies {
-	releaseImplementation 'com.cmoney.backend2:backend2:5.48.1'
-	debugImplementation 'com.cmoney.backend2:backend2-debug:5.48.1'
+	releaseImplementation("com.cmoney.backend2:backend2:5.50.0")
+	debugImplementation("com.cmoney.backend2:backend2-debug:5.50.0")
 	implementation("com.cmoney.logdatarecorder:logdatarecorder-data:5.4.0")
 	implementation("com.cmoney.logdatarecorder:logdatarecorder-domain:5.4.0")
 }
@@ -78,9 +78,7 @@ dependecies {
 </manifest>
 ```
 
----
-
-## 初始化LogDataRecorder.
+## 初始化LogDataRecorder
 
 為了紀錄Api行為，需要在Application加入初始化設定。
 
@@ -109,7 +107,6 @@ val BACKEND2_GSON_NON_SERIALIZE_NULLS = named("backend2_gson_non_serialize_nulls
 val BACKEND2_RETROFIT = named("backend2_retrofit")
 val BACKEND2_RETROFIT_WITH_GSON_NON_SERIALIZE_NULLS = named("backend2_retrofit_with_gson_non_serialize_nulls")
 val BACKEND2_SETTING = named("backend2_setting")
-
 ```
 
 #### 已被定義好的Class
@@ -152,39 +149,39 @@ class SampleApplication : Application() {
 
 backendServicesModule都包含以下定義，如果需要單一覆寫，可從下方找到。
 
-| 定義名稱                                   | 對應PackageName             |
+| 定義名稱                                      | 對應PackageName              |
 |-------------------------------------------|----------------------------|
 | activityServiceModule                     | activity                   |
 | additionalInformationRevisitServiceModule | additionInformationReviist |
-| authorizationServiceModule,               | authorization              |
-| backendBaseModule,                        | base                       |
-| billingServiceModule,                     | billing                    |
-| cellphoneServiceModule,                   | cellphone                  |
-| chatServiceModule,                        | chat                       |
-| chipkServiceModule,                       | chipk                      |
-| cmtalkServiceModule,                      | cmtalk                     |
-| commonServiceModule,                      | common                     |
-| commonUseModule,                          | commonuse                  |
-| customGroupServiceModule,                 | customgroup                |
-| customGroup2ServiceModule,                | customgroup2               |
+| authorizationServiceModule                | authorization              |
+| backendBaseModule                         | base                       |
+| billingServiceModule                      | billing                    |
+| cellphoneServiceModule                    | cellphone                  |
+| chatServiceModule                         | chat                       |
+| chipkServiceModule                        | chipk                      |
+| cmtalkServiceModule                       | cmtalk                     |
+| commonServiceModule                       | common                     |
+| commonUseModule                           | commonuse                  |
+| customGroupServiceModule                  | customgroup                |
+| customGroup2ServiceModule                 | customgroup2               |
 | dataServiceModule                         | data                       |
-| dtnoServiceModule,                        | dtno                       |
-| emilyServiceModule,                       | emilystock                 |
-| forumOceanServiceModule,                  | forumocean                 |
-| identityProviderServiceModule,            | identityprovider           |
-| imageServiceModule,                       | image                      |
-| mediaServiceModule,                       | media                      |
-| mobileOceanServiceModule,                 | mobileocean                |
-| noteExtensionServiceModule,               | note_extension             |
-| notesServiceModule,                       | notes                      |
-| notificationServiceModule,                | notification               |
-| notification2ServiceModule,               | notification2              |
-| oceanServiceModule,                       | ocean                      |
-| portalServiceModule,                      | portal                     |
-| profileServiceModule,                     | profile                    |
-| realtimeAfterMarketServiceModule,         | realtimeaftermarket        |
-| tickDataServiceModule,                    | tickdata                   |
-| trialServiceModule,                       | trial                      |
+| dtnoServiceModule                         | dtno                       |
+| emilyServiceModule                        | emilystock                 |
+| forumOceanServiceModule                   | forumocean                 |
+| identityProviderServiceModule             | identityprovider           |
+| imageServiceModule                        | image                      |
+| mediaServiceModule                        | media                      |
+| mobileOceanServiceModule                  | mobileocean                |
+| noteExtensionServiceModule                | note_extension             |
+| notesServiceModule                        | notes                      |
+| notificationServiceModule                 | notification               |
+| notification2ServiceModule                | notification2              |
+| oceanServiceModule                        | ocean                      |
+| portalServiceModule                       | portal                     |
+| profileServiceModule                      | profile                    |
+| realtimeAfterMarketServiceModule          | realtimeaftermarket        |
+| tickDataServiceModule                     | tickdata                   |
+| trialServiceModule                        | trial                      |
 | virtualAssetsServiceModule                | virtualassets              |
 | crmServiceModule                          | crm                        |
 | userBehaviorServiceModule                 | userbehavior               |
@@ -196,6 +193,7 @@ backendServicesModule都包含以下定義，如果需要單一覆寫，可從�
 | virtualTradeServiceModule                 | vtwebapi                   |
 | crawlSettingServiceModule                 | crawlsetting               |
 | productProvider                           | productdataprovider        |
+| virtualTrading2ServiceModule              | virtualtrading2            |
 
 #### 選擇使用Module的步驟
 
@@ -222,7 +220,7 @@ AuthorizationServer/Authorization/ExpiredTime/{type}/{subjectId}
     +--- package
     |    +--- di
     |    |    +--- ServiceModule.kt
-    |    \--- service
+    |    +--- service
     |         +--- XXXService.kt
     ```
 
@@ -354,7 +352,7 @@ class IdentityProviderWebImpl(
 }
 ```
 
-* 產生Authorization Bear格式：`AccessToken.createAuthorizationBearer()`
+* 產生Authorization Bearer格式：`AccessToken.createAuthorizationBearer()`
 
 ```kotlin
 override suspend fun isTokenLatest(): Result<Boolean> = withContext(dispatcherProvider.io()) {
@@ -367,194 +365,6 @@ override suspend fun isTokenLatest(): Result<Boolean> = withContext(dispatcherPr
 }
 
 ```
-
-### 解析Response寫法的選擇
-
-CMoney的錯誤格式有很多種，大部分會以下面範例code的格式出現，對應的物件為CMoneyError，根據不同的status code會有不同的解析策略。而解析Response的方法都在ResponseExtension.kt底下。
-
-```
-{	
-	"message":"錯誤訊息",
-	"Error":{
-		"Code":101,
-		"Message":"Auth Failed"
-	}
-}
-
-{	
-	"message":"錯誤訊息",
-	"error":{
-		"code":101,
-		"message":"Auth Failed"
-	}
-}
-```
-
-下面會以不同的情況說明用哪一種方法
-
-#### Status Code 200內有CMoneyError
-
-這時候代表200的code同時表示成功和失敗，但為了區分成功和失敗，需實作以下流程。
-
-- 第一步：檢查Http Status是否在200，如果是回傳[ResponseBody]，否則拋出[HttpException]。
-
-對應方法：checkIsSuccessful()
-
--  第二步：根據後台規則200一定有ResponseBody，所以再繼續檢查[Response]一定要有[ResponseBody]，否則拋出[EmptyBodyException]。
-
-對應方法：requireBody()
-
--  第三步：如果ResponseBody有CMoneyError則拋出[ServerException]。前提是ResponseBody有繼承CMoneyError
-
-對應方法：checkIWithError()
-
--  第四步（可選）：因為不加以過濾錯誤訊息就回傳給使用者，會造成成功時還會有一些不相關的Error欄位，所以ResponseBody可以實作IWithError介面做一層中間層，將資料轉成沒有Error欄位的物件。
-
-實作介面：IWithError
-
-```
-status code = 200
-{
-	//成功才會有	
-	"commkey":"2330"
-	//錯誤才會有
-	"Error":{
-		"Code":101,
-		"Message":"Auth Failed"
-	},
-	"error":{
-		"Code":101,
-		"Message":"Auth Failed"
-	}
-}
-```
-
-#### Status Code 200內有ResponseCode和IsSuccess
-
-這時候代表200的code同時表示成功和失敗，但為了區分成功和失敗，需實作以下流程。但有時IsSuccess不一定有意義，所有要確認是以ResponseCode還是IsSuccess為準。
-
-- 第一步：檢查Http Status是否在200，如果是回傳[ResponseBody]，否則拋出[HttpException]。
-
-對應方法：checkIsSuccessful()
-
--  第二步：根據後台規則200一定有ResponseBody，所以再繼續檢查[Response]一定要有[ResponseBody]，否則拋出[EmptyBodyException]。
-
-對應方法：requireBody()
-
--  第三步：ResponseBody需要實作[ISuccess]介面，來決定本次成功還是失敗，如果成功會回傳ResponseBody本身，否則拋出[ServerException]。
-
-實作介面：ISuccess  
-對應方法：checkISuccess
-
-```
-{
-	//不管成功還是失敗都會有
-	"IsSuccess": false,//不一定有意義
-	"ResponseCode": 2,
-	"ResponseMsg": "密碼錯誤"
-}
-```
-
-#### Status Code 2xx代表成功，4xx代表失敗。
-
-預設status為400時會給CMoneyError
-
-##### 第一種：處理http status code 200-299的狀態，並且`一定`有ResponseBody。
-
-處理http status code，200-299的狀態，並且一定有ResponseBody，如果沒有拋出[EmptyBodyException]。  
-400的狀態，解析[CMoneyError]，並拋出[ServerException]。  
-其他拋出[HttpException]。
-
-- 第一步：檢查Http Status是否在200，如果是回傳[ResponseBody]，否則拋出[HttpException]。
-
-對應方法：checkResponseBody
-
-```
-{	
-	//成功才有
-	"commkey":"2330"
-	//失敗才有
-	"Error":{
-		"Code":101,
-		"Message":"Auth Failed"
-	},
-	"error":{
-		"Code":101,
-		"Message":"Auth Failed"
-	}
-}
-```
-
-##### 帶二種：Http status code 204，不會有ResponseBody。 
-
-code是204的狀態的狀態，並且沒有[ResponseBody]。  
-400的狀態，解析[CMoneyError]，並拋出[ServerException]。  
-其他拋出[HttpException]。  
-
-檢查方法：handleNoContent
-
-```
-沒有任何東西
-```
-
-並推薦以下寫法
-
-* 在Retrofit回傳介面使用Response<Void>
-
-```kotlin
-@POST(URL)
-suspend fun action(
-	// ...
-): Response<Void>
-```
-
-* 在WebImpl中使用handleNoContent(Gson)解析ResponseBody，回傳介面使用Result<Unit>
-
-```kotlin
-override suspend fun action(): Result<Unit> = withContext(dispatcher.io()) {
-    runCatching {
-        val response = // ...
-        return@runCatching response.handleNoContent(gson)
-    }
-}
-```
-
-##### 第三種：當上面兩種都不符合時
-
-可能有時候有200和204或其他情況，需自行處理成功時的狀態，400時處理[CMoneyError]，其他[HttpException]。
-
-對應方法：handleHttpStatusCode
-
-* 在Retrofit回傳介面使用Response<ResponseBody>
-
-```kotlin
-@POST(URL)
-suspend fun action(
-	// ...
-): Response<ResponseBody>
-```
-
-* 在WebImpl中使用handleHttpStatusCode<Response<ResponseBody>。
-
-```kotlin
- val response = Response.success(body.toResponseBody())
- response.handleHttpStatusCode<Response<ResponseBody>, MockResponseBody?>(gson) { code: Int, responseBody: ResponseBody? ->
-	return@handleHttpStatusCode when(code) {
-		200 -> {
-			gson.fromJson(responseBody?.string(), MockResponseBody::class.java )
-		}
-		204 -> {
-			null
-		}
-		else -> {
-			null
-		}
-	}
-}
-```
-
-#### NO，以上都不符合，恭喜你，請自己寫判斷邏輯，幫你QQ，但現在新的API都應該是`Status Code 2xx代表成功，4xx代表失敗`，如果不是請跟核心組或是後台反應。
-
 
 ## 紀錄API
 
@@ -592,8 +402,6 @@ suspend fun getAccountInfo(
 ): Response<AccountInfoWithError>
 ```
 
-請新創建的service要在[RecordApiTest](./backend2/src/test/java/com/cmoney/backend2/base/model/calladapter/RecordApiTest.kt)中加入集合中成為測試案例
-
 ## Unsigned Data Type 支援
 
 某些服務回傳可能會遇到 Unsigned 的型別，目前模組預設提供的`Gson`有包含`ULong`轉換的支援。如果需要客製化的 Gson，註冊`ULongTypeAdapter`即可支援`ULong`。
@@ -601,8 +409,6 @@ suspend fun getAccountInfo(
 ```kotlin
 GsonBuilder().registerTypeAdapter(ULong::class.java, ULongTypeAdapter())
 ```
-
-
 
 [BaseModule]:http://192.168.10.147:10080/CG_Mobile/CG_Module_Android/Backend2/Base/blob/master/base/src/main/java/com/cmoney/backend2/base/di/BaseModule.kt
 

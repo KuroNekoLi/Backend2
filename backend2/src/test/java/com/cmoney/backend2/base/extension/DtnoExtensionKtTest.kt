@@ -86,7 +86,7 @@ class DtnoExtensionKtTest {
                 goPublic = ""
             )
         )
-        val actual = dtnoData.toListOfSomething<SomethingDao>(gson)
+        val actual = dtnoData.toListOfType<SomethingDao>(gson = gson)
         assertThat(actual).isEqualTo(expect)
     }
 

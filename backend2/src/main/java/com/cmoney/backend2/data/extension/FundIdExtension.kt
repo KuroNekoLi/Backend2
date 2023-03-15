@@ -1,6 +1,5 @@
 package com.cmoney.backend2.data.extension
 
-import com.cmoney.backend2.base.extension.toListOfSomething
 import com.cmoney.backend2.base.extension.toListOfType
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.request.Constant
@@ -25,7 +24,7 @@ internal fun FundIdWithError.checkApiError(): FundIdWithError {
 }
 
 inline fun <reified T> FundIdData.toListOfSomething(gson: Gson): List<T> {
-    return DtnoData(title, data).toListOfSomething(gson)
+    return DtnoData(title, data).toListOfType(gson = gson)
 }
 
 /**

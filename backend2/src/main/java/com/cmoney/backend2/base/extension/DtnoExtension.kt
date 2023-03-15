@@ -1,13 +1,8 @@
 package com.cmoney.backend2.base.extension
 
 import com.cmoney.backend2.base.model.response.dtno.DtnoData
-import com.google.gson.Gson
-import com.google.gson.JsonArray
-import com.google.gson.JsonObject
-import com.google.gson.JsonParseException
-import com.google.gson.JsonSyntaxException
+import com.google.gson.*
 import com.google.gson.annotations.SerializedName
-import com.google.gson.reflect.TypeToken
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.jvm.javaField
@@ -35,8 +30,9 @@ fun DtnoData.toJsonArrayString(): String {
 }
 
 @Throws(JsonSyntaxException::class, JsonParseException::class)
+@Deprecated("使用toListOfType代替", replaceWith = ReplaceWith("this.toListOfType<T>(gson = gson)", "com.cmoney.backend2.base.extension"))
 inline fun <reified T> DtnoData.toListOfSomething(gson: Gson): List<T> {
-    return gson.fromJson(toJsonArrayString(), object : TypeToken<List<T>>() {}.type)
+    return toListOfType(gson)
 }
 
 /**
