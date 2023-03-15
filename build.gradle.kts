@@ -4,7 +4,7 @@ plugins {
     id("com.android.application") version "7.4.1" apply false
     id("com.android.library") version "7.4.1" apply false
     id("org.jetbrains.kotlin.android") version Versions.KOTLIN apply false
-    id("org.jetbrains.kotlinx.kover") version "0.6.0"
+    id("org.jetbrains.kotlinx.kover") version Versions.KOVER
     id("androidx.benchmark") version Versions.ANDROID_BENCHMARK apply false
 }
 
