@@ -12,6 +12,7 @@ import com.cmoney.backend2.base.model.response.dtno.DtnoWithError
 import com.google.common.truth.Truth
 import com.google.common.truth.Truth.assertThat
 import com.google.gson.GsonBuilder
+import com.google.gson.annotations.SerializedName
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -204,4 +205,55 @@ class DtnoExtensionKtTest {
         val actual = testDtnoData.toListOfType<ComplicatedDaoWithOtherField>(gson)
         Truth.assertThat(actual).isEqualTo(expected)
     }
+
+    @Test
+    fun toListOfType_private_class_all_has_value_success() {
+        val complicatedDtnoDataJson = context.assets.open(DTNO_DATA_COMPLICATED)
+            .bufferedReader()
+            .use {
+                it.readText()
+            }
+        val complicatedDtnoWithError = gson.fromJson(complicatedDtnoDataJson, DtnoWithError::class.java)
+        val complicatedDtnoData = complicatedDtnoWithError.toRealResponse()
+        val expect = listOf(
+            PrivateComplicatedDao(
+                name = "元大台灣50",
+                upAndDown = 20.55,
+                time = 1675331681000,
+                time2 = 1675331600000,
+                isShow = false
+            ),
+            PrivateComplicatedDao(
+                name = "元大中型100",
+                upAndDown = 111.1,
+                time = 1675331680000,
+                time2 = 1675331610000,
+                isShow = true
+            )
+        )
+        val actual = complicatedDtnoData.toListOfType<PrivateComplicatedDao>(gson)
+        assertThat(actual).isEqualTo(expect)
+    }
+
+    /**
+     * 測試用資料
+     *
+     * @property name
+     * @property upAndDown
+     * @property time
+     * @property time2
+     * @property isShow
+     */
+    private data class PrivateComplicatedDao(
+        @SerializedName("名稱")
+        val name: String?,
+        @SerializedName("漲跌幅")
+        val upAndDown: Double?,
+        @SerializedName("時間")
+        val time: Long?,
+        @SerializedName("時間2")
+        val time2: Long?,
+        @SerializedName("是否顯示")
+        val isShow: Boolean?
+    )
 }
