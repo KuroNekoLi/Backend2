@@ -35,7 +35,12 @@ class BackendSettingImpl(
 
     private fun getAppVersionName(context: Context): String {
         return try {
-            val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
+            val packageInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                context.packageManager.getPackageInfo(context.packageName, PackageManager.PackageInfoFlags.of(0.toLong()))
+            } else {
+                @Suppress("DEPRECATION")
+                context.packageManager.getPackageInfo(context.packageName, 0)
+            }
             packageInfo.versionName
         } catch (e: PackageManager.NameNotFoundException) {
             "0.0.0"
@@ -44,11 +49,15 @@ class BackendSettingImpl(
 
     private fun getAppVersionCode(context: Context): Long {
         return try {
-            val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
+            val packageInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                context.packageManager.getPackageInfo(context.packageName, PackageManager.PackageInfoFlags.of(0.toLong()))
+            } else {
+                @Suppress("DEPRECATION") context.packageManager.getPackageInfo(context.packageName, 0)
+            }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 packageInfo.longVersionCode
             } else {
-                packageInfo.versionCode.toLong()
+                @Suppress("DEPRECATION") packageInfo.versionCode.toLong()
             }
         } catch (e: PackageManager.NameNotFoundException) {
             0

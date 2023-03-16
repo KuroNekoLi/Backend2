@@ -1,7 +1,6 @@
 package com.cmoney.backend2.sample.servicecase
 
-import com.cmoney.backend2.base.di.BACKEND2_SETTING
-import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.sample.extension.logResponse
 import com.cmoney.backend2.vtwebapi.service.VirtualTradeWeb
 import com.cmoney.backend2.vtwebapi.service.api.createaccount.AccountType
@@ -11,30 +10,30 @@ import org.koin.core.component.inject
 class VirtualTradeServiceCase : ServiceCase {
 
     private val web by inject<VirtualTradeWeb>()
-    private val setting by inject<Setting>(BACKEND2_SETTING)
+    private val globalBackend2Manager by inject<GlobalBackend2Manager>()
 
     override suspend fun testAll() {
         web.getAccount(
-            domain = setting.domainUrl
+            domain = globalBackend2Manager.getGlobalDomainUrl()
         )
             .logResponse(TAG)
 
         web.createAccount(
-            domain = setting.domainUrl,
+            domain = globalBackend2Manager.getGlobalDomainUrl(),
             type = AccountType.STOCK,
             isn = 0
         )
             .logResponse(TAG)
 
         web.getCardInstanceSns(
-            domain = setting.domainUrl,
+            domain = globalBackend2Manager.getGlobalDomainUrl(),
             productSn = TEST_PRODUCT,
             productUsage = UsageType.UNUSED
         )
             .logResponse(TAG)
 
         web.purchaseProductCard(
-            domain = setting.domainUrl,
+            domain = globalBackend2Manager.getGlobalDomainUrl(),
             giftFromMember = 22478,
             ownerMemberPk = 22478,
             productSn = TEST_PRODUCT
@@ -42,12 +41,12 @@ class VirtualTradeServiceCase : ServiceCase {
             .logResponse(TAG)
 
         web.getAttendGroup(
-            domain = setting.domainUrl
+            domain = globalBackend2Manager.getGlobalDomainUrl()
         )
             .logResponse(TAG)
 
         web.getStockInventoryList(
-            domain = setting.domainUrl,
+            domain = globalBackend2Manager.getGlobalDomainUrl(),
             account = TEST_ACCOUNT
         )
     }
