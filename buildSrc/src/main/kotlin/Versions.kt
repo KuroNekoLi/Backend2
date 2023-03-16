@@ -31,6 +31,6 @@ object Versions {
     const val ANDROID_TEST_ESPRESSO = "3.5.1"
     const val ANDROID_TEST_RUNNER = "1.5.2"
     // CMoney
-    const val LOG_DATA_RECORDER = "5.4.0-kotlin1722-SNAPSHOT"
-    const val CMONEY_UTILS = "5.4.1-kotlin1722-SNAPSHOT"
+    const val LOG_DATA_RECORDER = "5.5.0-kotlin1722-SNAPSHOT"
+    const val CMONEY_UTILS = "5.5.0-kotlin1722-SNAPSHOT"
 }
