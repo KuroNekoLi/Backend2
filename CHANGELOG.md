@@ -1,12 +1,23 @@
-#  (2023-02-20)
- 
-## [5.49.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.48.1...5.49.0) (2023-02-07)
+# [5.50.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.49.0...5.50.0)
+
+
+### Features
+
+- 新增釘選社團看板文章
+- 新增取消釘選社團看板文章
+- 新增取得社團看板置頂文章列表
+- 新增取得社團看板置頂文章列表
+- 將toListOfSomething()棄用，改用toListOfType()
+
+
+# [5.49.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.48.1...5.49.0)
 
 
 ### Features
 
 - 新增全域的Backend2管理者(目前能控制虛擬下單Domain)
 - 新增可以變更Domain和特定Path的物件，詳看VirtualTradingV2資料夾
+
 
 #### 虛擬下單
 
@@ -23,7 +34,7 @@
 - 新增虛擬下單V2-取得上市上櫃的庫存
 
 
-## [5.48.1](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.48.0...5.48.1) (2023-02-07)
+## [5.48.1](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.48.0...5.48.1)
 
 
 ### Changes

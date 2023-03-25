@@ -1,5 +1,5 @@
 object ModuleConfig {
-    const val PROJECT_VERSION = "5.51.0.adaptersetting-SNAPSHOT"
+    const val PROJECT_VERSION = "5.51.0-kotlin1722-SNAPSHOT"
     // Maven Upload Properties
     const val RELEASE_URL = "http://192.168.99.70:8081/repository/maven-snapshots/"
     const val USER_NAME = "uploader"
