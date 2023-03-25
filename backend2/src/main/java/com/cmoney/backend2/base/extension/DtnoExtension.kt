@@ -5,6 +5,7 @@ import com.google.gson.*
 import com.google.gson.annotations.SerializedName
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
+import kotlin.reflect.jvm.isAccessible
 import kotlin.reflect.jvm.javaField
 import kotlin.reflect.jvm.jvmErasure
 
@@ -48,6 +49,7 @@ inline fun <reified T: Any> DtnoData.toListOfType(gson: Gson): List<T> {
     val titleIndexMap = getTitleIndexMapping()
     val type = T::class
     val primaryConstructor = requireNotNull(type.primaryConstructor)
+    primaryConstructor.isAccessible = true
     val memberPropertyMap = type.memberProperties.associateBy { property ->
         property.name
     }

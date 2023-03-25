@@ -1,3 +1,14 @@
+## [5.50.1](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.50.0...5.50.1)
+
+
+### Features
+
+- 調整取得推薦文章API回傳物件
+
+### Bug Fixes 
+
+- 修正 toListOfType 無法處理 private class 物件建立問題
+
 # [5.50.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.49.0...5.50.0)
 
 
