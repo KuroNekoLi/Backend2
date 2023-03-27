@@ -1,4 +1,4 @@
-package com.cmoney.backend2.base.extension
+package com.cmoney.backend2.base.extension.data
 
 import com.google.gson.annotations.SerializedName
 
