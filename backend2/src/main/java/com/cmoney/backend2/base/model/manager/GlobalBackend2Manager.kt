@@ -179,6 +179,15 @@ class GlobalBackend2Manager(
         return virtualTrading2SettingAdapter
     }
 
+    /**
+     * 清除Jwt設定，主要提供給登出使用。
+     */
+    fun clearJwtSetting() {
+        jwtSetting.setAccessToken(AccessToken())
+        jwtSetting.setIdentityToken(IdentityToken())
+        jwtSetting.setRefreshToken("")
+    }
+
     class Builder(
         val backendSetting: BackendSetting,
         val jwtSetting: JwtSetting,
