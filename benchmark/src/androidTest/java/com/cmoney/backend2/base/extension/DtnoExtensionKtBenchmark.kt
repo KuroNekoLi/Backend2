@@ -5,6 +5,8 @@ import androidx.benchmark.junit4.BenchmarkRule
 import androidx.benchmark.junit4.measureRepeated
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.cmoney.backend2.base.extension.data.CommodityInformation
+import com.cmoney.backend2.base.extension.data.UsaCompanyInformation
 import com.cmoney.backend2.base.model.response.dtno.DtnoData
 import com.google.gson.GsonBuilder
 import com.google.gson.stream.JsonReader
