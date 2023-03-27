@@ -27,16 +27,74 @@ interface VirtualTrading2Service {
 }
 ```
 
-|欄位|說明|
-|---|---|
-| /** */ |註解，請加入相關說明|
-| @RecordApi |紀錄API的參數，可看README的紀錄API|
-| @POST |Retrofit的RESTFul的方法定義|
-| @Url | 設定的API位址 |
-| @Header("Authorization") | JWT Token所需要的參數 |
-| @Body | 需要打Post的Body |
-| Response<T> | 外面一層使用Response，讓呼叫的方法，自己判斷Http Stutus Code。 T是對應的服務回傳資料，不同服務會有不同行為|
+| 欄位                       | 說明                                                                 |
+|--------------------------|--------------------------------------------------------------------|
+| /** */                   | 註解，請加入相關說明                                                         |
+| @RecordApi               | 紀錄API的參數，可看README的紀錄API                                            |
+| @POST                    | Retrofit的RESTFul的方法定義                                              |
+| @Url                     | 設定的API位址                                                           |
+| @Header("Authorization") | JWT Token所需要的參數                                                    |
+| @Body                    | 需要打Post的Body                                                       |
+| Response<T>              | 外面一層使用Response，讓呼叫的方法，自己判斷Http Stutus Code。 T是對應的服務回傳資料，不同服務會有不同行為 |
 
+#### 在需要驗證的Retrofit的API中，加入Header的Authorization欄位
+
+```kotlin
+@GET(value = "identity/session/isLatest")
+suspend fun isTokenLatest(
+    @Header("Authorization")
+    accessToken: String
+): Response<IsLatestResponseBodyWithError>
+```
+
+#### 若是API PATH相同，服務是以參數進行區分(例如: action)，請全小寫
+
+```kotlin
+@FormUrlEncoded
+@POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
+suspend fun getAuthStatus(
+    @Header("Authorization") authorization: String,
+    @Field("Action") action: String = "getauth",
+    @Field("Guid") guid: String,
+    @Field("AppId") appId: Int
+): Response<GetAuthResponseBody>
+```
+
+#### 紀錄API
+
+目前所有API都要記錄  
+需要在服務介面的方法上加上註譯`@RecordApi`，代表要記錄這個API的行為。    
+`@RecordApi`有一個可選的參數`cmoneyAction`，預設空字串，代表不會紀錄此API的發送請求中的action。
+
+```kotlin
+@RecordApi
+@GET(value = "identity/session/isLatest")
+suspend fun isTokenLatest(
+    @Header("Authorization")
+    accessToken: String
+): Response<IsLatestResponseBodyWithError>
+```
+
+目前MobileService部分API以`Action`作為服務的分類故需要加上`cmoneyAction`參數以利後續資料分析，請全小寫。
+
+```kotlin
+/**
+ * 服務7. 取得帳號資訊
+ *
+ * @param guid 該會員的Guid
+ * @param appId App編號
+ *
+ */
+@RecordApi(cmoneyAction = "getaccountinfo")
+@FormUrlEncoded
+@POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
+suspend fun getAccountInfo(
+    @Header("Authorization") authorization: String,
+    @Field("Action") action: String = "getaccountinfo",
+    @Field("Guid") guid: String,
+    @Field("AppId") appId: Int
+): Response<AccountInfoWithError>
+```
 
 #### Response選擇
 
