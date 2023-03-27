@@ -9,8 +9,8 @@ object ModuleConfig {
     const val POM_ARTIFACT_ID_RELEASE = "backend2"
     const val POM_ARTIFACT_ID_DEBUG = "backend2-debug"
     //SDK
-    const val COMPILE_SDK = 32
-    const val BUILD_TOOLS_VERSION = "32.0.0"
-    const val MIN_SDK = 21
-    const val TARGET_SDK = 32
+    const val COMPILE_SDK = 33
+    const val BUILD_TOOLS_VERSION = "33.0.2"
+    const val MIN_SDK = 23
+    const val TARGET_SDK = 33
 }

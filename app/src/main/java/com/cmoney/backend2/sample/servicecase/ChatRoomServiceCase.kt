@@ -1,7 +1,5 @@
 package com.cmoney.backend2.sample.servicecase
 
-import com.cmoney.backend2.base.di.BACKEND2_SETTING
-import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.chat.di.BACKEND2_CHAT_DEBUG
 import com.cmoney.backend2.chat.service.ChatRoomWeb
 import com.cmoney.backend2.chat.service.api.chatroomsetting.request.ChatRoomSettingUpdateProperties
@@ -16,7 +14,6 @@ class ChatRoomServiceCase(
 ) : ServiceCase {
 
     private val chatRoomWebImpl by inject<ChatRoomWeb>(chatQualifier)
-    private val setting by inject<Setting>(BACKEND2_SETTING)
 
     @Suppress("BlockingMethodInNonBlockingContext")
     override suspend fun testAll() {
@@ -50,10 +47,6 @@ class ChatRoomServiceCase(
 
         // 如果有需要可以添加
 //        chatRoomWebImpl.deleteMessage( roomId, messageId)
-    }
-
-    private fun setDomain(domain: String) {
-        setting.domainUrl = domain
     }
 
     companion object {

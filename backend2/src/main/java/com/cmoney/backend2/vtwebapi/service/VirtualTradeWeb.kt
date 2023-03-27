@@ -1,6 +1,6 @@
 package com.cmoney.backend2.vtwebapi.service
 
-import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.vtwebapi.service.api.createaccount.AccountType
 import com.cmoney.backend2.vtwebapi.service.api.getaccount.GetAccountResponseBody
 import com.cmoney.backend2.vtwebapi.service.api.getattendgroup.GetAttendGroupResponseBody
@@ -9,13 +9,12 @@ import com.cmoney.backend2.vtwebapi.service.api.getcardinstancesns.UsageType
 import com.cmoney.backend2.vtwebapi.service.api.getstockinventorylist.GetStockInventoryListResponseBody
 import com.cmoney.backend2.vtwebapi.service.api.purchaseproductcard.PurchaseProductCardResponseBody
 
-/**
- * @property setting 網路基本設定
- * @property
- */
 interface VirtualTradeWeb {
 
-    val setting: Setting
+    /**
+     * Backend2管理者
+     */
+    val globalBackend2Manager: GlobalBackend2Manager
 
     /**
      * 取得會員所有帳戶資訊
@@ -28,7 +27,8 @@ interface VirtualTradeWeb {
      * @param needExtendInfo 是否需要帳號額外資訊(含問帳戶數)(預設null)
      */
     suspend fun getAccount(
-        domain: String = setting.domainUrl,
+        domain: String = globalBackend2Manager.getVirtualTradeSettingAdapter().getDomain(),
+        url: String = "${domain}vt.webapi/Account",
         destMemberPk: Long? = null,
         skipCount: Int? = null,
         fetchSize: Int? = null,
@@ -44,7 +44,8 @@ interface VirtualTradeWeb {
      * @param isn 使用的道具卡卡號，沒有道具卡填0(免費創建)
      */
     suspend fun createAccount(
-        domain: String = setting.domainUrl,
+        domain: String = globalBackend2Manager.getVirtualTradeSettingAdapter().getDomain(),
+        url: String = "${domain}vt.webapi/Account",
         type: AccountType,
         isn: Long
     ): Result<GetAccountResponseBody>
@@ -57,7 +58,8 @@ interface VirtualTradeWeb {
      * @param productUsage 道具使用狀況
      */
     suspend fun getCardInstanceSns(
-        domain: String = setting.domainUrl,
+        domain: String = globalBackend2Manager.getVirtualTradeSettingAdapter().getDomain(),
+        url: String = "${domain}vt.webapi/ByProductSn",
         productSn: Long,
         productUsage: UsageType
     ): Result<GetCardInstanceSnsResponseBody>
@@ -71,7 +73,8 @@ interface VirtualTradeWeb {
      * @param productSn 卡片類型編號
      */
     suspend fun purchaseProductCard(
-        domain: String = setting.domainUrl,
+        domain: String = globalBackend2Manager.getVirtualTradeSettingAdapter().getDomain(),
+        url: String = "${domain}vt.webapi/ProductCard/PurchaseProductCard",
         giftFromMember: Int,
         ownerMemberPk: Int,
         productSn: Long
@@ -85,7 +88,8 @@ interface VirtualTradeWeb {
      * @param fetchSize 取得量(預設null->取全部)
      */
     suspend fun getAttendGroup(
-        domain: String = setting.domainUrl,
+        domain: String = globalBackend2Manager.getVirtualTradeSettingAdapter().getDomain(),
+        url: String = "${domain}vt.webapi/Group/Attend",
         fetchIndex: Int? = null,
         fetchSize: Int? = null
     ): Result<List<GetAttendGroupResponseBody>>
@@ -97,7 +101,8 @@ interface VirtualTradeWeb {
      * @param account 帳號ID
      */
     suspend fun getStockInventoryList(
-        domain: String = setting.domainUrl,
-        account: Long
+        account: Long,
+        domain: String = globalBackend2Manager.getVirtualTradeSettingAdapter().getDomain(),
+        url: String = "${domain}vt.webapi/Inventory/SecInventoryListByAccount/${account}",
     ): Result<List<GetStockInventoryListResponseBody>>
 }

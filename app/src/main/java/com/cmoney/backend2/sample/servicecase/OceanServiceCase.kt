@@ -41,7 +41,7 @@ class OceanServiceCase : ServiceCase {
             val publicClubChannelId = 4277314L
 
             //測試機社團
-            val clubChannelId = 105551L
+//            val clubChannelId = 105551L
             val channelId = publicClubChannelId
             channelQuestions(
                 ChannelQuestionnaire(
@@ -316,7 +316,7 @@ class OceanServiceCase : ServiceCase {
                 }.fold(
                     onSuccess = {
                         it.list?.forEach {announcement ->
-                            val removeResult =  oceanWeb.removeAnnouncements(
+                            oceanWeb.removeAnnouncements(
                                 clubChannelId = 5083102,
                                 articleId = announcement.article?.articleId ?: 0,
                                 isPinned = announcement.isPinned ?: false

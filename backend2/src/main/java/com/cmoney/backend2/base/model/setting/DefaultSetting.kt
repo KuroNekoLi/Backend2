@@ -1,64 +1,57 @@
 package com.cmoney.backend2.base.model.setting
 
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.base.model.request.AccessToken
 import com.cmoney.backend2.base.model.request.IdentityToken
 
+@Deprecated("使用GlobalBackend2Manager代替")
 class DefaultSetting(
-    private val backendSettingSharedPreference: BackendSettingSharedPreference
+    private val manager: GlobalBackend2Manager
 ) : Setting {
-    override var domainUrl: String = backendSettingSharedPreference.domainUrl
+    override var domainUrl: String
+        get() = manager.getGlobalDomainUrl()
         set(value) {
-            backendSettingSharedPreference.domainUrl = value
-            field = value
+            manager.setGlobalDomainUrl(value)
         }
-    override var appId: Int = -1
+    override var appId: Int
+        get() = manager.getAppId()
         set(value) {
-            backendSettingSharedPreference.appId = value
-            field = value
+            manager.setAppId(value)
         }
-    override var clientId: String = ""
+    override var clientId: String
+        get() = manager.getClientId()
         set(value) {
-            backendSettingSharedPreference.clientId = value
-            field = value
+            manager.setClientId(value)
         }
-    override var appVersionCode: Int = -1
+    override val appVersionCode: Int = manager.getAppVersionCode().toInt()
+    override val appVersion: String = manager.getAppVersionName()
+    override val manufacturer: String = manager.getManufacturer()
+    override val model: String = manager.getModel()
+    override val osVersion: String = manager.getOsVersion()
+    override var platform: Platform
+        get() = manager.getPlatform()
         set(value) {
-            backendSettingSharedPreference.appVersionCode = value
-            field = value
+            manager.setPlatform(value)
         }
-    override var appVersion: String = "0.0.0"
+    override var accessToken: AccessToken
+        get() = manager.getAccessToken()
         set(value) {
-            backendSettingSharedPreference.appVersion = value
-            field = value
+            manager.setAccessToken(value)
         }
-    override val manufacturer: String = android.os.Build.MANUFACTURER
-    override val model: String = android.os.Build.MODEL
-    override val osVersion: String = android.os.Build.VERSION.SDK_INT.toString()
-    override var platform: Platform = Platform.Android
+    override var identityToken: IdentityToken
+        get() = manager.getIdentityToken()
         set(value) {
-            backendSettingSharedPreference.platform = value.code.toString()
-            field = value
+            manager.setIdentityToken(value)
         }
-    override var accessToken: AccessToken = AccessToken(backendSettingSharedPreference.accessToken)
+    override var refreshToken: String
+        get() = manager.getRefreshToken()
         set(value) {
-            backendSettingSharedPreference.accessToken = value.originContent
-            field = value
-        }
-    override var identityToken: IdentityToken =
-        IdentityToken(backendSettingSharedPreference.identityToken)
-        set(value) {
-            backendSettingSharedPreference.identityToken = value.originContent
-            field = value
-        }
-    override var refreshToken: String = backendSettingSharedPreference.refreshToken
-        set(value) {
-            backendSettingSharedPreference.refreshToken = value
-            field = value
+            manager.setRefreshToken(value)
         }
 
     override fun clear() {
-        accessToken = AccessToken()
-        identityToken = IdentityToken()
-        refreshToken = ""
+        manager.setAccessToken(AccessToken())
+        manager.setIdentityToken(IdentityToken())
+        manager.setRefreshToken("")
     }
 }

@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.cmoney.backend2.sample.R
 import com.cmoney.backend2.sample.databinding.ActivityMainBinding
@@ -12,7 +11,6 @@ import com.cmoney.backend2.sample.extension.lockWindows
 import com.cmoney.backend2.sample.extension.toast
 import com.cmoney.backend2.sample.extension.unlockWindows
 import com.cmoney.backend2.sample.servicecase.ServiceCase
-import com.cmoney.backend2.sample.servicecase.VirtualTrading2ServiceCase
 import com.cmoney.backend2.sample.view.main.data.LoginEvent
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -30,24 +28,24 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initView()
-        viewModel.error.observe(this, Observer {
+        viewModel.error.observe(this) {
             toast(it)
-        })
-        viewModel.windowsLock.observe(this, Observer {
+        }
+        viewModel.windowsLock.observe(this) {
             it.fold({
                 lockWindows()
             }, {
                 unlockWindows()
             })
-        })
-        viewModel.loginEvent.observe(this, Observer {
+        }
+        viewModel.loginEvent.observe(this) {
             when (it) {
                 LoginEvent.Success -> {
                     toast("登入成功")
                     apiTest()
                 }
             }
-        })
+        }
     }
 
     private fun initView() {
