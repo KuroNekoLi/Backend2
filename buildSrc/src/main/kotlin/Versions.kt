@@ -24,7 +24,7 @@ object Versions {
     const val JUNIT = "4.13.2"
     const val ROBOLECTRIC = "4.9.2"
     const val TRUTH = "1.1.3"
-    const val MOCKK = "1.13.4"
+    const val MOCKK = "1.13.3"
     // Android Test
     const val ANDROID_TEST_CORE = "1.5.0"
     const val ANDROID_TEST_JUNIT = "1.1.5"
