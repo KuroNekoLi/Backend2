@@ -20,14 +20,13 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.koin.core.context.stopKoin
-import org.koin.test.KoinTest
 import org.robolectric.RobolectricTestRunner
 import retrofit2.HttpException
 import retrofit2.Response
 
 @ExperimentalCoroutinesApi
 @RunWith(RobolectricTestRunner::class)
-class AdditionalInformationRevisitWebImplTest : KoinTest {
+class AdditionalInformationRevisitWebImplTest {
     private val testScope = TestScope()
     // Set the main coroutines dispatcher for unit testing
     @get:Rule

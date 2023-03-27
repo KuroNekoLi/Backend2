@@ -9,15 +9,15 @@ import com.cmoney.backend2.activity.service.api.requestbonus.RequestBonusRequest
 import com.cmoney.backend2.base.extension.checkResponseBody
 import com.cmoney.backend2.base.extension.createAuthorizationBearer
 import com.cmoney.backend2.base.extension.handleNoContent
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.base.model.request.MemberApiParam
-import com.cmoney.backend2.base.model.setting.Setting
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class ActivityWebImpl(
-    private val setting: Setting,
+    private val manager: GlobalBackend2Manager,
     private val gson: Gson,
     private val activityService: ActivityService,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
@@ -31,10 +31,10 @@ class ActivityWebImpl(
         withContext(ioDispatcher) {
             kotlin.runCatching {
                 activityService.getDayCount(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
                     requestBody = GetDayCountRequestBody(
-                        appId = setting.appId,
-                        guid = setting.identityToken.getMemberGuid()
+                        appId = manager.getAppId(),
+                        guid = manager.getIdentityToken().getMemberGuid()
                     )
                 ).checkActivityResponseBody(gson)
             }
@@ -49,10 +49,10 @@ class ActivityWebImpl(
         withContext(ioDispatcher) {
             kotlin.runCatching {
                 activityService.requestBonus(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
                     requestBody = RequestBonusRequestBody(
-                        appId = setting.appId,
-                        guid = setting.identityToken.getMemberGuid(),
+                        appId = manager.getAppId(),
+                        guid = manager.getIdentityToken().getMemberGuid(),
                         referrerId = referrerId,
                         eventId = eventId
                     )
@@ -69,10 +69,10 @@ class ActivityWebImpl(
         withContext(ioDispatcher) {
             kotlin.runCatching {
                 activityService.getReferralCount(
-                    authorization =  setting.accessToken.createAuthorizationBearer(),
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
                     requestBody = GetReferralCountRequestBody(
-                        appId = setting.appId,
-                        guid = setting.identityToken.getMemberGuid(),
+                        appId = manager.getAppId(),
+                        guid = manager.getIdentityToken().getMemberGuid(),
                         eventId = eventId
                     )
                 ).checkResponseBody(gson)

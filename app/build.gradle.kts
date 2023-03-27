@@ -6,6 +6,7 @@ plugins {
 android {
     compileSdk = ModuleConfig.COMPILE_SDK
     buildToolsVersion = ModuleConfig.BUILD_TOOLS_VERSION
+    namespace = "com.cmoney.backend2.sample"
 
     defaultConfig {
         applicationId = "com.cmoney.backend.sample"

@@ -1,9 +1,9 @@
 package com.cmoney.backend2.sample.servicecase.data
 
 import android.util.Log
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.base.model.request.AccessToken
 import com.cmoney.backend2.base.model.request.IdentityToken
-import com.cmoney.backend2.base.model.setting.Setting
 
 data class AccountSettingInfo(
     val account :String,
@@ -14,11 +14,11 @@ data class AccountSettingInfo(
     val appId : Int
 ){
     companion object{
-        fun AccountSettingInfo.changeUser(setting: Setting){
-            setting.refreshToken = refreshToken
-            setting.identityToken = identityToken
-            setting.accessToken = AccessToken(accessToken)
-            setting.appId = appId
+        fun AccountSettingInfo.changeUser(globalBackend2Manager: GlobalBackend2Manager){
+            globalBackend2Manager.setRefreshToken(refreshToken)
+            globalBackend2Manager.setIdentityToken(identityToken)
+            globalBackend2Manager.setAccessToken(AccessToken(accessToken))
+            globalBackend2Manager.setAppId(appId)
             Log.d("AccountSettingInfo","切換帳號$account")
         }
     }
