@@ -3,6 +3,8 @@ package com.cmoney.backend2.base.extension
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import com.cmoney.backend2.base.DTNO_DATA_COMPLICATED
+import com.cmoney.backend2.base.DTNO_DATA_COMPLICATED_V2
+import com.cmoney.backend2.base.DTNO_DATA_COMPLICATED_V3
 import com.cmoney.backend2.base.DTNO_DATA_LESS
 import com.cmoney.backend2.base.extension.data.ComplicatedDao
 import com.cmoney.backend2.base.extension.data.ComplicatedDaoLackAnnotation
@@ -232,6 +234,64 @@ class DtnoExtensionKtTest {
             )
         )
         val actual = complicatedDtnoData.toListOfType<PrivateComplicatedDao>(gson)
+        assertThat(actual).isEqualTo(expect)
+    }
+
+    @Test
+    fun `toListOfType property support alternate`() {
+        val complicatedDtnoDataJson = context.assets.open(DTNO_DATA_COMPLICATED_V2)
+            .bufferedReader()
+            .use {
+                it.readText()
+            }
+        val complicatedDtnoWithError = gson.fromJson(complicatedDtnoDataJson, DtnoWithError::class.java)
+        val complicatedDtnoData = complicatedDtnoWithError.toRealResponse()
+        val expect = listOf(
+            ComplicatedDao(
+                name = "元大台灣50",
+                upAndDown = 20.55,
+                time = 1675331681000,
+                time2 = 1675331600000,
+                isShow = false
+            ),
+            ComplicatedDao(
+                name = "元大中型100",
+                upAndDown = 111.1,
+                time = 1675331680000,
+                time2 = 1675331610000,
+                isShow = true
+            )
+        )
+        val actual = complicatedDtnoData.toListOfType<ComplicatedDao>(gson)
+        assertThat(actual).isEqualTo(expect)
+    }
+
+    @Test
+    fun `toListOfType property first use value to parse`() {
+        val complicatedDtnoDataJson = context.assets.open(DTNO_DATA_COMPLICATED_V3)
+            .bufferedReader()
+            .use {
+                it.readText()
+            }
+        val complicatedDtnoWithError = gson.fromJson(complicatedDtnoDataJson, DtnoWithError::class.java)
+        val complicatedDtnoData = complicatedDtnoWithError.toRealResponse()
+        val expect = listOf(
+            ComplicatedDao(
+                name = "元大台灣50",
+                upAndDown = 20.55,
+                time = 1675331681000,
+                time2 = 1675331600000,
+                isShow = false
+            ),
+            ComplicatedDao(
+                name = "元大中型100",
+                upAndDown = 111.1,
+                time = 1675331680000,
+                time2 = 1675331610000,
+                isShow = true
+            )
+        )
+        val actual = complicatedDtnoData.toListOfType<ComplicatedDao>(gson)
         assertThat(actual).isEqualTo(expect)
     }
 
