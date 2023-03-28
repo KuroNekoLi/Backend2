@@ -1,3 +1,24 @@
+## [5.50.2](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.50.1...5.50.2)
+
+
+### Features
+
+- DtnoExtension.kt 
+  - toListOfType 支援 @SerializedName 的 alternate 欄位數值用於轉換資料物件
+  - 備註：上述轉換方法優先使用 value 作為轉換基礎資料中找不到對應欄位名稱才使用 alternate  
+
+
+## [5.50.1](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.50.0...5.50.1)
+
+
+### Features
+
+- 調整取得推薦文章API回傳物件
+
+### Bug Fixes 
+
+- 修正 toListOfType 無法處理 private class 物件建立問題
+
 # [5.50.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.49.0...5.50.0)
 
 

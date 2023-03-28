@@ -5,6 +5,7 @@ import com.google.gson.*
 import com.google.gson.annotations.SerializedName
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
+import kotlin.reflect.jvm.isAccessible
 import kotlin.reflect.jvm.javaField
 import kotlin.reflect.jvm.jvmErasure
 
@@ -48,22 +49,33 @@ inline fun <reified T: Any> DtnoData.toListOfType(gson: Gson): List<T> {
     val titleIndexMap = getTitleIndexMapping()
     val type = T::class
     val primaryConstructor = requireNotNull(type.primaryConstructor)
+    primaryConstructor.isAccessible = true
     val memberPropertyMap = type.memberProperties.associateBy { property ->
         property.name
     }
     val typeWithItemIndexList = primaryConstructor.parameters.mapNotNull paramMap@ { parameter ->
         // 取得建構式參數名稱相同之欄位
         val property = memberPropertyMap[parameter.name] ?: return@paramMap null
-        val serializedName = property.javaField?.let { field ->
+        property.javaField?.let indexLet@ { field ->
+            // 取得對應序列化名稱集合之資料索引位置，若無對應索引位置則令其值為-1
+            // 索引位置回傳時須配上對應之資料類型
             val annotation = field.annotations.filterIsInstance<SerializedName>()
                 .firstOrNull()
             requireNotNull(annotation) {
                 "Field ${field.name} not set the @SerializedName."
             }
-            annotation.value
+            // 處理 annotation value
+            titleIndexMap[annotation.value]?.let { index ->
+                return@indexLet parameter.type.jvmErasure to index
+            }
+            // 處理 alternate
+            for (value in annotation.alternate) {
+                titleIndexMap[value]?.let { index ->
+                    return@indexLet parameter.type.jvmErasure to index
+                }
+            }
+            parameter.type.jvmErasure to -1
         } ?: return@paramMap null
-        // 取得對應序列化名稱之資料索引位置，若不存在則回傳 -1
-        parameter.type.jvmErasure to (titleIndexMap[serializedName] ?: -1)
     }
     return data?.map { items ->
         val constructorArgs = typeWithItemIndexList.map argMap@ { (kClass, index) ->

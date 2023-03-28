@@ -12,7 +12,7 @@ import com.google.gson.annotations.SerializedName
  * @property isShow
  */
 data class ComplicatedDao(
-    @SerializedName("名稱")
+    @SerializedName("名稱", alternate = ["商品名稱"])
     val name: String?,
     @SerializedName("漲跌幅")
     val upAndDown: Double?,
