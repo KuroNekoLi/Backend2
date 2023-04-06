@@ -1,59 +1,37 @@
 package com.cmoney.backend2.sample.servicecase
 
-import com.cmoney.backend2.additioninformationrevisit.di.BACKEND_ADDITION_INFORMATION_REVISIT_SERVICE
 import com.cmoney.backend2.additioninformationrevisit.service.AdditionalInformationRevisitWeb
-import com.cmoney.backend2.additioninformationrevisit.service.ServicePath
 import com.cmoney.backend2.additioninformationrevisit.service.api.request.ProcessStep
 import com.cmoney.backend2.base.di.BACKEND2_GSON
-import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.sample.extension.logResponse
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
-import org.koin.core.component.get
 import org.koin.core.component.inject
-import org.koin.core.parameter.parametersOf
 
 /**
- * Additional information revisit test case
- *
- * @param hasSignal 是否有要測試[AdditionalInformationRevisitWeb.getSignal]，用於調整測試機的service name
+ * 附加資訊測試案例
  */
-class AdditionalInformationRevisitTestCase(hasSignal: Boolean) : ServiceCase {
+class AdditionalInformationRevisitTestCase : ServiceCase {
 
-    private val web by lazy {
-        get<AdditionalInformationRevisitWeb>(BACKEND_ADDITION_INFORMATION_REVISIT_SERVICE) {
-            parametersOf(servicePath)
-        }
-    }
+    private val web by inject<AdditionalInformationRevisitWeb>()
     private val gson by inject<Gson>(BACKEND2_GSON)
-    private val globalBackend2Manager by inject<GlobalBackend2Manager>()
-    private val servicePath = if (hasSignal) {
-        ServicePath().copy(signal = "AdditionInformationRevisit_V2")
-    } else {
-        ServicePath()
-    }
 
     override suspend fun testAll() {
         test()
         // 測試後續處理功能
-        testHasProcessStep()
+        testProcessStep()
         // 測試前一次交易資料
         testPreviousData()
     }
 
     private suspend fun test() {
         web.getAll(
-            domain = globalBackend2Manager.getGlobalDomainUrl(),
-            serviceParam = servicePath.all,
             columns = listOf("標的", "商品名稱"),
             typeName = "StockCommodity",
             processSteps = emptyList()
-        )
-            .logResponse(TAG)
+        ).logResponse(TAG)
         val commKeys = listOf("2330", "0050")
         web.getTarget(
-            domain = globalBackend2Manager.getGlobalDomainUrl(),
-            serviceParam = servicePath.target,
             typeName = "StockCalculation",
             columns = listOf("傳輸序號", "標的", "即時成交價"),
             keyNamePath = listOf("Commodity", "CommKey"),
@@ -62,8 +40,6 @@ class AdditionalInformationRevisitTestCase(hasSignal: Boolean) : ServiceCase {
         )
             .logResponse(TAG)
         web.getMultiple(
-            domain = globalBackend2Manager.getGlobalDomainUrl(),
-            serviceParam = servicePath.multiple,
             typeName = "CandlestickChartTick<StockCommodity,StockTick>",
             columns = listOf("傳輸序號", "標的", "收盤價"),
             keyNamePath = listOf("Key"),
@@ -72,8 +48,6 @@ class AdditionalInformationRevisitTestCase(hasSignal: Boolean) : ServiceCase {
         )
             .logResponse(TAG)
         web.getOtherQuery(
-            domain = globalBackend2Manager.getGlobalDomainUrl(),
-            serviceParam = servicePath.otherQuery,
             requestType = "SectionTransactionDetailsRequest<StockTick>",
             responseType = "IEnumerable<StockTick>",
             columns = listOf("傳輸序號", "標的", "即時成交價"),
@@ -88,22 +62,15 @@ class AdditionalInformationRevisitTestCase(hasSignal: Boolean) : ServiceCase {
         )
             .logResponse(TAG)
         web.getSignal(
-            domain = globalBackend2Manager.getGlobalDomainUrl(),
-            serviceParam = servicePath.signal,
             channels = listOf(
-                // 台股上市櫃(不含ETF)
-                "1175865",
-                // 可現股當沖標的(不含ETF)
-                "13335330"
+                "2101582"
             )
         )
             .logResponse(TAG)
     }
 
-    private suspend fun testHasProcessStep() {
+    private suspend fun testProcessStep() {
         web.getAll(
-            domain = globalBackend2Manager.getGlobalDomainUrl(),
-            serviceParam = servicePath.all,
             columns = listOf("標的", "商品名稱"),
             typeName = "StockCommodity",
             processSteps = listOf(
@@ -113,15 +80,13 @@ class AdditionalInformationRevisitTestCase(hasSignal: Boolean) : ServiceCase {
                 ),
                 ProcessStep(
                     type = "AscOrder",
-                    json = "{\"TargetPropertyNamePath\":[\"High\"]}"
+                    json = "{\"TargetPropertyNamePath\":[\"TradeDate\"]}"
                 )
             )
         )
             .logResponse(TAG)
         val commKeys = listOf("2330", "0050", "2344", "3008")
         web.getTarget(
-            domain = globalBackend2Manager.getGlobalDomainUrl(),
-            serviceParam = servicePath.target,
             typeName = "StockCalculation",
             columns = listOf("傳輸序號", "標的", "即時成交價"),
             keyNamePath = listOf("Commodity", "CommKey"),
@@ -139,8 +104,6 @@ class AdditionalInformationRevisitTestCase(hasSignal: Boolean) : ServiceCase {
         )
             .logResponse(TAG)
         web.getMultiple(
-            domain = globalBackend2Manager.getGlobalDomainUrl(),
-            serviceParam = servicePath.multiple,
             typeName = "CandlestickChartTick<StockCommodity,StockTick>",
             columns = listOf("傳輸序號", "標的", "收盤價"),
             keyNamePath = listOf("Key"),
@@ -158,8 +121,6 @@ class AdditionalInformationRevisitTestCase(hasSignal: Boolean) : ServiceCase {
         )
             .logResponse(TAG)
         web.getOtherQuery(
-            domain = globalBackend2Manager.getGlobalDomainUrl(),
-            serviceParam = servicePath.otherQuery,
             requestType = "SectionTransactionDetailsRequest<StockTick>",
             responseType = "IEnumerable<StockTick>",
             columns = listOf("傳輸序號", "標的", "即時成交價"),
@@ -224,7 +185,7 @@ class AdditionalInformationRevisitTestCase(hasSignal: Boolean) : ServiceCase {
     }
 
     companion object {
-        private const val TAG = "AIRTestCase"
+        private const val TAG = "AdditionalInformationRevisitTestCase"
         private val TEST_COLUMNS = listOf("傳輸序號", "標的", "即時成交價")
     }
 

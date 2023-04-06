@@ -1,14 +1,15 @@
 package com.cmoney.backend2.additioninformationrevisit.service
 
-import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.additioninformationrevisit.service.testing.CandleChartRequest
 import com.cmoney.backend2.additioninformationrevisit.service.testing.SomeTickRequest
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.core.CoroutineTestRule
 import com.cmoney.core.TestDispatcherProvider
 import com.google.common.truth.Truth
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import io.mockk.MockKAnnotations
 import io.mockk.coEvery
+import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
@@ -27,24 +28,27 @@ import retrofit2.Response
 @ExperimentalCoroutinesApi
 @RunWith(RobolectricTestRunner::class)
 class AdditionalInformationRevisitWebImplTest {
+
     private val testScope = TestScope()
-    // Set the main coroutines dispatcher for unit testing
+
     @get:Rule
     var mainCoroutineRule = CoroutineTestRule(testScope = testScope)
-    private lateinit var webImpl: AdditionalInformationRevisitWeb
+    private lateinit var web: AdditionalInformationRevisitWeb
+    @MockK(relaxed = true)
+    private lateinit var manager: GlobalBackend2Manager
+    @MockK
     private lateinit var service: AdditionalInformationRevisitService
-    private lateinit var gson: Gson
+    private val gson =  GsonBuilder()
+        .setLenient()
+        .serializeNulls()
+        .serializeSpecialFloatingPointValues()
+        .create()
 
     @Before
     fun setUp() {
-        gson = GsonBuilder()
-            .setLenient()
-            .serializeNulls()
-            .serializeSpecialFloatingPointValues()
-            .create()
-        service = mockk()
-        webImpl = AdditionalInformationRevisitWebImpl(
-            setting = TestSetting(),
+        MockKAnnotations.init(this)
+        web = AdditionalInformationRevisitWebImpl(
+            globalBackend2Manager = manager,
             service = service,
             dispatcher = TestDispatcherProvider()
         )
@@ -61,7 +65,7 @@ class AdditionalInformationRevisitWebImplTest {
             emptyList()
         )
         val typeName = "StockCalculation"
-        val response = webImpl.getAll(listOf(), typeName, emptyList())
+        val response = web.getAll(listOf(), typeName, emptyList())
         Truth.assertThat(response.isSuccess).isTrue()
     }
 
@@ -71,7 +75,7 @@ class AdditionalInformationRevisitWebImplTest {
         coEvery {
             service.getAll(any(), any(), any(), any())
         } returns Response.error(401, "".toResponseBody())
-        val result = webImpl.getAll(
+        val result = web.getAll(
             columns = emptyList(),
             typeName = "StockCalculation",
             processSteps = emptyList()
@@ -100,7 +104,7 @@ class AdditionalInformationRevisitWebImplTest {
             emptyList()
         )
         val typeName = "StockCalculation"
-        val response = webImpl.getTarget(
+        val response = web.getTarget(
             typeName = typeName,
             columns = listOf(),
             keyNamePath = listOf("Commodity", "CommKey"),
@@ -122,7 +126,7 @@ class AdditionalInformationRevisitWebImplTest {
             )
         } returns Response.error(401, "".toResponseBody())
         val typeName = "StockCalculation"
-        val result = webImpl.getTarget(
+        val result = web.getTarget(
             typeName = typeName,
             columns = listOf(),
             keyNamePath = listOf("Commodity", "CommKey"),
@@ -152,7 +156,7 @@ class AdditionalInformationRevisitWebImplTest {
             emptyList()
         )
         val typeName = "CandleStockChart"
-        val response = webImpl.getMultiple(
+        val response = web.getMultiple(
             typeName = typeName,
             columns = listOf(),
             keyNamePath = listOf("傳輸序號", "標的"),
@@ -174,7 +178,7 @@ class AdditionalInformationRevisitWebImplTest {
             )
         } returns Response.error(401, "".toResponseBody())
         val typeName = "CandleStockChart"
-        val result = webImpl.getMultiple(
+        val result = web.getMultiple(
             typeName = typeName,
             columns = listOf(),
             keyNamePath = listOf("傳輸序號", "標的"),
@@ -204,7 +208,7 @@ class AdditionalInformationRevisitWebImplTest {
         )
         val columns = listOf("標的")
         val responseType = "IEnumerable<ITick<ICommodity>>"
-        val response = webImpl.getOtherQuery(
+        val response = web.getOtherQuery(
             requestType = "SectionTransactionDetailsRequest",
             responseType = responseType,
             columns = columns,
@@ -226,7 +230,7 @@ class AdditionalInformationRevisitWebImplTest {
         } returns Response.error(401, "".toResponseBody())
         val columns = listOf("標的")
         val responseType = "IEnumerable<ITick<ICommodity>>"
-        val result = webImpl.getOtherQuery(
+        val result = web.getOtherQuery(
             requestType = "SectionTransactionDetailsRequest",
             responseType = responseType,
             columns = columns,
@@ -250,7 +254,7 @@ class AdditionalInformationRevisitWebImplTest {
             )
         )
         val channels = listOf<String>("4218074", "4217863", "4218054")
-        val response = webImpl.getSignal(channels)
+        val response = web.getSignal(channels)
         Truth.assertThat(response.isSuccess).isTrue()
         response.getOrThrow().forEach { oneRowData ->
             Truth.assertThat(oneRowData.size).isEqualTo(channels.size + 2)
@@ -268,7 +272,7 @@ class AdditionalInformationRevisitWebImplTest {
             service.getSignal(any(), any(), any())
         } returns Response.error(401, "".toResponseBody())
         val channels = listOf<String>("4218074", "4217863", "4218054")
-        val result = webImpl.getSignal(channels)
+        val result = web.getSignal(channels)
         Truth.assertThat(result.isSuccess).isFalse()
         val exception = result.exceptionOrNull()
         Truth.assertThat(exception).isNotNull()
@@ -284,7 +288,7 @@ class AdditionalInformationRevisitWebImplTest {
             emptyList()
         )
         val typeName = "StockCalculation"
-        val response = webImpl.getPreviousAll(
+        val response = web.getPreviousAll(
             columns = emptyList(),
             typeName = typeName,
             processSteps = emptyList()
@@ -298,7 +302,7 @@ class AdditionalInformationRevisitWebImplTest {
         coEvery {
             service.getPreviousAll(any(), any(), any(), any())
         } returns Response.error(401, "".toResponseBody())
-        val result = webImpl.getPreviousAll(
+        val result = web.getPreviousAll(
             columns = emptyList(),
             typeName = "StockCalculation",
             processSteps = emptyList()
@@ -327,7 +331,7 @@ class AdditionalInformationRevisitWebImplTest {
             emptyList()
         )
         val typeName = "StockCalculation"
-        val response = webImpl.getPreviousTarget(
+        val response = web.getPreviousTarget(
             typeName = typeName,
             columns = listOf(),
             keyNamePath = listOf("Commodity", "CommKey"),
@@ -349,7 +353,7 @@ class AdditionalInformationRevisitWebImplTest {
             )
         } returns Response.error(401, "".toResponseBody())
         val typeName = "StockCalculation"
-        val result = webImpl.getPreviousTarget(
+        val result = web.getPreviousTarget(
             typeName = typeName,
             columns = listOf(),
             keyNamePath = listOf("Commodity", "CommKey"),
@@ -379,7 +383,7 @@ class AdditionalInformationRevisitWebImplTest {
             emptyList()
         )
         val typeName = "CandleStockChart"
-        val response = webImpl.getPreviousMultiple(
+        val response = web.getPreviousMultiple(
             typeName = typeName,
             columns = listOf(),
             keyNamePath = listOf("傳輸序號", "標的"),
@@ -401,7 +405,7 @@ class AdditionalInformationRevisitWebImplTest {
             )
         } returns Response.error(401, "".toResponseBody())
         val typeName = "CandleStockChart"
-        val result = webImpl.getPreviousMultiple(
+        val result = web.getPreviousMultiple(
             typeName = typeName,
             columns = listOf(),
             keyNamePath = listOf("傳輸序號", "標的"),
@@ -431,7 +435,7 @@ class AdditionalInformationRevisitWebImplTest {
         )
         val columns = listOf("標的")
         val responseType = "IEnumerable<ITick<ICommodity>>"
-        val response = webImpl.getPreviousOtherQuery(
+        val response = web.getPreviousOtherQuery(
             requestType = "SectionTransactionDetailsRequest",
             responseType = responseType,
             columns = columns,
@@ -453,7 +457,7 @@ class AdditionalInformationRevisitWebImplTest {
         } returns Response.error(401, "".toResponseBody())
         val columns = listOf("標的")
         val responseType = "IEnumerable<ITick<ICommodity>>"
-        val result = webImpl.getPreviousOtherQuery(
+        val result = web.getPreviousOtherQuery(
             requestType = "SectionTransactionDetailsRequest",
             responseType = responseType,
             columns = columns,

@@ -1,5 +1,7 @@
 package com.cmoney.backend2.base.model.manager
 
+import com.cmoney.backend2.additioninformationrevisit.model.settingadapter.AdditionInformationRevisitSettingAdapter
+import com.cmoney.backend2.additioninformationrevisit.model.settingadapter.AdditionInformationRevisitSettingAdapterImpl
 import com.cmoney.backend2.base.model.request.AccessToken
 import com.cmoney.backend2.base.model.request.IdentityToken
 import com.cmoney.backend2.base.model.setting.Platform
@@ -17,19 +19,22 @@ import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdap
  * @property jwtSetting Jwt設定
  * @property virtualTradeSettingAdapter 虛擬下單V1轉接器
  * @property virtualTrading2SettingAdapter 虛擬下單V2轉接器
+ * @property additionInformationRevisitSettingAdapter 附加資訊轉接器
  *
  */
 class GlobalBackend2Manager(
     private val backendSetting: BackendSetting,
     private val jwtSetting: JwtSetting,
     private val virtualTradeSettingAdapter: VirtualTradeSettingAdapter,
-    private val virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter
+    private val virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter,
+    private val additionInformationRevisitSettingAdapter: AdditionInformationRevisitSettingAdapter
 ) {
     constructor(builder: Builder) : this(
         backendSetting = builder.backendSetting,
         jwtSetting = builder.jwtSetting,
         virtualTradeSettingAdapter = builder.virtualTradeSettingAdapter,
-        virtualTrading2SettingAdapter = builder.virtualTrading2SettingAdapter
+        virtualTrading2SettingAdapter = builder.virtualTrading2SettingAdapter,
+        additionInformationRevisitSettingAdapter = builder.additionInformationRevisitSettingAdapter
     )
 
     /**
@@ -180,6 +185,13 @@ class GlobalBackend2Manager(
     }
 
     /**
+     * 取得附加資訊設定轉接器
+     */
+    fun getAdditionInformationRevisitSettingAdapter(): AdditionInformationRevisitSettingAdapter {
+        return additionInformationRevisitSettingAdapter
+    }
+
+    /**
      * 清除Jwt設定，主要提供給登出使用。
      */
     fun clearJwtSetting() {
@@ -220,6 +232,8 @@ class GlobalBackend2Manager(
             VirtualTradeSettingAdapterImpl(backendSetting)
         var virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter =
             VirtualTrading2SettingAdapterImpl()
+        var additionInformationRevisitSettingAdapter: AdditionInformationRevisitSettingAdapter =
+            AdditionInformationRevisitSettingAdapterImpl(backendSetting)
 
         fun build(): GlobalBackend2Manager = GlobalBackend2Manager(this)
 
@@ -228,7 +242,7 @@ class GlobalBackend2Manager(
                 backendSetting: BackendSetting,
                 jwtSetting: JwtSetting,
                 block: Builder.() -> Unit
-            ) = Builder(
+            ): GlobalBackend2Manager = Builder(
                 backendSetting = backendSetting,
                 jwtSetting = jwtSetting
             ).apply(block)
