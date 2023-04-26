@@ -1,23 +1,20 @@
 package com.cmoney.backend2.activity.service
 
-import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.activity.service.api.getdaycount.GetDayCountResponseBody
 import com.cmoney.backend2.activity.service.api.getreferralcount.GetReferralCountResponseBody
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.core.CoroutineTestRule
+import com.cmoney.core.TestDispatcherProvider
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
-import io.mockk.mockk
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import okhttp3.ResponseBody.Companion.toResponseBody
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -46,7 +43,7 @@ class ActivityWebImplTest {
             manager,
             gson,
             activityService,
-            Dispatchers.Main
+            TestDispatcherProvider()
         )
     }
 
@@ -58,7 +55,8 @@ class ActivityWebImplTest {
         coEvery {
             activityService.getDayCount(
                 authorization = any(),
-                requestBody = any()
+                requestBody = any(),
+                url = any()
             )
         } returns Response.success(responseBody)
 
@@ -80,7 +78,8 @@ class ActivityWebImplTest {
         coEvery {
             activityService.getDayCount(
                 authorization = any(),
-                requestBody = any()
+                requestBody = any(),
+                url = any()
             )
         } returns Response.error(401, json.toResponseBody())
 
@@ -96,7 +95,8 @@ class ActivityWebImplTest {
         coEvery {
             activityService.requestBonus(
                 authorization = any(),
-                requestBody = any()
+                requestBody = any(),
+                url = any()
             )
         } returns Response.success<Void>(204, null)         //確認api是否成功
         val result = service.requestBonus(123504, 7)
@@ -120,7 +120,8 @@ class ActivityWebImplTest {
         coEvery {
             activityService.requestBonus(
                 authorization = any(),
-                requestBody = any()
+                requestBody = any(),
+                url = any()
             )
         } returns Response.error(400, json.toResponseBody())
 
@@ -137,7 +138,8 @@ class ActivityWebImplTest {
         coEvery {
             activityService.getReferralCount(
                 authorization = any(),
-                requestBody = any()
+                requestBody = any(),
+                url = any()
             )
         } returns Response.success(responseBody)
 
@@ -164,7 +166,8 @@ class ActivityWebImplTest {
         coEvery {
             activityService.getReferralCount(
                 authorization = any(),
-                requestBody = any()
+                requestBody = any(),
+                url = any()
             )
         } returns Response.error(400, json.toResponseBody())
 
