@@ -2,6 +2,8 @@ package com.cmoney.backend2.base.model.manager
 
 import com.cmoney.backend2.activity.model.ActivitySettingAdapter
 import com.cmoney.backend2.activity.model.ActivitySettingAdapterImpl
+import com.cmoney.backend2.authorization.model.AuthorizationSettingAdapter
+import com.cmoney.backend2.authorization.model.AuthorizationSettingAdapterImpl
 import com.cmoney.backend2.base.model.request.AccessToken
 import com.cmoney.backend2.base.model.request.IdentityToken
 import com.cmoney.backend2.base.model.setting.Platform
@@ -26,13 +28,15 @@ class GlobalBackend2Manager(
     private val backendSetting: BackendSetting,
     private val jwtSetting: JwtSetting,
     private val activitySettingAdapter: ActivitySettingAdapter,
+    private val authorizationSettingAdapter: AuthorizationSettingAdapter,
     private val virtualTradeSettingAdapter: VirtualTradeSettingAdapter,
-    private val virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter
+    private val virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter,
 ) {
     constructor(builder: Builder) : this(
         backendSetting = builder.backendSetting,
         jwtSetting = builder.jwtSetting,
         activitySettingAdapter = builder.activitySettingAdapter,
+        authorizationSettingAdapter = builder.authorizationSettingAdapter,
         virtualTradeSettingAdapter = builder.virtualTradeSettingAdapter,
         virtualTrading2SettingAdapter = builder.virtualTrading2SettingAdapter
     )
@@ -178,6 +182,13 @@ class GlobalBackend2Manager(
     }
 
     /**
+     * 取得授權設定轉接器
+     */
+    fun getAuthorizationSettingAdapter(): AuthorizationSettingAdapter {
+        return authorizationSettingAdapter
+    }
+
+    /**
      * 取得虛擬下單V1設定轉接器
      */
     fun getVirtualTradeSettingAdapter(): VirtualTradeSettingAdapter {
@@ -230,6 +241,8 @@ class GlobalBackend2Manager(
             }
         var activitySettingAdapter: ActivitySettingAdapter =
             ActivitySettingAdapterImpl(backendSetting)
+        var authorizationSettingAdapter: AuthorizationSettingAdapter =
+            AuthorizationSettingAdapterImpl(backendSetting)
         var virtualTradeSettingAdapter: VirtualTradeSettingAdapter =
             VirtualTradeSettingAdapterImpl(backendSetting)
         var virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter =
