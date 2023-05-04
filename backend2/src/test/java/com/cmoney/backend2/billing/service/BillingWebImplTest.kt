@@ -2,10 +2,9 @@ package com.cmoney.backend2.billing.service
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
-import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.ServerException
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.base.model.response.error.CMoneyError
-import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.billing.TestApplication
 import com.cmoney.backend2.billing.service.api.authbycmoney.AuthByCMoneyResponseBody
 import com.cmoney.backend2.billing.service.api.getappauth.GetAppAuthResponseBody
@@ -13,11 +12,7 @@ import com.cmoney.backend2.billing.service.api.getauth.GetAuthResponseBody
 import com.cmoney.backend2.billing.service.api.getdevelpoerpayload.GetDeveloperPayloadResponseBody
 import com.cmoney.backend2.billing.service.api.getproductinfo.ProductInformation
 import com.cmoney.backend2.billing.service.api.isPurchasable.IsPurchasableResponseBody
-import com.cmoney.backend2.billing.service.common.Authorization
-import com.cmoney.backend2.billing.service.common.InAppGoogleReceipt
-import com.cmoney.backend2.billing.service.common.InAppHuaweiReceipt
-import com.cmoney.backend2.billing.service.common.SubGoogleReceipt
-import com.cmoney.backend2.billing.service.common.SubHuaweiReceipt
+import com.cmoney.backend2.billing.service.common.*
 import com.cmoney.core.CoroutineTestRule
 import com.cmoney.core.TestDispatcherProvider
 import com.google.common.truth.Truth
@@ -27,6 +22,7 @@ import com.google.gson.reflect.TypeToken
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.impl.annotations.MockK
 import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
@@ -42,21 +38,21 @@ import retrofit2.Response
 import java.text.ParseException
 import java.text.SimpleDateFormat
 
+@Suppress("NonAsciiCharacters")
 @ExperimentalCoroutinesApi
 @RunWith(RobolectricTestRunner::class)
 @Config(application = TestApplication::class)
 class BillingWebImplTest {
 
     private val context = ApplicationProvider.getApplicationContext<Context>()
-
     private val testScope = TestScope()
     @get:Rule
     val mainCoroutineRule = CoroutineTestRule(testScope = testScope)
-
-    @RelaxedMockK
+    @MockK
     lateinit var service: BillingService
+    @MockK(relaxed = true)
+    private lateinit var manager: GlobalBackend2Manager
     private lateinit var billingWeb: BillingWeb
-    private lateinit var setting: Setting
     private val gson = GsonBuilder().serializeNulls().setLenient().setPrettyPrinting().create()
 
     companion object {
@@ -68,11 +64,10 @@ class BillingWebImplTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        setting = TestSetting()
         billingWeb = BillingWebImpl(
             service = service,
             gson = gson,
-            setting = setting,
+            manager = manager,
             dispatcher = TestDispatcherProvider()
         )
     }
@@ -84,6 +79,7 @@ class BillingWebImplTest {
         )
         coEvery {
             service.getDeveloperPayload(
+                url = any(),
                 authorization = any(),
                 requestBody = any()
             )
@@ -105,6 +101,7 @@ class BillingWebImplTest {
         ).toResponseBody()
         coEvery {
             service.getDeveloperPayload(
+                url = any(),
                 authorization = any(),
                 requestBody = any()
             )
@@ -120,7 +117,7 @@ class BillingWebImplTest {
         )
         coEvery {
             service.isReadyToPurchase(
-                platform = any(),
+                url = any(),
                 authorization = any(),
                 requestBody = any()
             )
@@ -140,7 +137,7 @@ class BillingWebImplTest {
         coEvery {
             service.isReadyToPurchase(
                 authorization = any(),
-                platform = any(),
+                url = any(),
                 requestBody = any()
             )
         } returns Response.success(responseBody)
@@ -163,7 +160,7 @@ class BillingWebImplTest {
         coEvery {
             service.isReadyToPurchase(
                 authorization = any(),
-                platform = any(),
+                url = any(),
                 requestBody = any()
             )
         } returns Response.error(400, errorBody)
@@ -179,7 +176,7 @@ class BillingWebImplTest {
             service.getIapProductInformation(
                 authorization = any(),
                 requestBody = any(),
-                platform = any()
+                url = any(),
             )
         } returns Response.success<List<ProductInformation>>(emptyList())
         val result = billingWeb.getProductInfo()
@@ -203,7 +200,7 @@ class BillingWebImplTest {
             service.getIapProductInformation(
                 authorization = any(),
                 requestBody = any(),
-                platform = any()
+                url = any(),
             )
         } returns Response.success(responseBody)
 
@@ -226,7 +223,7 @@ class BillingWebImplTest {
             service.getIapProductInformation(
                 authorization = any(),
                 requestBody = any(),
-                platform = any()
+                url = any(),
             )
         } returns Response.error<List<ProductInformation>>(400, errorBody)
 
@@ -246,7 +243,8 @@ class BillingWebImplTest {
             service.getAuthStatus(
                 authorization = any(),
                 appId = any(),
-                guid = any()
+                guid = any(),
+                url = any()
             )
         } returns Response.success(responseBody)
 
@@ -268,7 +266,8 @@ class BillingWebImplTest {
             service.getAuthStatus(
                 authorization = any(),
                 appId = any(),
-                guid = any()
+                guid = any(),
+                url = any()
             )
         } returns Response.success(responseBody)
 
@@ -288,6 +287,7 @@ class BillingWebImplTest {
         )
         coEvery {
             service.getAuthStatus(
+                url = any(),
                 authorization = any(),
                 appId = any(),
                 guid = any()
@@ -310,6 +310,7 @@ class BillingWebImplTest {
         )
         coEvery {
             service.getAuthStatus(
+                url = any(),
                 authorization = any(),
                 appId = any(),
                 guid = any()
@@ -333,6 +334,7 @@ class BillingWebImplTest {
         )
         coEvery {
             service.getAuthStatus(
+                url = any(),
                 authorization = any(),
                 appId = any(),
                 guid = any()
@@ -355,6 +357,7 @@ class BillingWebImplTest {
         )
         coEvery {
             service.getAuthStatus(
+                url = any(),
                 authorization = any(),
                 appId = any(),
                 guid = any()
@@ -378,6 +381,7 @@ class BillingWebImplTest {
         )
         coEvery {
             service.getAuthStatus(
+                url = any(),
                 authorization = any(),
                 appId = any(),
                 guid = any()
@@ -399,6 +403,7 @@ class BillingWebImplTest {
         )
         coEvery {
             service.getTargetAppAuthStatus(
+                url = any(),
                 appId = any(),
                 guid = any(),
                 authorization = any(),
@@ -424,6 +429,7 @@ class BillingWebImplTest {
         )
         coEvery {
             service.getTargetAppAuthStatus(
+                url = any(),
                 appId = any(),
                 guid = any(),
                 authorization = any(),
@@ -449,6 +455,7 @@ class BillingWebImplTest {
         )
         coEvery {
             service.getTargetAppAuthStatus(
+                url = any(),
                 appId = any(),
                 guid = any(),
                 authorization = any(),
@@ -474,6 +481,7 @@ class BillingWebImplTest {
         )
         coEvery {
             service.getTargetAppAuthStatus(
+                url = any(),
                 appId = any(),
                 guid = any(),
                 authorization = any(),
@@ -499,6 +507,7 @@ class BillingWebImplTest {
         )
         coEvery {
             service.getTargetAppAuthStatus(
+                url = any(),
                 appId = any(),
                 guid = any(),
                 authorization = any(),
@@ -524,6 +533,7 @@ class BillingWebImplTest {
         )
         coEvery {
             service.getTargetAppAuthStatus(
+                url = any(),
                 appId = any(),
                 guid = any(),
                 authorization = any(),
@@ -550,6 +560,7 @@ class BillingWebImplTest {
         )
         coEvery {
             service.getTargetAppAuthStatus(
+                url = any(),
                 appId = any(),
                 guid = any(),
                 authorization = any(),
@@ -568,6 +579,7 @@ class BillingWebImplTest {
     fun `verifyHuaweiInAppReceipt_購買成功`() = testScope.runTest {
         coEvery {
             service.verifyHuaweiInAppReceipt(
+                url = any(),
                 authorization = any(),
                 requestBody = any()
             )
@@ -581,7 +593,7 @@ class BillingWebImplTest {
                 signature = ""
             )
         )
-        coVerify { service.verifyHuaweiInAppReceipt(any(), any()) }
+        coVerify { service.verifyHuaweiInAppReceipt(any(), any(), any()) }
         assertThat(result.isSuccess).isTrue()
         assertThat(result.getOrThrow()).isEqualTo(Unit)
     }
@@ -597,6 +609,7 @@ class BillingWebImplTest {
         ).toResponseBody()
         coEvery {
             service.verifyHuaweiInAppReceipt(
+                url = any(),
                 authorization = any(),
                 requestBody = any()
             )
@@ -611,7 +624,7 @@ class BillingWebImplTest {
                 signature = ""
             )
         )
-        coVerify { service.verifyHuaweiInAppReceipt(any(), any()) }
+        coVerify { service.verifyHuaweiInAppReceipt(any(), any(), any()) }
         checkServerException(result, 10001)
     }
 
@@ -619,6 +632,7 @@ class BillingWebImplTest {
     fun `verifyHuaweiSubReceipt_購買成功`() = testScope.runTest {
         coEvery {
             service.verifyHuaweiSubReceipt(
+                url = any(),
                 authorization = any(),
                 requestBody = any()
             )
@@ -633,7 +647,7 @@ class BillingWebImplTest {
                 signature = ""
             )
         )
-        coVerify { service.verifyHuaweiSubReceipt(any(), any()) }
+        coVerify { service.verifyHuaweiSubReceipt(any(), any(), any()) }
         assertThat(result.isSuccess).isTrue()
         assertThat(result.getOrThrow()).isEqualTo(Unit)
     }
@@ -649,6 +663,7 @@ class BillingWebImplTest {
         ).toResponseBody()
         coEvery {
             service.verifyHuaweiSubReceipt(
+                url = any(),
                 authorization = any(),
                 requestBody = any()
             )
@@ -664,7 +679,7 @@ class BillingWebImplTest {
                 signature = ""
             )
         )
-        coVerify { service.verifyHuaweiSubReceipt(any(), any()) }
+        coVerify { service.verifyHuaweiSubReceipt(any(), any(), any()) }
         checkServerException(result, 10001)
     }
 
@@ -672,6 +687,7 @@ class BillingWebImplTest {
     fun `recoveryHuaweiInAppReceipt_成功`() = testScope.runTest {
         coEvery {
             service.recoveryHuaweiInAppReceipt(
+                url = any(),
                 authorization = any(),
                 requestBody = any()
             )
@@ -679,7 +695,7 @@ class BillingWebImplTest {
         val result = billingWeb.recoveryHuaweiInAppReceipt(
             receipts = emptyList()
         )
-        coVerify { service.recoveryHuaweiInAppReceipt(any(), any()) }
+        coVerify { service.recoveryHuaweiInAppReceipt(any(), any(), any()) }
         assertThat(result.isSuccess).isTrue()
         assertThat(result.getOrThrow()).isEqualTo(Unit)
     }
@@ -697,6 +713,7 @@ class BillingWebImplTest {
             ).toResponseBody()
             coEvery {
                 service.recoveryHuaweiInAppReceipt(
+                    url = any(),
                     authorization = any(),
                     requestBody = any()
                 )
@@ -705,7 +722,7 @@ class BillingWebImplTest {
             val result = billingWeb.recoveryHuaweiInAppReceipt(
                 receipts = emptyList()
             )
-            coVerify { service.recoveryHuaweiInAppReceipt(any(), any()) }
+            coVerify { service.recoveryHuaweiInAppReceipt(any(), any(), any()) }
             checkServerException(result, 10001)
         }
 
@@ -713,6 +730,7 @@ class BillingWebImplTest {
     fun `recoveryHuaweiSubReceipt_成功`() = testScope.runTest {
         coEvery {
             service.recoveryHuaweiSubReceipt(
+                url = any(),
                 authorization = any(),
                 requestBody = any()
             )
@@ -720,7 +738,7 @@ class BillingWebImplTest {
         val result = billingWeb.recoveryHuaweiSubReceipt(
             receipts = emptyList()
         )
-        coVerify { service.recoveryHuaweiSubReceipt(any(), any()) }
+        coVerify { service.recoveryHuaweiSubReceipt(any(), any(), any()) }
         assertThat(result.isSuccess).isTrue()
         assertThat(result.getOrThrow()).isEqualTo(Unit)
     }
@@ -736,6 +754,7 @@ class BillingWebImplTest {
         ).toResponseBody()
         coEvery {
             service.recoveryHuaweiSubReceipt(
+                url = any(),
                 authorization = any(),
                 requestBody = any()
             )
@@ -744,7 +763,7 @@ class BillingWebImplTest {
         val result = billingWeb.recoveryHuaweiSubReceipt(
             receipts = emptyList()
         )
-        coVerify { service.recoveryHuaweiSubReceipt(any(), any()) }
+        coVerify { service.recoveryHuaweiSubReceipt(any(), any(), any()) }
         checkServerException(result, 10001)
     }
 
@@ -752,6 +771,7 @@ class BillingWebImplTest {
     fun `verifyGoogleInAppReceipt_購買成功`() = testScope.runTest {
         coEvery {
             service.verifyGoogleInAppReceipt(
+                url = any(),
                 authorization = any(),
                 requestBody = any()
             )
@@ -762,7 +782,7 @@ class BillingWebImplTest {
                 productId = ""
             )
         )
-        coVerify { service.verifyGoogleInAppReceipt(any(), any()) }
+        coVerify { service.verifyGoogleInAppReceipt(any(), any(), any()) }
         assertThat(result.isSuccess).isTrue()
         assertThat(result.getOrThrow()).isEqualTo(Unit)
     }
@@ -778,6 +798,7 @@ class BillingWebImplTest {
         ).toResponseBody()
         coEvery {
             service.verifyGoogleInAppReceipt(
+                url = any(),
                 authorization = any(),
                 requestBody = any()
             )
@@ -789,7 +810,7 @@ class BillingWebImplTest {
                 productId = ""
             )
         )
-        coVerify { service.verifyGoogleInAppReceipt(any(), any()) }
+        coVerify { service.verifyGoogleInAppReceipt(any(), any(), any()) }
         checkServerException(result, 10001)
     }
 
@@ -797,6 +818,7 @@ class BillingWebImplTest {
     fun `verifyGoogleSubReceipt_購買成功`() = testScope.runTest {
         coEvery {
             service.verifyGoogleSubReceipt(
+                url = any(),
                 authorization = any(),
                 requestBody = any()
             )
@@ -807,7 +829,7 @@ class BillingWebImplTest {
                 productId = ""
             )
         )
-        coVerify { service.verifyGoogleSubReceipt(any(), any()) }
+        coVerify { service.verifyGoogleSubReceipt(any(), any(), any()) }
         assertThat(result.isSuccess).isTrue()
         assertThat(result.getOrThrow()).isEqualTo(Unit)
     }
@@ -823,6 +845,7 @@ class BillingWebImplTest {
         ).toResponseBody()
         coEvery {
             service.verifyGoogleSubReceipt(
+                url = any(),
                 authorization = any(),
                 requestBody = any()
             )
@@ -834,7 +857,7 @@ class BillingWebImplTest {
                 productId = ""
             )
         )
-        coVerify { service.verifyGoogleSubReceipt(any(), any()) }
+        coVerify { service.verifyGoogleSubReceipt(any(), any(), any()) }
         checkServerException(result, 10001)
     }
 
@@ -842,6 +865,7 @@ class BillingWebImplTest {
     fun `recoveryGoogleInAppReceipt_成功`() = testScope.runTest {
         coEvery {
             service.recoveryGoogleInAppReceipt(
+                url = any(),
                 authorization = any(),
                 requestBody = any()
             )
@@ -849,7 +873,7 @@ class BillingWebImplTest {
         val result = billingWeb.recoveryGoogleInAppReceipt(
             receipts = emptyList()
         )
-        coVerify { service.recoveryGoogleInAppReceipt(any(), any()) }
+        coVerify { service.recoveryGoogleInAppReceipt(any(), any(), any()) }
         assertThat(result.isSuccess).isTrue()
         assertThat(result.getOrThrow()).isEqualTo(Unit)
     }
@@ -867,6 +891,7 @@ class BillingWebImplTest {
             ).toResponseBody()
             coEvery {
                 service.recoveryGoogleInAppReceipt(
+                    url = any(),
                     authorization = any(),
                     requestBody = any()
                 )
@@ -875,7 +900,7 @@ class BillingWebImplTest {
             val result = billingWeb.recoveryGoogleInAppReceipt(
                 receipts = emptyList()
             )
-            coVerify { service.recoveryGoogleInAppReceipt(any(), any()) }
+            coVerify { service.recoveryGoogleInAppReceipt(any(), any(), any()) }
             checkServerException(result, 10001)
         }
 
@@ -883,6 +908,7 @@ class BillingWebImplTest {
     fun `recoveryGoogleSubReceipt_成功`() = testScope.runTest {
         coEvery {
             service.recoveryGoogleSubReceipt(
+                url = any(),
                 authorization = any(),
                 requestBody = any()
             )
@@ -890,7 +916,7 @@ class BillingWebImplTest {
         val result = billingWeb.recoveryGoogleSubReceipt(
             receipts = emptyList()
         )
-        coVerify { service.recoveryGoogleSubReceipt(any(), any()) }
+        coVerify { service.recoveryGoogleSubReceipt(any(), any(), any()) }
         assertThat(result.isSuccess).isTrue()
         assertThat(result.getOrThrow()).isEqualTo(Unit)
     }
@@ -907,6 +933,7 @@ class BillingWebImplTest {
         ).toResponseBody()
         coEvery {
             service.recoveryGoogleSubReceipt(
+                url = any(),
                 authorization = any(),
                 requestBody = any()
             )
@@ -915,7 +942,7 @@ class BillingWebImplTest {
         val result = billingWeb.recoveryGoogleSubReceipt(
             receipts = emptyList()
         )
-        coVerify { service.recoveryGoogleSubReceipt(any(), any()) }
+        coVerify { service.recoveryGoogleSubReceipt(any(), any(), any()) }
         checkServerException(result, 10001)
     }
 
@@ -926,8 +953,8 @@ class BillingWebImplTest {
         )
         coEvery {
             service.getAuthByCMoney(
-                authorization = any(),
-                appId = any()
+                url = any(),
+                authorization = any()
             )
         } returns Response.success(responseBody)
         val result = billingWeb.getAuthByCMoney(2)
@@ -947,8 +974,8 @@ class BillingWebImplTest {
         ).toResponseBody()
         coEvery {
             service.getAuthByCMoney(
-                authorization = any(),
-                appId = any()
+                url = any(),
+                authorization = any()
             )
         } returns Response.error(400, errorBody)
 
@@ -959,17 +986,18 @@ class BillingWebImplTest {
 
     @Test
     fun `getHistoryCount_成功`() = testScope.runTest {
-        val functionIds :Long= 6531
+        val functionIds: Long = 6531
         val responseBody = "{\"$functionIds\":555}".toResponseBody()
         coEvery {
             service.getHistoryCount(
+                url = any(),
                 authorization = any(),
                 productType = any(),
                 functionIds = any()
             )
         } returns Response.success(responseBody)
         val result = billingWeb.getHistoryCount(888003, functionIds)
-        coVerify { service.getHistoryCount(any(), any(), any()) }
+        coVerify { service.getHistoryCount(any(), any(), any(), any()) }
         assertThat(result.isSuccess).isTrue()
         assertThat(result.getOrThrow()).isEqualTo(555)
     }
@@ -985,6 +1013,7 @@ class BillingWebImplTest {
         ).toResponseBody()
         coEvery {
             service.getHistoryCount(
+                url = any(),
                 authorization = any(),
                 productType = any(),
                 functionIds = any()

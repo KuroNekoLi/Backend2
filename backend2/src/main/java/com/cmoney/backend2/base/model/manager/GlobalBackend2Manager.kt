@@ -9,6 +9,8 @@ import com.cmoney.backend2.base.model.request.IdentityToken
 import com.cmoney.backend2.base.model.setting.Platform
 import com.cmoney.backend2.base.model.setting.backend.BackendSetting
 import com.cmoney.backend2.base.model.setting.jwt.JwtSetting
+import com.cmoney.backend2.billing.model.BillingSettingAdapter
+import com.cmoney.backend2.billing.model.BillingSettingAdapterImpl
 import com.cmoney.backend2.virtualtrading2.model.settingadapter.VirtualTrading2SettingAdapter
 import com.cmoney.backend2.virtualtrading2.model.settingadapter.VirtualTrading2SettingAdapterImpl
 import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdapter
@@ -29,6 +31,7 @@ class GlobalBackend2Manager(
     private val jwtSetting: JwtSetting,
     private val activitySettingAdapter: ActivitySettingAdapter,
     private val authorizationSettingAdapter: AuthorizationSettingAdapter,
+    private val billingSettingAdapter: BillingSettingAdapter,
     private val virtualTradeSettingAdapter: VirtualTradeSettingAdapter,
     private val virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter,
 ) {
@@ -37,6 +40,7 @@ class GlobalBackend2Manager(
         jwtSetting = builder.jwtSetting,
         activitySettingAdapter = builder.activitySettingAdapter,
         authorizationSettingAdapter = builder.authorizationSettingAdapter,
+        billingSettingAdapter = builder.billingSettingAdapter,
         virtualTradeSettingAdapter = builder.virtualTradeSettingAdapter,
         virtualTrading2SettingAdapter = builder.virtualTrading2SettingAdapter
     )
@@ -188,6 +192,10 @@ class GlobalBackend2Manager(
         return authorizationSettingAdapter
     }
 
+    fun getBillingSettingAdapter(): BillingSettingAdapter {
+        return billingSettingAdapter
+    }
+
     /**
      * 取得虛擬下單V1設定轉接器
      */
@@ -243,6 +251,8 @@ class GlobalBackend2Manager(
             ActivitySettingAdapterImpl(backendSetting)
         var authorizationSettingAdapter: AuthorizationSettingAdapter =
             AuthorizationSettingAdapterImpl(backendSetting)
+        var billingSettingAdapter: BillingSettingAdapter =
+            BillingSettingAdapterImpl(backendSetting)
         var virtualTradeSettingAdapter: VirtualTradeSettingAdapter =
             VirtualTradeSettingAdapterImpl(backendSetting)
         var virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter =
