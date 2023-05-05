@@ -1,3 +1,13 @@
+# [5.52.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.51.0...5.52.0)
+
+
+### Features
+
+- ForumOcean
+  - 新增聊天室相關API
+  - 調整社團推播設定層級至看板
+
+
 # [5.51.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.50.2...5.51.0)
 
 
