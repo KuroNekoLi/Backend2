@@ -8,6 +8,7 @@ import com.cmoney.backend2.forumocean.service.api.article.createpersonal.CreateP
 import com.cmoney.backend2.forumocean.service.api.article.createquestion.CreateQuestionResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.update.UpdateArticleHelper
 import com.cmoney.backend2.forumocean.service.api.channel.getmemberstatistics.GetMemberStatisticsResponseBody
+import com.cmoney.backend2.forumocean.service.api.chatroom.GetUncheckChatRoomCountResponse
 import com.cmoney.backend2.forumocean.service.api.columnist.GetColumnistVipGroupResponse
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBodyV2
@@ -51,6 +52,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.request.ReactionType
 import com.cmoney.backend2.forumocean.service.api.variable.response.GroupPositionInfo
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetGroupBoardArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations.GetRecommendationResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.spacepin.GetSpaceBoardPinArticlesResponseBody
@@ -4144,10 +4146,11 @@ class ForumOceanWebImplTest {
                 authorization = any(),
                 path = "",
                 groupId = 1L,
-                body = any()
+                body = any(),
+                isChatRoom = false
             )
         } returns Response.success(InsertedId(-1))
-        val result = web.createGroupBoard(1, BoardManipulation(null, null))
+        val result = web.createGroupBoard(1, false, BoardManipulation(null, null))
         assertThat(result.isSuccess).isTrue()
     }
 
@@ -4159,10 +4162,11 @@ class ForumOceanWebImplTest {
                 authorization = any(),
                 path = "",
                 groupId = 1L,
-                body = any()
+                body = any(),
+                isChatRoom = false
             )
         } returns Response.error(500, "".toResponseBody())
-        val result = web.createGroupBoard(1, BoardManipulation(null, null))
+        val result = web.createGroupBoard(1, false, BoardManipulation(null, null))
         assertThat(result.isFailure).isTrue()
     }
 
@@ -4233,7 +4237,7 @@ class ForumOceanWebImplTest {
                 path = "",
                 boardId = 1L
             )
-        } returns Response.success(BoardSingle(null, null, null, null, null, null))
+        } returns Response.success(BoardSingle(null, null, null, null, null, null, null, null))
         val result = web.getGroupBoard(1)
         assertThat(result.isSuccess).isTrue()
     }
@@ -4834,6 +4838,70 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
+    fun `取得社團看板推播_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getGroupBoardPushSetting(
+                authorization = any(),
+                path = "",
+                boardId = any()
+            )
+        } returns Response.success(GroupPushSetting(""))
+        val result = web.getGroupBoardPushSetting(1L)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得社團看板推播_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getGroupBoardPushSetting(
+                authorization = any(),
+                path = "",
+                boardId = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getGroupBoardPushSetting(1L)
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `設定社團看板推播_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.setGroupBoardPushSetting(
+                authorization = any(),
+                path = any(),
+                boardId = any(),
+                body = any()
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.setGroupBoardPushSetting(
+            1L,
+            PushType.NONE
+        )
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `設定社團看板推播_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.setGroupBoardPushSetting(
+                authorization = any(),
+                path = any(),
+                boardId = any(),
+                body = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.setGroupBoardPushSetting(
+            -1,
+            PushType.NONE
+        )
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
     fun `取得會員的被評價資訊統計_success`() = testScope.runTest {
         coEvery {
             forumOceanService.getMemberRatingCounter(
@@ -5228,4 +5296,141 @@ class ForumOceanWebImplTest {
         assertThat(result.isFailure).isTrue()
     }
 
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得指定看板文章_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getBoardArticles(
+                authorization = any(),
+                path = any(),
+                boardId = any(),
+                startWeight = any(),
+                fetch = any()
+            )
+        } returns Response.success(GetGroupBoardArticlesResponse(listOf(), true, 0))
+        val result = web.getBoardArticles(0, 0, 0)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得指定看板文章_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getBoardArticles(
+                authorization = any(),
+                path = any(),
+                boardId = any(),
+                startWeight = any(),
+                fetch = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getBoardArticles(0, 0, 0)
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `收回自己的訊息_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.unsendArticle(
+                authorization = any(),
+                path = any(),
+                articleId = any(),
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.unsendArticle(0)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `收回自己的訊息_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.unsendArticle(
+                authorization = any(),
+                path = any(),
+                articleId = any(),
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.unsendArticle(0)
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得聊天室清單_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getAllChatRoom(
+                authorization = any(),
+                path = any()
+            )
+        } returns Response.success(listOf())
+        val result = web.getAllChatRoom()
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得聊天室清單_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getAllChatRoom(
+                authorization = any(),
+                path = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getAllChatRoom()
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得使用者未檢查的聊天室看板數_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getUncheckChatRoomCount(
+                authorization = any(),
+                path = any()
+            )
+        } returns Response.success(GetUncheckChatRoomCountResponse(0))
+        val result = web.getUncheckChatRoomCount()
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得使用者未檢查的聊天室看板數_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getUncheckChatRoomCount(
+                authorization = any(),
+                path = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getUncheckChatRoomCount()
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `重設使用者未檢查的聊天室看板數_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.resetUncheckChatRoomCount(
+                authorization = any(),
+                path = any()
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.resetUncheckChatRoomCount()
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `重設使用者未檢查的聊天室看板數_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.resetUncheckChatRoomCount(
+                authorization = any(),
+                path = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.resetUncheckChatRoomCount()
+        assertThat(result.isFailure).isTrue()
+    }
 }

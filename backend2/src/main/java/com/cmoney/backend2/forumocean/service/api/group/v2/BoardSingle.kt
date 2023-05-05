@@ -28,6 +28,11 @@ data class BoardSingle(
     @SerializedName("isDefault")
     val isDefault: Boolean?,
     /**
+     * 是否為聊天室
+     */
+    @SerializedName("isChatroom")
+    val isChatroom: Boolean?,
+    /**
      * 看板名稱
      */
     @SerializedName("name")
@@ -36,5 +41,10 @@ data class BoardSingle(
      * 角色權限
      */
     @SerializedName("rolesAuth")
-    val rolesAuth: List<RolesAuth>?
+    val rolesAuth: List<RolesAuth>?,
+    /**
+     * 未讀資訊
+     */
+    @SerializedName("readInfo")
+    val readInfo: BoardReadInfo?
 )

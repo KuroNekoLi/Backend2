@@ -15,6 +15,7 @@ import com.cmoney.backend2.forumocean.service.api.article.getbanstate.GetBanStat
 import com.cmoney.backend2.forumocean.service.api.article.update.IUpdateArticleHelper
 import com.cmoney.backend2.forumocean.service.api.channel.channelname.IChannelNameBuilder
 import com.cmoney.backend2.forumocean.service.api.channel.getchannelsarticlebyweight.GetChannelsArticleByWeightRequestBody
+import com.cmoney.backend2.forumocean.service.api.chatroom.GetUncheckChatRoomCountResponse
 import com.cmoney.backend2.forumocean.service.api.columnist.GetColumnistVipGroupResponse
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentRequestBody
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentRequestBodyV2
@@ -33,6 +34,7 @@ import com.cmoney.backend2.forumocean.service.api.group.v2.Board
 import com.cmoney.backend2.forumocean.service.api.group.v2.BoardManipulation
 import com.cmoney.backend2.forumocean.service.api.group.v2.BoardSingle
 import com.cmoney.backend2.forumocean.service.api.group.v2.Group
+import com.cmoney.backend2.forumocean.service.api.group.v2.GroupBoardPushSettingRequestBody
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupManipulation
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupMember2
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupPushSettingRequest
@@ -65,6 +67,8 @@ import com.cmoney.backend2.forumocean.service.api.variable.request.ReactionType
 import com.cmoney.backend2.forumocean.service.api.variable.request.mediatype.MediaType
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetAllChatRoomResponse
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetGroupBoardArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.PromotedArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations.GetRecommendationResponse
@@ -1692,12 +1696,14 @@ class ForumOceanWebImpl(
 
     override suspend fun createGroupBoard(
         groupId: Long,
+        isChatRoom: Boolean,
         board: BoardManipulation
     ): Result<Long> {
         return withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.createGroupBoard(
                     path = serverName,
+                    isChatRoom = isChatRoom,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     groupId = groupId,
                     body = board
@@ -1974,6 +1980,24 @@ class ForumOceanWebImpl(
         }
     }
 
+    override suspend fun getBoardArticles(
+        boardId: Long,
+        startWeight: Long?, // Optional
+        fetch: Int
+    ): Result<GetGroupBoardArticlesResponse> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.getBoardArticles(
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    path = serverName,
+                    boardId,
+                    startWeight,
+                    fetch
+                ).checkResponseBody(jsonParser)
+            }
+        }
+    }
+
     override suspend fun deleteGroupArticle(articleId: Long): Result<Unit> {
         return withContext(dispatcher.io()) {
             kotlin.runCatching {
@@ -2010,6 +2034,7 @@ class ForumOceanWebImpl(
         }
     }
 
+    @Deprecated("推播層級已由社團改至看板，請使用getGroupBoardPushSetting")
     override suspend fun getGroupPushSetting(groupId: Long): Result<PushType> {
         return withContext(dispatcher.io()) {
             kotlin.runCatching {
@@ -2018,16 +2043,12 @@ class ForumOceanWebImpl(
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     groupId = groupId
                 ).checkResponseBody(jsonParser)
-                when (result.pushType) {
-                    "all" -> PushType.ALL
-                    "admin" -> PushType.ADMIN
-                    "none" -> PushType.NONE
-                    else -> PushType.NONE
-                }
+                PushType.values().find { it.value == result.pushType } ?: PushType.NONE
             }
         }
     }
 
+    @Deprecated("推播層級已由社團改至看板，請使用setGroupBoardPushSetting")
     override suspend fun setGroupPushSetting(groupId: Long, pushType: PushType): Result<Unit> {
         return withContext(dispatcher.io()) {
             kotlin.runCatching {
@@ -2036,11 +2057,36 @@ class ForumOceanWebImpl(
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     body = GroupPushSettingRequest(
                         groupId,
-                        when (pushType) {
-                            PushType.ALL -> "all"
-                            PushType.ADMIN -> "admin"
-                            PushType.NONE -> "none"
-                        }
+                        pushType.value
+                    )
+                ).handleNoContent(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun getGroupBoardPushSetting(boardId: Long): Result<PushType> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                val result = service.getGroupBoardPushSetting(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    boardId = boardId
+                ).checkResponseBody(jsonParser)
+
+                PushType.values().find { it.value == result.pushType } ?: PushType.NONE
+            }
+        }
+    }
+
+    override suspend fun setGroupBoardPushSetting(boardId: Long, pushType: PushType): Result<Unit> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.setGroupBoardPushSetting(
+                    path = serverName,
+                    boardId = boardId,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    body = GroupBoardPushSettingRequestBody(
+                        pushType.value
                     )
                 ).handleNoContent(jsonParser)
             }
@@ -2181,6 +2227,51 @@ class ForumOceanWebImpl(
                     startWeight = startWeight,
                     fetch = fetch
                 ).checkResponseBody(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun unsendArticle(articleId: Long): Result<Unit> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.unsendArticle(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    articleId = articleId
+                ).handleNoContent(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun getAllChatRoom(): Result<List<GetAllChatRoomResponse>> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.getAllChatRoom(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                ).checkResponseBody(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun getUncheckChatRoomCount(): Result<GetUncheckChatRoomCountResponse> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.getUncheckChatRoomCount(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                ).checkResponseBody(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun resetUncheckChatRoomCount(): Result<Unit> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.resetUncheckChatRoomCount(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer()
+                ).handleNoContent(jsonParser)
             }
         }
     }
