@@ -1,6 +1,7 @@
 package com.cmoney.backend2.vtwebapi.service
 
 import com.cmoney.backend2.TestSetting
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.vtwebapi.service.api.createaccount.AccountType
 import com.cmoney.backend2.vtwebapi.service.api.createaccount.CreateAccountRequestBody
 import com.cmoney.backend2.vtwebapi.service.api.getaccount.GetAccountResponseBody
@@ -30,6 +31,7 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import retrofit2.Response
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
 class VirtualTradeWebImplTest {
 
@@ -40,6 +42,8 @@ class VirtualTradeWebImplTest {
 
     @MockK
     private lateinit var service: VirtualTradeService
+    @MockK(relaxed = true)
+    private lateinit var manager: GlobalBackend2Manager
     private lateinit var webImpl: VirtualTradeWebImpl
     private val gson = GsonBuilder().serializeNulls().setLenient().setPrettyPrinting().create()
 
@@ -47,7 +51,7 @@ class VirtualTradeWebImplTest {
     fun setUp() {
         MockKAnnotations.init(this)
         webImpl = VirtualTradeWebImpl(
-            setting = TestSetting(),
+            globalBackend2Manager = manager,
             service = service,
             dispatcher = TestDispatcherProvider(),
             gson = gson

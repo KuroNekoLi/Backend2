@@ -1,127 +1,175 @@
 package com.cmoney.backend2.base.model.manager
 
-import android.content.Context
-import com.cmoney.backend2.base.di.BACKEND2_SETTING
 import com.cmoney.backend2.base.model.request.AccessToken
 import com.cmoney.backend2.base.model.request.IdentityToken
 import com.cmoney.backend2.base.model.setting.Platform
-import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.backend2.base.model.setting.backend.BackendSetting
+import com.cmoney.backend2.base.model.setting.jwt.JwtSetting
 import com.cmoney.backend2.virtualtrading2.model.settingadapter.VirtualTrading2SettingAdapter
 import com.cmoney.backend2.virtualtrading2.model.settingadapter.VirtualTrading2SettingAdapterImpl
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.get
+import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdapter
+import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdapterImpl
 
+/**
+ * Backend模組經常變動設定的管理者。
+ *
+ * @property backendSetting Backend設定
+ * @property jwtSetting Jwt設定
+ * @property virtualTradeSettingAdapter 虛擬下單V1轉接器
+ * @property virtualTrading2SettingAdapter 虛擬下單V2轉接器
+ *
+ */
 class GlobalBackend2Manager(
-    private val context: Context,
+    private val backendSetting: BackendSetting,
+    private val jwtSetting: JwtSetting,
+    private val virtualTradeSettingAdapter: VirtualTradeSettingAdapter,
     private val virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter
-) : KoinComponent {
+) {
     constructor(builder: Builder) : this(
-        context = builder.context,
+        backendSetting = builder.backendSetting,
+        jwtSetting = builder.jwtSetting,
+        virtualTradeSettingAdapter = builder.virtualTradeSettingAdapter,
         virtualTrading2SettingAdapter = builder.virtualTrading2SettingAdapter
     )
-
-    private val setting = get<Setting>(BACKEND2_SETTING)
-
-//    private fun getAppVersionName(context: Context): String {
-//        return try {
-//            val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
-//            packageInfo.versionName
-//        } catch (e: PackageManager.NameNotFoundException) {
-//            "0.0.0"
-//        }
-//    }
-//
-//    private fun getAppVersionCode(context: Context): Long {
-//        return try {
-//            val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
-//            packageInfo.longVersionCode
-//        } catch (e: PackageManager.NameNotFoundException) {
-//            0
-//        }
-//    }
 
     /**
      * 取得全域的DomainUrl
      */
     fun getGlobalDomainUrl(): String {
-        return setting.domainUrl
+        return backendSetting.getDomainUrl()
+    }
+
+    /**
+     * 設定全域的DomainUrl
+     */
+    fun setGlobalDomainUrl(domainUrl: String) {
+        backendSetting.setDomainUrl(domainUrl)
     }
 
     /**
      * 取得App編號
      */
     fun getAppId(): Int {
-        return setting.appId
+        return backendSetting.getAppId()
+    }
+
+    /**
+     * 設定App編號
+     */
+    fun setAppId(appId: Int) {
+        backendSetting.setAppId(appId)
     }
 
     /**
      * 取得客戶端編號
      */
     fun getClientId(): String {
-        return setting.clientId
+        return backendSetting.getClientId()
+    }
+
+    /**
+     * 設定客戶端編號
+     */
+    fun setClientId(clientId: String) {
+        backendSetting.setClientId(clientId)
     }
 
     /**
      * 取得App版本名稱
      */
     fun getAppVersionName(): String {
-        return setting.appVersion
+        return backendSetting.getAppVersionName()
     }
 
     /**
      * 取得App版本碼
      */
     fun getAppVersionCode(): Long {
-        return setting.appVersionCode.toLong()
+        return backendSetting.getAppVersionCode()
     }
 
     /**
      * 取得製造商
      */
     fun getManufacturer(): String {
-        return android.os.Build.MANUFACTURER
+        return backendSetting.getManufacturer()
     }
 
     /**
      * 取得手機模型
      */
     fun getModel(): String {
-        return android.os.Build.MODEL
+        return backendSetting.getModel()
     }
 
     /**
      * 取得手機系統版本
      */
     fun getOsVersion(): String {
-        return android.os.Build.VERSION.SDK_INT.toString()
+        return backendSetting.getOsVersion()
     }
 
     /**
      * 取得平台
      */
     fun getPlatform(): Platform {
-        return setting.platform
+        return backendSetting.getPlatform()
     }
 
     /**
-     * 取得授權連接Token
+     * 設定平台
+     */
+    fun setPlatform(platform: Platform) {
+        backendSetting.setPlatform(platform)
+    }
+
+    /**
+     * 取得Jwt的AccessToken
      */
     fun getAccessToken(): AccessToken {
-        return setting.accessToken
+        return jwtSetting.getAccessToken()
     }
 
     /**
-     * 取得會員資訊辨識Token
+     * 設定Jwt的AccessToken
+     */
+    fun setAccessToken(accessToken: AccessToken) {
+        jwtSetting.setAccessToken(accessToken)
+    }
+
+    /**
+     * 取得Jwt的IdentityToken
      */
     fun getIdentityToken(): IdentityToken {
-        return setting.identityToken
+        return jwtSetting.getIdentityToken()
     }
 
     /**
-     * 取得刷新Token
+     * 設定Jwt的IdentityToken
+     */
+    fun setIdentityToken(identityToken: IdentityToken) {
+        jwtSetting.setIdentityToken(identityToken)
+    }
+
+    /**
+     * 取得Jwt的RefreshToken
      */
     fun getRefreshToken(): String {
-        return setting.refreshToken
+        return jwtSetting.getRefreshToken()
+    }
+
+    /**
+     * 設定Jwt的RefreshToken
+     */
+    fun setRefreshToken(refreshToken: String) {
+        jwtSetting.setRefreshToken(refreshToken)
+    }
+
+    /**
+     * 取得虛擬下單V1設定轉接器
+     */
+    fun getVirtualTradeSettingAdapter(): VirtualTradeSettingAdapter {
+        return virtualTradeSettingAdapter
     }
 
     /**
@@ -131,13 +179,45 @@ class GlobalBackend2Manager(
         return virtualTrading2SettingAdapter
     }
 
+    /**
+     * 清除Jwt設定，主要提供給登出使用。
+     */
+    fun clearJwtSetting() {
+        jwtSetting.setAccessToken(AccessToken())
+        jwtSetting.setIdentityToken(IdentityToken())
+        jwtSetting.setRefreshToken("")
+    }
+
     class Builder(
-        val context: Context
+        val backendSetting: BackendSetting,
+        val jwtSetting: JwtSetting,
     ) {
         constructor(builder: Builder) : this(
-            context = builder.context
+            backendSetting = builder.backendSetting,
+            jwtSetting = builder.jwtSetting
         )
 
+        var globalDomainUrl: String = backendSetting.getDomainUrl()
+            set(value) {
+                backendSetting.setDomainUrl(value)
+                field = value
+            }
+        var appId: Int = backendSetting.getAppId()
+            set(value) {
+                backendSetting.setAppId(value)
+                field = value
+            }
+        var clientId: String = backendSetting.getClientId()
+            set(value) {
+                backendSetting.setClientId(value)
+                field = value
+            }
+        var platform: Platform = backendSetting.getPlatform()
+            set(value) {
+                backendSetting.setPlatform(value)
+            }
+        var virtualTradeSettingAdapter: VirtualTradeSettingAdapter =
+            VirtualTradeSettingAdapterImpl(backendSetting)
         var virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter =
             VirtualTrading2SettingAdapterImpl()
 
@@ -145,10 +225,12 @@ class GlobalBackend2Manager(
 
         companion object {
             inline fun build(
-                context: Context,
+                backendSetting: BackendSetting,
+                jwtSetting: JwtSetting,
                 block: Builder.() -> Unit
             ) = Builder(
-                context = context
+                backendSetting = backendSetting,
+                jwtSetting = jwtSetting
             ).apply(block)
                 .build()
         }

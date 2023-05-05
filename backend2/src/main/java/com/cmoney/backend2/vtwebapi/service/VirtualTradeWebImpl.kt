@@ -2,7 +2,7 @@ package com.cmoney.backend2.vtwebapi.service
 
 import com.cmoney.backend2.base.extension.checkResponseBody
 import com.cmoney.backend2.base.extension.createAuthorizationBearer
-import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.vtwebapi.service.api.createaccount.AccountType
 import com.cmoney.backend2.vtwebapi.service.api.createaccount.CreateAccountRequestBody
 import com.cmoney.backend2.vtwebapi.service.api.getaccount.GetAccountResponseBody
@@ -17,20 +17,16 @@ import com.cmoney.core.DispatcherProvider
 import com.google.gson.Gson
 import kotlinx.coroutines.withContext
 
-/**
- * @property servicePath 服務路徑
- */
 class VirtualTradeWebImpl(
-    override val setting: Setting,
+    override val globalBackend2Manager: GlobalBackend2Manager,
     private val service: VirtualTradeService,
     private val gson: Gson,
-    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider
+    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider,
 ) : VirtualTradeWeb {
-
-    private val servicePath: String = "vt.webapi"
 
     override suspend fun getAccount(
         domain: String,
+        url: String,
         destMemberPk: Long?,
         skipCount: Int?,
         fetchSize: Int?,
@@ -39,8 +35,8 @@ class VirtualTradeWebImpl(
     ): Result<List<GetAccountResponseBody>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getAccount(
-                url = "$domain$servicePath/Account",
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                url = url,
+                authorization = globalBackend2Manager.getAccessToken().createAuthorizationBearer(),
                 destMemberPk = destMemberPk,
                 skipCount = skipCount,
                 fetchSize = fetchSize,
@@ -52,13 +48,14 @@ class VirtualTradeWebImpl(
 
     override suspend fun createAccount(
         domain: String,
+        url: String,
         type: AccountType,
         isn: Long
     ): Result<GetAccountResponseBody> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.createAccount(
-                url = "$domain$servicePath/Account",
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                url = url,
+                authorization = globalBackend2Manager.getAccessToken().createAuthorizationBearer(),
                 body = CreateAccountRequestBody(
                     type = type.typeNum,
                     isn = isn
@@ -69,13 +66,14 @@ class VirtualTradeWebImpl(
 
     override suspend fun getCardInstanceSns(
         domain: String,
+        url: String,
         productSn: Long,
         productUsage: UsageType
     ): Result<GetCardInstanceSnsResponseBody> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getCardInstanceSns(
-                url = "$domain$servicePath/ByProductSn",
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                url = url,
+                authorization = globalBackend2Manager.getAccessToken().createAuthorizationBearer(),
                 productSn = productSn,
                 productUsage = productUsage.typeNum,
             ).checkResponseBody(gson)
@@ -84,14 +82,15 @@ class VirtualTradeWebImpl(
 
     override suspend fun purchaseProductCard(
         domain: String,
+        url: String,
         giftFromMember: Int,
         ownerMemberPk: Int,
         productSn: Long
     ): Result<PurchaseProductCardResponseBody> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.purchaseProductCard(
-                url = "$domain$servicePath/ProductCard/PurchaseProductCard",
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                url = url,
+                authorization = globalBackend2Manager.getAccessToken().createAuthorizationBearer(),
                 body = PurchaseProductCardRequestBody(
                     giftFromMember = giftFromMember,
                     ownerMemberPk = ownerMemberPk,
@@ -103,13 +102,14 @@ class VirtualTradeWebImpl(
 
     override suspend fun getAttendGroup(
         domain: String,
+        url: String,
         fetchIndex: Int?,
         fetchSize: Int?
     ): Result<List<GetAttendGroupResponseBody>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getAttendGroup(
-                url = "$domain$servicePath/Group/Attend",
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                url = url,
+                authorization = globalBackend2Manager.getAccessToken().createAuthorizationBearer(),
                 fetchIndex = fetchIndex,
                 fetchSize = fetchSize
             ).checkResponseBody(gson)
@@ -117,13 +117,14 @@ class VirtualTradeWebImpl(
     }
 
     override suspend fun getStockInventoryList(
+        account: Long,
         domain: String,
-        account: Long
+        url: String
     ): Result<List<GetStockInventoryListResponseBody>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getStockInventoryList(
-                url = "$domain$servicePath/Inventory/SecInventoryListByAccount/$account",
-                authorization = setting.accessToken.createAuthorizationBearer()
+                url = url,
+                authorization = globalBackend2Manager.getAccessToken().createAuthorizationBearer()
             ).checkResponseBody(gson)
         }
     }

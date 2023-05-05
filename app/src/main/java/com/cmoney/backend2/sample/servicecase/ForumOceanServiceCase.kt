@@ -1,8 +1,7 @@
 package com.cmoney.backend2.sample.servicecase
 
 import android.util.Log
-import com.cmoney.backend2.base.di.BACKEND2_SETTING
-import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.forumocean.service.ForumOceanWeb
 import com.cmoney.backend2.forumocean.service.api.article.create.variable.Content
 import com.cmoney.backend2.forumocean.service.api.article.update.UpdateArticleHelper
@@ -32,15 +31,14 @@ class ForumOceanServiceCase : ServiceCase {
     }
 
     private val forumOceanWeb by inject<ForumOceanWeb>()
-
-    private val setting by inject<Setting>(BACKEND2_SETTING)
+    private val globalBackend2Manager by inject<GlobalBackend2Manager>()
 
     override suspend fun testAll() {
         forumOceanWeb.apply {
 
             getMemberStatistics(
                 listOf(
-                    setting.identityToken.getMemberId().toLong(),
+                    globalBackend2Manager.getIdentityToken().getMemberId().toLong(),
                     35
                 )
             ).logResponse(TAG)
@@ -130,7 +128,7 @@ class ForumOceanServiceCase : ServiceCase {
             testOfficials()
             testReport()
             testVote()
-            testSupport(setting.identityToken.getMemberId().toLong())
+            testSupport(globalBackend2Manager.getIdentityToken().getMemberId().toLong())
         }
     }
 
@@ -283,7 +281,7 @@ class ForumOceanServiceCase : ServiceCase {
         createCollection(articleId).logResponse(TAG)
 
         getChannelsArticleByWeight(
-            listOf(DefineChannelName.Collection(setting.identityToken.getMemberId().toLong())),
+            listOf(DefineChannelName.Collection(globalBackend2Manager.getIdentityToken().getMemberId().toLong())),
             Long.MAX_VALUE,
             50
         ).logResponse(TAG)
@@ -341,7 +339,7 @@ class ForumOceanServiceCase : ServiceCase {
         getChannelsArticleByWeight(
             channelNameBuilderList = listOf(
                 DefineChannelName.MemberNote(
-                    memberId = setting.identityToken.getMemberId().toLong(),
+                    memberId = globalBackend2Manager.getIdentityToken().getMemberId().toLong(),
                     commodityType = CommodityType.Stock.text,
                     stockId = "1234"
                 )
@@ -395,18 +393,18 @@ class ForumOceanServiceCase : ServiceCase {
         groupId?.apply {
             getGroup(this).logResponse(TAG)
             getGroupsByPosition(
-                setting.identityToken.getMemberId().toLong(),
+                globalBackend2Manager.getIdentityToken().getMemberId().toLong(),
                 0,
                 20,
                 listOf(GroupPosition.NORMAL, GroupPosition.MANAGEMENT, GroupPosition.PRESIDENT)
             ).logResponse(TAG)
-            getMemberManagedGroups(setting.identityToken.getMemberId().toLong(), 0, 20).logResponse(
+            getMemberManagedGroups(globalBackend2Manager.getIdentityToken().getMemberId().toLong(), 0, 20).logResponse(
                 TAG
             )
-            getMemberBelongGroups(setting.identityToken.getMemberId().toLong(), 0, 20).logResponse(
+            getMemberBelongGroups(globalBackend2Manager.getIdentityToken().getMemberId().toLong(), 0, 20).logResponse(
                 TAG
             )
-            getMemberJoinAnyGroups(setting.identityToken.getMemberId().toLong()).logResponse(TAG)
+            getMemberJoinAnyGroups(globalBackend2Manager.getIdentityToken().getMemberId().toLong()).logResponse(TAG)
             updateGroup(
                 this,
                 UpdateGroupRequestBody(joinType = GroupJoinType.Invitation)
@@ -423,7 +421,7 @@ class ForumOceanServiceCase : ServiceCase {
         if (botIdList != null && botIdList.size >= 2) {
             val firstBotId = botIdList[0]
             val secondBotId = botIdList[1]
-            val memberId = setting.identityToken.getMemberId().toLong()
+            val memberId = globalBackend2Manager.getIdentityToken().getMemberId().toLong()
             getOfficialsByIds(botIdList).logResponse(TAG)
 
             subscribe(firstBotId).logResponse(TAG)
@@ -442,14 +440,14 @@ class ForumOceanServiceCase : ServiceCase {
         val user1 = manager.accountList[0]
         val user2 = manager.accountList[1]
 
-        user1.changeUser(setting)
+        user1.changeUser(globalBackend2Manager)
         var groupId: Long? = null
         createGroup("測試用社團名稱").logResponse(TAG) {
             groupId = it.groupId
         }
 
         groupId?.apply {
-            user2.changeUser(setting)
+            user2.changeUser(globalBackend2Manager)
             join(this, "測試api用").logResponse(TAG)
             val groupArticleId = createArticle(
                 body = Content.Article.Group(
@@ -465,7 +463,7 @@ class ForumOceanServiceCase : ServiceCase {
             ).getOrNull()?.articleId
             leave(this).logResponse(TAG)
 
-            user1.changeUser(setting)
+            user1.changeUser(globalBackend2Manager)
 
             if (groupArticleId != null) {
                 deleteArticleV2(groupArticleId.toString()).logResponse(TAG)
@@ -476,10 +474,10 @@ class ForumOceanServiceCase : ServiceCase {
                 UpdateGroupRequestBody(joinType = GroupJoinType.Private)
             ).logResponse(TAG)
 
-            user2.changeUser(setting)
+            user2.changeUser(globalBackend2Manager)
             join(this, "測試api用").logResponse(TAG)
 
-            user1.changeUser(setting)
+            user1.changeUser(globalBackend2Manager)
             getMembers(
                 this,
                 0,
@@ -496,9 +494,9 @@ class ForumOceanServiceCase : ServiceCase {
                 ).logResponse(TAG)
                 kick(this, needApprovalId).logResponse(TAG)
 
-                user1.changeUser(setting)
+                user1.changeUser(globalBackend2Manager)
                 transferGroup(this, needApprovalId).logResponse(TAG)
-                user2.changeUser(setting)
+                user2.changeUser(globalBackend2Manager)
             }
 
             deleteGroup(this)
@@ -509,10 +507,10 @@ class ForumOceanServiceCase : ServiceCase {
         val user1 = manager.accountList[0]
         val user2 = manager.accountList[1]
 
-        user1.changeUser(setting)
-        val user1MemberId = setting.identityToken.getMemberId().toLong()
-        user2.changeUser(setting)
-        val user2MemberId = setting.identityToken.getMemberId().toLong()
+        user1.changeUser(globalBackend2Manager)
+        val user1MemberId = globalBackend2Manager.getIdentityToken().getMemberId().toLong()
+        user2.changeUser(globalBackend2Manager)
+        val user2MemberId = globalBackend2Manager.getIdentityToken().getMemberId().toLong()
 
         follow(user1MemberId).logResponse(TAG)
         getFollowingList(user2MemberId, 0, 10).logResponse(TAG)
@@ -521,12 +519,12 @@ class ForumOceanServiceCase : ServiceCase {
         getFollowingList(user2MemberId, 0, 10).logResponse(TAG)
 
         block(user1MemberId).logResponse(TAG)
-        user1.changeUser(setting)
+        user1.changeUser(globalBackend2Manager)
         block(user2MemberId).logResponse(TAG)
         getBlockers(0, 10).logResponse(TAG)
         getBlockingList(0, 10).logResponse(TAG)
         unblock(user2MemberId).logResponse(TAG)
-        user2.changeUser(setting)
+        user2.changeUser(globalBackend2Manager)
         unblock(user1MemberId).logResponse(TAG)
     }
 
@@ -588,7 +586,7 @@ class ForumOceanServiceCase : ServiceCase {
         val user1 = manager.accountList[0]
         val user2 = manager.accountList[1]
 
-        user1.changeUser(setting)
+        user1.changeUser(globalBackend2Manager)
         val groupId = createGroup("社團文章名稱").getOrNull()?.groupId
 
         groupId?.apply {
@@ -618,8 +616,8 @@ class ForumOceanServiceCase : ServiceCase {
                 unpinArticle(this).logResponse(TAG)
             }
 
-            user2.changeUser(setting)
-            val user2MemberId = setting.identityToken.getMemberId().toLong()
+            user2.changeUser(globalBackend2Manager)
+            val user2MemberId = globalBackend2Manager.getIdentityToken().getMemberId().toLong()
             join(groupId, "測試").logResponse(TAG)
 
             presidentGroupArticleId?.apply {
@@ -643,7 +641,7 @@ class ForumOceanServiceCase : ServiceCase {
                 )
             ).logResponse(TAG)
 
-            user1.changeUser(setting)
+            user1.changeUser(globalBackend2Manager)
 
             getApprovals(groupId, 0, 20).logResponse(TAG)
             approval(groupId, user2MemberId, true).logResponse(TAG)
@@ -654,7 +652,7 @@ class ForumOceanServiceCase : ServiceCase {
                 GroupPosition.PRESIDENT
             ).logResponse(TAG)
 
-            user2.changeUser(setting)
+            user2.changeUser(globalBackend2Manager)
             var groupArticleId: Long? = null
             createArticle(
                 Content.Article.Group(
@@ -680,7 +678,7 @@ class ForumOceanServiceCase : ServiceCase {
                 getGroupManagerComments(this).logResponse(TAG)
             }
 
-            user1.changeUser(setting)
+            user1.changeUser(globalBackend2Manager)
             deleteGroup(groupId)
         }
     }
@@ -701,7 +699,7 @@ class ForumOceanServiceCase : ServiceCase {
         val user1 = manager.accountList[0]
         val user2 = manager.accountList[1]
 
-        user1.changeUser(setting)
+        user1.changeUser(globalBackend2Manager)
         var articleId: Long? = null
         createArticle(
             Content.Article.General(
@@ -718,11 +716,11 @@ class ForumOceanServiceCase : ServiceCase {
             articleId = it.articleId
         }
         articleId?.apply {
-            user2.changeUser(setting)
-            val user2MemberId = setting.identityToken.getMemberId().toLong()
+            user2.changeUser(globalBackend2Manager)
+            val user2MemberId = globalBackend2Manager.getIdentityToken().getMemberId().toLong()
             createCommentV2(this.toString(), "使用者二的回文", multiMedia = listOf()).logResponse(TAG)
 
-            user1.changeUser(setting)
+            user1.changeUser(globalBackend2Manager)
             block(user2MemberId).logResponse(TAG)
             getCommentV2(this.toString(), null, null).logResponse(TAG)
             unblock(user2MemberId).logResponse(TAG)

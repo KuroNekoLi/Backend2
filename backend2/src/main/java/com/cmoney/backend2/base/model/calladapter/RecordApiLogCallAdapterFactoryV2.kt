@@ -1,7 +1,7 @@
 package com.cmoney.backend2.base.model.calladapter
 
 import com.cmoney.backend2.base.model.logdatarecorder.MutableApiLog
-import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.data_logdatarecorder.recorder.LogDataRecorder
 import com.cmoney.domain_logdatarecorder.data.api.log.ApiLog
 import com.cmoney.domain_logdatarecorder.data.api.log.ApiLogError
@@ -18,7 +18,7 @@ import java.nio.charset.StandardCharsets
 import java.util.*
 
 class RecordApiLogCallAdapterFactoryV2(
-    private val setting: Setting,
+    private val manager: GlobalBackend2Manager,
     private val logDataRecorder: LogDataRecorder
 ) : CallAdapter.Factory() {
 
@@ -47,8 +47,9 @@ class RecordApiLogCallAdapterFactoryV2(
 
             override fun adapt(call: Call<Any?>): Call<Any?> {
                 val mutableApiLog = MutableApiLog()
-                mutableApiLog.userId = setting.identityToken.getMemberId()
-                val logCMoneyAction = recordApiLogAnnotation.cmoneyAction.takeIf { isLogCMoneyAction }
+                mutableApiLog.userId = manager.getIdentityToken().getMemberId()
+                val logCMoneyAction =
+                    recordApiLogAnnotation.cmoneyAction.takeIf { isLogCMoneyAction }
                 val request = call.request()
                 val requestUrl = request.url
                 mutableApiLog.domain = "${requestUrl.scheme}://${requestUrl.host}"

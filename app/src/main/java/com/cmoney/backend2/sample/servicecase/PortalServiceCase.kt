@@ -1,7 +1,6 @@
 package com.cmoney.backend2.sample.servicecase
 
-import com.cmoney.backend2.base.di.BACKEND2_SETTING
-import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.portal.service.PortalWeb
 import com.cmoney.backend2.portal.service.api.ForecastValue
 import com.cmoney.backend2.sample.extension.logResponse
@@ -10,7 +9,7 @@ import org.koin.core.component.inject
 class PortalServiceCase : ServiceCase {
 
     private val cmPortalServiceImpl by inject<PortalWeb>()
-    private val setting by inject<Setting>(BACKEND2_SETTING)
+    private val globalBackend2Manager by inject<GlobalBackend2Manager>()
 
     override suspend fun testAll() {
         with(cmPortalServiceImpl) {
@@ -24,7 +23,7 @@ class PortalServiceCase : ServiceCase {
             result.logResponse(TAG)
             getActivityNowInfo(guessBullBearCommKey)
                 .logResponse(TAG)
-            getMemberPerformance(guessBullBearCommKey, setting.identityToken.getMemberGuid())
+            getMemberPerformance(guessBullBearCommKey, globalBackend2Manager.getIdentityToken().getMemberGuid())
                 .logResponse(TAG)
             getRanking(guessBullBearCommKey, 30, 0)
                 .logResponse(TAG)
@@ -32,7 +31,7 @@ class PortalServiceCase : ServiceCase {
                 guessBullBearCommKey,
                 30,
                 0,
-                setting.identityToken.getMemberGuid()
+                globalBackend2Manager.getIdentityToken().getMemberGuid()
             )
                 .logResponse(TAG)
             askMemberForecastStatus(guessBullBearCommKey)

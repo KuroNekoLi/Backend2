@@ -5,8 +5,7 @@ import com.cmoney.backend2.additioninformationrevisit.service.AdditionalInformat
 import com.cmoney.backend2.additioninformationrevisit.service.ServicePath
 import com.cmoney.backend2.additioninformationrevisit.service.api.request.ProcessStep
 import com.cmoney.backend2.base.di.BACKEND2_GSON
-import com.cmoney.backend2.base.di.BACKEND2_SETTING
-import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.sample.extension.logResponse
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
@@ -27,7 +26,7 @@ class AdditionalInformationRevisitTestCase(hasSignal: Boolean) : ServiceCase {
         }
     }
     private val gson by inject<Gson>(BACKEND2_GSON)
-    private val setting by inject<Setting>(BACKEND2_SETTING)
+    private val globalBackend2Manager by inject<GlobalBackend2Manager>()
     private val servicePath = if (hasSignal) {
         ServicePath().copy(signal = "AdditionInformationRevisit_V2")
     } else {
@@ -44,7 +43,7 @@ class AdditionalInformationRevisitTestCase(hasSignal: Boolean) : ServiceCase {
 
     private suspend fun test() {
         web.getAll(
-            domain = setting.domainUrl,
+            domain = globalBackend2Manager.getGlobalDomainUrl(),
             serviceParam = servicePath.all,
             columns = listOf("標的", "商品名稱"),
             typeName = "StockCommodity",
@@ -53,7 +52,7 @@ class AdditionalInformationRevisitTestCase(hasSignal: Boolean) : ServiceCase {
             .logResponse(TAG)
         val commKeys = listOf("2330", "0050")
         web.getTarget(
-            domain = setting.domainUrl,
+            domain = globalBackend2Manager.getGlobalDomainUrl(),
             serviceParam = servicePath.target,
             typeName = "StockCalculation",
             columns = listOf("傳輸序號", "標的", "即時成交價"),
@@ -63,7 +62,7 @@ class AdditionalInformationRevisitTestCase(hasSignal: Boolean) : ServiceCase {
         )
             .logResponse(TAG)
         web.getMultiple(
-            domain = setting.domainUrl,
+            domain = globalBackend2Manager.getGlobalDomainUrl(),
             serviceParam = servicePath.multiple,
             typeName = "CandlestickChartTick<StockCommodity,StockTick>",
             columns = listOf("傳輸序號", "標的", "收盤價"),
@@ -73,7 +72,7 @@ class AdditionalInformationRevisitTestCase(hasSignal: Boolean) : ServiceCase {
         )
             .logResponse(TAG)
         web.getOtherQuery(
-            domain = setting.domainUrl,
+            domain = globalBackend2Manager.getGlobalDomainUrl(),
             serviceParam = servicePath.otherQuery,
             requestType = "SectionTransactionDetailsRequest<StockTick>",
             responseType = "IEnumerable<StockTick>",
@@ -89,7 +88,7 @@ class AdditionalInformationRevisitTestCase(hasSignal: Boolean) : ServiceCase {
         )
             .logResponse(TAG)
         web.getSignal(
-            domain = setting.domainUrl,
+            domain = globalBackend2Manager.getGlobalDomainUrl(),
             serviceParam = servicePath.signal,
             channels = listOf(
                 // 台股上市櫃(不含ETF)
@@ -103,7 +102,7 @@ class AdditionalInformationRevisitTestCase(hasSignal: Boolean) : ServiceCase {
 
     private suspend fun testHasProcessStep() {
         web.getAll(
-            domain = setting.domainUrl,
+            domain = globalBackend2Manager.getGlobalDomainUrl(),
             serviceParam = servicePath.all,
             columns = listOf("標的", "商品名稱"),
             typeName = "StockCommodity",
@@ -121,7 +120,7 @@ class AdditionalInformationRevisitTestCase(hasSignal: Boolean) : ServiceCase {
             .logResponse(TAG)
         val commKeys = listOf("2330", "0050", "2344", "3008")
         web.getTarget(
-            domain = setting.domainUrl,
+            domain = globalBackend2Manager.getGlobalDomainUrl(),
             serviceParam = servicePath.target,
             typeName = "StockCalculation",
             columns = listOf("傳輸序號", "標的", "即時成交價"),
@@ -140,7 +139,7 @@ class AdditionalInformationRevisitTestCase(hasSignal: Boolean) : ServiceCase {
         )
             .logResponse(TAG)
         web.getMultiple(
-            domain = setting.domainUrl,
+            domain = globalBackend2Manager.getGlobalDomainUrl(),
             serviceParam = servicePath.multiple,
             typeName = "CandlestickChartTick<StockCommodity,StockTick>",
             columns = listOf("傳輸序號", "標的", "收盤價"),
@@ -159,7 +158,7 @@ class AdditionalInformationRevisitTestCase(hasSignal: Boolean) : ServiceCase {
         )
             .logResponse(TAG)
         web.getOtherQuery(
-            domain = setting.domainUrl,
+            domain = globalBackend2Manager.getGlobalDomainUrl(),
             serviceParam = servicePath.otherQuery,
             requestType = "SectionTransactionDetailsRequest<StockTick>",
             responseType = "IEnumerable<StockTick>",
