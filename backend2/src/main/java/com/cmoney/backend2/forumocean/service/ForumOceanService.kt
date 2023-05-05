@@ -10,6 +10,7 @@ import com.cmoney.backend2.forumocean.service.api.article.getbanstate.GetBanStat
 import com.cmoney.backend2.forumocean.service.api.article.update.UpdateArticleRequestBody
 import com.cmoney.backend2.forumocean.service.api.channel.getchannelsarticlebyweight.GetChannelsArticleByWeightRequestBody
 import com.cmoney.backend2.forumocean.service.api.channel.getmemberstatistics.GetMemberStatisticsResponseBody
+import com.cmoney.backend2.forumocean.service.api.chatroom.GetUncheckChatRoomCountResponse
 import com.cmoney.backend2.forumocean.service.api.columnist.Columnist
 import com.cmoney.backend2.forumocean.service.api.columnist.GetColumnistVipGroupResponse
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentRequestBody
@@ -29,6 +30,7 @@ import com.cmoney.backend2.forumocean.service.api.group.v2.Board
 import com.cmoney.backend2.forumocean.service.api.group.v2.BoardManipulation
 import com.cmoney.backend2.forumocean.service.api.group.v2.BoardSingle
 import com.cmoney.backend2.forumocean.service.api.group.v2.Group
+import com.cmoney.backend2.forumocean.service.api.group.v2.GroupBoardPushSettingRequestBody
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupManipulation
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupMember2
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupPushSetting
@@ -59,6 +61,8 @@ import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
 import com.cmoney.backend2.forumocean.service.api.support.SearchMembersResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetAllChatRoomResponse
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetGroupBoardArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.PromotedArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations.GetRecommendationResponse
@@ -1234,6 +1238,7 @@ interface ForumOceanService {
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Path("groupId") groupId: Long,
+        @Query("isChatRoom") isChatRoom: Boolean,
         @Body body: BoardManipulation
     ): Response<InsertedId>
 
@@ -1461,6 +1466,20 @@ interface ForumOceanService {
     ): Response<CreateArticleResponseBody>
 
     /**
+     * 取得指定看板文章
+     */
+    @RecordApi
+    @GET("{path}/api/GroupArticle/Board/{boardId}")
+    @Headers("X-Version: 2.0")
+    suspend fun getBoardArticles(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("boardId") boardId: Long,
+        @Query("startWeight") startWeight: Long?, // Optional.
+        @Query("fetch") fetch: Int
+    ): Response<GetGroupBoardArticlesResponse>
+
+    /**
      * 刪除社團文章
      */
     @RecordApi
@@ -1488,6 +1507,18 @@ interface ForumOceanService {
     ): Response<Void>
 
     /**
+     * 聊天室: 收回自己的訊息
+     */
+    @RecordApi
+    @PUT("{path}/api/GroupArticle/{articleId}/Unsend")
+    @Headers("X-Version: 2.0")
+    suspend fun unsendArticle(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("articleId") articleId: Long,
+    ): Response<Void>
+
+    /**
      * 取得用戶可以進入的所有看板 id
      */
     @RecordApi
@@ -1504,6 +1535,7 @@ interface ForumOceanService {
     @RecordApi
     @GET("{path}/api/GroupNotification/PushSetting/Group/{groupId}")
     @Headers("X-Version: 2.0")
+    @Deprecated("推播層級已由社團改至看板，請使用getGroupBoardPushSetting")
     suspend fun getGroupPushSetting(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
@@ -1516,10 +1548,36 @@ interface ForumOceanService {
     @RecordApi
     @PUT("{path}/api/GroupNotification/PushSetting")
     @Headers("X-Version: 2.0")
+    @Deprecated("推播層級已由社團改至看板，請使用setGroupBoardPushSetting")
     suspend fun setGroupPushSetting(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
         @Body body: GroupPushSettingRequest
+    ): Response<Void>
+
+    /**
+     * 取得會員在社團看板的推播設定
+     */
+    @RecordApi
+    @GET("{path}/api/GroupNotification/Board/{boardId}/PushSetting")
+    @Headers("X-Version: 2.0")
+    suspend fun getGroupBoardPushSetting(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("boardId") boardId: Long
+    ): Response<GroupPushSetting>
+
+    /**
+     * 設定會員在社團看板的推播
+     */
+    @RecordApi
+    @PUT("{path}/api/GroupNotification/Board/{boardId}/PushSetting")
+    @Headers("X-Version: 2.0")
+    suspend fun setGroupBoardPushSetting(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Path("boardId") boardId: Long,
+        @Body body: GroupBoardPushSettingRequestBody
     ): Response<Void>
 
     /**
@@ -1690,6 +1748,39 @@ interface ForumOceanService {
     ): Response<GetPromotedArticlesResponse>
 
     /**
+     * 取得聊天室列表
+     */
+    @RecordApi
+    @GET("{path}/api/Group/Chatroom/All")
+    @Headers("X-Version: 2.0")
+    suspend fun getAllChatRoom(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String
+    ): Response<List<GetAllChatRoomResponse>>
+
+    /**
+     * 取得使用者未檢查的聊天室看板數
+     */
+    @RecordApi
+    @GET("{path}/api/Group/Chatroom/UncheckChatroomCount")
+    @Headers("X-Version: 2.0")
+    suspend fun getUncheckChatRoomCount(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String
+    ): Response<GetUncheckChatRoomCountResponse>
+
+    /**
+     * 重設使用者未檢查的聊天室看板數
+     */
+    @RecordApi
+    @PUT("{path}/api/Group/Chatroom/UncheckChatroomCount")
+    @Headers("X-Version: 2.0")
+    suspend fun resetUncheckChatRoomCount(
+        @Path("path") path: String,
+        @Header("Authorization") authorization: String
+    ): Response<Void>
+
+    /**
      * 釘選社團看板文章
      */
     @RecordApi
@@ -1725,3 +1816,4 @@ interface ForumOceanService {
         @Path("boardId") boardId: Long
     ): Response<GetSpaceBoardPinArticlesResponseBody>
 }
+

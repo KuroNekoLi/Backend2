@@ -1,19 +1,19 @@
-package com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted
+package com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat
 
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleContentV2
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
 import com.google.gson.annotations.SerializedName
 
 /**
- * Same as [ArticleResponseBodyV2] with additional field: [promotedArticleTitle].
+ * Same as [ArticleResponseBodyV2] with additional field: [unsend].
  */
-data class PromotedArticleResponseBody(
+data class GroupArticlesResponseBody(
     @SerializedName("id")
     val id: String?,
     @SerializedName("creatorId")
     val creatorId: Long?,
-    @SerializedName("promotedArticleTitle")
-    val promotedArticleTitle: String?,
+    @SerializedName("unsend")
+    val unsend: Boolean?,
     @SerializedName("content")
     val articleContent: ArticleContentV2?,
     @SerializedName("createTime")

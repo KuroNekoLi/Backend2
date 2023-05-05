@@ -9,6 +9,7 @@ import com.cmoney.backend2.forumocean.service.api.article.getbanstate.GetBanStat
 import com.cmoney.backend2.forumocean.service.api.article.update.IUpdateArticleHelper
 import com.cmoney.backend2.forumocean.service.api.channel.channelname.IChannelNameBuilder
 import com.cmoney.backend2.forumocean.service.api.channel.getmemberstatistics.GetMemberStatisticsResponseBody
+import com.cmoney.backend2.forumocean.service.api.chatroom.GetUncheckChatRoomCountResponse
 import com.cmoney.backend2.forumocean.service.api.columnist.GetColumnistVipGroupResponse
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBodyV2
@@ -54,6 +55,8 @@ import com.cmoney.backend2.forumocean.service.api.variable.request.ReactionType
 import com.cmoney.backend2.forumocean.service.api.variable.request.mediatype.MediaType
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetAllChatRoomResponse
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetGroupBoardArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.PromotedArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations.GetRecommendationResponse
@@ -1344,7 +1347,11 @@ interface ForumOceanWeb {
      * GroupV2
      * @return Id of inserted board
      */
-    suspend fun createGroupBoard(groupId: Long, board: BoardManipulation): Result<Long>
+    suspend fun createGroupBoard(
+        groupId: Long,
+        isChatRoom: Boolean,
+        board: BoardManipulation
+    ): Result<Long>
 
     /**
      * 修改看板
@@ -1509,12 +1516,24 @@ interface ForumOceanWeb {
     /**
      * 取得社團推播
      */
+    @Deprecated("推播層級已由社團改至看板，請使用getGroupBoardPushSetting")
     suspend fun getGroupPushSetting(groupId: Long): Result<PushType>
 
     /**
      * 設定社團推播
      */
+    @Deprecated("推播層級已由社團改至看板，請使用setGroupBoardPushSetting")
     suspend fun setGroupPushSetting(groupId: Long, pushType: PushType): Result<Unit>
+
+    /**
+     * 取得社團推播
+     */
+    suspend fun getGroupBoardPushSetting(boardId: Long): Result<PushType>
+
+    /**
+     * 設定社團推播
+     */
+    suspend fun setGroupBoardPushSetting(boardId: Long, pushType: PushType): Result<Unit>
 
     /**
      * 取得會員的被評價資訊統計
@@ -1538,6 +1557,12 @@ interface ForumOceanWeb {
         fetch: Int,
         sortType: SortType
     ): Result<List<OthersRatingComment>>
+
+    suspend fun getBoardArticles(
+        boardId: Long,
+        startWeight: Long?,
+        fetch: Int
+    ): Result<GetGroupBoardArticlesResponse>
 
     /**
      * 滿分為5, 評論字數不可多於200
@@ -1579,6 +1604,28 @@ interface ForumOceanWeb {
         startWeight: Long,
         fetch: Int
     ): Result<GetPromotedArticlesResponse>
+
+    /**
+     * 聊天室: 收回自己的訊息
+     */
+    suspend fun unsendArticle(
+        articleId: Long
+    ): Result<Unit>
+
+    /**
+     * 取得聊天室列表
+     */
+    suspend fun getAllChatRoom(): Result<List<GetAllChatRoomResponse>>
+
+    /**
+     * 取得使用者未檢查的聊天室看板數
+     */
+    suspend fun getUncheckChatRoomCount(): Result<GetUncheckChatRoomCountResponse>
+
+    /**
+     * 重設使用者未檢查的聊天室看板數
+     */
+    suspend fun resetUncheckChatRoomCount(): Result<Unit>
 
     /**
      * 釘選社團看板文章
