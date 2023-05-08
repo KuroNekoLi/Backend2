@@ -11,10 +11,7 @@ import com.cmoney.backend2.cellphone.service.api.register.CellphoneRegisterWithE
 import com.cmoney.backend2.cellphone.service.api.unbindcellphone.UnbindCellphoneResponseBodyWithError
 import com.cmoney.backend2.cellphone.service.api.updatepassword.UpdatePasswordResponseBodyWithError
 import retrofit2.Response
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.Header
-import retrofit2.http.POST
+import retrofit2.http.*
 
 /**
  * MobileService-手機註冊登入
@@ -30,11 +27,12 @@ interface CellphoneService {
      */
     @RecordApi(cmoneyAction = "getregisterverifycode")
     @FormUrlEncoded
-    @POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
+    @POST
     suspend fun getVerifyCode(
+        @Url url: String,
         @Field("Action") action: String = "getregisterverifycode",
         @Field("CountryCode") countryCode: String,
-        @Field("Cellphone") cellphoneNumber: String
+        @Field("Cellphone") cellphoneNumber: String,
     ): Response<CellphoneGetVerifyCodeWithError>
 
     /**
@@ -47,8 +45,9 @@ interface CellphoneService {
      */
     @RecordApi(cmoneyAction = "checkverifycode")
     @FormUrlEncoded
-    @POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
+    @POST
     suspend fun checkVerifyCode(
+        @Url url: String,
         @Field("Action") action: String = "checkverifycode",
         @Field("CountryCode") countryCode: String,
         @Field("Cellphone") cellphoneNumber: String,
@@ -63,12 +62,13 @@ interface CellphoneService {
      * @param cellphoneNumber 註冊的手機號碼(09開頭或9開頭都可以)
      * @param password 註冊的密碼(MD5過)
      * @param platform 平台
-     * @return Response<CellphoneRegisterWithError>
+     *
      */
     @RecordApi(cmoneyAction = "phoneregistermember")
     @FormUrlEncoded
-    @POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
+    @POST
     suspend fun registerByCellphone(
+        @Url url: String,
         @Header("x-cmapi-trace-context") xApiLog: String,
         @Field("Action") action: String = "phoneregistermember",
         @Field("CountryCode") countryCode: String,
@@ -86,8 +86,9 @@ interface CellphoneService {
      */
     @RecordApi(cmoneyAction = "forgetpasswordbycellphone")
     @FormUrlEncoded
-    @POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
+    @POST
     suspend fun forgotPasswordForCellphone(
+        @Url url: String,
         @Field("Action") action: String = "forgetpasswordbycellphone",
         @Field("CountryCode") countryCode: String,
         @Field("Cellphone") cellphoneNumber: String
@@ -104,8 +105,9 @@ interface CellphoneService {
      */
     @RecordApi(cmoneyAction = "updatepassword")
     @FormUrlEncoded
-    @POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
+    @POST
     suspend fun updatePassword(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("Action") action: String = "updatepassword",
         @Field("Guid") guid: String,
@@ -123,8 +125,9 @@ interface CellphoneService {
      */
     @RecordApi(cmoneyAction = "getaccountinfo")
     @FormUrlEncoded
-    @POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
+    @POST
     suspend fun getAccountInfo(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("Action") action: String = "getaccountinfo",
         @Field("Guid") guid: String,
@@ -142,8 +145,9 @@ interface CellphoneService {
      */
     @RecordApi(cmoneyAction = "bindcellphone")
     @FormUrlEncoded
-    @POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
+    @POST
     suspend fun bindCellphone(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("Action") action: String = "bindcellphone",
         @Field("Guid") guid: String,
@@ -164,8 +168,9 @@ interface CellphoneService {
      */
     @RecordApi(cmoneyAction = "checkcellphonebindingverifycode")
     @FormUrlEncoded
-    @POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
+    @POST
     suspend fun checkCellphoneBindingVerifyCode(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("Action") action: String = "checkcellphonebindingverifycode",
         @Field("Guid") guid: String,
@@ -184,8 +189,9 @@ interface CellphoneService {
      */
     @RecordApi(cmoneyAction = "unbindcellphone")
     @FormUrlEncoded
-    @POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
+    @POST
     suspend fun unbindCellphone(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("Action") action: String = "unbindcellphone",
         @Field("Guid") guid: String,
