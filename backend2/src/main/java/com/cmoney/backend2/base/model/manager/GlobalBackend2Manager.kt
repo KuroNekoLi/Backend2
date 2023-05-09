@@ -17,6 +17,8 @@ import com.cmoney.backend2.cellphone.model.CellphoneSettingAdapter
 import com.cmoney.backend2.cellphone.model.CellphoneSettingAdapterImpl
 import com.cmoney.backend2.centralizedimage.model.CentralizedImageSettingAdapter
 import com.cmoney.backend2.centralizedimage.model.CentralizedImageSettingAdapterImpl
+import com.cmoney.backend2.chipk.model.ChipKSettingAdapter
+import com.cmoney.backend2.chipk.model.ChipKSettingAdapterImpl
 import com.cmoney.backend2.virtualtrading2.model.settingadapter.VirtualTrading2SettingAdapter
 import com.cmoney.backend2.virtualtrading2.model.settingadapter.VirtualTrading2SettingAdapterImpl
 import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdapter
@@ -46,6 +48,7 @@ class GlobalBackend2Manager(
     private val billingSettingAdapter: BillingSettingAdapter,
     private val cellphoneSettingAdapter: CellphoneSettingAdapter,
     private val centralizedImageSettingAdapter: CentralizedImageSettingAdapter,
+    private val chipKSettingAdapter: ChipKSettingAdapter,
     private val virtualTradeSettingAdapter: VirtualTradeSettingAdapter,
     private val virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter,
 ) {
@@ -58,6 +61,7 @@ class GlobalBackend2Manager(
         brokerDataTransmissionSettingAdapter = builder.brokerDataTransmissionSettingAdapter,
         cellphoneSettingAdapter = builder.cellphoneSettingAdapter,
         centralizedImageSettingAdapter = builder.centralizedImageSettingAdapter,
+        chipKSettingAdapter = builder.chipKSettingAdapter,
         virtualTradeSettingAdapter = builder.virtualTradeSettingAdapter,
         virtualTrading2SettingAdapter = builder.virtualTrading2SettingAdapter
     )
@@ -238,6 +242,15 @@ class GlobalBackend2Manager(
     }
 
     /**
+     * 取得籌碼K服務設定轉接器
+     *
+     * @return 籌碼K服務設定轉接器
+     */
+    fun getChipKSettingAdapter(): ChipKSettingAdapter {
+        return chipKSettingAdapter
+    }
+
+    /**
      * 取得虛擬下單V1設定轉接器
      */
     fun getVirtualTradeSettingAdapter(): VirtualTradeSettingAdapter {
@@ -300,6 +313,8 @@ class GlobalBackend2Manager(
             CellphoneSettingAdapterImpl(backendSetting)
         var centralizedImageSettingAdapter: CentralizedImageSettingAdapter =
             CentralizedImageSettingAdapterImpl(backendSetting)
+        val chipKSettingAdapter: ChipKSettingAdapter =
+            ChipKSettingAdapterImpl(backendSetting)
         var virtualTradeSettingAdapter: VirtualTradeSettingAdapter =
             VirtualTradeSettingAdapterImpl(backendSetting)
         var virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter =
