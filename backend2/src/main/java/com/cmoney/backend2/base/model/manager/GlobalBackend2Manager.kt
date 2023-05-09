@@ -17,6 +17,8 @@ import com.cmoney.backend2.cellphone.model.CellphoneSettingAdapter
 import com.cmoney.backend2.cellphone.model.CellphoneSettingAdapterImpl
 import com.cmoney.backend2.centralizedimage.model.CentralizedImageSettingAdapter
 import com.cmoney.backend2.centralizedimage.model.CentralizedImageSettingAdapterImpl
+import com.cmoney.backend2.chat.model.ChatRoomSettingAdapter
+import com.cmoney.backend2.chat.model.ChatRoomSettingAdapterImpl
 import com.cmoney.backend2.virtualtrading2.model.settingadapter.VirtualTrading2SettingAdapter
 import com.cmoney.backend2.virtualtrading2.model.settingadapter.VirtualTrading2SettingAdapterImpl
 import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdapter
@@ -46,6 +48,7 @@ class GlobalBackend2Manager(
     private val billingSettingAdapter: BillingSettingAdapter,
     private val cellphoneSettingAdapter: CellphoneSettingAdapter,
     private val centralizedImageSettingAdapter: CentralizedImageSettingAdapter,
+    private val chatRoomSettingAdapter: ChatRoomSettingAdapter,
     private val virtualTradeSettingAdapter: VirtualTradeSettingAdapter,
     private val virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter,
 ) {
@@ -58,6 +61,7 @@ class GlobalBackend2Manager(
         brokerDataTransmissionSettingAdapter = builder.brokerDataTransmissionSettingAdapter,
         cellphoneSettingAdapter = builder.cellphoneSettingAdapter,
         centralizedImageSettingAdapter = builder.centralizedImageSettingAdapter,
+        chatRoomSettingAdapter = builder.chatRoomSettingAdapter,
         virtualTradeSettingAdapter = builder.virtualTradeSettingAdapter,
         virtualTrading2SettingAdapter = builder.virtualTrading2SettingAdapter
     )
@@ -238,6 +242,13 @@ class GlobalBackend2Manager(
     }
 
     /**
+     * 取得聊天室設定轉接器
+     */
+    fun getChatRoomSettingAdapter(): ChatRoomSettingAdapter {
+        return chatRoomSettingAdapter
+    }
+
+    /**
      * 取得虛擬下單V1設定轉接器
      */
     fun getVirtualTradeSettingAdapter(): VirtualTradeSettingAdapter {
@@ -300,6 +311,8 @@ class GlobalBackend2Manager(
             CellphoneSettingAdapterImpl(backendSetting)
         var centralizedImageSettingAdapter: CentralizedImageSettingAdapter =
             CentralizedImageSettingAdapterImpl(backendSetting)
+        var chatRoomSettingAdapter: ChatRoomSettingAdapter =
+            ChatRoomSettingAdapterImpl()
         var virtualTradeSettingAdapter: VirtualTradeSettingAdapter =
             VirtualTradeSettingAdapterImpl(backendSetting)
         var virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter =
