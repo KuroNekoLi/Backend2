@@ -15,6 +15,8 @@ import com.cmoney.backend2.brokerdatatransmission.model.BrokerDataTransmissionSe
 import com.cmoney.backend2.brokerdatatransmission.model.BrokerDataTransmissionSettingAdapterImpl
 import com.cmoney.backend2.cellphone.model.CellphoneSettingAdapter
 import com.cmoney.backend2.cellphone.model.CellphoneSettingAdapterImpl
+import com.cmoney.backend2.centralizedimage.model.CentralizedImageSettingAdapter
+import com.cmoney.backend2.centralizedimage.model.CentralizedImageSettingAdapterImpl
 import com.cmoney.backend2.virtualtrading2.model.settingadapter.VirtualTrading2SettingAdapter
 import com.cmoney.backend2.virtualtrading2.model.settingadapter.VirtualTrading2SettingAdapterImpl
 import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdapter
@@ -30,6 +32,7 @@ import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdap
  * @property billingSettingAdapter Billing設定轉接器
  * @property brokerDataTransmissionSettingAdapter 券商庫存設定轉接器
  * @property cellphoneSettingAdapter 電話號碼設定轉接器
+ * @property centralizedImageSettingAdapter 中央圖片設定轉接器
  * @property virtualTradeSettingAdapter 虛擬下單V1轉接器
  * @property virtualTrading2SettingAdapter 虛擬下單V2轉接器
  *
@@ -42,6 +45,7 @@ class GlobalBackend2Manager(
     private val brokerDataTransmissionSettingAdapter: BrokerDataTransmissionSettingAdapter,
     private val billingSettingAdapter: BillingSettingAdapter,
     private val cellphoneSettingAdapter: CellphoneSettingAdapter,
+    private val centralizedImageSettingAdapter: CentralizedImageSettingAdapter,
     private val virtualTradeSettingAdapter: VirtualTradeSettingAdapter,
     private val virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter,
 ) {
@@ -53,6 +57,7 @@ class GlobalBackend2Manager(
         billingSettingAdapter = builder.billingSettingAdapter,
         brokerDataTransmissionSettingAdapter = builder.brokerDataTransmissionSettingAdapter,
         cellphoneSettingAdapter = builder.cellphoneSettingAdapter,
+        centralizedImageSettingAdapter = builder.centralizedImageSettingAdapter,
         virtualTradeSettingAdapter = builder.virtualTradeSettingAdapter,
         virtualTrading2SettingAdapter = builder.virtualTrading2SettingAdapter
     )
@@ -226,6 +231,13 @@ class GlobalBackend2Manager(
     }
 
     /**
+     * 取得中央圖片設定轉接器
+     */
+    fun getCentralizedImageSettingAdapter(): CentralizedImageSettingAdapter {
+        return centralizedImageSettingAdapter
+    }
+
+    /**
      * 取得虛擬下單V1設定轉接器
      */
     fun getVirtualTradeSettingAdapter(): VirtualTradeSettingAdapter {
@@ -286,6 +298,8 @@ class GlobalBackend2Manager(
             BrokerDataTransmissionSettingAdapterImpl(backendSetting)
         var cellphoneSettingAdapter: CellphoneSettingAdapter =
             CellphoneSettingAdapterImpl(backendSetting)
+        var centralizedImageSettingAdapter: CentralizedImageSettingAdapter =
+            CentralizedImageSettingAdapterImpl(backendSetting)
         var virtualTradeSettingAdapter: VirtualTradeSettingAdapter =
             VirtualTradeSettingAdapterImpl(backendSetting)
         var virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter =
