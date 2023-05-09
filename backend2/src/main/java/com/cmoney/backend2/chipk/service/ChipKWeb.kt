@@ -1,5 +1,6 @@
 package com.cmoney.backend2.chipk.service
 
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.base.model.response.dtno.DtnoData
 import com.cmoney.backend2.chipk.service.api.futuredaytradedtnodata.FutureDayTradeDtnoData
 import com.cmoney.backend2.chipk.service.api.getOfficialStockPickData.OfficialStockInfo
@@ -7,6 +8,8 @@ import com.cmoney.backend2.chipk.service.api.internationalkchart.ProductType
 import com.cmoney.backend2.chipk.service.api.internationalkchart.TickInfoSet
 
 interface ChipKWeb {
+
+    val manager: GlobalBackend2Manager
 
     /**
      * 服務6-2. 籌碼K統一要求Dtno的方法
@@ -16,7 +19,9 @@ interface ChipKWeb {
      */
     suspend fun getData(
         commKey: String,
-        type: Int
+        type: Int,
+        domain: String = manager.getChipKSettingAdapter().getDomain(),
+        url: String = "${domain}chipk/ashx/GetDtnoData.ashx"
     ): Result<DtnoData>
 
     /**
@@ -25,7 +30,9 @@ interface ChipKWeb {
      * @return 請使用DtnoData.toListOfSomething 轉換成自定義的物件
      */
     suspend fun getIndexForeignInvestment(
-        tickCount: Int
+        tickCount: Int,
+        domain: String = manager.getChipKSettingAdapter().getDomain(),
+        url: String = "${domain}chipk/ashx/GetDtnoData.ashx"
     ): Result<DtnoData>
 
     /**
@@ -34,7 +41,9 @@ interface ChipKWeb {
      * @return 請使用DtnoData.toListOfSomething 轉換成自定義的物件
      */
     suspend fun getIndexMain(
-        tickCount: Int
+        tickCount: Int,
+        domain: String = manager.getChipKSettingAdapter().getDomain(),
+        url: String = "${domain}chipk/ashx/GetDtnoData.ashx"
     ): Result<DtnoData>
 
     /**
@@ -43,7 +52,9 @@ interface ChipKWeb {
      * @return 請使用DtnoData.toListOfSomething 轉換成自定義的物件
      */
     suspend fun getIndexFunded(
-        tickCount: Int
+        tickCount: Int,
+        domain: String = manager.getChipKSettingAdapter().getDomain(),
+        url: String = "${domain}chipk/ashx/GetDtnoData.ashx"
     ): Result<DtnoData>
 
     /**
@@ -54,14 +65,19 @@ interface ChipKWeb {
      */
     suspend fun getInternationalKChart(
         id: String,
-        productType: ProductType
+        productType: ProductType,
+        domain: String = manager.getChipKSettingAdapter().getDomain(),
+        url: String = "${domain}chipk/ashx/GetDtnoData.ashx"
     ): Result<TickInfoSet>
 
     /**
      * 服務6-10. 取得加權指數融資維持率
      * @return 請使用DtnoData.toListOfSomething 轉換成自定義的物件
      */
-    suspend fun getCreditRate(): Result<DtnoData>
+    suspend fun getCreditRate(
+        domain: String = manager.getChipKSettingAdapter().getDomain(),
+        url: String = "${domain}chipk/ashx/GetDtnoData.ashx"
+    ): Result<DtnoData>
 
     /**
      * 服務6-11. 取得指數技術圖
@@ -71,7 +87,9 @@ interface ChipKWeb {
      */
     suspend fun getIndexCalculateRate(
         commKey: String,
-        timeRange: Int
+        timeRange: Int,
+        domain: String = manager.getChipKSettingAdapter().getDomain(),
+        url: String = "${domain}chipk/ashx/GetDtnoData.ashx"
     ): Result<DtnoData>
 
     /**
@@ -82,7 +100,9 @@ interface ChipKWeb {
      */
     suspend fun getIndexKData(
         commKey: String,
-        timeRange: Int
+        timeRange: Int,
+        domain: String = manager.getChipKSettingAdapter().getDomain(),
+        url: String = "${domain}chipk/ashx/GetDtnoData.ashx"
     ): Result<DtnoData>
 
     /**
@@ -92,7 +112,9 @@ interface ChipKWeb {
      */
     suspend fun getChipKData(
         fundId: Int,
-        params: String
+        params: String,
+        domain: String = manager.getChipKSettingAdapter().getDomain(),
+        url: String = "${domain}chipk/ashx/ChipK.ashx"
     ): Result<DtnoData>
 
     /**
@@ -100,14 +122,18 @@ interface ChipKWeb {
      */
     suspend fun getOfficialStockPickData(
         index: Int,
-        pageType: Int
+        pageType: Int,
+        domain: String = manager.getChipKSettingAdapter().getDomain(),
+        url: String = "${domain}chipk/Ashx/GetDtnoData.ashx"
     ): Result<OfficialStockInfo>
 
     /**
      * 取得官方標題
      */
     suspend fun getOfficialStockPickTitle(
-        type: Int
+        type: Int,
+        domain: String = manager.getChipKSettingAdapter().getDomain(),
+        url: String = "${domain}chipk/Ashx/GetDtnoData.ashx"
     ): Result<List<String>>
 
     /**
@@ -115,5 +141,8 @@ interface ChipKWeb {
      * 服務 - 官股、融資
      * 取得盤後官股、融資變動以及三大法人買賣超
      */
-    suspend fun getFutureDayTradeIndexAnalysis(): Result<FutureDayTradeDtnoData>
+    suspend fun getFutureDayTradeIndexAnalysis(
+        domain: String = manager.getChipKSettingAdapter().getDomain(),
+        url: String = "${domain}chipk/ashx/GetDtnoData.ashx"
+    ): Result<FutureDayTradeDtnoData>
 }
