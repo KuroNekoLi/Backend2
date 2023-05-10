@@ -1,7 +1,6 @@
 package com.cmoney.backend2.commonuse.service
 
-import com.cmoney.backend2.TestSetting
-import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.commonuse.service.api.historyevent.HistoryEvents
 import com.cmoney.backend2.commonuse.service.api.investmentpreference.InvestmentPreference
 import com.cmoney.backend2.commonuse.service.api.investmentpreference.InvestmentPreferenceType
@@ -13,7 +12,9 @@ import com.google.gson.JsonParser
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
+import io.mockk.slot
 import io.mockk.unmockkAll
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import okhttp3.ResponseBody.Companion.toResponseBody
@@ -25,6 +26,7 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import retrofit2.Response
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
 class CommonUseWebImplTest {
 
@@ -35,20 +37,23 @@ class CommonUseWebImplTest {
     @MockK
     private lateinit var service: CommonUseService
     private val gson = GsonBuilder().serializeNulls().setLenient().setPrettyPrinting().create()
-    private lateinit var setting: Setting
     private lateinit var web: CommonUseWeb
+
+    @MockK(relaxed = true)
+    private lateinit var manager: GlobalBackend2Manager
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        setting = TestSetting()
         web = CommonUseWebImpl(
-            "",
-            service,
-            setting,
-            gson,
+            manager = manager,
+            commonUseService = service,
+            gson = gson,
             dispatcherProvider = TestDispatcherProvider()
         )
+        coEvery {
+            manager.getCommonUseSettingAdapter().getDomain()
+        } returns EXCEPT_DOMAIN
     }
 
     @After
@@ -57,7 +62,30 @@ class CommonUseWebImplTest {
     }
 
     @Test
-    fun `getRemoteConfigLabel with non null response`() = testScope.runTest {
+    fun `getRemoteConfigLabel_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}commonuse/graphql"
+        val urlSlot = slot<String>()
+        val response = JsonParser.parseString(
+            """
+                {
+                  "data": {
+                    "member": {
+                      "remoteConfigLabel": "A"
+                    }
+                  }
+                }
+            """.trimMargin()
+        )
+        coEvery {
+            service.query(url = capture(urlSlot), authorization = any(), query = any())
+        } returns Response.success(response.asJsonObject)
+
+        web.getRemoteConfigLabel()
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun `getRemoteConfigLabel_success with non null response`() = testScope.runTest {
         val response = JsonParser.parseString(
             """
                 {
@@ -79,7 +107,7 @@ class CommonUseWebImplTest {
     }
 
     @Test
-    fun `getRemoteConfigLabel with null response`() = testScope.runTest {
+    fun `getRemoteConfigLabel_success with null response`() = testScope.runTest {
         val response = JsonParser.parseString(
             """
                 {
@@ -92,12 +120,40 @@ class CommonUseWebImplTest {
             """.trimMargin()
         )
         coEvery {
-            service.query(any(), any(), any())
+            service.query(url = any(), authorization = any(), query = any())
         } returns Response.success(response.asJsonObject)
 
         val result = web.getRemoteConfigLabel()
         Truth.assertThat(result.isSuccess).isTrue()
         Truth.assertThat(result.getOrNull()).isEmpty()
+    }
+
+    @Test
+    fun `updateInvestmentPreference_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}commonuse/graphql"
+        val urlSlot = slot<String>()
+        val response = JsonParser.parseString(
+            """
+                {
+                  "data": {
+                    "updateMember": {
+                      "updateInvestmentRiskPreference": [
+                        1,
+                        2,
+                        3
+                      ]
+                    }
+                  }
+                }
+            """.trimMargin()
+        )
+
+        coEvery {
+            service.query(url = capture(urlSlot), authorization = any(), query = any())
+        } returns Response.success(response.asJsonObject)
+
+        web.updateInvestmentPreference(investmentPreferenceType = InvestmentPreferenceType.All)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
     }
 
     @Test
@@ -119,7 +175,7 @@ class CommonUseWebImplTest {
         )
 
         coEvery {
-            service.query(any(), any(), any())
+            service.query(url = any(), authorization = any(), query = any())
         } returns Response.success(response.asJsonObject)
 
         val result =
@@ -131,12 +187,41 @@ class CommonUseWebImplTest {
     @Test
     fun `updateInvestmentPreference failure`() = testScope.runTest {
         coEvery {
-            service.query(any(), any(), any())
+            service.query(url = any(), authorization = any(), query = any())
         } returns Response.error(400, "".toResponseBody())
 
         val result =
             web.updateInvestmentPreference(investmentPreferenceType = InvestmentPreferenceType.All)
         Truth.assertThat(result.isSuccess).isFalse()
+    }
+
+    @Test
+    fun `getInvestmentPreference_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}commonuse/graphql"
+        val urlSlot = slot<String>()
+        val response = JsonParser.parseString(
+            """
+                {
+                  "data": {
+                    "member": {
+                      "investmentRiskPreferences": [
+                        {
+                          "id": 1,
+                          "name": "短線賺價差",
+                          "isChosen": true
+                        }
+                      ]
+                    }
+                  }
+                }
+            """.trimMargin()
+        )
+        coEvery {
+            service.query(url = capture(urlSlot), authorization = any(), query = any())
+        } returns Response.success(response.asJsonObject)
+
+        web.getInvestmentPreferences()
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
     }
 
     @Test
@@ -167,7 +252,7 @@ class CommonUseWebImplTest {
         )
 
         coEvery {
-            service.query(any(), any(), any())
+            service.query(url = any(), authorization = any(), query = any())
         } returns Response.success(response.asJsonObject)
 
         val result = web.getInvestmentPreferences()
@@ -178,11 +263,50 @@ class CommonUseWebImplTest {
     @Test
     fun `gegInvestmentPreference failure`() = testScope.runTest {
         coEvery {
-            service.query(any(), any(), any())
+            service.query(url = any(), authorization = any(), query = any())
         } returns Response.error(400, "".toResponseBody())
 
         val result = web.getInvestmentPreferences()
         Truth.assertThat(result.isSuccess).isFalse()
+    }
+
+    @Test
+    fun `getCommodityHistoryEvent_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}commonuse/graphql"
+        val urlSlot = slot<String>()
+        val response = JsonParser.parseString(
+            """
+                {
+                  "data": {
+                    "notif": {
+                      "majorEvents": {
+                        "edges": [
+                            {
+                                "node": {
+                                  "commKey": "5880",
+                                  "commName": "合庫金",
+                                  "body": "合庫金(5880)因除息，2022年08月04日星期四訂為融券最後回補日，尚餘1個交易日，2022年08月10日星期三開放融券。",
+                                  "link": "https://www.cmoney.tw/app/landing_page/chipk?page=stock&subpage=0&stockid=5880&stockname=合庫金",
+                                  "notifyTime": 1659522320
+                                }
+                            }
+                        ],
+                        "pageInfo": {
+                          "hasNextPage": true,
+                          "endCursor": "1"
+                        }
+                      }
+                    }
+                  }
+                }
+            """.trimMargin()
+        )
+        coEvery {
+            service.query(url = capture(urlSlot), authorization = any(), query = any())
+        } returns Response.success(response.asJsonObject)
+
+        web.getCommodityHistoryEvent(commodityIds = listOf("5880"))
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
     }
 
     @Test
@@ -233,7 +357,7 @@ class CommonUseWebImplTest {
         )
 
         coEvery {
-            service.query(any(), any(), any())
+            service.query(url = any(), authorization = any(), query = any())
         } returns Response.success(response.asJsonObject)
 
         val result = web.getCommodityHistoryEvent(commodityIds = listOf("5880"))
@@ -289,7 +413,7 @@ class CommonUseWebImplTest {
         )
 
         coEvery {
-            service.query(any(), any(), any())
+            service.query(url = any(), authorization = any(), query = any())
         } returns Response.success(response.asJsonObject)
 
         val result = web.getCommodityHistoryEvent(commodityIds = listOf("5880"), endCursor = "8")
@@ -300,10 +424,14 @@ class CommonUseWebImplTest {
     @Test
     fun `getCommodityHistoryEvent failure`() = testScope.runTest {
         coEvery {
-            service.query(any(), any(), any())
+            service.query(url = any(), authorization = any(), query = any())
         } returns Response.error(400, "".toResponseBody())
 
         val result = web.getCommodityHistoryEvent(commodityIds = listOf("5880"))
         Truth.assertThat(result.isSuccess).isFalse()
+    }
+
+    companion object {
+        private const val EXCEPT_DOMAIN = "localhost://8080:80/"
     }
 }

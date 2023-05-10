@@ -29,6 +29,8 @@ import com.cmoney.backend2.crawlsetting.model.CrawlSettingSettingAdapter
 import com.cmoney.backend2.crawlsetting.model.CrawlSettingSettingAdapterImpl
 import com.cmoney.backend2.common.model.CommonSettingAdapter
 import com.cmoney.backend2.common.model.CommonSettingAdapterImpl
+import com.cmoney.backend2.commonuse.model.CommonUseSettingAdapter
+import com.cmoney.backend2.commonuse.model.CommonUseSettingAdapterImpl
 import com.cmoney.backend2.virtualtrading2.model.settingadapter.VirtualTrading2SettingAdapter
 import com.cmoney.backend2.virtualtrading2.model.settingadapter.VirtualTrading2SettingAdapterImpl
 import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdapter
@@ -51,6 +53,7 @@ import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdap
  * @property cmTalkSettingAdapter CMTalk 服務設定轉接器
  * @property crawlSettingSettingAdapter 爬蟲服務設定轉接器
  * @property commonSettingAdapter MobileService通用設定轉接器
+ * @property commonUseSettingAdapter CommonUse服務設定轉接器
  * @property virtualTradeSettingAdapter 虛擬下單V1轉接器
  * @property virtualTrading2SettingAdapter 虛擬下單V2轉接器
  *
@@ -70,6 +73,7 @@ class GlobalBackend2Manager(
     private val cmTalkSettingAdapter: CMTalkSettingAdapter,
     private val crawlSettingSettingAdapter: CrawlSettingSettingAdapter,
     private val commonSettingAdapter: CommonSettingAdapter,
+    private val commonUseSettingAdapter: CommonUseSettingAdapter,
     private val virtualTradeSettingAdapter: VirtualTradeSettingAdapter,
     private val virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter,
 ) {
@@ -88,6 +92,7 @@ class GlobalBackend2Manager(
         cmTalkSettingAdapter = builder.cmTalkSettingAdapter,
         crawlSettingSettingAdapter = builder.crawlSettingSettingAdapter,
         commonSettingAdapter = builder.commonSettingAdapter,
+        commonUseSettingAdapter = builder.commonUseSettingAdapter,
         virtualTradeSettingAdapter = builder.virtualTradeSettingAdapter,
         virtualTrading2SettingAdapter = builder.virtualTrading2SettingAdapter
     )
@@ -318,6 +323,15 @@ class GlobalBackend2Manager(
     }
 
     /**
+     * 取得CommonUse服務設定轉接器
+     *
+     * @return CommonUse服務設定轉接器
+     */
+    fun getCommonUseSettingAdapter(): CommonUseSettingAdapter {
+        return commonUseSettingAdapter
+    }
+
+    /**
      * 取得虛擬下單V1設定轉接器
      */
     fun getVirtualTradeSettingAdapter(): VirtualTradeSettingAdapter {
@@ -392,6 +406,8 @@ class GlobalBackend2Manager(
             CrawlSettingSettingAdapterImpl()
         var commonSettingAdapter: CommonSettingAdapter =
             CommonSettingAdapterImpl(backendSetting)
+        var commonUseSettingAdapter: CommonUseSettingAdapter =
+            CommonUseSettingAdapterImpl(backendSetting)
         var virtualTradeSettingAdapter: VirtualTradeSettingAdapter =
             VirtualTradeSettingAdapterImpl(backendSetting)
         var virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter =
