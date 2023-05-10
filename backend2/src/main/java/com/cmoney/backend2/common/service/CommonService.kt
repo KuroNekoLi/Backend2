@@ -40,8 +40,9 @@ interface CommonService {
      */
     @RecordApi(cmoneyAction = "getconfig")
     @FormUrlEncoded
-    @POST("MobileService/ashx/SystemCheck.ashx")
+    @POST
     suspend fun getConfig(
+        @Url url: String,
         @Field("Action") action: String = "getconfig",
         @Field("Device") device: Int,
         @Field("AppId") appId: Int,
@@ -53,8 +54,9 @@ interface CommonService {
      */
     @RecordApi(cmoneyAction = "forgetpassword")
     @FormUrlEncoded
-    @POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
+    @POST
     suspend fun forgotPasswordForEmail(
+        @Url url: String,
         @Field("Action") action: String = "forgetpassword",
         @Field("Account") account: String
     ): Response<EmailForgotPassword>
@@ -66,8 +68,9 @@ interface CommonService {
      */
     @RecordApi(cmoneyAction = "registeraccount")
     @FormUrlEncoded
-    @POST("/MobileService/ashx/LoginCheck/LoginCheck.ashx")
+    @POST
     suspend fun registerByEmail(
+        @Url url: String,
         @Header("x-cmapi-trace-context") xApiLog: String,
         @Field("Action") action: String = "registeraccount",
         @Field("Account") account: String,
@@ -80,8 +83,9 @@ interface CommonService {
      */
     @RecordApi(cmoneyAction = "getmemberprofile")
     @FormUrlEncoded
-    @POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
+    @POST
     suspend fun getMemberProfile(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("Action") action: String = "getmemberprofile",
         @Field("Guid") guid: String,
@@ -93,8 +97,9 @@ interface CommonService {
      */
     @RecordApi(cmoneyAction = "changenickname")
     @FormUrlEncoded
-    @POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
+    @POST
     suspend fun changeNickname(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("Action") action: String = "changenickname",
         @Field("appid") appId: Int,
@@ -107,8 +112,9 @@ interface CommonService {
      */
     @RecordApi(cmoneyAction = "logout")
     @FormUrlEncoded
-    @POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
+    @POST
     suspend fun logout(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("action") action: String = "logout",
         @Field("appid") appId: Int,
@@ -119,8 +125,9 @@ interface CommonService {
      * 服務12. 更新會員頭像
      */
     @RecordApi
-    @POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
+    @POST
     suspend fun changeUserImage(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body : MultipartBody
     ): Response<ChangeUserImageResponseWithError>
@@ -130,8 +137,9 @@ interface CommonService {
      */
     @RecordApi(cmoneyAction = "loginreward")
     @FormUrlEncoded
-    @POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
+    @POST
     suspend fun loginReward(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("Action") action: String = "loginreward",
         @Field("AppId") appId: Int,
@@ -143,8 +151,9 @@ interface CommonService {
      */
     @RecordApi(cmoneyAction = "hassentloginrewardtoday")
     @FormUrlEncoded
-    @POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
+    @POST
     suspend fun hasSentLoginRewardToday(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("Action") action: String = "hassentloginrewardtoday",
         @Field("AppId") appId: Int,
@@ -156,8 +165,9 @@ interface CommonService {
      */
     @RecordApi(cmoneyAction = "updateisneedpush")
     @FormUrlEncoded
-    @POST("MobileService/ashx/MobilePush.ashx")
+    @POST
     suspend fun updateIsNeedPush(
+        @Url url: String,
         @Header("Authorization")authorization: String,
         @Field("Action") action: String = "updateisneedpush",
         @Field("AppId") appId: Int,
@@ -171,8 +181,9 @@ interface CommonService {
      */
     @RecordApi(cmoneyAction = "starttrialtiming")
     @FormUrlEncoded
-    @POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
+    @POST
     suspend fun startTrial(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("Action") action: String = "starttrialtiming",
         @Field("AppId") appId: Int,
@@ -184,8 +195,9 @@ interface CommonService {
      */
     @RecordApi(cmoneyAction = "pausetrialtiming")
     @FormUrlEncoded
-    @POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
+    @POST
     suspend fun pauseTrial(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("Action") action: String = "pausetrialtiming",
         @Field("AppId") appId: Int,
@@ -199,8 +211,9 @@ interface CommonService {
      */
     @RecordApi(cmoneyAction = "enableserialnum")
     @FormUrlEncoded
-    @POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
+    @POST
     suspend fun invocationSerialNumber(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("action") action: String = "enableserialnum",
         @Field("guid") guid: String,
@@ -213,8 +226,9 @@ interface CommonService {
      */
     @RecordApi(cmoneyAction = "getaccesstoken")
     @FormUrlEncoded
-    @POST("MobileService/ashx/AccessToken.ashx")
+    @POST
     suspend fun getAccessToken(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("action") action: String = "getaccesstoken",
         @Field("guid") guid: String,
@@ -225,8 +239,9 @@ interface CommonService {
      * 服務5. 紀錄AAID或IDFA(紀錄廣告識別碼)
      */
     @RecordApi(cmoneyAction = "adddeviceidentification")
-    @GET("MobileService/ashx/LoginCheck/LoginCheck.ashx")
+    @GET
     suspend fun addDeviceIdentification(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Query("Action") action: String = "adddeviceidentification",
         @Query("guid") guid: String,
@@ -243,8 +258,9 @@ interface CommonService {
      */
     @RecordApi(cmoneyAction = "getdailyheadline")
     @FormUrlEncoded
-    @POST("MobileService/ashx/StockNews/StockNews.ashx")
+    @POST
     suspend fun getDailyHeadLine(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("Action") action: String = "getdailyheadline",
         @Field("AppId") appId: Int,
@@ -279,8 +295,9 @@ interface CommonService {
      */
     @RecordApi(cmoneyAction = "getstockrssarticleswithfiltertype")
     @FormUrlEncoded
-    @POST("MobileService/ashx/StockNews/StockNews.ashx")
+    @POST
     suspend fun getStockRssArticlesWithFilterType(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("Action") action: String = "getstockrssarticleswithfiltertype",
         @Field("AppId") appId: Int,
@@ -296,8 +313,9 @@ interface CommonService {
 
     @RecordApi(cmoneyAction = "addrssarticleclickcount")
     @FormUrlEncoded
-    @POST("MobileService/ashx/StockNews/StockNews.ashx")
+    @POST
     suspend fun addRssArticleClickCount(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("Action") action: String = "addrssarticleclickcount",
         @Field("AppId") appId: Int,
@@ -311,8 +329,9 @@ interface CommonService {
      */
     @RecordApi(cmoneyAction = "getmemberbonus")
     @FormUrlEncoded
-    @POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
+    @POST
     suspend fun getMemberBonus(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("Action") action: String = "getmemberbonus",
         @Field("AppId") appId: Int,
@@ -325,8 +344,9 @@ interface CommonService {
      */
     @RecordApi(cmoneyAction = "hasreceivedcellphoneBindReward")
     @FormUrlEncoded
-    @POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
+    @POST
     suspend fun hasReceivedCellphoneBindReward(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("Action") action: String = "hasreceivedcellphoneBindReward",
         @Field("AppId") appId: Int,
