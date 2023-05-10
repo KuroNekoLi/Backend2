@@ -1,14 +1,12 @@
 package com.cmoney.backend2.chat.service
 
-import com.cmoney.backend2.base.extension.checkIsSuccessful
 import com.cmoney.backend2.base.extension.checkResponseBody
 import com.cmoney.backend2.base.extension.createAuthorizationBearer
-import com.cmoney.backend2.base.extension.requireBody
 import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.chat.service.api.chatroomsetting.request.ChatRoomSettingUpdateProperties
 import com.cmoney.backend2.chat.service.api.chatroomsetting.response.ChatRoomSettingResponseBody
 import com.cmoney.backend2.chat.service.api.getallreport.request.ReportInfo
-import com.cmoney.backend2.chat.service.api.gethistorymessage.request.HistroyMessageRequestParam
+import com.cmoney.backend2.chat.service.api.gethistorymessage.request.HistoryMessageRequestParam
 import com.cmoney.backend2.chat.service.api.gethistorymessage.response.Message
 import com.cmoney.backend2.chat.service.api.getsubjectallrequests.response.AuthorizationRequestResponseBody
 import com.cmoney.backend2.chat.service.api.getuserprofile.response.UserProfileResponseBody
@@ -72,8 +70,7 @@ class ChatRoomWebImpl(
             service.lookUpSubjectAllRoles(
                 url = url,
                 authorization = manager.getAccessToken().createAuthorizationBearer()
-            ).checkIsSuccessful()
-                .requireBody()
+            ).checkResponseBody(gson)
                 .mapValues {
                     it.value.mapNotNull { value ->
                         value
@@ -93,8 +90,7 @@ class ChatRoomWebImpl(
                 url = url,
                 authorization = manager.getAccessToken().createAuthorizationBearer(),
                 userProfile = UpdateUserProfile(name, imageUrl)
-            ).checkIsSuccessful()
-                .requireBody()
+            ).checkResponseBody(gson)
         }
     }
 
@@ -109,8 +105,7 @@ class ChatRoomWebImpl(
             service.bindRuleSet(
                 url = url,
                 authorization = manager.getAccessToken().createAuthorizationBearer()
-            ).checkIsSuccessful()
-                .requireBody()
+            ).checkResponseBody(gson)
         }
     }
 
@@ -126,8 +121,7 @@ class ChatRoomWebImpl(
             service.addRole(
                 url = url,
                 authorization = manager.getAccessToken().createAuthorizationBearer()
-            ).checkIsSuccessful()
-                .requireBody()
+            ).checkResponseBody(gson)
         }
     }
 
@@ -143,8 +137,7 @@ class ChatRoomWebImpl(
             service.deleteRole(
                 url = url,
                 authorization = manager.getAccessToken().createAuthorizationBearer(),
-            ).checkIsSuccessful()
-                .requireBody()
+            ).checkResponseBody(gson)
         }
     }
 
@@ -158,8 +151,7 @@ class ChatRoomWebImpl(
             service.getSubjectAllAuthorizationRequests(
                 url = url,
                 authorization = manager.getAccessToken().createAuthorizationBearer()
-            ).checkIsSuccessful()
-                .requireBody()
+            ).checkResponseBody(gson)
                 .mapNotNull {
                     it
                 }
@@ -176,8 +168,7 @@ class ChatRoomWebImpl(
             service.getBindingSubjectRuleSets(
                 url = url,
                 authorization = manager.getAccessToken().createAuthorizationBearer()
-            ).checkIsSuccessful()
-                .requireBody()
+            ).checkResponseBody(gson)
                 .mapNotNull {
                     it
                 }
@@ -192,8 +183,7 @@ class ChatRoomWebImpl(
             service.getAvailableRoom(
                 url = url,
                 authorization = manager.getAccessToken().createAuthorizationBearer()
-            ).checkIsSuccessful()
-                .requireBody()
+            ).checkResponseBody(gson)
                 .mapNotNull { it }
         }
     }
@@ -236,8 +226,7 @@ class ChatRoomWebImpl(
             service.requestJoinChatRoom(
                 url = url,
                 authorization = manager.getAccessToken().createAuthorizationBearer(),
-            ).checkIsSuccessful()
-                .requireBody()
+            ).checkResponseBody(gson)
         }
     }
 
@@ -251,11 +240,10 @@ class ChatRoomWebImpl(
             service.getHistoryMessageLatest(
                 url = url,
                 authorization = manager.getAccessToken().createAuthorizationBearer(),
-                requestParam = HistroyMessageRequestParam(count = fetchCount).putQueryMap(
+                requestParam = HistoryMessageRequestParam(count = fetchCount).putQueryMap(
                     mutableMapOf()
                 )
-            )
-                .checkResponseBody(gson)
+            ).checkResponseBody(gson)
                 .mapNotNull { rawMessage ->
                     rawMessage?.asReal()
                 }
@@ -272,11 +260,11 @@ class ChatRoomWebImpl(
     ): Result<List<Message>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             val requestParam = if (isStart) {
-                HistroyMessageRequestParam(count = fetchCount, startTime = time).putQueryMap(
+                HistoryMessageRequestParam(count = fetchCount, startTime = time).putQueryMap(
                     mutableMapOf()
                 )
             } else {
-                HistroyMessageRequestParam(count = fetchCount, endTime = time).putQueryMap(
+                HistoryMessageRequestParam(count = fetchCount, endTime = time).putQueryMap(
                     mutableMapOf()
                 )
             }
@@ -301,7 +289,7 @@ class ChatRoomWebImpl(
         url: String
     ): Result<List<Message>> = withContext(dispatcher.io()) {
         runCatching {
-            val param = HistroyMessageRequestParam(
+            val param = HistoryMessageRequestParam(
                 count = fetchCount,
                 startTime = startTime,
                 endTime = endTime
@@ -328,7 +316,7 @@ class ChatRoomWebImpl(
             val response = service.getHistoryMessageOldest(
                 url = url,
                 authorization = manager.getAccessToken().createAuthorizationBearer(),
-                requestParam = HistroyMessageRequestParam(count = fetchCount).putQueryMap(
+                requestParam = HistoryMessageRequestParam(count = fetchCount).putQueryMap(
                     mutableMapOf()
                 )
             )
@@ -349,11 +337,11 @@ class ChatRoomWebImpl(
     ): Result<List<Message>> = withContext(dispatcher.io()) {
         runCatching {
             val requestParam = if (isStart) {
-                HistroyMessageRequestParam(count = fetchCount, startTime = time).putQueryMap(
+                HistoryMessageRequestParam(count = fetchCount, startTime = time).putQueryMap(
                     mutableMapOf()
                 )
             } else {
-                HistroyMessageRequestParam(count = fetchCount, endTime = time).putQueryMap(
+                HistoryMessageRequestParam(count = fetchCount, endTime = time).putQueryMap(
                     mutableMapOf()
                 )
             }
@@ -378,7 +366,7 @@ class ChatRoomWebImpl(
         url: String
     ): Result<List<Message>> = withContext(dispatcher.io()) {
         runCatching {
-            val requestParam = HistroyMessageRequestParam(
+            val requestParam = HistoryMessageRequestParam(
                 count = fetchCount,
                 startTime = startTime,
                 endTime = endTime
@@ -417,8 +405,7 @@ class ChatRoomWebImpl(
             service.deleteMessage(
                 url = url,
                 authorization = manager.getAccessToken().createAuthorizationBearer()
-            ).checkIsSuccessful()
-                .requireBody()
+            ).checkResponseBody(gson)
         }
     }
 
@@ -434,8 +421,7 @@ class ChatRoomWebImpl(
             service.uploadImage(
                 url = url,
                 formFile = body
-            ).checkIsSuccessful()
-                .requireBody()
+            ).checkResponseBody(gson)
         }
     }
 
@@ -448,8 +434,7 @@ class ChatRoomWebImpl(
             service.getAllUser(
                 url = url,
                 authorization = manager.getAccessToken().createAuthorizationBearer()
-            ).checkIsSuccessful()
-                .requireBody()
+            ).checkResponseBody(gson)
                 .mapNotNull {
                     it
                 }
@@ -465,8 +450,7 @@ class ChatRoomWebImpl(
             service.getOnlineUserCount(
                 url = url,
                 authorization = manager.getAccessToken().createAuthorizationBearer()
-            ).checkIsSuccessful()
-                .requireBody()
+            ).checkResponseBody(gson)
         }
     }
 
@@ -479,8 +463,7 @@ class ChatRoomWebImpl(
             service.getUserProfile(
                 url = url,
                 authorization = manager.getAccessToken().createAuthorizationBearer()
-            ).checkIsSuccessful()
-                .requireBody()
+            ).checkResponseBody(gson)
                 .mapNotNull { it }
         }
     }
@@ -502,9 +485,7 @@ class ChatRoomWebImpl(
                     messageId = messageId,
                     userId = userId
                 )
-            ).checkIsSuccessful()
-                .requireBody()
-
+            ).checkResponseBody(gson)
         }
     }
 
@@ -517,9 +498,7 @@ class ChatRoomWebImpl(
             service.getAllReport(
                 url = url,
                 authorization = manager.getAccessToken().createAuthorizationBearer(),
-            ).checkIsSuccessful()
-                .requireBody()
-
+            ).checkResponseBody(gson)
         }
     }
 
@@ -534,8 +513,7 @@ class ChatRoomWebImpl(
                 url = url,
                 authorization = manager.getAccessToken().createAuthorizationBearer(),
                 id = reportId
-            ).checkIsSuccessful()
-                .requireBody()
+            ).checkResponseBody(gson)
         }
     }
 }
