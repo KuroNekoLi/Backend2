@@ -39,6 +39,8 @@ import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdap
  * @property brokerDataTransmissionSettingAdapter 券商庫存設定轉接器
  * @property cellphoneSettingAdapter 電話號碼設定轉接器
  * @property centralizedImageSettingAdapter 中央圖片設定轉接器
+ * @property chipKSettingAdapter 籌碼K服務設定轉接器
+ * @property clientConfigurationSettingAdapter 用戶端設定服務設定轉接器
  * @property cmTalkSettingAdapter CMTalk 服務設定轉接器
  * @property virtualTradeSettingAdapter 虛擬下單V1轉接器
  * @property virtualTrading2SettingAdapter 虛擬下單V2轉接器
@@ -340,9 +342,9 @@ class GlobalBackend2Manager(
             CellphoneSettingAdapterImpl(backendSetting)
         var centralizedImageSettingAdapter: CentralizedImageSettingAdapter =
             CentralizedImageSettingAdapterImpl(backendSetting)
-        val chipKSettingAdapter: ChipKSettingAdapter =
+        var chipKSettingAdapter: ChipKSettingAdapter =
             ChipKSettingAdapterImpl(backendSetting)
-        val clientConfigurationSettingAdapter: ClientConfigurationSettingAdapter =
+        var clientConfigurationSettingAdapter: ClientConfigurationSettingAdapter =
             ClientConfigurationSettingAdapterImpl(backendSetting)
         var cmTalkSettingAdapter: CMTalkSettingAdapter =
             CMTalkSettingAdapterImpl(backendSetting)
