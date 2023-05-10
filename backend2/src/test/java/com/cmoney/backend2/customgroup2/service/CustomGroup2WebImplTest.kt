@@ -441,7 +441,7 @@ class CustomGroup2WebImplTest {
     }
 
     @Test
-    fun `getCustomGroup(Default)p_401_failure`() = testScope.runTest {
+    fun `getCustomGroup(Default)_401_failure`() = testScope.runTest {
         coEvery {
             service.getCustomGroup(
                 url = any(),
