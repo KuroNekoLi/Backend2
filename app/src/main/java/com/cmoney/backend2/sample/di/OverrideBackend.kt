@@ -2,6 +2,7 @@ package com.cmoney.backend2.sample.di
 
 import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.base.model.setting.Platform
+import com.cmoney.backend2.chat.model.ChatRoomSettingAdapter
 import org.koin.dsl.module
 
 val sampleBackendModule = module {
@@ -11,6 +12,11 @@ val sampleBackendModule = module {
             jwtSetting = get()
         ) {
             platform = Platform.Android
+            chatRoomSettingAdapter = object : ChatRoomSettingAdapter {
+                override fun getDomain(): String {
+                    return "http://192.168.99.103/"
+                }
+            }
         }
     }
 }

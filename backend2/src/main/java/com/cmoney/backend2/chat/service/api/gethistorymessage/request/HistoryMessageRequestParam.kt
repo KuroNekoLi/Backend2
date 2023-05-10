@@ -3,7 +3,7 @@ package com.cmoney.backend2.chat.service.api.gethistorymessage.request
 /**
  * 取得歷史訊息參數物件
  */
-data class HistroyMessageRequestParam(
+data class HistoryMessageRequestParam(
         val count: Int,
 
         val startTime: Long = Long.MIN_VALUE,

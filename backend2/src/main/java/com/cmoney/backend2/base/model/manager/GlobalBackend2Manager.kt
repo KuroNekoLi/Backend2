@@ -17,6 +17,8 @@ import com.cmoney.backend2.cellphone.model.CellphoneSettingAdapter
 import com.cmoney.backend2.cellphone.model.CellphoneSettingAdapterImpl
 import com.cmoney.backend2.centralizedimage.model.CentralizedImageSettingAdapter
 import com.cmoney.backend2.centralizedimage.model.CentralizedImageSettingAdapterImpl
+import com.cmoney.backend2.chat.model.ChatRoomSettingAdapter
+import com.cmoney.backend2.chat.model.ChatRoomSettingAdapterImpl
 import com.cmoney.backend2.chipk.model.ChipKSettingAdapter
 import com.cmoney.backend2.chipk.model.ChipKSettingAdapterImpl
 import com.cmoney.backend2.clientconfiguration.model.ClientConfigurationSettingAdapter
@@ -39,6 +41,7 @@ import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdap
  * @property brokerDataTransmissionSettingAdapter 券商庫存設定轉接器
  * @property cellphoneSettingAdapter 電話號碼設定轉接器
  * @property centralizedImageSettingAdapter 中央圖片設定轉接器
+ * @property chatRoomSettingAdapter 聊天室設定轉接器
  * @property chipKSettingAdapter 籌碼K服務設定轉接器
  * @property clientConfigurationSettingAdapter 用戶端設定服務設定轉接器
  * @property cmTalkSettingAdapter CMTalk 服務設定轉接器
@@ -55,6 +58,7 @@ class GlobalBackend2Manager(
     private val billingSettingAdapter: BillingSettingAdapter,
     private val cellphoneSettingAdapter: CellphoneSettingAdapter,
     private val centralizedImageSettingAdapter: CentralizedImageSettingAdapter,
+    private val chatRoomSettingAdapter: ChatRoomSettingAdapter,
     private val chipKSettingAdapter: ChipKSettingAdapter,
     private val clientConfigurationSettingAdapter: ClientConfigurationSettingAdapter,
     private val cmTalkSettingAdapter: CMTalkSettingAdapter,
@@ -70,6 +74,7 @@ class GlobalBackend2Manager(
         brokerDataTransmissionSettingAdapter = builder.brokerDataTransmissionSettingAdapter,
         cellphoneSettingAdapter = builder.cellphoneSettingAdapter,
         centralizedImageSettingAdapter = builder.centralizedImageSettingAdapter,
+        chatRoomSettingAdapter = builder.chatRoomSettingAdapter,
         chipKSettingAdapter = builder.chipKSettingAdapter,
         clientConfigurationSettingAdapter = builder.clientConfigurationSettingAdapter,
         cmTalkSettingAdapter = builder.cmTalkSettingAdapter,
@@ -253,6 +258,13 @@ class GlobalBackend2Manager(
     }
 
     /**
+     * 取得聊天室設定轉接器
+     */
+    fun getChatRoomSettingAdapter(): ChatRoomSettingAdapter {
+        return chatRoomSettingAdapter
+    }
+
+    /**
      * 取得籌碼K服務設定轉接器
      *
      * @return 籌碼K服務設定轉接器
@@ -342,6 +354,8 @@ class GlobalBackend2Manager(
             CellphoneSettingAdapterImpl(backendSetting)
         var centralizedImageSettingAdapter: CentralizedImageSettingAdapter =
             CentralizedImageSettingAdapterImpl(backendSetting)
+        var chatRoomSettingAdapter: ChatRoomSettingAdapter =
+            ChatRoomSettingAdapterImpl()
         var chipKSettingAdapter: ChipKSettingAdapter =
             ChipKSettingAdapterImpl(backendSetting)
         var clientConfigurationSettingAdapter: ClientConfigurationSettingAdapter =
