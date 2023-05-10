@@ -103,6 +103,6 @@ class ClientConfigurationWebImplTest {
     }
 
     companion object {
-        private const val EXCEPT_DOMAIN = "localhost://8080:80"
+        private const val EXCEPT_DOMAIN = "localhost://8080:80/"
     }
 }
