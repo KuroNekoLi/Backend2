@@ -1,7 +1,7 @@
 package com.cmoney.backend2.clientconfiguration.model
 
 /**
- * ClientConfiguration 設定轉接器
+ * 用戶端設定服務設定轉接器
  */
 interface ClientConfigurationSettingAdapter {
 

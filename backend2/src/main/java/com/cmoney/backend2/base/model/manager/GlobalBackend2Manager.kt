@@ -21,6 +21,8 @@ import com.cmoney.backend2.chipk.model.ChipKSettingAdapter
 import com.cmoney.backend2.chipk.model.ChipKSettingAdapterImpl
 import com.cmoney.backend2.clientconfiguration.model.ClientConfigurationSettingAdapter
 import com.cmoney.backend2.clientconfiguration.model.ClientConfigurationSettingAdapterImpl
+import com.cmoney.backend2.cmtalk.model.CMTalkSettingAdapter
+import com.cmoney.backend2.cmtalk.model.CMTalkSettingAdapterImpl
 import com.cmoney.backend2.virtualtrading2.model.settingadapter.VirtualTrading2SettingAdapter
 import com.cmoney.backend2.virtualtrading2.model.settingadapter.VirtualTrading2SettingAdapterImpl
 import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdapter
@@ -37,6 +39,9 @@ import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdap
  * @property brokerDataTransmissionSettingAdapter 券商庫存設定轉接器
  * @property cellphoneSettingAdapter 電話號碼設定轉接器
  * @property centralizedImageSettingAdapter 中央圖片設定轉接器
+ * @property chipKSettingAdapter 籌碼K服務設定轉接器
+ * @property clientConfigurationSettingAdapter 用戶端設定服務設定轉接器
+ * @property cmTalkSettingAdapter CMTalk 服務設定轉接器
  * @property virtualTradeSettingAdapter 虛擬下單V1轉接器
  * @property virtualTrading2SettingAdapter 虛擬下單V2轉接器
  *
@@ -52,6 +57,7 @@ class GlobalBackend2Manager(
     private val centralizedImageSettingAdapter: CentralizedImageSettingAdapter,
     private val chipKSettingAdapter: ChipKSettingAdapter,
     private val clientConfigurationSettingAdapter: ClientConfigurationSettingAdapter,
+    private val cmTalkSettingAdapter: CMTalkSettingAdapter,
     private val virtualTradeSettingAdapter: VirtualTradeSettingAdapter,
     private val virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter,
 ) {
@@ -66,6 +72,7 @@ class GlobalBackend2Manager(
         centralizedImageSettingAdapter = builder.centralizedImageSettingAdapter,
         chipKSettingAdapter = builder.chipKSettingAdapter,
         clientConfigurationSettingAdapter = builder.clientConfigurationSettingAdapter,
+        cmTalkSettingAdapter = builder.cmTalkSettingAdapter,
         virtualTradeSettingAdapter = builder.virtualTradeSettingAdapter,
         virtualTrading2SettingAdapter = builder.virtualTrading2SettingAdapter
     )
@@ -264,6 +271,15 @@ class GlobalBackend2Manager(
     }
 
     /**
+     * 取得CMTalk 服務設定轉接器
+     *
+     * @return CMTalk 服務設定轉接器
+     */
+    fun getCMTalkSettingAdapter(): CMTalkSettingAdapter {
+        return cmTalkSettingAdapter
+    }
+
+    /**
      * 取得虛擬下單V1設定轉接器
      */
     fun getVirtualTradeSettingAdapter(): VirtualTradeSettingAdapter {
@@ -326,10 +342,12 @@ class GlobalBackend2Manager(
             CellphoneSettingAdapterImpl(backendSetting)
         var centralizedImageSettingAdapter: CentralizedImageSettingAdapter =
             CentralizedImageSettingAdapterImpl(backendSetting)
-        val chipKSettingAdapter: ChipKSettingAdapter =
+        var chipKSettingAdapter: ChipKSettingAdapter =
             ChipKSettingAdapterImpl(backendSetting)
-        val clientConfigurationSettingAdapter: ClientConfigurationSettingAdapter =
+        var clientConfigurationSettingAdapter: ClientConfigurationSettingAdapter =
             ClientConfigurationSettingAdapterImpl(backendSetting)
+        var cmTalkSettingAdapter: CMTalkSettingAdapter =
+            CMTalkSettingAdapterImpl(backendSetting)
         var virtualTradeSettingAdapter: VirtualTradeSettingAdapter =
             VirtualTradeSettingAdapterImpl(backendSetting)
         var virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter =
