@@ -10,6 +10,10 @@ interface ClientConfigurationWeb {
 
     /**
      * 取得設定檔
+     *
+     * @param list config參數集合
+     * @param domain 網域名稱
+     * @param url 完整的Url
      */
     suspend fun getConfig(
         list: List<ConfigKey>,

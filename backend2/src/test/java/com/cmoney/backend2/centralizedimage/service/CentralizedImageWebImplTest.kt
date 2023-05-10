@@ -15,6 +15,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import okhttp3.ResponseBody.Companion.toResponseBody
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -41,10 +42,6 @@ class CentralizedImageWebImplTest {
     @MockK(relaxed = true)
     private lateinit var manager: GlobalBackend2Manager
 
-    companion object {
-        private const val EXCEPT_DOMAIN = "localhost://8080:80/"
-    }
-
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
@@ -57,6 +54,17 @@ class CentralizedImageWebImplTest {
         coEvery {
             manager.getCentralizedImageSettingAdapter().getDomain()
         } returns EXCEPT_DOMAIN
+    }
+
+    @After
+    fun tearDown() {
+        // remove test file after test
+        try {
+            val testFile = File(TEST_FILE_OUTPUT_PATH)
+            testFile.delete()
+        } catch (e: Throwable) {
+            e.printStackTrace()
+        }
     }
 
     @Test
@@ -134,7 +142,7 @@ class CentralizedImageWebImplTest {
 
     private fun getTestFile(
         srcPath: String,
-        outputPath: String = "src/test/resources/image/targetFile.tmp"
+        outputPath: String = TEST_FILE_OUTPUT_PATH
     ): File {
         val initialStream: InputStream = FileInputStream(File(srcPath))
         val buffer = ByteArray(initialStream.available())
@@ -147,5 +155,10 @@ class CentralizedImageWebImplTest {
         outStream.close()
 
         return targetFile
+    }
+
+    companion object {
+        private const val EXCEPT_DOMAIN = "localhost://8080:80/"
+        private const val TEST_FILE_OUTPUT_PATH = "src/test/resources/image/targetFile.tmp"
     }
 }

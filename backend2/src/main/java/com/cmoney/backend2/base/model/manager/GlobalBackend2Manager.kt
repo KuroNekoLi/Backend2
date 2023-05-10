@@ -29,6 +29,8 @@ import com.cmoney.backend2.common.model.CommonSettingAdapter
 import com.cmoney.backend2.common.model.CommonSettingAdapterImpl
 import com.cmoney.backend2.commonuse.model.CommonUseSettingAdapter
 import com.cmoney.backend2.commonuse.model.CommonUseSettingAdapterImpl
+import com.cmoney.backend2.customgroup.model.CustomGroupSettingAdapter
+import com.cmoney.backend2.customgroup.model.CustomGroupSettingAdapterImpl
 import com.cmoney.backend2.crawlsetting.model.CrawlSettingSettingAdapter
 import com.cmoney.backend2.crawlsetting.model.CrawlSettingSettingAdapterImpl
 import com.cmoney.backend2.crm.model.CrmSettingAdapter
@@ -59,6 +61,7 @@ import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdap
  * @property commonUseSettingAdapter CommonUse服務設定轉接器
  * @property crawlSettingSettingAdapter 爬蟲服務設定轉接器
  * @property crmSettingAdapter CRM設定轉接器
+ * @property customGroupSettingAdapter MobileService-自選股設定轉接器
  * @property customGroup2SettingAdapter 自選股V2設定轉接器
  * @property virtualTradeSettingAdapter 虛擬下單V1轉接器
  * @property virtualTrading2SettingAdapter 虛擬下單V2轉接器
@@ -81,6 +84,7 @@ class GlobalBackend2Manager(
     private val commonUseSettingAdapter: CommonUseSettingAdapter,
     private val crawlSettingSettingAdapter: CrawlSettingSettingAdapter,
     private val crmSettingAdapter: CrmSettingAdapter,
+    private val customGroupSettingAdapter: CustomGroupSettingAdapter,
     private val customGroup2SettingAdapter: CustomGroup2SettingAdapter,
     private val virtualTradeSettingAdapter: VirtualTradeSettingAdapter,
     private val virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter,
@@ -102,6 +106,7 @@ class GlobalBackend2Manager(
         commonUseSettingAdapter = builder.commonUseSettingAdapter,
         crawlSettingSettingAdapter = builder.crawlSettingSettingAdapter,
         crmSettingAdapter = builder.crmSettingAdapter,
+        customGroupSettingAdapter = builder.customGroupSettingAdapter,
         customGroup2SettingAdapter = builder.customGroup2SettingAdapter,
         virtualTradeSettingAdapter = builder.virtualTradeSettingAdapter,
         virtualTrading2SettingAdapter = builder.virtualTrading2SettingAdapter
@@ -349,6 +354,15 @@ class GlobalBackend2Manager(
     }
 
     /**
+     * 取得MobileService-自選股設定轉接器
+     *
+     * @return MobileService-自選股設定轉接器
+     */
+    fun getCustomGroupSettingAdapter(): CustomGroupSettingAdapter {
+        return customGroupSettingAdapter
+    }
+
+    /**
      * 取得自選股2設定轉接器
      */
     fun getCustomGroup2SettingAdapter(): CustomGroup2SettingAdapter {
@@ -434,6 +448,8 @@ class GlobalBackend2Manager(
             CrawlSettingSettingAdapterImpl()
         var crmSettingAdapter: CrmSettingAdapter =
             CrmSettingAdapterImpl(backendSetting)
+        var customGroupSettingAdapter: CustomGroupSettingAdapter =
+            CustomGroupSettingAdapterImpl(backendSetting)
         var customGroup2SettingAdapter: CustomGroup2SettingAdapter =
             CustomGroup2SettingAdapterImpl(backendSetting)
         var virtualTradeSettingAdapter: VirtualTradeSettingAdapter =
