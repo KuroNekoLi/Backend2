@@ -112,6 +112,7 @@ class MainActivity : AppCompatActivity() {
 //                CrawlSettingServiceCase(),
 //                CrmServiceCase(),
 //                CustomGroupServiceCase(),
+//                CustomGroup2ServiceCase(),
 //                DataServiceCase(),
 //                DtnoServiceCase(),
 //                EmilyServiceCase(),
@@ -130,7 +131,6 @@ class MainActivity : AppCompatActivity() {
 //                TrialServiceCase(),
 //                VideoChannelServiceCase(),
 //                VirtualAssetsServiceCase(),
-//                CustomGroup2ServiceCase(),
 //                UserBehaviorServiceCase(),
 //                ClientConfigurationServiceCase(),
 //                ImageRecognitionServiceCase()
