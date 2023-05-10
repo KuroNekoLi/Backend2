@@ -223,7 +223,9 @@ class CommonWebImpl(
      * 服務7-2 更改使用者暱稱(加上身份識別)
      */
     override suspend fun changeNickname(
-        newNickname: String, domain: String, url: String
+        newNickname: String,
+        domain: String,
+        url: String
     ): Result<ChangeNicknameResponse> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
@@ -246,7 +248,9 @@ class CommonWebImpl(
      */
     override suspend fun changeUserImage(
         isUseFbImage: Boolean,
-        newImageFile: File?, domain: String, url: String
+        newImageFile: File?,
+        domain: String,
+        url: String
     ): Result<ChangeUserImageResponse> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
@@ -312,7 +316,8 @@ class CommonWebImpl(
         baseArticleId: Long,
         newsType: Int,
         fetchSize: Int,
-        domain: String, url: String
+        domain: String,
+        url: String
     ): Result<List<News>> = withContext(dispatcher.io()) {
         runCatching {
             val response = service.getDailyHeadLine(
@@ -339,7 +344,8 @@ class CommonWebImpl(
         beforeDays: Int,
         filterType: Int,
         fetchSize: Int,
-        domain: String, url: String
+        domain: String,
+        url: String
     ): Result<List<StockNews>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             val response = service.getStockRssArticlesWithFilterType(
@@ -365,7 +371,8 @@ class CommonWebImpl(
     override suspend fun addStockRssArticleClickCount(
         memberPk: Int,
         articleId: Long,
-        domain: String, url: String
+        domain: String,
+        url: String
     ): Result<Unit> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             val response = service.addRssArticleClickCount(
