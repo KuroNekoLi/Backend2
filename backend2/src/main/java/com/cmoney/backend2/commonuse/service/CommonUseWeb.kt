@@ -11,6 +11,9 @@ interface CommonUseWeb {
 
     /**
      * get remoteConfigLabel from [domain], return empty string if response is null
+     *
+     * @param domain 網域名稱
+     * @param url 完整的Url
      */
     suspend fun getRemoteConfigLabel(
         domain: String = manager.getCommonUseSettingAdapter().getDomain(),
@@ -21,6 +24,8 @@ interface CommonUseWeb {
      * 更新用戶選擇的投資屬性
      *
      * @param investmentPreferenceType 用戶選擇的投資屬性
+     * @param domain 網域名稱
+     * @param url 完整的Url
      * @return 用戶選擇的投資屬性
      */
     suspend fun updateInvestmentPreference(
@@ -32,6 +37,8 @@ interface CommonUseWeb {
     /**
      * 取得用戶選擇的投資屬性
      *
+     * @param domain 網域名稱
+     * @param url 完整的Url
      * @return 用戶選擇的投資屬性清單
      */
     suspend fun getInvestmentPreferences(
@@ -44,6 +51,8 @@ interface CommonUseWeb {
      *
      * @param commodityIds 欲取的商品清單
      * @param endCursor 取得下筆分頁的 key, 第一筆預設為 null
+     * @param domain 網域名稱
+     * @param url 完整的Url
      * @return 歷史推播事件清單
      */
     suspend fun getCommodityHistoryEvent(
