@@ -41,6 +41,7 @@ import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdap
  * @property brokerDataTransmissionSettingAdapter 券商庫存設定轉接器
  * @property cellphoneSettingAdapter 電話號碼設定轉接器
  * @property centralizedImageSettingAdapter 中央圖片設定轉接器
+ * @property chatRoomSettingAdapter 聊天室設定轉接器
  * @property chipKSettingAdapter 籌碼K服務設定轉接器
  * @property clientConfigurationSettingAdapter 用戶端設定服務設定轉接器
  * @property cmTalkSettingAdapter CMTalk 服務設定轉接器
