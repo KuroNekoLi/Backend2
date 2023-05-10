@@ -25,6 +25,10 @@ import com.cmoney.backend2.clientconfiguration.model.ClientConfigurationSettingA
 import com.cmoney.backend2.clientconfiguration.model.ClientConfigurationSettingAdapterImpl
 import com.cmoney.backend2.cmtalk.model.CMTalkSettingAdapter
 import com.cmoney.backend2.cmtalk.model.CMTalkSettingAdapterImpl
+import com.cmoney.backend2.crawlsetting.model.CrawlSettingSettingAdapter
+import com.cmoney.backend2.crawlsetting.model.CrawlSettingSettingAdapterImpl
+import com.cmoney.backend2.common.model.CommonSettingAdapter
+import com.cmoney.backend2.common.model.CommonSettingAdapterImpl
 import com.cmoney.backend2.commonuse.model.CommonUseSettingAdapter
 import com.cmoney.backend2.commonuse.model.CommonUseSettingAdapterImpl
 import com.cmoney.backend2.virtualtrading2.model.settingadapter.VirtualTrading2SettingAdapter
@@ -47,6 +51,8 @@ import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdap
  * @property chipKSettingAdapter 籌碼K服務設定轉接器
  * @property clientConfigurationSettingAdapter 用戶端設定服務設定轉接器
  * @property cmTalkSettingAdapter CMTalk 服務設定轉接器
+ * @property crawlSettingSettingAdapter 爬蟲服務設定轉接器
+ * @property commonSettingAdapter MobileService通用設定轉接器
  * @property commonUseSettingAdapter CommonUse服務設定轉接器
  * @property virtualTradeSettingAdapter 虛擬下單V1轉接器
  * @property virtualTrading2SettingAdapter 虛擬下單V2轉接器
@@ -65,6 +71,8 @@ class GlobalBackend2Manager(
     private val chipKSettingAdapter: ChipKSettingAdapter,
     private val clientConfigurationSettingAdapter: ClientConfigurationSettingAdapter,
     private val cmTalkSettingAdapter: CMTalkSettingAdapter,
+    private val crawlSettingSettingAdapter: CrawlSettingSettingAdapter,
+    private val commonSettingAdapter: CommonSettingAdapter,
     private val commonUseSettingAdapter: CommonUseSettingAdapter,
     private val virtualTradeSettingAdapter: VirtualTradeSettingAdapter,
     private val virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter,
@@ -82,6 +90,8 @@ class GlobalBackend2Manager(
         chipKSettingAdapter = builder.chipKSettingAdapter,
         clientConfigurationSettingAdapter = builder.clientConfigurationSettingAdapter,
         cmTalkSettingAdapter = builder.cmTalkSettingAdapter,
+        crawlSettingSettingAdapter = builder.crawlSettingSettingAdapter,
+        commonSettingAdapter = builder.commonSettingAdapter,
         commonUseSettingAdapter = builder.commonUseSettingAdapter,
         virtualTradeSettingAdapter = builder.virtualTradeSettingAdapter,
         virtualTrading2SettingAdapter = builder.virtualTrading2SettingAdapter
@@ -297,6 +307,22 @@ class GlobalBackend2Manager(
     }
 
     /**
+     * 取得爬蟲設定轉接器
+     */
+    fun getCrawlSettingSettingAdapter(): CrawlSettingSettingAdapter {
+        return crawlSettingSettingAdapter
+    }
+
+    /**
+     * 取得MobileService通用設定轉接器
+     *
+     * @return MobileService通用設定轉接器
+     */
+    fun getCommonSettingAdapter(): CommonSettingAdapter {
+        return commonSettingAdapter
+    }
+
+    /**
      * 取得CommonUse服務設定轉接器
      *
      * @return CommonUse服務設定轉接器
@@ -376,6 +402,10 @@ class GlobalBackend2Manager(
             ClientConfigurationSettingAdapterImpl(backendSetting)
         var cmTalkSettingAdapter: CMTalkSettingAdapter =
             CMTalkSettingAdapterImpl(backendSetting)
+        var crawlSettingSettingAdapter: CrawlSettingSettingAdapter =
+            CrawlSettingSettingAdapterImpl()
+        var commonSettingAdapter: CommonSettingAdapter =
+            CommonSettingAdapterImpl(backendSetting)
         var commonUseSettingAdapter: CommonUseSettingAdapter =
             CommonUseSettingAdapterImpl(backendSetting)
         var virtualTradeSettingAdapter: VirtualTradeSettingAdapter =
