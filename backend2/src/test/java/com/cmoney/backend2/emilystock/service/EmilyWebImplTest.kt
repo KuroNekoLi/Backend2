@@ -1,8 +1,8 @@
 package com.cmoney.backend2.emilystock.service
 
-import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.EmptyBodyException
 import com.cmoney.backend2.base.model.exception.ServerException
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.emilystock.service.api.getemilycommkeys.GetEmilyCommKeysResponse
 import com.cmoney.backend2.emilystock.service.api.getfiltercondition.GetFilterConditionResponse
 import com.cmoney.backend2.emilystock.service.api.getstockinfos.GetStockInfosResponse
@@ -20,6 +20,7 @@ import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
+import io.mockk.slot
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
@@ -41,15 +42,41 @@ class EmilyWebImplTest {
     private val emilyService = mockk<EmilyService>()
     private val gson = Gson()
     private lateinit var emilyWeb: EmilyWeb
+    @MockK(relaxed = true)
+    private lateinit var manager: GlobalBackend2Manager
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        emilyWeb = EmilyWebImpl(TestSetting(), emilyService, gson, TestDispatcherProvider())
+        emilyWeb = EmilyWebImpl(
+            manager = manager,
+            service = emilyService,
+            gson = gson,
+            dispatcher = TestDispatcherProvider()
+        )
+        coEvery {
+            manager.getEmilyStockSettingAdapter().getDomain()
+        } returns EXCEPT_DOMAIN
     }
 
     @Test
-    fun `getEmilyCommKeys_成功`() = testScope.runTest {
+    fun `searchStocksV2_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}EmilyFixedStock/api/EmilyStock/GetEmilyCommKeys"
+        val urlSlot = slot<String>()
+        coEvery {
+            emilyService.getEmilyCommKeys(
+                url = capture(urlSlot),
+                authorization = any(),
+                appId = any(),
+                guid = any()
+            )
+        } returns Response.success(GetEmilyCommKeysResponse(listOf()))
+        emilyWeb.getEmilyCommKeys()
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getEmilyCommKeys_success() = testScope.runTest {
         val response = GetEmilyCommKeysResponse(
             listOf(
                 "0050",
@@ -67,6 +94,7 @@ class EmilyWebImplTest {
         )
         coEvery {
             emilyService.getEmilyCommKeys(
+                url = any(),
                 authorization = any(),
                 appId = any(),
                 guid = any()
@@ -77,9 +105,10 @@ class EmilyWebImplTest {
     }
 
     @Test(expected = EmptyBodyException::class)
-    fun `getEmilyCommKeys_沒資料`() = testScope.runTest {
+    fun `getEmilyCommKeys_no data`() = testScope.runTest {
         coEvery {
             emilyService.getEmilyCommKeys(
+                url = any(),
                 authorization = any(),
                 appId = any(),
                 guid = any()
@@ -90,7 +119,24 @@ class EmilyWebImplTest {
     }
 
     @Test
-    fun `getStockInfos_成功`() = testScope.runTest {
+    fun `getStockInfos_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}EmilyFixedStock/api/EmilyStock/GetStockInfos"
+        val urlSlot = slot<String>()
+        coEvery {
+            emilyService.getStockInfos(
+                url = capture(urlSlot),
+                authorization = any(),
+                isTeacherDefault = any(),
+                appId = any(),
+                guid = any()
+            )
+        } returns Response.success(GetStockInfosResponse(listOf()))
+        emilyWeb.getStockInfos(isTeacherDefault = true)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getStockInfos_success() = testScope.runTest {
         val response = GetStockInfosResponse(
             listOf(
                 GetStockInfosResponse.StockInfo(
@@ -113,6 +159,7 @@ class EmilyWebImplTest {
         )
         coEvery {
             emilyService.getStockInfos(
+                url = any(),
                 authorization = any(),
                 isTeacherDefault = any(),
                 appId = any(),
@@ -124,9 +171,10 @@ class EmilyWebImplTest {
     }
 
     @Test(expected = EmptyBodyException::class)
-    fun `getStockInfos_沒資料`() = testScope.runTest {
+    fun `getStockInfos_no data`() = testScope.runTest {
         coEvery {
             emilyService.getStockInfos(
+                url = any(),
                 authorization = any(),
                 isTeacherDefault = any(),
                 appId = any(),
@@ -138,7 +186,25 @@ class EmilyWebImplTest {
     }
 
     @Test
-    fun `getTargetStockInfos_成功`() = testScope.runTest {
+    fun `getTargetStockInfos_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}EmilyFixedStock/api/EmilyStock/GetTargetStockInfos"
+        val urlSlot = slot<String>()
+        coEvery {
+            emilyService.getTargetStockInfos(
+                url = capture(urlSlot),
+                authorization = any(),
+                isTeacherDefault = any(),
+                appId = any(),
+                guid = any(),
+                commKeys = any()
+            )
+        } returns Response.success(GetTargetStockInfosWithError(listOf()))
+        emilyWeb.getTargetStockInfos(isTeacherDefault = true, commKeyList = listOf("1565"))
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getTargetStockInfos_success() = testScope.runTest {
         val response = GetTargetStockInfosWithError(
             listOf(
                 StockInfo(
@@ -161,6 +227,7 @@ class EmilyWebImplTest {
         )
         coEvery {
             emilyService.getTargetStockInfos(
+                url = any(),
                 authorization = any(),
                 isTeacherDefault = any(),
                 appId = any(),
@@ -174,7 +241,7 @@ class EmilyWebImplTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `getTargetStockInfos_失敗`() = testScope.runTest {
+    fun getTargetStockInfos_failure() = testScope.runTest {
         val errorText = """
             {
                 "Error": {
@@ -183,12 +250,13 @@ class EmilyWebImplTest {
                 }
             }
         """.trimIndent()
-        val errorResponse = gson.fromJson<GetTargetStockInfosWithError>(
+        val errorResponse = gson.fromJson(
             errorText,
             GetTargetStockInfosWithError::class.java
         )
         coEvery {
             emilyService.getTargetStockInfos(
+                url = any(),
                 authorization = any(),
                 isTeacherDefault = any(),
                 appId = any(),
@@ -202,9 +270,10 @@ class EmilyWebImplTest {
     }
 
     @Test(expected = EmptyBodyException::class)
-    fun `getTargetStockInfos_沒有值`() = testScope.runTest {
+    fun `getTargetStockInfos_no data`() = testScope.runTest {
         coEvery {
             emilyService.getTargetStockInfos(
+                url = any(),
                 authorization = any(),
                 isTeacherDefault = any(),
                 appId = any(),
@@ -218,7 +287,25 @@ class EmilyWebImplTest {
     }
 
     @Test
-    fun `getTargetConstitution_成功`() = testScope.runTest {
+    fun `getTargetConstitution_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}EmilyFixedStock/api/EmilyStock/GetTargetConstitution"
+        val urlSlot = slot<String>()
+        coEvery {
+            emilyService.getTargetConstitution(
+                url = capture(urlSlot),
+                authorization = any(),
+                isTeacherDefault = any(),
+                appId = any(),
+                guid = any(),
+                commKey = any()
+            )
+        } returns Response.success(GetTargetConstitutionWithError(null))
+        emilyWeb.getTargetConstitution(isTeacherDefault = true, commKey = "2330")
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getTargetConstitution_success() = testScope.runTest {
         val response = GetTargetConstitutionWithError(
             response = Constitution(
                 commKey = "2330",
@@ -287,6 +374,7 @@ class EmilyWebImplTest {
         )
         coEvery {
             emilyService.getTargetConstitution(
+                url = any(),
                 authorization = any(),
                 isTeacherDefault = any(),
                 appId = any(),
@@ -299,7 +387,7 @@ class EmilyWebImplTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `getTargetConstitution_失敗`() = testScope.runTest {
+    fun getTargetConstitution_failure() = testScope.runTest {
         val errorText = """
             {
                 "Error": {
@@ -314,6 +402,7 @@ class EmilyWebImplTest {
         )
         coEvery {
             emilyService.getTargetConstitution(
+                url = any(),
                 authorization = any(),
                 isTeacherDefault = any(),
                 appId = any(),
@@ -326,9 +415,10 @@ class EmilyWebImplTest {
     }
 
     @Test(expected = EmptyBodyException::class)
-    fun `getTargetConstitution_沒資料`() = testScope.runTest {
+    fun `getTargetConstitution_not data`() = testScope.runTest {
         coEvery {
             emilyService.getTargetConstitution(
+                url = any(),
                 authorization = any(),
                 isTeacherDefault = any(),
                 appId = any(),
@@ -341,7 +431,23 @@ class EmilyWebImplTest {
     }
 
     @Test
-    fun `getFilterCondition_成功`() = testScope.runTest {
+    fun `getFilterCondition_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}EmilyFixedStock/api/EmilyStock/GetFilterCondition"
+        val urlSlot = slot<String>()
+        coEvery {
+            emilyService.getFilterCondition(
+                url = capture(urlSlot),
+                authorization = any(),
+                appId = any(),
+                guid = any()
+            )
+        } returns Response.success(GetFilterConditionResponse(null))
+        emilyWeb.getFilterCondition()
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getFilterCondition_success() = testScope.runTest {
         val response = GetFilterConditionResponse(
             response = listOf(
                 GetFilterConditionResponse.FilterCondition(
@@ -357,6 +463,7 @@ class EmilyWebImplTest {
         )
         coEvery {
             emilyService.getFilterCondition(
+                url = any(),
                 authorization = any(),
                 appId = any(),
                 guid = any()
@@ -367,9 +474,10 @@ class EmilyWebImplTest {
     }
 
     @Test(expected = EmptyBodyException::class)
-    fun `getFilterCondition_沒資料`() = testScope.runTest {
+    fun `getFilterCondition_no data`() = testScope.runTest {
         coEvery {
             emilyService.getFilterCondition(
+                url = any(),
                 authorization = any(),
                 appId = any(),
                 guid = any()
@@ -380,7 +488,23 @@ class EmilyWebImplTest {
     }
 
     @Test
-    fun `getTrafficLightRecord_成功`() = testScope.runTest {
+    fun `getTrafficLightRecord_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}EmilyFixedStock/api/EmilyStock/GetTrafficLightRecord"
+        val urlSlot = slot<String>()
+        coEvery {
+            emilyService.getTrafficLightRecord(
+                url = capture(urlSlot),
+                authorization = any(),
+                appId = any(),
+                guid = any()
+            )
+        } returns Response.success(GetTrafficLightRecordWithError(null))
+        emilyWeb.getTrafficLightRecord()
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getTrafficLightRecord_success() = testScope.runTest {
         val response = GetTrafficLightRecordWithError(
             listOf(
                 TrafficLightRecord(
@@ -397,6 +521,7 @@ class EmilyWebImplTest {
         )
         coEvery {
             emilyService.getTrafficLightRecord(
+                url = any(),
                 authorization = any(),
                 appId = any(),
                 guid = any()
@@ -407,9 +532,10 @@ class EmilyWebImplTest {
     }
 
     @Test(expected = EmptyBodyException::class)
-    fun `getTrafficLightRecord_沒資料`() = testScope.runTest {
+    fun `getTrafficLightRecord_no data`() = testScope.runTest {
         coEvery {
             emilyService.getTrafficLightRecord(
+                url = any(),
                 authorization = any(),
                 appId = any(),
                 guid = any()
@@ -420,7 +546,7 @@ class EmilyWebImplTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `getTrafficLightRecord_錯誤`() = testScope.runTest {
+    fun getTrafficLightRecord_error() = testScope.runTest {
         val errorText = """
             {
                 "Error": {
@@ -435,6 +561,7 @@ class EmilyWebImplTest {
         )
         coEvery {
             emilyService.getTrafficLightRecord(
+                url = any(),
                 authorization = any(),
                 appId = any(),
                 guid = any()
@@ -442,6 +569,10 @@ class EmilyWebImplTest {
         } returns Response.success(errorResponse)
         val result = emilyWeb.getTrafficLightRecord()
         result.getOrThrow()
+    }
+
+    companion object {
+        private const val EXCEPT_DOMAIN = "localhost://8080:80/"
     }
 }
 

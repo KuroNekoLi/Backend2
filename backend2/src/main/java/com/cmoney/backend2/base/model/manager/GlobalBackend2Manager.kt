@@ -39,6 +39,8 @@ import com.cmoney.backend2.customgroup2.model.CustomGroup2SettingAdapter
 import com.cmoney.backend2.customgroup2.model.CustomGroup2SettingAdapterImpl
 import com.cmoney.backend2.data.model.DataSettingAdapter
 import com.cmoney.backend2.data.model.DataSettingAdapterImpl
+import com.cmoney.backend2.emilystock.model.EmilyStockSettingAdapter
+import com.cmoney.backend2.emilystock.model.EmilyStockSettingAdapterImpl
 import com.cmoney.backend2.virtualtrading2.model.settingadapter.VirtualTrading2SettingAdapter
 import com.cmoney.backend2.virtualtrading2.model.settingadapter.VirtualTrading2SettingAdapterImpl
 import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdapter
@@ -66,6 +68,7 @@ import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdap
  * @property customGroupSettingAdapter MobileService-自選股設定轉接器
  * @property customGroup2SettingAdapter 自選股V2設定轉接器
  * @property dataSettingAdapter Data服務設定轉接器
+ * @property emilyStockSettingAdapter EmilyStock服務設定轉接器
  * @property virtualTradeSettingAdapter 虛擬下單V1轉接器
  * @property virtualTrading2SettingAdapter 虛擬下單V2轉接器
  *
@@ -90,6 +93,7 @@ class GlobalBackend2Manager(
     private val customGroupSettingAdapter: CustomGroupSettingAdapter,
     private val customGroup2SettingAdapter: CustomGroup2SettingAdapter,
     private val dataSettingAdapter: DataSettingAdapter,
+    private val emilyStockSettingAdapter: EmilyStockSettingAdapter,
     private val virtualTradeSettingAdapter: VirtualTradeSettingAdapter,
     private val virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter,
 ) {
@@ -113,6 +117,7 @@ class GlobalBackend2Manager(
         customGroupSettingAdapter = builder.customGroupSettingAdapter,
         customGroup2SettingAdapter = builder.customGroup2SettingAdapter,
         dataSettingAdapter = builder.dataSettingAdapter,
+        emilyStockSettingAdapter = builder.emilyStockSettingAdapter,
         virtualTradeSettingAdapter = builder.virtualTradeSettingAdapter,
         virtualTrading2SettingAdapter = builder.virtualTrading2SettingAdapter
     )
@@ -384,6 +389,13 @@ class GlobalBackend2Manager(
     }
 
     /**
+     * 取得EmilyStock服務設定轉接器
+     */
+    fun getEmilyStockSettingAdapter(): EmilyStockSettingAdapter {
+        return emilyStockSettingAdapter
+    }
+
+    /**
      * 取得虛擬下單V1設定轉接器
      */
     fun getVirtualTradeSettingAdapter(): VirtualTradeSettingAdapter {
@@ -468,6 +480,8 @@ class GlobalBackend2Manager(
             CustomGroup2SettingAdapterImpl(backendSetting)
         var dataSettingAdapter: DataSettingAdapter =
             DataSettingAdapterImpl()
+        var emilyStockSettingAdapter: EmilyStockSettingAdapter =
+            EmilyStockSettingAdapterImpl(backendSetting)
         var virtualTradeSettingAdapter: VirtualTradeSettingAdapter =
             VirtualTradeSettingAdapterImpl(backendSetting)
         var virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter =
