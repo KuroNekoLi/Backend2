@@ -1,8 +1,11 @@
 package com.cmoney.backend2.dtno.service
 
-import com.cmoney.backend2.base.extension.*
-import com.cmoney.backend2.base.model.request.MemberApiParam
-import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.backend2.base.extension.checkIWithError
+import com.cmoney.backend2.base.extension.checkIsSuccessful
+import com.cmoney.backend2.base.extension.createAuthorizationBearer
+import com.cmoney.backend2.base.extension.requireBody
+import com.cmoney.backend2.base.extension.toListOfType
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.dtno.service.api.getLatestBasicInfo.BasicInfoResponseBody
 import com.cmoney.backend2.dtno.service.api.getklindata.KLineData
 import com.cmoney.core.DefaultDispatcherProvider
@@ -11,32 +14,28 @@ import com.google.gson.Gson
 import kotlinx.coroutines.withContext
 
 class DtnoWebImpl(
+    override val manager: GlobalBackend2Manager,
     private val gson: Gson,
     private val service: DtnoService,
-    private val setting: Setting,
-    private val dispatcherProvider: DispatcherProvider = DefaultDispatcherProvider
+    private val dispatcherProvider: DispatcherProvider = DefaultDispatcherProvider,
 ) : DtnoWeb {
 
     override suspend fun getKLineData(
-        apiParam: MemberApiParam,
         commKey: String,
         timeRangeType: Int,
-        number: Int
-    ): Result<List<KLineData>> = getKLineData(commKey, timeRangeType, number)
-
-    override suspend fun getKLineData(
-        commKey: String,
-        timeRangeType: Int,
-        number: Int
+        number: Int,
+        domain: String,
+        url: String
     ): Result<List<KLineData>> = withContext(dispatcherProvider.io()) {
         runCatching {
             val response = service.getKLineData(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
                 commKey = commKey,
                 timeRangeType = timeRangeType,
                 number = number,
-                appId = setting.appId,
-                guid = setting.identityToken.getMemberGuid()
+                appId = manager.getAppId(),
+                guid = manager.getIdentityToken().getMemberGuid()
             )
             response.checkIsSuccessful()
                 .requireBody()
@@ -47,21 +46,18 @@ class DtnoWebImpl(
     }
 
     override suspend fun getLatestBasicInfo(
-        apiParam: MemberApiParam,
         commKeys: List<String>,
-        appServiceId: Int
-    ): Result<BasicInfoResponseBody> = getLatestBasicInfo(commKeys, appServiceId)
-
-    override suspend fun getLatestBasicInfo(
-        commKeys: List<String>,
-        appServiceId: Int
+        appServiceId: Int,
+        domain: String,
+        url: String
     ): Result<BasicInfoResponseBody> = withContext(dispatcherProvider.io()) {
         runCatching {
             val response = service.getLatestBasicInfo(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
                 commKeys = commKeys.toCommKeyList(),
-                appId = setting.appId,
-                guid = setting.identityToken.getMemberGuid(),
+                appId = manager.getAppId(),
+                guid = manager.getIdentityToken().getMemberGuid(),
                 appServiceId = appServiceId
             )
             response.checkIsSuccessful()

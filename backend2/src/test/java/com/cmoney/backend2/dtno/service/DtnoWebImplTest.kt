@@ -1,9 +1,8 @@
 package com.cmoney.backend2.dtno.service
 
-import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.ServerException
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.base.model.response.dtno.DtnoWithError
-import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.dtno.service.api.getLatestBasicInfo.BasicInfoData
 import com.cmoney.backend2.dtno.service.api.getLatestBasicInfo.BasicInfoResponseBodyWithError
 import com.cmoney.core.CoroutineTestRule
@@ -13,6 +12,7 @@ import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
+import io.mockk.slot
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
@@ -28,6 +28,7 @@ import retrofit2.Response
 class DtnoWebImplTest {
 
     private val testScope = TestScope()
+
     @ExperimentalCoroutinesApi
     @get:Rule
     val mainCoroutineRule = CoroutineTestRule(testScope = testScope)
@@ -35,23 +36,46 @@ class DtnoWebImplTest {
     @MockK
     private lateinit var service: DtnoService
     private val gson = GsonBuilder().serializeNulls().setLenient().setPrettyPrinting().create()
-    private lateinit var setting: Setting
     private lateinit var dtnoWeb: DtnoWeb
+
+    @MockK(relaxed = true)
+    private lateinit var manager: GlobalBackend2Manager
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        setting = TestSetting()
         dtnoWeb = DtnoWebImpl(
+            manager = manager,
             gson = gson,
             service = service,
-            setting = setting,
             dispatcherProvider = TestDispatcherProvider()
         )
+        coEvery {
+            manager.getDtnoSettingAdapter().getDomain()
+        } returns EXCEPT_DOMAIN
     }
 
     @Test
-    fun `getKLineData_成功`() = testScope.runTest {
+    fun `getKLineData_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}DtnoService/api/KLine/GetKLine"
+        val urlSlot = slot<String>()
+        coEvery {
+            service.getKLineData(
+                url = capture(urlSlot),
+                authorization = any(),
+                commKey = any(),
+                timeRangeType = any(),
+                number = any(),
+                appId = any(),
+                guid = any()
+            )
+        } returns Response.success(DtnoWithError(listOf(), listOf()))
+        dtnoWeb.getKLineData("TWA00", 1, 1)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getKLineData_success() = testScope.runTest {
         val response = DtnoWithError(
             listOf("日期", "開盤價", "最高價", "最低價", "收盤價", "成交量", "漲跌", "漲幅(%)", "成交金額(千)"),
             listOf(
@@ -81,6 +105,7 @@ class DtnoWebImplTest {
         )
         coEvery {
             service.getKLineData(
+                url = any(),
                 authorization = any(),
                 commKey = any(),
                 timeRangeType = any(),
@@ -96,13 +121,14 @@ class DtnoWebImplTest {
     }
 
     @Test
-    fun `getKLineData_參數錯誤`() = testScope.runTest {
+    fun `getKLineData_parameter error`() = testScope.runTest {
         val response = DtnoWithError(
             listOf("日期", "開盤價", "最高價", "最低價", "收盤價", "成交量", "漲跌", "漲幅(%)", "成交金額(千)"),
             listOf()
         )
         coEvery {
             service.getKLineData(
+                url = any(),
                 commKey = any(),
                 timeRangeType = any(),
                 number = any(),
@@ -119,7 +145,28 @@ class DtnoWebImplTest {
     }
 
     @Test
-    fun `getLatestBasicInfo_成功`() = testScope.runTest {
+    fun `getLatestBasicInfo_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}DtnoService/api/HistoryData/GetLatestBasicInfo"
+        val urlSlot = slot<String>()
+        coEvery {
+            service.getLatestBasicInfo(
+                url = capture(urlSlot),
+                commKeys = any(),
+                appId = any(),
+                guid = any(),
+                authorization = any(),
+                appServiceId = any()
+            )
+        } returns Response.success(BasicInfoResponseBodyWithError(listOf()))
+        dtnoWeb.getLatestBasicInfo(
+            commKeys = listOf("TSM", "CHT"),
+            appServiceId = 0
+        )
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getLatestBasicInfo_success() = testScope.runTest {
         val response = BasicInfoResponseBodyWithError(
             listOf(
                 BasicInfoData("TSM", "73.90", "9.69", "6.53", "20200724"),
@@ -128,6 +175,7 @@ class DtnoWebImplTest {
         )
         coEvery {
             service.getLatestBasicInfo(
+                url = any(),
                 commKeys = any(),
                 appId = any(),
                 guid = any(),
@@ -145,7 +193,7 @@ class DtnoWebImplTest {
     }
 
     @Test
-    fun `getLatestBasicInfo_參數錯誤`() = testScope.runTest {
+    fun `getLatestBasicInfo_parameter error`() = testScope.runTest {
         val responseBodyJson = """
             {"Error": {"Code": 100,"Message": "參數錯誤"}}
         """.trimIndent()
@@ -153,6 +201,7 @@ class DtnoWebImplTest {
             gson.fromJson(responseBodyJson, BasicInfoResponseBodyWithError::class.java)
         coEvery {
             service.getLatestBasicInfo(
+                url = any(),
                 commKeys = any(),
                 appId = any(),
                 guid = any(),
@@ -170,7 +219,7 @@ class DtnoWebImplTest {
     }
 
     @Test
-    fun `getLatestBasicInfo_身分驗證錯誤`() = testScope.runTest {
+    fun `getLatestBasicInfo_identity card error`() = testScope.runTest {
         val responseBodyJson = """
             { "Error": {"Code": 101,"Message": "身分驗證錯誤"}}
         """.trimIndent()
@@ -178,6 +227,7 @@ class DtnoWebImplTest {
             gson.fromJson(responseBodyJson, BasicInfoResponseBodyWithError::class.java)
         coEvery {
             service.getLatestBasicInfo(
+                url = any(),
                 commKeys = any(),
                 appId = any(),
                 guid = any(),
@@ -192,5 +242,9 @@ class DtnoWebImplTest {
         Truth.assertThat(result.isSuccess).isFalse()
         val exception = result.exceptionOrNull() as ServerException
         Truth.assertThat(exception).isNotNull()
+    }
+
+    companion object {
+        private const val EXCEPT_DOMAIN = "localhost://8080:80/"
     }
 }

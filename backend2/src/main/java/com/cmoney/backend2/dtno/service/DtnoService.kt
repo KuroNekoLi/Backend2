@@ -8,6 +8,7 @@ import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Url
 
 interface DtnoService {
 
@@ -16,8 +17,9 @@ interface DtnoService {
      */
     @RecordApi
     @FormUrlEncoded
-    @POST("DtnoService/api/KLine/GetKLine")
+    @POST
     suspend fun getKLineData(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("Commkey") commKey: String,
         @Field("TimeRangeType") timeRangeType: Int,
@@ -31,8 +33,9 @@ interface DtnoService {
      */
     @RecordApi
     @FormUrlEncoded
-    @POST("DtnoService/api/HistoryData/GetLatestBasicInfo")
+    @POST
     suspend fun getLatestBasicInfo(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("Commkeys") commKeys: String,
         @Field("AppId") appId: Int,
