@@ -1,9 +1,8 @@
 package com.cmoney.backend2.identityprovider.service
 
-import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.ServerException
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.base.model.response.error.CMoneyError
-import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.identityprovider.service.api.gettoken.GetTokenResponseBodyWithError
 import com.cmoney.backend2.identityprovider.service.api.islatest.IsLatestResponseBodyWithError
 import com.cmoney.backend2.identityprovider.service.api.revoke.RevokeResponseBodyWithError
@@ -14,6 +13,7 @@ import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
+import io.mockk.slot
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
@@ -38,26 +38,42 @@ class IdentityProviderWebImplTest {
     @MockK
     private lateinit var service: IdentityProviderService
     private val gson = GsonBuilder().serializeNulls().setLenient().setPrettyPrinting().create()
-    private lateinit var setting: Setting
     private lateinit var web: IdentityProviderWeb
+
+    @MockK(relaxed = true)
+    private lateinit var manager: GlobalBackend2Manager
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        setting = TestSetting()
         web = IdentityProviderWebImpl(
+            manager = manager,
             service = service,
             gson = gson,
-            setting = setting,
             dispatcherProvider = TestDispatcherProvider()
         )
+        coEvery {
+            manager.getIdentityProviderSettingAdapter().getDomain()
+        } returns EXCEPT_DOMAIN
+    }
+
+    @Test
+    fun `isTokenLatest_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}identity/session/isLatest"
+        val urlSlot = slot<String>()
+        val responseBody = IsLatestResponseBodyWithError(isSuccess = true)
+        coEvery {
+            service.isTokenLatest(url = capture(urlSlot), accessToken = any())
+        } returns Response.success(responseBody)
+        web.isTokenLatest()
+        assertThat(urlSlot.captured).isEqualTo(expect)
     }
 
     @Test
     fun `isTokenLatest_是最新回傳true`() = testScope.runTest {
         val responseBody = IsLatestResponseBodyWithError(isSuccess = true)
         coEvery {
-            service.isTokenLatest(any())
+            service.isTokenLatest(url = any(), accessToken = any())
         } returns Response.success(responseBody)
         val result = web.isTokenLatest()
         assertThat(result.isSuccess).isTrue()
@@ -68,7 +84,7 @@ class IdentityProviderWebImplTest {
     fun `isTokenLatest_是最新回傳false`() = testScope.runTest {
         val responseBody = IsLatestResponseBodyWithError(isSuccess = false)
         coEvery {
-            service.isTokenLatest(any())
+            service.isTokenLatest(url = any(), accessToken = any())
         } returns Response.success(responseBody)
         val result = web.isTokenLatest()
         assertThat(result.isSuccess).isTrue()
@@ -85,7 +101,7 @@ class IdentityProviderWebImplTest {
             )
         ).toResponseBody()
         coEvery {
-            service.isTokenLatest(any())
+            service.isTokenLatest(url = any(), accessToken = any())
         } returns Response.error(400, errorBody)
         val result = web.isTokenLatest()
         assertThat(result.isSuccess).isFalse()
@@ -102,11 +118,44 @@ class IdentityProviderWebImplTest {
             )
         ).toResponseBody()
         coEvery {
-            service.isTokenLatest(any())
+            service.isTokenLatest(url = any(), accessToken = any())
         } returns Response.error(401, errorBody)
         val result = web.isTokenLatest()
         assertThat(result.isSuccess).isFalse()
         result.getOrThrow()
+    }
+
+    @Test
+    fun `loginByEmail_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}identity/token"
+        val urlSlot = slot<String>()
+        val responseBody = GetTokenResponseBodyWithError(
+            accessToken = "",
+            expiresIn = 0,
+            idToken = "",
+            refreshToken = "",
+            tokenType = ""
+        )
+        coEvery {
+            service.getIdentityToken(
+                url = capture(urlSlot),
+                xApiLog = any(),
+                grantType = any(),
+                clientId = any(),
+                scope = any(),
+                clientSecret = any(),
+                account = any(),
+                hashedPassword = any(),
+                providerToken = any(),
+                provider = any(),
+                loginMethod = any(),
+                code = any(),
+                redirectUri = any(),
+                refreshToken = any()
+            )
+        } returns Response.success(responseBody)
+        web.loginByEmail("", "")
+        assertThat(urlSlot.captured).isEqualTo(expect)
     }
 
     @Test
@@ -120,6 +169,7 @@ class IdentityProviderWebImplTest {
         )
         coEvery {
             service.getIdentityToken(
+                url = any(),
                 xApiLog = any(),
                 grantType = any(),
                 clientId = any(),
@@ -152,6 +202,7 @@ class IdentityProviderWebImplTest {
         ).toResponseBody()
         coEvery {
             service.getIdentityToken(
+                url = any(),
                 xApiLog = any(),
                 grantType = any(),
                 clientId = any(),
@@ -183,6 +234,7 @@ class IdentityProviderWebImplTest {
         ).toResponseBody()
         coEvery {
             service.getIdentityToken(
+                url = any(),
                 xApiLog = any(),
                 grantType = any(),
                 clientId = any(),
@@ -204,6 +256,39 @@ class IdentityProviderWebImplTest {
     }
 
     @Test
+    fun `loginByCellphone_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}identity/token"
+        val urlSlot = slot<String>()
+        val responseBody = GetTokenResponseBodyWithError(
+            accessToken = "",
+            expiresIn = 0,
+            idToken = "",
+            refreshToken = "",
+            tokenType = ""
+        )
+        coEvery {
+            service.getIdentityToken(
+                url = capture(urlSlot),
+                xApiLog = any(),
+                grantType = any(),
+                clientId = any(),
+                scope = any(),
+                clientSecret = any(),
+                account = any(),
+                hashedPassword = any(),
+                providerToken = any(),
+                provider = any(),
+                loginMethod = any(),
+                code = any(),
+                redirectUri = any(),
+                refreshToken = any()
+            )
+        } returns Response.success(responseBody)
+        web.loginByCellphone("", "")
+        assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun `loginByCellphone_status is 200_成功`() = testScope.runTest {
         val responseBody = GetTokenResponseBodyWithError(
             accessToken = "",
@@ -214,6 +299,7 @@ class IdentityProviderWebImplTest {
         )
         coEvery {
             service.getIdentityToken(
+                url = any(),
                 xApiLog = any(),
                 grantType = any(),
                 clientId = any(),
@@ -246,6 +332,7 @@ class IdentityProviderWebImplTest {
         ).toResponseBody()
         coEvery {
             service.getIdentityToken(
+                url = any(),
                 xApiLog = any(),
                 grantType = any(),
                 clientId = any(),
@@ -277,6 +364,7 @@ class IdentityProviderWebImplTest {
         ).toResponseBody()
         coEvery {
             service.getIdentityToken(
+                url = any(),
                 xApiLog = any(),
                 grantType = any(),
                 clientId = any(),
@@ -298,6 +386,39 @@ class IdentityProviderWebImplTest {
     }
 
     @Test
+    fun `loginByFacebook_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}identity/token"
+        val urlSlot = slot<String>()
+        val responseBody = GetTokenResponseBodyWithError(
+            accessToken = "",
+            expiresIn = 0,
+            idToken = "",
+            refreshToken = "",
+            tokenType = ""
+        )
+        coEvery {
+            service.getIdentityToken(
+                url = capture(urlSlot),
+                xApiLog = any(),
+                grantType = any(),
+                clientId = any(),
+                scope = any(),
+                clientSecret = any(),
+                account = any(),
+                hashedPassword = any(),
+                providerToken = any(),
+                provider = any(),
+                loginMethod = any(),
+                code = any(),
+                redirectUri = any(),
+                refreshToken = any()
+            )
+        } returns Response.success(responseBody)
+        web.loginByFacebook("")
+        assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun `loginByFacebook_status is 200_成功`() = testScope.runTest {
         val responseBody = GetTokenResponseBodyWithError(
             accessToken = "",
@@ -308,6 +429,7 @@ class IdentityProviderWebImplTest {
         )
         coEvery {
             service.getIdentityToken(
+                url = any(),
                 xApiLog = any(),
                 grantType = any(),
                 clientId = any(),
@@ -340,6 +462,7 @@ class IdentityProviderWebImplTest {
         ).toResponseBody()
         coEvery {
             service.getIdentityToken(
+                url = any(),
                 xApiLog = any(),
                 grantType = any(),
                 clientId = any(),
@@ -371,6 +494,7 @@ class IdentityProviderWebImplTest {
         ).toResponseBody()
         coEvery {
             service.getIdentityToken(
+                url = any(),
                 xApiLog = any(),
                 grantType = any(),
                 clientId = any(),
@@ -392,6 +516,39 @@ class IdentityProviderWebImplTest {
     }
 
     @Test
+    fun `loginByGoogle_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}identity/token"
+        val urlSlot = slot<String>()
+        val responseBody = GetTokenResponseBodyWithError(
+            accessToken = "",
+            expiresIn = 0,
+            idToken = "",
+            refreshToken = "",
+            tokenType = ""
+        )
+        coEvery {
+            service.getIdentityToken(
+                url = capture(urlSlot),
+                xApiLog = any(),
+                grantType = any(),
+                clientId = any(),
+                scope = any(),
+                clientSecret = any(),
+                account = any(),
+                hashedPassword = any(),
+                providerToken = any(),
+                provider = any(),
+                loginMethod = any(),
+                code = any(),
+                redirectUri = any(),
+                refreshToken = any()
+            )
+        } returns Response.success(responseBody)
+        web.loginByGoogle("")
+        assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun `loginByGoogle_status is 200_成功`() = testScope.runTest {
         val responseBody = GetTokenResponseBodyWithError(
             accessToken = "",
@@ -402,6 +559,7 @@ class IdentityProviderWebImplTest {
         )
         coEvery {
             service.getIdentityToken(
+                url = any(),
                 xApiLog = any(),
                 grantType = any(),
                 clientId = any(),
@@ -423,7 +581,6 @@ class IdentityProviderWebImplTest {
         assertThat(resultValue).isEqualTo(responseBody.toRealResponse())
     }
 
-
     @Test(expected = ServerException::class)
     fun `loginByGoogle_status is 400_ServerException`() = testScope.runTest {
         val errorBody = gson.toJson(
@@ -435,6 +592,7 @@ class IdentityProviderWebImplTest {
         ).toResponseBody()
         coEvery {
             service.getIdentityToken(
+                url = any(),
                 xApiLog = any(),
                 grantType = any(),
                 clientId = any(),
@@ -456,6 +614,39 @@ class IdentityProviderWebImplTest {
     }
 
     @Test
+    fun `loginByFirebaseAnonymousToken_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}identity/token"
+        val urlSlot = slot<String>()
+        val responseBody = GetTokenResponseBodyWithError(
+            accessToken = "",
+            expiresIn = 0,
+            idToken = "",
+            refreshToken = "",
+            tokenType = ""
+        )
+        coEvery {
+            service.getIdentityToken(
+                url = capture(urlSlot),
+                xApiLog = any(),
+                grantType = any(),
+                clientId = any(),
+                scope = any(),
+                clientSecret = any(),
+                account = any(),
+                hashedPassword = any(),
+                providerToken = any(),
+                provider = any(),
+                loginMethod = any(),
+                code = any(),
+                redirectUri = any(),
+                refreshToken = any()
+            )
+        } returns Response.success(responseBody)
+        web.loginByFirebaseAnonymousToken("")
+        assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun `loginByFirebaseAnonymousToken_status is 200_成功`() = testScope.runTest {
         val responseBody = GetTokenResponseBodyWithError(
             accessToken = "",
@@ -466,6 +657,7 @@ class IdentityProviderWebImplTest {
         )
         coEvery {
             service.getIdentityToken(
+                url = any(),
                 xApiLog = any(),
                 grantType = any(),
                 clientId = any(),
@@ -499,6 +691,7 @@ class IdentityProviderWebImplTest {
             ).toResponseBody()
             coEvery {
                 service.getIdentityToken(
+                    url = any(),
                     xApiLog = any(),
                     grantType = any(),
                     clientId = any(),
@@ -531,6 +724,7 @@ class IdentityProviderWebImplTest {
             ).toResponseBody()
             coEvery {
                 service.getIdentityToken(
+                    url = any(),
                     xApiLog = any(),
                     grantType = any(),
                     clientId = any(),
@@ -552,6 +746,40 @@ class IdentityProviderWebImplTest {
         }
 
     @Test
+    fun `logByPkce_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}identity/token"
+        val urlSlot = slot<String>()
+        val responseBody = GetTokenResponseBodyWithError(
+            accessToken = "",
+            expiresIn = 0,
+            idToken = "",
+            refreshToken = "",
+            tokenType = ""
+        )
+        coEvery {
+            service.getIdentityToken(
+                url = capture(urlSlot),
+                xApiLog = any(),
+                grantType = any(),
+                clientId = any(),
+                scope = any(),
+                clientSecret = any(),
+                account = any(),
+                hashedPassword = any(),
+                providerToken = any(),
+                provider = any(),
+                loginMethod = any(),
+                code = any(),
+                redirectUri = any(),
+                refreshToken = any(),
+                codeVerifier = any()
+            )
+        } returns Response.success(responseBody)
+        web.loginByPkce("", "", "")
+        assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun `logByPkce_status is 200_成功`() = testScope.runTest {
         val responseBody = GetTokenResponseBodyWithError(
             accessToken = "",
@@ -562,6 +790,7 @@ class IdentityProviderWebImplTest {
         )
         coEvery {
             service.getIdentityToken(
+                url = any(),
                 xApiLog = any(),
                 grantType = any(),
                 clientId = any(),
@@ -593,6 +822,7 @@ class IdentityProviderWebImplTest {
         ).toResponseBody()
         coEvery {
             service.getIdentityToken(
+                url = any(),
                 xApiLog = any(),
                 grantType = any(),
                 clientId = any(),
@@ -618,6 +848,7 @@ class IdentityProviderWebImplTest {
         val errorBody = "".toResponseBody()
         coEvery {
             service.getIdentityToken(
+                url = any(),
                 xApiLog = any(),
                 grantType = any(),
                 clientId = any(),
@@ -639,6 +870,40 @@ class IdentityProviderWebImplTest {
     }
 
     @Test
+    fun `logByCMoneyThirdParty_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}identity/token"
+        val urlSlot = slot<String>()
+        val responseBody = GetTokenResponseBodyWithError(
+            accessToken = "",
+            expiresIn = 0,
+            idToken = "",
+            refreshToken = "",
+            tokenType = ""
+        )
+        coEvery {
+            service.getIdentityToken(
+                url = capture(urlSlot),
+                xApiLog = any(),
+                grantType = any(),
+                clientId = any(),
+                scope = any(),
+                clientSecret = any(),
+                account = any(),
+                hashedPassword = any(),
+                providerToken = any(),
+                provider = any(),
+                loginMethod = any(),
+                code = any(),
+                redirectUri = any(),
+                refreshToken = any(),
+                codeVerifier = any()
+            )
+        } returns Response.success(responseBody)
+        web.loginByCMoneyThirdParty("")
+        assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun `logByCMoneyThirdParty_status is 200_成功`() = testScope.runTest {
         val responseBody = GetTokenResponseBodyWithError(
             accessToken = "",
@@ -649,6 +914,7 @@ class IdentityProviderWebImplTest {
         )
         coEvery {
             service.getIdentityToken(
+                url = any(),
                 xApiLog = any(),
                 grantType = any(),
                 clientId = any(),
@@ -676,6 +942,7 @@ class IdentityProviderWebImplTest {
         val errorBody = "".toResponseBody()
         coEvery {
             service.getIdentityToken(
+                url = any(),
                 xApiLog = any(),
                 grantType = any(),
                 clientId = any(),
@@ -697,14 +964,35 @@ class IdentityProviderWebImplTest {
     }
 
     @Test
+    fun `revokeToken_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}identity/revocation"
+        val urlSlot = slot<String>()
+        val responseBody = RevokeResponseBodyWithError(tokenType = "", success = true)
+        coEvery {
+            service.revokeIdentityToken(
+                url = capture(urlSlot),
+                accessToken = any(),
+                clientId = any(),
+                clientSecret = any(),
+                token = any(),
+                tokenType = any()
+            )
+        } returns Response.success(responseBody)
+        web.revokeToken("")
+        assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun `revokeToken_http is 200_success是true`() = testScope.runTest {
         val responseBody = RevokeResponseBodyWithError(tokenType = "", success = true)
         coEvery {
             service.revokeIdentityToken(
+                url = any(),
+                accessToken = any(),
                 clientId = any(),
                 clientSecret = any(),
                 token = any(),
-                tokenType = any(), accessToken = any()
+                tokenType = any()
             )
         } returns Response.success(responseBody)
         val result = web.revokeToken("")
@@ -717,10 +1005,12 @@ class IdentityProviderWebImplTest {
         val responseBody = RevokeResponseBodyWithError(tokenType = "", success = false)
         coEvery {
             service.revokeIdentityToken(
+                url = any(),
+                accessToken = any(),
                 clientId = any(),
                 clientSecret = any(),
                 token = any(),
-                tokenType = any(), accessToken = any()
+                tokenType = any()
             )
         } returns Response.success(responseBody)
         val result = web.revokeToken("")
@@ -739,10 +1029,12 @@ class IdentityProviderWebImplTest {
         ).toResponseBody()
         coEvery {
             service.revokeIdentityToken(
+                url = any(),
+                accessToken = any(),
                 clientId = any(),
                 clientSecret = any(),
                 token = any(),
-                tokenType = any(), accessToken = any()
+                tokenType = any()
             )
         } returns Response.error(400, errorBody)
         val result = web.revokeToken("")
@@ -761,15 +1053,50 @@ class IdentityProviderWebImplTest {
         ).toResponseBody()
         coEvery {
             service.revokeIdentityToken(
+                url = any(),
+                accessToken = any(),
                 clientId = any(),
                 clientSecret = any(),
                 token = any(),
-                tokenType = any(), accessToken = any()
+                tokenType = any()
             )
         } returns Response.error(401, errorBody)
         val result = web.revokeToken("")
         assertThat(result.isSuccess).isFalse()
         result.getOrThrow()
+    }
+
+    @Test
+    fun `refreshToken_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}identity/token"
+        val urlSlot = slot<String>()
+        val responseBody = GetTokenResponseBodyWithError(
+            accessToken = "",
+            expiresIn = 0,
+            idToken = "",
+            refreshToken = "",
+            tokenType = ""
+        )
+        coEvery {
+            service.getIdentityToken(
+                url = capture(urlSlot),
+                xApiLog = any(),
+                grantType = any(),
+                clientId = any(),
+                scope = any(),
+                clientSecret = any(),
+                account = any(),
+                hashedPassword = any(),
+                providerToken = any(),
+                provider = any(),
+                loginMethod = any(),
+                code = any(),
+                redirectUri = any(),
+                refreshToken = any()
+            )
+        } returns Response.success(responseBody)
+        web.refreshToken("")
+        assertThat(urlSlot.captured).isEqualTo(expect)
     }
 
     @Test
@@ -783,6 +1110,7 @@ class IdentityProviderWebImplTest {
         )
         coEvery {
             service.getIdentityToken(
+                url = any(),
                 xApiLog = any(),
                 grantType = any(),
                 clientId = any(),
@@ -815,6 +1143,7 @@ class IdentityProviderWebImplTest {
         ).toResponseBody()
         coEvery {
             service.getIdentityToken(
+                url = any(),
                 xApiLog = any(),
                 grantType = any(),
                 clientId = any(),
@@ -846,6 +1175,7 @@ class IdentityProviderWebImplTest {
         ).toResponseBody()
         coEvery {
             service.getIdentityToken(
+                url = any(),
                 xApiLog = any(),
                 grantType = any(),
                 clientId = any(),
@@ -864,5 +1194,9 @@ class IdentityProviderWebImplTest {
         val result = web.refreshToken("")
         assertThat(result.isSuccess).isFalse()
         result.getOrThrow()
+    }
+
+    companion object {
+        private const val EXCEPT_DOMAIN  = "localhost://8080:80/"
     }
 }
