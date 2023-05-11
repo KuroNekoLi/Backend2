@@ -13,8 +13,9 @@ interface IdentityProviderService {
      *
      */
     @RecordApi
-    @GET(value = "identity/session/isLatest")
+    @GET
     suspend fun isTokenLatest(
+        @Url url: String,
         @Header("Authorization")
         accessToken: String
     ): Response<IsLatestResponseBodyWithError>
@@ -38,9 +39,10 @@ interface IdentityProviderService {
      *
      */
     @RecordApi
-    @POST(value = "identity/token")
+    @POST
     @FormUrlEncoded
     suspend fun getIdentityToken(
+        @Url url: String,
         @Header("x-cmapi-trace-context")
         xApiLog: String,
         @Field(value = "grant_type")
@@ -81,9 +83,10 @@ interface IdentityProviderService {
      * @return
      */
     @RecordApi
-    @POST(value = "identity/revocation")
+    @POST
     @FormUrlEncoded
     suspend fun revokeIdentityToken(
+        @Url url: String,
         @Header("Authorization")
         accessToken: String,
         @Field(value = "client_id")
