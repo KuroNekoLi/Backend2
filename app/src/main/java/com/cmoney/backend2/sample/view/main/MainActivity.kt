@@ -114,7 +114,6 @@ class MainActivity : AppCompatActivity() {
 //                CustomGroupServiceCase(),
 //                CustomGroup2ServiceCase(),
 //                DataServiceCase(),
-//                DtnoServiceCase(),
 //                EmilyServiceCase(),
 //                ForumOceanServiceCase(),
 //                FrontEndLoggerServiceCase(),

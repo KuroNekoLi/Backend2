@@ -37,8 +37,6 @@ import com.cmoney.backend2.customgroup.model.CustomGroupSettingAdapter
 import com.cmoney.backend2.customgroup.model.CustomGroupSettingAdapterImpl
 import com.cmoney.backend2.customgroup2.model.CustomGroup2SettingAdapter
 import com.cmoney.backend2.customgroup2.model.CustomGroup2SettingAdapterImpl
-import com.cmoney.backend2.dtno.model.DtnoSettingAdapter
-import com.cmoney.backend2.dtno.model.DtnoSettingAdapterImpl
 import com.cmoney.backend2.virtualtrading2.model.settingadapter.VirtualTrading2SettingAdapter
 import com.cmoney.backend2.virtualtrading2.model.settingadapter.VirtualTrading2SettingAdapterImpl
 import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdapter
@@ -65,7 +63,6 @@ import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdap
  * @property crmSettingAdapter CRM設定轉接器
  * @property customGroupSettingAdapter MobileService-自選股設定轉接器
  * @property customGroup2SettingAdapter 自選股V2設定轉接器
- * @property dtnoSettingAdapter DTNO設定轉接器
  * @property virtualTradeSettingAdapter 虛擬下單V1轉接器
  * @property virtualTrading2SettingAdapter 虛擬下單V2轉接器
  *
@@ -89,7 +86,6 @@ class GlobalBackend2Manager(
     private val crmSettingAdapter: CrmSettingAdapter,
     private val customGroupSettingAdapter: CustomGroupSettingAdapter,
     private val customGroup2SettingAdapter: CustomGroup2SettingAdapter,
-    private val dtnoSettingAdapter: DtnoSettingAdapter,
     private val virtualTradeSettingAdapter: VirtualTradeSettingAdapter,
     private val virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter,
 ) {
@@ -112,7 +108,6 @@ class GlobalBackend2Manager(
         crmSettingAdapter = builder.crmSettingAdapter,
         customGroupSettingAdapter = builder.customGroupSettingAdapter,
         customGroup2SettingAdapter = builder.customGroup2SettingAdapter,
-        dtnoSettingAdapter = builder.dtnoSettingAdapter,
         virtualTradeSettingAdapter = builder.virtualTradeSettingAdapter,
         virtualTrading2SettingAdapter = builder.virtualTrading2SettingAdapter
     )
@@ -375,13 +370,6 @@ class GlobalBackend2Manager(
     }
 
     /**
-     * 取得dtno設定轉接器
-     */
-    fun getDtnoSettingAdapter(): DtnoSettingAdapter {
-        return dtnoSettingAdapter
-    }
-
-    /**
      * 取得虛擬下單V1設定轉接器
      */
     fun getVirtualTradeSettingAdapter(): VirtualTradeSettingAdapter {
@@ -464,8 +452,6 @@ class GlobalBackend2Manager(
             CustomGroupSettingAdapterImpl(backendSetting)
         var customGroup2SettingAdapter: CustomGroup2SettingAdapter =
             CustomGroup2SettingAdapterImpl(backendSetting)
-        var dtnoSettingAdapter: DtnoSettingAdapter =
-            DtnoSettingAdapterImpl(backendSetting)
         var virtualTradeSettingAdapter: VirtualTradeSettingAdapter =
             VirtualTradeSettingAdapterImpl(backendSetting)
         var virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter =
