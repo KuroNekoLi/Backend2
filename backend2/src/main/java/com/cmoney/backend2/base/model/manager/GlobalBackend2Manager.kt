@@ -29,12 +29,12 @@ import com.cmoney.backend2.common.model.CommonSettingAdapter
 import com.cmoney.backend2.common.model.CommonSettingAdapterImpl
 import com.cmoney.backend2.commonuse.model.CommonUseSettingAdapter
 import com.cmoney.backend2.commonuse.model.CommonUseSettingAdapterImpl
-import com.cmoney.backend2.customgroup.model.CustomGroupSettingAdapter
-import com.cmoney.backend2.customgroup.model.CustomGroupSettingAdapterImpl
 import com.cmoney.backend2.crawlsetting.model.CrawlSettingSettingAdapter
 import com.cmoney.backend2.crawlsetting.model.CrawlSettingSettingAdapterImpl
 import com.cmoney.backend2.crm.model.CrmSettingAdapter
 import com.cmoney.backend2.crm.model.CrmSettingAdapterImpl
+import com.cmoney.backend2.customgroup.model.CustomGroupSettingAdapter
+import com.cmoney.backend2.customgroup.model.CustomGroupSettingAdapterImpl
 import com.cmoney.backend2.customgroup2.model.CustomGroup2SettingAdapter
 import com.cmoney.backend2.customgroup2.model.CustomGroup2SettingAdapterImpl
 import com.cmoney.backend2.data.model.DataSettingAdapter
