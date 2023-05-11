@@ -45,6 +45,8 @@ import com.cmoney.backend2.frontendlogger.model.FrontEndLoggerSettingAdapter
 import com.cmoney.backend2.frontendlogger.model.FrontEndLoggerSettingAdapterImpl
 import com.cmoney.backend2.identityprovider.model.IdentityProviderSettingAdapter
 import com.cmoney.backend2.identityprovider.model.IdentityProviderSettingAdapterImpl
+import com.cmoney.backend2.imagerecognition.model.ImageRecognitionSettingAdapter
+import com.cmoney.backend2.imagerecognition.model.ImageRecognitionSettingAdapterImpl
 import com.cmoney.backend2.virtualtrading2.model.settingadapter.VirtualTrading2SettingAdapter
 import com.cmoney.backend2.virtualtrading2.model.settingadapter.VirtualTrading2SettingAdapterImpl
 import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdapter
@@ -75,6 +77,7 @@ import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdap
  * @property emilyStockSettingAdapter EmilyStock服務設定轉接器
  * @property frontEndLoggerSettingAdapter FrontEndLogger服務設定轉接器
  * @property identityProviderSettingAdapter IdentityProvider服務設定轉接器
+ * @property imageRecognitionSettingAdapter 圖像辨識服務設定轉接器
  * @property virtualTradeSettingAdapter 虛擬下單V1轉接器
  * @property virtualTrading2SettingAdapter 虛擬下單V2轉接器
  *
@@ -102,6 +105,7 @@ class GlobalBackend2Manager(
     private val emilyStockSettingAdapter: EmilyStockSettingAdapter,
     private val frontEndLoggerSettingAdapter: FrontEndLoggerSettingAdapter,
     private val identityProviderSettingAdapter: IdentityProviderSettingAdapter,
+    private val imageRecognitionSettingAdapter: ImageRecognitionSettingAdapter,
     private val virtualTradeSettingAdapter: VirtualTradeSettingAdapter,
     private val virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter,
 ) {
@@ -128,6 +132,7 @@ class GlobalBackend2Manager(
         emilyStockSettingAdapter = builder.emilyStockSettingAdapter,
         frontEndLoggerSettingAdapter = builder.frontEndLoggerSettingAdapter,
         identityProviderSettingAdapter = builder.identityProviderSettingAdapter,
+        imageRecognitionSettingAdapter = builder.imageRecognitionSettingAdapter,
         virtualTradeSettingAdapter = builder.virtualTradeSettingAdapter,
         virtualTrading2SettingAdapter = builder.virtualTrading2SettingAdapter
     )
@@ -424,6 +429,13 @@ class GlobalBackend2Manager(
     }
 
     /**
+     * 取得圖像辨識設定轉接器
+     */
+    fun getImageRecognitionSettingAdapter(): ImageRecognitionSettingAdapter {
+        return imageRecognitionSettingAdapter
+    }
+
+    /**
      * 取得虛擬下單V1設定轉接器
      */
     fun getVirtualTradeSettingAdapter(): VirtualTradeSettingAdapter {
@@ -514,6 +526,8 @@ class GlobalBackend2Manager(
             FrontEndLoggerSettingAdapterImpl(backendSetting)
         var identityProviderSettingAdapter: IdentityProviderSettingAdapter =
             IdentityProviderSettingAdapterImpl(backendSetting)
+        var imageRecognitionSettingAdapter: ImageRecognitionSettingAdapter =
+            ImageRecognitionSettingAdapterImpl()
         var virtualTradeSettingAdapter: VirtualTradeSettingAdapter =
             VirtualTradeSettingAdapterImpl(backendSetting)
         var virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter =
