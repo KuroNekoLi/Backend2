@@ -1,27 +1,23 @@
 package com.cmoney.backend2.notification.service
 
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
+
 interface NotificationWeb {
-    /**
-     * 增加到達數
-     */
-    @Deprecated("Will remove in 2023/1/1", replaceWith = ReplaceWith("this.updateArriveCount(sn, pushToken, title, content, emptyList(), 0)"))
-    suspend fun updateArriveCount(
-        sn: Long,
-        pushToken: String,
-        analyticsId: Long,
-        title: String,
-        content: String
-    ): Result<Unit>
+
+    val manager: GlobalBackend2Manager
 
     /**
      * 增加到達數
      *
-     * @property sn 序號
-     * @property pushToken 推播Token
-     * @property title 標題
-     * @property content 內容
-     * @property analyticsLabels 用於統計與分析的labels
-     * @property createTime 推播建立時間
+     * @param sn 序號
+     * @param pushToken 推播Token
+     * @param title 標題
+     * @param content 內容
+     * @param analyticsLabels 用於統計與分析的labels
+     * @param createTime 推播建立時間,
+     * @param domain 網域名稱
+     * @param url 完整的Url
+     *
      */
     suspend fun updateArriveCount(
         sn: Long,
@@ -29,47 +25,60 @@ interface NotificationWeb {
         title: String,
         content: String,
         analyticsLabels: List<String> = emptyList(),
-        createTime: Long = 0
-    ): Result<Unit>
-
-    /**
-     * 增加點擊數
-     */
-    @Deprecated("Will remove in 2023/1/1", replaceWith = ReplaceWith("this.updateClickCount(sn, pushToken, title, content, emptyList(), 0)"))
-    suspend fun updateClickCount(
-        sn: Long,
-        pushToken: String,
-        analyticsId: Long,
-        title: String,
-        content: String
-    ): Result<Unit>
-
-    /**
-     * 增加點擊數
-     *
-     * @property sn 序號
-     * @property pushToken 推播Token
-     * @property title 標題
-     * @property content 內容
-     * @property analyticsLabels 用於統計與分析的labels
-     * @property createTime 推播建立時間
-     */
-    suspend fun updateClickCount(
-        sn: Long,
-        pushToken: String,
-        title: String,
-        content: String,
-        analyticsLabels: List<String> = emptyList(),
-        createTime: Long = 0
+        createTime: Long = 0,
+        domain: String = manager.getNotificationSettingAdapter().getDomain(),
+        url: String = "${domain}NotificationService/Statistics/arrived"
     ): Result<Unit>
 
     /**
      * 新增訪客Token
+     *
+     * @param pushToken 推播Token
+     * @param domain 網域名稱
+     * @param url 完整的Url
+     *
      */
-    suspend fun updateGuestPushToken(pushToken: String): Result<Unit>
+    suspend fun updateGuestPushToken(
+        pushToken: String,
+        domain: String = manager.getNotificationSettingAdapter().getDomain(),
+        url: String = "${domain}NotificationService/DeviceToken/guest"
+    ): Result<Unit>
 
     /**
      * 新增會員Token
+     *
+     * @param pushToken 推播Token
+     * @param domain 網域名稱
+     * @param url 完整的Url
+     *
      */
-    suspend fun updateMemberPushToken(pushToken: String): Result<Unit>
+    suspend fun updateMemberPushToken(
+        pushToken: String,
+        domain: String = manager.getNotificationSettingAdapter().getDomain(),
+        url: String = "${domain}NotificationService/DeviceToken/member"
+    ): Result<Unit>
+
+    /**
+     * 增加點擊數
+     *
+     * @param sn 序號
+     * @param pushToken 推播Token
+     * @param title 標題
+     * @param content 內容
+     * @param analyticsLabels 用於統計與分析的labels
+     * @param createTime 推播建立時間
+     * @param domain 網域名稱
+     * @param url 完整的Url
+     *
+     */
+    suspend fun updateClickCount(
+        sn: Long,
+        pushToken: String,
+        title: String,
+        content: String,
+        analyticsLabels: List<String> = emptyList(),
+        createTime: Long = 0,
+        domain: String = manager.getNotificationSettingAdapter().getDomain(),
+        url: String = "${domain}NotificationService/Statistics/clicked"
+    ): Result<Unit>
 }
