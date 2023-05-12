@@ -53,6 +53,8 @@ import com.cmoney.backend2.mobileocean.model.MobileOceanSettingAdapter
 import com.cmoney.backend2.mobileocean.model.MobileOceanSettingAdapterImpl
 import com.cmoney.backend2.note_extension.model.NoteExtensionSettingAdapter
 import com.cmoney.backend2.note_extension.model.NoteExtensionSettingAdapterImpl
+import com.cmoney.backend2.notes.model.NotesSettingAdapter
+import com.cmoney.backend2.notes.model.NotesSettingAdapterImpl
 import com.cmoney.backend2.virtualtrading2.model.settingadapter.VirtualTrading2SettingAdapter
 import com.cmoney.backend2.virtualtrading2.model.settingadapter.VirtualTrading2SettingAdapterImpl
 import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdapter
@@ -87,6 +89,7 @@ import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdap
  * @property mediaSettingAdapter MobileService-Media服務設定轉接器
  * @property mobileOceanSettingAdapter MobileOcean服務設定轉接器
  * @property noteExtensionSettingAdapter NoteExtension服務設定轉接器
+ * @property notesSettingAdapter Notes(網誌文章)服務設定轉接器
  * @property virtualTradeSettingAdapter 虛擬下單V1轉接器
  * @property virtualTrading2SettingAdapter 虛擬下單V2轉接器
  *
@@ -118,6 +121,7 @@ class GlobalBackend2Manager(
     private val mediaSettingAdapter: MediaSettingAdapter,
     private val mobileOceanSettingAdapter: MobileOceanSettingAdapter,
     private val noteExtensionSettingAdapter: NoteExtensionSettingAdapter,
+    private val notesSettingAdapter: NotesSettingAdapter,
     private val virtualTradeSettingAdapter: VirtualTradeSettingAdapter,
     private val virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter,
 ) {
@@ -148,6 +152,7 @@ class GlobalBackend2Manager(
         mediaSettingAdapter = builder.mediaSettingAdapter,
         mobileOceanSettingAdapter = builder.mobileOceanSettingAdapter,
         noteExtensionSettingAdapter = builder.noteExtensionSettingAdapter,
+        notesSettingAdapter = builder.notesSettingAdapter,
         virtualTradeSettingAdapter = builder.virtualTradeSettingAdapter,
         virtualTrading2SettingAdapter = builder.virtualTrading2SettingAdapter
     )
@@ -476,6 +481,15 @@ class GlobalBackend2Manager(
     }
 
     /**
+     * 取得Notes(網誌文章)服務設定轉接器
+     *
+     * @return Notes(網誌文章)服務設定轉接器
+     */
+    fun getNotesSettingAdapter(): NotesSettingAdapter {
+        return notesSettingAdapter
+    }
+
+    /**
      * 取得虛擬下單V1設定轉接器
      */
     fun getVirtualTradeSettingAdapter(): VirtualTradeSettingAdapter {
@@ -574,6 +588,8 @@ class GlobalBackend2Manager(
             MobileOceanSettingAdapterImpl(backendSetting)
         var noteExtensionSettingAdapter: NoteExtensionSettingAdapter =
             NoteExtensionSettingAdapterImpl(backendSetting)
+        var notesSettingAdapter: NotesSettingAdapter =
+            NotesSettingAdapterImpl(backendSetting)
         var virtualTradeSettingAdapter: VirtualTradeSettingAdapter =
             VirtualTradeSettingAdapterImpl(backendSetting)
         var virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter =

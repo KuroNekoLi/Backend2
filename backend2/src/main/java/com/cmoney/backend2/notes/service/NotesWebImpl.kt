@@ -5,8 +5,7 @@ import com.cmoney.backend2.base.extension.checkIsSuccessful
 import com.cmoney.backend2.base.extension.checkResponseBody
 import com.cmoney.backend2.base.extension.createAuthorizationBearer
 import com.cmoney.backend2.base.extension.requireBody
-import com.cmoney.backend2.base.model.request.MemberApiParam
-import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.notes.service.api.getnotesbycoauthorIds.GetNotesByCoAuthorIdsRequestBody
 import com.cmoney.backend2.notes.service.api.getnotesbycoauthorIds.GetNotesByCoAuthorIdsResponseBody
 import com.cmoney.backend2.notes.service.api.getnotesbytags.GetNotesByTagsRequestBody
@@ -21,30 +20,26 @@ import com.google.gson.Gson
 import kotlinx.coroutines.withContext
 
 class NotesWebImpl(
+    override val manager: GlobalBackend2Manager,
     private val service: NotesService,
-    private val setting: Setting,
     private val gson: Gson,
     private val dispatcher: DispatcherProvider = DefaultDispatcherProvider
 ) : NotesWeb {
 
     override suspend fun fetchWritingPost(
-        apiParam: MemberApiParam,
         noteId: Long,
         fetchCount: Int,
-        tags: List<String>
-    ): Result<List<Note>> = fetchWritingPost(noteId, fetchCount, tags)
-
-    override suspend fun fetchWritingPost(
-        noteId: Long,
-        fetchCount: Int,
-        tags: List<String>
+        tags: List<String>,
+        domain: String,
+        url: String
     ): Result<List<Note>> = withContext(dispatcher.io()) {
         runCatching {
             service.getNotesByTags(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
                 requestBody = GetNotesByTagsRequestBody(
-                    appId = setting.appId,
-                    guid = setting.identityToken.getMemberGuid(),
+                    appId = manager.getAppId(),
+                    guid = manager.getIdentityToken().getMemberGuid(),
                     tagIds = tags.map { it.toInt() },
                     baseNoteId = noteId,
                     fetchSize = fetchCount
@@ -57,26 +52,20 @@ class NotesWebImpl(
     }
 
     override suspend fun getNotes(
-        apiParam: MemberApiParam,
         noteId: Long,
         fetchSize: Int,
         fetchDay: Int,
         blogId: Int,
-        hasPayNotes: Boolean
-    ): Result<GetNotesResponseBody> = getNotes(noteId, fetchSize, fetchDay, blogId, hasPayNotes)
-
-    override suspend fun getNotes(
-        noteId: Long,
-        fetchSize: Int,
-        fetchDay: Int,
-        blogId: Int,
-        hasPayNotes: Boolean
+        hasPayNotes: Boolean,
+        domain: String,
+        url: String
     ): Result<GetNotesResponseBody> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getNotes(
-                authorization = setting.accessToken.createAuthorizationBearer(),
-                appId = setting.appId,
-                guid = setting.identityToken.getMemberGuid(),
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
+                appId = manager.getAppId(),
+                guid = manager.getIdentityToken().getMemberGuid(),
                 noteId = noteId,
                 fetchSize = fetchSize,
                 fetchDay = fetchDay,
@@ -91,30 +80,21 @@ class NotesWebImpl(
     }
 
     override suspend fun getNotesByTagsUsingNotesApi(
-        apiParam: MemberApiParam,
         noteId: Long,
         fetchSize: Int,
         fetchDay: Int,
         tags: List<Long>,
         hasPayNotes: Boolean,
-        isShowAllFree: Boolean
-    ): Result<GetNotesByTagsResponseBody> = getNotesByTagsUsingNotesApi(
-        noteId, fetchSize, fetchDay, tags, hasPayNotes, isShowAllFree
-    )
-
-    override suspend fun getNotesByTagsUsingNotesApi(
-        noteId: Long,
-        fetchSize: Int,
-        fetchDay: Int,
-        tags: List<Long>,
-        hasPayNotes: Boolean,
-        isShowAllFree: Boolean
+        isShowAllFree: Boolean,
+        domain: String,
+        url: String
     ): Result<GetNotesByTagsResponseBody> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getNotesByTagsUsingNotesApi(
-                authorization = setting.accessToken.createAuthorizationBearer(),
-                appId = setting.appId,
-                guid = setting.identityToken.getMemberGuid(),
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
+                appId = manager.getAppId(),
+                guid = manager.getIdentityToken().getMemberGuid(),
                 noteId = noteId,
                 fetchSize = fetchSize,
                 fetchDay = fetchDay,
@@ -131,14 +111,17 @@ class NotesWebImpl(
 
     override suspend fun getPopularAndPayNotes(
         blogId: Long,
-        fetchSize: Int
+        fetchSize: Int,
+        domain: String,
+        url: String
     ): Result<List<GetPopularAndPayNotesResponseBodyWithError.Note>> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getPopularAndPayNotes(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
                     requestBody = GetPopularAndPayNotesRequestBody(
-                        appId = setting.appId,
+                        appId = manager.getAppId(),
                         blogId = blogId,
                         fetchSize = fetchSize
                     )
@@ -154,11 +137,14 @@ class NotesWebImpl(
     override suspend fun getNotesByCoAuthorIds(
         coAuthorIds: List<Long>,
         baseNoteId: Long,
-        fetchSize: Int
+        fetchSize: Int,
+        domain: String,
+        url: String
     ): Result<List<GetNotesByCoAuthorIdsResponseBody.Note>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getNotesByCoAuthorIds(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
                 requestBody = GetNotesByCoAuthorIdsRequestBody(
                     fetchSize = fetchSize,
                     coAuthorIds = coAuthorIds,
