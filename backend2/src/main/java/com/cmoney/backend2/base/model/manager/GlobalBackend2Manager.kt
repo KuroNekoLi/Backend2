@@ -47,6 +47,8 @@ import com.cmoney.backend2.identityprovider.model.IdentityProviderSettingAdapter
 import com.cmoney.backend2.identityprovider.model.IdentityProviderSettingAdapterImpl
 import com.cmoney.backend2.imagerecognition.model.ImageRecognitionSettingAdapter
 import com.cmoney.backend2.imagerecognition.model.ImageRecognitionSettingAdapterImpl
+import com.cmoney.backend2.mobileocean.model.MobileOceanSettingAdapter
+import com.cmoney.backend2.mobileocean.model.MobileOceanSettingAdapterImpl
 import com.cmoney.backend2.virtualtrading2.model.settingadapter.VirtualTrading2SettingAdapter
 import com.cmoney.backend2.virtualtrading2.model.settingadapter.VirtualTrading2SettingAdapterImpl
 import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdapter
@@ -78,6 +80,7 @@ import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdap
  * @property frontEndLoggerSettingAdapter FrontEndLogger服務設定轉接器
  * @property identityProviderSettingAdapter IdentityProvider服務設定轉接器
  * @property imageRecognitionSettingAdapter 圖像辨識服務設定轉接器
+ * @property mobileOceanSettingAdapter MobileOcean服務設定轉接器
  * @property virtualTradeSettingAdapter 虛擬下單V1轉接器
  * @property virtualTrading2SettingAdapter 虛擬下單V2轉接器
  *
@@ -106,6 +109,7 @@ class GlobalBackend2Manager(
     private val frontEndLoggerSettingAdapter: FrontEndLoggerSettingAdapter,
     private val identityProviderSettingAdapter: IdentityProviderSettingAdapter,
     private val imageRecognitionSettingAdapter: ImageRecognitionSettingAdapter,
+    private val mobileOceanSettingAdapter: MobileOceanSettingAdapter,
     private val virtualTradeSettingAdapter: VirtualTradeSettingAdapter,
     private val virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter,
 ) {
@@ -133,6 +137,7 @@ class GlobalBackend2Manager(
         frontEndLoggerSettingAdapter = builder.frontEndLoggerSettingAdapter,
         identityProviderSettingAdapter = builder.identityProviderSettingAdapter,
         imageRecognitionSettingAdapter = builder.imageRecognitionSettingAdapter,
+        mobileOceanSettingAdapter = builder.mobileOceanSettingAdapter,
         virtualTradeSettingAdapter = builder.virtualTradeSettingAdapter,
         virtualTrading2SettingAdapter = builder.virtualTrading2SettingAdapter
     )
@@ -436,6 +441,12 @@ class GlobalBackend2Manager(
     }
 
     /**
+     * 取得MobileOcean設定轉接器
+     */
+    fun getMobileOceanSettingAdapter(): MobileOceanSettingAdapter {
+        return mobileOceanSettingAdapter
+    }
+    /**
      * 取得虛擬下單V1設定轉接器
      */
     fun getVirtualTradeSettingAdapter(): VirtualTradeSettingAdapter {
@@ -528,6 +539,8 @@ class GlobalBackend2Manager(
             IdentityProviderSettingAdapterImpl(backendSetting)
         var imageRecognitionSettingAdapter: ImageRecognitionSettingAdapter =
             ImageRecognitionSettingAdapterImpl()
+        var mobileOceanSettingAdapter: MobileOceanSettingAdapter =
+            MobileOceanSettingAdapterImpl(backendSetting)
         var virtualTradeSettingAdapter: VirtualTradeSettingAdapter =
             VirtualTradeSettingAdapterImpl(backendSetting)
         var virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter =
