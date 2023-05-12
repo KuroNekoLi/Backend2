@@ -32,6 +32,8 @@ interface NotesWeb {
      * Notes API
      * 服務1. 取得網誌文章
      *
+     * notes: 2023/05/12 api.cmoney.tw及mobile.cmoney.tw 測試都回 500 internal server error
+     *
      * @param noteId 從哪個文章編號以後開始取(預設:long.Max)
      * @param fetchSize 一次取最多多少篇文章(預設:int.Max)
      * @param fetchDay 撈多久天以前的資料(預設:7)
