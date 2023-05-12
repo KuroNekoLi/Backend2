@@ -2,10 +2,9 @@ package com.cmoney.backend2.media.service
 
 import com.cmoney.backend2.base.extension.*
 import com.cmoney.backend2.base.model.exception.ServerException
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.base.model.request.Constant
-import com.cmoney.backend2.base.model.request.MemberApiParam
 import com.cmoney.backend2.base.model.response.error.CMoneyError
-import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.media.service.api.getlivevideolistbyappid.LiveStreamInfo
 import com.cmoney.backend2.media.service.api.getmediadetail.GetMediaDetailResponse
 import com.cmoney.backend2.media.service.api.getmediainfo.MediaInfo
@@ -22,33 +21,28 @@ import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.withContext
 
 class MediaWebImpl(
-    private val setting: Setting,
+    override val manager: GlobalBackend2Manager,
     private val service: MediaService,
     private val gson: Gson,
     private val dispatcher: DispatcherProvider = DefaultDispatcherProvider
 ) : MediaWeb {
 
     override suspend fun getMediaList(
-        apiParam: MemberApiParam,
         skipCount: Int,
         fetchCount: Int,
         chargeType: Int,
-        tagIdList : List<Int>
-    ): Result<List<VideoInfo>> = getMediaList(skipCount, fetchCount, chargeType , tagIdList)
-
-    override suspend fun getMediaList(
-        skipCount: Int,
-        fetchCount: Int,
-        chargeType: Int,
-        tagIdList : List<Int>
+        tagIdList : List<Int>,
+        domain: String,
+        url: String
     ): Result<List<VideoInfo>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             val tagIdListString = tagIdList.joinToString(separator = ",")
             solvedJsonArrayResponseQuestion<List<VideoInfo>>(
                 service.getMediaList(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    appId = setting.appId,
-                    guid = setting.identityToken.getMemberGuid(),
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
+                    appId = manager.getAppId(),
+                    guid = manager.getIdentityToken().getMemberGuid(),
                     skipCount = skipCount,
                     fetchCount = fetchCount,
                     chargeType = chargeType,
@@ -61,16 +55,16 @@ class MediaWebImpl(
     }
 
     override suspend fun getMediaPurchaseUrl(
-        apiParam: MemberApiParam,
-        mediaId: Long
-    ): Result<String> = getMediaPurchaseUrl(mediaId)
-
-    override suspend fun getMediaPurchaseUrl(mediaId: Long): Result<String> = withContext(dispatcher.io()) {
+        mediaId: Long,
+        domain: String,
+        url: String
+    ): Result<String> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getMediaPurchaseUrl(
-                authorization = setting.accessToken.createAuthorizationBearer(),
-                appId = setting.appId,
-                guid = setting.identityToken.getMemberGuid(),
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
+                appId = manager.getAppId(),
+                guid = manager.getIdentityToken().getMemberGuid(),
                 mediaId = mediaId
             ).checkIsSuccessful()
                 .requireBody()
@@ -79,16 +73,16 @@ class MediaWebImpl(
     }
 
     override suspend fun getMediaUrl(
-        apiParam: MemberApiParam,
-        mediaId: Long
-    ): Result<String> = getMediaUrl(mediaId)
-
-    override suspend fun getMediaUrl(mediaId: Long): Result<String> = withContext(dispatcher.io()) {
+        mediaId: Long,
+        domain: String,
+        url: String
+    ): Result<String> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getMediaUrl(
-                authorization = setting.accessToken.createAuthorizationBearer(),
-                appId = setting.appId,
-                guid = setting.identityToken.getMemberGuid(),
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
+                appId = manager.getAppId(),
+                guid = manager.getIdentityToken().getMemberGuid(),
                 mediaId = mediaId
             ).checkIsSuccessful()
                 .requireBody()
@@ -97,23 +91,19 @@ class MediaWebImpl(
     }
 
     override suspend fun getLiveStreamList(
-        apiParam: MemberApiParam,
         skipCount: Int,
         fetchCount: Int,
-        chargeType: Int
-    ): Result<List<LiveStreamInfo>> = getLiveStreamList(skipCount, fetchCount, chargeType)
-
-    override suspend fun getLiveStreamList(
-        skipCount: Int,
-        fetchCount: Int,
-        chargeType: Int
+        chargeType: Int,
+        domain: String,
+        url: String
     ): Result<List<LiveStreamInfo>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             solvedJsonArrayResponseQuestion<List<LiveStreamInfo>>(
                 service.getLiveStreamList(
-                    appId = setting.appId,
-                    guid = setting.identityToken.getMemberGuid(),
-                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    appId = manager.getAppId(),
+                    guid = manager.getIdentityToken().getMemberGuid(),
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
                     skipCount = skipCount,
                     fetchCount = fetchCount,
                     chargeType = chargeType
@@ -125,21 +115,18 @@ class MediaWebImpl(
     }
 
     override suspend fun getPaidMediaListOfMember(
-        apiParam: MemberApiParam,
         skipCount: Int,
-        fetchCount: Int
-    ): Result<List<BoughtMediaListInfo>> = getPaidMediaListOfMember(skipCount, fetchCount)
-
-    override suspend fun getPaidMediaListOfMember(
-        skipCount: Int,
-        fetchCount: Int
+        fetchCount: Int,
+        domain: String,
+        url: String
     ): Result<List<BoughtMediaListInfo>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             solvedJsonArrayResponseQuestion<List<BoughtMediaListInfo>>(
                 service.getPaidMediaListOfMember(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    appId = setting.appId,
-                    guid = setting.identityToken.getMemberGuid(),
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
+                    appId = manager.getAppId(),
+                    guid = manager.getIdentityToken().getMemberGuid(),
                     skipCount = skipCount,
                     fetchCount = fetchCount
                 ).checkIsSuccessful()
@@ -150,21 +137,18 @@ class MediaWebImpl(
     }
 
     override suspend fun getPaidMediaList(
-        apiParam: MemberApiParam,
         skipCount: Int,
-        fetchCount: Int
-    ): Result<List<PaidMediaListInfo>> = getPaidMediaList(skipCount, fetchCount)
-
-    override suspend fun getPaidMediaList(
-        skipCount: Int,
-        fetchCount: Int
+        fetchCount: Int,
+        domain: String,
+        url: String
     ): Result<List<PaidMediaListInfo>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             solvedJsonArrayResponseQuestion<List<PaidMediaListInfo>>(
                 service.getPaidMediaList(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    appId = setting.appId,
-                    guid = setting.identityToken.getMemberGuid(),
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
+                    appId = manager.getAppId(),
+                    guid = manager.getIdentityToken().getMemberGuid(),
                     skipCount = skipCount,
                     fetchCount = fetchCount
                 ).checkIsSuccessful()
@@ -175,18 +159,18 @@ class MediaWebImpl(
     }
 
     override suspend fun getMediaInfo(
-        apiParam: MemberApiParam,
-        mediaId: Long
-    ): Result<MediaInfo> = getMediaInfo(mediaId)
-
-    override suspend fun getMediaInfo(mediaId: Long): Result<MediaInfo> =
+        mediaId: Long,
+        domain: String,
+        url: String
+    ): Result<MediaInfo> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getMediaInfo(
                     action = "getmediainfo",
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    appId = setting.appId,
-                    guid = setting.identityToken.getMemberGuid(),
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
+                    appId = manager.getAppId(),
+                    guid = manager.getIdentityToken().getMemberGuid(),
                     mediaId = mediaId
                 ).checkIsSuccessful()
                     .requireBody()
@@ -196,21 +180,18 @@ class MediaWebImpl(
         }
 
     override suspend fun getPaidLiveList(
-        apiParam: MemberApiParam,
         skipCount: Int,
-        fetchCount: Int
-    ): Result<List<PaidLiveListInfo>> = getPaidLiveList(skipCount, fetchCount)
-
-    override suspend fun getPaidLiveList(
-        skipCount: Int,
-        fetchCount: Int
+        fetchCount: Int,
+        domain: String,
+        url: String
     ): Result<List<PaidLiveListInfo>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             solvedJsonArrayResponseQuestion<List<PaidLiveListInfo>>(
                 service.getPaidLiveList(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    appId = setting.appId,
-                    guid = setting.identityToken.getMemberGuid(),
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
+                    appId = manager.getAppId(),
+                    guid = manager.getIdentityToken().getMemberGuid(),
                     skipCount = skipCount,
                     fetchCount = fetchCount
                 ).checkIsSuccessful()
@@ -220,16 +201,20 @@ class MediaWebImpl(
         }
     }
 
+    @Deprecated(message = "See interface comment.")
     override suspend fun getMediaDetail(
-        mediaId: Long
+        mediaId: Long,
+        domain: String,
+        url: String
     ): Result<GetMediaDetailResponse> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getMediaDetail(
-                authorization = setting.accessToken.createAuthorizationBearer(),
-                appId = setting.appId,
-                guid = setting.identityToken.getMemberGuid(),
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
+                appId = manager.getAppId(),
+                guid = manager.getIdentityToken().getMemberGuid(),
                 mediaId = mediaId,
-                device = setting.platform.code
+                device = manager.getPlatform().code
             ).checkIsSuccessful()
                 .checkResponseBody(gson)
                 .checkIWithError()
@@ -237,17 +222,19 @@ class MediaWebImpl(
         }
     }
 
-
     override suspend fun getPaidMediaListOfMemberByAppId(
         skipCount: Int,
-        fetchCount: Int
+        fetchCount: Int,
+        domain: String,
+        url: String
     ): Result<List<Media>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             solvedJsonArrayResponseQuestion<List<Media>>(
                 service.getPaidMediaListOfMemberByAppId(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    appId = setting.appId,
-                    guid = setting.identityToken.getMemberGuid(),
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
+                    appId = manager.getAppId(),
+                    guid = manager.getIdentityToken().getMemberGuid(),
                     skipCount = skipCount,
                     fetchCount = fetchCount
                 ).checkIsSuccessful()
