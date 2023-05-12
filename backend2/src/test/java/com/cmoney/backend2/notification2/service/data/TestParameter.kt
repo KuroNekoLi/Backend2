@@ -1,8 +1,8 @@
-package com.cmoney.backend2.notification2.service
+package com.cmoney.backend2.notification2.service.data
 
 import com.google.gson.annotations.SerializedName
 
-data class TestParameter26(
+data class TestParameter(
     @SerializedName("CommKey", alternate = ["commKey"])
     val commonKey: String?,
     @SerializedName("ClosingPrice", alternate = ["closingPrice"])
