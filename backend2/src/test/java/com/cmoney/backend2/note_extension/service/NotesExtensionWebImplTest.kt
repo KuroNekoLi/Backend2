@@ -1,7 +1,6 @@
 package com.cmoney.backend2.note_extension.service
 
-import com.cmoney.backend2.TestSetting
-import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.note_extension.service.api.createreply.CreateCommentResponseBody
 import com.cmoney.backend2.note_extension.service.api.getnotecommentcount.GetCommentCountByNoteIdsResponseBody
 import com.cmoney.backend2.note_extension.service.api.getreplylistbyid.GetCommentListByNoteIdResponseBody
@@ -12,6 +11,7 @@ import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
+import io.mockk.slot
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
@@ -33,44 +33,56 @@ class NotesExtensionWebImplTest {
     private lateinit var noteExtensionService: NoteExtensionService
     private lateinit var noteExtensionWeb: NoteExtensionWeb
     private val gson = GsonBuilder().serializeNulls().setLenient().setPrettyPrinting().create()
-    private lateinit var setting: Setting
+
+    @MockK(relaxed = true)
+    private lateinit var manager: GlobalBackend2Manager
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        setting = TestSetting()
         noteExtensionWeb = NoteExtensionWebImpl(
+            manager = manager,
             service = noteExtensionService,
-            setting = setting,
             dispatcher = TestDispatcherProvider(),
             gson = gson
         )
+        coEvery {
+            manager.getNoteExtensionSettingAdapter().getDomain()
+        } returns EXCEPT_DOMAIN
     }
 
     @Test
-    fun formatTest() {
-        val result = listOf<Long>(1, 2, 3, 4).toStringWithFormat()
-        val data = "1,2,3,4"
-        Truth.assertThat(data).isEqualTo(result)
-    }
+    fun `createComment_check url`() =
+        testScope.runTest {
+            val expect = "${EXCEPT_DOMAIN}NoteExtension/api/Comment/Create/0"
+            val urlSlot = slot<String>()
+            val responseBody = CreateCommentResponseBody(1)
+            coEvery {
+                noteExtensionService.createComment(
+                    url = capture(urlSlot),
+                    authorization = any(),
+                    requestBody = any()
+                )
+            } returns Response.success(responseBody)
 
-    private fun List<Long>.toStringWithFormat(): String {
-        return this.toString().filter {
-            it != '[' &&
-                it != ']' &&
-                it != ' '
+            noteExtensionWeb.createComment(
+                noteId = 0,
+                createTime = 0,
+                contentText = "",
+                contentImageUrl = ""
+            )
+            Truth.assertThat(urlSlot.captured).isEqualTo(expect)
         }
-    }
 
     @Test
-    fun `createReply取得指定主文的回文清單 成功`() =
+    fun createComment_success() =
         testScope.runTest {
             val responseBody = CreateCommentResponseBody(1)
             coEvery {
                 noteExtensionService.createComment(
+                    url = any(),
                     authorization = any(),
-                    requestBody = any(),
-                    noteId = any()
+                    requestBody = any()
                 )
             } returns Response.success(responseBody)
 
@@ -88,13 +100,13 @@ class NotesExtensionWebImplTest {
         }
 
     @Test
-    fun `createReply取得指定主文的回文清單 失敗`() =
+    fun createComment_failure() =
         testScope.runTest {
             coEvery {
                 noteExtensionService.createComment(
+                    url = any(),
                     authorization = any(),
-                    requestBody = any(),
-                    noteId = any()
+                    requestBody = any()
                 )
             } returns Response.success(null)
 
@@ -110,7 +122,40 @@ class NotesExtensionWebImplTest {
         }
 
     @Test
-    fun `getReplyListById取得指定主文的回文清單 成功`() =
+    fun `getCommentListByNoteId_check url`() =
+        testScope.runTest {
+            val expect = "${EXCEPT_DOMAIN}NoteExtension/api/Comment/Get/0"
+            val urlSlot = slot<String>()
+            val response =
+                listOf(
+                    GetCommentListByNoteIdResponseBody.Comment(
+                        memberId = 0,
+                        id = 0,
+                        deleted = null,
+                        createTime = null,
+                        content = null
+                    )
+                )
+
+            coEvery {
+                noteExtensionService.getCommentListByNoteId(
+                    url = capture(urlSlot),
+                    authorization = any(),
+                    commentId = any(),
+                    count = any()
+                )
+            } returns Response.success(response)
+
+            noteExtensionWeb.getCommentListByNoteId(
+                noteId = 0,
+                commentId = 0,
+                count = 0
+            )
+            Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        }
+
+    @Test
+    fun getCommentListByNoteId_success() =
         testScope.runTest {
             val response =
                 listOf(
@@ -125,8 +170,8 @@ class NotesExtensionWebImplTest {
 
             coEvery {
                 noteExtensionService.getCommentListByNoteId(
+                    url = any(),
                     authorization = any(),
-                    noteId = any(),
                     commentId = any(),
                     count = any()
                 )
@@ -140,17 +185,17 @@ class NotesExtensionWebImplTest {
                 )
             Truth.assertThat(result.isSuccess).isTrue()
             val data = result.getOrThrow()
-            Truth.assertThat(data.isNullOrEmpty()).isFalse()
+            Truth.assertThat(data.isEmpty()).isFalse()
             Truth.assertThat(result.exceptionOrNull()).isNull()
         }
 
     @Test
-    fun `getReplyListById取得指定主文的回文清單 失敗`() =
+    fun getCommentListByNoteId_failure() =
         testScope.runTest {
             coEvery {
                 noteExtensionService.getCommentListByNoteId(
+                    url = any(),
                     authorization = any(),
-                    noteId = any(),
                     commentId = any(),
                     count = any()
                 )
@@ -167,7 +212,61 @@ class NotesExtensionWebImplTest {
         }
 
     @Test
-    fun `getNoteCommentCount取得網誌回文數量 成功`() =
+    fun `getCommentCountByNoteIds_check url input=(1,2,3)`() =
+        testScope.runTest {
+            val expect = "${EXCEPT_DOMAIN}NoteExtension/api/Note/GetNoteCommentCount/0,1,2"
+            val urlSlot = slot<String>()
+            val response =
+                listOf(
+                    GetCommentCountByNoteIdsResponseBody.CommentCount(
+                        noteId = 1,
+                        count = 1,
+                        deletedCount = 1
+                    )
+                )
+
+            coEvery {
+                noteExtensionService.getCommentCountByNoteIds(
+                    url = capture(urlSlot),
+                    authorization = any()
+                )
+            } returns Response.success(response)
+
+            noteExtensionWeb.getCommentCountByNoteIds(
+                noteIdList = listOf(0, 1, 2)
+            )
+            Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        }
+
+    @Test
+    fun `getCommentCountByNoteIds_check url input(1)`() =
+        testScope.runTest {
+            val expect = "${EXCEPT_DOMAIN}NoteExtension/api/Note/GetNoteCommentCount/0"
+            val urlSlot = slot<String>()
+            val response =
+                listOf(
+                    GetCommentCountByNoteIdsResponseBody.CommentCount(
+                        noteId = 1,
+                        count = 1,
+                        deletedCount = 1
+                    )
+                )
+
+            coEvery {
+                noteExtensionService.getCommentCountByNoteIds(
+                    url = capture(urlSlot),
+                    authorization = any()
+                )
+            } returns Response.success(response)
+
+            noteExtensionWeb.getCommentCountByNoteIds(
+                noteIdList = listOf(0)
+            )
+            Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        }
+
+    @Test
+    fun getCommentCountByNoteIds_success() =
         testScope.runTest {
             val response =
                 listOf(
@@ -180,8 +279,8 @@ class NotesExtensionWebImplTest {
 
             coEvery {
                 noteExtensionService.getCommentCountByNoteIds(
-                    authorization = any(),
-                    noteIds = any()
+                    url = any(),
+                    authorization = any()
                 )
             } returns Response.success(response)
 
@@ -191,17 +290,17 @@ class NotesExtensionWebImplTest {
                 )
             Truth.assertThat(result.isSuccess).isTrue()
             val data = result.getOrThrow()
-            Truth.assertThat(data.isNullOrEmpty()).isFalse()
+            Truth.assertThat(data.isEmpty()).isFalse()
             Truth.assertThat(result.exceptionOrNull()).isNull()
         }
 
     @Test
-    fun `getNoteCommentCount取得網誌回文數量 失敗`() =
+    fun getCommentCountByNoteIds_failure() =
         testScope.runTest {
             coEvery {
                 noteExtensionService.getCommentCountByNoteIds(
-                    authorization = any(),
-                    noteIds = any()
+                    url = any(),
+                    authorization = any()
                 )
             } returns Response.success(null)
 
@@ -214,14 +313,33 @@ class NotesExtensionWebImplTest {
         }
 
     @Test
-    fun `deleteReply刪除回文 成功`() =
+    fun `deleteComment_check url`() =
+        testScope.runTest {
+            val expect = "${EXCEPT_DOMAIN}NoteExtension/api/Comment/Delete/0/0"
+            val urlSlot = slot<String>()
+            val response: Void? = null
+            coEvery {
+                noteExtensionService.deleteComment(
+                    url = capture(urlSlot),
+                    authorization = any()
+                )
+            } returns Response.success(204, response)
+
+            noteExtensionWeb.deleteComment(
+                noteId = 0,
+                commentId = 0
+            )
+            Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        }
+
+    @Test
+    fun deleteComment_success() =
         testScope.runTest {
             val response: Void? = null
             coEvery {
                 noteExtensionService.deleteComment(
-                    authorization = any(),
-                    noteId = any(),
-                    commentId = any()
+                    url = any(),
+                    authorization = any()
                 )
             } returns Response.success(204, response)
 
@@ -235,13 +353,12 @@ class NotesExtensionWebImplTest {
         }
 
     @Test
-    fun `deleteReply刪除回文 失敗`() =
+    fun deleteComment_failure() =
         testScope.runTest {
             coEvery {
                 noteExtensionService.deleteComment(
-                    authorization = any(),
-                    noteId = any(),
-                    commentId = any()
+                    url = any(),
+                    authorization = any()
                 )
             } returns Response.success(null)
 
@@ -253,4 +370,8 @@ class NotesExtensionWebImplTest {
             Truth.assertThat(result.isSuccess).isFalse()
             Truth.assertThat(result.exceptionOrNull()).isNotNull()
         }
+
+    companion object {
+        private const val EXCEPT_DOMAIN = "localhost://8080:80/"
+    }
 }

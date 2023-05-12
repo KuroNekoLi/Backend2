@@ -49,6 +49,8 @@ import com.cmoney.backend2.imagerecognition.model.ImageRecognitionSettingAdapter
 import com.cmoney.backend2.imagerecognition.model.ImageRecognitionSettingAdapterImpl
 import com.cmoney.backend2.media.model.MediaSettingAdapter
 import com.cmoney.backend2.media.model.MediaSettingAdapterImpl
+import com.cmoney.backend2.note_extension.model.NoteExtensionSettingAdapter
+import com.cmoney.backend2.note_extension.model.NoteExtensionSettingAdapterImpl
 import com.cmoney.backend2.notes.model.NotesSettingAdapter
 import com.cmoney.backend2.notes.model.NotesSettingAdapterImpl
 import com.cmoney.backend2.virtualtrading2.model.settingadapter.VirtualTrading2SettingAdapter
@@ -83,6 +85,7 @@ import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdap
  * @property identityProviderSettingAdapter IdentityProvider服務設定轉接器
  * @property imageRecognitionSettingAdapter 圖像辨識服務設定轉接器
  * @property mediaSettingAdapter MobileService-Media服務設定轉接器
+ * @property noteExtensionSettingAdapter NoteExtension服務設定轉接器
  * @property notesSettingAdapter Notes(網誌文章)服務設定轉接器
  * @property virtualTradeSettingAdapter 虛擬下單V1轉接器
  * @property virtualTrading2SettingAdapter 虛擬下單V2轉接器
@@ -113,6 +116,7 @@ class GlobalBackend2Manager(
     private val identityProviderSettingAdapter: IdentityProviderSettingAdapter,
     private val imageRecognitionSettingAdapter: ImageRecognitionSettingAdapter,
     private val mediaSettingAdapter: MediaSettingAdapter,
+    private val noteExtensionSettingAdapter: NoteExtensionSettingAdapter,
     private val notesSettingAdapter: NotesSettingAdapter,
     private val virtualTradeSettingAdapter: VirtualTradeSettingAdapter,
     private val virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter,
@@ -142,6 +146,7 @@ class GlobalBackend2Manager(
         identityProviderSettingAdapter = builder.identityProviderSettingAdapter,
         imageRecognitionSettingAdapter = builder.imageRecognitionSettingAdapter,
         mediaSettingAdapter = builder.mediaSettingAdapter,
+        noteExtensionSettingAdapter = builder.noteExtensionSettingAdapter,
         notesSettingAdapter = builder.notesSettingAdapter,
         virtualTradeSettingAdapter = builder.virtualTradeSettingAdapter,
         virtualTrading2SettingAdapter = builder.virtualTrading2SettingAdapter
@@ -455,6 +460,15 @@ class GlobalBackend2Manager(
     }
 
     /**
+     * 取得NoteExtension服務設定轉接器
+     *
+     * @return NoteExtension服務設定轉接器
+     */
+    fun getNoteExtensionSettingAdapter(): NoteExtensionSettingAdapter {
+        return noteExtensionSettingAdapter
+    }
+
+    /**
      * 取得Notes(網誌文章)服務設定轉接器
      *
      * @return Notes(網誌文章)服務設定轉接器
@@ -558,6 +572,8 @@ class GlobalBackend2Manager(
             ImageRecognitionSettingAdapterImpl()
         var mediaSettingAdapter: MediaSettingAdapter =
             MediaSettingAdapterImpl(backendSetting)
+        var noteExtensionSettingAdapter: NoteExtensionSettingAdapter =
+            NoteExtensionSettingAdapterImpl(backendSetting)
         var notesSettingAdapter: NotesSettingAdapter =
             NotesSettingAdapterImpl(backendSetting)
         var virtualTradeSettingAdapter: VirtualTradeSettingAdapter =

@@ -15,6 +15,7 @@ class NoteExtensionServiceCase : ServiceCase {
                 contentText = "test content Text!!",
                 contentImageUrl = "test Image"
             )
+            createRelayResult.logResponse(TAG)
 
             val commentIndex = createRelayResult.getOrNull()?.commentIndex ?: return
             getCommentListByNoteId(
@@ -26,6 +27,7 @@ class NoteExtensionServiceCase : ServiceCase {
             getCommentCountByNoteIds(
                 noteIdList = listOf(NOTE_ID)
             ).logResponse(TAG)
+            // 2023/05/12 測試機有髒資料刪除會失敗
             deleteComment(
                 noteId = NOTE_ID,
                 commentId = commentIndex
