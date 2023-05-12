@@ -15,9 +15,9 @@ interface NoteExtensionService {
      * 對指定網誌文章發一篇回文
      */
     @RecordApi
-    @POST("NoteExtension/api/Comment/Create/{noteId}")
+    @POST
     suspend fun createComment(
-        @Path("noteId") noteId: Long,
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: CreateCommentRequestBody
     ): Response<CreateCommentResponseBody>
@@ -27,23 +27,22 @@ interface NoteExtensionService {
      * 取得指定主文的回文清單
      */
     @RecordApi
-    @GET("NoteExtension/api/Comment/Get/{noteId}")
+    @GET
     suspend fun getCommentListByNoteId(
-        @Path("noteId") noteId: Long,
+        @Url url: String,
+        @Header("Authorization") authorization: String,
         @Query("commentId") commentId: Long,
-        @Query("count") count: Int,
-        @Header("Authorization") authorization: String
-    ): Response<List<GetCommentListByNoteIdResponseBody.Comment?>?>
+        @Query("count") count: Int
+    ): Response<List<GetCommentListByNoteIdResponseBody.Comment?>>
 
     /**
      * NotesExtension API
      * 刪除回文
      */
     @RecordApi
-    @DELETE("NoteExtension/api/Comment/Delete/{noteId}/{commentId}")
+    @DELETE
     suspend fun deleteComment(
-        @Path("noteId") noteId: Long,
-        @Path("commentId") commentId: Long,
+        @Url url: String,
         @Header("Authorization") authorization: String
     ): Response<Void>
 
@@ -52,9 +51,9 @@ interface NoteExtensionService {
      * 取得網誌回文數量
      */
     @RecordApi
-    @GET("NoteExtension/api/Note/GetNoteCommentCount/{noteIds}")
+    @GET
     suspend fun getCommentCountByNoteIds(
-        @Path("noteIds") noteIds: String,
+        @Url url: String,
         @Header("Authorization") authorization: String
-    ): Response<List<GetCommentCountByNoteIdsResponseBody.CommentCount?>?>
+    ): Response<List<GetCommentCountByNoteIdsResponseBody.CommentCount?>>
 }

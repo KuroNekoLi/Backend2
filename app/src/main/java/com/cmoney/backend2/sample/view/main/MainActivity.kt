@@ -121,6 +121,7 @@ class MainActivity : AppCompatActivity() {
 //                ImageRecognitionServiceCase()
 //                MediaServiceCase(),
 //                MobileOceanServiceCase(),
+//                NoteExtensionServiceCase()
 //                NotesServiceCase(),
 //                NotificationServiceCase(),
 //                Notification2ServiceCase(),
