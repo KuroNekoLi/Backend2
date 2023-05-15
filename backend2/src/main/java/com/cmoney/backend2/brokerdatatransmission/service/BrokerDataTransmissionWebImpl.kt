@@ -1,6 +1,11 @@
 package com.cmoney.backend2.brokerdatatransmission.service
 
-import com.cmoney.backend2.base.extension.*
+import com.cmoney.backend2.base.extension.checkResponseBody
+import com.cmoney.backend2.base.extension.createAuthorizationBearer
+import com.cmoney.backend2.base.extension.handleNoContent
+import com.cmoney.backend2.base.extension.parseServerException
+import com.cmoney.backend2.base.extension.requireBody
+import com.cmoney.backend2.base.extension.toJsonArrayWithErrorResponse
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.base.model.request.Constant
@@ -22,10 +27,7 @@ import com.cmoney.backend2.brokerdatatransmission.service.api.transactionhistory
 import com.cmoney.core.DefaultDispatcherProvider
 import com.cmoney.core.DispatcherProvider
 import com.google.gson.Gson
-import com.google.gson.JsonElement
 import com.google.gson.JsonObject
-import com.google.gson.JsonSyntaxException
-import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import retrofit2.Response
@@ -125,8 +127,8 @@ class BrokerDataTransmissionWebImpl(
                     ),
                     authToken = manager.getAccessToken().createAuthorizationBearer()
                 )
-                    .checkResponseBody(gson)
-                    .toJsonArrayWithErrorResponse()
+                    .checkResponseBody(gson = gson)
+                    .toJsonArrayWithErrorResponse(gson = gson)
             }
         }
 
@@ -213,7 +215,7 @@ class BrokerDataTransmissionWebImpl(
                     authToken = manager.getAccessToken().createAuthorizationBearer()
                 )
                     .checkResponseBody(gson)
-                    .toJsonArrayWithErrorResponse()
+                    .toJsonArrayWithErrorResponse(gson = gson)
             }
         }
 
@@ -227,35 +229,6 @@ class BrokerDataTransmissionWebImpl(
                     .handleNoContent(gson)
             }
         }
-
-    /**
-     * 處理正常回傳是JsonArray 發生錯誤是JsonObject 的api回傳
-     *
-     * @param T
-     * @return
-     */
-    @Throws(ServerException::class)
-    private inline fun <reified T> JsonElement.toJsonArrayWithErrorResponse(): T {
-        val responseResult = if (this.isJsonArray) {
-            try {
-                gson.fromJson<T>(this, object : TypeToken<T>() {}.type)
-            } catch (exception: JsonSyntaxException) {
-                null
-            }
-        } else {
-            null
-        }
-
-        return if (responseResult != null) {
-            responseResult
-        } else {
-            val error = gson.fromJson<CMoneyError>(this, object : TypeToken<CMoneyError>() {}.type)
-            throw ServerException(
-                error.detail?.code ?: Constant.SERVICE_ERROR_CODE,
-                error.detail?.message.orEmpty()
-            )
-        }
-    }
 
     private fun String.urlEncode(): String {
         return URLEncoder.encode(this, Charsets.UTF_8.name())

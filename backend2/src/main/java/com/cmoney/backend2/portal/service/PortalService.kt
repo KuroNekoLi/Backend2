@@ -28,6 +28,7 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Url
 
 interface PortalService {
 
@@ -35,8 +36,9 @@ interface PortalService {
      * 服務1. 取得選股監控對象股票清單
      */
     @RecordApi
-    @POST("cmportal/api/pickstock/gettarget/")
+    @POST
     suspend fun getTarget(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: GetTargetRequestBody
     ): Response<CmPortalTargetWithError>
@@ -45,8 +47,9 @@ interface PortalService {
      * 服務2. 取得選股全部條件篩選狀態
      */
     @RecordApi
-    @POST("cmportal/api/pickstock/getsignals/")
+    @POST
     suspend fun getSignals(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: GetSignalRequestBody
     ): Response<CmPortalSignalWithError>
@@ -55,8 +58,9 @@ interface PortalService {
      * 服務3. 取得顯示資訊欄位資料
      */
     @RecordApi
-    @POST("cmportal/api/additionalinformation/getadditionalInfo/")
+    @POST
     suspend fun getAdditionalInfo(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: GetAdditionRequestBody
     ): Response<CmPortalAdditionWithError>
@@ -66,8 +70,9 @@ interface PortalService {
      *
      */
     @RecordApi
-    @POST("CMPortal/api/GuessBullBear/GetActivitiesBaseInfo")
+    @POST
     suspend fun getActivitiesBaseInfo(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: GetActivitiesBaseInfoRequestBody
     ): Response<GetActivitiesBaseInfoWithError>
@@ -77,8 +82,9 @@ interface PortalService {
      *
      */
     @RecordApi
-    @POST("CMPortal/api/GuessBullBear/GetActivityNowInfo")
+    @POST
     suspend fun getActivityNowInfo(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: GetActivityNowInfoRequestBody
     ): Response<GetActivityNowInfoWithError>
@@ -87,8 +93,9 @@ interface PortalService {
      * 取得會員戰績
      */
     @RecordApi
-    @POST("CMPortal/api/GuessBullBear/GetMemberPerformance")
+    @POST
     suspend fun getMemberPerformance(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: GetMemberPerformanceRequestBody
     ): Response<GetMemberPerformanceWithError>
@@ -98,8 +105,9 @@ interface PortalService {
      *
      */
     @RecordApi
-    @POST("CMPortal/api/GuessBullBear/GetRanking")
+    @POST
     suspend fun getRanking(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: GetRankingRequestBody
     ): Response<JsonElement>
@@ -109,8 +117,9 @@ interface PortalService {
      *
      */
     @RecordApi
-    @POST("CMPortal/api/GuessBullBear/GetPersonActivityHistory")
+    @POST
     suspend fun getPersonActivityHistory(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: GetPersonActivityHistoryRequestBody
     ): Response<JsonElement>
@@ -120,8 +129,9 @@ interface PortalService {
      *
      */
     @RecordApi
-    @POST("CMPortal/api/GuessBullBear/AskMemberForecastStatus")
+    @POST
     suspend fun askMemberForecastStatus(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: AskMemberForecastStatusRequestBody
     ): Response<AskMemberForecastStatusWithError>
@@ -130,8 +140,9 @@ interface PortalService {
      * 詢問會員上期猜多空活動參與狀況(驗證身分)
      */
     @RecordApi
-    @POST("CMPortal/api/GuessBullBear/AskMemberLastForecastInfo")
+    @POST
     suspend fun askMemberLastForecastInfo(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: AskMemberLastForecastInfoRequestBody
     ): Response<AskMemberLastForecastInfoWithError>
@@ -140,8 +151,9 @@ interface PortalService {
      * 參與活動(驗證身分)
      */
     @RecordApi
-    @POST("CMPortal/api/GuessBullBear/JoinActivity")
+    @POST
     suspend fun joinActivity(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: JoinActivityRequestBody
     ): Response<JoinActivityWithError>
@@ -150,8 +162,9 @@ interface PortalService {
      * 詢問會員某App上期全部的猜多空活動參與狀況(驗證身分)
      */
     @RecordApi
-    @POST("CMPortal/api/GuessBullBear/AskAllMemberLastForecastInfo")
+    @POST
     suspend fun askAllMemberLastForecastInfo(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: AskAllMemberLastForecastInfoRequestBody
     ): Response<AskAllMemberLastForecastInfoWithError>
