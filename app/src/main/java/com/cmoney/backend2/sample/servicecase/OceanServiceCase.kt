@@ -235,9 +235,6 @@ class OceanServiceCase : ServiceCase {
             clubNeedInfoV5.add(ChannelInfoOption.Member.ViewerClubInfo)
             getManagerList(4277314, clubNeedInfoV5).logResponse(TAG)
 
-            createAnnouncement(publicClubChannelId, true, articleId)
-            getAnnouncements(publicClubChannelId)
-            removeAnnouncements(publicClubChannelId, true, articleId)
             getRelevantComments(articleIds = listOf(articleId), fetch = 10)
 
             getTopicArticles(
@@ -266,11 +263,6 @@ class OceanServiceCase : ServiceCase {
                 FilterType.ALL
             ).logResponse(TAG)
 
-            createAnnouncement(
-                channelId = publicClubChannelId,
-                isPinned = false,
-                articleId = 102029966
-            ).logResponse("TEST_CREATE_ANNOUNCEMENT")
 //            testAnnouncement()
         }
     }
