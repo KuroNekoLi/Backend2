@@ -3,8 +3,7 @@ package com.cmoney.backend2.notification2.service
 import com.cmoney.backend2.base.extension.checkResponseBody
 import com.cmoney.backend2.base.extension.createAuthorizationBearer
 import com.cmoney.backend2.base.extension.handleNoContent
-import com.cmoney.backend2.base.model.request.MemberApiParam
-import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.notification2.service.api.deletemonitor.DeleteMonitorRequestBody
 import com.cmoney.backend2.notification2.service.api.getbranchfcm.BranchSettingRequestBody
 import com.cmoney.backend2.notification2.service.api.getclubfcm.ClubFcmSettingResponseBody
@@ -29,38 +28,39 @@ import com.google.gson.Gson
 import kotlinx.coroutines.withContext
 
 class Notification2WebImpl(
+    override val manager: GlobalBackend2Manager,
     private val gson: Gson,
     private val service: Notification2Service,
-    private val setting: Setting,
     private val dispatcher: DispatcherProvider = DefaultDispatcherProvider
 ) : Notification2Web {
 
-    override suspend fun <T> getNotifyHistory(appId: Int, parameterClass: Class<T>): Result<List<GetNotifyAllResponseBody>> =
-        getHistoryNotifyAll(parameterClass)
-
-    override suspend fun <T> getHistoryNotifyAll(parameterClass: Class<T>): Result<List<GetNotifyAllResponseBody>> =
+    override suspend fun <T> getHistoryNotifyAll(
+        parameterClass: Class<T>,
+        domain: String,
+        url: String
+    ): Result<List<GetNotifyAllResponseBody>> =
         withContext(dispatcher.io()) {
             runCatching {
                 val response = service.getHistoryNotifyAll(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    appId = setting.appId
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
+                    appId = manager.getAppId()
                 )
                 response.checkResponseBody(gson).formatCustomParameter(gson, parameterClass)
             }
         }
 
-
     override suspend fun getBranchFcm(
-        apiParam: MemberApiParam
-    ): Result<List<BranchSettingRequestBody>> = getBranchFcm()
-
-    override suspend fun getBranchFcm(): Result<List<BranchSettingRequestBody>> =
+        domain: String,
+        url: String
+    ): Result<List<BranchSettingRequestBody>> =
         withContext(dispatcher.io()) {
             runCatching {
                 val response = service.getBranchFcm(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    guid = setting.identityToken.getMemberGuid(),
-                    appId = setting.appId
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
+                    guid = manager.getIdentityToken().getMemberGuid(),
+                    appId = manager.getAppId()
                 )
                 response.checkResponseBody(gson)
             }
@@ -69,21 +69,18 @@ class Notification2WebImpl(
     override suspend fun updateBranchFcm(
         pushSettingId: Int,
         isNeedPush: Boolean,
-        apiParam: MemberApiParam
-    ): Result<Unit> = updateBranchFcm(pushSettingId, isNeedPush)
-
-    override suspend fun updateBranchFcm(
-        pushSettingId: Int,
-        isNeedPush: Boolean
+        domain: String,
+        url: String
     ): Result<Unit> = withContext(dispatcher.io()) {
         runCatching {
             val response = service.updateBranchFcm(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
                 requestBody = UpdateBranchFcmRequestBody(
                     isNeedPush = isNeedPush,
                     pushSettingId = pushSettingId,
-                    guid = setting.identityToken.getMemberGuid(),
-                    appId = setting.appId
+                    guid = manager.getIdentityToken().getMemberGuid(),
+                    appId = manager.getAppId()
                 )
             )
             response.checkResponseBody(gson)
@@ -93,19 +90,17 @@ class Notification2WebImpl(
 
     override suspend fun updateBranchFcmMultipleSettings(
         pushSettings: List<PushSetting>,
-        apiParam: MemberApiParam
-    ): Result<Unit> = updateBranchFcmMultipleSettings(pushSettings)
-
-    override suspend fun updateBranchFcmMultipleSettings(
-        pushSettings: List<PushSetting>
+        domain: String,
+        url: String
     ): Result<Unit> = withContext(dispatcher.io()) {
         runCatching {
             service.updateBranchFcmMultipleSettings(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
                 requestBody = UpdateBranchFcmListRequestBody(
                     pushSettings = pushSettings,
-                    guid = setting.identityToken.getMemberGuid(),
-                    appId = setting.appId
+                    guid = manager.getIdentityToken().getMemberGuid(),
+                    appId = manager.getAppId()
                 )
             ).handleNoContent(gson)
         }
@@ -113,17 +108,17 @@ class Notification2WebImpl(
 
     override suspend fun getClubFcm(
         clubId: Long,
-        apiParam: MemberApiParam
-    ): Result<List<ClubFcmSettingResponseBody>> = getClubFcm(clubId)
-
-    override suspend fun getClubFcm(clubId: Long): Result<List<ClubFcmSettingResponseBody>> =
+        domain: String,
+        url: String
+    ): Result<List<ClubFcmSettingResponseBody>> =
         withContext(dispatcher.io()) {
             runCatching {
                 val response = service.getClubFcm(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
                     clubId = clubId,
-                    guid = setting.identityToken.getMemberGuid(),
-                    appId = setting.appId
+                    guid = manager.getIdentityToken().getMemberGuid(),
+                    appId = manager.getAppId()
                 )
                 response.checkResponseBody(gson)
             }
@@ -132,19 +127,19 @@ class Notification2WebImpl(
     override suspend fun updateClubFcm(
         pushSettingType: Int,
         clubId: Long,
-        apiParam: MemberApiParam
-    ): Result<Unit> = updateClubFcm(pushSettingType, clubId)
-
-    override suspend fun updateClubFcm(pushSettingType: Int, clubId: Long): Result<Unit> =
+        domain: String,
+        url: String
+    ): Result<Unit> =
         withContext(dispatcher.io()) {
             runCatching {
                 val response = service.updateClubFcm(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
                     requestBody = UpdateClubFcmRequestBody(
                         pushSettingType = pushSettingType,
                         clubId = clubId,
-                        guid = setting.identityToken.getMemberGuid(),
-                        appId = setting.appId
+                        guid = manager.getIdentityToken().getMemberGuid(),
+                        appId = manager.getAppId()
                     )
                 )
                 response.checkResponseBody(gson)
@@ -153,36 +148,35 @@ class Notification2WebImpl(
         }
 
     override suspend fun getMainFcm(
-        apiParam: MemberApiParam
-    ): Result<GetMainFCMResponseBody> = getMainFcm()
-
-    override suspend fun getMainFcm(): Result<GetMainFCMResponseBody> =
+        domain: String,
+        url: String
+    ): Result<GetMainFCMResponseBody> =
         withContext(dispatcher.io()) {
             runCatching {
                 val response = service.getMainFcm(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    guid = setting.identityToken.getMemberGuid(),
-                    appId = setting.appId
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
+                    guid = manager.getIdentityToken().getMemberGuid(),
+                    appId = manager.getAppId()
                 )
                 response.checkResponseBody(gson)
             }
         }
 
-
     override suspend fun updateMainFcm(
         isNeedPush: Boolean,
-        apiParam: MemberApiParam
-    ): Result<Unit> = updateMainFcm(isNeedPush)
-
-    override suspend fun updateMainFcm(isNeedPush: Boolean): Result<Unit> =
+        domain: String,
+        url: String
+    ): Result<Unit> =
         withContext(dispatcher.io()) {
             runCatching {
                 val response = service.updateMainFcm(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
                     requestBody = UpdateMainFcmRequestBody(
                         isNeedPush = isNeedPush,
-                        guid = setting.identityToken.getMemberGuid(),
-                        appId = setting.appId
+                        guid = manager.getIdentityToken().getMemberGuid(),
+                        appId = manager.getAppId()
                     )
                 )
                 response.checkResponseBody(gson)
@@ -190,182 +184,165 @@ class Notification2WebImpl(
             }
         }
 
-    override suspend fun getMonitorConditionList(apiParam: MemberApiParam): Result<List<GetMonitorResponseBody>> =
-        getMonitorList()
-
-    override suspend fun getMonitorList(): Result<List<GetMonitorResponseBody>> =
+    override suspend fun getMonitorList(
+        domain: String,
+        url: String
+    ): Result<List<GetMonitorResponseBody>> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getMonitorList(
-                    guid = setting.identityToken.getMemberGuid(),
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    appId = setting.appId
+                    guid = manager.getIdentityToken().getMemberGuid(),
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
+                    appId = manager.getAppId()
                 ).checkResponseBody(gson)
             }
         }
 
-    override suspend fun addNewMonitorCondition(
-        commonKey: String,
-        strategyId: Int,
-        monitorPrice: Double,
-        apiParam: MemberApiParam
-    ): Result<Unit> = insertMonitor(commonKey, strategyId, monitorPrice)
-
     override suspend fun insertMonitor(
         commonKey: String,
         strategyId: Int,
-        monitorPrice: Double
+        monitorPrice: Double,
+        domain: String,
+        url: String
     ): Result<Unit> = withContext(dispatcher.io()) {
         kotlin.runCatching {
-
             service.insertMonitor(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
                 requestBody = InsertMonitorRequestBody(
                     commonKey = commonKey,
                     strategyId = strategyId,
                     condition = InsertMonitorRequestBody.Condition(
                         targetPrice = monitorPrice
                     ),
-                    guid = setting.identityToken.getMemberGuid(),
-                    appId = setting.appId
+                    guid = manager.getIdentityToken().getMemberGuid(),
+                    appId = manager.getAppId()
                 )
             ).handleNoContent(gson)
         }
     }
 
-    override suspend fun updateCondition(
-        conditionId: Long,
-        strategyId: Int,
-        monitorPrice: Double,
-        apiParam: MemberApiParam
-    ): Result<Unit> = updateMonitor(
-        conditionId,
-        strategyId,
-        monitorPrice
-    )
-
     override suspend fun updateMonitor(
         conditionId: Long,
         strategyId: Int,
-        monitorPrice: Double
+        monitorPrice: Double,
+        domain: String,
+        url: String
     ): Result<Unit> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.updateMonitor(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
                 requestBody = UpdateMonitorRequestBody(
                     conditionId = conditionId,
                     strategyId = strategyId,
                     condition = UpdateMonitorRequestBody.Condition(
                         targetPrice = monitorPrice
                     ),
-                    guid = setting.identityToken.getMemberGuid(),
-                    appId = setting.appId
+                    guid = manager.getIdentityToken().getMemberGuid(),
+                    appId = manager.getAppId()
                 )
             ).handleNoContent(gson)
         }
     }
 
-    override suspend fun deleteMonitorCondition(
-        conditionId: Long,
-        apiParam: MemberApiParam
-    ): Result<Unit> = deleteMonitor(conditionId)
-
     override suspend fun deleteMonitor(
-        conditionId: Long
+        conditionId: Long,
+        domain: String,
+        url: String
     ): Result<Unit> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.deleteMonitor(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
                 requestBody = DeleteMonitorRequestBody(
                     conditionId = conditionId,
-                    guid = setting.identityToken.getMemberGuid(),
-                    appId = setting.appId
+                    guid = manager.getIdentityToken().getMemberGuid(),
+                    appId = manager.getAppId()
                 )
             ).handleNoContent(gson)
         }
     }
 
-    override suspend fun getMonitorArriveNotifyHistoryList(apiParam: MemberApiParam):
-            Result<List<GetMonitorHistoryResponseBody>> = getMonitorHistoryList()
-
-
-    override suspend fun getMonitorHistoryList(): Result<List<GetMonitorHistoryResponseBody>> =
+    override suspend fun getMonitorHistoryList(
+        domain: String,
+        url: String
+    ): Result<List<GetMonitorHistoryResponseBody>> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getMonitorHistoryList(
-                    guid = setting.identityToken.getMemberGuid(),
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    appId = setting.appId
+                    guid = manager.getIdentityToken().getMemberGuid(),
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
+                    appId = manager.getAppId()
                 ).checkResponseBody(gson)
             }
         }
 
-    override suspend fun updateMonitorIsNeedToPush(
-        conditionId: Long,
-        isNeedPush: Boolean,
-        apiParam: MemberApiParam
-    ): Result<Unit> = updateMonitorPushNotification(conditionId, isNeedPush)
-
     override suspend fun updateMonitorPushNotification(
         conditionId: Long,
-        isNeedPush: Boolean
+        isNeedPush: Boolean,
+        domain: String,
+        url: String
     ): Result<Unit> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.updateMonitorPushNotification(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
                 requestBody = UpdateMonitorPushNotificationRequestBody(
                     conditionId = conditionId,
                     isNeedToPush = isNeedPush,
-                    guid = setting.identityToken.getMemberGuid(),
-                    appId = setting.appId
+                    guid = manager.getIdentityToken().getMemberGuid(),
+                    appId = manager.getAppId()
                 )
             ).handleNoContent(gson)
         }
     }
 
-    override suspend fun getMrOptionOptionConditionList(
-        apiParam: MemberApiParam
-    ): Result<List<GetMrOptionListResponseBody>> = getMrOptionOptionList()
-
-    override suspend fun getMrOptionOptionList(): Result<List<GetMrOptionListResponseBody>> =
+    override suspend fun getMrOptionOptionList(
+        domain: String,
+        url: String
+    ): Result<List<GetMrOptionListResponseBody>> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getMrOptionOptionConditionList(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    guid = setting.identityToken.getMemberGuid(),
-                    appId = setting.appId
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
+                    guid = manager.getIdentityToken().getMemberGuid(),
+                    appId = manager.getAppId()
                 ).checkResponseBody(gson)
             }
         }
 
-    override suspend fun getMrOptionSpotGoodsConditionList(
-        apiParam: MemberApiParam
-    ): Result<List<GetMrOptionListResponseBody>> = getMrOptionSpotGoodsList()
-
-    override suspend fun getMrOptionSpotGoodsList(): Result<List<GetMrOptionListResponseBody>> =
+    override suspend fun getMrOptionSpotGoodsList(
+        domain: String,
+        url: String
+    ): Result<List<GetMrOptionListResponseBody>> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getMrOptionSpotGoodsConditionList(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    guid = setting.identityToken.getMemberGuid(),
-                    appId = setting.appId
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
+                    guid = manager.getIdentityToken().getMemberGuid(),
+                    appId = manager.getAppId()
                 ).checkResponseBody(gson)
             }
         }
 
-    override suspend fun updateMrOptionConditionList(
+    override suspend fun updateMrOptionList(
         conditions: List<UpdateMrOptionConditionRequestBody.Condition>,
-        apiParam: MemberApiParam
-    ): Result<Unit> = updateMrOptionList(conditions)
-
-    override suspend fun updateMrOptionList(conditions: List<UpdateMrOptionConditionRequestBody.Condition>): Result<Unit> =
+        domain: String,
+        url: String
+    ): Result<Unit> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.updateMrOptionConditionList(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
                     updateMrOptionConditionRequestBody = UpdateMrOptionConditionRequestBody(
                         conditions = conditions,
-                        appId = setting.appId
+                        appId = manager.getAppId()
                     )
                 ).handleNoContent(gson)
             }
