@@ -27,8 +27,9 @@ interface Notification2Service {
      * 取得所有人都有的通知
      */
     @RecordApi
-    @GET("notification/History/NotifyAll")
+    @GET
     suspend fun getHistoryNotifyAll(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Query("AppId") appId: Int
     ): Response<List<GetNotifyAllResponseBody>>
@@ -37,8 +38,9 @@ interface Notification2Service {
      * 取得推播分支設定(個別設定)
      */
     @RecordApi
-    @GET("notification/usersetting/Branch")
+    @GET
     suspend fun getBranchFcm(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Query("Guid") guid: String,
         @Query("AppId") appId: Int
@@ -48,8 +50,9 @@ interface Notification2Service {
      * 更新推播分支設定(個別設定)
      */
     @RecordApi
-    @PUT("notification/usersetting/Branch")
+    @PUT
     suspend fun updateBranchFcm(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: UpdateBranchFcmRequestBody
     ): Response<ResponseBody>
@@ -58,8 +61,9 @@ interface Notification2Service {
      * 更新推播分支設定(多組設定)
      */
     @RecordApi
-    @PATCH("notification/usersetting/Branch")
+    @PATCH
     suspend fun updateBranchFcmMultipleSettings(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: UpdateBranchFcmListRequestBody
     ): Response<Void>
@@ -69,8 +73,9 @@ interface Notification2Service {
      *
      */
     @RecordApi
-    @GET("notification/usersetting/Club")
+    @GET
     suspend fun getClubFcm(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Query("ClubId") clubId: Long,
         @Query("Guid") guid: String,
@@ -81,8 +86,9 @@ interface Notification2Service {
      * 更新社團推播設定
      */
     @RecordApi
-    @PUT("notification/usersetting/Club")
+    @PUT
     suspend fun updateClubFcm(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: UpdateClubFcmRequestBody
     ): Response<ResponseBody>
@@ -91,8 +97,9 @@ interface Notification2Service {
      * 取得總推播設定
      */
     @RecordApi
-    @GET("notification/usersetting/Main")
+    @GET
     suspend fun getMainFcm(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Query("Guid") guid: String,
         @Query("AppId") appId: Int
@@ -102,8 +109,9 @@ interface Notification2Service {
      * 更新總推播設定
      */
     @RecordApi
-    @PUT("notification/usersetting/Main")
+    @PUT
     suspend fun updateMainFcm(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: UpdateMainFcmRequestBody
     ): Response<ResponseBody>
@@ -112,8 +120,9 @@ interface Notification2Service {
      * 取的某個App的監控列表
      */
     @RecordApi
-    @GET("notification/userCondition/Monitor")
+    @GET
     suspend fun getMonitorList(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Query("Guid") guid: String,
         @Query("AppId") appId: Int
@@ -123,8 +132,9 @@ interface Notification2Service {
      * 新增監控
      */
     @RecordApi
-    @POST("notification/userCondition/Monitor")
+    @POST
     suspend fun insertMonitor(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: InsertMonitorRequestBody
     ): Response<Void>
@@ -133,8 +143,9 @@ interface Notification2Service {
      * 更新監控
      */
     @RecordApi
-    @PUT("notification/userCondition/Monitor")
+    @PUT
     suspend fun updateMonitor(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: UpdateMonitorRequestBody
     ): Response<Void>
@@ -143,8 +154,9 @@ interface Notification2Service {
      * 刪除監控
      */
     @RecordApi
-    @HTTP(method = "DELETE", path = "notification/userCondition/Monitor", hasBody = true)
+    @DELETE
     suspend fun deleteMonitor(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: DeleteMonitorRequestBody
     ): Response<Void>
@@ -153,8 +165,9 @@ interface Notification2Service {
      * 取得監控歷史列表
      */
     @RecordApi
-    @GET("notification/userCondition/Monitor/history")
+    @GET
     suspend fun getMonitorHistoryList(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Query("Guid") guid: String,
         @Query("AppId") appId: Int
@@ -164,8 +177,9 @@ interface Notification2Service {
      * 更新監控推播
      */
     @RecordApi
-    @PUT("notification/userCondition/Monitor/isNeedPush")
+    @PUT
     suspend fun updateMonitorPushNotification(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: UpdateMonitorPushNotificationRequestBody
     ): Response<Void>
@@ -174,13 +188,13 @@ interface Notification2Service {
     /**
      * 取得期權條件設定
      * @param guid String
-     * @param authToken String
      * @param appId Int
      * @return List<MrOptionCondition>
      */
     @RecordApi
-    @GET("notification/userCondition/MrOption/Option")
+    @GET
     suspend fun getMrOptionOptionConditionList(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Query("Guid") guid: String,
         @Query("AppId") appId: Int
@@ -189,13 +203,13 @@ interface Notification2Service {
     /**
      * 取得現貨條件設定
      * @param guid String
-     * @param authToken String
      * @param appId Int
      * @return List<MrOptionCondition>
      */
     @RecordApi
-    @GET("notification/userCondition/MrOption/SpotGoods")
+    @GET
     suspend fun getMrOptionSpotGoodsConditionList(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Query("Guid") guid: String,
         @Query("AppId") appId: Int
@@ -206,8 +220,9 @@ interface Notification2Service {
      * @param updateMrOptionConditionRequestBody UpdateMrOptionCondition
      */
     @RecordApi
-    @PUT("notification/userCondition/MrOption")
+    @PUT
     suspend fun updateMrOptionConditionList(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body updateMrOptionConditionRequestBody: UpdateMrOptionConditionRequestBody
     ): Response<Void>
