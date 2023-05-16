@@ -59,6 +59,8 @@ import com.cmoney.backend2.notification.model.NotificationSettingAdapter
 import com.cmoney.backend2.notification.model.NotificationSettingAdapterImpl
 import com.cmoney.backend2.notification2.model.Notification2SettingAdapter
 import com.cmoney.backend2.notification2.model.Notification2SettingAdapterImpl
+import com.cmoney.backend2.productdataprovider.model.ProductDataProviderSettingAdapter
+import com.cmoney.backend2.productdataprovider.model.ProductDataProviderSettingAdapterImpl
 import com.cmoney.backend2.virtualtrading2.model.settingadapter.VirtualTrading2SettingAdapter
 import com.cmoney.backend2.virtualtrading2.model.settingadapter.VirtualTrading2SettingAdapterImpl
 import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdapter
@@ -96,6 +98,7 @@ import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdap
  * @property notesSettingAdapter Notes(網誌文章)服務設定轉接器
  * @property notificationSettingAdapter 推播服務設定轉接器
  * @property notification2SettingAdapter Notification2服務設定轉接器
+ * @property productDataProviderSettingAdapter 產品服務提供者服務設定轉接器
  * @property virtualTradeSettingAdapter 虛擬下單V1轉接器
  * @property virtualTrading2SettingAdapter 虛擬下單V2轉接器
  *
@@ -130,6 +133,7 @@ class GlobalBackend2Manager(
     private val notesSettingAdapter: NotesSettingAdapter,
     private val notificationSettingAdapter: NotificationSettingAdapter,
     private val notification2SettingAdapter: Notification2SettingAdapter,
+    private val productDataProviderSettingAdapter: ProductDataProviderSettingAdapter,
     private val virtualTradeSettingAdapter: VirtualTradeSettingAdapter,
     private val virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter,
 ) {
@@ -163,6 +167,7 @@ class GlobalBackend2Manager(
         notesSettingAdapter = builder.notesSettingAdapter,
         notificationSettingAdapter = builder.notificationSettingAdapter,
         notification2SettingAdapter = builder.notification2SettingAdapter,
+        productDataProviderSettingAdapter = builder.productDataProviderSettingAdapter,
         virtualTradeSettingAdapter = builder.virtualTradeSettingAdapter,
         virtualTrading2SettingAdapter = builder.virtualTrading2SettingAdapter
     )
@@ -516,6 +521,13 @@ class GlobalBackend2Manager(
     }
 
     /**
+     * 取得產品資料提供者設定轉接器
+     */
+    fun getProductDataProviderSettingAdapter(): ProductDataProviderSettingAdapter {
+        return productDataProviderSettingAdapter
+    }
+
+    /**
      * 取得虛擬下單V1設定轉接器
      */
     fun getVirtualTradeSettingAdapter(): VirtualTradeSettingAdapter {
@@ -620,6 +632,8 @@ class GlobalBackend2Manager(
             NotificationSettingAdapterImpl(backendSetting)
         var notification2SettingAdapter: Notification2SettingAdapter =
             Notification2SettingAdapterImpl(backendSetting)
+        var productDataProviderSettingAdapter: ProductDataProviderSettingAdapter =
+            ProductDataProviderSettingAdapterImpl(backendSetting)
         var virtualTradeSettingAdapter: VirtualTradeSettingAdapter =
             VirtualTradeSettingAdapterImpl(backendSetting)
         var virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter =
