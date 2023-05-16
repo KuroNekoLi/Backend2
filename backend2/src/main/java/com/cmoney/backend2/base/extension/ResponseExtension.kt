@@ -1,6 +1,5 @@
 package com.cmoney.backend2.base.extension
 
-import androidx.annotation.VisibleForTesting
 import com.cmoney.backend2.base.model.exception.EmptyBodyException
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.request.Constant
@@ -176,7 +175,6 @@ fun <T> Response<T>.parseServerException(gson: Gson): ServerException {
  * @throws JsonSyntaxException 轉換錯誤資料物件失敗時的例外
  * @throws HttpException 其餘的例外
  */
-@VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
 @Throws(
     HttpException::class,
     EmptyBodyException::class,
