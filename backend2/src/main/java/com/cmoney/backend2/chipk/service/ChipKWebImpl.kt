@@ -1,11 +1,13 @@
 package com.cmoney.backend2.chipk.service
 
-import com.cmoney.backend2.base.extension.*
-import com.cmoney.backend2.base.model.exception.ServerException
+import com.cmoney.backend2.base.extension.checkIWithError
+import com.cmoney.backend2.base.extension.checkIsSuccessful
+import com.cmoney.backend2.base.extension.checkResponseBody
+import com.cmoney.backend2.base.extension.createAuthorizationBearer
+import com.cmoney.backend2.base.extension.requireBody
+import com.cmoney.backend2.base.extension.toJsonArrayWithErrorResponse
 import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
-import com.cmoney.backend2.base.model.request.Constant
 import com.cmoney.backend2.base.model.response.dtno.DtnoData
-import com.cmoney.backend2.base.model.response.error.CMoneyError
 import com.cmoney.backend2.chipk.service.api.futuredaytradedtnodata.FutureDayTradeDtnoData
 import com.cmoney.backend2.chipk.service.api.getOfficialStockPickData.OfficialStockInfo
 import com.cmoney.backend2.chipk.service.api.internationalkchart.ProductType
@@ -13,9 +15,6 @@ import com.cmoney.backend2.chipk.service.api.internationalkchart.TickInfoSet
 import com.cmoney.core.DefaultDispatcherProvider
 import com.cmoney.core.DispatcherProvider
 import com.google.gson.Gson
-import com.google.gson.JsonElement
-import com.google.gson.JsonSyntaxException
-import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.withContext
 
 class ChipKWebImpl(
@@ -236,40 +235,9 @@ class ChipKWebImpl(
                     guid = manager.getIdentityToken().getMemberGuid(),
                     type = type
                 )
-                response.checkIsSuccessful()
-                    .requireBody()
-                    .toJsonArrayWithErrorResponse<List<String>>()
+                response.toJsonArrayWithErrorResponse<List<String>>(gson = gson)
             }
         }
-
-    /**
-     * 處理正常回傳是JsonArray 發生錯誤是JsonObject 的api回傳
-     *
-     * @param T
-     * @return
-     */
-    @Throws(ServerException::class)
-    private inline fun <reified T> JsonElement.toJsonArrayWithErrorResponse() : T{
-        val responseResult = if(this.isJsonArray){
-            try {
-                gson.fromJson<T>(this,object : TypeToken<T>() {}.type)
-            }catch (exception : JsonSyntaxException){
-                null
-            }
-        }else{
-            null
-        }
-
-        return if(responseResult != null){
-            responseResult
-        }else{
-            val error = gson.fromJson<CMoneyError>(this,object : TypeToken<CMoneyError>() {}.type)
-            throw ServerException(
-                error.detail?.code?: Constant.SERVICE_ERROR_CODE,
-                error.detail?.message.orEmpty()
-            )
-        }
-    }
 
     /**
      * 期貨盤後資訊
