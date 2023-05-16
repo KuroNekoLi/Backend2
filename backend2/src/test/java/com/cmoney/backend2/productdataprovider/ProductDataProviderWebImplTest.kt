@@ -1,9 +1,13 @@
 package com.cmoney.backend2.productdataprovider
 
+import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
+import com.cmoney.backend2.base.model.response.error.CMoneyError
 import com.cmoney.backend2.productdataprovider.service.ProductDataProviderService
 import com.cmoney.backend2.productdataprovider.service.ProductDataProviderWeb
 import com.cmoney.backend2.productdataprovider.service.ProductDataProviderWebImpl
+import com.cmoney.backend2.productdataprovider.service.api.getproductbysalesid.GetProductBySalesIdResponseBody
+import com.cmoney.backend2.productdataprovider.service.api.getsalesitembysubjectid.GetSalesItemBySubjectIdResponseBody
 import com.cmoney.core.CoroutineTestRule
 import com.cmoney.core.TestDispatcherProvider
 import com.google.common.truth.Truth
@@ -54,154 +58,218 @@ class ProductDataProviderWebImplTest {
     }
 
     @Test
-    fun `getProductByGraphQL_check url`() = testScope.runTest {
+    fun `getProductBySalesId_check url`() = testScope.runTest {
         val expect = "${EXCEPT_DOMAIN}ProductDataProvider/Product/GraphQLQuery"
         val urlSlot = slot<String>()
+        val responseBody = GetProductBySalesIdResponseBody(data = null)
         coEvery {
-            service.getProductByGraphQL(
+            service.getProductBySalesId(
                 url = capture(urlSlot),
                 authorization = any(),
                 query = any()
             )
-        } returns Response.success(
-            "{}".toResponseBody()
-        )
+        } returns Response.success(responseBody)
         web.getProductBySalesId(1)
         Truth.assertThat(urlSlot.captured).isEqualTo(expect)
     }
 
     @Test
     fun getProductBySalesId_success() = testScope.runTest {
+        val responseJsonString = """
+                {
+                  "data": {
+                    "saleInfo": {
+                      "name": "主力大_7天",
+                      "price": 0.0,
+                      "itemPrice": 13500.0,
+                      "productId": 3696,
+                      "productInformation": {
+                        "name": "【贈品】籌碼K線專業版",
+                        "shortDesc": "",
+                        "authorInfoSet": [
+                          {
+                            "authorName": "苦命程序員",
+                            "memberId": 15511,
+                            "account": "davidlin@cmoney.com.tw"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+            """.trimIndent()
+        val responseBody =
+            gson.fromJson(responseJsonString, GetProductBySalesIdResponseBody::class.java)
         coEvery {
-            service.getProductByGraphQL(
+            service.getProductBySalesId(
                 url = any(),
                 authorization = any(),
                 query = any()
             )
         } returns Response.success(
-            // language=JSON
-            """{
-                "data": {
-                    "saleInfo": {
-                        "name": "30天",
-                        "price": 299.0000,
-                        "itemPrice": 999.0000,
-                        "productId": 4399,
-                        "description": null,
-                        "productInformation": {
-                            "name": "鄉民PTT「金庸」投資專欄測試",
-                            "shortDesc": "鄉民PTT金庸分享看盤經驗，在股海江湖中帶你拆解招式，突破主力迷思，首要戰勝心魔方能笑看紅塵。專欄內容純屬個人操作與看法，不做任何買賣建議，僅供參考，盈利自負",
-                            "authorInfoSet": [
-                                {
-                                    "authorName": "台股籌碼戰-金庸",
-                                    "memberId": 123590,
-                                    "account": "alvin_hsu@cmoney.com.tw"
-                                }
-                            ]
-                        }
-                    }
-                }
-            }""".trimIndent().toResponseBody()
+            responseBody
         )
-        val result = web.getProductBySalesId(1)
-        Truth.assertThat(result.getOrNull()?.productId).isEqualTo(4399L)
-        Truth.assertThat(result.isSuccess).isTrue()
+        val result = web.getProductBySalesId(3696)
+            .getOrThrow()
+        Truth.assertThat(result.name).isEqualTo("主力大_7天")
+        Truth.assertThat(result.price).isEqualTo(0.0)
+        Truth.assertThat(result.originalPrice).isEqualTo(13500.0)
+        Truth.assertThat(result.productId).isEqualTo(3696)
+        Truth.assertThat(result.authorName).isEqualTo("苦命程序員")
+        Truth.assertThat(result.displayName).isEqualTo("【贈品】籌碼K線專業版")
+        Truth.assertThat(result.displayDesc).isEqualTo("")
     }
 
     @Test
-    fun getProductBySalesId_failure() = testScope.runTest {
+    fun getProductBySalesId_failure_ServerException() = testScope.runTest {
+        val errorBody = gson.toJson(
+            CMoneyError(
+                detail = CMoneyError.Detail(
+                    code = 101
+                )
+            )
+        ).toResponseBody()
         coEvery {
-            service.getProductByGraphQL(
+            service.getProductBySalesId(
                 url = any(),
                 authorization = any(),
                 query = any()
             )
-        } returns Response.error(400, "".toResponseBody())
+        } returns Response.error(400, errorBody)
         val result = web.getProductBySalesId(1)
-        Truth.assertThat(result.getOrNull()?.productId).isEqualTo(null)
-        Truth.assertThat(result.isSuccess).isFalse()
+        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.exceptionOrNull()).isInstanceOf(ServerException::class.java)
+    }
+
+    @Test
+    fun `getProductBySalesId_success_IllegalArgumentException 找不到符合的商品`() = testScope.runTest {
+        val responseJsonString = """
+                {"data":{"saleInfo":null}}
+            """.trimIndent()
+        val responseBody =
+            gson.fromJson(responseJsonString, GetProductBySalesIdResponseBody::class.java)
+        coEvery {
+            service.getProductBySalesId(
+                url = any(),
+                authorization = any(),
+                query = any()
+            )
+        } returns Response.success(responseBody)
+        val result = web.getProductBySalesId(1)
+        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.exceptionOrNull()).isInstanceOf(IllegalArgumentException::class.java)
+        Truth.assertThat(result.exceptionOrNull()?.message).isEqualTo("找不到符合的商品")
     }
 
     @Test
     fun `getSalesItemBySubjectId_check url`() = testScope.runTest {
         val expect = "${EXCEPT_DOMAIN}ProductDataProvider/Product/GraphQLQuery"
         val urlSlot = slot<String>()
+        val responseBody = GetSalesItemBySubjectIdResponseBody(data = null)
         coEvery {
-            service.getProductByGraphQL(
+            service.getSalesItemBySubjectId(
                 url = capture(urlSlot),
                 authorization = any(),
                 query = any()
             )
-        } returns Response.success(
-            "{}".toResponseBody()
-        )
+        } returns Response.success(responseBody)
         web.getSalesItemBySubjectId(1)
         Truth.assertThat(urlSlot.captured).isEqualTo(expect)
     }
 
     @Test
     fun getSalesItemBySubjectId_success() = testScope.runTest {
+        val responseJsonString = """
+            {
+              "data": {
+                "productInfoSet": [
+                  {
+                    "id": 5038,
+                    "name": "String Yeh｜投資專欄",
+                    "status": 1,
+                    "logoPath": "String Yeh-修.jpg",
+                    "saleInfoSet": [
+                      {
+                        "id": 5821,
+                        "name": "月訂閱(30天)",
+                        "isShow": true,
+                        "rank": 0
+                      },
+                      {
+                        "id": 5834,
+                        "name": "年訂閱(365天)",
+                        "isShow": true,
+                        "rank": 1
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+        """.trimIndent()
+        val responseBody =
+            gson.fromJson(responseJsonString, GetSalesItemBySubjectIdResponseBody::class.java)
         coEvery {
-            service.getProductByGraphQL(
+            service.getSalesItemBySubjectId(
                 url = any(),
                 authorization = any(),
                 query = any()
             )
-        } returns Response.success(
-            // language=JSON
-            """
-            {
-            	"data": {
-            		"productInfoSet": [
-            			{
-            				"id": 4399,
-            				"name": "鄉民PTT「金庸」投資專欄測試",
-            				"status": 1,
-            				"logoPath": "C3D09441.png",
-            				"saleInfoSet": [
-            					{
-            						"id": 6497,
-            						"name": "30天",
-            						"isShow": true
-            					}
-            				]
-            			},
-            			{
-            				"id": 4403,
-            				"name": "Ann-test",
-            				"status": 1,
-            				"logoPath": "C9C7BEBB-A48F-4089-A113-7DDF6D531549.png",
-            				"saleInfoSet": [
-            					{
-            						"id": 6502,
-            						"name": "一個月",
-            						"isShow": false
-            					}
-            				]
-            			}
-            		]
-            	}
-            }
-        """.trimIndent().toResponseBody()
-        )
+        } returns Response.success(responseBody)
         val result = web.getSalesItemBySubjectId(1)
-        Truth.assertThat(result.getOrNull()?.firstOrNull()?.productId).isEqualTo(4399)
-        Truth.assertThat(result.isSuccess).isTrue()
+            .getOrThrow()
+        Truth.assertThat(result[0].productId).isEqualTo(5038)
+        Truth.assertThat(result[0].productName).isEqualTo("String Yeh｜投資專欄")
+        Truth.assertThat(result[0].saleId).isEqualTo(5821)
+        Truth.assertThat(result[0].title).isEqualTo("月訂閱(30天)")
+        Truth.assertThat(result[0].isShown).isTrue()
+        Truth.assertThat(result[1].productId).isEqualTo(5038)
+        Truth.assertThat(result[1].productName).isEqualTo("String Yeh｜投資專欄")
+        Truth.assertThat(result[1].saleId).isEqualTo(5834)
+        Truth.assertThat(result[1].title).isEqualTo("年訂閱(365天)")
+        Truth.assertThat(result[1].isShown).isTrue()
     }
 
     @Test
-    fun getSalesItemBySubjectId_failure() = testScope.runTest {
+    fun `getSalesItemBySubjectId_item is empty_success`() = testScope.runTest {
+        val responseJsonString = """
+           {"data":{"productInfoSet":[]}}
+        """.trimIndent()
+        val responseBody =
+            gson.fromJson(responseJsonString, GetSalesItemBySubjectIdResponseBody::class.java)
         coEvery {
-            service.getProductByGraphQL(
+            service.getSalesItemBySubjectId(
                 url = any(),
                 authorization = any(),
                 query = any()
             )
-        } returns Response.error(400, "".toResponseBody())
+        } returns Response.success(responseBody)
         val result = web.getSalesItemBySubjectId(1)
-        Truth.assertThat(result.getOrNull()?.firstOrNull()?.productId).isEqualTo(null)
-        Truth.assertThat(result.isSuccess).isFalse()
+            .getOrThrow()
+        Truth.assertThat(result).isEmpty()
     }
+
+    @Test
+    fun getSalesItemBySubjectId_failure_ServerException() = testScope.runTest {
+        val errorBody = gson.toJson(
+            CMoneyError(
+                detail = CMoneyError.Detail(
+                    code = 101
+                )
+            )
+        ).toResponseBody()
+        coEvery {
+            service.getSalesItemBySubjectId(
+                url = any(),
+                authorization = any(),
+                query = any()
+            )
+        } returns Response.error(400, errorBody)
+        val result = web.getSalesItemBySubjectId(1)
+        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.exceptionOrNull()).isInstanceOf(ServerException::class.java)
+    }
+
 
     companion object {
         private const val EXCEPT_DOMAIN = "localhost://8080:80/"

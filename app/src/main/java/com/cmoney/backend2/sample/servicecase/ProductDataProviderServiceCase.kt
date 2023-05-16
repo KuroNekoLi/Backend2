@@ -9,8 +9,8 @@ class ProductDataProviderServiceCase : ServiceCase {
     private val web by inject<ProductDataProviderWeb>()
 
     override suspend fun testAll() {
-        web.getProductBySalesId(1).logResponse(TAG)
-        web.getSalesItemBySubjectId(1).logResponse(TAG)
+        web.getProductBySalesId(id = 5038).logResponse(TAG)
+        web.getSalesItemBySubjectId(829852).logResponse(TAG)
     }
 
     companion object {
