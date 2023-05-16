@@ -61,6 +61,8 @@ import com.cmoney.backend2.notification2.model.Notification2SettingAdapter
 import com.cmoney.backend2.notification2.model.Notification2SettingAdapterImpl
 import com.cmoney.backend2.ocean.model.OceanSettingAdapter
 import com.cmoney.backend2.ocean.model.OceanSettingAdapterImpl
+import com.cmoney.backend2.portal.model.PortalSettingAdapter
+import com.cmoney.backend2.portal.model.PortalSettingAdapterImpl
 import com.cmoney.backend2.virtualtrading2.model.settingadapter.VirtualTrading2SettingAdapter
 import com.cmoney.backend2.virtualtrading2.model.settingadapter.VirtualTrading2SettingAdapterImpl
 import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdapter
@@ -99,6 +101,7 @@ import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdap
  * @property notificationSettingAdapter 推播服務設定轉接器
  * @property notification2SettingAdapter Notification2服務設定轉接器
  * @property oceanSettingAdapter Ocean服務設定轉接器
+ * @property portalSettingAdapter Portal服務設定轉接器
  * @property virtualTradeSettingAdapter 虛擬下單V1轉接器
  * @property virtualTrading2SettingAdapter 虛擬下單V2轉接器
  *
@@ -134,6 +137,7 @@ class GlobalBackend2Manager(
     private val notificationSettingAdapter: NotificationSettingAdapter,
     private val notification2SettingAdapter: Notification2SettingAdapter,
     private val oceanSettingAdapter: OceanSettingAdapter,
+    private val portalSettingAdapter: PortalSettingAdapter,
     private val virtualTradeSettingAdapter: VirtualTradeSettingAdapter,
     private val virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter,
 ) {
@@ -168,6 +172,7 @@ class GlobalBackend2Manager(
         notificationSettingAdapter = builder.notificationSettingAdapter,
         notification2SettingAdapter = builder.notification2SettingAdapter,
         oceanSettingAdapter = builder.oceanSettingAdapter,
+        portalSettingAdapter = builder.portalSettingAdapter,
         virtualTradeSettingAdapter = builder.virtualTradeSettingAdapter,
         virtualTrading2SettingAdapter = builder.virtualTrading2SettingAdapter
     )
@@ -528,6 +533,15 @@ class GlobalBackend2Manager(
     }
 
     /**
+     * 取得Portal服務設定轉接器
+     *
+     * @return Portal服務設定轉接器
+     */
+    fun getPortalSettingAdapter(): PortalSettingAdapter {
+        return portalSettingAdapter
+    }
+
+    /**
      * 取得虛擬下單V1設定轉接器
      */
     fun getVirtualTradeSettingAdapter(): VirtualTradeSettingAdapter {
@@ -634,6 +648,8 @@ class GlobalBackend2Manager(
             Notification2SettingAdapterImpl(backendSetting)
         var oceanSettingAdapter: OceanSettingAdapter =
             OceanSettingAdapterImpl(backendSetting)
+        var portalSettingAdapter: PortalSettingAdapter =
+            PortalSettingAdapterImpl(backendSetting)
         var virtualTradeSettingAdapter: VirtualTradeSettingAdapter =
             VirtualTradeSettingAdapterImpl(backendSetting)
         var virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter =

@@ -1,10 +1,13 @@
 package com.cmoney.backend2.ocean.service
 
-import com.cmoney.backend2.base.extension.*
-import com.cmoney.backend2.base.model.exception.ServerException
+import com.cmoney.backend2.base.extension.checkIWithError
+import com.cmoney.backend2.base.extension.checkIsSuccessful
+import com.cmoney.backend2.base.extension.checkResponseBody
+import com.cmoney.backend2.base.extension.createAuthorizationBearer
+import com.cmoney.backend2.base.extension.handleNoContent
+import com.cmoney.backend2.base.extension.requireBody
+import com.cmoney.backend2.base.extension.toJsonArrayWithErrorResponse
 import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
-import com.cmoney.backend2.base.model.request.Constant
-import com.cmoney.backend2.base.model.response.error.CMoneyError
 import com.cmoney.backend2.ocean.extension.checkOceanResponseBody
 import com.cmoney.backend2.ocean.service.api.RequestIds
 import com.cmoney.backend2.ocean.service.api.answers.AnswersBody
@@ -24,7 +27,12 @@ import com.cmoney.backend2.ocean.service.api.checkHasJoinedClub.HasJoinedClubCom
 import com.cmoney.backend2.ocean.service.api.checkHasJoinedClub.HasJoinedClubRequestBody
 import com.cmoney.backend2.ocean.service.api.checkhasevaluated.CheckHasEvaluatedRequestBody
 import com.cmoney.backend2.ocean.service.api.checkhasevaluated.CheckHasEvaluatedResponseBody
-import com.cmoney.backend2.ocean.service.api.club.*
+import com.cmoney.backend2.ocean.service.api.club.AnnouncementListResponse
+import com.cmoney.backend2.ocean.service.api.club.CreateOrUpdateAnnouncementRequestBody
+import com.cmoney.backend2.ocean.service.api.club.IsCreateOrUpdateSuccessResponse
+import com.cmoney.backend2.ocean.service.api.club.IsRemoveAnnouncementSuccessResponse
+import com.cmoney.backend2.ocean.service.api.club.ReadAnnouncementsRequestBody
+import com.cmoney.backend2.ocean.service.api.club.RemoveAnnouncementRequestBody
 import com.cmoney.backend2.ocean.service.api.createclub.CreateClubRequestBody
 import com.cmoney.backend2.ocean.service.api.createclub.CreateClubResponseBody
 import com.cmoney.backend2.ocean.service.api.createclub.JoinMethod
@@ -111,20 +119,24 @@ import com.cmoney.backend2.ocean.service.api.spinoffblacklist.SpinOffBlackListRe
 import com.cmoney.backend2.ocean.service.api.updateclubdescription.UpdateClubDescriptionRequestBody
 import com.cmoney.backend2.ocean.service.api.updateclubdescription.UpdateClubDescriptionResponseBody
 import com.cmoney.backend2.ocean.service.api.uploadchannelimage.UploadChannelImageResponseBody
-import com.cmoney.backend2.ocean.service.api.variable.*
+import com.cmoney.backend2.ocean.service.api.variable.AnswerParam
+import com.cmoney.backend2.ocean.service.api.variable.ArticleNeedInfo
+import com.cmoney.backend2.ocean.service.api.variable.ChannelInfoOption
+import com.cmoney.backend2.ocean.service.api.variable.ChannelNeedInfo
+import com.cmoney.backend2.ocean.service.api.variable.ChannelTypes
+import com.cmoney.backend2.ocean.service.api.variable.FilterType
+import com.cmoney.backend2.ocean.service.api.variable.MemberPosition
+import com.cmoney.backend2.ocean.service.api.variable.NotificationType
+import com.cmoney.backend2.ocean.service.api.variable.Relation
+import com.cmoney.backend2.ocean.service.api.variable.SuccessResult
 import com.cmoney.backend2.ocean.service.api.variable.channelinfo.ChannelInfo
 import com.cmoney.core.DefaultDispatcherProvider
 import com.cmoney.core.DispatcherProvider
 import com.google.gson.Gson
-import com.google.gson.JsonElement
-import com.google.gson.JsonSyntaxException
-import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.withContext
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
-import retrofit2.Response
 import java.io.File
-import java.lang.reflect.Type
 
 class OceanWebImpl(
     override val manager: GlobalBackend2Manager,
@@ -189,7 +201,7 @@ class OceanWebImpl(
                 url = url,
                 authorization = manager.getAccessToken().createAuthorizationBearer()
             )
-            solvedJsonArrayResponseQuestion(response)
+            response.toJsonArrayWithErrorResponse(gson = gson)
         }
     }
 
@@ -206,7 +218,7 @@ class OceanWebImpl(
                     guid = manager.getIdentityToken().getMemberGuid()
                 )
             )
-            solvedJsonArrayResponseQuestion(response)
+            response.toJsonArrayWithErrorResponse(gson = gson)
         }
     }
 
@@ -223,7 +235,7 @@ class OceanWebImpl(
                     guid = manager.getIdentityToken().getMemberGuid()
                 )
             )
-            solvedJsonArrayResponseQuestion(response)
+            response.toJsonArrayWithErrorResponse(gson = gson)
         }
     }
 
@@ -239,7 +251,7 @@ class OceanWebImpl(
                         guid = manager.getIdentityToken().getMemberGuid()
                     )
                 )
-                solvedJsonArrayResponseQuestion(response)
+                response.toJsonArrayWithErrorResponse(gson = gson)
             }
         }
 
@@ -258,7 +270,7 @@ class OceanWebImpl(
                     guid = manager.getIdentityToken().getMemberGuid()
                 )
             )
-            solvedJsonArrayResponseQuestion(response)
+            response.toJsonArrayWithErrorResponse(gson = gson)
         }
     }
 
@@ -1581,53 +1593,5 @@ class OceanWebImpl(
                 .checkIWithError()
                 .toRealResponse()
         }
-    }
-
-    /**
-     * 解決回傳是JsonArray的方法
-     */
-    @Throws(ServerException::class)
-    private inline fun <reified T> solvedJsonArrayResponseQuestion(
-        response: Response<JsonElement>
-    ): T {
-        val jsonString = response
-            .checkIsSuccessful()
-            .requireBody()
-        val result: T? = if (jsonString.isJsonArray) {
-            try {
-                gson.parseResult<T>(jsonString, object : TypeToken<T>() {}.type)
-            } catch (ex: JsonSyntaxException) {
-                null
-            }
-        } else {
-            null
-        }
-
-        return if (result != null) {
-            result
-        } else {
-            val error =
-                gson.parseResult<CMoneyError>(jsonString, object : TypeToken<CMoneyError>() {}.type)
-            throw ServerException(
-                error?.detail?.code ?: Constant.SERVICE_ERROR_CODE,
-                error?.detail?.message.orEmpty()
-            )
-        }
-    }
-
-    /**
-     * 解析json回傳
-     *
-     * @param T
-     * @param jsonString
-     * @param type
-     * @return
-     */
-    @Throws(JsonSyntaxException::class)
-    private inline fun <reified T> Gson.parseResult(
-        jsonString: JsonElement?,
-        type: Type
-    ): T? {
-        return this.fromJson<T>(jsonString, type)
     }
 }
