@@ -18,12 +18,15 @@ class Notification2ServiceCase : ServiceCase {
 
     override suspend fun testAll() {
         userSettingImpl.apply {
-            getHistoryNotifyAll(Notification2TestParameter::class.java).logResponse("TEST_FROM_SPINNER")
+            getHistoryNotifyAll(Notification2TestParameter::class.java)
+                .logResponse(TAG)
 
             getBranchFcm()
+                .logResponse(TAG)
             //推播設定ID
             val pushSettingId = 6
             updateBranchFcm(pushSettingId, true)
+                .logResponse(TAG)
             //多組推播設定
             val pushSettings = listOf(
                 PushSetting(true, 17),
@@ -31,20 +34,29 @@ class Notification2ServiceCase : ServiceCase {
                 PushSetting(true, 19)
             )
             updateBranchFcmMultipleSettings(pushSettings)
+                .logResponse(TAG)
             val clubId = 105551L
             getClubFcm(clubId)
+                .logResponse(TAG)
             val randType = (0..2).random()
             updateClubFcm(randType, clubId)
+                .logResponse(TAG)
             getMainFcm()
+                .logResponse(TAG)
             updateMainFcm(true)
+                .logResponse(TAG)
             //Monitor
             delay(5000)
             val commonKey = "2330"
             getMonitorList()
+                .logResponse(TAG)
             delay(1000)
             insertMonitor(commonKey, 1, 400.0)
+                .logResponse(TAG)
             delay(1000)
-            val updateMonitorList = getMonitorList().getOrNull().orEmpty()
+            val monitorListResult = getMonitorList()
+            monitorListResult.logResponse(TAG)
+            val updateMonitorList = monitorListResult.getOrNull().orEmpty()
             delay(1000)
             val updateMonitor = updateMonitorList.find {
                 it.commonKey.orEmpty() == commonKey
@@ -53,13 +65,15 @@ class Notification2ServiceCase : ServiceCase {
                 conditionId = updateMonitor?.conditionId ?: return,
                 strategyId = 1,
                 monitorPrice = 350.0
-            )
+            ).logResponse(TAG)
             updateMonitorPushNotification(
                 conditionId = updateMonitor.conditionId ?: return,
                 isNeedPush = true
-            )
+            ).logResponse(TAG)
             delay(1000)
-            val deleteMonitorList = getMonitorList().getOrNull().orEmpty()
+            val monitorListResult2 = getMonitorList()
+            monitorListResult2.logResponse(TAG)
+            val deleteMonitorList = monitorListResult2.getOrNull().orEmpty()
             delay(1000)
             deleteMonitorList.forEach {
                 deleteMonitor(it.conditionId ?: 0)
@@ -107,13 +121,16 @@ class Notification2ServiceCase : ServiceCase {
                 )
             )
             updateMrOptionList(mrOptionConditionList)
+                .logResponse(TAG)
             delay(1000)
             getMrOptionOptionList()
+                .logResponse(TAG)
             getMrOptionSpotGoodsList()
+                .logResponse(TAG)
         }
     }
 
     companion object {
-        private val TAG = Notification2ServiceCase::class.java.simpleName
+        private const val TAG = "Notification2"
     }
 }
