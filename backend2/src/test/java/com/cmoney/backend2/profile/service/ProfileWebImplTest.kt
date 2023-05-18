@@ -2,21 +2,17 @@ package com.cmoney.backend2.profile.service
 
 import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.setting.Setting
-import com.cmoney.backend2.profile.data.GetNicknameAndAvatarResponse
 import com.cmoney.backend2.profile.service.api.checkregistrationcodebyemail.GetRegistrationCodeByEmailResponseBody
 import com.cmoney.backend2.profile.service.api.checkregistrationcodebyphone.GetRegistrationCodeByPhoneResponseBody
 import com.cmoney.backend2.profile.service.api.getaccount.GetAccountResponseBody
-import com.cmoney.backend2.profile.service.api.getusergraphqlinfo.UserGraphQLInfo
 import com.cmoney.backend2.profile.service.api.mutationmyusergraphqlinfo.MutationData
 import com.cmoney.backend2.profile.service.api.queryotherprofile.RawOtherMemberProfile
 import com.cmoney.backend2.profile.service.api.signupcompletebyemail.SignUpCompleteByEmailResponseBody
 import com.cmoney.backend2.profile.service.api.signupcompletebyphone.SignUpCompleteByPhoneResponseBody
-import com.cmoney.backend2.profile.service.api.variable.GraphQLFieldDefinition
 import com.cmoney.core.CoroutineTestRule
 import com.cmoney.core.TestDispatcherProvider
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
-import com.google.gson.reflect.TypeToken
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
@@ -740,64 +736,6 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun `getMyUserGraphQlInfo 取得暱稱及頭像`() = testScope.runTest {
-        val responseBody =
-            """{"nickname": "泰瑞瑞瑞瑞","image": "https://storage.googleapis.com/cmoney-image/1378ceeb-2f10-4ef5-8d38-cb63f8f97422"}""".toResponseBody()
-        coEvery {
-            service.getMyUserGraphQlInfo(
-                authorization = any(),
-                body = any()
-            )
-        } returns Response.success(
-            responseBody
-        )
-
-        val result = webImpl.getMyUserGraphQlInfo<GetNicknameAndAvatarResponse>(
-            fields = setOf(
-                GraphQLFieldDefinition.NickName,
-                GraphQLFieldDefinition.Image
-            ),
-            type = object : TypeToken<GetNicknameAndAvatarResponse>() {}.type
-        )
-        Truth.assertThat(result.isSuccess).isTrue()
-        val data = result.getOrThrow()
-        Truth.assertThat(result.exceptionOrNull()).isNull()
-        Truth.assertThat(data.memberId).isNull()
-        Truth.assertThat(data.nickname).isEqualTo("泰瑞瑞瑞瑞")
-        Truth.assertThat(data.image)
-            .isEqualTo("https://storage.googleapis.com/cmoney-image/1378ceeb-2f10-4ef5-8d38-cb63f8f97422")
-    }
-
-    @Test
-    fun `getMyUserGraphQlInfo 取得暱稱及頭像失敗`() = testScope.runTest {
-        coEvery {
-            service.getMyUserGraphQlInfo(
-                authorization = any(),
-                body = any()
-            )
-        } returns Response.error(
-            400,
-            // language=JSON
-            """{
-              "error": {
-                "Code": 400,
-                "Message": "參數錯誤"
-              }
-            }""".toResponseBody()
-        )
-
-        val result = webImpl.getMyUserGraphQlInfo<GetNicknameAndAvatarResponse>(
-            fields = setOf(
-                GraphQLFieldDefinition.NickName,
-                GraphQLFieldDefinition.Image
-            ),
-            type = object : TypeToken<GetNicknameAndAvatarResponse>() {}.type
-        )
-        Truth.assertThat(result.isSuccess).isFalse()
-        Truth.assertThat(result.exceptionOrNull()).isNotNull()
-    }
-
-    @Test
     fun `getSelfMemberProfile 取得暱稱及頭像`() = testScope.runTest {
         val responseBody =
             """{"nickname": "泰瑞瑞瑞瑞","image": "https://storage.googleapis.com/cmoney-image/1378ceeb-2f10-4ef5-8d38-cb63f8f97422"}""".toResponseBody()
@@ -850,64 +788,6 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun `mutationMyUserGraphQlInfo 更新暱稱及頭像`() = testScope.runTest {
-        val responseBody =
-            """{"nickname": "泰瑞瑞瑞瑞","image": "https://storage.googleapis.com/cmoney-image/1378ceeb-2f10-4ef5-8d38-cb63f8f97422"}""".toResponseBody()
-        coEvery {
-            service.mutationMyUserGraphQlInfo(
-                authorization = any(),
-                body = any()
-            )
-        } returns Response.success(
-            responseBody
-        )
-
-        val result = webImpl.mutationMyUserGraphQlInfo<GetNicknameAndAvatarResponse>(
-            type = object : TypeToken<GetNicknameAndAvatarResponse>() {}.type,
-            variable = MutationData.Builder(
-                nickname = "泰瑞瑞瑞瑞",
-                image = "https://storage.googleapis.com/cmoney-image/1378ceeb-2f10-4ef5-8d38-cb63f8f97422"
-            ).build()
-        )
-        Truth.assertThat(result.isSuccess).isTrue()
-        val data = result.getOrThrow()
-        Truth.assertThat(result.exceptionOrNull()).isNull()
-        Truth.assertThat(data.memberId).isNull()
-        Truth.assertThat(data.nickname).isEqualTo("泰瑞瑞瑞瑞")
-        Truth.assertThat(data.image)
-            .isEqualTo("https://storage.googleapis.com/cmoney-image/1378ceeb-2f10-4ef5-8d38-cb63f8f97422")
-    }
-
-    @Test
-    fun `mutationMyUserGraphQlInfo 更新暱稱及頭像失敗`() = testScope.runTest {
-        coEvery {
-            service.mutationMyUserGraphQlInfo(
-                authorization = any(),
-                body = any()
-            )
-        } returns Response.error(
-            400,
-            // language=JSON
-            """{
-              "error": {
-                "Code": 400,
-                "Message": "參數錯誤"
-              }
-            }""".toResponseBody()
-        )
-
-        val result = webImpl.mutationMyUserGraphQlInfo<GetNicknameAndAvatarResponse>(
-            type = object : TypeToken<GetNicknameAndAvatarResponse>() {}.type,
-            variable = MutationData.Builder(
-                nickname = "泰瑞瑞瑞瑞",
-                image = "https://storage.googleapis.com/cmoney-image/1378ceeb-2f10-4ef5-8d38-cb63f8f97422"
-            ).build()
-        )
-        Truth.assertThat(result.isSuccess).isFalse()
-        Truth.assertThat(result.exceptionOrNull()).isNotNull()
-    }
-
-    @Test
     fun `mutateMemberProfile 更新暱稱及頭像`() = testScope.runTest {
         val responseBody =
             """{"nickname": "泰瑞瑞瑞瑞","image": "https://storage.googleapis.com/cmoney-image/1378ceeb-2f10-4ef5-8d38-cb63f8f97422"}""".toResponseBody()
@@ -953,61 +833,6 @@ class ProfileWebImplTest {
                 nickname = "泰瑞瑞瑞瑞",
                 image = "https://storage.googleapis.com/cmoney-image/1378ceeb-2f10-4ef5-8d38-cb63f8f97422"
             ).build()
-        )
-        Truth.assertThat(result.isSuccess).isFalse()
-        Truth.assertThat(result.exceptionOrNull()).isNotNull()
-    }
-
-    @Test
-    fun `getNicknameAndAvatar 取得 id 清單的暱稱及頭像`() = testScope.runTest {
-        val responseBody =
-            """[{"id": 1,"nickname": "泰瑞瑞瑞瑞","image": "https://storage.googleapis.com/cmoney-image/1378ceeb-2f10-4ef5-8d38-cb63f8f97422"}]""".toResponseBody()
-        coEvery {
-            service.getUserGraphQLInfo(
-                authorization = any(),
-                body = any()
-            )
-        } returns Response.success(
-            responseBody
-        )
-
-        val result = webImpl.getUserGraphQLInfo<GetNicknameAndAvatarResponse>(
-            memberIds = listOf(1),
-            fields = setOf(UserGraphQLInfo.ID, UserGraphQLInfo.Image, UserGraphQLInfo.NickName),
-            type = object : TypeToken<List<GetNicknameAndAvatarResponse>>() {}.type
-        )
-        Truth.assertThat(result.isSuccess).isTrue()
-        val data = result.getOrThrow()
-        Truth.assertThat(data.isNullOrEmpty()).isFalse()
-        Truth.assertThat(result.exceptionOrNull()).isNull()
-        Truth.assertThat(data.firstOrNull()?.memberId).isEqualTo(1)
-        Truth.assertThat(data.firstOrNull()?.nickname).isEqualTo("泰瑞瑞瑞瑞")
-        Truth.assertThat(data.firstOrNull()?.image)
-            .isEqualTo("https://storage.googleapis.com/cmoney-image/1378ceeb-2f10-4ef5-8d38-cb63f8f97422")
-    }
-
-    @Test
-    fun `getNicknameAndAvatarFailure 取得 id 清單的暱稱及頭像失敗`() = testScope.runTest {
-        coEvery {
-            service.getUserGraphQLInfo(
-                authorization = any(),
-                body = any()
-            )
-        } returns Response.error(
-            400,
-            // language=JSON
-            """{
-              "error": {
-                "Code": 400,
-                "Message": "參數錯誤"
-              }
-            }""".toResponseBody()
-        )
-
-        val result = webImpl.getUserGraphQLInfo<GetNicknameAndAvatarResponse>(
-            memberIds = listOf(1),
-            fields = setOf(UserGraphQLInfo.ID, UserGraphQLInfo.Image, UserGraphQLInfo.NickName),
-            type = object : TypeToken<List<GetNicknameAndAvatarResponse>>() {}.type
         )
         Truth.assertThat(result.isSuccess).isFalse()
         Truth.assertThat(result.exceptionOrNull()).isNotNull()

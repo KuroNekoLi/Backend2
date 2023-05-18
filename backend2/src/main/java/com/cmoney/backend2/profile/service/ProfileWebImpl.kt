@@ -16,7 +16,6 @@ import com.cmoney.backend2.profile.service.api.convertguestbyphone.ConvertGuestB
 import com.cmoney.backend2.profile.service.api.getaccount.GetAccountResponseBody
 import com.cmoney.backend2.profile.service.api.getmyusergraphqlinfo.GetMyUserGraphQLInfoRequestBody
 import com.cmoney.backend2.profile.service.api.getusergraphqlinfo.GetUserGraphQLInfoRequestBody
-import com.cmoney.backend2.profile.service.api.getusergraphqlinfo.UserGraphQLInfo
 import com.cmoney.backend2.profile.service.api.linkcontactemail.LinkContactEmailRequestBody
 import com.cmoney.backend2.profile.service.api.linkemail.LinkEmailRequestBody
 import com.cmoney.backend2.profile.service.api.linkfacebook.LinkFacebookRequestBody
@@ -41,7 +40,6 @@ import com.cmoney.backend2.profile.service.api.signupcompletebyemail.SignUpCompl
 import com.cmoney.backend2.profile.service.api.signupcompletebyphone.SignUpCompleteByPhoneResponseBody
 import com.cmoney.backend2.profile.service.api.signupcompletebyphone.SignupCompleteByPhoneRequestBody
 import com.cmoney.backend2.profile.service.api.singupbyphone.SignUpByPhoneRequestBody
-import com.cmoney.backend2.profile.service.api.variable.GraphQLFieldDefinition
 import com.cmoney.core.DefaultDispatcherProvider
 import com.cmoney.core.DispatcherProvider
 import com.google.gson.Gson
@@ -49,8 +47,6 @@ import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
-import okhttp3.ResponseBody
-import java.lang.reflect.Type
 
 class ProfileWebImpl(
     private val gson: Gson,
@@ -292,22 +288,6 @@ class ProfileWebImpl(
         }
     }
 
-    override suspend fun <T> getMyUserGraphQlInfo(
-        fields: Set<GraphQLFieldDefinition>,
-        type: Type
-    ): Result<T> = withContext(dispatcher.io()) {
-        kotlin.runCatching {
-            val responseBody = service.getMyUserGraphQlInfo(
-                authorization = setting.accessToken.createAuthorizationBearer(),
-                body = GetMyUserGraphQLInfoRequestBody(
-                    fields = "{ ${fields.joinToString(" ") { it.value }} }"
-                )
-            ).checkResponseBody(gson)
-
-            return@runCatching gson.fromJson<T>(responseBody.string(), type)
-        }
-    }
-
     override suspend fun getSelfMemberProfile(
         block: MemberProfileQueryBuilder.() -> MemberProfileQueryBuilder
     ): Result<MemberProfile> =
@@ -334,25 +314,6 @@ class ProfileWebImpl(
             }
         }
 
-    override suspend fun <T> mutationMyUserGraphQlInfo(
-        variable: MutationData,
-        type: Type
-    ): Result<T> = withContext(dispatcher.io()) {
-        kotlin.runCatching {
-            //因應後端問題 如果將某些沒有要修改欄位的欄位設為null 發出去  會導致api失敗 因此才用自己處理全部的requestBody
-            val responseBody = service.mutationMyUserGraphQlInfo(
-                authorization = setting.accessToken.createAuthorizationBearer(),
-                body = ("{\n" +
-                    "  \"operationName\": \"updateMember\",\n" +
-                    "  \"fields\": \"{ ${variable.getFieldsString()} }\",\n" +
-                    "  \"variables\": " + variable.toJsonString() +
-                    "\n}").toRequestBody("application/json".toMediaType())
-            ).checkResponseBody(gson)
-
-            return@runCatching gson.fromJson<T>(responseBody.string(), type)
-        }
-    }
-
     override suspend fun mutateMemberProfile(mutationData: MutationData): Result<Unit> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
@@ -367,34 +328,6 @@ class ProfileWebImpl(
                 Unit
             }
         }
-
-    override suspend fun <T> getUserGraphQLInfo(
-        memberIds: List<Long>,
-        fields: Set<UserGraphQLInfo>,
-        type: Type
-    ): Result<List<T>> =
-        withContext(dispatcher.io()) {
-            kotlin.runCatching {
-                service.getUserGraphQLInfo(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    body = GetUserGraphQLInfoRequestBody(
-                        memberIds,
-                        "{ ${fields.joinToString(" ") { it.value }} }"
-                    )
-                )
-                    .checkResponseBody(gson)
-                    .parseResponseBodyToObject<T>(type)
-            }
-        }
-
-    /**
-     * @param type = TypeToken<List<T>> 要解析的格式
-     */
-    private fun <T> ResponseBody?.parseResponseBodyToObject(
-        type: Type
-    ): List<T> {
-        return gson.fromJson<List<T>>(this?.string(), type)
-    }
 
     override suspend fun getOtherMemberProfiles(
         memberIds: List<Long>,

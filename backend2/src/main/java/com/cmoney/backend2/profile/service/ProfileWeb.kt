@@ -3,7 +3,6 @@ package com.cmoney.backend2.profile.service
 import com.cmoney.backend2.profile.service.api.checkregistrationcodebyemail.GetRegistrationCodeByEmailResponseBody
 import com.cmoney.backend2.profile.service.api.checkregistrationcodebyphone.GetRegistrationCodeByPhoneResponseBody
 import com.cmoney.backend2.profile.service.api.getaccount.GetAccountResponseBody
-import com.cmoney.backend2.profile.service.api.getusergraphqlinfo.UserGraphQLInfo
 import com.cmoney.backend2.profile.service.api.mutationmyusergraphqlinfo.MutationData
 import com.cmoney.backend2.profile.service.api.queryotherprofile.OtherMemberProfile
 import com.cmoney.backend2.profile.service.api.queryotherprofile.OtherMemberProfileQueryBuilder
@@ -11,8 +10,6 @@ import com.cmoney.backend2.profile.service.api.queryprofile.MemberProfile
 import com.cmoney.backend2.profile.service.api.queryprofile.MemberProfileQueryBuilder
 import com.cmoney.backend2.profile.service.api.signupcompletebyemail.SignUpCompleteByEmailResponseBody
 import com.cmoney.backend2.profile.service.api.signupcompletebyphone.SignUpCompleteByPhoneResponseBody
-import com.cmoney.backend2.profile.service.api.variable.GraphQLFieldDefinition
-import java.lang.reflect.Type
 
 /**
  * Profile web
@@ -208,15 +205,6 @@ interface ProfileWeb {
 
     /**
      * 取得自己的使用者資料
-     */
-    @Deprecated("Use getSelfMemberProfile to get MemberProfile")
-    suspend fun <T> getMyUserGraphQlInfo(
-        fields: Set<GraphQLFieldDefinition>,
-        type: Type
-    ): Result<T>
-
-    /**
-     * 取得自己的使用者資料
      *
      * @param block 取得時的設定
      * @return 會員資料
@@ -228,36 +216,12 @@ interface ProfileWeb {
     /**
      * 更新自己的使用者資料
      *
-     * @param T 回傳資料型別
-     * @param variable 更新的物件，使用[MutationData.Builder]創建
-     * @param type 回傳解析的type
-     * @return
+     * @param mutationData 更新的內容，欄位為null時不會上傳
+     * @return Result.success 為成功，Result.failure 為失敗
      */
-    @Deprecated("Can use mutateMemberProfile to avoid type alias")
-    suspend fun <T> mutationMyUserGraphQlInfo(
-        variable : MutationData,
-        type: Type
-    ): Result<T>
-
     suspend fun mutateMemberProfile(
         mutationData: MutationData
     ): Result<Unit>
-
-    /**
-     * 取得使用者的GraphQLInfo
-     *
-     * @param memberIds 要查詢的使用者ID
-     * @param fields 要查詢的欄位
-     * @param type Gson解析的資料格式(需先加上List<T>的解析) TypeToken<List<T>>(){}.type
-     *
-     * @return 查詢結果的資料清單 (會依照查詢欄位對應相關的Class）
-     */
-    @Deprecated("Use getOtherMemberProfile to avoid type alias")
-    suspend fun <T> getUserGraphQLInfo(
-        memberIds: List<Long>,
-        fields: Set<UserGraphQLInfo>,
-        type: Type
-    ): Result<List<T>>
 
     /**
      * 取得其他使用者會員資訊
