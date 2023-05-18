@@ -3,7 +3,7 @@ package com.cmoney.backend2.profile.service
 import com.cmoney.backend2.base.extension.checkResponseBody
 import com.cmoney.backend2.base.extension.createAuthorizationBearer
 import com.cmoney.backend2.base.extension.handleNoContent
-import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.profile.service.api.changepassword.ChangePasswordRequestBody
 import com.cmoney.backend2.profile.service.api.checkemailcode.CheckEmailCodeRequestBody
 import com.cmoney.backend2.profile.service.api.checkphonecode.CheckSmsCodeRequestBody
@@ -49,106 +49,175 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
 
 class ProfileWebImpl(
-    private val gson: Gson,
+    override val manager: GlobalBackend2Manager,
     private val service: ProfileService,
-    private val setting: Setting,
+    private val gson: Gson,
     private val dispatcher: DispatcherProvider = DefaultDispatcherProvider
 ) : ProfileWeb {
-    override suspend fun getAccount(): Result<GetAccountResponseBody> =
+    override suspend fun getAccount(
+        domain: String,
+        url: String
+    ): Result<GetAccountResponseBody> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getAccount(
-                    authorization = setting.accessToken.createAuthorizationBearer()
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer()
                 ).checkResponseBody(gson)
             }
         }
 
-    override suspend fun sendVerificationEmail(email: String): Result<Unit> =
+    override suspend fun sendVerificationEmail(
+        email: String,
+        domain: String,
+        url: String
+    ): Result<Unit> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.sendVerificationEmail(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    body = SendVerificationEmailRequestBody(email)
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
+                    body = SendVerificationEmailRequestBody(email = email)
                 ).handleNoContent(gson)
             }
         }
 
-    override suspend fun sendForgotPasswordEmail(email: String): Result<Unit> =
+    override suspend fun sendForgotPasswordEmail(
+        email: String,
+        domain: String,
+        url: String
+    ): Result<Unit> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.sendForgotPasswordEmail(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    body = SendForgotPasswordEmailRequestBody(email)
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
+                    body = SendForgotPasswordEmailRequestBody(email = email)
                 ).handleNoContent(gson)
             }
         }
 
-    override suspend fun sendVerificationSms(phone: String): Result<Unit> =
+    override suspend fun sendVerificationSms(
+        phone: String,
+        domain: String,
+        url: String
+    ): Result<Unit> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.sendVerificationSms(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    body = SendVerificationSmsRequestBody(phone)
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
+                    body = SendVerificationSmsRequestBody(phone = phone)
                 ).handleNoContent(gson)
             }
         }
 
-    override suspend fun checkCodeEmail(email: String, code: String): Result<Unit> =
+    override suspend fun checkCodeEmail(
+        email: String,
+        code: String,
+        domain: String,
+        url: String
+    ): Result<Unit> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.checkCodeEmail(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    body = CheckEmailCodeRequestBody(email, code)
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
+                    body = CheckEmailCodeRequestBody(
+                        email = email,
+                        code = code
+                    )
                 ).handleNoContent(gson)
             }
         }
 
-    override suspend fun checkCodeSms(phone: String, code: String): Result<Unit> =
+    override suspend fun checkCodeSms(
+        phone: String,
+        code: String,
+        domain: String,
+        url: String
+    ): Result<Unit> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.checkCodeSms(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    body = CheckSmsCodeRequestBody(phone, code)
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
+                    body = CheckSmsCodeRequestBody(
+                        cellphone = phone,
+                        code = code
+                    )
                 ).handleNoContent(gson)
             }
         }
 
-    override suspend fun linkEmail(code: String, email: String): Result<Unit> =
+    override suspend fun linkEmail(
+        code: String,
+        email: String,
+        domain: String,
+        url: String
+    ): Result<Unit> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.linkEmail(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    body = LinkEmailRequestBody(code, email)
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
+                    body = LinkEmailRequestBody(
+                        code = code,
+                        email = email
+                    )
                 ).handleNoContent(gson)
             }
         }
 
-    override suspend fun linkPhone(code: String, phone: String): Result<Unit> =
+    override suspend fun linkPhone(
+        code: String,
+        phone: String,
+        domain: String,
+        url: String
+    ): Result<Unit> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.linkPhone(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    body = LinkPhoneRequestBody(code, phone)
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
+                    body = LinkPhoneRequestBody(
+                        code = code,
+                        cellphone = phone
+                    )
                 ).handleNoContent(gson)
             }
         }
 
-    override suspend fun linkFacebook(token: String): Result<Unit> =
+    override suspend fun linkFacebook(
+        token: String,
+        domain: String,
+        url: String
+    ): Result<Unit> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.linkFacebook(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    body = LinkFacebookRequestBody(token)
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
+                    body = LinkFacebookRequestBody(token = token)
                 ).handleNoContent(gson)
             }
         }
 
-    override suspend fun linkContactEmail(code: String, email: String): Result<Unit> =
+    override suspend fun linkContactEmail(
+        code: String,
+        email: String,
+        domain: String,
+        url: String
+    ): Result<Unit> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.linkContactEmail(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    body = LinkContactEmailRequestBody(code, email)
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
+                    body = LinkContactEmailRequestBody(
+                        code = code,
+                        email = email
+                    )
                 ).handleNoContent(gson)
             }
         }
@@ -156,13 +225,20 @@ class ProfileWebImpl(
     override suspend fun convertGuestByEmail(
         email: String,
         code: String,
-        newPassword: String
+        newPassword: String,
+        domain: String,
+        url: String
     ): Result<Unit> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.convertGuestByEmail(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    body = ConvertGuestByEmailRequestBody(email, code, newPassword)
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
+                    body = ConvertGuestByEmailRequestBody(
+                        account = email,
+                        code = code,
+                        newPassword = newPassword
+                    )
                 ).handleNoContent(gson)
             }
         }
@@ -170,24 +246,40 @@ class ProfileWebImpl(
     override suspend fun convertGuestBySms(
         phone: String,
         code: String,
-        newPassword: String
+        newPassword: String,
+        domain: String,
+        url: String
     ): Result<Unit> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.convertGuestBySms(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    body = ConvertGuestBySmsRequestBody(phone, code, newPassword)
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
+                    body = ConvertGuestBySmsRequestBody(
+                        account = phone,
+                        code = code,
+                        newPassword = newPassword
+                    )
                 ).handleNoContent(gson)
             }
         }
 
 
-    override suspend fun changePassword(oldPassword: String, newPassword: String): Result<Unit> =
+    override suspend fun changePassword(
+        oldPassword: String,
+        newPassword: String,
+        domain: String,
+        url: String
+    ): Result<Unit> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.changePassword(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    body = ChangePasswordRequestBody(oldPassword, newPassword)
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
+                    body = ChangePasswordRequestBody(
+                        oldPassword = oldPassword,
+                        newPassword = newPassword
+                    )
                 ).handleNoContent(gson)
             }
         }
@@ -195,11 +287,18 @@ class ProfileWebImpl(
     override suspend fun resetPasswordByEmail(
         code: String,
         email: String,
-        newPassword: String
+        newPassword: String,
+        domain: String,
+        url: String
     ): Result<Unit> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.resetPasswordByEmail(
-                body = ResetPasswordByEmailRequestBody(code, email, newPassword)
+                url = url,
+                body = ResetPasswordByEmailRequestBody(
+                    code = code,
+                    email = email,
+                    newPassword = newPassword
+                )
             ).handleNoContent(gson)
         }
     }
@@ -207,27 +306,44 @@ class ProfileWebImpl(
     override suspend fun resetPasswordBySms(
         code: String,
         phone: String,
-        newPassword: String
+        newPassword: String,
+        domain: String,
+        url: String
     ): Result<Unit> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.resetPasswordBySms(
-                body = ResetPasswordBySmsRequestBody(code, phone, newPassword)
+                url = url,
+                body = ResetPasswordBySmsRequestBody(
+                    code = code,
+                    cellphone = phone,
+                    newPassword = newPassword
+                )
             ).handleNoContent(gson)
         }
     }
 
-    override suspend fun signUpByEmail(email: String): Result<Unit> = withContext(dispatcher.io()) {
+    override suspend fun signUpByEmail(
+        email: String,
+        domain: String,
+        url: String
+    ): Result<Unit> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.signUpByEmail(
-                body = SignUpByEmailRequestBody(email)
+                url = url,
+                body = SignUpByEmailRequestBody(email = email)
             ).handleNoContent(gson)
         }
     }
 
-    override suspend fun signUpByPhone(phone: String): Result<Unit> = withContext(dispatcher.io()) {
+    override suspend fun signUpByPhone(
+        phone: String,
+        domain: String,
+        url: String
+    ): Result<Unit> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.signUpByPhone(
-                body = SignUpByPhoneRequestBody(phone)
+                url = url,
+                body = SignUpByPhoneRequestBody(cellphone = phone)
             ).handleNoContent(gson)
         }
     }
@@ -235,14 +351,17 @@ class ProfileWebImpl(
     override suspend fun signUpCompleteByEmail(
         email: String,
         code: String,
-        password: String
+        password: String,
+        domain: String,
+        url: String
     ): Result<SignUpCompleteByEmailResponseBody> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.signUpCompleteByEmail(
+                url = url,
                 body = SignUpCompleteByEmailRequestBody(
-                    email,
-                    code,
-                    password
+                    email = email,
+                    code = code,
+                    password = password
                 )
             ).checkResponseBody(gson)
         }
@@ -251,14 +370,17 @@ class ProfileWebImpl(
     override suspend fun signUpCompleteByPhone(
         phone: String,
         code: String,
-        password: String
+        password: String,
+        domain: String,
+        url: String
     ): Result<SignUpCompleteByPhoneResponseBody> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.signUpCompleteByPhone(
+                url = url,
                 body = SignupCompleteByPhoneRequestBody(
-                    phone,
-                    code,
-                    password
+                    cellphone = phone,
+                    code = code,
+                    password = password
                 )
             ).checkResponseBody(gson)
         }
@@ -266,29 +388,41 @@ class ProfileWebImpl(
 
     override suspend fun getRegistrationCodeByEmail(
         code: String,
-        email: String
+        email: String,
+        domain: String,
+        url: String
     ): Result<GetRegistrationCodeByEmailResponseBody> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getRegistrationCodeByEmail(
-                body = GetRegistrationCodeByEmailRequestBody(code, email)
+                url = url,
+                body = GetRegistrationCodeByEmailRequestBody(
+                    code = code,
+                    email = email
+                )
             ).checkResponseBody(gson)
         }
     }
 
     override suspend fun getRegistrationCodeByPhone(
         code: String,
-        phone: String
+        phone: String,
+        domain: String,
+        url: String
     ): Result<GetRegistrationCodeByPhoneResponseBody> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.getRegistrationCodeByPhone(
+                url = url,
                 body = GetRegistrationCodeByPhoneRequestBody(
-                    code, phone
+                    code = code,
+                    cellphone = phone
                 )
             ).checkResponseBody(gson)
         }
     }
 
     override suspend fun getSelfMemberProfile(
+        domain: String,
+        url: String,
         block: MemberProfileQueryBuilder.() -> MemberProfileQueryBuilder
     ): Result<MemberProfile> =
         withContext(dispatcher.io()) {
@@ -301,24 +435,30 @@ class ProfileWebImpl(
                 )
                     .build()
                 val responseBody = service.getMyUserGraphQlInfo(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
                     body = GetMyUserGraphQLInfoRequestBody(fields = requestFields)
                 ).checkResponseBody(gson)
                 val rawMemberProfile =
                     gson.fromJson(responseBody.string(), RawMemberProfile::class.java)
                 MemberProfile(
                     params = params,
-                    id = setting.identityToken.getMemberId(),
+                    id = manager.getIdentityToken().getMemberId(),
                     raw = rawMemberProfile,
                 )
             }
         }
 
-    override suspend fun mutateMemberProfile(mutationData: MutationData): Result<Unit> =
+    override suspend fun mutateMemberProfile(
+        mutationData: MutationData,
+        domain: String,
+        url: String
+    ): Result<Unit> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.mutationMyUserGraphQlInfo(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
                     body = ("{\n" +
                         "  \"operationName\": \"updateMember\",\n" +
                         "  \"fields\": \"{ ${mutationData.getFieldsString()} }\",\n" +
@@ -331,6 +471,8 @@ class ProfileWebImpl(
 
     override suspend fun getOtherMemberProfiles(
         memberIds: List<Long>,
+        domain: String,
+        url: String,
         block: OtherMemberProfileQueryBuilder.() -> OtherMemberProfileQueryBuilder
     ): Result<List<OtherMemberProfile>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
@@ -345,7 +487,8 @@ class ProfileWebImpl(
                 fields = requestFields
             )
             val responseBody = service.getUserGraphQLInfo(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
                 body = requestBody
             ).checkResponseBody(gson)
             val type = object : TypeToken<List<RawOtherMemberProfile>>() {}.type

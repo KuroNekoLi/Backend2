@@ -35,14 +35,16 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Url
 
 interface ProfileService {
     /**
      * 取得帳戶綁定資訊
      */
     @RecordApi
-    @GET("profile/account")
+    @GET
     suspend fun getAccount(
+        @Url url: String,
         @Header("Authorization") authorization: String
     ): Response<GetAccountResponseBody>
 
@@ -50,8 +52,9 @@ interface ProfileService {
      * 送出驗證信
      */
     @RecordApi
-    @POST("profile/verification/email")
+    @POST
     suspend fun sendVerificationEmail(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: SendVerificationEmailRequestBody
     ): Response<Void>
@@ -60,8 +63,9 @@ interface ProfileService {
      * 發送忘記密碼驗證信
      */
     @RecordApi
-    @POST("profile/verification/forgotPassword/email")
+    @POST
     suspend fun sendForgotPasswordEmail(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: SendForgotPasswordEmailRequestBody
     ): Response<Void>
@@ -70,8 +74,9 @@ interface ProfileService {
      * 送出驗證簡訊
      */
     @RecordApi
-    @POST("profile/verification/sms")
+    @POST
     suspend fun sendVerificationSms(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: SendVerificationSmsRequestBody
     ): Response<Void>
@@ -80,8 +85,9 @@ interface ProfileService {
      * 確認信箱驗證碼是否有效
      */
     @RecordApi
-    @POST("profile/verification/code/Check/email")
+    @POST
     suspend fun checkCodeEmail(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: CheckEmailCodeRequestBody
     ): Response<Void>
@@ -90,8 +96,9 @@ interface ProfileService {
      * 確認簡訊驗證碼是否有效
      */
     @RecordApi
-    @POST("profile/verification/code/Check/sms")
+    @POST
     suspend fun checkCodeSms(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: CheckSmsCodeRequestBody
     ): Response<Void>
@@ -100,8 +107,9 @@ interface ProfileService {
      * 信箱綁定
      */
     @RecordApi
-    @POST("profile/account/link/email")
+    @POST
     suspend fun linkEmail(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: LinkEmailRequestBody
     ): Response<Void>
@@ -110,8 +118,9 @@ interface ProfileService {
      * 手機綁定
      */
     @RecordApi
-    @POST("profile/account/link/cellphone")
+    @POST
     suspend fun linkPhone(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: LinkPhoneRequestBody
     ): Response<Void>
@@ -120,8 +129,9 @@ interface ProfileService {
      * Facebook綁定
      */
     @RecordApi
-    @POST("profile/account/link/facebook")
+    @POST
     suspend fun linkFacebook(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: LinkFacebookRequestBody
     ): Response<Void>
@@ -130,8 +140,9 @@ interface ProfileService {
      * 聯絡信箱綁定
      */
     @RecordApi
-    @POST("profile/account/link/contactEmail")
+    @POST
     suspend fun linkContactEmail(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: LinkContactEmailRequestBody
     ): Response<Void>
@@ -140,8 +151,9 @@ interface ProfileService {
      * 訪客帳號轉正綁定手機，此方法會更新訪客的密碼並將訪客綁定刪除
      */
     @RecordApi
-    @POST("profile/account/convertGuest/cellphone")
+    @POST
     suspend fun convertGuestBySms(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: ConvertGuestBySmsRequestBody
     ): Response<Void>
@@ -150,8 +162,9 @@ interface ProfileService {
      * 訪客帳號轉正綁定信箱，此方法會更新訪客的密碼並將訪客綁定刪除
      */
     @RecordApi
-    @POST("profile/account/convertGuest/email")
+    @POST
     suspend fun convertGuestByEmail(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: ConvertGuestByEmailRequestBody
     ): Response<Void>
@@ -160,8 +173,9 @@ interface ProfileService {
      * 更改密碼
      */
     @RecordApi
-    @POST("profile/account/password/change")
+    @POST
     suspend fun changePassword(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: ChangePasswordRequestBody
     ): Response<Void>
@@ -170,8 +184,9 @@ interface ProfileService {
      * 信箱重置密碼
      */
     @RecordApi
-    @POST("profile/account/password/reset/email")
+    @POST
     suspend fun resetPasswordByEmail(
+        @Url url: String,
         @Body body: ResetPasswordByEmailRequestBody
     ): Response<Void>
 
@@ -179,8 +194,9 @@ interface ProfileService {
      * 用簡訊重置密碼
      */
     @RecordApi
-    @POST("profile/account/password/reset/sms")
+    @POST
     suspend fun resetPasswordBySms(
+        @Url url: String,
         @Body body: ResetPasswordBySmsRequestBody
     ): Response<Void>
 
@@ -188,8 +204,9 @@ interface ProfileService {
      * 信箱註冊
      */
     @RecordApi
-    @POST("profile/signup/email")
+    @POST
     suspend fun signUpByEmail(
+        @Url url: String,
         @Body body: SignUpByEmailRequestBody
     ): Response<Void>
 
@@ -197,8 +214,9 @@ interface ProfileService {
      * 手機註冊
      */
     @RecordApi
-    @POST("profile/signup/cellphone")
+    @POST
     suspend fun signUpByPhone(
+        @Url url: String,
         @Body body: SignUpByPhoneRequestBody
     ): Response<Void>
 
@@ -206,8 +224,9 @@ interface ProfileService {
      * 完成Email註冊程序
      */
     @RecordApi
-    @POST("profile/signup/complete/email")
+    @POST
     suspend fun signUpCompleteByEmail(
+        @Url url: String,
         @Body body: SignUpCompleteByEmailRequestBody
     ): Response<SignUpCompleteByEmailResponseBody>
 
@@ -215,8 +234,9 @@ interface ProfileService {
      * 完成手機註冊程序
      */
     @RecordApi
-    @POST("profile/signup/complete/cellphone")
+    @POST
     suspend fun signUpCompleteByPhone(
+        @Url url: String,
         @Body body: SignupCompleteByPhoneRequestBody
     ): Response<SignUpCompleteByPhoneResponseBody>
 
@@ -224,8 +244,9 @@ interface ProfileService {
      * 用信箱取得註冊碼
      */
     @RecordApi
-    @POST("profile/signup/registrationcode/Get/email")
+    @POST
     suspend fun getRegistrationCodeByEmail(
+        @Url url: String,
         @Body body: GetRegistrationCodeByEmailRequestBody
     ): Response<GetRegistrationCodeByEmailResponseBody>
 
@@ -233,8 +254,9 @@ interface ProfileService {
      * 用簡訊取得註冊碼
      */
     @RecordApi
-    @POST("profile/signup/registrationcode/Get/sms")
+    @POST
     suspend fun getRegistrationCodeByPhone(
+        @Url url: String,
         @Body body: GetRegistrationCodeByPhoneRequestBody
     ): Response<GetRegistrationCodeByPhoneResponseBody>
 
@@ -242,8 +264,9 @@ interface ProfileService {
      * 取得自己的使用者資訊
      * */
     @RecordApi
-    @POST("profile/graphql/query/member")
+    @POST
     suspend fun getMyUserGraphQlInfo(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: GetMyUserGraphQLInfoRequestBody
     ): Response<ResponseBody>
@@ -252,8 +275,9 @@ interface ProfileService {
      * 更新自己的使用者資訊
      */
     @RecordApi
-    @POST("profile/graphql/mutation/member")
+    @POST
     suspend fun mutationMyUserGraphQlInfo(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: RequestBody
     ): Response<ResponseBody>
@@ -264,8 +288,9 @@ interface ProfileService {
      *  @return 傳出ResponseBody，由外面在做解析
      */
     @RecordApi
-    @POST("profile/graphql/query/members")
+    @POST
     suspend fun getUserGraphQLInfo(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: GetUserGraphQLInfoRequestBody
     ): Response<ResponseBody>

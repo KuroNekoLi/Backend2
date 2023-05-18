@@ -1,7 +1,6 @@
 package com.cmoney.backend2.profile.service
 
-import com.cmoney.backend2.TestSetting
-import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.profile.service.api.checkregistrationcodebyemail.GetRegistrationCodeByEmailResponseBody
 import com.cmoney.backend2.profile.service.api.checkregistrationcodebyphone.GetRegistrationCodeByPhoneResponseBody
 import com.cmoney.backend2.profile.service.api.getaccount.GetAccountResponseBody
@@ -16,6 +15,8 @@ import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
+import io.mockk.slot
+import io.mockk.unmockkAll
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
@@ -39,25 +40,57 @@ class ProfileWebImplTest {
     @MockK
     private lateinit var service: ProfileService
 
-    private val setting: Setting = TestSetting()
     private val gson = GsonBuilder().serializeNulls().setLenient().setPrettyPrinting().create()
     private lateinit var webImpl: ProfileWeb
+
+    @MockK(relaxed = true)
+    private lateinit var manager: GlobalBackend2Manager
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
         webImpl = ProfileWebImpl(
-            gson = gson,
+            manager = manager,
             service = service,
-            setting = setting,
+            gson = gson,
             dispatcher = TestDispatcherProvider()
         )
+        coEvery {
+            manager.getProfileSettingAdapter().getDomain()
+        } returns EXCEPT_DOMAIN
     }
 
     @Test
-    fun getAccountTestSuccess() = testScope.runTest {
+    fun `getAccountTest_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}profile/account"
+        val urlSlot = slot<String>()
         coEvery {
             service.getAccount(
+                url = capture(urlSlot),
+                authorization = any()
+            )
+        } returns Response.success(
+            // language=JSON
+            gson.fromJson(
+                """{
+  "email": "example@cmoney.com.tw",
+  "contactEmail": "example@cmoney.com.tw",
+  "cellphone": "+886912345678",
+  "facebook": "example@cmoney.com.tw",
+  "signupDate": "2019/10/14 上午 09:18:23"
+}
+""", GetAccountResponseBody::class.java
+            )
+        )
+        webImpl.getAccount()
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getAccountTest_success() = testScope.runTest {
+        coEvery {
+            service.getAccount(
+                url = any(),
                 authorization = any()
             )
         } returns Response.success(
@@ -81,6 +114,7 @@ class ProfileWebImplTest {
     fun getAccountTestError() = testScope.runTest {
         coEvery {
             service.getAccount(
+                url = any(),
                 authorization = any()
             )
         } returns Response.error(
@@ -97,9 +131,25 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun sendVerificationEmailSuccess() = testScope.runTest {
+    fun `sendVerificationEmail_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}profile/verification/email"
+        val urlSlot = slot<String>()
         coEvery {
             service.sendVerificationEmail(
+                url = capture(urlSlot),
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success(204, null as? Void)
+        webImpl.sendVerificationEmail("email@email.com")
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun sendVerificationEmail_success() = testScope.runTest {
+        coEvery {
+            service.sendVerificationEmail(
+                url = any(),
                 authorization = any(),
                 body = any()
             )
@@ -109,9 +159,10 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun sendVerificationEmailFailure() = testScope.runTest {
+    fun sendVerificationEmail_failure() = testScope.runTest {
         coEvery {
             service.sendVerificationEmail(
+                url = any(),
                 authorization = any(),
                 body = any()
             )
@@ -128,9 +179,25 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun sendForgotPasswordEmailSuccess() = testScope.runTest {
+    fun `sendForgotPasswordEmail_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}profile/verification/forgotPassword/email"
+        val urlSlot = slot<String>()
         coEvery {
             service.sendForgotPasswordEmail(
+                url = capture(urlSlot),
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success(204, null as? Void)
+        webImpl.sendForgotPasswordEmail("email@email.com")
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun sendForgotPasswordEmail_success() = testScope.runTest {
+        coEvery {
+            service.sendForgotPasswordEmail(
+                url = any(),
                 authorization = any(),
                 body = any()
             )
@@ -140,9 +207,10 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun sendForgotPasswordEmailFailure() = testScope.runTest {
+    fun sendForgotPasswordEmail_failure() = testScope.runTest {
         coEvery {
             service.sendForgotPasswordEmail(
+                url = any(),
                 authorization = any(),
                 body = any()
             )
@@ -159,9 +227,25 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun sendVerificationSmsSuccess() = testScope.runTest {
+    fun `sendVerificationSms_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}profile/verification/sms"
+        val urlSlot = slot<String>()
         coEvery {
             service.sendVerificationSms(
+                url = capture(urlSlot),
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success(204, null as? Void)
+        webImpl.sendVerificationSms("+886978850397")
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun sendVerificationSms_success() = testScope.runTest {
+        coEvery {
+            service.sendVerificationSms(
+                url = any(),
                 authorization = any(),
                 body = any()
             )
@@ -171,9 +255,10 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun sendVerificationSmsFailure() = testScope.runTest {
+    fun sendVerificationSms_failure() = testScope.runTest {
         coEvery {
             service.sendVerificationSms(
+                url = any(),
                 authorization = any(),
                 body = any()
             )
@@ -190,9 +275,25 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun checkCodeEmailSuccess() = testScope.runTest {
+    fun `checkCodeEmail_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}profile/verification/code/Check/email"
+        val urlSlot = slot<String>()
         coEvery {
             service.checkCodeEmail(
+                url = capture(urlSlot),
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success(204, null as? Void)
+        webImpl.checkCodeEmail("email@email.com", "code")
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun checkCodeEmail_success() = testScope.runTest {
+        coEvery {
+            service.checkCodeEmail(
+                url = any(),
                 authorization = any(),
                 body = any()
             )
@@ -202,9 +303,10 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun checkCodeEmailFailure() = testScope.runTest {
+    fun checkCodeEmail_failure() = testScope.runTest {
         coEvery {
             service.checkCodeEmail(
+                url = any(),
                 authorization = any(),
                 body = any()
             )
@@ -221,9 +323,25 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun checkCodeSmsSuccess() = testScope.runTest {
+    fun `checkCodeSms_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}profile/verification/code/Check/sms"
+        val urlSlot = slot<String>()
         coEvery {
             service.checkCodeSms(
+                url = capture(urlSlot),
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success(204, null as? Void)
+        webImpl.checkCodeSms("+886978850397", "code")
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun checkCodeSms_success() = testScope.runTest {
+        coEvery {
+            service.checkCodeSms(
+                url = any(),
                 authorization = any(),
                 body = any()
             )
@@ -233,9 +351,10 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun checkCodeSmsFailure() = testScope.runTest {
+    fun checkCodeSms_failure() = testScope.runTest {
         coEvery {
             service.checkCodeSms(
+                url = any(),
                 authorization = any(),
                 body = any()
             )
@@ -252,9 +371,25 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun linkEmailSuccess() = testScope.runTest {
+    fun `linkEmail_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}profile/account/link/email"
+        val urlSlot = slot<String>()
         coEvery {
             service.linkEmail(
+                url = capture(urlSlot),
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success(204, null as? Void)
+        webImpl.linkEmail("email@email.com", "code")
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun linkEmail_success() = testScope.runTest {
+        coEvery {
+            service.linkEmail(
+                url = any(),
                 authorization = any(),
                 body = any()
             )
@@ -264,9 +399,10 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun linkEmailFailure() = testScope.runTest {
+    fun linkEmail_failure() = testScope.runTest {
         coEvery {
             service.linkEmail(
+                url = any(),
                 authorization = any(),
                 body = any()
             )
@@ -283,9 +419,25 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun linkPhoneSuccess() = testScope.runTest {
+    fun `linkPhone_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}profile/account/link/cellphone"
+        val urlSlot = slot<String>()
         coEvery {
             service.linkPhone(
+                url = capture(urlSlot),
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success(204, null as? Void)
+        webImpl.linkPhone("+886978850397", "code")
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun linkPhone_success() = testScope.runTest {
+        coEvery {
+            service.linkPhone(
+                url = any(),
                 authorization = any(),
                 body = any()
             )
@@ -295,9 +447,10 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun linkPhoneFailure() = testScope.runTest {
+    fun linkPhone_failure() = testScope.runTest {
         coEvery {
             service.linkPhone(
+                url = any(),
                 authorization = any(),
                 body = any()
             )
@@ -314,9 +467,25 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun linkFacebookSuccess() = testScope.runTest {
+    fun `linkFacebook_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}profile/account/link/facebook"
+        val urlSlot = slot<String>()
         coEvery {
             service.linkFacebook(
+                url = capture(urlSlot),
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success(204, null as? Void)
+        webImpl.linkFacebook("code")
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun linkFacebook_success() = testScope.runTest {
+        coEvery {
+            service.linkFacebook(
+                url = any(),
                 authorization = any(),
                 body = any()
             )
@@ -326,9 +495,10 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun linkFacebookFailure() = testScope.runTest {
+    fun linkFacebook_failure() = testScope.runTest {
         coEvery {
             service.linkFacebook(
+                url = any(),
                 authorization = any(),
                 body = any()
             )
@@ -344,11 +514,26 @@ class ProfileWebImplTest {
         Truth.assertThat(result.isSuccess).isFalse()
     }
 
-
     @Test
-    fun linkContactEmailSuccess() = testScope.runTest {
+    fun `linkContactEmail_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}profile/account/link/contactEmail"
+        val urlSlot = slot<String>()
         coEvery {
             service.linkContactEmail(
+                url = capture(urlSlot),
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success(204, null as? Void)
+        webImpl.linkContactEmail("code", "email@email.com")
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun linkContactEmail_success() = testScope.runTest {
+        coEvery {
+            service.linkContactEmail(
+                url = any(),
                 authorization = any(),
                 body = any()
             )
@@ -358,9 +543,10 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun linkContactEmailFailure() = testScope.runTest {
+    fun linkContactEmail_failure() = testScope.runTest {
         coEvery {
             service.linkContactEmail(
+                url = any(),
                 authorization = any(),
                 body = any()
             )
@@ -376,11 +562,26 @@ class ProfileWebImplTest {
         Truth.assertThat(result.isSuccess).isFalse()
     }
 
-
     @Test
-    fun convertGuestByEmailSuccess() = testScope.runTest {
+    fun `convertGuestByEmail_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}profile/account/convertGuest/email"
+        val urlSlot = slot<String>()
         coEvery {
             service.convertGuestByEmail(
+                url = capture(urlSlot),
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success(204, null as? Void)
+        webImpl.convertGuestByEmail("email@email.com", "code", "newPasswrod")
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun convertGuestByEmail_success() = testScope.runTest {
+        coEvery {
+            service.convertGuestByEmail(
+                url = any(),
                 authorization = any(),
                 body = any()
             )
@@ -390,9 +591,10 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun convertGuestByEmailFailure() = testScope.runTest {
+    fun convertGuestByEmail_failure() = testScope.runTest {
         coEvery {
             service.convertGuestByEmail(
+                url = any(),
                 authorization = any(),
                 body = any()
             )
@@ -409,9 +611,25 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun convertGuestBySmsSuccess() = testScope.runTest {
+    fun `convertGuestBySms_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}profile/account/convertGuest/cellphone"
+        val urlSlot = slot<String>()
         coEvery {
             service.convertGuestBySms(
+                url = capture(urlSlot),
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success(204, null as? Void)
+        webImpl.convertGuestBySms("+886978850397", "code", "newPasswrod")
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun convertGuestBySms_success() = testScope.runTest {
+        coEvery {
+            service.convertGuestBySms(
+                url = any(),
                 authorization = any(),
                 body = any()
             )
@@ -421,9 +639,10 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun convertGuestBySmsFailure() = testScope.runTest {
+    fun convertGuestBySms_failure() = testScope.runTest {
         coEvery {
             service.convertGuestBySms(
+                url = any(),
                 authorization = any(),
                 body = any()
             )
@@ -440,9 +659,25 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun changePasswordSuccess() = testScope.runTest {
+    fun `changePassword_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}profile/account/password/change"
+        val urlSlot = slot<String>()
         coEvery {
             service.changePassword(
+                url = capture(urlSlot),
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success(204, null as? Void)
+        webImpl.changePassword("oldPassword", "newPassword")
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun changePassword_success() = testScope.runTest {
+        coEvery {
+            service.changePassword(
+                url = any(),
                 authorization = any(),
                 body = any()
             )
@@ -452,9 +687,10 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun changePasswordFailure() = testScope.runTest {
+    fun changePassword_failure() = testScope.runTest {
         coEvery {
             service.changePassword(
+                url = any(),
                 authorization = any(),
                 body = any()
             )
@@ -471,18 +707,29 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun resetPasswordByEmailSuccess() = testScope.runTest {
+    fun `resetPasswordByEmail_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}profile/account/password/reset/email"
+        val urlSlot = slot<String>()
         coEvery {
-            service.resetPasswordByEmail(body = any())
+            service.resetPasswordByEmail(url = capture(urlSlot), body = any())
+        } returns Response.success(204, null as? Void)
+        webImpl.resetPasswordByEmail("code", "eamil@email.com", "newPassword")
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun resetPasswordByEmail_success() = testScope.runTest {
+        coEvery {
+            service.resetPasswordByEmail(url = any(), body = any())
         } returns Response.success(204, null as? Void)
         val result = webImpl.resetPasswordByEmail("code", "eamil@email.com", "newPassword")
         Truth.assertThat(result.isSuccess).isTrue()
     }
 
     @Test
-    fun resetPasswordByEmailFailure() = testScope.runTest {
+    fun resetPasswordByEmail_failure() = testScope.runTest {
         coEvery {
-            service.resetPasswordByEmail(body = any())
+            service.resetPasswordByEmail(url = any(), body = any())
         } returns Response.error(
             400, """{
           "Error": {
@@ -496,18 +743,29 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun resetPasswordBySmsSuccess() = testScope.runTest {
+    fun `resetPasswordBySms_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}profile/account/password/reset/sms"
+        val urlSlot = slot<String>()
         coEvery {
-            service.resetPasswordBySms(body = any())
+            service.resetPasswordBySms(url = capture(urlSlot), body = any())
+        } returns Response.success(204, null as? Void)
+        webImpl.resetPasswordBySms("code", "+886978850397", "newPassword")
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun resetPasswordBySms_success() = testScope.runTest {
+        coEvery {
+            service.resetPasswordBySms(url = any(), body = any())
         } returns Response.success(204, null as? Void)
         val result = webImpl.resetPasswordBySms("code", "+886978850397", "newPassword")
         Truth.assertThat(result.isSuccess).isTrue()
     }
 
     @Test
-    fun resetPasswordBySmsFailure() = testScope.runTest {
+    fun resetPasswordBySms_failure() = testScope.runTest {
         coEvery {
-            service.resetPasswordBySms(body = any())
+            service.resetPasswordBySms(url = any(), body = any())
         } returns Response.error(
             400, """{
           "Error": {
@@ -521,18 +779,29 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun signUpByEmail() = testScope.runTest {
+    fun `signUpByEmail_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}profile/signup/email"
+        val urlSlot = slot<String>()
         coEvery {
-            service.signUpByEmail(body = any())
+            service.signUpByEmail(url = capture(urlSlot), body = any())
+        } returns Response.success(204, null as? Void)
+        webImpl.signUpByEmail("mail@mail.com")
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun signUpByEmail_success() = testScope.runTest {
+        coEvery {
+            service.signUpByEmail(url = any(), body = any())
         } returns Response.success(204, null as? Void)
         val result = webImpl.signUpByEmail("mail@mail.com")
         Truth.assertThat(result.isSuccess).isTrue()
     }
 
     @Test
-    fun signUpByEmailError() = testScope.runTest {
+    fun signUpByEmail_failure() = testScope.runTest {
         coEvery {
-            service.signUpByEmail(body = any())
+            service.signUpByEmail(url = any(), body = any())
         } returns Response.error(
             400,
             // language=JSON
@@ -548,18 +817,29 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun signUpByPhone() = testScope.runTest {
+    fun `signUpByPhone_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}profile/signup/cellphone"
+        val urlSlot = slot<String>()
         coEvery {
-            service.signUpByPhone(body = any())
+            service.signUpByPhone(url = capture(urlSlot), body = any())
+        } returns Response.success(204, null as? Void)
+        webImpl.signUpByPhone("+886978850397")
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun signUpByPhone_success() = testScope.runTest {
+        coEvery {
+            service.signUpByPhone(url = any(), body = any())
         } returns Response.success(204, null as? Void)
         val result = webImpl.signUpByPhone("+886978850397")
         Truth.assertThat(result.isSuccess).isTrue()
     }
 
     @Test
-    fun signUpByPhoneFailure() = testScope.runTest {
+    fun signUpByPhone_failure() = testScope.runTest {
         coEvery {
-            service.signUpByPhone(body = any())
+            service.signUpByPhone(url = any(), body = any())
         } returns Response.error(
             400,
             // language=JSON
@@ -575,9 +855,31 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun getRegistrationCodeByEmail() = testScope.runTest {
+    fun `getRegistrationCodeByEmail_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}profile/signup/registrationcode/Get/email"
+        val urlSlot = slot<String>()
         coEvery {
-            service.getRegistrationCodeByEmail(body = any())
+            service.getRegistrationCodeByEmail(url = capture(urlSlot), body = any())
+        } returns Response.success(
+            200,
+            gson.fromJson(
+                // language=JSON
+                """
+                {
+                  "registrationCode": "29345" 
+                }
+            """.trimIndent(),
+                GetRegistrationCodeByEmailResponseBody::class.java
+            )
+        )
+        webImpl.getRegistrationCodeByEmail("code", "email@email.com")
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getRegistrationCodeByEmail_success() = testScope.runTest {
+        coEvery {
+            service.getRegistrationCodeByEmail(url = any(), body = any())
         } returns Response.success(
             200,
             gson.fromJson(
@@ -596,9 +898,9 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun getRegistrationCodeByEmailFailure() = testScope.runTest {
+    fun getRegistrationCodeByEmail_failure() = testScope.runTest {
         coEvery {
-            service.getRegistrationCodeByEmail(body = any())
+            service.getRegistrationCodeByEmail(url = any(), body = any())
         } returns Response.error(
             400,
             // language=JSON
@@ -614,9 +916,31 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun getRegistrationCodeByPhone() = testScope.runTest {
+    fun `getRegistrationCodeByPhone_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}profile/signup/registrationcode/Get/sms"
+        val urlSlot = slot<String>()
         coEvery {
-            service.getRegistrationCodeByPhone(body = any())
+            service.getRegistrationCodeByPhone(url = capture(urlSlot), body = any())
+        } returns Response.success(
+            200,
+            gson.fromJson(
+                // language=JSON
+                """
+                {
+                  "registrationCode": "29345" 
+                }
+            """.trimIndent(),
+                GetRegistrationCodeByPhoneResponseBody::class.java
+            )
+        )
+        webImpl.getRegistrationCodeByPhone("code", "email@email.com")
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getRegistrationCodeByPhone_success() = testScope.runTest {
+        coEvery {
+            service.getRegistrationCodeByPhone(url = any(), body = any())
         } returns Response.success(
             200,
             gson.fromJson(
@@ -635,9 +959,9 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun getRegistrationCodeByPhoneFailure() = testScope.runTest {
+    fun getRegistrationCodeByPhone_failure() = testScope.runTest {
         coEvery {
-            service.getRegistrationCodeByPhone(body = any())
+            service.getRegistrationCodeByPhone(url = any(), body = any())
         } returns Response.error(
             400,
             // language=JSON
@@ -653,9 +977,33 @@ class ProfileWebImplTest {
     }
 
     @Test
+    fun `signUpCompleteByEmail_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}profile/signup/complete/email"
+        val urlSlot = slot<String>()
+        coEvery {
+            service.signUpCompleteByEmail(url = capture(urlSlot), body = any())
+        } returns Response.success(
+            200,
+            gson.fromJson(
+                // language=JSON
+                """
+                {
+                  "account": "mail@mail.com",
+                  "password": "password"
+                }
+            """.trimIndent(),
+                SignUpCompleteByEmailResponseBody
+                ::class.java
+            )
+        )
+        webImpl.signUpCompleteByEmail("code", "email@email.com", "password")
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun signUpCompleteByEmail() = testScope.runTest {
         coEvery {
-            service.signUpCompleteByEmail(body = any())
+            service.signUpCompleteByEmail(url = any(), body = any())
         } returns Response.success(
             200,
             gson.fromJson(
@@ -677,9 +1025,9 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun signUpCompleteByEmailFailure() = testScope.runTest {
+    fun signUpCompleteByEmail_failure() = testScope.runTest {
         coEvery {
-            service.signUpCompleteByEmail(body = any())
+            service.signUpCompleteByEmail(url = any(), body = any())
         } returns Response.error(
             400,
             // language=JSON
@@ -695,9 +1043,32 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun signUpCompleteByPhone() = testScope.runTest {
+    fun `signUpCompleteByPhone_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}profile/signup/complete/cellphone"
+        val urlSlot = slot<String>()
         coEvery {
-            service.signUpCompleteByPhone(body = any())
+            service.signUpCompleteByPhone(url = capture(urlSlot), body = any())
+        } returns Response.success(
+            200,
+            gson.fromJson(
+                // language=JSON
+                """
+                {
+                  "account": "+886978850555",
+                  "password": "password"
+                }
+            """.trimIndent(),
+                SignUpCompleteByPhoneResponseBody::class.java
+            )
+        )
+        webImpl.signUpCompleteByPhone("+886978850555", "code", "password")
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun signUpCompleteByPhone_success() = testScope.runTest {
+        coEvery {
+            service.signUpCompleteByPhone(url = any(), body = any())
         } returns Response.success(
             200,
             gson.fromJson(
@@ -718,9 +1089,9 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun signupCompleteByPhoneFailure() = testScope.runTest {
+    fun signupCompleteByPhone_failure() = testScope.runTest {
         coEvery {
-            service.signUpCompleteByPhone(body = any())
+            service.signUpCompleteByPhone(url = any(), body = any())
         } returns Response.error(
             400,
             // language=JSON
@@ -736,11 +1107,35 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun `getSelfMemberProfile 取得暱稱及頭像`() = testScope.runTest {
+    fun `getSelfMemberProfile_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}profile/graphql/query/member"
+        val urlSlot = slot<String>()
         val responseBody =
             """{"nickname": "泰瑞瑞瑞瑞","image": "https://storage.googleapis.com/cmoney-image/1378ceeb-2f10-4ef5-8d38-cb63f8f97422"}""".toResponseBody()
         coEvery {
             service.getMyUserGraphQlInfo(
+                url = capture(urlSlot),
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success(
+            responseBody
+        )
+
+        webImpl.getSelfMemberProfile {
+            nickname
+            image
+        }
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getSelfMemberProfile_success() = testScope.runTest {
+        val responseBody =
+            """{"nickname": "泰瑞瑞瑞瑞","image": "https://storage.googleapis.com/cmoney-image/1378ceeb-2f10-4ef5-8d38-cb63f8f97422"}""".toResponseBody()
+        coEvery {
+            service.getMyUserGraphQlInfo(
+                url = any(),
                 authorization = any(),
                 body = any()
             )
@@ -762,9 +1157,10 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun `getSelfMemberProfile 取得暱稱及頭像失敗`() = testScope.runTest {
+    fun getSelfMemberProfile_failure() = testScope.runTest {
         coEvery {
             service.getMyUserGraphQlInfo(
+                url = any(),
                 authorization = any(),
                 body = any()
             )
@@ -788,11 +1184,37 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun `mutateMemberProfile 更新暱稱及頭像`() = testScope.runTest {
+    fun `mutateMemberProfile_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}profile/graphql/mutation/member"
+        val urlSlot = slot<String>()
         val responseBody =
             """{"nickname": "泰瑞瑞瑞瑞","image": "https://storage.googleapis.com/cmoney-image/1378ceeb-2f10-4ef5-8d38-cb63f8f97422"}""".toResponseBody()
         coEvery {
             service.mutationMyUserGraphQlInfo(
+                url = capture(urlSlot),
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success(
+            responseBody
+        )
+
+        webImpl.mutateMemberProfile(
+            mutationData = MutationData.Builder(
+                nickname = "泰瑞瑞瑞瑞",
+                image = "https://storage.googleapis.com/cmoney-image/1378ceeb-2f10-4ef5-8d38-cb63f8f97422"
+            ).build()
+        )
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun mutateMemberProfile_success() = testScope.runTest {
+        val responseBody =
+            """{"nickname": "泰瑞瑞瑞瑞","image": "https://storage.googleapis.com/cmoney-image/1378ceeb-2f10-4ef5-8d38-cb63f8f97422"}""".toResponseBody()
+        coEvery {
+            service.mutationMyUserGraphQlInfo(
+                url = any(),
                 authorization = any(),
                 body = any()
             )
@@ -811,9 +1233,10 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun `mutateMemberProfile 更新暱稱及頭像失敗`() = testScope.runTest {
+    fun mutateMemberProfile_failure() = testScope.runTest {
         coEvery {
             service.mutationMyUserGraphQlInfo(
+                url = any(),
                 authorization = any(),
                 body = any()
             )
@@ -839,7 +1262,9 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun `getOtherMemberProfiles_取得成功`() = testScope.runTest {
+    fun `getOtherMemberProfiles_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}profile/graphql/query/members"
+        val urlSlot = slot<String>()
         val memberId = 1L
         val testNickName = "測試帳號"
         val rawOtherMemberProfile = RawOtherMemberProfile(
@@ -856,6 +1281,39 @@ class ProfileWebImplTest {
         val responseBody = gson.toJson(rawOtherMemberProfiles).toResponseBody()
         coEvery {
             service.getUserGraphQLInfo(
+                url = capture(urlSlot),
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success(responseBody)
+
+        webImpl.getOtherMemberProfiles(
+            memberIds = listOf(memberId)
+        ) {
+            nickname
+        }
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getOtherMemberProfiles_success() = testScope.runTest {
+        val memberId = 1L
+        val testNickName = "測試帳號"
+        val rawOtherMemberProfile = RawOtherMemberProfile(
+            badges = listOf(),
+            bio = null,
+            communityRoles = listOf(),
+            id = memberId,
+            image = null,
+            isBindingCellphone = null,
+            level = null,
+            nickname = testNickName
+        )
+        val rawOtherMemberProfiles = listOf(rawOtherMemberProfile)
+        val responseBody = gson.toJson(rawOtherMemberProfiles).toResponseBody()
+        coEvery {
+            service.getUserGraphQLInfo(
+                url = any(),
                 authorization = any(),
                 body = any()
             )
@@ -877,9 +1335,10 @@ class ProfileWebImplTest {
     }
 
     @Test
-    fun `getOtherMemberProfiles_取得失敗_401`() = testScope.runTest {
+    fun getOtherMemberProfiles_failure_401() = testScope.runTest {
         coEvery {
             service.getUserGraphQLInfo(
+                url = any(),
                 authorization = any(),
                 body = any()
             )
@@ -901,5 +1360,10 @@ class ProfileWebImplTest {
 
     @After
     fun tearDown() {
+        unmockkAll()
+    }
+
+    companion object {
+        private const val EXCEPT_DOMAIN = "localhost://8080:80/"
     }
 }
