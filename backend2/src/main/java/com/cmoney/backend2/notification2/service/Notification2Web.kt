@@ -17,6 +17,9 @@ interface Notification2Web {
 
     /**
      * 取得所有人都有的通知
+     *
+     * @param domain 網域名稱
+     * @param url 完整的Url
      */
     suspend fun <T> getHistoryNotifyAll(
         parameterClass: Class<T>,
@@ -24,11 +27,27 @@ interface Notification2Web {
         url: String = "${domain}notification/History/NotifyAll"
     ): Result<List<GetNotifyAllResponseBody>>
 
+    /**
+     * 取得分支推播設定
+     *
+     * @param domain 網域名稱
+     * @param url 完整的Url
+     * @return
+     */
     suspend fun getBranchFcm(
         domain: String = manager.getNotification2SettingAdapter().getDomain(),
         url: String = "${domain}notification/usersetting/Branch"
     ): Result<List<BranchSettingRequestBody>>
 
+    /**
+     * 更新分支推播設定
+     *
+     * @param pushSettingId 分支設定編號
+     * @param isNeedPush 是否需要推播
+     * @param domain 網域名稱
+     * @param url 完整的Url
+     * @return
+     */
     suspend fun updateBranchFcm(
         pushSettingId: Int,
         isNeedPush: Boolean,
@@ -36,18 +55,43 @@ interface Notification2Web {
         url: String = "${domain}notification/usersetting/Branch"
     ): Result<Unit>
 
+    /**
+     * 更新多筆分支推播設定
+     *
+     * @param pushSettings 分支推播設定集合
+     * @param domain 網域名稱
+     * @param url 完整的Url
+     * @return
+     */
     suspend fun updateBranchFcmMultipleSettings(
         pushSettings: List<PushSetting>,
         domain: String = manager.getNotification2SettingAdapter().getDomain(),
         url: String = "${domain}notification/usersetting/Branch"
     ): Result<Unit>
 
+    /**
+     * 取得社團推播設定
+     *
+     * @param clubId 社團編號
+     * @param domain 網域名稱
+     * @param url 完整的Url
+     * @return
+     */
     suspend fun getClubFcm(
         clubId: Long,
         domain: String = manager.getNotification2SettingAdapter().getDomain(),
         url: String = "${domain}notification/usersetting/Club"
     ): Result<List<ClubFcmSettingResponseBody>>
 
+    /**
+     * 更新社團推播設定
+     *
+     * @param pushSettingType setting種類, 0: 全部關閉 3: 全部打開
+     * @param clubId 社團編號
+     * @param domain 網域名稱
+     * @param url 完整的Url
+     * @return
+     */
     suspend fun updateClubFcm(
         pushSettingType: Int,
         clubId: Long,
@@ -55,11 +99,26 @@ interface Notification2Web {
         url: String = "${domain}notification/usersetting/Club"
     ): Result<Unit>
 
+    /**
+     * 取得主要推播設定
+     *
+     * @param domain 網域名稱
+     * @param url 完整的Url
+     * @return
+     */
     suspend fun getMainFcm(
         domain: String = manager.getNotification2SettingAdapter().getDomain(),
         url: String = "${domain}notification/usersetting/Main"
     ): Result<GetMainFCMResponseBody>
 
+    /**
+     * 更新主要推播設定
+     *
+     * @param isNeedPush 是否推播
+     * @param domain 網域名稱
+     * @param url 完整的Url
+     * @return
+     */
     suspend fun updateMainFcm(
         isNeedPush: Boolean,
         domain: String = manager.getNotification2SettingAdapter().getDomain(),
@@ -67,7 +126,10 @@ interface Notification2Web {
     ): Result<Unit>
 
     /**
-     * 取的某個App的監控列表
+     * 取得目前App的監控列表
+     *
+     * @param domain 網域名稱
+     * @param url 完整的Url
      */
     suspend fun getMonitorList(
         domain: String = manager.getNotification2SettingAdapter().getDomain(),
@@ -76,6 +138,12 @@ interface Notification2Web {
 
     /**
      * 新增監控
+     *
+     * @param commonKey 標的
+     * @param strategyId 監控策略編號
+     * @param monitorPrice 價位
+     * @param domain 網域名稱
+     * @param url 完整的Url
      */
     suspend fun insertMonitor(
         commonKey : String,
@@ -87,6 +155,12 @@ interface Notification2Web {
 
     /**
      * 更新監控
+     *
+     * @param conditionId 使用者條件編號
+     * @param strategyId 監控策略編號
+     * @param monitorPrice 價位
+     * @param domain 網域名稱
+     * @param url 完整的Url
      */
     suspend fun updateMonitor(
         conditionId : Long,
@@ -98,6 +172,10 @@ interface Notification2Web {
 
     /**
      * 刪除監控
+     *
+     * @param conditionId 使用者條件編號
+     * @param domain 網域名稱
+     * @param url 完整的Url
      */
     suspend fun deleteMonitor(
         conditionId: Long,
@@ -107,6 +185,9 @@ interface Notification2Web {
 
     /**
      * 拿到監控推播歷史
+     *
+     * @param domain 網域名稱
+     * @param url 完整的Url
      */
     suspend fun getMonitorHistoryList(
         domain: String = manager.getNotification2SettingAdapter().getDomain(),
@@ -115,6 +196,11 @@ interface Notification2Web {
 
     /**
      * 更新監控推播
+     *
+     * @param conditionId 使用者條件編號
+     * @param isNeedPush 是否推播
+     * @param domain 網域名稱
+     * @param url 完整的Url
      */
     suspend fun updateMonitorPushNotification(
         conditionId: Long,
@@ -129,6 +215,8 @@ interface Notification2Web {
     /**
      * 取得期權先生期權條件設定
      *
+     * @param domain 網域名稱
+     * @param url 完整的Url
      * @return List<MrOptionCondition>
      */
     suspend fun getMrOptionOptionList(
@@ -139,6 +227,8 @@ interface Notification2Web {
     /**
      * 取得期權先生現貨條件設定
      *
+     * @param domain 網域名稱
+     * @param url 完整的Url
      * @return List<MrOptionCondition>
      */
     suspend fun getMrOptionSpotGoodsList(
@@ -149,7 +239,9 @@ interface Notification2Web {
     /**
      * 更新期權先生條件
      *
-     * @param conditions List<Condition>
+     * @param conditions List<Condition> 用戶的所有條件
+     * @param domain 網域名稱
+     * @param url 完整的Url
      */
     suspend fun updateMrOptionList(
         conditions: List<UpdateMrOptionConditionRequestBody.Condition>,
