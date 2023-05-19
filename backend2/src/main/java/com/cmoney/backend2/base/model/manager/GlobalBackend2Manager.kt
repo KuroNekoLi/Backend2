@@ -65,6 +65,8 @@ import com.cmoney.backend2.portal.model.PortalSettingAdapter
 import com.cmoney.backend2.portal.model.PortalSettingAdapterImpl
 import com.cmoney.backend2.productdataprovider.model.ProductDataProviderSettingAdapter
 import com.cmoney.backend2.productdataprovider.model.ProductDataProviderSettingAdapterImpl
+import com.cmoney.backend2.profile.model.ProfileSettingAdapter
+import com.cmoney.backend2.profile.model.ProfileSettingAdapterImpl
 import com.cmoney.backend2.virtualtrading2.model.settingadapter.VirtualTrading2SettingAdapter
 import com.cmoney.backend2.virtualtrading2.model.settingadapter.VirtualTrading2SettingAdapterImpl
 import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdapter
@@ -105,6 +107,7 @@ import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdap
  * @property oceanSettingAdapter Ocean服務設定轉接器
  * @property portalSettingAdapter Portal服務設定轉接器
  * @property productDataProviderSettingAdapter 產品服務提供者服務設定轉接器
+ * @property profileSettingAdapter 會員服務設定轉接器
  * @property virtualTradeSettingAdapter 虛擬下單V1轉接器
  * @property virtualTrading2SettingAdapter 虛擬下單V2轉接器
  *
@@ -142,6 +145,7 @@ class GlobalBackend2Manager(
     private val oceanSettingAdapter: OceanSettingAdapter,
     private val portalSettingAdapter: PortalSettingAdapter,
     private val productDataProviderSettingAdapter: ProductDataProviderSettingAdapter,
+    private val profileSettingAdapter: ProfileSettingAdapter,
     private val virtualTradeSettingAdapter: VirtualTradeSettingAdapter,
     private val virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter,
 ) {
@@ -178,6 +182,7 @@ class GlobalBackend2Manager(
         oceanSettingAdapter = builder.oceanSettingAdapter,
         portalSettingAdapter = builder.portalSettingAdapter,
         productDataProviderSettingAdapter = builder.productDataProviderSettingAdapter,
+        profileSettingAdapter = builder.profileSettingAdapter,
         virtualTradeSettingAdapter = builder.virtualTradeSettingAdapter,
         virtualTrading2SettingAdapter = builder.virtualTrading2SettingAdapter
     )
@@ -554,6 +559,15 @@ class GlobalBackend2Manager(
     }
 
     /**
+     * 取得會員服務設定轉接器
+     *
+     * @return 會員服務設定轉接器
+     */
+    fun getProfileSettingAdapter(): ProfileSettingAdapter {
+        return profileSettingAdapter
+    }
+
+    /**
      * 取得虛擬下單V1設定轉接器
      */
     fun getVirtualTradeSettingAdapter(): VirtualTradeSettingAdapter {
@@ -664,6 +678,8 @@ class GlobalBackend2Manager(
             PortalSettingAdapterImpl(backendSetting)
         var productDataProviderSettingAdapter: ProductDataProviderSettingAdapter =
             ProductDataProviderSettingAdapterImpl(backendSetting)
+        var profileSettingAdapter: ProfileSettingAdapter =
+            ProfileSettingAdapterImpl(backendSetting)
         var virtualTradeSettingAdapter: VirtualTradeSettingAdapter =
             VirtualTradeSettingAdapterImpl(backendSetting)
         var virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter =
