@@ -21,6 +21,9 @@ interface PortalWeb {
 
     /**
      * 服務1. 取得選股監控對象股票清單
+     *
+     * @param domain 網域名稱
+     * @param url 完整的Url
      */
     suspend fun getTarget(
         domain: String = manager.getPortalSettingAdapter().getDomain(),
@@ -30,6 +33,9 @@ interface PortalWeb {
 
     /**
      * 服務2. 取得選股全部條件篩選狀態
+     *
+     * @param domain 網域名稱
+     * @param url 完整的Url
      */
     suspend fun getSignals(
         domain: String = manager.getPortalSettingAdapter().getDomain(),
@@ -38,6 +44,10 @@ interface PortalWeb {
 
     /**
      * 服務3. 取得顯示資訊欄位資料
+     *
+     * @param settingId 資料編號
+     * @param domain 網域名稱
+     * @param url 完整的Url
      */
     suspend fun getAdditionalInfo(
         settingId: Int,
@@ -47,6 +57,9 @@ interface PortalWeb {
 
     /**
      * 詢問App的所有猜多空活動基本資訊
+     *
+     * @param domain 網域名稱
+     * @param url 完整的Url
      */
     suspend fun getActivitiesBaseInfo(
         domain: String = manager.getPortalSettingAdapter().getDomain(),
@@ -55,6 +68,10 @@ interface PortalWeb {
 
     /**
      * 詢問目前猜多空活動狀況
+     *
+     * @param commKey 標的
+     * @param domain 網域名稱
+     * @param url 完整的Url
      */
     suspend fun getActivityNowInfo(
         commKey: String,
@@ -64,6 +81,11 @@ interface PortalWeb {
 
     /**
      * 取得會員戰績
+     *
+     * @param commKey 標的
+     * @param queryGuid 會員辨識編號
+     * @param domain 網域名稱
+     * @param url 完整的Url
      */
     suspend fun getMemberPerformance(
         commKey: String,
@@ -74,6 +96,12 @@ interface PortalWeb {
 
     /**
      * 取得排行榜資料
+     *
+     * @param commKey 標的
+     * @param fetchCount 預計取得的數量
+     * @param skipCount 略過多少筆
+     * @param domain 網域名稱
+     * @param url 完整的Url
      */
     suspend fun getRanking(
         commKey: String,
@@ -85,6 +113,12 @@ interface PortalWeb {
 
     /**
      * 取得某人的活動歷史紀錄
+     *
+     * @param commKey 標的
+     * @param fetchCount 預計取得的數量
+     * @param skipCount 略過多少筆
+     * @param domain 網域名稱
+     * @param url 完整的Url
      */
     suspend fun getPersonActivityHistory(
         commKey: String,
@@ -97,6 +131,10 @@ interface PortalWeb {
 
     /**
      * 詢問會員目前猜多空活動參與狀況(驗證身分)
+     *
+     * @param commKey 標的
+     * @param domain 網域名稱
+     * @param url 完整的Url
      */
     suspend fun askMemberForecastStatus(
         commKey: String,
@@ -106,6 +144,10 @@ interface PortalWeb {
 
     /**
      * 詢問會員上期猜多空活動參與狀況(驗證身分)
+     *
+     * @param commKey 標的
+     * @param domain 網域名稱
+     * @param url 完整的Url
      */
     suspend fun askMemberLastForecastInfo(
         commKey: String,
@@ -115,6 +157,11 @@ interface PortalWeb {
 
     /**
      * 參與活動(驗證身分)
+     *
+     * @param commKey 標的
+     * @param forecastValue 預測多空值
+     * @param domain 網域名稱
+     * @param url 完整的Url
      */
     suspend fun joinActivity(
         commKey: String,
@@ -125,6 +172,9 @@ interface PortalWeb {
 
     /**
      * 詢問會員某App上期全部的猜多空活動參與狀況(驗證身分)
+     *
+     * @param domain 網域名稱
+     * @param url 完整的Url
      */
     suspend fun askAllMemberLastForecastInfo(
         domain: String = manager.getPortalSettingAdapter().getDomain(),
