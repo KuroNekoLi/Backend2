@@ -6,14 +6,16 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Url
 
 interface UserBehaviorService {
     /**
-     * 新增監控
+     * 上傳報告
      */
     @RecordApi
-    @POST("UserBehaviorLog/Log")
+    @POST
     suspend fun uploadReport(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: LogRequestBody
     ): Response<Void>

@@ -71,6 +71,8 @@ import com.cmoney.backend2.tickdata.model.TickDataSettingAdapter
 import com.cmoney.backend2.tickdata.model.TickDataSettingAdapterImpl
 import com.cmoney.backend2.trial.model.TrialSettingAdapter
 import com.cmoney.backend2.trial.model.TrialSettingAdapterImpl
+import com.cmoney.backend2.userbehavior.model.UserBehaviorSettingAdapter
+import com.cmoney.backend2.userbehavior.model.UserBehaviorSettingAdapterImpl
 import com.cmoney.backend2.virtualtrading2.model.settingadapter.VirtualTrading2SettingAdapter
 import com.cmoney.backend2.virtualtrading2.model.settingadapter.VirtualTrading2SettingAdapterImpl
 import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdapter
@@ -114,6 +116,7 @@ import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdap
  * @property profileSettingAdapter 會員服務設定轉接器
  * @property tickDataSettingAdapter TickData服務設定轉接器
  * @property trialSettingAdapter 試用服務設定轉接器
+ * @property userBehaviorSettingAdapter 使用者行為設定轉接器
  * @property virtualTradeSettingAdapter 虛擬下單V1轉接器
  * @property virtualTrading2SettingAdapter 虛擬下單V2轉接器
  *
@@ -154,6 +157,7 @@ class GlobalBackend2Manager(
     private val profileSettingAdapter: ProfileSettingAdapter,
     private val tickDataSettingAdapter: TickDataSettingAdapter,
     private val trialSettingAdapter: TrialSettingAdapter,
+    private val userBehaviorSettingAdapter: UserBehaviorSettingAdapter,
     private val virtualTradeSettingAdapter: VirtualTradeSettingAdapter,
     private val virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter,
 ) {
@@ -193,6 +197,7 @@ class GlobalBackend2Manager(
         profileSettingAdapter = builder.profileSettingAdapter,
         tickDataSettingAdapter = builder.tickDataSettingAdapter,
         trialSettingAdapter = builder.trialSettingAdapter,
+        userBehaviorSettingAdapter = builder.userBehaviorSettingAdapter,
         virtualTradeSettingAdapter = builder.virtualTradeSettingAdapter,
         virtualTrading2SettingAdapter = builder.virtualTrading2SettingAdapter
     )
@@ -596,6 +601,13 @@ class GlobalBackend2Manager(
     }
 
     /**
+     * 取得使用者行為設定轉接器
+     */
+    fun getUserBehaviorSettingAdapter(): UserBehaviorSettingAdapter {
+        return userBehaviorSettingAdapter
+    }
+
+    /**
      * 取得虛擬下單V1設定轉接器
      */
     fun getVirtualTradeSettingAdapter(): VirtualTradeSettingAdapter {
@@ -712,6 +724,8 @@ class GlobalBackend2Manager(
             TickDataSettingAdapterImpl(backendSetting)
         var trialSettingAdapter: TrialSettingAdapter =
             TrialSettingAdapterImpl(backendSetting)
+        var userBehaviorSettingAdapter: UserBehaviorSettingAdapter =
+            UserBehaviorSettingAdapterImpl(backendSetting)
         var virtualTradeSettingAdapter: VirtualTradeSettingAdapter =
             VirtualTradeSettingAdapterImpl(backendSetting)
         var virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter =
