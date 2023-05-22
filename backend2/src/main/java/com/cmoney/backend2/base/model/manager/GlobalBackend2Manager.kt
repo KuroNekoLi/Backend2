@@ -67,6 +67,8 @@ import com.cmoney.backend2.productdataprovider.model.ProductDataProviderSettingA
 import com.cmoney.backend2.productdataprovider.model.ProductDataProviderSettingAdapterImpl
 import com.cmoney.backend2.profile.model.ProfileSettingAdapter
 import com.cmoney.backend2.profile.model.ProfileSettingAdapterImpl
+import com.cmoney.backend2.realtimeaftermarket.model.RealtimeAfterMarketSettingAdapter
+import com.cmoney.backend2.realtimeaftermarket.model.RealtimeAfterMarketSettingAdapterImpl
 import com.cmoney.backend2.tickdata.model.TickDataSettingAdapter
 import com.cmoney.backend2.tickdata.model.TickDataSettingAdapterImpl
 import com.cmoney.backend2.trial.model.TrialSettingAdapter
@@ -116,6 +118,7 @@ import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdap
  * @property portalSettingAdapter Portal服務設定轉接器
  * @property productDataProviderSettingAdapter 產品服務提供者服務設定轉接器
  * @property profileSettingAdapter 會員服務設定轉接器
+ * @property realtimeAfterMarketSettingAdapter 即時盤後設定轉接器
  * @property tickDataSettingAdapter TickData服務設定轉接器
  * @property trialSettingAdapter 試用服務設定轉接器
  * @property userBehaviorSettingAdapter 使用者行為設定轉接器
@@ -158,6 +161,7 @@ class GlobalBackend2Manager(
     private val portalSettingAdapter: PortalSettingAdapter,
     private val productDataProviderSettingAdapter: ProductDataProviderSettingAdapter,
     private val profileSettingAdapter: ProfileSettingAdapter,
+    private val realtimeAfterMarketSettingAdapter: RealtimeAfterMarketSettingAdapter,
     private val tickDataSettingAdapter: TickDataSettingAdapter,
     private val trialSettingAdapter: TrialSettingAdapter,
     private val userBehaviorSettingAdapter: UserBehaviorSettingAdapter,
@@ -199,6 +203,7 @@ class GlobalBackend2Manager(
         portalSettingAdapter = builder.portalSettingAdapter,
         productDataProviderSettingAdapter = builder.productDataProviderSettingAdapter,
         profileSettingAdapter = builder.profileSettingAdapter,
+        realtimeAfterMarketSettingAdapter = builder.realtimeAfterMarketSettingAdapter,
         tickDataSettingAdapter = builder.tickDataSettingAdapter,
         trialSettingAdapter = builder.trialSettingAdapter,
         userBehaviorSettingAdapter = builder.userBehaviorSettingAdapter,
@@ -588,6 +593,13 @@ class GlobalBackend2Manager(
     }
 
     /**
+     * 取得即時盤後設定轉接器
+     */
+    fun getRealtimeAfterMarketSettingAdapter(): RealtimeAfterMarketSettingAdapter {
+        return realtimeAfterMarketSettingAdapter
+    }
+
+    /**
      * 取得TickData服務設定轉接器
      *
      * @return TickData服務設定轉接器
@@ -732,6 +744,8 @@ class GlobalBackend2Manager(
             ProductDataProviderSettingAdapterImpl(backendSetting)
         var profileSettingAdapter: ProfileSettingAdapter =
             ProfileSettingAdapterImpl(backendSetting)
+        var realtimeAfterMarketSettingAdapter: RealtimeAfterMarketSettingAdapter =
+            RealtimeAfterMarketSettingAdapterImpl(backendSetting)
         var tickDataSettingAdapter: TickDataSettingAdapter =
             TickDataSettingAdapterImpl(backendSetting)
         var trialSettingAdapter: TrialSettingAdapter =
