@@ -71,6 +71,8 @@ import com.cmoney.backend2.tickdata.model.TickDataSettingAdapter
 import com.cmoney.backend2.tickdata.model.TickDataSettingAdapterImpl
 import com.cmoney.backend2.trial.model.TrialSettingAdapter
 import com.cmoney.backend2.trial.model.TrialSettingAdapterImpl
+import com.cmoney.backend2.videochannel.model.VideoChannelSettingAdapter
+import com.cmoney.backend2.videochannel.model.VideoChannelSettingAdapterImpl
 import com.cmoney.backend2.virtualtrading2.model.settingadapter.VirtualTrading2SettingAdapter
 import com.cmoney.backend2.virtualtrading2.model.settingadapter.VirtualTrading2SettingAdapterImpl
 import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdapter
@@ -114,6 +116,7 @@ import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdap
  * @property profileSettingAdapter 會員服務設定轉接器
  * @property tickDataSettingAdapter TickData服務設定轉接器
  * @property trialSettingAdapter 試用服務設定轉接器
+ * @property videoChannelSettingAdapter 影音頻道設定轉接器
  * @property virtualTradeSettingAdapter 虛擬下單V1轉接器
  * @property virtualTrading2SettingAdapter 虛擬下單V2轉接器
  *
@@ -154,6 +157,7 @@ class GlobalBackend2Manager(
     private val profileSettingAdapter: ProfileSettingAdapter,
     private val tickDataSettingAdapter: TickDataSettingAdapter,
     private val trialSettingAdapter: TrialSettingAdapter,
+    private val videoChannelSettingAdapter: VideoChannelSettingAdapter,
     private val virtualTradeSettingAdapter: VirtualTradeSettingAdapter,
     private val virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter,
 ) {
@@ -193,6 +197,7 @@ class GlobalBackend2Manager(
         profileSettingAdapter = builder.profileSettingAdapter,
         tickDataSettingAdapter = builder.tickDataSettingAdapter,
         trialSettingAdapter = builder.trialSettingAdapter,
+        videoChannelSettingAdapter = builder.videoChannelSettingAdapter,
         virtualTradeSettingAdapter = builder.virtualTradeSettingAdapter,
         virtualTrading2SettingAdapter = builder.virtualTrading2SettingAdapter
     )
@@ -596,6 +601,13 @@ class GlobalBackend2Manager(
     }
 
     /**
+     * 取得影音頻道設定轉接器
+     */
+    fun getVideoChannelSettingAdapter(): VideoChannelSettingAdapter {
+        return videoChannelSettingAdapter
+    }
+
+    /**
      * 取得虛擬下單V1設定轉接器
      */
     fun getVirtualTradeSettingAdapter(): VirtualTradeSettingAdapter {
@@ -712,6 +724,8 @@ class GlobalBackend2Manager(
             TickDataSettingAdapterImpl(backendSetting)
         var trialSettingAdapter: TrialSettingAdapter =
             TrialSettingAdapterImpl(backendSetting)
+        var videoChannelSettingAdapter: VideoChannelSettingAdapter =
+            VideoChannelSettingAdapterImpl()
         var virtualTradeSettingAdapter: VirtualTradeSettingAdapter =
             VirtualTradeSettingAdapterImpl(backendSetting)
         var virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter =
