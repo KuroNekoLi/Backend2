@@ -49,7 +49,7 @@ class RealTimeAfterMarketServiceTest {
             .setBody("{\"IsMarketClosed\":false,\"TickInfoSet\":[{\"RefPrice\":16713.86,\"TotalVolume\":$testValue,\"SingleVolume\":$testValue,\"LimitDown\":\"0\",\"LimitUp\":\"0\",\"TickTime\":1633663310,\"BuyOrSell\":0,\"OpenPrice\":0.0,\"HighestPrice\":0.0,\"LowestPrice\":0.0,\"InvestorStatus\":0,\"PackageDataType\":2,\"Commkey\":\"TWA00\",\"DealPrice\":16688.98,\"PriceChange\":-24.88,\"QuoteChange\":-0.15,\"StatusCode\":3406}],\"IsSuccess\":true,\"ResponseCode\":0,\"ResponseMsg\":\"\"}")
         webServer.enqueue(mockResponse)
 
-        val response = service.getNewTickInfo("", "", "", "", 0, "")
+        val response = service.getNewTickInfo("","", "", "", "", 0, "")
         Truth.assertThat(response.isSuccessful).isTrue()
 
         val newTickInfo = response.body()!!

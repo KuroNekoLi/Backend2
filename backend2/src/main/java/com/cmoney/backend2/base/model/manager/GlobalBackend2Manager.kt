@@ -67,6 +67,8 @@ import com.cmoney.backend2.productdataprovider.model.ProductDataProviderSettingA
 import com.cmoney.backend2.productdataprovider.model.ProductDataProviderSettingAdapterImpl
 import com.cmoney.backend2.profile.model.ProfileSettingAdapter
 import com.cmoney.backend2.profile.model.ProfileSettingAdapterImpl
+import com.cmoney.backend2.realtimeaftermarket.model.RealtimeAfterMarketSettingAdapter
+import com.cmoney.backend2.realtimeaftermarket.model.RealtimeAfterMarketSettingAdapterImpl
 import com.cmoney.backend2.virtualtrading2.model.settingadapter.VirtualTrading2SettingAdapter
 import com.cmoney.backend2.virtualtrading2.model.settingadapter.VirtualTrading2SettingAdapterImpl
 import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdapter
@@ -108,6 +110,7 @@ import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdap
  * @property portalSettingAdapter Portal服務設定轉接器
  * @property productDataProviderSettingAdapter 產品服務提供者服務設定轉接器
  * @property profileSettingAdapter 會員服務設定轉接器
+ * @property realtimeAfterMarketSettingAdapter 即時盤後設定轉接器
  * @property virtualTradeSettingAdapter 虛擬下單V1轉接器
  * @property virtualTrading2SettingAdapter 虛擬下單V2轉接器
  *
@@ -146,6 +149,7 @@ class GlobalBackend2Manager(
     private val portalSettingAdapter: PortalSettingAdapter,
     private val productDataProviderSettingAdapter: ProductDataProviderSettingAdapter,
     private val profileSettingAdapter: ProfileSettingAdapter,
+    private val realtimeAfterMarketSettingAdapter: RealtimeAfterMarketSettingAdapter,
     private val virtualTradeSettingAdapter: VirtualTradeSettingAdapter,
     private val virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter,
 ) {
@@ -183,6 +187,7 @@ class GlobalBackend2Manager(
         portalSettingAdapter = builder.portalSettingAdapter,
         productDataProviderSettingAdapter = builder.productDataProviderSettingAdapter,
         profileSettingAdapter = builder.profileSettingAdapter,
+        realtimeAfterMarketSettingAdapter = builder.realtimeAfterMarketSettingAdapter,
         virtualTradeSettingAdapter = builder.virtualTradeSettingAdapter,
         virtualTrading2SettingAdapter = builder.virtualTrading2SettingAdapter
     )
@@ -568,6 +573,13 @@ class GlobalBackend2Manager(
     }
 
     /**
+     * 取得即時盤後設定轉接器
+     */
+    fun getRealtimeAfterMarketSettingAdapter(): RealtimeAfterMarketSettingAdapter {
+        return realtimeAfterMarketSettingAdapter
+    }
+
+    /**
      * 取得虛擬下單V1設定轉接器
      */
     fun getVirtualTradeSettingAdapter(): VirtualTradeSettingAdapter {
@@ -680,6 +692,8 @@ class GlobalBackend2Manager(
             ProductDataProviderSettingAdapterImpl(backendSetting)
         var profileSettingAdapter: ProfileSettingAdapter =
             ProfileSettingAdapterImpl(backendSetting)
+        var realtimeAfterMarketSettingAdapter: RealtimeAfterMarketSettingAdapter =
+            RealtimeAfterMarketSettingAdapterImpl(backendSetting)
         var virtualTradeSettingAdapter: VirtualTradeSettingAdapter =
             VirtualTradeSettingAdapterImpl(backendSetting)
         var virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter =

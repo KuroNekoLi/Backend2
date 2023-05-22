@@ -6,34 +6,34 @@ import org.koin.core.component.inject
 
 class RealTimeAfterMarketServiceCase: ServiceCase {
 
-    private val realTimeAfterMarketServiceImpl by inject<RealTimeAfterMarketWeb>()
+    private val web by inject<RealTimeAfterMarketWeb>()
 
     override suspend fun testAll() {
-        realTimeAfterMarketServiceImpl.getCommList(listOf("1")).logResponse(TAG)
-        realTimeAfterMarketServiceImpl.getNewTickInfo(
+        web.getCommList(listOf("1")).logResponse(TAG)
+        web.getNewTickInfo(
             commKeys = listOf("2330"),
             statusCodes = listOf(0),
             isSimplified = false
         ).logResponse(TAG)
-        realTimeAfterMarketServiceImpl.getSingleStockLongNewTick(
+        web.getSingleStockLongNewTick(
             commKey = "2330",
             statusCode = "0"
         ).logResponse(TAG)
-        realTimeAfterMarketServiceImpl.getMarketNewTick(commKey = "TWA00", statusCode = "0").logResponse(TAG)
-        realTimeAfterMarketServiceImpl.getInternationalNewTick("TXF1", "0").logResponse(TAG)
-        realTimeAfterMarketServiceImpl.getDtno(4210983, "", "", "", 0).logResponse(TAG)
-        realTimeAfterMarketServiceImpl.getAfterHoursTime().logResponse(TAG)
-        realTimeAfterMarketServiceImpl.searchStock("電子").logResponse(TAG)
-        realTimeAfterMarketServiceImpl.searchStock("2330").logResponse(TAG)
-        realTimeAfterMarketServiceImpl.searchUsStock("Apple").logResponse(TAG)
-        realTimeAfterMarketServiceImpl.getForeignExchangeTicks(listOf("SUSDTWD" to 0)).logResponse(TAG)
-        realTimeAfterMarketServiceImpl.getStockDealDetail(
+        web.getMarketNewTick(commKey = "TWA00", statusCode = "0").logResponse(TAG)
+        web.getInternationalNewTick("TXF1", "0").logResponse(TAG)
+        web.getDtno(4210983, "", "", "", 0).logResponse(TAG)
+        web.getAfterHoursTime().logResponse(TAG)
+        web.searchStock("電子").logResponse(TAG)
+        web.searchStock("2330").logResponse(TAG)
+        web.searchUsStock("Apple").logResponse(TAG)
+        web.getForeignExchangeTicks(listOf("SUSDTWD" to 0)).logResponse(TAG)
+        web.getStockDealDetail(
             commKey = "2330",
             perReturnCode = 0,
             timeCode = 0
         )
-        realTimeAfterMarketServiceImpl.getIsInTradeDay().logResponse(TAG)
-        realTimeAfterMarketServiceImpl.getStockSinIndex("TWB12").logResponse(TAG)
+        web.getIsInTradeDay().logResponse(TAG)
+        web.getStockSinIndex("TWB12").logResponse(TAG)
     }
 
     companion object {

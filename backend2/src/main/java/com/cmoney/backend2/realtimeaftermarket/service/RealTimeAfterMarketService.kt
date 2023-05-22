@@ -19,6 +19,7 @@ import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Url
 
 interface RealTimeAfterMarketService {
 
@@ -51,8 +52,9 @@ interface RealTimeAfterMarketService {
      */
     @RecordApi(cmoneyAction = "getcommlist")
     @FormUrlEncoded
-    @POST("MobileService/ashx/InstantTrading/InstantTrading.ashx")
+    @POST
     suspend fun getCommList(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("Action") action: String = "getcommlist",
         @Field("AreaIds") areaIds: String,
@@ -72,25 +74,15 @@ interface RealTimeAfterMarketService {
      */
     @RecordApi(cmoneyAction = "getnewtickinfo")
     @FormUrlEncoded
-    @POST("MobileService/ashx/InstantTrading/InstantTrading.ashx")
+    @POST
     suspend fun getNewTickInfo(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("action") action: String = "getnewtickinfo",
-
-        /**
-         * 逗號分隔
-         */
         @Field("commkeys") commKeys: String,
-
-        /**
-         * 逗號分隔
-         */
         @Field("statusCodes") statusCodes: String,
         @Field("AppId") appId: Int,
         @Field("Guid") guid: String,
-        /**
-         * 是否簡化，預設False
-         */
         @Field("isSimplified") isSimplified: Boolean = false
     ): Response<NewTickInfo>
 
@@ -105,8 +97,9 @@ interface RealTimeAfterMarketService {
      */
     @RecordApi(cmoneyAction = "getstockinstantdata")
     @FormUrlEncoded
-    @POST("MobileService/ashx/InstantTrading/InstantTrading.ashx")
+    @POST
     suspend fun getSingleStockNewTick(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("action") action: String = "getstockinstantdata",
         @Field("commkey") commKey: String,
@@ -126,8 +119,9 @@ interface RealTimeAfterMarketService {
      */
     @RecordApi(cmoneyAction = "getindextickinfo")
     @FormUrlEncoded
-    @POST("MobileService/ashx/InstantTrading/InstantTrading.ashx")
+    @POST
     suspend fun getMarketNewTick(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("Action") action: String = "getindextickinfo",
         @Field("Commkeys") commkey: String,
@@ -147,8 +141,9 @@ interface RealTimeAfterMarketService {
      */
     @RecordApi(cmoneyAction = "getinternationalticks")
     @FormUrlEncoded
-    @POST("MobileService/ashx/InstantTrading/InternationalTrading.ashx")
+    @POST
     suspend fun getInternationalNewTick(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("Action") action: String = "getinternationalticks",
         @Field("Commkey") commKey: String,
@@ -171,8 +166,9 @@ interface RealTimeAfterMarketService {
      */
     @RecordApi(cmoneyAction = "getdtnodata")
     @FormUrlEncoded
-    @POST("MobileService/ashx/GetDtnoData.ashx")
+    @POST
     suspend fun getDtno(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("action") action: String = "getdtnodata",
         @Field("DtNo") dtno: Long,
@@ -189,12 +185,13 @@ interface RealTimeAfterMarketService {
      */
     @RecordApi(cmoneyAction = "getafterhourstime")
     @FormUrlEncoded
-    @POST("MobileService/ashx/InstantTrading/InstantTrading.ashx")
+    @POST
     suspend fun getAfterHoursTime(
-            @Header("Authorization") authorization: String,
-            @Field("action") action: String = "getafterhourstime",
-            @Field("AppId") appId: Int,
-            @Field("Guid") guid: String
+        @Url url: String,
+        @Header("Authorization") authorization: String,
+        @Field("action") action: String = "getafterhourstime",
+        @Field("AppId") appId: Int,
+        @Field("Guid") guid: String
     ): Response<AfterHoursTimeWithError>
 
     /**
@@ -205,8 +202,9 @@ interface RealTimeAfterMarketService {
      */
     @RecordApi(cmoneyAction = "searchstock")
     @FormUrlEncoded
-    @POST("MobileService/ashx/CustomerGroup/CustomGroup.ashx")
+    @POST
     suspend fun searchStock(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("action") action: String = "searchstock",
         @Field("Querykey") queryKey: String
@@ -220,8 +218,9 @@ interface RealTimeAfterMarketService {
      */
     @RecordApi(cmoneyAction = "searchustock")
     @FormUrlEncoded
-    @POST("MobileService/ashx/CustomerGroup/CustomGroup.ashx")
+    @POST
     suspend fun searchUsStock(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("action") action: String = "searchustock",
         @Field("Querykey") queryKey: String
@@ -239,8 +238,9 @@ interface RealTimeAfterMarketService {
      */
     @RecordApi(cmoneyAction = "getforeignexchangeticks")
     @FormUrlEncoded
-    @POST("MobileService/ashx/InstantTrading/ForeignExchangeTrading.ashx")
+    @POST
     suspend fun getForeignExchangeTicks(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("action") action: String = "getforeignexchangeticks",
         @Field("guid") guid: String,
@@ -261,8 +261,9 @@ interface RealTimeAfterMarketService {
      */
     @RecordApi(cmoneyAction = "getdealdetail")
     @FormUrlEncoded
-    @POST("MobileService/ashx/InstantTrading/InstantTrading.ashx")
+    @POST
     suspend fun getStockDealDetail(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("Action") action: String = "getdealdetail",
         @Field("Commkey") commKey: String,
@@ -277,13 +278,15 @@ interface RealTimeAfterMarketService {
      */
     @RecordApi(cmoneyAction = "getisintraday")
     @FormUrlEncoded
-    @POST("MobileService/ashx/InstantTrading/InstantTrading.ashx")
+    @POST
     suspend fun getIsInTradeDay(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("Action") action: String = "getisintraday",
         @Field("Guid") guid: String,
         @Field("AppId") appId: Int
     ): Response<GetIsInTradeDayResponseBodyWithError>
+
     /**
      * 服務23.取得指數的成分股票清單
      * @param commKey 類股指數代號
@@ -292,8 +295,9 @@ interface RealTimeAfterMarketService {
      */
     @RecordApi(cmoneyAction = "getstocksinindex")
     @FormUrlEncoded
-    @POST("MobileService/ashx/InstantTrading/InstantTrading.ashx")
+    @POST
     suspend fun getStockSinIndex(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("Action") action: String = "getstocksinindex",
         @Field("AppId") appId: Int,
