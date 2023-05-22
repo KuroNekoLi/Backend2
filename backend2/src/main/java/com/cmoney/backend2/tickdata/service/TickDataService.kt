@@ -11,6 +11,7 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Url
 
 interface TickDataService {
 
@@ -18,8 +19,9 @@ interface TickDataService {
      * 提供K線資料
      */
     @RecordApi
-    @POST("TickDataService/api/GetKChartData")
+    @POST
     suspend fun getKChartData(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: GetKChartRequestBody
     ): Response<List<KDataItem>>
@@ -29,8 +31,9 @@ interface TickDataService {
      * @return Response<MAChartData>
      */
     @RecordApi
-    @POST("TickDataService/api/GetMAChartData")
+    @POST
     suspend fun getMAChartData(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: GetMaChartRequestBody
     ): Response<List<MaDataItem>>
@@ -39,8 +42,9 @@ interface TickDataService {
      * 提供指定簡單移動均線資料
      */
     @RecordApi
-    @POST("TickDataService/api/GetMultipleMovingAverage")
+    @POST
     suspend fun getMultipleMovingAverage(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: GetMultipleMovingAverageRequestBody
     ): Response<List<MultipleMovingAverageData>>
