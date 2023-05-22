@@ -2,7 +2,7 @@ package com.cmoney.backend2.userbehavior.service
 
 import com.cmoney.backend2.base.extension.createAuthorizationBearer
 import com.cmoney.backend2.base.extension.handleNoContent
-import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.userbehavior.service.api.common.Event
 import com.cmoney.backend2.userbehavior.service.api.log.LogRequestBody
 import com.cmoney.core.DefaultDispatcherProvider
@@ -11,10 +11,10 @@ import com.google.gson.Gson
 import kotlinx.coroutines.withContext
 
 class UserBehaviorWebImpl(
+    override val manager: GlobalBackend2Manager,
     private val gson: Gson,
     private val service: UserBehaviorService,
-    private val setting: Setting,
-    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider
+    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider,
 ) : UserBehaviorWeb {
 
     override suspend fun uploadReport(
@@ -24,7 +24,9 @@ class UserBehaviorWebImpl(
         platform: Int,
         version: String,
         os: String?,
-        device: String?
+        device: String?,
+        domain: String,
+        url: String
     ): Result<Unit> = withContext(dispatcher.io()) {
         runCatching {
             val requestBody = LogRequestBody(
@@ -37,7 +39,8 @@ class UserBehaviorWebImpl(
                 device = device
             )
             service.uploadReport(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
                 requestBody = requestBody
             ).handleNoContent(gson)
         }

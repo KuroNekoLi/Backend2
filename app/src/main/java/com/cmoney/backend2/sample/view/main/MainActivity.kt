@@ -133,9 +133,9 @@ class MainActivity : AppCompatActivity() {
 //                RealTimeAfterMarketServiceCase(),
 //                TickDataServiceCase(),
 //                TrialServiceCase(),
+//                UserBehaviorServiceCase(),
 //                VideoChannelServiceCase(),
 //                VirtualAssetsServiceCase(),
-//                UserBehaviorServiceCase(),
 //                VirtualTradeServiceCase(),
 //                VirtualTrading2ServiceCase()
             ).map { serviceCase ->
