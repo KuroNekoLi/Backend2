@@ -53,7 +53,7 @@ class VideoChannelWebImplTest {
 
     @Test
     fun `setQuotaTimeUse_check url`() = testScope.runTest {
-        val expect = "${EXCEPT_DOMAIN}api/v1/VideoChannel/123/videos"
+        val expect = "${EXCEPT_DOMAIN}podcast/api/v1/VideoChannel/123/videos"
         val urlSlot = slot<String>()
         coEvery {
             videoChannelService.getYoutubeVideos(
@@ -152,6 +152,6 @@ class VideoChannelWebImplTest {
     }
 
     companion object {
-        private const val EXCEPT_DOMAIN = "https://www.icheckapp.com.tw/podcast/"
+        private const val EXCEPT_DOMAIN = "https://www.icheckapp.com.tw/"
     }
 }

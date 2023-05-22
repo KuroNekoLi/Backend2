@@ -22,6 +22,6 @@ interface VideoChannelWeb {
         amount: Int?,
         time: Long?,
         domain: String = manager.getVideoChannelSettingAdapter().getDomain(),
-        url: String = "${domain}api/v1/VideoChannel/${youtubeChannelId}/videos"
+        url: String = "${domain}podcast/api/v1/VideoChannel/${youtubeChannelId}/videos"
     ): Result<List<YoutubeVideo>>
 }
