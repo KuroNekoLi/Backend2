@@ -98,14 +98,15 @@ class MainActivity : AppCompatActivity() {
             val deferredList = listOf<ServiceCase>(
                 // 要測試記得取消註解
 //                ActivityServiceCase(),
-//                AuthorizationServiceCase(),
 //                AdditionalInformationRevisitTestCase(hasSignal = true),
+//                AuthorizationServiceCase(),
 //                BillingServiceCase()
 //                BrokerDataTransmissionServiceCase(),
 //                CellphoneServiceCase(),
+//                CentralizedImageServiceCase(),
 //                ChatRoomServiceCase(),
 //                ChipKServiceCase(),
-//                CentralizedImageServiceCase(),
+//                ClientConfigurationServiceCase(),
 //                CMTalkServiceCase(),
 //                CommonServiceCase(this@MainActivity),
 //                CommonUseServiceCase(),
@@ -135,7 +136,6 @@ class MainActivity : AppCompatActivity() {
 //                VideoChannelServiceCase(),
 //                VirtualAssetsServiceCase(),
 //                UserBehaviorServiceCase(),
-//                ClientConfigurationServiceCase(),
 //                VirtualTradeServiceCase(),
 //                VirtualTrading2ServiceCase()
             ).map { serviceCase ->
