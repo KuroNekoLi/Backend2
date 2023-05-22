@@ -4,6 +4,7 @@ import com.cmoney.backend2.base.extension.checkIsSuccessful
 import com.cmoney.backend2.base.extension.requireBody
 import com.cmoney.backend2.base.extension.toJsonArrayWithErrorResponse
 import com.cmoney.backend2.base.model.exception.ServerException
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.videochannel.service.api.YoutubeVideo
 import com.cmoney.core.DefaultDispatcherProvider
 import com.cmoney.core.DispatcherProvider
@@ -13,6 +14,7 @@ import com.google.gson.JsonSyntaxException
 import kotlinx.coroutines.withContext
 
 class VideoChannelWebImpl(
+    override val manager: GlobalBackend2Manager,
     private val service: VideoChannelService,
     private val gson: Gson,
     private val dispatcher: DispatcherProvider = DefaultDispatcherProvider
@@ -20,12 +22,14 @@ class VideoChannelWebImpl(
     override suspend fun getYoutubeVideos(
         youtubeChannelId: String,
         amount: Int?,
-        time: Long?
+        time: Long?,
+        domain: String,
+        url: String
     ): Result<List<YoutubeVideo>> = withContext(dispatcher.io()) {
         runCatching {
-            solvedJsonArrayResponseQuestion<List<YoutubeVideo>>(
+            solvedJsonArrayResponseQuestion(
                 service.getYoutubeVideos(
-                    id = youtubeChannelId,
+                    url = url,
                     amount = amount,
                     time = time
                 ).checkIsSuccessful()
