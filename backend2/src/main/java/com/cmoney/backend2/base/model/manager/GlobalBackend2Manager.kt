@@ -77,6 +77,8 @@ import com.cmoney.backend2.userbehavior.model.UserBehaviorSettingAdapter
 import com.cmoney.backend2.userbehavior.model.UserBehaviorSettingAdapterImpl
 import com.cmoney.backend2.videochannel.model.VideoChannelSettingAdapter
 import com.cmoney.backend2.videochannel.model.VideoChannelSettingAdapterImpl
+import com.cmoney.backend2.virtualassets.model.VirtualAssetsSettingAdapter
+import com.cmoney.backend2.virtualassets.model.VirtualAssetsSettingAdapterImpl
 import com.cmoney.backend2.virtualtrading2.model.settingadapter.VirtualTrading2SettingAdapter
 import com.cmoney.backend2.virtualtrading2.model.settingadapter.VirtualTrading2SettingAdapterImpl
 import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdapter
@@ -123,6 +125,7 @@ import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdap
  * @property trialSettingAdapter 試用服務設定轉接器
  * @property userBehaviorSettingAdapter 使用者行為設定轉接器
  * @property videoChannelSettingAdapter 影音頻道設定轉接器
+ * @property virtualAssetsSettingAdapter 虛擬資產設定轉接器
  * @property virtualTradeSettingAdapter 虛擬下單V1轉接器
  * @property virtualTrading2SettingAdapter 虛擬下單V2轉接器
  *
@@ -166,6 +169,7 @@ class GlobalBackend2Manager(
     private val trialSettingAdapter: TrialSettingAdapter,
     private val userBehaviorSettingAdapter: UserBehaviorSettingAdapter,
     private val videoChannelSettingAdapter: VideoChannelSettingAdapter,
+    private val virtualAssetsSettingAdapter: VirtualAssetsSettingAdapter,
     private val virtualTradeSettingAdapter: VirtualTradeSettingAdapter,
     private val virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter,
 ) {
@@ -208,6 +212,7 @@ class GlobalBackend2Manager(
         trialSettingAdapter = builder.trialSettingAdapter,
         userBehaviorSettingAdapter = builder.userBehaviorSettingAdapter,
         videoChannelSettingAdapter = builder.videoChannelSettingAdapter,
+        virtualAssetsSettingAdapter = builder.virtualAssetsSettingAdapter,
         virtualTradeSettingAdapter = builder.virtualTradeSettingAdapter,
         virtualTrading2SettingAdapter = builder.virtualTrading2SettingAdapter
     )
@@ -632,6 +637,13 @@ class GlobalBackend2Manager(
     }
 
     /**
+     * 取得虛擬資產設定轉接器
+     */
+    fun getVirtualAssetsSettingAdapter(): VirtualAssetsSettingAdapter {
+        return virtualAssetsSettingAdapter
+    }
+
+    /**
      * 取得虛擬下單V1設定轉接器
      */
     fun getVirtualTradeSettingAdapter(): VirtualTradeSettingAdapter {
@@ -754,6 +766,8 @@ class GlobalBackend2Manager(
             UserBehaviorSettingAdapterImpl(backendSetting)
         var videoChannelSettingAdapter: VideoChannelSettingAdapter =
             VideoChannelSettingAdapterImpl()
+        var virtualAssetsSettingAdapter: VirtualAssetsSettingAdapter =
+            VirtualAssetsSettingAdapterImpl(backendSetting)
         var virtualTradeSettingAdapter: VirtualTradeSettingAdapter =
             VirtualTradeSettingAdapterImpl(backendSetting)
         var virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter =

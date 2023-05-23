@@ -1,7 +1,7 @@
 package com.cmoney.backend2.virtualassets.service
 
-import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.ServerException
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.virtualassets.service.api.getexchangeproductlist.GetExchangeProductListResponseBody
 import com.cmoney.backend2.virtualassets.service.api.getexchangeproductlist.ProductInfo
 import com.cmoney.backend2.virtualassets.service.api.getgrouplastexchangetime.GetGroupLastExchangeTimeResponseBody
@@ -12,11 +12,11 @@ import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
+import io.mockk.slot
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import okhttp3.ResponseBody.Companion.toResponseBody
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -25,46 +25,72 @@ import org.robolectric.RobolectricTestRunner
 import retrofit2.HttpException
 import retrofit2.Response
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
 class VirtualAssetsWebImplTest {
 
     private val testScope = TestScope()
+
     @ExperimentalCoroutinesApi
     @get:Rule
     val mainCoroutineRule = CoroutineTestRule(testScope = testScope)
 
     @MockK
-    private lateinit var virtualAssetsService: VirtualAssetsService
+    private lateinit var service: VirtualAssetsService
     private val gson = GsonBuilder().serializeNulls().setLenient().setPrettyPrinting().create()
-    private lateinit var service: VirtualAssetsWeb
+    private lateinit var web: VirtualAssetsWeb
+
+    @MockK(relaxed = true)
+    private lateinit var manager: GlobalBackend2Manager
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        service =
+        web =
             VirtualAssetsWebImpl(
-                TestSetting(),
-                gson,
-                virtualAssetsService,
+                manager = manager,
+                gson = gson,
+                service = service,
                 TestDispatcherProvider()
             )
-    }
-
-    @After
-    fun tearDown() {
-
+        coEvery {
+            manager.getVirtualAssetsSettingAdapter().getDomain()
+        } returns EXCEPT_DOMAIN
     }
 
     @Test
-    fun `getExchangeProductList取得可兌換商品清單 成功`() = testScope.runTest {
+    fun `getExchangeProductList_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}VirtualAssets/BonusExchange/Product/2"
+        val urlSlot = slot<String>()
+        val responseBody = GetExchangeProductListResponseBody(
+            list = emptyList()
+        )
+        coEvery {
+            manager.getAppId()
+        } returns 2
+
+        coEvery {
+            service.getExchangeProductList(
+                url = capture(urlSlot),
+                appId = any(),
+                guid = any(),
+                authorization = any()
+            )
+        } returns Response.success(responseBody)
+        web.getExchangeProductList()
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getExchangeProductList_success() = testScope.runTest {
         //準備api成功時的回傳
         val responseBody = GetExchangeProductListResponseBody(
             list = listOf<ProductInfo>()
         )
         //設定api成功時的回傳
         coEvery {
-            virtualAssetsService.getExchangeProductList(
-                pathAppId = any(),
+            service.getExchangeProductList(
+                url = any(),
                 appId = any(),
                 guid = any(),
                 authorization = any()
@@ -72,7 +98,7 @@ class VirtualAssetsWebImplTest {
         } returns Response.success(responseBody)
 
         //確認api是否成功
-        val result = service.getExchangeProductList()
+        val result = web.getExchangeProductList()
         Truth.assertThat(result.isSuccess).isTrue()
 
         //確認api回傳是否如預期
@@ -82,7 +108,7 @@ class VirtualAssetsWebImplTest {
     }
 
     @Test
-    fun `getExchangeProductList取得可兌換商品清單 失敗`() = testScope.runTest {
+    fun getExchangeProductList_failure() = testScope.runTest {
         val json = """{
           "Error": {
             "Code": 100103,
@@ -91,8 +117,8 @@ class VirtualAssetsWebImplTest {
         }""".trimIndent()
         //設定api成功時的回傳
         coEvery {
-            virtualAssetsService.getExchangeProductList(
-                pathAppId = any(),
+            service.getExchangeProductList(
+                url = any(),
                 appId = any(),
                 guid = any(),
                 authorization = any()
@@ -100,12 +126,31 @@ class VirtualAssetsWebImplTest {
         } returns Response.error(400, json.toResponseBody())
 
         //確認api是否成功
-        val result = service.getExchangeProductList()
+        val result = web.getExchangeProductList()
         checkServerException(result)
     }
 
     @Test
-    fun `getGroupLastExchangeTime批次取得會員最後一次兌換指定商品的時間 成功`() = testScope.runTest {
+    fun `getGroupLastExchangeTime_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}VirtualAssets/BonusExchange/Product/MoreLastExchangeTime"
+        val urlSlot = slot<String>()
+        val responseBody = GetGroupLastExchangeTimeResponseBody(
+            lastExchangeTime = emptyMap()
+        )
+        coEvery {
+            service.getGroupLastExchangeTime(
+                url = capture(urlSlot),
+                authorization = any(),
+                requestBody = any()
+            )
+        } returns Response.success(responseBody)
+
+        web.getGroupLastExchangeTime(listOf(1L, 2L, 3L, 4L))
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getGroupLastExchangeTime_success() = testScope.runTest {
         //準備api成功時的回傳
         val map = HashMap<String, Long>()
         map["1"] = 123456L
@@ -114,14 +159,15 @@ class VirtualAssetsWebImplTest {
         )
         //設定api成功時的回傳
         coEvery {
-            virtualAssetsService.getGroupLastExchangeTime(
+            service.getGroupLastExchangeTime(
+                url = any(),
                 authorization = any(),
                 requestBody = any()
             )
         } returns Response.success(responseBody)
 
         //確認api是否成功
-        val result = service.getGroupLastExchangeTime(listOf(1L, 2L, 3L, 4L))
+        val result = web.getGroupLastExchangeTime(listOf(1L, 2L, 3L, 4L))
         Truth.assertThat(result.isSuccess).isTrue()
 
         //確認api回傳是否如預期
@@ -130,43 +176,56 @@ class VirtualAssetsWebImplTest {
     }
 
     @Test
-    fun `getGroupLastExchangeTime批次取得會員最後一次兌換指定商品的時間 失敗`() = testScope.runTest {
+    fun getGroupLastExchangeTime_failure() = testScope.runTest {
         val json = ""
 
         //設定api成功時的回傳
         coEvery {
-            virtualAssetsService.getGroupLastExchangeTime(
+            service.getGroupLastExchangeTime(
+                url = any(),
                 authorization = any(),
                 requestBody = any()
             )
         } returns Response.error(401, json.toResponseBody())
 
         //確認api是否成功
-        val result = service.getGroupLastExchangeTime(listOf(1L, 2L, 3L, 4L))
+        val result = web.getGroupLastExchangeTime(listOf(1L, 2L, 3L, 4L))
         checkHttpException(result)
     }
 
     @Test
-    fun `exchange會員兌換指定商品 成功`() = testScope.runTest {
-        //準備api成功時的回傳(後端在成功時回傳204和空值)
-        //設定api成功時的回傳
+    fun `exchange_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}VirtualAssets/BonusExchange/Product/Exchange/1"
+        val urlSlot = slot<String>()
         coEvery {
-            virtualAssetsService.exchange(
+            service.exchange(
+                url = capture(urlSlot),
                 authorization = any(),
-                pathExchangeId = 1L,
                 requestBody = any()
             )
-        } returns Response.success(204, null as? Void)         //確認api是否成功
-        val result = service.exchange(1L)
+        } returns Response.success<Void>(204, null)
+        web.exchange(1L)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun exchange_success() = testScope.runTest {
+        coEvery {
+            service.exchange(
+                url = any(),
+                authorization = any(),
+                requestBody = any()
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.exchange(1L)
         Truth.assertThat(result.isSuccess).isTrue()
 
-        //確認api回傳是否如預期
         val data = result.getOrThrow()
         Truth.assertThat(data).isEqualTo(Unit)
     }
 
     @Test
-    fun `exchange會員兌換指定商品 失敗 發生ServerException`() = testScope.runTest {
+    fun exchange_failure_ServerException() = testScope.runTest {
         val json = """{
           "Error": {
             "Code": 100103,
@@ -174,17 +233,15 @@ class VirtualAssetsWebImplTest {
           }
         }""".trimIndent()
 
-        //設定api成功時的回傳
         coEvery {
-            virtualAssetsService.exchange(
-                pathExchangeId = 1L,
+            service.exchange(
+                url = any(),
                 authorization = any(),
                 requestBody = any()
             )
         } returns Response.error(400, json.toResponseBody())
 
-        //確認api是否成功
-        val result = service.exchange(1L)
+        val result = web.exchange(1L)
         checkServerException(result)
     }
 
@@ -199,5 +256,9 @@ class VirtualAssetsWebImplTest {
         Truth.assertThat(result.isSuccess).isFalse()
         val exception = result.exceptionOrNull() as HttpException
         Truth.assertThat(exception).isNotNull()
+    }
+
+    companion object {
+        private const val EXCEPT_DOMAIN = "localhost://8080:80/"
     }
 }
