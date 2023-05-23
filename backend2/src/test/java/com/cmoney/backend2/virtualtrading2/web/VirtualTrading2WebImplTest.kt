@@ -200,6 +200,32 @@ class VirtualTrading2WebImplTest {
     }
 
     @Test
+    fun `createTseOtcDelegate_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}trading-api/Trading/TseOtc/NewOrder"
+        val urlSlot = slot<String>()
+        val responseBody = getCreateTseOtcDelegateSuccess()
+        coEvery {
+            service.createTseOtcDelegate(
+                url = capture(urlSlot),
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success(responseBody)
+        web.createTseOtcDelegate(
+            accountId = 0,
+            buySellType = 66,
+            commodityId = "",
+            subsistingType = 82,
+            groupId = 0,
+            delegatePrice = "0",
+            delegateVolume = "0",
+            marketUnit = 1,
+            transactionType = 1
+        ).getOrThrow()
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun `createTseOtcDelegate_輸入的BuySellType是買_Code是66`() = testScope.runTest {
         val responseBody = getCreateTseOtcDelegateSuccess()
         val requestBodySlot = slot<CreateDelegateRequestBody>()
@@ -322,32 +348,6 @@ class VirtualTrading2WebImplTest {
             transactionType = 1
         ).getOrThrow()
         Truth.assertThat(requestBodySlot.captured.subsistingType).isEqualTo(70)
-    }
-
-    @Test
-    fun `createTseOtcDelegate_check url`() = testScope.runTest {
-        val expect = "${EXCEPT_DOMAIN}trading-api/Trading/TseOtc/NewOrder"
-        val urlSlot = slot<String>()
-        val responseBody = getCreateTseOtcDelegateSuccess()
-        coEvery {
-            service.createTseOtcDelegate(
-                url = capture(urlSlot),
-                authorization = any(),
-                body = any()
-            )
-        } returns Response.success(responseBody)
-        web.createTseOtcDelegate(
-            accountId = 0,
-            buySellType = 66,
-            commodityId = "",
-            subsistingType = 82,
-            groupId = 0,
-            delegatePrice = "0",
-            delegateVolume = "0",
-            marketUnit = 1,
-            transactionType = 1
-        ).getOrThrow()
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
     }
 
     @Test
