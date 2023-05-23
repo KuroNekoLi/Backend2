@@ -11,6 +11,7 @@ import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
+import io.mockk.slot
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
@@ -45,13 +46,30 @@ class ActivityWebImplTest {
             activityService,
             TestDispatcherProvider()
         )
+        coEvery {
+            manager.getActivitySettingAdapter().getDomain()
+        } returns EXCEPT_DOMAIN
     }
 
     @Test
-    fun `getDayCount取得用戶這個月開啟幾天APP 成功`() = testScope.runTest {
-        //準備api成功時的回傳
+    fun `getDayCount_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}ActivityService/Statistics/ActiveApp/Month/DayCount"
+        val urlSlot = slot<String>()
         val responseBody = GetDayCountResponseBody(dayCount = 1)
-        //設定api成功時的回傳
+        coEvery {
+            activityService.getDayCount(
+                authorization = any(),
+                requestBody = any(),
+                url = capture(urlSlot)
+            )
+        } returns Response.success(responseBody)
+        service.getDayCount()
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getDayCount_success() = testScope.runTest {
+        val responseBody = GetDayCountResponseBody(dayCount = 1)
         coEvery {
             activityService.getDayCount(
                 authorization = any(),
@@ -59,19 +77,15 @@ class ActivityWebImplTest {
                 url = any()
             )
         } returns Response.success(responseBody)
-
-        //確認api是否成功
         val result = service.getDayCount()
         Truth.assertThat(result.isSuccess).isTrue()
-
-        //確認api回傳是否如預期
         val data = result.getOrThrow()
         Truth.assertThat(data.dayCount).isEqualTo(1)
         Truth.assertThat(result.exceptionOrNull()).isNull()
     }
 
     @Test
-    fun `getDayCount取得用戶這個月開啟幾天APP 失敗`() = testScope.runTest {
+    fun getDayCount_failure() = testScope.runTest {
         val json = ""
 
         //設定api成功時的回傳
@@ -89,7 +103,22 @@ class ActivityWebImplTest {
     }
 
     @Test
-    fun `requestBonus請求獎勵 成功`() = testScope.runTest {
+    fun `requestBonus_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}ActivityService/Referral/Request"
+        val urlSlot = slot<String>()
+        coEvery {
+            activityService.requestBonus(
+                authorization = any(),
+                requestBody = any(),
+                url = capture(urlSlot)
+            )
+        } returns Response.success<Void>(204, null)
+        service.requestBonus(123504, 7)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun requestBonus_success() = testScope.runTest {
         //準備api成功時的回傳(後端在成功時回傳204和空值)
         //設定api成功時的回傳
         coEvery {
@@ -108,7 +137,7 @@ class ActivityWebImplTest {
     }
 
     @Test
-    fun `requestBonus請求獎勵 失敗 發生ServerException`() = testScope.runTest {
+    fun requestBonus_failure_ServerException() = testScope.runTest {
         val json = """{
           "Error": {
             "Code": 10002,
@@ -131,7 +160,25 @@ class ActivityWebImplTest {
     }
 
     @Test
-    fun `getReferralCount取得推薦人總共成功推薦次數 成功`() = testScope.runTest {
+    fun `getReferralCount_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}ActivityService/Referral/ReferralCount"
+        val urlSlot = slot<String>()
+        val responseBody = GetReferralCountResponseBody(referralCount = 1)
+        coEvery {
+            activityService.getReferralCount(
+                authorization = any(),
+                requestBody = any(),
+                url = capture(urlSlot)
+            )
+        } returns Response.success(responseBody)
+
+        service.getReferralCount(7)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+
+    @Test
+    fun getReferralCount_success() = testScope.runTest {
         //準備api成功時的回傳
         val responseBody = GetReferralCountResponseBody(referralCount = 1)
         //設定api成功時的回傳
@@ -154,7 +201,7 @@ class ActivityWebImplTest {
     }
 
     @Test
-    fun `getReferralCount取得推薦人總共成功推薦次數 失敗 發生ServerException`() = testScope.runTest {
+    fun getReferralCount_failure_ServerException() = testScope.runTest {
         val json = """{
           "Error": {
             "Code": 100,
@@ -186,5 +233,9 @@ class ActivityWebImplTest {
         Truth.assertThat(result.isSuccess).isFalse()
         val exception = result.exceptionOrNull() as HttpException
         Truth.assertThat(exception).isNotNull()
+    }
+
+    companion object {
+        private const val EXCEPT_DOMAIN = "localhost://8080:80/"
     }
 }
