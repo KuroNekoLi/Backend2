@@ -1,6 +1,5 @@
 package com.cmoney.backend2.vtwebapi.service
 
-import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.vtwebapi.service.api.createaccount.AccountType
 import com.cmoney.backend2.vtwebapi.service.api.createaccount.CreateAccountRequestBody
@@ -18,6 +17,7 @@ import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
+import io.mockk.slot
 import io.mockk.unmockkAll
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
@@ -44,18 +44,21 @@ class VirtualTradeWebImplTest {
     private lateinit var service: VirtualTradeService
     @MockK(relaxed = true)
     private lateinit var manager: GlobalBackend2Manager
-    private lateinit var webImpl: VirtualTradeWebImpl
+    private lateinit var web: VirtualTradeWebImpl
     private val gson = GsonBuilder().serializeNulls().setLenient().setPrettyPrinting().create()
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        webImpl = VirtualTradeWebImpl(
+        web = VirtualTradeWebImpl(
             globalBackend2Manager = manager,
             service = service,
             dispatcher = TestDispatcherProvider(),
             gson = gson
         )
+        coEvery {
+            manager.getVirtualTradeSettingAdapter().getDomain()
+        } returns EXCEPT_DOMAIN
     }
 
     @After
@@ -63,7 +66,26 @@ class VirtualTradeWebImplTest {
         unmockkAll()
     }
 
-    @ExperimentalCoroutinesApi
+    @Test
+    fun `getAccount_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}vt.webapi/Account"
+        val urlSlot = slot<String>()
+        coEvery {
+            service.getAccount(
+                url = capture(urlSlot),
+                authorization = any(),
+                destMemberPk = any(),
+                skipCount = any(),
+                fetchSize = any(),
+                needGroupAccount = any(),
+                needExtendInfo = any()
+            )
+        } returns Response.success(listOf())
+
+        web.getAccount()
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
     @Test
     fun getAccountTestSuccess() = testScope.runTest {
         val responseBody = GetAccountResponseBody(
@@ -115,11 +137,10 @@ class VirtualTradeWebImplTest {
             )
         } returns Response.success(listOf(responseBody))
 
-        val result = webImpl.getAccount()
+        val result = web.getAccount()
         Truth.assertThat(result.isSuccess).isTrue()
     }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun getAccountTestFailure() = testScope.runTest {
         coEvery {
@@ -134,11 +155,63 @@ class VirtualTradeWebImplTest {
             )
         } returns Response.error(409, "".toResponseBody())
 
-        val result = webImpl.getAccount()
+        val result = web.getAccount()
         Truth.assertThat(result.isSuccess).isFalse()
     }
 
-    @ExperimentalCoroutinesApi
+    @Test
+    fun `createAccount_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}vt.webapi/Account"
+        val urlSlot = slot<String>()
+        val responseBody = GetAccountResponseBody(
+            cardInstanceSn = 0,
+            payType = 0,
+            account = 0,
+            name = null,
+            groupId = 0,
+            memberPK = 0,
+            defaultFunds = 0.0,
+            extendFunds = 0.0,
+            funds = 0.0,
+            allPrePayment = 0.0,
+            inventoryValue = 0.0,
+            foInventoryValue = 0.0,
+            ratio = 0.0,
+            isTracked = false,
+            beTrackedCount = 0,
+            accountType = 0,
+            maintenanceRate = 0.0,
+            activeDate = "",
+            needFee = false,
+            needTax = false,
+            canWatch = false,
+            isDefault = false,
+            isDelete = false,
+            ratioRankType = 0,
+            viewTime = "",
+            avgMonthOrderCount = 0.0,
+            isEmail = false,
+            punishment = 0.0,
+            dividendMemoney = 0.0,
+            tradedWarrantDate = 0,
+            incomeLoss = 0.0,
+            totalFunds = 0.0,
+            borrowLimit = 0.0,
+            borrowFunds = 0.0,
+            arenaAdInfoList = listOf()
+        )
+        coEvery {
+            service.createAccount(
+                url = capture(urlSlot),
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success(responseBody)
+
+        web.createAccount(type = AccountType.STOCK, isn = 0)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
     @Test
     fun createAccountTestSuccess() = testScope.runTest {
         val requestBody = CreateAccountRequestBody(
@@ -190,11 +263,10 @@ class VirtualTradeWebImplTest {
             )
         } returns Response.success(responseBody)
 
-        val result = webImpl.createAccount(type = AccountType.STOCK, isn = 0)
+        val result = web.createAccount(type = AccountType.STOCK, isn = 0)
         Truth.assertThat(result.isSuccess).isTrue()
     }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun createAccountTestFailure() = testScope.runTest {
         val requestBody = CreateAccountRequestBody(
@@ -209,11 +281,31 @@ class VirtualTradeWebImplTest {
             )
         } returns Response.error(409, "".toResponseBody())
 
-        val result = webImpl.createAccount(type = AccountType.STOCK, isn = 0)
+        val result = web.createAccount(type = AccountType.STOCK, isn = 0)
         Truth.assertThat(result.isSuccess).isFalse()
     }
 
-    @ExperimentalCoroutinesApi
+    @Test
+    fun `getCardInstanceSns_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}vt.webapi/ByProductSn"
+        val urlSlot = slot<String>()
+        val responseBody = GetCardInstanceSnsResponseBody(cardInstanceSns = listOf())
+        coEvery {
+            service.getCardInstanceSns(
+                url = capture(urlSlot),
+                authorization = any(),
+                productSn = any(),
+                productUsage = any()
+            )
+        } returns Response.success(responseBody)
+
+        web.getCardInstanceSns(
+            productSn = 20,
+            productUsage = UsageType.UNUSED
+        )
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
     @Test
     fun getCardInstanceSnsTestSuccess() = testScope.runTest {
         val responseBody = GetCardInstanceSnsResponseBody(cardInstanceSns = listOf(1L))
@@ -226,14 +318,13 @@ class VirtualTradeWebImplTest {
             )
         } returns Response.success(responseBody)
 
-        val result = webImpl.getCardInstanceSns(
+        val result = web.getCardInstanceSns(
             productSn = 20,
             productUsage = UsageType.UNUSED
         )
         Truth.assertThat(result.isSuccess).isTrue()
     }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun getCardInstanceSnsTestFailure() = testScope.runTest {
         coEvery {
@@ -245,14 +336,34 @@ class VirtualTradeWebImplTest {
             )
         } returns Response.error(409, "".toResponseBody())
 
-        val result = webImpl.getCardInstanceSns(
+        val result = web.getCardInstanceSns(
             productSn = 20,
             productUsage = UsageType.UNUSED
         )
         Truth.assertThat(result.isSuccess).isFalse()
     }
 
-    @ExperimentalCoroutinesApi
+    @Test
+    fun `purchaseProductCard_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}vt.webapi/ProductCard/PurchaseProductCard"
+        val urlSlot = slot<String>()
+        val responseBody = PurchaseProductCardResponseBody(instanceSn = 99)
+        coEvery {
+            service.purchaseProductCard(
+                url = capture(urlSlot),
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success(responseBody)
+
+        web.purchaseProductCard(
+            giftFromMember = 1,
+            ownerMemberPk = 200,
+            productSn = 20
+        )
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
     @Test
     fun purchaseProductCardTestSuccess() = testScope.runTest {
         val requestBody = PurchaseProductCardRequestBody(
@@ -269,7 +380,7 @@ class VirtualTradeWebImplTest {
             )
         } returns Response.success(responseBody)
 
-        val result = webImpl.purchaseProductCard(
+        val result = web.purchaseProductCard(
             giftFromMember = 1,
             ownerMemberPk = 200,
             productSn = 20
@@ -293,7 +404,7 @@ class VirtualTradeWebImplTest {
             )
         } returns Response.error(409, "".toResponseBody())
 
-        val result = webImpl.purchaseProductCard(
+        val result = web.purchaseProductCard(
             giftFromMember = 1,
             ownerMemberPk = 200,
             productSn = 20
@@ -301,7 +412,23 @@ class VirtualTradeWebImplTest {
         Truth.assertThat(result.isSuccess).isFalse()
     }
 
-    @ExperimentalCoroutinesApi
+    @Test
+    fun `getAttendGroup_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}vt.webapi/Group/Attend"
+        val urlSlot = slot<String>()
+        coEvery {
+            service.getAttendGroup(
+                url = capture(urlSlot),
+                authorization = any(),
+                fetchIndex = any(),
+                fetchSize = any()
+            )
+        } returns Response.success(listOf())
+
+        web.getAttendGroup()
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
     @Test
     fun getAttendGroupTestSuccess() = testScope.runTest {
         val responseBody = GetAttendGroupResponseBody(
@@ -359,11 +486,10 @@ class VirtualTradeWebImplTest {
             )
         } returns Response.success(listOf(responseBody))
 
-        val result = webImpl.getAttendGroup()
+        val result = web.getAttendGroup()
         Truth.assertThat(result.isSuccess).isTrue()
     }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun getAttendGroupTestFailure() = testScope.runTest {
         coEvery {
@@ -375,11 +501,25 @@ class VirtualTradeWebImplTest {
             )
         } returns Response.error(409, "".toResponseBody())
 
-        val result = webImpl.getAttendGroup()
+        val result = web.getAttendGroup()
         Truth.assertThat(result.isSuccess).isFalse()
     }
 
-    @ExperimentalCoroutinesApi
+    @Test
+    fun `getStockInventoryList_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}vt.webapi/Inventory/SecInventoryListByAccount/1"
+        val urlSlot = slot<String>()
+        coEvery {
+            service.getStockInventoryList(
+                url = capture(urlSlot),
+                authorization = any()
+            )
+        } returns Response.success(listOf())
+
+        web.getStockInventoryList(account = 1)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
     @Test
     fun getStockInventoryListTestSuccess() = testScope.runTest {
         val responseBody = GetStockInventoryListResponseBody(
@@ -412,11 +552,10 @@ class VirtualTradeWebImplTest {
             )
         } returns Response.success(listOf(responseBody))
 
-        val result = webImpl.getStockInventoryList(account = 1)
+        val result = web.getStockInventoryList(account = 1)
         Truth.assertThat(result.isSuccess).isTrue()
     }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun getStockInventoryListTestFailure() = testScope.runTest {
         coEvery {
@@ -426,7 +565,11 @@ class VirtualTradeWebImplTest {
             )
         } returns Response.error(409, "".toResponseBody())
 
-        val result = webImpl.getStockInventoryList(account = 1)
+        val result = web.getStockInventoryList(account = 1)
         Truth.assertThat(result.isSuccess).isFalse()
+    }
+
+    companion object {
+        private const val EXCEPT_DOMAIN = "localhost://8080:80/"
     }
 }
