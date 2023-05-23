@@ -1,5 +1,6 @@
 package com.cmoney.backend2.forumocean.service
 
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.forumocean.service.api.article.ExchangeCount
 import com.cmoney.backend2.forumocean.service.api.article.create.CreateArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.article.create.variable.Content
@@ -11,7 +12,6 @@ import com.cmoney.backend2.forumocean.service.api.channel.channelname.IChannelNa
 import com.cmoney.backend2.forumocean.service.api.channel.getmemberstatistics.GetMemberStatisticsResponseBody
 import com.cmoney.backend2.forumocean.service.api.chatroom.GetUncheckChatRoomCountResponse
 import com.cmoney.backend2.forumocean.service.api.columnist.GetColumnistVipGroupResponse
-import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBodyV2
 import com.cmoney.backend2.forumocean.service.api.comment.update.IUpdateCommentHelper
 import com.cmoney.backend2.forumocean.service.api.group.create.CreateGroupResponseBody
@@ -51,6 +51,7 @@ import com.cmoney.backend2.forumocean.service.api.role.Role
 import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
 import com.cmoney.backend2.forumocean.service.api.support.SearchMembersResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.request.GroupPosition
+import com.cmoney.backend2.forumocean.service.api.variable.request.PersonalArticleType
 import com.cmoney.backend2.forumocean.service.api.variable.request.ReactionType
 import com.cmoney.backend2.forumocean.service.api.variable.request.mediatype.MediaType
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
@@ -72,111 +73,84 @@ import com.cmoney.backend2.ocean.service.api.getevaluationlist.SortType
 
 interface ForumOceanWeb {
 
+    val manager: GlobalBackend2Manager
+
     //region Article 文章
 
     /**
      * 查詢是否被禁言
      *
+     * @param domain 網域名稱
+     * @param url 完整的Url
      * @return 是否被禁言
      */
-    suspend fun getBanState(): Result<GetBanStateResponseBody>
+    suspend fun getBanState(
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Article/GetBanState"
+    ): Result<GetBanStateResponseBody>
 
     /**
      * 發個人文章(專欄文章or筆記文)
      *
      * @param body 發個人文章的資訊
+     * @param domain 網域名稱
+     * @param url 完整的Url
      * @return 個人文章id
      */
-    suspend fun createPersonalArticle(body: Content.PersonalArticle): Result<CreatePersonalArticleResponseBody>
+    suspend fun createPersonalArticle(
+        body: Content.PersonalArticle,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = run {
+            val articleType = when (body) {
+                is Content.PersonalArticle.Columnist -> {
+                    PersonalArticleType.COLUMNIST.articleType
+                }
+                is Content.PersonalArticle.Note -> {
+                    PersonalArticleType.NOTE.articleType
+                }
+            }
+            "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Article/${articleType}"
+        }
+    ): Result<CreatePersonalArticleResponseBody>
 
     /**
      * 發文
      *
      * @param body 發文章的資訊
+     * @param domain 網域名稱
+     * @param url 完整的Url
      * @return 文章Id
      */
-    suspend fun createArticle(body: Content.Article): Result<CreateArticleResponseBody>
+    suspend fun createArticle(
+        body: Content.Article,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = run {
+            when (body) {
+                is Content.Article.General,
+                is Content.Article.Group,
+                is Content.Article.Shared -> {
+                    "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Article/Create"
+                }
+                is Content.Article.Column -> {
+                    "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/article/columnist"
+                }
+            }
+        }
+    ): Result<CreateArticleResponseBody>
 
     /**
      * 發問答文章
      *
      * @param body 發問答文章的資訊
+     * @param domain 網域名稱
+     * @param url 完整的Url
      * @return 問答文章Id
      */
-    suspend fun createQuestion(body: Content.Question): Result<CreateQuestionResponseBody>
-
-    /**
-     * 取得一般文章
-     *
-     * @param articleId 文章Id
-     * @return 文章資訊
-     */
-    @Deprecated("請使用getArticleV2")
-    suspend fun getArticle(articleId: Long): Result<ArticleResponseBody.GeneralArticleResponseBody>
-
-    /**
-     * 取得問答文章
-     *
-     * @param articleId 文章Id
-     * @return 文章資訊
-     */
-    @Deprecated("請使用getArticleV2")
-    suspend fun getQuestionArticle(articleId: Long): Result<ArticleResponseBody.QuestionArticleResponseBody>
-
-    /**
-     * 取得社團文章
-     *
-     * @param articleId 文章Id
-     * @return 文章資訊
-     */
-    @Deprecated("請使用getArticleV2")
-    suspend fun getGroupArticle(articleId: Long): Result<ArticleResponseBody.GroupArticleResponseBody>
-
-    /**
-     * 取得轉推文章
-     *
-     * @param articleId 文章Id
-     * @return 文章資訊
-     */
-    @Deprecated("請使用getArticleV2")
-    suspend fun getSharedArticle(articleId: Long): Result<ArticleResponseBody.SharedArticleResponseBody>
-
-    /**
-     * 取得訊號文章
-     *
-     * @param articleId 文章Id
-     * @return 文章資訊
-     */
-    @Deprecated("請使用getArticleV2")
-    suspend fun getSignalArticle(articleId: Long): Result<ArticleResponseBody.SignalArticleResponseBody>
-
-    /**
-     * 取得新聞文章
-     *
-     * @param articleId 文章Id
-     * @return 文章資訊
-     */
-    @Deprecated("請使用getArticleV2")
-    suspend fun getNewsArticle(articleId: Long): Result<ArticleResponseBody.NewsArticleResponseBody>
-
-    /**
-     * 取得個人文章(專欄文章/筆記)
-     *
-     * @param articleId 文章Id
-     * @return 文章資訊
-     */
-    @Deprecated("請使用getArticleV2")
-    suspend fun getPersonalArticle(articleId: Long): Result<ArticleResponseBody.PersonalArticleResponseBody>
-
-    /**
-     * 取得文章(不確定文章類型)
-     *
-     * @param articleId 文章Id
-     * @return 文章資訊
-     */
-    @Deprecated("請使用getArticleV2")
-    suspend fun getUnknownArticle(articleId: Long): Result<ArticleResponseBody.UnknownArticleResponseBody>
-
+    suspend fun createQuestion(
+        body: Content.Question,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Article/CreateQuestion"
+    ): Result<CreateQuestionResponseBody>
 
     /**
      * 取得文章(不確定文章類型)v2
@@ -192,27 +166,46 @@ interface ForumOceanWeb {
      *
      * @param articleId 文章Id
      * @param updateHelper 建立修改文章的requestBody
+     * @param domain 網域名稱
+     * @param url 完整的Url
      * @return 成功不回傳任何資訊
      */
-    suspend fun updateArticle(articleId: Long, updateHelper: IUpdateArticleHelper): Result<Unit>
+    suspend fun updateArticle(
+        articleId: Long,
+        updateHelper: IUpdateArticleHelper,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Article/Update/${articleId}"
+    ): Result<Unit>
 
 
     /**
      * 刪除文章
      *
      * @param articleId 文章Id
+     * @param domain 網域名稱
+     * @param url 完整的Url
      * @return 成功不回傳任何資訊
      */
     @Deprecated("待服務實作完成，使用deleteArticleV2")
-    suspend fun deleteArticle(articleId: Long): Result<Unit>
+    suspend fun deleteArticle(
+        articleId: Long,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Article/Delete/${articleId}"
+    ): Result<Unit>
 
     /**
      * 刪除文章V2
      *
      * @param articleId 文章Id
+     * @param domain 網域名稱
+     * @param url 完整的Url
      * @return
      */
-    suspend fun deleteArticleV2(articleId: String): Result<Unit>
+    suspend fun deleteArticleV2(
+        articleId: String,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Article/${articleId}"
+    ): Result<Unit>
 
     //endregion
 
@@ -222,21 +215,31 @@ interface ForumOceanWeb {
      * 取得指定使用者的統計資訊
      *
      * @param memberIdList 會員Id
+     * @param domain 網域名稱
+     * @param url 完整的Url
      * @return
      */
-    suspend fun getMemberStatistics(memberIdList: List<Long>): Result<List<GetMemberStatisticsResponseBody>>
+    suspend fun getMemberStatistics(
+        memberIdList: List<Long>,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Member/Info"
+    ): Result<List<GetMemberStatisticsResponseBody>>
 
     /**
      * 取得頻道文章清單(by weight) 適用於常變動的清單
      *
      * @param channelNameBuilderList 文章的ChannelName
-     * @param weight 權重
+     * @param weight 權重, null時取分頁的第一頁
      * @param count 取得筆數(正數往舊的取N筆，負數往新的取N筆)
+     * @param domain 網域名稱
+     * @param url 完整的Url
      */
     suspend fun getChannelsArticleByWeight(
         channelNameBuilderList: List<IChannelNameBuilder>,
-        weight: Long,
-        count: Int
+        weight: Long? = null,
+        count: Int,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Channel/GetChannelsArticleByWeight"
     ): Result<List<ArticleResponseBody.UnknownArticleResponseBody>>
 
     /**
@@ -244,14 +247,25 @@ interface ForumOceanWeb {
      *
      * @param channelNameBuilderList 文章的ChannelName
      * @param count 取得筆數(正數往舊的取N筆，負數往新的取N筆)
-     *
-     * @see getChannelsArticleByWeight
+     * @param domain 網域名稱
+     * @param url 完整的Url
      */
+    @Deprecated(
+        message = "20230523 can use getChannelsArticleByWeight(weight = null)",
+        replaceWith = ReplaceWith("this.getChannelsArticleByWeight(channelNameBuilderList = channelNameBuilderList, weight = null, count = count, domain = domain, url = url)")
+    )
     suspend fun getChannelsArticleByWeight(
         channelNameBuilderList: List<IChannelNameBuilder>,
-        count: Int
-    ): Result<List<ArticleResponseBody.UnknownArticleResponseBody>>
-
+        count: Int,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Channel/GetChannelsArticleByWeight"
+    ): Result<List<ArticleResponseBody.UnknownArticleResponseBody>> = getChannelsArticleByWeight(
+        channelNameBuilderList = channelNameBuilderList,
+        weight = null,
+        count = count,
+        domain = domain,
+        url = url
+    )
 
     //endregion
 
@@ -261,36 +275,32 @@ interface ForumOceanWeb {
      * 收藏文章
      *
      * @param articleId 收藏文章Id
+     * @param domain 網域名稱
+     * @param url 完整的Url
      */
-    suspend fun createCollection(articleId: Long): Result<Unit>
+    suspend fun createCollection(
+        articleId: Long,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Collection/Create/${articleId}"
+    ): Result<Unit>
 
     /**
      * 取消收藏文章
      *
      * @param articleId 取消文章Id
+     * @param domain 網域名稱
+     * @param url 完整的Url
      */
-    suspend fun deleteCollection(articleId: Long): Result<Unit>
+    suspend fun deleteCollection(
+        articleId: Long,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Collection/Delete/${articleId}"
+    ): Result<Unit>
 
 
     //endregion
 
     //region Comment 回文
-
-    /**
-     * 對指定主文發一篇回文
-     * @param articleId 指定主文Id
-     * @param text content
-     * @param multiMedia ContentType
-     * @param position
-     * @return 回文Id
-     */
-    @Deprecated("請使用createCommentV2")
-    suspend fun createComment(
-        articleId: Long,
-        text: String?,
-        multiMedia: List<MediaType>?,
-        position: Any?
-    ): Result<CreateCommentResponseBody>
 
     /**
      * 對指定主文或留言發一篇回文
@@ -306,83 +316,51 @@ interface ForumOceanWeb {
     ): Result<CreateCommentResponseBodyV2>
 
     /**
-     * 對指定Group主文發一篇回文
-     * @param articleId 指定主文Id
-     * @param text content
-     * @param multiMedia ContentType
-     * @param position
-     * @return 回文Id
-     */
-    @Deprecated("請使用createCommentV2")
-    suspend fun createGroupArticleComment(
-        articleId: Long,
-        text: String?,
-        multiMedia: List<MediaType>?,
-        position: Any?
-    ): Result<CreateCommentResponseBody>
-
-    /**
-     * 取得指定主文的回文清單
-     *
-     * @param articleId 指定主文Id
-     * @param commentId 回文Id
-     * @param offsetCount 取得回文偏移數量
-     * @return 回文清單
-     */
-    @Deprecated("請使用getCommentV2")
-    suspend fun getComment(
-        articleId: Long,
-        commentId: Long?,
-        offsetCount: Int?
-    ): Result<List<CommentResponseBody>>
-
-    /**
      * 取得指定主文或回文的回文清單V2
      *
      * @param articleId 指定主文或回文Id
      * @param startCommentIndex 起始回文index
      * @param fetch 取得回文數量
+     * @param domain 網域名稱
+     * @param url 完整的Url
      * @return 回文清單
      */
     suspend fun getCommentV2(
         articleId: String,
         startCommentIndex: Long?,
-        fetch: Int?
+        fetch: Int?,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Article/${articleId}/Comments"
     ): Result<GetCommentsResponseBody>
-
-    /**
-     * 取得主文的指定回文清單
-     *
-     * @param articleId 指定主文Id
-     * @param commentIds 回文Id清單
-     * @return
-     */
-    @Deprecated("請使用getCommentsByIndex")
-    suspend fun getCommentsWithId(
-        articleId: Long,
-        commentIds: List<Long>
-    ): Result<List<CommentResponseBody>>
 
     /**
      * 取得指定 index 的留言
      *
      * @param id 主文或回文Id
      * @param commentIndices 回文index清單
+     * @param domain 網域名稱
+     * @param url 完整的Url
      * @return
      */
     suspend fun getCommentsByIndex(
         id: String,
-        commentIndices: List<Long>
+        commentIndices: List<Long>,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Article/CommentsByIndex"
     ): Result<List<CommentResponseBodyV2>>
 
     /**
      * 取得指定主文的社團管理員回文清單
      *
      * @param articleId
+     * @param domain 網域名稱
+     * @param url 完整的Url
      * @return
      */
     suspend fun getGroupManagerComments(
-        articleId: Long
+        articleId: Long,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Comment/GetGroupManagerComments/${articleId}"
     ): Result<List<CommentResponseBody>>
 
     /**
@@ -391,50 +369,35 @@ interface ForumOceanWeb {
      * @param articleId 指定主文Id
      * @param commentId 回文Id
      * @param helper 編輯回文的工具
+     * @param domain 網域名稱
+     * @param url 完整的Url
      * @return
      */
     suspend fun updateComment(
         articleId: Long,
         commentId: Long,
-        helper: IUpdateCommentHelper
+        helper: IUpdateCommentHelper,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Comment/Update/${articleId}/${commentId}"
     ): Result<Unit>
-
-    /**
-     * 刪除回文
-     *
-     * @param articleId 指定主文Id
-     * @param commentIndex 回文索引
-     * @return
-     */
-    @Deprecated("請使用deleteCommentV2")
-    suspend fun deleteComment(articleId: Long, commentIndex: Long): Result<Unit>
 
     /**
      * 刪除回文
      *
      * @param commentId 回文Id
+     * @param domain 網域名稱
+     * @param url 完整的Url
      * @return
      */
-    suspend fun deleteCommentV2(commentId: String): Result<Unit>
+    suspend fun deleteCommentV2(
+        commentId: String,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Article/$commentId"
+    ): Result<Unit>
 
     //endregion
 
     //region CommentInteractive 回文互動
-
-    /**
-     * 對回文做出反應
-     *
-     * @param articleId 指定主文Id
-     * @param commentIndex 回文索引
-     * @param reactionType 反應
-     * @return
-     */
-    @Deprecated("請使用createReaction")
-    suspend fun reactionComment(
-        articleId: Long,
-        commentIndex: Long,
-        reactionType: ReactionType
-    ): Result<Unit>
 
     /**
      * 取得指定回文的反應明細
@@ -732,19 +695,6 @@ interface ForumOceanWeb {
     //region Interactive 文章互動
 
     /**
-     * 對文章做出互動
-     *
-     * @param articleId 文章Id
-     * @param type 反應類型
-     * @return
-     */
-    @Deprecated("請使用createReaction")
-    suspend fun createArticleReaction(
-        articleId: Long,
-        type: ReactionType
-    ): Result<Unit>
-
-    /**
      * 對文章/留言做出互動
      *
      * @param id 文章或留言id
@@ -753,7 +703,9 @@ interface ForumOceanWeb {
      */
     suspend fun createReaction(
         id: String,
-        type: ReactionType
+        type: ReactionType,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Article/${id}/Emoji/${type.value}"
     ): Result<Unit>
 
     /**
