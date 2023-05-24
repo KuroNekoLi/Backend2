@@ -130,6 +130,46 @@ class ForumOceanServiceCase : ServiceCase {
             testVote()
             testSupport(globalBackend2Manager.getIdentityToken().getMemberId().toLong())
         }
+        testChatRoom()
+//        testSpaceBoardPinArticles()
+    }
+
+    /**
+     * 測試聊天室
+     */
+    private suspend fun testChatRoom() {
+        forumOceanWeb.getAllChatRoom()
+        forumOceanWeb.getUncheckChatRoomCount()
+        forumOceanWeb.resetUncheckChatRoomCount()
+    }
+
+    private suspend fun testSpaceBoardPinArticles(boardId: Long, articleId: String) {
+        val currentCountResult = forumOceanWeb.getSpaceBoardPinArticles(
+            boardId = boardId
+        )
+        currentCountResult.logResponse(TAG)
+        val currentCount = currentCountResult.getOrNull()?.articles?.size
+        Log.d(TAG, "current pin count is $currentCount")
+        forumOceanWeb.pinSpaceBoardArticle(
+            articleId = articleId
+        )
+        // 檢查Pin的文章數量是否+1
+        val pinCountResult = forumOceanWeb.getSpaceBoardPinArticles(
+            boardId = boardId
+        )
+        pinCountResult.logResponse(TAG)
+        val pinCount = pinCountResult.getOrNull()?.articles?.size
+        Log.d(TAG, "current pin count is $pinCount")
+        forumOceanWeb.unpinSpaceBoardArticle(
+            articleId = articleId
+        )
+        // 檢查Pin的文章數量是否-1
+        val unpinCountResult = forumOceanWeb.getSpaceBoardPinArticles(
+            boardId = boardId
+        )
+        unpinCountResult.logResponse(TAG)
+        val unpinCount = unpinCountResult.getOrNull()?.articles?.size
+        Log.d(TAG, "current pin count is $unpinCount")
     }
 
     /**
