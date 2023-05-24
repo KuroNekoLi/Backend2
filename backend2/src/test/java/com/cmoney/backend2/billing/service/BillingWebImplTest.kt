@@ -5,6 +5,7 @@ import androidx.test.core.app.ApplicationProvider
 import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.base.model.response.error.CMoneyError
+import com.cmoney.backend2.base.model.setting.Platform
 import com.cmoney.backend2.billing.TestApplication
 import com.cmoney.backend2.billing.service.api.authbycmoney.AuthByCMoneyResponseBody
 import com.cmoney.backend2.billing.service.api.getappauth.GetAppAuthResponseBody
@@ -23,7 +24,7 @@ import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
-import io.mockk.impl.annotations.RelaxedMockK
+import io.mockk.slot
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
@@ -46,20 +47,17 @@ class BillingWebImplTest {
 
     private val context = ApplicationProvider.getApplicationContext<Context>()
     private val testScope = TestScope()
+
     @get:Rule
     val mainCoroutineRule = CoroutineTestRule(testScope = testScope)
+
     @MockK
     lateinit var service: BillingService
+
     @MockK(relaxed = true)
     private lateinit var manager: GlobalBackend2Manager
     private lateinit var billingWeb: BillingWeb
     private val gson = GsonBuilder().serializeNulls().setLenient().setPrettyPrinting().create()
-
-    companion object {
-        private const val HAUWEI_PRODUCT_INFO = "huawei_product_info.json"
-        private const val GOOGLE_PRODUCT_INFO = "google_product_info.json"
-
-    }
 
     @Before
     fun setUp() {
@@ -70,10 +68,32 @@ class BillingWebImplTest {
             manager = manager,
             dispatcher = TestDispatcherProvider()
         )
+        coEvery {
+            manager.getBillingSettingAdapter().getDomain()
+        } returns EXCEPT_DOMAIN
+        coEvery {
+            manager.getPlatform()
+        } returns Platform.Android
     }
 
     @Test
-    fun `getDeveloperPayload_成功_有定義的資料`() = testScope.runTest {
+    fun `getDayCount_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}PurchaseService/CommonMethod/GetDeveloperPayLoadAsync"
+        val urlSlot = slot<String>()
+        val responseBody = GetDeveloperPayloadResponseBody(id = 14948)
+        coEvery {
+            service.getDeveloperPayload(
+                url = capture(urlSlot),
+                authorization = any(),
+                requestBody = any()
+            )
+        } returns Response.success(responseBody)
+        billingWeb.getDeveloperPayload()
+        assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getDeveloperPayload_success() = testScope.runTest {
         val responseBody = GetDeveloperPayloadResponseBody(
             id = 14948
         )
@@ -91,7 +111,7 @@ class BillingWebImplTest {
     }
 
     @Test
-    fun `getDeveloperPayload_失敗400_有Error物件`() = testScope.runTest {
+    fun getDeveloperPayload_failure_ServerException() = testScope.runTest {
         val errorBody = gson.toJson(
             CMoneyError(
                 detail = CMoneyError.Detail(
@@ -111,7 +131,25 @@ class BillingWebImplTest {
     }
 
     @Test
-    fun `isReadyToPurchase_還沒開放購買_false`() = testScope.runTest {
+    fun `isReadyToPurchase_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}PurchaseService/CommonMethod/IsPurchasable/2"
+        val urlSlot = slot<String>()
+        val responseBody = IsPurchasableResponseBody(
+            isPurchasable = false
+        )
+        coEvery {
+            service.isReadyToPurchase(
+                url = capture(urlSlot),
+                authorization = any(),
+                requestBody = any()
+            )
+        } returns Response.success(responseBody)
+        billingWeb.isReadyToPurchase()
+        assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun `isReadyToPurchase_not allow for purchase_false`() = testScope.runTest {
         val responseBody = IsPurchasableResponseBody(
             isPurchasable = false
         )
@@ -130,7 +168,7 @@ class BillingWebImplTest {
 
 
     @Test
-    fun `isReadyToPurchase_開放購買_true`() = testScope.runTest {
+    fun `isReadyToPurchase_not allow for purchase_true`() = testScope.runTest {
         val responseBody = IsPurchasableResponseBody(
             isPurchasable = true
         )
@@ -149,7 +187,7 @@ class BillingWebImplTest {
     }
 
     @Test
-    fun `isReadyToPurchase_錯誤_ServerException`() = testScope.runTest {
+    fun isReadyToPurchase_failure_ServerException() = testScope.runTest {
         val errorBody = gson.toJson(
             CMoneyError(
                 detail = CMoneyError.Detail(
@@ -171,7 +209,22 @@ class BillingWebImplTest {
     }
 
     @Test
-    fun `getProductInfo_華為商品成功_是空的清單`() = testScope.runTest {
+    fun `getProductInfo_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}PurchaseService/CommonMethod/ProductsInfo/2"
+        val urlSlot = slot<String>()
+        coEvery {
+            service.getIapProductInformation(
+                authorization = any(),
+                requestBody = any(),
+                url = capture(urlSlot),
+            )
+        } returns Response.success(emptyList())
+        billingWeb.getProductInfo()
+        assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun `getProductInfo_success_list is empty`() = testScope.runTest {
         coEvery {
             service.getIapProductInformation(
                 authorization = any(),
@@ -186,7 +239,7 @@ class BillingWebImplTest {
     }
 
     @Test
-    fun `getProductInfo_成功_不是空的清單`() = testScope.runTest {
+    fun `getProductInfo_success_list is not empty`() = testScope.runTest {
         val productInfoJson = context.assets.open(HAUWEI_PRODUCT_INFO)
             .bufferedReader()
             .use {
@@ -211,7 +264,7 @@ class BillingWebImplTest {
     }
 
     @Test
-    fun `getIapProductInfo_失敗_有錯誤碼`() = testScope.runTest {
+    fun `getProductInfo_failure_error code is exist`() = testScope.runTest {
         val errorBody = gson.toJson(
             CMoneyError(
                 detail = CMoneyError.Detail(
@@ -229,6 +282,29 @@ class BillingWebImplTest {
 
         val result = billingWeb.getProductInfo()
         checkServerException(result, 10001)
+    }
+
+    @Test
+    fun `getAuthStatus_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}MobileService/ashx/LoginCheck/LoginCheck.ashx"
+        val urlSlot = slot<String>()
+        val responseBody = GetAuthResponseBody(
+            authType = 0,
+            authExpTime = "2020/05/05",
+            responseCode = 1,
+            responseMsg = ""
+        )
+        coEvery {
+            service.getAuthStatus(
+                authorization = any(),
+                appId = any(),
+                guid = any(),
+                url = capture(urlSlot)
+            )
+        } returns Response.success(responseBody)
+
+        billingWeb.getAuthStatus()
+        assertThat(urlSlot.captured).isEqualTo(expect)
     }
 
     @Test
@@ -391,6 +467,32 @@ class BillingWebImplTest {
         val result = billingWeb.getAuthStatus()
         assertThat(result.isSuccess).isFalse()
         result.getOrThrow()
+    }
+
+    @Test
+    fun `getTargetAppAuthStatus_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}MobileService/ashx/LoginCheck/LoginCheck.ashx"
+        val urlSlot = slot<String>()
+        val responseBody = GetAppAuthResponseBody(
+            authType = 0,
+            authExpTime = "2020/05/05",
+            responseCode = 1,
+            responseMsg = ""
+        )
+        coEvery {
+            service.getTargetAppAuthStatus(
+                url = capture(urlSlot),
+                appId = any(),
+                guid = any(),
+                authorization = any(),
+                queryAppId = any()
+            )
+        } returns Response.success(responseBody)
+
+        billingWeb.getTargetAppAuthStatus(
+            queryAppId = 1
+        )
+        assertThat(urlSlot.captured).isEqualTo(expect)
     }
 
     @Test
@@ -576,6 +678,29 @@ class BillingWebImplTest {
     }
 
     @Test
+    fun `verifyHuaweiInAppReceipt_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}PurchaseService/HuaWei/VerifyHUAWEIOrderReceipt"
+        val urlSlot = slot<String>()
+        coEvery {
+            service.verifyHuaweiInAppReceipt(
+                url = capture(urlSlot),
+                authorization = any(),
+                requestBody = any()
+            )
+        } returns Response.success<Void>(204, null)
+        billingWeb.verifyHuaweiInAppReceipt(
+            receipt = InAppHuaweiReceipt(
+                accountFlag = 0,
+                purchaseToken = "",
+                productId = "",
+                receiptJson = "",
+                signature = ""
+            )
+        )
+        assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun `verifyHuaweiInAppReceipt_購買成功`() = testScope.runTest {
         coEvery {
             service.verifyHuaweiInAppReceipt(
@@ -626,6 +751,30 @@ class BillingWebImplTest {
         )
         coVerify { service.verifyHuaweiInAppReceipt(any(), any(), any()) }
         checkServerException(result, 10001)
+    }
+
+    @Test
+    fun `verifyHuaweiSubReceipt_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}PurchaseService/HuaWei/VerifyHUAWEISubscriptReceipt"
+        val urlSlot = slot<String>()
+        coEvery {
+            service.verifyHuaweiSubReceipt(
+                url = capture(urlSlot),
+                authorization = any(),
+                requestBody = any()
+            )
+        } returns Response.success<Void>(204, null)
+        billingWeb.verifyHuaweiSubReceipt(
+            receipt = SubHuaweiReceipt(
+                accountFlag = 0,
+                purchaseToken = "",
+                productId = "",
+                subscriptionId = "",
+                receiptJson = "",
+                signature = ""
+            )
+        )
+        assertThat(urlSlot.captured).isEqualTo(expect)
     }
 
     @Test
@@ -684,6 +833,23 @@ class BillingWebImplTest {
     }
 
     @Test
+    fun `recoveryHuaweiInAppReceipt_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}PurchaseService/HuaWei/RecoveryHUAWEIOrderReceipt"
+        val urlSlot = slot<String>()
+        coEvery {
+            service.recoveryHuaweiInAppReceipt(
+                url = capture(urlSlot),
+                authorization = any(),
+                requestBody = any()
+            )
+        } returns Response.success<Void>(204, null)
+        billingWeb.recoveryHuaweiInAppReceipt(
+            receipts = emptyList()
+        )
+        assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun `recoveryHuaweiInAppReceipt_成功`() = testScope.runTest {
         coEvery {
             service.recoveryHuaweiInAppReceipt(
@@ -727,6 +893,23 @@ class BillingWebImplTest {
         }
 
     @Test
+    fun `recoveryHuaweiSubReceipt_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}PurchaseService/HuaWei/RecoveryHUAWEISubscriptReceipt"
+        val urlSlot = slot<String>()
+        coEvery {
+            service.recoveryHuaweiSubReceipt(
+                url = capture(urlSlot),
+                authorization = any(),
+                requestBody = any()
+            )
+        } returns Response.success<Void>(204, null)
+        billingWeb.recoveryHuaweiSubReceipt(
+            receipts = emptyList()
+        )
+        assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun `recoveryHuaweiSubReceipt_成功`() = testScope.runTest {
         coEvery {
             service.recoveryHuaweiSubReceipt(
@@ -765,6 +948,26 @@ class BillingWebImplTest {
         )
         coVerify { service.recoveryHuaweiSubReceipt(any(), any(), any()) }
         checkServerException(result, 10001)
+    }
+
+    @Test
+    fun `verifyGoogleInAppReceipt_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}PurchaseService/Google/VerifyOrderReceipt"
+        val urlSlot = slot<String>()
+        coEvery {
+            service.verifyGoogleInAppReceipt(
+                url = capture(urlSlot),
+                authorization = any(),
+                requestBody = any()
+            )
+        } returns Response.success<Void>(204, null)
+        billingWeb.verifyGoogleInAppReceipt(
+            receipt = InAppGoogleReceipt(
+                purchaseToken = "",
+                productId = ""
+            )
+        )
+        assertThat(urlSlot.captured).isEqualTo(expect)
     }
 
     @Test
@@ -815,6 +1018,26 @@ class BillingWebImplTest {
     }
 
     @Test
+    fun `verifyGoogleSubReceipt_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}PurchaseService/Google/VerifySubscriptReceipt"
+        val urlSlot = slot<String>()
+        coEvery {
+            service.verifyGoogleSubReceipt(
+                url = capture(urlSlot),
+                authorization = any(),
+                requestBody = any()
+            )
+        } returns Response.success<Void>(204, null)
+        billingWeb.verifyGoogleSubReceipt(
+            receipt = SubGoogleReceipt(
+                purchaseToken = "",
+                productId = ""
+            )
+        )
+        assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun `verifyGoogleSubReceipt_購買成功`() = testScope.runTest {
         coEvery {
             service.verifyGoogleSubReceipt(
@@ -862,6 +1085,23 @@ class BillingWebImplTest {
     }
 
     @Test
+    fun `recoveryGoogleInAppReceipt_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}PurchaseService/Google/RecoveryOrderReceipt"
+        val urlSlot = slot<String>()
+        coEvery {
+            service.recoveryGoogleInAppReceipt(
+                url = capture(urlSlot),
+                authorization = any(),
+                requestBody = any()
+            )
+        } returns Response.success<Void>(204, null)
+        billingWeb.recoveryGoogleInAppReceipt(
+            receipts = emptyList()
+        )
+        assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun `recoveryGoogleInAppReceipt_成功`() = testScope.runTest {
         coEvery {
             service.recoveryGoogleInAppReceipt(
@@ -903,6 +1143,23 @@ class BillingWebImplTest {
             coVerify { service.recoveryGoogleInAppReceipt(any(), any(), any()) }
             checkServerException(result, 10001)
         }
+
+    @Test
+    fun `recoveryGoogleSubReceipt_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}PurchaseService/Google/RecoverySubscriptReceipt"
+        val urlSlot = slot<String>()
+        coEvery {
+            service.recoveryGoogleSubReceipt(
+                url = capture(urlSlot),
+                authorization = any(),
+                requestBody = any()
+            )
+        } returns Response.success<Void>(204, null)
+        billingWeb.recoveryGoogleSubReceipt(
+            receipts = emptyList()
+        )
+        assertThat(urlSlot.captured).isEqualTo(expect)
+    }
 
     @Test
     fun `recoveryGoogleSubReceipt_成功`() = testScope.runTest {
@@ -947,6 +1204,23 @@ class BillingWebImplTest {
     }
 
     @Test
+    fun `getAuthByCMoney_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}PurchaseService/Order/AutorenewalingByCM/2"
+        val urlSlot = slot<String>()
+        val responseBody = AuthByCMoneyResponseBody(
+            isAuth = false
+        )
+        coEvery {
+            service.getAuthByCMoney(
+                url = capture(urlSlot),
+                authorization = any()
+            )
+        } returns Response.success(responseBody)
+        billingWeb.getAuthByCMoney(2)
+        assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun `getAuthByCMoney_成功`() = testScope.runTest {
         val responseBody = AuthByCMoneyResponseBody(
             isAuth = false
@@ -982,6 +1256,22 @@ class BillingWebImplTest {
         val result = billingWeb.getAuthByCMoney(2)
         assertThat(result.isSuccess).isFalse()
         checkServerException(result, 10001)
+    }
+
+    @Test
+    fun `getHistoryCount_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}PurchaseService/Statistics/Subscription/CMSales/HistoryCount"
+        val urlSlot = slot<String>()
+        coEvery {
+            service.getHistoryCount(
+                url = capture(urlSlot),
+                authorization = any(),
+                productType = any(),
+                functionIds = any()
+            )
+        } returns Response.success("{}".toResponseBody())
+        billingWeb.getHistoryCount(888003, 6531)
+        assertThat(urlSlot.captured).isEqualTo(expect)
     }
 
     @Test
@@ -1030,5 +1320,11 @@ class BillingWebImplTest {
         val exception = result.exceptionOrNull() as ServerException
         assertThat(exception).isNotNull()
         assertThat(exception.code).isEqualTo(errorCode)
+    }
+
+    companion object {
+        private const val HAUWEI_PRODUCT_INFO = "huawei_product_info.json"
+        private const val GOOGLE_PRODUCT_INFO = "google_product_info.json"
+        private const val EXCEPT_DOMAIN = "localhost://8080:80/"
     }
 }
