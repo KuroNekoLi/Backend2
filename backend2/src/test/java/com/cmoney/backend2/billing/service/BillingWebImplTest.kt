@@ -77,7 +77,7 @@ class BillingWebImplTest {
     }
 
     @Test
-    fun `getDayCount_check url`() = testScope.runTest {
+    fun `getDeveloperPayload url`() = testScope.runTest {
         val expect = "${EXCEPT_DOMAIN}PurchaseService/CommonMethod/GetDeveloperPayLoadAsync"
         val urlSlot = slot<String>()
         val responseBody = GetDeveloperPayloadResponseBody(id = 14948)
