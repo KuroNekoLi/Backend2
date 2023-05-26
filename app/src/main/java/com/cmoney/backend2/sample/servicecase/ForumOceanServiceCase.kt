@@ -213,10 +213,10 @@ class ForumOceanServiceCase : ServiceCase {
 
     private suspend fun ForumOceanWeb.testInteractive(articleId: Long) {
         createReaction(articleId.toString(), ReactionType.LIKE).logResponse(TAG)
-        getArticleReactionDetail(articleId, listOf(ReactionType.LIKE), 0, 20).logResponse(TAG)
+        getReactionDetailV2(articleId.toString(), listOf(ReactionType.LIKE), 0, 20).logResponse(TAG)
         createReaction(articleId.toString(), ReactionType.DISLIKE).logResponse(TAG)
-        getArticleReactionDetail(
-            articleId,
+        getReactionDetailV2(
+            articleId.toString(),
             listOf(ReactionType.LIKE, ReactionType.DISLIKE),
             0,
             20

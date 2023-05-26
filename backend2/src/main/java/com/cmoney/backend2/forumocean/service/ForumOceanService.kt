@@ -69,7 +69,6 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.commentrespo
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.GetCommentsResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.groupresponse.GroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.MemberEmojis
-import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.ReactionInfo
 import com.cmoney.backend2.forumocean.service.api.vote.get.VoteInfo
 import okhttp3.ResponseBody
 import retrofit2.Response
@@ -281,18 +280,6 @@ interface ForumOceanService {
     ): Response<Void>
 
     @RecordApi
-    @Deprecated("請使用getReactionDetailV2")
-    @GET("{path}/api/Interactive/GetReactionDetail/{articleId}")
-    suspend fun getArticleReactionDetail(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: Long,
-        @Query("reactions") reactions: String,
-        @Query("skipCount") skipCount: Int,
-        @Query("takeCount") count: Int
-    ): Response<List<ReactionInfo>>
-
-    @RecordApi
     @POST("{path}/api/Interactive/Donate/{articleId}")
     suspend fun createArticleDonate(
         @Header("Authorization") authorization: String,
@@ -310,11 +297,10 @@ interface ForumOceanService {
     ): Response<Void>
 
     @RecordApi
-    @POST("{path}/api/Interactive/Interest/{articleId}")
+    @POST
     suspend fun createArticleInterest(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: Long
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<Void>
 
     @RecordApi

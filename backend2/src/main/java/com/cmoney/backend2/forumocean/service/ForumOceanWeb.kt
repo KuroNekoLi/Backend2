@@ -67,7 +67,6 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.commentrespo
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.GetCommentsResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.groupresponse.GroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.MemberEmojis
-import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.ReactionInfo
 import com.cmoney.backend2.forumocean.service.api.vote.get.VoteInfo
 import com.cmoney.backend2.ocean.service.api.getevaluationlist.SortType
 
@@ -623,23 +622,6 @@ interface ForumOceanWeb {
     ): Result<Unit>
 
     /**
-     * 取得文章互動詳情
-     *
-     * @param articleId 文章Id
-     * @param reactionTypeList 想取得的互動類型清單
-     * @param skipCount 跳過的數量
-     * @param count 取得數量
-     * @return 互動 對應 做此互動的會員清單
-     */
-    @Deprecated("請使用getReactionDetailV2")
-    suspend fun getArticleReactionDetail(
-        articleId: Long,
-        reactionTypeList: List<ReactionType>,
-        skipCount: Int,
-        count: Int
-    ): Result<List<ReactionInfo>>
-
-    /**
      * 移除對文章/回覆的反應
      *
      * @param id 文章或留言Id
@@ -658,7 +640,9 @@ interface ForumOceanWeb {
      * @return
      */
     suspend fun createArticleInterest(
-        articleId: Long
+        articleId: Long,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Interactive/Interest/${articleId}"
     ): Result<Unit>
 
     /**

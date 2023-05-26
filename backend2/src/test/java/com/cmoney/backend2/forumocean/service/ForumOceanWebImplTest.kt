@@ -28,7 +28,6 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.commentrespo
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.groupresponse.GroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.MemberEmojis
-import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.ReactionInfo
 import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.ReactionInfoV2
 import com.cmoney.core.CoroutineTestRule
 import com.cmoney.core.TestDispatcherProvider
@@ -1446,48 +1445,6 @@ class ForumOceanWebImplTest {
     }
 
     @Test
-    fun `getArticleReactionDetail_取得主文反應成功測試`() = testScope.runTest {
-        val reactionTypeList = listOf(ReactionType.DISLIKE)
-        coEvery {
-            forumOceanService.getArticleReactionDetail(
-                authorization = any(),
-                articleId = any(),
-                reactions = any(),
-                count = any(),
-                skipCount = any(),
-                path = ""
-            )
-        } returns Response.success(
-            listOf(
-                ReactionInfo(
-                    memberId = 67, reactionType = ReactionType.DISLIKE.value, time = 1625563759
-                )
-            )
-        )
-        val result = web.getArticleReactionDetail(1010, reactionTypeList, 0, 20)
-        assertThat(result.isSuccess).isTrue()
-        assertThat(result.getOrThrow()).hasSize(1)
-        assertThat(result.getOrThrow().first()).isNotNull()
-    }
-
-    @Test
-    fun `getArticleReactionDetail_取得主文反應失敗測試`() = testScope.runTest {
-        val reactionTypeList = listOf(ReactionType.DISLIKE)
-        coEvery {
-            forumOceanService.getArticleReactionDetail(
-                authorization = any(),
-                articleId = any(),
-                reactions = any(),
-                count = any(),
-                skipCount = any(),
-                path = ""
-            )
-        } returns Response.error(500, "".toResponseBody())
-        val result = web.getArticleReactionDetail(1010, reactionTypeList, 0, 20)
-        assertThat(result.isSuccess).isFalse()
-    }
-
-    @Test
     fun `deleteReaction_check url`() = testScope.runTest {
         val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/Article/123-1/Emoji"
         val urlSlot = slot<String>()
@@ -1533,29 +1490,42 @@ class ForumOceanWebImplTest {
     }
 
     @Test
-    fun `createArticleInterest_對文章有興趣成功測試`() = testScope.runTest {
+    fun `createArticleInterest_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/Interactive/Interest/10101"
+        val urlSlot = slot<String>()
         coEvery {
             forumOceanService.createArticleInterest(
-                authorization = any(),
-                articleId = any(),
-                path = ""
+                url = capture(urlSlot),
+                authorization = any()
+            )
+        } returns Response.success<Void>(204, null)
+        web.createArticleInterest(10101)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun createArticleInterest_success() = testScope.runTest {
+        coEvery {
+            forumOceanService.createArticleInterest(
+                url = any(),
+                authorization = any()
             )
         } returns Response.success<Void>(204, null)
         val result = web.createArticleInterest(10101)
         assertThat(result.isSuccess).isTrue()
     }
 
-    @Test
-    fun `createArticleInterest_對文章有興趣失敗測試`() = testScope.runTest {
+    @Test(expected = HttpException::class)
+    fun createArticleInterest_failure_HttpException() = testScope.runTest {
         coEvery {
             forumOceanService.createArticleInterest(
-                authorization = any(),
-                articleId = any(),
-                path = ""
+                url = any(),
+                authorization = any()
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.createArticleInterest(10101)
         assertThat(result.isSuccess).isFalse()
+        result.getOrThrow()
     }
 
     @Test

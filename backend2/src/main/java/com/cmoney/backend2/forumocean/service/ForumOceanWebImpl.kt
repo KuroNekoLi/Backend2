@@ -76,7 +76,6 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.commentrespo
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.GetCommentsResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.groupresponse.GroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.MemberEmojis
-import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.ReactionInfo
 import com.cmoney.backend2.forumocean.service.api.vote.get.VoteInfo
 import com.cmoney.backend2.ocean.service.api.getevaluationlist.SortType
 import com.cmoney.core.DefaultDispatcherProvider
@@ -367,25 +366,6 @@ class ForumOceanWebImpl(
         }
     }
 
-    @Deprecated("請使用getReactionDetailV2")
-    override suspend fun getArticleReactionDetail(
-        articleId: Long,
-        reactionTypeList: List<ReactionType>,
-        skipCount: Int,
-        count: Int
-    ): Result<List<ReactionInfo>> = withContext(dispatcher.io()) {
-        kotlin.runCatching {
-            service.getArticleReactionDetail(
-                path = serverName,
-                authorization = manager.getAccessToken().createAuthorizationBearer(),
-                articleId = articleId,
-                reactions = reactionTypeList.joinToString { it.value.toString() },
-                skipCount = skipCount,
-                count = count
-            ).checkResponseBody(jsonParser)
-        }
-    }
-
     override suspend fun deleteReaction(
         id: String,
         domain: String,
@@ -401,13 +381,16 @@ class ForumOceanWebImpl(
         }
     }
 
-    override suspend fun createArticleInterest(articleId: Long): Result<Unit> =
+    override suspend fun createArticleInterest(
+        articleId: Long,
+        domain: String,
+        url: String
+    ): Result<Unit> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.createArticleInterest(
-                    path = serverName,
-                    authorization = manager.getAccessToken().createAuthorizationBearer(),
-                    articleId = articleId
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer()
                 ).handleNoContent(jsonParser)
             }
         }
