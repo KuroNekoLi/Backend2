@@ -10,7 +10,7 @@ import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
-import io.mockk.mockk
+import io.mockk.slot
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
@@ -34,11 +34,13 @@ class AdditionalInformationRevisitWebImplTest {
     @get:Rule
     var mainCoroutineRule = CoroutineTestRule(testScope = testScope)
     private lateinit var web: AdditionalInformationRevisitWeb
+
     @MockK(relaxed = true)
     private lateinit var manager: GlobalBackend2Manager
+
     @MockK
     private lateinit var service: AdditionalInformationRevisitService
-    private val gson =  GsonBuilder()
+    private val gson = GsonBuilder()
         .setLenient()
         .serializeNulls()
         .serializeSpecialFloatingPointValues()
@@ -52,6 +54,12 @@ class AdditionalInformationRevisitWebImplTest {
             service = service,
             dispatcher = TestDispatcherProvider()
         )
+        coEvery {
+            manager.getAdditionInformationRevisitSettingAdapter().getDomain()
+        } returns EXCEPT_DOMAIN
+        coEvery {
+            manager.getAdditionInformationRevisitSettingAdapter().getPathName()
+        } returns EXCEPT_PATH_NAME
     }
 
     @After
@@ -60,8 +68,33 @@ class AdditionalInformationRevisitWebImplTest {
     }
 
     @Test
+    fun `getAll_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/GetAll/StockCalculation"
+        val urlSlot = slot<String>()
+        coEvery {
+            service.getAll(
+                url = capture(urlSlot),
+                authorization = any(),
+                columns = any(),
+                param = any()
+            )
+        } returns Response.success(
+            emptyList()
+        )
+        web.getAll(listOf(), "StockCalculation", emptyList())
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun getAll_success_ListListString() = testScope.runTest {
-        coEvery { service.getAll(any(), any(), any(), any()) } returns Response.success(
+        coEvery {
+            service.getAll(
+                url = any(),
+                authorization = any(),
+                columns = any(),
+                param = any()
+            )
+        } returns Response.success(
             emptyList()
         )
         val typeName = "StockCalculation"
@@ -73,7 +106,12 @@ class AdditionalInformationRevisitWebImplTest {
     @Test
     fun getAll_failed_401() = testScope.runTest {
         coEvery {
-            service.getAll(any(), any(), any(), any())
+            service.getAll(
+                url = any(),
+                authorization = any(),
+                columns = any(),
+                param = any()
+            )
         } returns Response.error(401, "".toResponseBody())
         val result = web.getAll(
             columns = emptyList(),
@@ -89,16 +127,41 @@ class AdditionalInformationRevisitWebImplTest {
         Truth.assertThat(exception.code()).isEqualTo(401)
     }
 
+    @Test
+    fun `getTarget_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/GetTarget/StockCalculation"
+        val urlSlot = slot<String>()
+        coEvery {
+            service.getTarget(
+                url = capture(urlSlot),
+                authorization = any(),
+                keyNamePath = any(),
+                columns = any(),
+                param = any()
+            )
+        } returns Response.success(
+            emptyList()
+        )
+        val typeName = "StockCalculation"
+        web.getTarget(
+            typeName = typeName,
+            columns = listOf(),
+            keyNamePath = listOf("Commodity", "CommKey"),
+            value = gson.toJson(listOf("2330")),
+            processSteps = emptyList()
+        )
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
 
     @Test
     fun getTarget_success_ListListString() = testScope.runTest {
         coEvery {
             service.getTarget(
-                any(),
-                any(),
-                any(),
-                any(),
-                any()
+                url = any(),
+                authorization = any(),
+                keyNamePath = any(),
+                columns = any(),
+                param = any()
             )
         } returns Response.success(
             emptyList()
@@ -118,11 +181,11 @@ class AdditionalInformationRevisitWebImplTest {
     fun getTarget_failed_401() = testScope.runTest {
         coEvery {
             service.getTarget(
-                any(),
-                any(),
-                any(),
-                any(),
-                any()
+                url = any(),
+                authorization = any(),
+                keyNamePath = any(),
+                columns = any(),
+                param = any()
             )
         } returns Response.error(401, "".toResponseBody())
         val typeName = "StockCalculation"
@@ -143,14 +206,104 @@ class AdditionalInformationRevisitWebImplTest {
     }
 
     @Test
+    fun `getSignal_check url`() = testScope.runTest {
+        val expect =
+            "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/Signal/Get/4218074,4217863,4218054"
+        val urlSlot = slot<String>()
+        coEvery {
+            service.getSignal(
+                url = capture(urlSlot),
+                authorization = any(),
+                param = any()
+            )
+        } returns Response.success(emptyList())
+        val channels = listOf("4218074", "4217863", "4218054")
+        web.getSignal(channels)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getSignal_success_ListListString() = testScope.runTest {
+        coEvery {
+            service.getSignal(
+                url = any(),
+                authorization = any(),
+                param = any()
+            )
+        } returns Response.success(
+            listOf(
+                listOf("2330", "1620696741000", "true", "true", "true")
+            )
+        )
+        val channels = listOf("4218074", "4217863", "4218054")
+        val response = web.getSignal(channels)
+        Truth.assertThat(response.isSuccess).isTrue()
+        response.getOrThrow().forEach { oneRowData ->
+            Truth.assertThat(oneRowData.size).isEqualTo(channels.size + 2)
+            oneRowData.forEachIndexed { index, isMatch ->
+                if (index > 1) {
+                    Truth.assertThat(isMatch.toBoolean()).isTrue()
+                }
+            }
+        }
+    }
+
+    @Test
+    fun getSignal_failed_401() = testScope.runTest {
+        coEvery {
+            service.getSignal(
+                url = any(),
+                authorization = any(),
+                param = any()
+            )
+        } returns Response.error(401, "".toResponseBody())
+        val channels = listOf<String>("4218074", "4217863", "4218054")
+        val result = web.getSignal(channels)
+        Truth.assertThat(result.isSuccess).isFalse()
+        val exception = result.exceptionOrNull()
+        Truth.assertThat(exception).isNotNull()
+        requireNotNull(exception)
+        Truth.assertThat(exception).isInstanceOf(HttpException::class.java)
+        require(exception is HttpException)
+        Truth.assertThat(exception.code()).isEqualTo(401)
+    }
+
+    @Test
+    fun `getMultiple_check url`() = testScope.runTest {
+        val expect =
+            "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/GetMultiple/CandleStockChart"
+        val urlSlot = slot<String>()
+        coEvery {
+            service.getMultiple(
+                url = capture(urlSlot),
+                authorization = any(),
+                columns = any(),
+                keyNamePath = any(),
+                param = any()
+            )
+        } returns Response.success(
+            emptyList()
+        )
+        val typeName = "CandleStockChart"
+        web.getMultiple(
+            typeName = typeName,
+            columns = listOf(),
+            keyNamePath = listOf("傳輸序號", "標的"),
+            value = gson.toJson(CandleChartRequest("2330", 1)),
+            processSteps = emptyList()
+        )
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun getMultiple_success_ListListString() = testScope.runTest {
         coEvery {
             service.getMultiple(
-                any(),
-                any(),
-                any(),
-                any(),
-                any()
+                url = any(),
+                authorization = any(),
+                columns = any(),
+                keyNamePath = any(),
+                param = any()
             )
         } returns Response.success(
             emptyList()
@@ -170,11 +323,11 @@ class AdditionalInformationRevisitWebImplTest {
     fun getMultiple_failed_401() = testScope.runTest {
         coEvery {
             service.getMultiple(
-                any(),
-                any(),
-                any(),
-                any(),
-                any()
+                url = any(),
+                authorization = any(),
+                columns = any(),
+                keyNamePath = any(),
+                param = any()
             )
         } returns Response.error(401, "".toResponseBody())
         val typeName = "CandleStockChart"
@@ -195,13 +348,40 @@ class AdditionalInformationRevisitWebImplTest {
     }
 
     @Test
+    fun `getOtherQuery_check url`() = testScope.runTest {
+        val expect =
+            "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/GetOtherQuery/SectionTransactionDetailsRequest/IEnumerable<ITick<ICommodity>>"
+        val urlSlot = slot<String>()
+        coEvery {
+            service.getOtherQuery(
+                url = capture(urlSlot),
+                authorization = any(),
+                columns = any(),
+                param = any()
+            )
+        } returns Response.success(
+            emptyList()
+        )
+        val columns = listOf("標的")
+        val responseType = "IEnumerable<ITick<ICommodity>>"
+        web.getOtherQuery(
+            requestType = "SectionTransactionDetailsRequest",
+            responseType = responseType,
+            columns = columns,
+            value = gson.toJson(SomeTickRequest("2330", 0, 10)),
+            processSteps = emptyList()
+        )
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun getOtherQuery_success_ListListString() = testScope.runTest {
         coEvery {
             service.getOtherQuery(
-                any(),
-                any(),
-                any(),
-                any()
+                url = any(),
+                authorization = any(),
+                columns = any(),
+                param = any()
             )
         } returns Response.success(
             emptyList()
@@ -222,10 +402,10 @@ class AdditionalInformationRevisitWebImplTest {
     fun getOtherQuery_failed_401() = testScope.runTest {
         coEvery {
             service.getOtherQuery(
-                any(),
-                any(),
-                any(),
-                any()
+                url = any(),
+                authorization = any(),
+                columns = any(),
+                param = any()
             )
         } returns Response.error(401, "".toResponseBody())
         val columns = listOf("標的")
@@ -247,44 +427,38 @@ class AdditionalInformationRevisitWebImplTest {
     }
 
     @Test
-    fun getSignal_success_ListListString() = testScope.runTest {
-        coEvery { service.getSignal(any(), any(), any()) } returns Response.success(
-            listOf(
-                listOf("2330", "1620696741000", "true", "true", "true")
-            )
-        )
-        val channels = listOf<String>("4218074", "4217863", "4218054")
-        val response = web.getSignal(channels)
-        Truth.assertThat(response.isSuccess).isTrue()
-        response.getOrThrow().forEach { oneRowData ->
-            Truth.assertThat(oneRowData.size).isEqualTo(channels.size + 2)
-            oneRowData.forEachIndexed { index, isMatch ->
-                if (index > 1) {
-                    Truth.assertThat(isMatch.toBoolean()).isTrue()
-                }
-            }
-        }
-    }
-
-    @Test
-    fun getSignal_failed_401() = testScope.runTest {
+    fun `getPreviousAll_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/PreviousData/GetAll/StockCalculation"
+        val urlSlot = slot<String>()
         coEvery {
-            service.getSignal(any(), any(), any())
-        } returns Response.error(401, "".toResponseBody())
-        val channels = listOf<String>("4218074", "4217863", "4218054")
-        val result = web.getSignal(channels)
-        Truth.assertThat(result.isSuccess).isFalse()
-        val exception = result.exceptionOrNull()
-        Truth.assertThat(exception).isNotNull()
-        requireNotNull(exception)
-        Truth.assertThat(exception).isInstanceOf(HttpException::class.java)
-        require(exception is HttpException)
-        Truth.assertThat(exception.code()).isEqualTo(401)
+            service.getPreviousAll(
+                url = capture(urlSlot),
+                authorization = any(),
+                columns = any(),
+                param = any()
+            )
+        } returns Response.success(
+            emptyList()
+        )
+        val typeName = "StockCalculation"
+        web.getPreviousAll(
+            columns = emptyList(),
+            typeName = typeName,
+            processSteps = emptyList()
+        )
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
     }
 
     @Test
-    fun getYesterdayAll_success_ListListString() = testScope.runTest {
-        coEvery { service.getPreviousAll(any(), any(), any(), any()) } returns Response.success(
+    fun getPreviousAll_success_ListListString() = testScope.runTest {
+        coEvery {
+            service.getPreviousAll(
+                url = any(),
+                authorization = any(),
+                columns = any(),
+                param = any()
+            )
+        } returns Response.success(
             emptyList()
         )
         val typeName = "StockCalculation"
@@ -298,9 +472,14 @@ class AdditionalInformationRevisitWebImplTest {
 
 
     @Test
-    fun getYesterdayAll_failed_401() = testScope.runTest {
+    fun getPreviousAll_failed_401() = testScope.runTest {
         coEvery {
-            service.getPreviousAll(any(), any(), any(), any())
+            service.getPreviousAll(
+                url = any(),
+                authorization = any(),
+                columns = any(),
+                param = any()
+            )
         } returns Response.error(401, "".toResponseBody())
         val result = web.getPreviousAll(
             columns = emptyList(),
@@ -316,16 +495,41 @@ class AdditionalInformationRevisitWebImplTest {
         Truth.assertThat(exception.code()).isEqualTo(401)
     }
 
-
     @Test
-    fun getYesterdayTarget_success_ListListString() = testScope.runTest {
+    fun `getPreviousTarget_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/PreviousData/GetTarget/StockCalculation"
+        val urlSlot = slot<String>()
         coEvery {
             service.getPreviousTarget(
-                any(),
-                any(),
-                any(),
-                any(),
-                any()
+                url = capture(urlSlot),
+                authorization = any(),
+                columns = any(),
+                keyNamePath = any(),
+                param = any()
+            )
+        } returns Response.success(
+            emptyList()
+        )
+        val typeName = "StockCalculation"
+        web.getPreviousTarget(
+            typeName = typeName,
+            columns = listOf(),
+            keyNamePath = listOf("Commodity", "CommKey"),
+            value = gson.toJson(listOf("2330")),
+            processSteps = emptyList()
+        )
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getPreviousTarget_success_ListListString() = testScope.runTest {
+        coEvery {
+            service.getPreviousTarget(
+                url = any(),
+                authorization = any(),
+                columns = any(),
+                keyNamePath = any(),
+                param = any()
             )
         } returns Response.success(
             emptyList()
@@ -342,14 +546,14 @@ class AdditionalInformationRevisitWebImplTest {
     }
 
     @Test
-    fun getYesterdayTarget_failed_401() = testScope.runTest {
+    fun getPreviousTarget_failed_401() = testScope.runTest {
         coEvery {
             service.getPreviousTarget(
-                any(),
-                any(),
-                any(),
-                any(),
-                any()
+                url = any(),
+                authorization = any(),
+                columns = any(),
+                keyNamePath = any(),
+                param = any()
             )
         } returns Response.error(401, "".toResponseBody())
         val typeName = "StockCalculation"
@@ -370,14 +574,40 @@ class AdditionalInformationRevisitWebImplTest {
     }
 
     @Test
-    fun getYesterdayMultiple_success_ListListString() = testScope.runTest {
+    fun `getPreviousMultiple_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/PreviousData/GetMultiple/CandleStockChart"
+        val urlSlot = slot<String>()
         coEvery {
             service.getPreviousMultiple(
-                any(),
-                any(),
-                any(),
-                any(),
-                any()
+                url = capture(urlSlot),
+                authorization = any(),
+                columns = any(),
+                keyNamePath = any(),
+                param = any()
+            )
+        } returns Response.success(
+            emptyList()
+        )
+        val typeName = "CandleStockChart"
+        web.getPreviousMultiple(
+            typeName = typeName,
+            columns = listOf(),
+            keyNamePath = listOf("傳輸序號", "標的"),
+            value = gson.toJson(CandleChartRequest("2330", 1)),
+            processSteps = emptyList()
+        )
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getPreviousMultiple_success_ListListString() = testScope.runTest {
+        coEvery {
+            service.getPreviousMultiple(
+                url = any(),
+                authorization = any(),
+                columns = any(),
+                keyNamePath = any(),
+                param = any()
             )
         } returns Response.success(
             emptyList()
@@ -394,14 +624,14 @@ class AdditionalInformationRevisitWebImplTest {
     }
 
     @Test
-    fun getYesterdayMultiple_failed_401() = testScope.runTest {
+    fun getPreviousMultiple_failed_401() = testScope.runTest {
         coEvery {
             service.getPreviousMultiple(
-                any(),
-                any(),
-                any(),
-                any(),
-                any()
+                url = any(),
+                authorization = any(),
+                columns = any(),
+                keyNamePath = any(),
+                param = any()
             )
         } returns Response.error(401, "".toResponseBody())
         val typeName = "CandleStockChart"
@@ -422,13 +652,39 @@ class AdditionalInformationRevisitWebImplTest {
     }
 
     @Test
-    fun getYesterdayOtherQuery_success_ListListString() = testScope.runTest {
+    fun `getPreviousOtherQuery_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/PreviousData/GetOtherQuery/SectionTransactionDetailsRequest/IEnumerable<ITick<ICommodity>>"
+        val urlSlot = slot<String>()
         coEvery {
             service.getPreviousOtherQuery(
-                any(),
-                any(),
-                any(),
-                any()
+                url = capture(urlSlot),
+                authorization = any(),
+                columns = any(),
+                param = any()
+            )
+        } returns Response.success(
+            emptyList()
+        )
+        val columns = listOf("標的")
+        val responseType = "IEnumerable<ITick<ICommodity>>"
+        web.getPreviousOtherQuery(
+            requestType = "SectionTransactionDetailsRequest",
+            responseType = responseType,
+            columns = columns,
+            value = gson.toJson(SomeTickRequest("2330", 0, 10)),
+            processSteps = emptyList()
+        )
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getPreviousOtherQuery_success_ListListString() = testScope.runTest {
+        coEvery {
+            service.getPreviousOtherQuery(
+                url = any(),
+                authorization = any(),
+                columns = any(),
+                param = any()
             )
         } returns Response.success(
             emptyList()
@@ -446,13 +702,13 @@ class AdditionalInformationRevisitWebImplTest {
     }
 
     @Test
-    fun getYesterdayOtherQuery_failed_401() = testScope.runTest {
+    fun getPreviousOtherQuery_failed_401() = testScope.runTest {
         coEvery {
             service.getPreviousOtherQuery(
-                any(),
-                any(),
-                any(),
-                any()
+                url = any(),
+                authorization = any(),
+                columns = any(),
+                param = any()
             )
         } returns Response.error(401, "".toResponseBody())
         val columns = listOf("標的")
@@ -471,5 +727,10 @@ class AdditionalInformationRevisitWebImplTest {
         Truth.assertThat(exception).isInstanceOf(HttpException::class.java)
         require(exception is HttpException)
         Truth.assertThat(exception.code()).isEqualTo(401)
+    }
+
+    companion object {
+        private const val EXCEPT_DOMAIN = "localhost://8080:80/"
+        private const val EXCEPT_PATH_NAME = "AdditionInformationRevisit/"
     }
 }

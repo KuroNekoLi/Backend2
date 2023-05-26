@@ -11,6 +11,6 @@ class AdditionInformationRevisitSettingAdapterImpl(
     }
 
     override fun getPathName(): String {
-        return "AdditionInformationRevisit"
+        return "AdditionInformationRevisit/"
     }
 }

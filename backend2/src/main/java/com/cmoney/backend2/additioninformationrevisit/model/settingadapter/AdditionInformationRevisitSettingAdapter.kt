@@ -13,8 +13,11 @@ interface AdditionInformationRevisitSettingAdapter {
     fun getDomain(): String
 
     /**
+     *
      * 取得替換的Path，只提供特定位置的Path。
-     * 如果要個別改變，請使用[AdditionalInformationRevisitWeb]的方法。
+     * 需要加上 "/"，例如: "AdditionalInformationRevisit/"
+     * 如果要個別改變，請使用[AdditionalInformationRevisitWeb]方法的url參數。
+     *
      */
     fun getPathName(): String
 }

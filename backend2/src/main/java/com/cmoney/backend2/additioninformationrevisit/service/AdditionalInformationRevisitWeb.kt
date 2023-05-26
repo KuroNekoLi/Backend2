@@ -25,7 +25,7 @@ interface AdditionalInformationRevisitWeb {
         typeName: String,
         processSteps: List<ProcessStep>,
         domain: String = globalBackend2Manager.getAdditionInformationRevisitSettingAdapter().getDomain(),
-        url: String = "${domain}${globalBackend2Manager.getAdditionInformationRevisitSettingAdapter().getPathName()}/api/GetAll/$typeName"
+        url: String = "${domain}${globalBackend2Manager.getAdditionInformationRevisitSettingAdapter().getPathName()}api/GetAll/$typeName"
     ): Result<List<List<String>>>
 
     /**
@@ -48,7 +48,7 @@ interface AdditionalInformationRevisitWeb {
         value: String,
         processSteps: List<ProcessStep>,
         domain: String = globalBackend2Manager.getAdditionInformationRevisitSettingAdapter().getDomain(),
-        url: String = "${domain}${globalBackend2Manager.getAdditionInformationRevisitSettingAdapter().getPathName()}/api/GetTarget/$typeName"
+        url: String = "${domain}${globalBackend2Manager.getAdditionInformationRevisitSettingAdapter().getPathName()}api/GetTarget/$typeName"
     ): Result<List<List<String>>>
 
     /**
@@ -62,7 +62,7 @@ interface AdditionalInformationRevisitWeb {
     suspend fun getSignal(
         channels: List<String>,
         domain: String = globalBackend2Manager.getAdditionInformationRevisitSettingAdapter().getDomain(),
-        url: String = "${domain}${globalBackend2Manager.getAdditionInformationRevisitSettingAdapter().getPathName()}/api/Signal/Get/${channels.joinToString(",")}"
+        url: String = "${domain}${globalBackend2Manager.getAdditionInformationRevisitSettingAdapter().getPathName()}api/Signal/Get/${channels.joinToString(",")}"
     ): Result<List<List<String>>>
 
     /**
@@ -84,7 +84,7 @@ interface AdditionalInformationRevisitWeb {
         value: String,
         processSteps: List<ProcessStep>,
         domain: String = globalBackend2Manager.getAdditionInformationRevisitSettingAdapter().getDomain(),
-        url: String = "${domain}${globalBackend2Manager.getAdditionInformationRevisitSettingAdapter().getPathName()}/api/GetMultiple/$typeName"
+        url: String = "${domain}${globalBackend2Manager.getAdditionInformationRevisitSettingAdapter().getPathName()}api/GetMultiple/$typeName"
     ): Result<List<List<String>>>
 
     /**
@@ -106,7 +106,7 @@ interface AdditionalInformationRevisitWeb {
         value: String,
         processSteps: List<ProcessStep>,
         domain: String = globalBackend2Manager.getAdditionInformationRevisitSettingAdapter().getDomain(),
-        url: String = "${domain}${globalBackend2Manager.getAdditionInformationRevisitSettingAdapter().getPathName()}/api/GetOtherQuery/$requestType/$responseType"
+        url: String = "${domain}${globalBackend2Manager.getAdditionInformationRevisitSettingAdapter().getPathName()}api/GetOtherQuery/$requestType/$responseType"
     ): Result<List<List<String>>>
 
     /**
@@ -124,7 +124,7 @@ interface AdditionalInformationRevisitWeb {
         typeName: String,
         processSteps: List<ProcessStep>,
         domain: String = globalBackend2Manager.getAdditionInformationRevisitSettingAdapter().getDomain(),
-        url: String = "${domain}${globalBackend2Manager.getAdditionInformationRevisitSettingAdapter().getPathName()}/api/PreviousData/GetAll/$typeName"
+        url: String = "${domain}${globalBackend2Manager.getAdditionInformationRevisitSettingAdapter().getPathName()}api/PreviousData/GetAll/$typeName"
     ): Result<List<List<String>>>
 
     /**
@@ -146,7 +146,7 @@ interface AdditionalInformationRevisitWeb {
         value: String,
         processSteps: List<ProcessStep>,
         domain: String = globalBackend2Manager.getAdditionInformationRevisitSettingAdapter().getDomain(),
-        url: String = "${domain}${globalBackend2Manager.getAdditionInformationRevisitSettingAdapter().getPathName()}/api/PreviousData/GetTarget/$typeName"
+        url: String = "${domain}${globalBackend2Manager.getAdditionInformationRevisitSettingAdapter().getPathName()}api/PreviousData/GetTarget/$typeName"
     ): Result<List<List<String>>>
 
     /**
@@ -168,7 +168,7 @@ interface AdditionalInformationRevisitWeb {
         value: String,
         processSteps: List<ProcessStep>,
         domain: String = globalBackend2Manager.getAdditionInformationRevisitSettingAdapter().getDomain(),
-        url: String = "${domain}${globalBackend2Manager.getAdditionInformationRevisitSettingAdapter().getPathName()}/api/PreviousData/GetMultiple/$typeName"
+        url: String = "${domain}${globalBackend2Manager.getAdditionInformationRevisitSettingAdapter().getPathName()}api/PreviousData/GetMultiple/$typeName"
     ): Result<List<List<String>>>
 
     /**
@@ -190,6 +190,6 @@ interface AdditionalInformationRevisitWeb {
         value: String,
         processSteps: List<ProcessStep>,
         domain: String = globalBackend2Manager.getAdditionInformationRevisitSettingAdapter().getDomain(),
-        url: String = "${domain}${globalBackend2Manager.getAdditionInformationRevisitSettingAdapter().getPathName()}/api/PreviousData/GetOtherQuery/$requestType/$responseType"
+        url: String = "${domain}${globalBackend2Manager.getAdditionInformationRevisitSettingAdapter().getPathName()}api/PreviousData/GetOtherQuery/$requestType/$responseType"
     ): Result<List<List<String>>>
 }
