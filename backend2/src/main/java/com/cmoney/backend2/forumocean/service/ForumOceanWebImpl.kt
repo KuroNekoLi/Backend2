@@ -428,43 +428,6 @@ class ForumOceanWebImpl(
             }
         }
 
-    override suspend fun getPushDefaultSetting(): Result<List<NotifyPushSetting>> =
-        withContext(dispatcher.io()) {
-            kotlin.runCatching {
-                service.getPushDefaultSetting(
-                    path = serverName,
-                    authorization = manager.getAccessToken().createAuthorizationBearer()
-                ).checkResponseBody(jsonParser)
-            }
-        }
-
-    override suspend fun getUserNotifySetting(): Result<List<NotifyPushSetting>> =
-        withContext(dispatcher.io()) {
-            kotlin.runCatching {
-                service.getUserNotifySetting(
-                    path = serverName,
-                    authorization = manager.getAccessToken().createAuthorizationBearer()
-                ).checkResponseBody(jsonParser)
-            }
-        }
-
-    override suspend fun setNotifySetting(
-        notifyType: String,
-        subType: String,
-        enable: Boolean
-    ): Result<Unit> =
-        withContext(dispatcher.io()) {
-            kotlin.runCatching {
-                service.setNotifySetting(
-                    path = serverName,
-                    authorization = manager.getAccessToken().createAuthorizationBearer(),
-                    notifyType = notifyType,
-                    subType = subType,
-                    enable = enable
-                ).handleNoContent(jsonParser)
-            }
-        }
-
     override suspend fun getGroup(groupId: Long): Result<GroupResponseBody> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
@@ -476,22 +439,6 @@ class ForumOceanWebImpl(
             }
         }
 
-    override suspend fun getGroupsByKeyword(
-        keyword: String,
-        offset: Int,
-        fetch: Int
-    ): Result<List<GroupResponseBody>> =
-        withContext(dispatcher.io()) {
-            kotlin.runCatching {
-                service.getGroupsByKeyword(
-                    path = serverName,
-                    authorization = manager.getAccessToken().createAuthorizationBearer(),
-                    keyword = keyword,
-                    offset = offset,
-                    fetch = fetch
-                ).checkResponseBody(jsonParser)
-            }
-        }
 
     override suspend fun getGroupsByPosition(
         ownId: Long,
@@ -627,14 +574,15 @@ class ForumOceanWebImpl(
         groupId: Long,
         offset: Int,
         fetch: Int,
-        position: List<GroupPosition>
+        position: List<GroupPosition>,
+        domain: String,
+        url: String
     ): Result<List<com.cmoney.backend2.forumocean.service.api.group.getmember.GroupMember>> =
         withContext(dispatcher.io()) {
-            kotlin.runCatching {
+            runCatching {
                 service.getMembers(
-                    path = serverName,
+                    url = url,
                     authorization = manager.getAccessToken().createAuthorizationBearer(),
-                    groupId = groupId,
                     offset = offset,
                     fetch = fetch,
                     position = position.map { it.position }.sum()
@@ -645,191 +593,295 @@ class ForumOceanWebImpl(
     override suspend fun getApprovals(
         groupId: Long,
         offset: Int,
-        fetch: Int
-    ): Result<List<GroupPendingApproval>> =
-        withContext(dispatcher.io()) {
-            kotlin.runCatching {
-                service.getApprovals(
-                    path = serverName,
-                    authorization = manager.getAccessToken().createAuthorizationBearer(),
-                    groupId = groupId,
-                    offset = offset,
-                    fetch = fetch
-                ).checkResponseBody(jsonParser)
-            }
+        fetch: Int,
+        domain: String,
+        url: String
+    ): Result<List<GroupPendingApproval>> = withContext(dispatcher.io()) {
+        kotlin.runCatching {
+            service.getApprovals(
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
+                offset = offset,
+                fetch = fetch
+            ).checkResponseBody(jsonParser)
         }
+    }
 
-    override suspend fun approval(groupId: Long, memberId: Long, isAgree: Boolean): Result<Unit> =
-        withContext(dispatcher.io()) {
-            kotlin.runCatching {
-                service.approval(
-                    path = serverName,
-                    authorization = manager.getAccessToken().createAuthorizationBearer(),
-                    groupId = groupId,
-                    memberId = memberId,
-                    isAgree = isAgree
-                ).handleNoContent(jsonParser)
-            }
+    override suspend fun approval(
+        groupId: Long,
+        memberId: Long,
+        isAgree: Boolean,
+        domain: String,
+        url: String
+    ): Result<Unit> = withContext(dispatcher.io()) {
+        runCatching {
+            service.approval(
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
+                memberId = memberId,
+                isAgree = isAgree
+            ).handleNoContent(jsonParser)
         }
+    }
 
     override suspend fun changeGroupMemberPosition(
         groupId: Long,
         memberId: Long,
-        position: GroupPosition
+        position: GroupPosition,
+        domain: String,
+        url: String
     ): Result<Unit> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.changeGroupMemberPosition(
-                path = serverName,
+                url = url,
                 authorization = manager.getAccessToken().createAuthorizationBearer(),
-                groupId = groupId,
                 memberId = memberId,
                 position = position.position
             ).handleNoContent(jsonParser)
         }
     }
 
-    override suspend fun kick(groupId: Long, memberId: Long): Result<Unit> =
-        withContext(dispatcher.io()) {
-            kotlin.runCatching {
-                service.kick(
-                    path = serverName,
-                    authorization = manager.getAccessToken().createAuthorizationBearer(),
-                    groupId = groupId,
-                    memberId = memberId
-                ).handleNoContent(jsonParser)
-            }
+    override suspend fun kick(
+        groupId: Long,
+        memberId: Long,
+        domain: String,
+        url: String
+    ): Result<Unit> = withContext(dispatcher.io()) {
+        runCatching {
+            service.kick(
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
+                memberId = memberId
+            ).handleNoContent(jsonParser)
         }
+    }
 
-    override suspend fun leave(groupId: Long): Result<Unit> = withContext(dispatcher.io()) {
-        kotlin.runCatching {
+    override suspend fun leave(
+        groupId: Long,
+        domain: String,
+        url: String
+    ): Result<Unit> = withContext(dispatcher.io()) {
+        runCatching {
             service.leave(
-                path = serverName,
-                authorization = manager.getAccessToken().createAuthorizationBearer(),
-                groupId = groupId
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer()
             ).handleNoContent(jsonParser)
         }
     }
 
-    override suspend fun pinArticle(articleId: Long) = withContext(dispatcher.io()) {
-        kotlin.runCatching {
+    override suspend fun pinArticle(
+        articleId: Long,
+        domain: String,
+        url: String
+    ): Result<Unit> = withContext(dispatcher.io()) {
+        runCatching {
             service.pinArticle(
-                path = serverName,
-                authorization = manager.getAccessToken().createAuthorizationBearer(),
-                articleId = articleId
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer()
             ).handleNoContent(jsonParser)
         }
     }
 
-    override suspend fun unpinArticle(articleId: Long) = withContext(dispatcher.io()) {
-        kotlin.runCatching {
+    override suspend fun unpinArticle(
+        articleId: Long,
+        domain: String,
+        url: String
+    ): Result<Unit> = withContext(dispatcher.io()) {
+        runCatching {
             service.unpinArticle(
-                path = serverName,
-                authorization = manager.getAccessToken().createAuthorizationBearer(),
-                articleId = articleId
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer()
             ).handleNoContent(jsonParser)
         }
     }
 
-    override suspend fun getOfficials(offset: Int, fetch: Int): Result<List<OfficialChannelInfo>> =
-        withContext(dispatcher.io()) {
-            kotlin.runCatching {
-                service.getOfficials(
-                    path = serverName,
-                    authorization = manager.getAccessToken().createAuthorizationBearer(),
-                    offset = offset,
-                    fetch = fetch
-                ).checkResponseBody(jsonParser)
-            }
+    override suspend fun getPushDefaultSetting(
+        domain: String,
+        url: String
+    ): Result<List<NotifyPushSetting>> = withContext(dispatcher.io()) {
+        runCatching {
+            service.getPushDefaultSetting(
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer()
+            ).checkResponseBody(jsonParser)
         }
+    }
 
-    override suspend fun getOfficialsByIds(officialIds: List<Long>): Result<List<OfficialChannelInfo>> =
-        withContext(dispatcher.io()) {
-            kotlin.runCatching {
-                service.getOfficialsByIds(
-                    path = serverName,
-                    authorization = manager.getAccessToken().createAuthorizationBearer(),
-                    officialIds = officialIds.joinToString(",")
-                ).checkResponseBody(jsonParser)
-            }
+    override suspend fun getUserNotifySetting(
+        domain: String,
+        url: String
+    ): Result<List<NotifyPushSetting>> = withContext(dispatcher.io()) {
+        runCatching {
+            service.getUserNotifySetting(
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer()
+            ).checkResponseBody(jsonParser)
         }
+    }
+
+    override suspend fun setNotifySetting(
+        notifyType: String,
+        subType: String,
+        enable: Boolean,
+        domain: String,
+        url: String
+    ): Result<Unit> = withContext(dispatcher.io()) {
+        runCatching {
+            service.setNotifySetting(
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
+                notifyType = notifyType,
+                subType = subType,
+                enable = enable
+            ).handleNoContent(jsonParser)
+        }
+    }
+
+    override suspend fun getOfficials(
+        offset: Int,
+        fetch: Int,
+        domain: String,
+        url: String
+    ): Result<List<OfficialChannelInfo>> = withContext(dispatcher.io()) {
+        runCatching {
+            service.getOfficials(
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
+                offset = offset,
+                fetch = fetch
+            ).checkResponseBody(jsonParser)
+        }
+    }
+
+    override suspend fun getOfficialsByIds(
+        officialIds: List<Long>,
+        domain: String,
+        url: String
+    ): Result<List<OfficialChannelInfo>> = withContext(dispatcher.io()) {
+        runCatching {
+            service.getOfficialsByIds(
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
+                officialIds = officialIds.joinToString(",")
+            ).checkResponseBody(jsonParser)
+        }
+    }
 
     override suspend fun getOfficialsByKeyWord(
         keyword: String,
         offset: Int,
-        fetch: Int
-    ): Result<List<OfficialChannelInfo>> =
-        withContext(dispatcher.io()) {
-            kotlin.runCatching {
-                service.getOfficialsByKeyword(
-                    path = serverName,
-                    authorization = manager.getAccessToken().createAuthorizationBearer(),
-                    keyword = keyword,
-                    offset = offset,
-                    fetch = fetch
-                ).checkResponseBody(jsonParser)
-            }
+        fetch: Int,
+        domain: String,
+        url: String
+    ): Result<List<OfficialChannelInfo>> = withContext(dispatcher.io()) {
+        runCatching {
+            service.getOfficialsByKeyword(
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
+                keyword = keyword,
+                offset = offset,
+                fetch = fetch
+            ).checkResponseBody(jsonParser)
         }
+    }
 
-    override suspend fun getOfficialSubscribedCount(officialId: Long): Result<GetOfficialSubscribedCountResponseBody> =
-        withContext(dispatcher.io()) {
-            kotlin.runCatching {
-                service.getOfficialSubscribedCount(
-                    path = serverName,
-                    authorization = manager.getAccessToken().createAuthorizationBearer(),
-                    officialId = officialId
-                ).checkResponseBody(jsonParser)
-            }
+    override suspend fun getGroupsByKeyword(
+        keyword: String,
+        offset: Int,
+        fetch: Int,
+        domain: String,
+        url: String
+    ): Result<List<GroupResponseBody>> = withContext(dispatcher.io()) {
+        runCatching {
+            service.getGroupsByKeyword(
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
+                keyword = keyword,
+                offset = offset,
+                fetch = fetch
+            ).checkResponseBody(jsonParser)
         }
+    }
 
-    override suspend fun getSubscribedCount(memberId: Long): Result<GetSubscribedCountResponseBody> =
-        withContext(dispatcher.io()) {
-            kotlin.runCatching {
-                service.getSubscribedCount(
-                    path = serverName,
-                    authorization = manager.getAccessToken().createAuthorizationBearer(),
-                    memberId = memberId
-                ).checkResponseBody(jsonParser)
-            }
+    override suspend fun getOfficialSubscribedCount(
+        officialId: Long,
+        domain: String,
+        url: String
+    ): Result<GetOfficialSubscribedCountResponseBody> = withContext(dispatcher.io()) {
+        runCatching {
+            service.getOfficialSubscribedCount(
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer()
+            ).checkResponseBody(jsonParser)
         }
+    }
 
-    override suspend fun getSubscribed(memberId: Long, offset: Int, fetch: Int): Result<List<Int>> =
-        withContext(dispatcher.io()) {
-            kotlin.runCatching {
-                service.getSubscribed(
-                    path = serverName,
-                    authorization = manager.getAccessToken().createAuthorizationBearer(),
-                    memberId = memberId,
-                    offset = offset,
-                    fetch = fetch
-                ).checkResponseBody(jsonParser)
-            }
+    override suspend fun getSubscribedCount(
+        memberId: Long,
+        domain: String,
+        url: String
+    ): Result<GetSubscribedCountResponseBody> = withContext(dispatcher.io()) {
+        runCatching {
+            service.getSubscribedCount(
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
+                memberId = memberId
+            ).checkResponseBody(jsonParser)
         }
+    }
 
-    override suspend fun subscribe(officialId: Long): Result<Unit> = withContext(dispatcher.io()) {
-        kotlin.runCatching {
+    override suspend fun getSubscribed(
+        memberId: Long,
+        offset: Int,
+        fetch: Int,
+        domain: String,
+        url: String
+    ): Result<List<Int>> = withContext(dispatcher.io()) {
+        runCatching {
+            service.getSubscribed(
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
+                memberId = memberId,
+                offset = offset,
+                fetch = fetch
+            ).checkResponseBody(jsonParser)
+        }
+    }
+
+    override suspend fun subscribe(
+        officialId: Long,
+        domain: String,
+        url: String
+    ): Result<Unit> = withContext(dispatcher.io()) {
+        runCatching {
             service.subscribe(
-                path = serverName,
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer()
+            ).handleNoContent(jsonParser)
+        }
+    }
+
+    override suspend fun unsubscribe(
+        officialId: Long,
+        domain: String,
+        url: String
+    ): Result<Unit> = withContext(dispatcher.io()) {
+        runCatching {
+            service.unsubscribe(
+                url = url,
                 authorization = manager.getAccessToken().createAuthorizationBearer(),
                 officialId = officialId
             ).handleNoContent(jsonParser)
         }
     }
 
-    override suspend fun unsubscribe(officialId: Long): Result<Unit> =
-        withContext(dispatcher.io()) {
-            kotlin.runCatching {
-                service.unsubscribe(
-                    path = serverName,
-                    authorization = manager.getAccessToken().createAuthorizationBearer(),
-                    officialId = officialId
-                ).handleNoContent(jsonParser)
-            }
-        }
-
-    override suspend fun unsubscribeAll(): Result<Unit> = withContext(dispatcher.io()) {
-        kotlin.runCatching {
+    override suspend fun unsubscribeAll(
+        domain: String,
+        url: String
+    ): Result<Unit> = withContext(dispatcher.io()) {
+        runCatching {
             service.unsubscribeAll(
-                path = serverName,
+                url = url,
                 authorization = manager.getAccessToken().createAuthorizationBearer()
             ).handleNoContent(jsonParser)
         }
@@ -838,47 +890,59 @@ class ForumOceanWebImpl(
     override suspend fun getFollowingList(
         memberId: Long,
         offset: Int,
-        fetch: Int
-    ): Result<List<Long>> =
-        withContext(dispatcher.io()) {
-            kotlin.runCatching {
-                service.getFollowingList(
-                    path = serverName,
-                    authorization = manager.getAccessToken().createAuthorizationBearer(),
-                    memberId = memberId,
-                    offset = offset,
-                    fetch = fetch
-                ).checkResponseBody(jsonParser)
-            }
+        fetch: Int,
+        domain: String,
+        url: String
+    ): Result<List<Long>> = withContext(dispatcher.io()) {
+        runCatching {
+            service.getFollowingList(
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
+                offset = offset,
+                fetch = fetch
+            ).checkResponseBody(jsonParser)
         }
+    }
 
-    override suspend fun getFollowers(memberId: Long, offset: Int, fetch: Int): Result<List<Long>> =
-        withContext(dispatcher.io()) {
-            kotlin.runCatching {
-                service.getFollowers(
-                    path = serverName,
-                    authorization = manager.getAccessToken().createAuthorizationBearer(),
-                    memberId = memberId,
-                    offset = offset,
-                    fetch = fetch
-                ).checkResponseBody(jsonParser)
-            }
+    override suspend fun getFollowers(
+        memberId: Long,
+        offset: Int,
+        fetch: Int,
+        domain: String,
+        url: String
+    ): Result<List<Long>> = withContext(dispatcher.io()) {
+        runCatching {
+            service.getFollowers(
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
+                offset = offset,
+                fetch = fetch
+            ).checkResponseBody(jsonParser)
         }
+    }
 
-    override suspend fun follow(memberId: Long): Result<Unit> = withContext(dispatcher.io()) {
-        kotlin.runCatching {
+    override suspend fun follow(
+        memberId: Long,
+        domain: String,
+        url: String
+    ): Result<Unit> = withContext(dispatcher.io()) {
+        runCatching {
             service.follow(
-                path = serverName,
+                url = url,
                 authorization = manager.getAccessToken().createAuthorizationBearer(),
                 memberId = memberId
             ).handleNoContent(jsonParser)
         }
     }
 
-    override suspend fun unfollow(memberId: Long): Result<Unit> = withContext(dispatcher.io()) {
-        kotlin.runCatching {
+    override suspend fun unfollow(
+        memberId: Long,
+        domain: String,
+        url: String
+    ): Result<Unit> = withContext(dispatcher.io()) {
+        runCatching {
             service.unfollow(
-                path = serverName,
+                url = url,
                 authorization = manager.getAccessToken().createAuthorizationBearer(),
                 memberId = memberId
             ).handleNoContent(jsonParser)

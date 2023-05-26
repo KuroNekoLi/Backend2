@@ -74,8 +74,6 @@ interface ForumOceanWeb {
 
     val manager: GlobalBackend2Manager
 
-    //region Article 文章
-
     /**
      * 查詢是否被禁言
      *
@@ -197,10 +195,6 @@ interface ForumOceanWeb {
         url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Article/${articleId}"
     ): Result<Unit>
 
-    //endregion
-
-    //region Channel 頻道
-
     /**
      * 取得指定使用者的統計資訊
      *
@@ -257,10 +251,6 @@ interface ForumOceanWeb {
         url = url
     )
 
-    //endregion
-
-    //region Collection 收藏
-
     /**
      * 收藏文章
      *
@@ -286,11 +276,6 @@ interface ForumOceanWeb {
         domain: String = manager.getForumOceanSettingAdapter().getDomain(),
         url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Collection/Delete/${articleId}"
     ): Result<Unit>
-
-
-    //endregion
-
-    //region Comment 回文
 
     /**
      * 取得指定主文的社團管理員回文清單
@@ -338,10 +323,6 @@ interface ForumOceanWeb {
         url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Article/$commentId"
     ): Result<Unit>
 
-    //endregion
-
-    //region CommentInteractive 回文互動
-
     /**
      * 取得指定回文的反應明細V2
      *
@@ -359,52 +340,6 @@ interface ForumOceanWeb {
         domain: String = manager.getForumOceanSettingAdapter().getDomain(),
         url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Article/${id}/Emoji/Detail"
     ): Result<MemberEmojis>
-
-    //endregion
-
-    //region GroupArticle 社團文章管理
-
-    /**
-     * 置頂社團文章
-     *
-     * @param articleId 文章Id
-     * @return
-     */
-    suspend fun pinArticle(articleId: Long): Result<Unit>
-
-    /**
-     * 取消置頂社團文章
-     *
-     * @param articleId 文章Id
-     * @return
-     */
-    suspend fun unpinArticle(articleId: Long): Result<Unit>
-
-    //endregion
-
-    //region Group 社團
-
-    /**
-     * 取得社團資訊
-     *
-     * @param groupId 社團Id
-     * @return
-     */
-    suspend fun getGroup(groupId: Long): Result<GroupResponseBody>
-
-    /**
-     * 關鍵字搜尋社團(沒有處理查詢使用者社團身份 故position欄位固定為null)
-     *
-     * @param keyword 關鍵字
-     * @param offset 偏移數量
-     * @param fetch 查詢數量
-     * @return
-     */
-    suspend fun getGroupsByKeyword(
-        keyword: String,
-        offset: Int,
-        fetch: Int
-    ): Result<List<GroupResponseBody>>
 
     /**
      * 取得指定使用者持有的所有社團
@@ -497,10 +432,6 @@ interface ForumOceanWeb {
      */
     suspend fun deleteGroup(groupId: Long): Result<Unit>
 
-    //endregion
-
-    //region GroupMember 社團成員管理
-
     /**
      * 申請加入社團
      *
@@ -522,90 +453,6 @@ interface ForumOceanWeb {
     suspend fun join(
         groupId: Long
     ): Result<Unit>
-
-    /**
-     * 取得社團成員清單
-     *
-     * @param groupId 社團Id
-     * @param offset 偏移筆數
-     * @param fetch 指定筆數
-     * @param position 身份
-     * @return 社團成員清單
-     */
-    suspend fun getMembers(
-        groupId: Long,
-        offset: Int,
-        fetch: Int,
-        position: List<GroupPosition>
-    ): Result<List<com.cmoney.backend2.forumocean.service.api.group.getmember.GroupMember>>
-
-    /**
-     * 取得申請加入社團待審核清單
-     *
-     * @param groupId 社團Id
-     * @param offset 偏移數量
-     * @param fetch 查詢數量
-     * @return 加入社團待審核清單
-     */
-    suspend fun getApprovals(
-        groupId: Long,
-        offset: Int,
-        fetch: Int
-    ): Result<List<GroupPendingApproval>>
-
-    /**
-     * 審核成員加入社團
-     *
-     * @param groupId 社團ID
-     * @param memberId 被審核人員ID
-     * @param isAgree 是否同意
-     * @return
-     */
-    suspend fun approval(
-        groupId: Long,
-        memberId: Long,
-        isAgree: Boolean
-    ): Result<Unit>
-
-    /**
-     * 設定社團身份
-     *
-     * @param groupId 社團ID
-     * @param memberId 成員ID
-     * @param position 社團職位
-     * @return
-     */
-    suspend fun changeGroupMemberPosition(
-        groupId: Long,
-        memberId: Long,
-        position: GroupPosition
-    ): Result<Unit>
-
-    /**
-     * 踼除成員
-     *
-     * @param groupId 社團ID
-     * @param memberId 成員ID
-     * @return
-     */
-    suspend fun kick(
-        groupId: Long,
-        memberId: Long
-    ): Result<Unit>
-
-    /**
-     * 離開社團
-     *
-     * @param groupId 社團ID
-     * @return
-     */
-    suspend fun leave(
-        groupId: Long
-    ): Result<Unit>
-
-    //endregion
-
-    //region Interactive 文章互動
 
     /**
      * 對文章/留言做出互動
@@ -673,29 +520,169 @@ interface ForumOceanWeb {
         fetch: Int
     ): Result<List<DonateInfo>>
 
-    //endregion
+    /**
+     * 取得社團資訊
+     *
+     * @param groupId 社團Id
+     * @return
+     */
+    suspend fun getGroup(groupId: Long): Result<GroupResponseBody>
 
-    //region Notify 通知API
+    /**
+     * 取得社團成員清單
+     *
+     * @param groupId 社團Id
+     * @param offset 偏移筆數
+     * @param fetch 指定筆數
+     * @param position 身份
+     * @param domain 網域名稱
+     * @param url 完整的Url
+     *
+     */
+    suspend fun getMembers(
+        groupId: Long,
+        offset: Int,
+        fetch: Int,
+        position: List<GroupPosition>,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/GroupMember/GetMembers/${groupId}"
+    ): Result<List<com.cmoney.backend2.forumocean.service.api.group.getmember.GroupMember>>
 
+    /**
+     * 取得申請加入社團待審核清單
+     *
+     * @param groupId 社團Id
+     * @param offset 偏移數量
+     * @param fetch 查詢數量
+     * @param domain 網域名稱
+     * @param url 完整的Url
+     *
+     */
+    suspend fun getApprovals(
+        groupId: Long,
+        offset: Int,
+        fetch: Int,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/GroupMember/GetApprovals/${groupId}"
+    ): Result<List<GroupPendingApproval>>
 
+    /**
+     * 審核成員加入社團
+     *
+     * @param groupId 社團ID
+     * @param memberId 被審核人員ID
+     * @param isAgree 是否同意
+     * @param domain 網域名稱
+     * @param url 完整的Url
+     *
+     */
+    suspend fun approval(
+        groupId: Long,
+        memberId: Long,
+        isAgree: Boolean,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/GroupMember/Approval/${groupId}"
+    ): Result<Unit>
 
-    //endregion
+    /**
+     * 設定社團身份
+     *
+     * @param groupId 社團ID
+     * @param memberId 成員ID
+     * @param position 社團職位
+     * @param domain 網域名稱
+     * @param url 完整的Url
+     *
+     */
+    suspend fun changeGroupMemberPosition(
+        groupId: Long,
+        memberId: Long,
+        position: GroupPosition,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/GroupMember/ChangeGroupMemberPosition/${groupId}"
+    ): Result<Unit>
 
-    //region NotifySetting 通知設定API
+    /**
+     * 踼除成員
+     *
+     * @param groupId 社團ID
+     * @param memberId 成員ID
+     * @param domain 網域名稱
+     * @param url 完整的Url
+     *
+     */
+    suspend fun kick(
+        groupId: Long,
+        memberId: Long,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/GroupMember/Kick/${groupId}"
+    ): Result<Unit>
+
+    /**
+     * 離開社團
+     *
+     * @param groupId 社團ID
+     * @param domain 網域名稱
+     * @param url 完整的Url
+     *
+     */
+    suspend fun leave(
+        groupId: Long,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/GroupMember/Leave/${groupId}"
+    ): Result<Unit>
+
+    /**
+     * 置頂社團文章
+     *
+     * @param articleId 文章Id
+     * @param domain 網域名稱
+     * @param url 完整的Url
+     *
+     */
+    suspend fun pinArticle(
+        articleId: Long,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/GroupArticle/PinArticle/${articleId}"
+    ): Result<Unit>
+
+    /**
+     * 取消置頂社團文章
+     *
+     * @param articleId 文章Id
+     * @param domain 網域名稱
+     * @param url 完整的Url
+     *
+     */
+    suspend fun unpinArticle(
+        articleId: Long,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/GroupArticle/UnpinArticle/${articleId}"
+    ): Result<Unit>
 
     /**
      * 取得預設通知設定
      *
-     * @return
+     * @param domain 網域名稱
+     * @param url 完整的Url
+     *
      */
-    suspend fun getPushDefaultSetting(): Result<List<NotifyPushSetting>>
+    suspend fun getPushDefaultSetting(
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/NotifySetting/GetPushDefaultSetting"
+    ): Result<List<NotifyPushSetting>>
 
     /**
      * 取得使用者通知設定
      *
-     * @return
+     * @param domain 網域名稱
+     * @param url 完整的Url
+     *
      */
-    suspend fun getUserNotifySetting(): Result<List<NotifyPushSetting>>
+    suspend fun getUserNotifySetting(
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/NotifySetting/Get"
+    ): Result<List<NotifyPushSetting>>
 
     /**
      * 設定通知開關
@@ -703,38 +690,46 @@ interface ForumOceanWeb {
      * @param notifyType 通知類型
      * @param subType 通知子類型
      * @param enable 通知是否啟用
-     * @return
+     * @param domain 網域名稱
+     * @param url 完整的Url
+     *
      */
     suspend fun setNotifySetting(
         notifyType: String,
         subType: String = "",
-        enable: Boolean
+        enable: Boolean,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/NotifySetting/Set"
     ): Result<Unit>
-
-    //endregion
-
-    //region Official 官方頻道查詢
 
     /**
      * 取得官方頻道資訊
      *
      * @param offset 偏移數量
      * @param fetch 拿取數量
-     * @return
+     * @param domain 網域名稱
+     * @param url 完整的Url
+     *
      */
     suspend fun getOfficials(
         offset: Int,
-        fetch: Int
+        fetch: Int,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Official/GetOfficials"
     ): Result<List<OfficialChannelInfo>>
 
     /**
      * 取得多筆官方頻道資訊
      *
      * @param officialIds 官方頻道ID清單
-     * @return
+     * @param domain 網域名稱
+     * @param url 完整的Url
+     *
      */
     suspend fun getOfficialsByIds(
-        officialIds: List<Long>
+        officialIds: List<Long>,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Official/GetOfficialsByIds"
     ): Result<List<OfficialChannelInfo>>
 
     /**
@@ -743,36 +738,63 @@ interface ForumOceanWeb {
      * @param keyword 關鍵字
      * @param offset 偏移數量
      * @param fetch 拿取數量
-     * @return
+     * @param domain 網域名稱
+     * @param url 完整的Url
+     *
      */
     suspend fun getOfficialsByKeyWord(
         keyword: String,
         offset: Int,
-        fetch: Int
+        fetch: Int,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Official/GetOfficialsByKeyword"
     ): Result<List<OfficialChannelInfo>>
 
-    //endregion
+    /**
+     * 關鍵字搜尋社團(沒有處理查詢使用者社團身份 故position欄位固定為null)
+     *
+     * @param keyword 關鍵字
+     * @param offset 偏移數量
+     * @param fetch 查詢數量
+     * @param domain 網域名稱
+     * @param url 完整的Url
+     *
+     */
+    suspend fun getGroupsByKeyword(
+        keyword: String,
+        offset: Int,
+        fetch: Int,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Group/GetGroupsByKeyword"
+    ): Result<List<GroupResponseBody>>
 
-    //region OfficialSubscriber 官方頻道訂閱管理
 
     /**
      * 取得指定官方頻道的訂閱者數量
      *
      * @param officialId 官方頻道ID
-     * @return
+     * @param domain 網域名稱
+     * @param url 完整的Url
+     *
      */
     suspend fun getOfficialSubscribedCount(
-        officialId: Long
+        officialId: Long,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/OfficialSubscriber/GetOfficialSubscribedCount/${officialId}"
     ): Result<GetOfficialSubscribedCountResponseBody>
 
     /**
      * 取得使用者訂閱的官方頻道數量
      *
      * @param memberId 使用者Id
-     * @return
+     * @param domain 網域名稱
+     * @param url 完整的Url
+     *
      */
     suspend fun getSubscribedCount(
-        memberId: Long
+        memberId: Long,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/OfficialSubscriber/GetSubscribedCount"
     ): Result<GetSubscribedCountResponseBody>
 
     /**
@@ -781,50 +803,57 @@ interface ForumOceanWeb {
      * @param memberId 使用者Id
      * @param offset 偏移數量
      * @param fetch 查詢數量
-     * @return
+     * @param domain 網域名稱
+     * @param url 完整的Url
+     *
      */
     suspend fun getSubscribed(
         memberId: Long,
         offset: Int,
-        fetch: Int
+        fetch: Int,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/OfficialSubscriber/GetSubscribeds"
     ): Result<List<Int>>
 
     /**
      * 訂閱官方頻道
      *
      * @param officialId 官方頻道ID
-     * @return
+     * @param domain 網域名稱
+     * @param url 完整的Url
+     *
      */
     suspend fun subscribe(
-        officialId: Long
+        officialId: Long,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/OfficialSubscriber/Subscribe/${officialId}"
     ): Result<Unit>
 
     /**
      * 取消訂閱官方頻道
      *
      * @param officialId 官方頻道ID
-     * @return
+     * @param domain 網域名稱
+     * @param url 完整的Url
+     *
      */
     suspend fun unsubscribe(
-        officialId: Long
+        officialId: Long,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/OfficialSubscriber/Unsubscribe/${officialId}"
     ): Result<Unit>
 
     /**
      * 取消訂閱全部官方頻道
      *
-     * @return
+     * @param domain 網域名稱
+     * @param url 完整的Url
+     *
      */
-    suspend fun unsubscribeAll(): Result<Unit>
-
-    //endregion
-
-    //region Rank 排行榜
-
-
-
-    //endregion
-
-    //region Relationship 社群使用者關係
+    suspend fun unsubscribeAll(
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/OfficialSubscriber/UnsubscribeAll"
+    ): Result<Unit>
 
     /**
      * 取得指定使用者追蹤的對象清單
@@ -832,9 +861,17 @@ interface ForumOceanWeb {
      * @param memberId 使用者Id
      * @param offset 跳過的數量
      * @param fetch 拿取數量
-     * @return 使用者追蹤的對象清單
+     * @param domain 網域名稱
+     * @param url 完整的Url
+     *
      */
-    suspend fun getFollowingList(memberId: Long, offset: Int, fetch: Int): Result<List<Long>>
+    suspend fun getFollowingList(
+        memberId: Long,
+        offset: Int,
+        fetch: Int,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Relationship/GetFollowingList/${memberId}"
+    ): Result<List<Long>>
 
     /**
      * 取得指定使用者被對象追蹤的清單
@@ -842,25 +879,45 @@ interface ForumOceanWeb {
      * @param offset 跳過的數量
      * @param fetch 拿取數量
      * @param memberId 使用者Id
-     * @return 使用者被對象追蹤的清單
+     * @param domain 網域名稱
+     * @param url 完整的Url
+     *
      */
-    suspend fun getFollowers(memberId: Long, offset: Int, fetch: Int): Result<List<Long>>
+    suspend fun getFollowers(
+        memberId: Long,
+        offset: Int,
+        fetch: Int,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Relationship/GetFollowers/${memberId}"
+    ): Result<List<Long>>
 
     /**
      * 追蹤
      *
      * @param memberId 追蹤目標Id
-     * @return
+     * @param domain 網域名稱
+     * @param url 完整的Url
+     *
      */
-    suspend fun follow(memberId: Long): Result<Unit>
+    suspend fun follow(
+        memberId: Long,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Relationship/Follow"
+    ): Result<Unit>
 
     /**
      * 取消追蹤
      *
      * @param memberId 取消追蹤目標Id
-     * @return
+     * @param domain 網域名稱
+     * @param url 完整的Url
+     *
      */
-    suspend fun unfollow(memberId: Long): Result<Unit>
+    suspend fun unfollow(
+        memberId: Long,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Relationship/Unfollow"
+    ): Result<Unit>
 
     /**
      * 封鎖

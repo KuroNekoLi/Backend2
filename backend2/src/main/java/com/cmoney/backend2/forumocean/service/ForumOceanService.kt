@@ -384,222 +384,210 @@ interface ForumOceanService {
     ): Response<Void>
 
     @RecordApi
-    @GET("{path}/api/GroupMember/GetMembers/{groupId}")
+    @GET
     suspend fun getMembers(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("groupId") groupId: Long,
         @Query("offset") offset: Int,
         @Query("fetch") fetch: Int,
         @Query("position") position: Int
     ): Response<List<com.cmoney.backend2.forumocean.service.api.group.getmember.GroupMember>>
 
     @RecordApi
-    @GET("{path}/api/GroupMember/GetApprovals/{groupId}")
+    @GET
     suspend fun getApprovals(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("groupId") groupId: Long,
         @Query("offset") offset: Int,
         @Query("fetch") fetch: Int
     ): Response<List<GroupPendingApproval>>
 
     @RecordApi
-    @POST("{path}/api/GroupMember/Approval/{groupId}")
+    @POST
     suspend fun approval(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("groupId") groupId: Long,
         @Query("memberId") memberId: Long,
         @Query("isAgree") isAgree: Boolean
     ): Response<Void>
 
     @RecordApi
-    @PUT("{path}/api/GroupMember/ChangeGroupMemberPosition/{groupId}")
+    @PUT
     suspend fun changeGroupMemberPosition(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("groupId") groupId: Long,
         @Query("memberId") memberId: Long,
         @Query("position") position: Int
     ): Response<Void>
 
     @RecordApi
-    @DELETE("{path}/api/GroupMember/Kick/{groupId}")
+    @DELETE
     suspend fun kick(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("groupId") groupId: Long,
         @Query("memberId") memberId: Long
     ): Response<Void>
 
     @RecordApi
-    @DELETE("{path}/api/GroupMember/Leave/{groupId}")
+    @DELETE
     suspend fun leave(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("groupId") groupId: Long
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<Void>
 
     @RecordApi
-    @POST("{path}/api/GroupArticle/PinArticle/{articleId}")
+    @POST
     suspend fun pinArticle(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: Long
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<Void>
 
     @RecordApi
-    @DELETE("{path}/api/GroupArticle/UnpinArticle/{articleId}")
+    @DELETE
     suspend fun unpinArticle(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: Long
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<Void>
 
     @RecordApi
-    @GET("{path}/api/NotifySetting/GetPushDefaultSetting")
+    @GET
     suspend fun getPushDefaultSetting(
-        @Path("path") path: String,
+        @Url url: String,
         @Header("Authorization") authorization: String
     ): Response<List<NotifyPushSetting>>
 
     @RecordApi
-    @GET("{path}/api/NotifySetting/Get")
+    @GET
     suspend fun getUserNotifySetting(
-        @Path("path") path: String,
+        @Url url: String,
         @Header("Authorization") authorization: String
     ): Response<List<NotifyPushSetting>>
 
     @RecordApi
-    @POST("{path}/api/NotifySetting/Set")
+    @POST
     suspend fun setNotifySetting(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("type") notifyType: String,
         @Query("subType") subType: String = "",
         @Query("enable") enable: Boolean
     ): Response<Void>
 
     @RecordApi
-    @GET("{path}/api/Official/GetOfficials")
+    @GET
     suspend fun getOfficials(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("offset") offset: Int,
         @Query("fetch") fetch: Int
     ): Response<List<OfficialChannelInfo>>
 
     @RecordApi
-    @GET("{path}/api/Official/GetOfficialsByIds")
+    @GET
     suspend fun getOfficialsByIds(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("officialIds") officialIds: String
     ): Response<List<OfficialChannelInfo>>
 
     @RecordApi
-    @GET("{path}/api/Official/GetOfficialsByKeyword")
+    @GET
     suspend fun getOfficialsByKeyword(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("keyword") keyword: String,
         @Query("offset") offset: Int,
         @Query("fetch") fetch: Int
     ): Response<List<OfficialChannelInfo>>
 
     @RecordApi
-    @GET("{path}/api/Group/GetGroupsByKeyword")
+    @GET
     suspend fun getGroupsByKeyword(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("keyword") keyword: String,
         @Query("offset") offset: Int,
         @Query("fetch") fetch: Int
     ): Response<List<GroupResponseBody>>
 
     @RecordApi
-    @GET("{path}/api/OfficialSubscriber/GetOfficialSubscribedCount/{officialId}")
+    @GET
     suspend fun getOfficialSubscribedCount(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("officialId") officialId: Long
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<GetOfficialSubscribedCountResponseBody>
 
     @RecordApi
-    @GET("{path}/api/OfficialSubscriber/GetSubscribedCount")
+    @GET
     suspend fun getSubscribedCount(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("memberId") memberId: Long
     ): Response<GetSubscribedCountResponseBody>
 
     @RecordApi
-    @GET("{path}/api/OfficialSubscriber/GetSubscribeds")
+    @GET
     suspend fun getSubscribed(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("memberId") memberId: Long,
         @Query("offset") offset: Int,
         @Query("fetch") fetch: Int
     ): Response<List<Int>>
 
     @RecordApi
-    @POST("{path}/api/OfficialSubscriber/Subscribe/{officialId}")
+    @POST
     suspend fun subscribe(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("officialId") officialId: Long
-    ): Response<Void>
-
-    @RecordApi
-    @DELETE("{path}/api/OfficialSubscriber/Unsubscribe/{officialId}")
-    suspend fun unsubscribe(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("officialId") officialId: Long
-    ): Response<Void>
-
-    @RecordApi
-    @DELETE("{path}/api/OfficialSubscriber/UnsubscribeAll")
-    suspend fun unsubscribeAll(
-        @Path("path") path: String,
+        @Url url: String,
         @Header("Authorization") authorization: String
     ): Response<Void>
 
     @RecordApi
-    @GET("{path}/api/Relationship/GetFollowingList/{memberId}")
+    @DELETE
+    suspend fun unsubscribe(
+        @Url url: String,
+        @Header("Authorization") authorization: String,
+        @Path("officialId") officialId: Long
+    ): Response<Void>
+
+    @RecordApi
+    @DELETE
+    suspend fun unsubscribeAll(
+        @Url url: String,
+        @Header("Authorization") authorization: String
+    ): Response<Void>
+
+    @RecordApi
+    @GET
     suspend fun getFollowingList(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("memberId") memberId: Long,
         @Query("offset") offset: Int,
         @Query("fetch") fetch: Int
     ): Response<List<Long>>
 
     @RecordApi
-    @GET("{path}/api/Relationship/GetFollowers/{memberId}")
+    @GET
     suspend fun getFollowers(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("memberId") memberId: Long,
         @Query("offset") offset: Int,
         @Query("fetch") fetch: Int
     ): Response<List<Long>>
 
     @RecordApi
-    @POST("{path}/api/Relationship/Follow")
+    @POST
     suspend fun follow(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("memberId") memberId: Long
     ): Response<Void>
 
     @RecordApi
-    @DELETE("{path}/api/Relationship/Unfollow")
+    @DELETE
     suspend fun unfollow(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("memberId") memberId: Long
     ): Response<Void>
 

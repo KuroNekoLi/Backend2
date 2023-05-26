@@ -8,6 +8,8 @@ import com.cmoney.backend2.forumocean.service.api.chatroom.GetUncheckChatRoomCou
 import com.cmoney.backend2.forumocean.service.api.columnist.GetColumnistVipGroupResponse
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBodyV2
 import com.cmoney.backend2.forumocean.service.api.comment.hide.HideCommentRequestBody
+import com.cmoney.backend2.forumocean.service.api.group.getapprovals.GroupPendingApproval
+import com.cmoney.backend2.forumocean.service.api.group.getmember.GroupMember
 import com.cmoney.backend2.forumocean.service.api.group.v2.Admins
 import com.cmoney.backend2.forumocean.service.api.group.v2.AvailableBoardIds
 import com.cmoney.backend2.forumocean.service.api.group.v2.BoardManipulation
@@ -21,6 +23,10 @@ import com.cmoney.backend2.forumocean.service.api.group.v2.MemberRoles
 import com.cmoney.backend2.forumocean.service.api.group.v2.PendingRequests
 import com.cmoney.backend2.forumocean.service.api.group.v2.PushType
 import com.cmoney.backend2.forumocean.service.api.notify.getcount.GetNotifyCountResponseBody
+import com.cmoney.backend2.forumocean.service.api.notifysetting.NotifyPushSetting
+import com.cmoney.backend2.forumocean.service.api.official.get.OfficialChannelInfo
+import com.cmoney.backend2.forumocean.service.api.officialsubscriber.getofficialsubscribedcount.GetOfficialSubscribedCountResponseBody
+import com.cmoney.backend2.forumocean.service.api.officialsubscriber.getsubscribedcount.GetSubscribedCountResponseBody
 import com.cmoney.backend2.forumocean.service.api.rank.getcommodityrank.GetCommodityRankResponseBody
 import com.cmoney.backend2.forumocean.service.api.rank.getexpertmemberrank.GetExpertMemberRankResponseBody
 import com.cmoney.backend2.forumocean.service.api.rank.getfansmemberrank.FansMemberRankResponseBody
@@ -33,6 +39,8 @@ import com.cmoney.backend2.forumocean.service.api.report.ReportRequestBody
 import com.cmoney.backend2.forumocean.service.api.role.GetMembersByRoleResponse
 import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
 import com.cmoney.backend2.forumocean.service.api.support.SearchMembersResponseBody
+import com.cmoney.backend2.forumocean.service.api.variable.request.GroupPosition
+import com.cmoney.backend2.forumocean.service.api.variable.response.GroupPositionInfo
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetGroupBoardArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
@@ -40,6 +48,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.articlerespo
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.spacepin.GetSpaceBoardPinArticlesResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.CommentResponseBodyV2
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.GetCommentsResponseBody
+import com.cmoney.backend2.forumocean.service.api.variable.response.groupresponse.GroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.vote.get.VoteInfo
 import com.cmoney.backend2.ocean.service.api.getevaluationlist.SortType
 import com.cmoney.core.CoroutineTestRule
@@ -82,6 +91,7 @@ class ForumOceanWebImplTest2 {
     @MockK(relaxed = true)
     private lateinit var manager: GlobalBackend2Manager
 
+
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
@@ -97,6 +107,1176 @@ class ForumOceanWebImplTest2 {
         coEvery {
             manager.getForumOceanSettingAdapter().getPathName()
         } returns EXCEPT_PATH_NAME
+    }
+
+    @Test
+    fun `getMembers_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/GroupMember/GetMembers/132132"
+        val urlSlot = slot<String>()
+        coEvery {
+            forumOceanService.getMembers(
+                url = capture(urlSlot),
+                authorization = any(),
+                position = any(),
+                offset = any(),
+                fetch = any()
+            )
+        } returns Response.success(emptyList())
+        web.getMembers(132132, 0, 20, GroupPosition.values().toList())
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getMembers_success() = testScope.runTest {
+        coEvery {
+            forumOceanService.getMembers(
+                url = any(),
+                authorization = any(),
+                position = any(),
+                offset = any(),
+                fetch = any()
+            )
+        } returns Response.success(
+            listOf(
+                GroupMember(memberId = 1, position = GroupPositionInfo.NORMAL),
+                GroupMember(memberId = 2, position = GroupPositionInfo.NORMAL),
+                GroupMember(memberId = 3, position = GroupPositionInfo.PRESIDENT)
+            )
+        )
+        val result = web.getMembers(132132, 0, 20, GroupPosition.values().toList())
+        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.getOrThrow().find { it.position == GroupPositionInfo.PRESIDENT }).isNotNull()
+    }
+
+    @Test
+    fun getMembers_failure() = testScope.runTest {
+        coEvery {
+            forumOceanService.getMembers(
+                url = any(),
+                authorization = any(),
+                position = any(),
+                offset = any(),
+                fetch = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getMembers(132132, 0, 20, GroupPosition.values().toList())
+        Truth.assertThat(result.isFailure).isTrue()
+    }
+
+    @Test
+    fun `getApprovals_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/GroupMember/GetApprovals/1321684"
+        val urlSlot = slot<String>()
+        coEvery {
+            forumOceanService.getApprovals(
+                url = capture(urlSlot),
+                authorization = any(),
+                offset = any(),
+                fetch = any()
+            )
+        } returns Response.success(emptyList())
+        web.getApprovals(1321684, 0, 20)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getApprovals_success() = testScope.runTest {
+        coEvery {
+            forumOceanService.getApprovals(
+                url = any(),
+                authorization = any(),
+                offset = any(),
+                fetch = any()
+            )
+        } returns Response.success(
+            listOf(
+                GroupPendingApproval(
+                    memberId = 1, createTimestamp = 1615530481, reason = "加入社團理由"
+                ),
+                GroupPendingApproval(
+                    memberId = 2, createTimestamp = 1615630481, reason = "加入社團理由2"
+                )
+            )
+        )
+        val result = web.getApprovals(1321684, 0, 20)
+        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.getOrThrow()).hasSize(2)
+    }
+
+    @Test
+    fun getApprovals_failure() = testScope.runTest {
+        coEvery {
+            forumOceanService.getApprovals(
+                url = any(),
+                authorization = any(),
+                offset = any(),
+                fetch = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getApprovals(1321684, 0, 20)
+        Truth.assertThat(result.isFailure).isTrue()
+    }
+
+    @Test
+    fun `approval_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/GroupMember/Approval/132112"
+        val urlSlot = slot<String>()
+        coEvery {
+            forumOceanService.approval(
+                url = capture(urlSlot),
+                authorization = any(),
+                memberId = any(),
+                isAgree = any()
+            )
+        } returns Response.success<Void>(204, null)
+        web.approval(132112, 213213, true)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun approval_success() = testScope.runTest {
+        coEvery {
+            forumOceanService.approval(
+                url = any(),
+                authorization = any(),
+                memberId = any(),
+                isAgree = any()
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.approval(132112, 213213, true)
+        Truth.assertThat(result.isSuccess).isTrue()
+    }
+
+    @Test
+    fun approval_failure() = testScope.runTest {
+        coEvery {
+            forumOceanService.approval(
+                url = any(),
+                authorization = any(),
+                memberId = any(),
+                isAgree = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.approval(132112, 213213, true)
+        Truth.assertThat(result.isFailure).isTrue()
+    }
+
+    @Test
+    fun `changeGroupMemberPosition_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/GroupMember/ChangeGroupMemberPosition/1321321"
+        val urlSlot = slot<String>()
+        coEvery {
+            forumOceanService.changeGroupMemberPosition(
+                url = capture(urlSlot),
+                authorization = any(),
+                memberId = any(),
+                position = any()
+            )
+        } returns Response.success<Void>(204, null)
+        web.changeGroupMemberPosition(1321321, 1231, GroupPosition.PRESIDENT)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun changeGroupMemberPosition_success() = testScope.runTest {
+        coEvery {
+            forumOceanService.changeGroupMemberPosition(
+                url = any(),
+                authorization = any(),
+                memberId = any(),
+                position = any()
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.changeGroupMemberPosition(1321321, 1231, GroupPosition.PRESIDENT)
+        Truth.assertThat(result.isSuccess).isTrue()
+    }
+
+    @Test
+    fun changeGroupMemberPosition_failure() = testScope.runTest {
+        coEvery {
+            forumOceanService.changeGroupMemberPosition(
+                url = any(),
+                authorization = any(),
+                memberId = any(),
+                position = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.changeGroupMemberPosition(1321321, 1231, GroupPosition.PRESIDENT)
+        Truth.assertThat(result.isFailure).isTrue()
+    }
+
+    @Test
+    fun `kick_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/GroupMember/Kick/13213"
+        val urlSlot = slot<String>()
+        coEvery {
+            forumOceanService.kick(
+                url = capture(urlSlot),
+                authorization = any(),
+                memberId = any()
+            )
+        } returns Response.success<Void>(204, null)
+        web.kick(13213, 1321)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun kick_success() = testScope.runTest {
+        coEvery {
+            forumOceanService.kick(
+                url = any(),
+                authorization = any(),
+                memberId = any()
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.kick(13213, 1321)
+        Truth.assertThat(result.isSuccess).isTrue()
+    }
+
+    @Test
+    fun kick_failure() = testScope.runTest {
+        coEvery {
+            forumOceanService.kick(
+                url = any(),
+                authorization = any(),
+                memberId = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.kick(13213, 1321)
+        Truth.assertThat(result.isFailure).isTrue()
+    }
+
+    @Test
+    fun `leave_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/GroupMember/Leave/5050"
+        val urlSlot = slot<String>()
+        coEvery {
+            forumOceanService.leave(
+                url = capture(urlSlot),
+                authorization = any()
+            )
+        } returns Response.success<Void>(204, null)
+        web.leave(5050)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun leave_success() = testScope.runTest {
+        coEvery {
+            forumOceanService.leave(
+                url = any(),
+                authorization = any()
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.leave(5050)
+        Truth.assertThat(result.isSuccess).isTrue()
+    }
+
+    @Test
+    fun leave_failure() = testScope.runTest {
+        coEvery {
+            forumOceanService.leave(
+                url = any(),
+                authorization = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.leave(5050)
+        Truth.assertThat(result.isFailure).isTrue()
+    }
+
+    @Test
+    fun `pinArticle_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/GroupArticle/PinArticle/1321342"
+        val urlSlot = slot<String>()
+        coEvery {
+            forumOceanService.pinArticle(
+                url = capture(urlSlot),
+                authorization = any()
+            )
+        } returns Response.success<Void>(204, null)
+        web.pinArticle(1321342)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun pinArticle_success() = testScope.runTest {
+        coEvery {
+            forumOceanService.pinArticle(
+                url = any(),
+                authorization = any()
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.pinArticle(1321342)
+        Truth.assertThat(result.isSuccess).isTrue()
+    }
+
+    @Test
+    fun pinArticle_failure() = testScope.runTest {
+        coEvery {
+            forumOceanService.pinArticle(
+                url = any(),
+                authorization = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.pinArticle(1321342)
+        Truth.assertThat(result.isFailure).isTrue()
+    }
+
+    @Test
+    fun `unpinArticle_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/GroupArticle/UnpinArticle/1321342"
+        val urlSlot = slot<String>()
+        coEvery {
+            forumOceanService.unpinArticle(
+                url = capture(urlSlot),
+                authorization = any()
+            )
+        } returns Response.success<Void>(204, null)
+        web.unpinArticle(1321342)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun unpinArticle_success() = testScope.runTest {
+        coEvery {
+            forumOceanService.unpinArticle(
+                url = any(),
+                authorization = any()
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.unpinArticle(1321342)
+        Truth.assertThat(result.isSuccess).isTrue()
+    }
+
+    @Test
+    fun unpinArticle_failure() = testScope.runTest {
+        coEvery {
+            forumOceanService.unpinArticle(
+                url = any(),
+                authorization = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.unpinArticle(1321342)
+        Truth.assertThat(result.isFailure).isTrue()
+    }
+
+    @Test
+    fun `getPushDefaultSetting_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/NotifySetting/GetPushDefaultSetting"
+        val urlSlot = slot<String>()
+        coEvery {
+            forumOceanService.getPushDefaultSetting(
+                url = capture(urlSlot),
+                authorization = any()
+            )
+        } returns Response.success(200, emptyList())
+        web.getPushDefaultSetting()
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getPushDefaultSetting_success() = testScope.runTest {
+        val responseBody = listOf(
+            NotifyPushSetting(
+                enable = false,
+                notifySettingKey = null
+            )
+        )
+        coEvery {
+            forumOceanService.getPushDefaultSetting(
+                url = any(),
+                authorization = any()
+            )
+        } returns Response.success(200, responseBody)
+        val result = web.getPushDefaultSetting()
+        Truth.assertThat(result.isSuccess).isTrue()
+    }
+
+    @Test
+    fun getPushDefaultSetting_failure() = testScope.runTest {
+        coEvery {
+            forumOceanService.getPushDefaultSetting(
+                url = any(),
+                authorization = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getPushDefaultSetting()
+        Truth.assertThat(result.isFailure).isTrue()
+    }
+
+    @Test
+    fun `getUserNotifySetting_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/NotifySetting/Get"
+        val urlSlot = slot<String>()
+        coEvery {
+            forumOceanService.getUserNotifySetting(
+                url = capture(urlSlot),
+                authorization = any()
+            )
+        } returns Response.success(200, emptyList())
+        web.getUserNotifySetting()
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getUserNotifySetting_success() = testScope.runTest {
+        val responseBody = listOf(
+            NotifyPushSetting(
+                enable = false,
+                notifySettingKey = null
+            )
+        )
+        coEvery {
+            forumOceanService.getUserNotifySetting(
+                url = any(),
+                authorization = any()
+            )
+        } returns Response.success(200, responseBody)
+        val result = web.getUserNotifySetting()
+        Truth.assertThat(result.isSuccess).isTrue()
+    }
+
+    @Test
+    fun getUserNotifySetting_failure() = testScope.runTest {
+        coEvery {
+            forumOceanService.getUserNotifySetting(
+                url = any(),
+                authorization = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getUserNotifySetting()
+        Truth.assertThat(result.isFailure).isTrue()
+    }
+
+    @Test
+    fun `setNotifySetting_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/NotifySetting/Set"
+        val urlSlot = slot<String>()
+        coEvery {
+            forumOceanService.setNotifySetting(
+                url = capture(urlSlot),
+                authorization = any(),
+                notifyType = any(),
+                subType = any(),
+                enable = any()
+            )
+        } returns Response.success<Void>(204, null)
+        web.setNotifySetting(notifyType = "", subType = "", enable = false)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun setNotifySetting_success() = testScope.runTest {
+        coEvery {
+            forumOceanService.setNotifySetting(
+                url = any(),
+                authorization = any(),
+                notifyType = any(),
+                subType = any(),
+                enable = any()
+            )
+        } returns  Response.success<Void>(204, null)
+        val result = web.setNotifySetting(notifyType = "", subType = "", enable = false)
+            .getOrThrow()
+        Truth.assertThat(result).isEqualTo(Unit)
+    }
+
+    @Test
+    fun setNotifySetting_failure() = testScope.runTest {
+        coEvery {
+            forumOceanService.setNotifySetting(
+                url = any(),
+                authorization = any(),
+                notifyType = any(),
+                subType = any(),
+                enable = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.setNotifySetting(notifyType = "", subType = "", enable = false)
+        Truth.assertThat(result.isFailure).isTrue()
+    }
+
+    @Test
+    fun `getOfficials_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/Official/GetOfficials"
+        val urlSlot = slot<String>()
+        coEvery {
+            forumOceanService.getOfficials(
+                url = capture(urlSlot),
+                authorization = any(),
+                offset = 0,
+                fetch = 20
+            )
+        } returns Response.success(emptyList())
+        web.getOfficials(0, 20)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getOfficials_success() = testScope.runTest {
+        coEvery {
+            forumOceanService.getOfficials(
+                url = any(),
+                authorization = any(),
+                offset = 0,
+                fetch = 20
+            )
+        } returns Response.success(
+            listOf(
+                OfficialChannelInfo(
+                    id = 213213,
+                    name = "",
+                    description = "",
+                    imageUrl = "",
+                    typeName = "",
+                    subscribeCount = 0
+                ),
+                OfficialChannelInfo(
+                    id = 1321321,
+                    name = "",
+                    description = "",
+                    imageUrl = "",
+                    typeName = "",
+                    subscribeCount = 0
+                )
+            )
+        )
+        val result = web.getOfficials(0, 20)
+        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.getOrThrow()).hasSize(2)
+    }
+
+    @Test
+    fun getOfficials_failure() = testScope.runTest {
+        coEvery {
+            forumOceanService.getOfficials(
+                url = any(),
+                authorization = any(),
+                offset = 0,
+                fetch = 20
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getOfficials(0, 20)
+        Truth.assertThat(result.isFailure).isTrue()
+    }
+
+    @Test
+    fun `getOfficialsByIds_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/Official/GetOfficialsByIds"
+        val urlSlot = slot<String>()
+        coEvery {
+            forumOceanService.getOfficialsByIds(
+                url = capture(urlSlot),
+                authorization = any(),
+                officialIds = any()
+            )
+        } returns Response.success(emptyList())
+        web.getOfficialsByIds(emptyList())
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun `getOfficialsByIds_input official id is 1 2 3 4_official id string is 1,2,3,4`() = testScope.runTest {
+        val officialIdsSlot = slot<String>()
+        coEvery {
+            forumOceanService.getOfficialsByIds(
+                url = any(),
+                authorization = any(),
+                officialIds = capture(officialIdsSlot)
+            )
+        } returns Response.success(emptyList())
+        web.getOfficialsByIds(listOf(1,2,3,4))
+        Truth.assertThat(officialIdsSlot.captured).isEqualTo("1,2,3,4")
+    }
+
+    @Test
+    fun getOfficialsByIds_success() = testScope.runTest {
+        val responseBody = listOf(
+            OfficialChannelInfo(
+                id = 123,
+                name = null,
+                description = null,
+                imageUrl = null,
+                typeName = null,
+                subscribeCount = null
+            )
+        )
+        coEvery {
+            forumOceanService.getOfficialsByIds(
+                url = any(),
+                authorization = any(),
+                officialIds = any()
+            )
+        } returns Response.success(responseBody)
+        val result = web.getOfficialsByIds(listOf(1,2,3,4))
+            .getOrThrow()
+        Truth.assertThat(result[0].id).isEqualTo(123)
+    }
+
+    @Test
+    fun getOfficialsByIds_failure() = testScope.runTest {
+        coEvery {
+            forumOceanService.getOfficialsByIds(
+                url = any(),
+                authorization = any(),
+                officialIds = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getOfficialsByIds(emptyList())
+        Truth.assertThat(result.isFailure).isTrue()
+    }
+
+    @Test
+    fun `getOfficialsByKeyword_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/Official/GetOfficialsByKeyword"
+        val urlSlot = slot<String>()
+        coEvery {
+            forumOceanService.getOfficialsByKeyword(
+                url = capture(urlSlot),
+                authorization = any(),
+                keyword = any(),
+                offset = any(),
+                fetch = any()
+            )
+        } returns Response.success(emptyList())
+        web.getOfficialsByKeyWord(keyword = "", offset = 0, fetch = 0)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getOfficialsByKeyword_success() = testScope.runTest {
+        val responseBody = listOf(
+            OfficialChannelInfo(
+                id = 123,
+                name = null,
+                description = null,
+                imageUrl = null,
+                typeName = null,
+                subscribeCount = null
+            )
+        )
+        coEvery {
+            forumOceanService.getOfficialsByKeyword(
+                url = any(),
+                authorization = any(),
+                keyword = any(),
+                offset = any(),
+                fetch = any()
+            )
+        } returns Response.success(responseBody)
+        val result = web.getOfficialsByKeyWord(keyword = "", offset = 0, fetch = 0)
+            .getOrThrow()
+        Truth.assertThat(result[0].id).isEqualTo(123)
+    }
+
+    @Test
+    fun getOfficialsByKeyword_failure() = testScope.runTest {
+        coEvery {
+            forumOceanService.getOfficialsByKeyword(
+                url = any(),
+                authorization = any(),
+                keyword = any(),
+                offset = any(),
+                fetch = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getOfficialsByKeyWord(keyword = "", offset = 0, fetch = 0)
+        Truth.assertThat(result.isFailure).isTrue()
+    }
+
+    @Test
+    fun `getGroupsByKeyword_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/Group/GetGroupsByKeyword"
+        val urlSlot = slot<String>()
+        coEvery {
+            forumOceanService.getGroupsByKeyword(
+                url = capture(urlSlot),
+                authorization = any(),
+                keyword = any(),
+                offset = any(),
+                fetch = any()
+            )
+        } returns Response.success(emptyList())
+        web.getGroupsByKeyword(keyword = "", offset = 0, fetch = 0)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getGroupsByKeyword_success() = testScope.runTest {
+        val responseBody = listOf(
+            GroupResponseBody(
+                description = null,
+                id = 123,
+                imageUrl = null,
+                isPublic = null,
+                joinType = null,
+                name = null,
+                ownerId = null,
+                searchable = null,
+                memberCount = null,
+                groupPosition = null,
+                articleCount = null,
+                unreadCount = null,
+                lastViewTime = null
+            )
+        )
+        coEvery {
+            forumOceanService.getGroupsByKeyword(
+                url = any(),
+                authorization = any(),
+                keyword = any(),
+                offset = any(),
+                fetch = any()
+            )
+        } returns Response.success(responseBody)
+        val result = web.getGroupsByKeyword(keyword = "", offset = 0, fetch = 0)
+            .getOrThrow()
+        Truth.assertThat(result[0].id).isEqualTo(123)
+    }
+
+    @Test
+    fun getGroupsByKeyword_failure() = testScope.runTest {
+        coEvery {
+            forumOceanService.getGroupsByKeyword(
+                url = any(),
+                authorization = any(),
+                keyword = any(),
+                offset = any(),
+                fetch = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getGroupsByKeyword(keyword = "", offset = 0, fetch = 0)
+        Truth.assertThat(result.isFailure).isTrue()
+    }
+
+    @Test
+    fun `getOfficialSubscribedCount_check url`() = testScope.runTest {
+        val expect =
+            "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/OfficialSubscriber/GetOfficialSubscribedCount/21321"
+        val urlSlot = slot<String>()
+        coEvery {
+            forumOceanService.getOfficialSubscribedCount(
+                url = capture(urlSlot),
+                authorization = any()
+            )
+        } returns Response.success(
+            GetOfficialSubscribedCountResponseBody(132132)
+        )
+        web.getOfficialSubscribedCount(21321)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getOfficialSubscribedCount_success() = testScope.runTest {
+        coEvery {
+            forumOceanService.getOfficialSubscribedCount(
+                url = any(),
+                authorization = any()
+            )
+        } returns Response.success(
+            GetOfficialSubscribedCountResponseBody(132132)
+        )
+        val result = web.getOfficialSubscribedCount(21321)
+        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.getOrThrow().count).isEqualTo(132132)
+    }
+
+    @Test
+    fun getOfficialSubscribedCount_failure() = testScope.runTest {
+        coEvery {
+            forumOceanService.getOfficialSubscribedCount(
+                url = any(),
+                authorization = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getOfficialSubscribedCount(21321)
+        Truth.assertThat(result.isFailure).isTrue()
+    }
+
+    @Test
+    fun `getSubscribedCount_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/OfficialSubscriber/GetSubscribedCount"
+        val urlSlot = slot<String>()
+        coEvery {
+            forumOceanService.getSubscribedCount(
+                url = capture(urlSlot),
+                authorization = any(),
+                memberId = any()
+            )
+        } returns Response.success(GetSubscribedCountResponseBody(2134979))
+        web.getSubscribedCount(1465)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getSubscribedCount_success() = testScope.runTest {
+        coEvery {
+            forumOceanService.getSubscribedCount(
+                url = any(),
+                authorization = any(),
+                memberId = any()
+            )
+        } returns Response.success(GetSubscribedCountResponseBody(2134979))
+        val result = web.getSubscribedCount(1465)
+        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.getOrThrow().count).isEqualTo(2134979)
+    }
+
+    @Test
+    fun getSubscribedCount_failure() = testScope.runTest {
+        coEvery {
+            forumOceanService.getSubscribedCount(
+                url = any(),
+                authorization = any(),
+                memberId = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getSubscribedCount(1465)
+        Truth.assertThat(result.isFailure).isTrue()
+    }
+
+
+    @Test
+    fun `getSubscribed_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/OfficialSubscriber/GetSubscribeds"
+        val urlSlot = slot<String>()
+        coEvery {
+            forumOceanService.getSubscribed(
+                url = capture(urlSlot),
+                authorization = any(),
+                memberId = any(),
+                offset = any(),
+                fetch = any()
+            )
+        } returns Response.success(
+            listOf(1, 2, 3, 4, 5, 6)
+        )
+        web.getSubscribed(21321, 0, 20)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getSubscribed_success() = testScope.runTest {
+        coEvery {
+            forumOceanService.getSubscribed(
+                url = any(),
+                authorization = any(),
+                memberId = any(),
+                offset = any(),
+                fetch = any()
+            )
+        } returns Response.success(
+            listOf(1, 2, 3, 4, 5, 6)
+        )
+        val result = web.getSubscribed(21321, 0, 20)
+        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.getOrThrow()).hasSize(6)
+    }
+
+    @Test
+    fun getSubscribed_failure() = testScope.runTest {
+        coEvery {
+            forumOceanService.getSubscribed(
+                url = any(),
+                authorization = any(),
+                memberId = any(),
+                offset = any(),
+                fetch = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getSubscribed(21321, 0, 20)
+        Truth.assertThat(result.isFailure).isTrue()
+    }
+
+    @Test
+    fun `subscribe_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/OfficialSubscriber/Subscribe/21321"
+        val urlSlot = slot<String>()
+        coEvery {
+            forumOceanService.subscribe(
+                url = capture(urlSlot),
+                authorization = any()
+            )
+        } returns Response.success<Void>(204, null)
+        web.subscribe(21321)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun subscribe_success() = testScope.runTest {
+        coEvery {
+            forumOceanService.subscribe(
+                url = any(),
+                authorization = any()
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.subscribe(21321)
+        Truth.assertThat(result.isSuccess).isTrue()
+    }
+
+    @Test
+    fun subscribe_failure() = testScope.runTest {
+        coEvery {
+            forumOceanService.subscribe(
+                url = any(),
+                authorization = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.subscribe(21321)
+        Truth.assertThat(result.isFailure).isTrue()
+    }
+
+    @Test
+    fun `unsubscribe_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/OfficialSubscriber/Unsubscribe/3213489"
+        val urlSlot = slot<String>()
+        coEvery {
+            forumOceanService.unsubscribe(
+                url = capture(urlSlot),
+                authorization = any(),
+                officialId = any()
+            )
+        } returns Response.success<Void>(204, null)
+        web.unsubscribe(3213489)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    fun unsubscribe_success() = testScope.runTest {
+        coEvery {
+            forumOceanService.unsubscribe(
+                url = any(),
+                authorization = any(),
+                officialId = any()
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.unsubscribe(3213489)
+        Truth.assertThat(result.isSuccess).isTrue()
+    }
+
+    @Test
+    fun unsubscribe_failure() = testScope.runTest {
+        coEvery {
+            forumOceanService.unsubscribe(
+                url = any(),
+                authorization = any(),
+                officialId = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.unsubscribe(3213489)
+        Truth.assertThat(result.isSuccess).isFalse()
+    }
+
+    @Test
+    fun `unsubscribeAll_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/OfficialSubscriber/UnsubscribeAll"
+        val urlSlot = slot<String>()
+        coEvery {
+            forumOceanService.unsubscribeAll(
+                url = capture(urlSlot),
+                authorization = any()
+            )
+        } returns Response.success<Void>(204, null)
+        web.unsubscribeAll()
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun unsubscribeAll_success() = testScope.runTest {
+        coEvery {
+            forumOceanService.unsubscribeAll(
+                url = any(),
+                authorization = any()
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.unsubscribeAll()
+        Truth.assertThat(result.isSuccess).isTrue()
+    }
+
+
+    @Test
+    fun unsubscribeAll_failure() = testScope.runTest {
+        coEvery {
+            forumOceanService.unsubscribeAll(
+                url = any(),
+                authorization = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.unsubscribeAll()
+        Truth.assertThat(result.isFailure).isTrue()
+    }
+
+    @Test
+    fun `getFollowingList_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/Relationship/GetFollowingList/4564"
+        val urlSlot = slot<String>()
+        coEvery {
+            forumOceanService.getFollowingList(
+                url = capture(urlSlot),
+                authorization = any(),
+                offset = any(),
+                fetch = any(),
+            )
+        } returns Response.success(
+            listOf(1, 2, 3, 4)
+        )
+        web.getFollowingList(4564, 0, 10)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getFollowingList_success() = testScope.runTest {
+        coEvery {
+            forumOceanService.getFollowingList(
+                url = any(),
+                authorization = any(),
+                offset = any(),
+                fetch = any(),
+            )
+        } returns Response.success(
+            listOf(1, 2, 3, 4)
+        )
+        val result = web.getFollowingList(4564, 0, 10)
+        Truth.assertThat(result.getOrThrow()).hasSize(4)
+    }
+
+    @Test
+    fun getFollowingList_failure() = testScope.runTest {
+        coEvery {
+            forumOceanService.getFollowingList(
+                url = any(),
+                authorization = any(),
+                offset = any(),
+                fetch = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getFollowingList(4564, 0, 10)
+        Truth.assertThat(result.isFailure).isTrue()
+    }
+
+    @Test
+    fun `getFollowers_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/Relationship/GetFollowers/43241321"
+        val urlSlot = slot<String>()
+        coEvery {
+            forumOceanService.getFollowers(
+                url = capture(urlSlot),
+                authorization = any(),
+                offset = any(),
+                fetch = any()
+            )
+        } returns Response.success(listOf(1, 2, 3, 4))
+        web.getFollowers(43241321, 0, 10)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getFollowers_success() = testScope.runTest {
+        coEvery {
+            forumOceanService.getFollowers(
+                url = any(),
+                authorization = any(),
+                offset = any(),
+                fetch = any()
+            )
+        } returns Response.success(listOf(1, 2, 3, 4))
+        val result = web.getFollowers(43241321, 0, 10)
+        Truth.assertThat(result.getOrThrow()).hasSize(4)
+    }
+
+    @Test
+    fun getFollowers_failure() = testScope.runTest {
+        coEvery {
+            forumOceanService.getFollowers(
+                url = any(),
+                authorization = any(),
+                offset = any(),
+                fetch = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getFollowers(43241321, 0, 10)
+        Truth.assertThat(result.isFailure).isTrue()
+    }
+
+    @Test
+    fun `follow_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/Relationship/Follow"
+        val urlSlot = slot<String>()
+        coEvery {
+            forumOceanService.follow(
+                url = capture(urlSlot),
+                authorization = any(),
+                memberId = any()
+            )
+        } returns Response.success<Void>(204, null)
+        web.follow(1324324)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun follow_success() = testScope.runTest {
+        coEvery {
+            forumOceanService.follow(
+                url = any(),
+                authorization = any(),
+                memberId = any()
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.follow(1324324)
+        Truth.assertThat(result.isSuccess)
+    }
+
+    @Test
+    fun follow_failure() = testScope.runTest {
+        coEvery {
+            forumOceanService.follow(
+                url = any(),
+                authorization = any(),
+                memberId = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.follow(1324324)
+        Truth.assertThat(result.isFailure).isTrue()
+    }
+
+    @Test
+    fun `unfollow_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/Relationship/Unfollow"
+        val urlSlot = slot<String>()
+        coEvery {
+            forumOceanService.unfollow(
+                url = capture(urlSlot),
+                authorization = any(),
+                memberId = any()
+            )
+        } returns Response.success<Void>(204, null)
+        web.unfollow(21324324)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun unfollow_success() = testScope.runTest {
+        coEvery {
+            forumOceanService.unfollow(
+                url = any(),
+                authorization = any(),
+                memberId = any()
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.unfollow(21324324)
+        Truth.assertThat(result.isSuccess)
+    }
+
+    @Test
+    fun unfollow_failure() = testScope.runTest {
+        coEvery {
+            forumOceanService.unfollow(
+                url = any(),
+                authorization = any(),
+                memberId = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.unfollow(21324324)
+        Truth.assertThat(result.isFailure).isTrue()
     }
 
     @Test
@@ -192,10 +1372,11 @@ class ForumOceanWebImplTest2 {
                 offset = any(),
                 fetch = any()
             )
-        } returns Response.success(listOf<Long>(1, 2, 3, 4, 5))
+        } returns Response.success(listOf(1, 2, 3, 4, 5))
         web.getBlockingList(0, 10)
         Truth.assertThat(urlSlot.captured).isEqualTo(expect)
     }
+
     @Test
     fun getBlockingList_success() = testScope.runTest {
         coEvery {
@@ -205,9 +1386,8 @@ class ForumOceanWebImplTest2 {
                 offset = any(),
                 fetch = any()
             )
-        } returns Response.success(listOf<Long>(1, 2, 3, 4, 5))
+        } returns Response.success(listOf(1, 2, 3, 4, 5))
         val result = web.getBlockingList(0, 10)
-        Truth.assertThat(result.isSuccess)
         Truth.assertThat(result.getOrThrow()).hasSize(5)
     }
 
@@ -236,7 +1416,7 @@ class ForumOceanWebImplTest2 {
                 offset = any(),
                 fetch = any()
             )
-        } returns Response.success(listOf<Long>(1, 3, 5, 7, 9))
+        } returns Response.success(listOf(1, 3, 5, 7, 9))
         web.getBlockers(0, 10)
         Truth.assertThat(urlSlot.captured).isEqualTo(expect)
     }
@@ -250,9 +1430,8 @@ class ForumOceanWebImplTest2 {
                 offset = any(),
                 fetch = any()
             )
-        } returns Response.success(listOf<Long>(1, 3, 5, 7, 9))
+        } returns Response.success(listOf(1, 3, 5, 7, 9))
         val result = web.getBlockers(0, 10)
-        Truth.assertThat(result.isSuccess)
         Truth.assertThat(result.getOrThrow()).hasSize(5)
     }
 
@@ -458,6 +1637,7 @@ class ForumOceanWebImplTest2 {
         web.getMemberIds(listOf(67, 68))
         Truth.assertThat(urlSlot.captured).isEqualTo(expect)
     }
+
     @Test
     fun getMemberIds_success() = testScope.runTest {
         val memberIds: List<Long> = listOf(67, 68)
@@ -3380,7 +4560,7 @@ class ForumOceanWebImplTest2 {
                 authorization = any(),
                 body = any(),
             )
-        } returns Response.success<CreateCommentResponseBodyV2>(
+        } returns Response.success(
             200,
             CreateCommentResponseBodyV2(commentIndex)
         )
