@@ -1708,65 +1708,44 @@ class ForumOceanWebImplTest {
     }
 
     @Test
-    fun `getReactionDetail_取得反應詳細資料成功測試`() = testScope.runTest {
-        val reactionTypeList = listOf(ReactionType.LIKE, ReactionType.DISLIKE)
-        coEvery {
-            forumOceanService.getReactionDetail(
-                authorization = any(),
-                articleId = any(),
-                commentIndex = any(),
-                reactions = reactionTypeList.joinToString { it.value.toString() },
-                skipCount = any(),
-                takeCount = any(),
-                path = ""
-            )
-        } returns Response.success(
-            listOf(
-                ReactionInfo(
-                    memberId = 67, reactionType = 1, time = 1625563759
-
-                ),
-                ReactionInfo(
-                    memberId = 68, reactionType = 2, time = 1625563759
-
-                )
-            )
-        )
-        val result = web.getReactionDetail(1010, 2000, reactionTypeList, 0, 20)
-        assertThat(result.isSuccess).isTrue()
-        assertThat(result.getOrThrow()).hasSize(2)
-    }
-
-
-    @Test
-    fun `getReactionDetail_取得反應詳細資料失敗測試`() = testScope.runTest {
-        val reactionTypeList = listOf(ReactionType.LIKE, ReactionType.DISLIKE)
-        coEvery {
-            forumOceanService.getReactionDetail(
-                authorization = any(),
-                articleId = any(),
-                commentIndex = any(),
-                reactions = reactionTypeList.joinToString { it.value.toString() },
-                skipCount = any(),
-                takeCount = any(),
-                path = ""
-            )
-        } returns Response.error(500, "".toResponseBody())
-        val result = web.getReactionDetail(1010, 2000, reactionTypeList, 0, 20)
-        assertThat(result.isSuccess).isFalse()
-    }
-
-    @Test
-    fun `getReactionDetailV2_取得反應詳細資料成功測試`() = testScope.runTest {
+    fun `getReactionDetailV2_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/Article/123-1/Emoji/Detail"
+        val urlSlot = slot<String>()
         val reactionTypeList = listOf(ReactionType.LIKE, ReactionType.DISLIKE)
         coEvery {
             forumOceanService.getReactionDetailV2(
+                url = capture(urlSlot),
                 authorization = any(),
-                articleId = any(),
                 emojiTypes = reactionTypeList.joinToString { it.value.toString() },
                 offset = any(),
-                fetch = any(),
-                path = ""
+                fetch = any()
+            )
+        } returns Response.success(
+            MemberEmojis(
+                listOf(
+                    ReactionInfoV2(
+                        memberId = 67, emoji = ""
+                    ),
+                    ReactionInfoV2(
+                        memberId = 68, emoji = ""
+                    )
+                )
+            )
+        )
+        web.getReactionDetailV2("123-1", reactionTypeList, 0, 20)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getReactionDetailV2_success() = testScope.runTest {
+        val reactionTypeList = listOf(ReactionType.LIKE, ReactionType.DISLIKE)
+        coEvery {
+            forumOceanService.getReactionDetailV2(
+                url = any(),
+                authorization = any(),
+                emojiTypes = reactionTypeList.joinToString { it.value.toString() },
+                offset = any(),
+                fetch = any()
             )
         } returns Response.success(
             MemberEmojis(
@@ -1786,21 +1765,21 @@ class ForumOceanWebImplTest {
     }
 
 
-    @Test
-    fun `getReactionDetailV2_取得反應詳細資料失敗測試`() = testScope.runTest {
+    @Test(expected = HttpException::class)
+    fun getReactionDetailV2_failure() = testScope.runTest {
         val reactionTypeList = listOf(ReactionType.LIKE, ReactionType.DISLIKE)
         coEvery {
             forumOceanService.getReactionDetailV2(
+                url = any(),
                 authorization = any(),
-                articleId = any(),
                 emojiTypes = reactionTypeList.joinToString { it.value.toString() },
                 offset = any(),
-                fetch = any(),
-                path = ""
+                fetch = any()
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getReactionDetailV2("123-1", reactionTypeList, 0, 20)
         assertThat(result.isSuccess).isFalse()
+        result.getOrThrow()
     }
 
     @Test

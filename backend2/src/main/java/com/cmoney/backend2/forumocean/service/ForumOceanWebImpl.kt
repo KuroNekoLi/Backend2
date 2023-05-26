@@ -395,39 +395,19 @@ class ForumOceanWebImpl(
         }
     }
 
-    @Deprecated("請使用getReactionDetailV2")
-    override suspend fun getReactionDetail(
-        articleId: Long,
-        commentIndex: Long,
-        reactions: List<ReactionType>,
-        skipCount: Int,
-        takeCount: Int
-    ): Result<List<ReactionInfo>> = withContext(dispatcher.io()) {
-        kotlin.runCatching {
-            service.getReactionDetail(
-                path = serverName,
-                authorization = manager.getAccessToken().createAuthorizationBearer(),
-                articleId = articleId,
-                commentIndex = commentIndex,
-                reactions = reactions.joinToString { it.value.toString() },
-                skipCount = skipCount,
-                takeCount = takeCount
-            ).checkResponseBody(jsonParser)
-        }
-    }
-
     override suspend fun getReactionDetailV2(
         id: String,
         reactions: List<ReactionType>,
         offset: Int,
-        fetch: Int
+        fetch: Int,
+        domain: String,
+        url: String
     ): Result<MemberEmojis> {
         return withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getReactionDetailV2(
-                    path = serverName,
+                    url = url,
                     authorization = manager.getAccessToken().createAuthorizationBearer(),
-                    articleId = id,
                     emojiTypes = reactions.joinToString { it.value.toString() },
                     offset = offset,
                     fetch = fetch

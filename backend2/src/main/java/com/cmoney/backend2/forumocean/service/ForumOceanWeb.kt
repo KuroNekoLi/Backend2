@@ -400,25 +400,6 @@ interface ForumOceanWeb {
     //region CommentInteractive 回文互動
 
     /**
-     * 取得指定回文的反應明細
-     *
-     * @param articleId 指定主文Id
-     * @param commentIndex 回文索引
-     * @param reactions 需要取得的反應
-     * @param skipCount 跳過的數量(選項)
-     * @param takeCount 取得的數項(選項)
-     * @return 反應 對照 做此反應會員清單
-     */
-    @Deprecated("請使用getReactionDetailV2")
-    suspend fun getReactionDetail(
-        articleId: Long,
-        commentIndex: Long,
-        reactions: List<ReactionType>,
-        skipCount: Int,
-        takeCount: Int
-    ): Result<List<ReactionInfo>>
-
-    /**
      * 取得指定回文的反應明細V2
      *
      * @param id 文章或留言
@@ -431,7 +412,9 @@ interface ForumOceanWeb {
         id: String,
         reactions: List<ReactionType>,
         offset: Int,
-        fetch: Int
+        fetch: Int,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Article/${id}/Emoji/Detail"
     ): Result<MemberEmojis>
 
     /**
