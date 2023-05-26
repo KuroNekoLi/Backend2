@@ -361,19 +361,6 @@ interface ForumOceanWeb {
         url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Article/${id}/Emoji/Detail"
     ): Result<MemberEmojis>
 
-    /**
-     * 移除對回文的反應
-     *
-     * @param articleId 指定主文Id
-     * @param commentIndex 回文索引
-     * @return
-     */
-    @Deprecated("請使用deleteReaction")
-    suspend fun removeReactionComment(
-        articleId: Long,
-        commentIndex: Long
-    ): Result<Unit>
-
     //endregion
 
     //region GroupArticle 社團文章管理
@@ -653,24 +640,15 @@ interface ForumOceanWeb {
     ): Result<List<ReactionInfo>>
 
     /**
-     * 移除對文章的反應
-     *
-     * @param articleId 文章Id
-     * @return
-     */
-    @Deprecated("請使用deleteReaction")
-    suspend fun deleteArticleReaction(
-        articleId: Long
-    ): Result<Unit>
-
-    /**
      * 移除對文章/回覆的反應
      *
      * @param id 文章或留言Id
      * @return
      */
     suspend fun deleteReaction(
-        id: String
+        id: String,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Article/${id}/Emoji"
     ): Result<Unit>
 
     /**

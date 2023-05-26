@@ -351,22 +351,6 @@ class ForumOceanWebImpl(
         }
     }
 
-
-    @Deprecated("請使用deleteReaction")
-    override suspend fun removeReactionComment(
-        articleId: Long,
-        commentIndex: Long
-    ): Result<Unit> = withContext(dispatcher.io()) {
-        kotlin.runCatching {
-            service.removeCommentReaction(
-                path = serverName,
-                authorization = manager.getAccessToken().createAuthorizationBearer(),
-                articleId = articleId,
-                commentIndex = commentIndex
-            ).handleNoContent(jsonParser)
-        }
-    }
-
     override suspend fun createReaction(
         id: String,
         type: ReactionType,
@@ -402,25 +386,16 @@ class ForumOceanWebImpl(
         }
     }
 
-    @Deprecated("請使用deleteReaction")
-    override suspend fun deleteArticleReaction(articleId: Long): Result<Unit> =
-        withContext(dispatcher.io()) {
-            kotlin.runCatching {
-                service.deleteArticleReaction(
-                    path = serverName,
-                    authorization = manager.getAccessToken().createAuthorizationBearer(),
-                    articleId = articleId
-                ).handleNoContent(jsonParser)
-            }
-        }
-
-    override suspend fun deleteReaction(id: String): Result<Unit> {
+    override suspend fun deleteReaction(
+        id: String,
+        domain: String,
+        url: String
+    ): Result<Unit> {
         return withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.deleteReaction(
-                    path = serverName,
-                    authorization = manager.getAccessToken().createAuthorizationBearer(),
-                    articleId = id
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer()
                 ).handleNoContent(jsonParser)
             }
         }

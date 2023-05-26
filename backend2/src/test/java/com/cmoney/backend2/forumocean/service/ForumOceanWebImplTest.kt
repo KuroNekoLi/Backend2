@@ -19,15 +19,7 @@ import com.cmoney.backend2.forumocean.service.api.group.update.UpdateGroupReques
 import com.cmoney.backend2.forumocean.service.api.official.get.OfficialChannelInfo
 import com.cmoney.backend2.forumocean.service.api.officialsubscriber.getofficialsubscribedcount.GetOfficialSubscribedCountResponseBody
 import com.cmoney.backend2.forumocean.service.api.officialsubscriber.getsubscribedcount.GetSubscribedCountResponseBody
-import com.cmoney.backend2.forumocean.service.api.rank.getcommodityrank.GetCommodityRankResponseBody
-import com.cmoney.backend2.forumocean.service.api.rank.getexpertmemberrank.GetExpertMemberRankResponseBody
-import com.cmoney.backend2.forumocean.service.api.rank.getfansmemberrank.FansMemberRankResponseBody
-import com.cmoney.backend2.forumocean.service.api.rank.getsolutionexpertrank.SolutionExpertRankResponseBody
 import com.cmoney.backend2.forumocean.service.api.relationship.getdonate.DonateInfo
-import com.cmoney.backend2.forumocean.service.api.report.ReportRequestBody
-import com.cmoney.backend2.forumocean.service.api.role.GetMembersByRoleResponse
-import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
-import com.cmoney.backend2.forumocean.service.api.support.SearchMembersResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.request.GroupPosition
 import com.cmoney.backend2.forumocean.service.api.variable.request.ReactionType
 import com.cmoney.backend2.forumocean.service.api.variable.response.GroupPositionInfo
@@ -38,7 +30,6 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.grouprespons
 import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.MemberEmojis
 import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.ReactionInfo
 import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.ReactionInfoV2
-import com.cmoney.backend2.forumocean.service.api.vote.get.VoteInfo
 import com.cmoney.core.CoroutineTestRule
 import com.cmoney.core.TestDispatcherProvider
 import com.google.common.truth.Truth
@@ -1455,34 +1446,6 @@ class ForumOceanWebImplTest {
     }
 
     @Test
-    fun `removeReactionComment_移除回文反應成功測試`() = testScope.runTest {
-        coEvery {
-            forumOceanService.removeCommentReaction(
-                authorization = any(),
-                articleId = any(),
-                commentIndex = any(),
-                path = ""
-            )
-        } returns Response.success<Void>(204, null)
-        val result = web.removeReactionComment(1010, 2020)
-        assertThat(result.isSuccess).isTrue()
-    }
-
-    @Test
-    fun `removeReactionComment_移除回文反應失敗測試`() = testScope.runTest {
-        coEvery {
-            forumOceanService.removeCommentReaction(
-                authorization = any(),
-                articleId = any(),
-                commentIndex = any(),
-                path = ""
-            )
-        } returns Response.error(500, "".toResponseBody())
-        val result = web.removeReactionComment(1010, 2020)
-        assertThat(result.isSuccess).isFalse()
-    }
-
-    @Test
     fun `getArticleReactionDetail_取得主文反應成功測試`() = testScope.runTest {
         val reactionTypeList = listOf(ReactionType.DISLIKE)
         coEvery {
@@ -1525,29 +1488,48 @@ class ForumOceanWebImplTest {
     }
 
     @Test
-    fun `deleteArticleReaction_刪除文章反應成功測試`() = testScope.runTest {
+    fun `deleteReaction_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/Article/123-1/Emoji"
+        val urlSlot = slot<String>()
         coEvery {
-            forumOceanService.deleteArticleReaction(
-                authorization = any(),
-                articleId = any(),
-                path = ""
+            forumOceanService.deleteReaction(
+                url = capture(urlSlot),
+                authorization = any()
             )
         } returns Response.success<Void>(204, null)
-        val result = web.deleteArticleReaction(10101)
-        assertThat(result.isSuccess).isTrue()
+        web.deleteReaction(id = "123-1")
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
     }
 
     @Test
-    fun `deleteArticleReaction_刪除文章反應失敗測試`() = testScope.runTest {
+    fun deleteReaction_success() = testScope.runTest {
         coEvery {
-            forumOceanService.deleteArticleReaction(
-                authorization = any(),
-                articleId = any(),
-                path = ""
+            forumOceanService.deleteReaction(
+                url = any(),
+                authorization = any()
             )
-        } returns Response.error(500, "".toResponseBody())
-        val result = web.deleteArticleReaction(10101)
-        assertThat(result.isSuccess).isFalse()
+        } returns Response.success<Void>(204, null)
+        val result = web.deleteReaction(id = "123-1")
+        Truth.assertThat(result.isSuccess).isTrue()
+    }
+
+    @Test(expected = ServerException::class)
+    fun deleteReaction_failure_ServerException() = testScope.runTest {
+        val error = CMoneyError(
+            detail = CMoneyError.Detail(
+                message = "不存在的文章"
+            )
+        )
+        val errorBody = jsonParser.toJson(error).toResponseBody()
+        coEvery {
+            forumOceanService.deleteReaction(
+                url = any(),
+                authorization = any()
+            )
+        } returns Response.error(400, errorBody)
+        val result = web.deleteReaction(id = "123-1")
+        Truth.assertThat(result.isSuccess).isFalse()
+        result.getOrThrow()
     }
 
     @Test

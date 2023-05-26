@@ -273,16 +273,6 @@ interface ForumOceanService {
     ): Response<MemberEmojis>
 
     @RecordApi
-    @Deprecated("請使用deleteReaction")
-    @DELETE("{path}/api/CommentInteractive/RemoveReaction/{articleId}/{commentIndex}")
-    suspend fun removeCommentReaction(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: Long,
-        @Path("commentIndex") commentIndex: Long
-    ): Response<Void>
-
-    @RecordApi
     @Headers("X-Version: 2.0")
     @PUT
     suspend fun createReaction(
@@ -312,21 +302,11 @@ interface ForumOceanService {
     ): Response<Void>
 
     @RecordApi
-    @Deprecated("請使用deleteReaction")
-    @DELETE("{path}/api/Interactive/RemoveReaction/{articleId}")
-    suspend fun deleteArticleReaction(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: Long
-    ): Response<Void>
-
-    @RecordApi
     @Headers("X-Version: 2.0")
-    @DELETE("{path}/api/Article/{articleId}/Emoji")
+    @DELETE
     suspend fun deleteReaction(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: String
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<Void>
 
     @RecordApi
