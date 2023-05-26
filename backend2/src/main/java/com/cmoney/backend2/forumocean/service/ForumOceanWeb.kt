@@ -654,7 +654,9 @@ interface ForumOceanWeb {
      */
     suspend fun createArticleDonate(
         articleId: Long,
-        donateValue: Int
+        donateValue: Int,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Interactive/Donate/${articleId}"
     ): Result<Unit>
 
     /**

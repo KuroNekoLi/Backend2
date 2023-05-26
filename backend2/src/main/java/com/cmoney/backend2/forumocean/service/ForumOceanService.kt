@@ -280,11 +280,10 @@ interface ForumOceanService {
     ): Response<Void>
 
     @RecordApi
-    @POST("{path}/api/Interactive/Donate/{articleId}")
+    @POST
     suspend fun createArticleDonate(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: Long,
         @Query("donateValue") donateValue: Int
     ): Response<Void>
 

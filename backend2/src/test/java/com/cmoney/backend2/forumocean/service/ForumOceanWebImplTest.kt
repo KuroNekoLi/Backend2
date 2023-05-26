@@ -1529,31 +1529,45 @@ class ForumOceanWebImplTest {
     }
 
     @Test
-    fun `createArticleDonate_對文章做打賞成功測試`() = testScope.runTest {
+    fun `createArticleDonate_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/Interactive/Donate/10101"
+        val urlSlot = slot<String>()
         coEvery {
             forumOceanService.createArticleDonate(
+                url = capture(urlSlot),
                 authorization = any(),
-                articleId = any(),
-                donateValue = any(),
-                path = ""
+                donateValue = any()
+            )
+        } returns Response.success<Void>(204, null)
+        web.createArticleDonate(10101, 1)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun createArticleDonate_success() = testScope.runTest {
+        coEvery {
+            forumOceanService.createArticleDonate(
+                url = any(),
+                authorization = any(),
+                donateValue = any()
             )
         } returns Response.success<Void>(204, null)
         val result = web.createArticleDonate(10101, 1)
         assertThat(result.isSuccess).isTrue()
     }
 
-    @Test
-    fun `createArticleDonate_對文章做打賞失敗測試`() = testScope.runTest {
+    @Test(expected = HttpException::class)
+    fun createArticleDonate_failure_HttpException() = testScope.runTest {
         coEvery {
             forumOceanService.createArticleDonate(
+                url = any(),
                 authorization = any(),
-                articleId = any(),
-                donateValue = any(),
-                path = ""
+                donateValue = any()
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.createArticleDonate(10101, 1)
         assertThat(result.isSuccess).isFalse()
+        result.getOrThrow()
     }
 
     @Test

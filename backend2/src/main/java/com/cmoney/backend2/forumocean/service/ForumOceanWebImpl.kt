@@ -395,13 +395,17 @@ class ForumOceanWebImpl(
             }
         }
 
-    override suspend fun createArticleDonate(articleId: Long, donateValue: Int): Result<Unit> =
+    override suspend fun createArticleDonate(
+        articleId: Long,
+        donateValue: Int,
+        domain: String,
+        url: String
+    ): Result<Unit> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.createArticleDonate(
-                    path = serverName,
+                    url = url,
                     authorization = manager.getAccessToken().createAuthorizationBearer(),
-                    articleId = articleId,
                     donateValue = donateValue
                 ).handleNoContent(jsonParser)
             }
