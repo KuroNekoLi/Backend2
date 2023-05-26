@@ -146,11 +146,12 @@ class AdditionalInformationRevisitTestCase : ServiceCase {
     }
 
     private suspend fun testPreviousData() {
-        web.getPreviousAll(
-            columns = listOf("標的", "商品名稱"),
-            typeName = "USAStockCommodity",
-            processSteps = emptyList()
-        ).logResponse(TAG)
+        // 目前沒有相關的GetPreviousAll類型
+//        web.getPreviousAll(
+//            columns = listOf(""),
+//            typeName = "",
+//            processSteps = emptyList()
+//        ).logResponse(TAG)
 
         val commKeys = listOf("AAPL", "AMZN")
         web.getPreviousTarget(

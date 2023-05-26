@@ -99,7 +99,7 @@ class MainActivity : AppCompatActivity() {
                 // 要測試記得取消註解
 //                ActivityServiceCase(),
 //                AuthorizationServiceCase(),
-//                AdditionalInformationRevisitTestCase(hasSignal = true),
+//                AdditionalInformationRevisitTestCase(),
 //                BillingServiceCase()
 //                BrokerDataTransmissionServiceCase(),
 //                CellphoneServiceCase(),
