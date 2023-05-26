@@ -1571,14 +1571,35 @@ class ForumOceanWebImplTest {
     }
 
     @Test
-    fun `getArticleDonate_取得文章打賞成功測試`() = testScope.runTest {
+    fun `getArticleDonate_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/Interactive/GetDonate/10101"
+        val urlSlot = slot<String>()
         coEvery {
             forumOceanService.getArticleDonate(
+                url = capture(urlSlot),
                 authorization = any(),
-                articleId = any(),
                 offset = any(),
-                fetch = any(),
-                path = ""
+                fetch = any()
+            )
+        } returns Response.success(
+            listOf(
+                DonateInfo(memberId = 1000, donateValue = 10),
+                DonateInfo(memberId = 1001, donateValue = 1),
+                DonateInfo(memberId = 1002, donateValue = 100)
+            )
+        )
+        web.getArticleDonate(10101, 0, 20)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getArticleDonate_success() = testScope.runTest {
+        coEvery {
+            forumOceanService.getArticleDonate(
+                url = any(),
+                authorization = any(),
+                offset = any(),
+                fetch = any()
             )
         } returns Response.success(
             listOf(
@@ -1593,29 +1614,59 @@ class ForumOceanWebImplTest {
         assertThat(result.getOrThrow()[2].donateValue).isEqualTo(100)
     }
 
-    @Test
-    fun `getArticleDonate_取得文章打賞失敗測試`() = testScope.runTest {
+    @Test(expected = HttpException::class)
+    fun getArticleDonate_failure_HttpException() = testScope.runTest {
         coEvery {
             forumOceanService.getArticleDonate(
+                url = any(),
                 authorization = any(),
-                articleId = any(),
                 offset = any(),
-                fetch = any(),
-                path = ""
+                fetch = any()
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getArticleDonate(10101, 0, 20)
         assertThat(result.isSuccess).isFalse()
+        result.getOrThrow()
     }
 
     @Test
-    fun `getGroup_取得社團資訊成功測試`() = testScope.runTest {
+    fun `getGroup_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/Group/GetGroup/1161616"
+        val urlSlot = slot<String>()
         val groupId = 1161616L
         coEvery {
             forumOceanService.getGroup(
-                authorization = any(),
-                groupId = groupId,
-                path = ""
+                url = capture(urlSlot),
+                authorization = any()
+            )
+        } returns Response.success(
+            GroupResponseBody(
+                description = "社團敘述",
+                id = groupId,
+                imageUrl = null,
+                isPublic = null,
+                joinType = null,
+                name = "社團名稱",
+                ownerId = null,
+                searchable = null,
+                memberCount = null,
+                groupPosition = null,
+                articleCount = null,
+                unreadCount = null,
+                lastViewTime = null
+            )
+        )
+        web.getGroup(groupId)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getGroup_success() = testScope.runTest {
+        val groupId = 1161616L
+        coEvery {
+            forumOceanService.getGroup(
+                url = any(),
+                authorization = any()
             )
         } returns Response.success(
             GroupResponseBody(
@@ -1639,31 +1690,88 @@ class ForumOceanWebImplTest {
         assertThat(result.getOrThrow().id).isEqualTo(groupId)
     }
 
-    @Test
-    fun `getGroup_取得社團資訊失敗測試`() = testScope.runTest {
+    @Test(expected = HttpException::class)
+    fun getGroup_failure_HttpException() = testScope.runTest {
         val groupId = 1161616L
         coEvery {
             forumOceanService.getGroup(
-                authorization = any(),
-                groupId = groupId,
-                path = ""
+                url = any(),
+                authorization = any()
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getGroup(groupId)
         assertThat(result.isSuccess).isFalse()
+        result.getOrThrow()
     }
 
     @Test
-    fun `getUserOwnGroup_取得用戶所擁有社團成功測試`() = testScope.runTest {
+    fun `getUserOwnGroup_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/Group/GetGroupsWithPosition"
+        val urlSlot = slot<String>()
         coEvery {
             forumOceanService.getGroupsWithPosition(
+                url = capture(urlSlot),
                 authorization = any(),
                 memberId = any(),
                 offset = any(),
                 fetch = any(),
                 position = any(),
-                includeAppGroup = any(),
-                path = ""
+                includeAppGroup = any()
+            )
+        } returns Response.success(
+            listOf(
+                GroupResponseBody(
+                    description = null,
+                    id = 1,
+                    imageUrl = null,
+                    isPublic = null,
+                    joinType = null,
+                    name = null,
+                    ownerId = null,
+                    searchable = null,
+                    memberCount = null,
+                    groupPosition = null,
+                    articleCount = null,
+                    unreadCount = null,
+                    lastViewTime = null
+                ),
+                GroupResponseBody(
+                    description = null,
+                    id = 2,
+                    imageUrl = null,
+                    isPublic = null,
+                    joinType = null,
+                    name = null,
+                    ownerId = null,
+                    searchable = null,
+                    memberCount = null,
+                    groupPosition = null,
+                    articleCount = null,
+                    unreadCount = null,
+                    lastViewTime = null
+                )
+            )
+        )
+        web.getGroupsByPosition(
+            ownId = 1321321,
+            offset = 0,
+            fetch = 20,
+            positions = listOf(GroupPosition.NORMAL, GroupPosition.MANAGEMENT, GroupPosition.PRESIDENT)
+        )
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getUserOwnGroup_success() = testScope.runTest {
+        coEvery {
+            forumOceanService.getGroupsWithPosition(
+                url = any(),
+                authorization = any(),
+                memberId = any(),
+                offset = any(),
+                fetch = any(),
+                position = any(),
+                includeAppGroup = any()
             )
         } returns Response.success(
             listOf(
@@ -1700,48 +1808,51 @@ class ForumOceanWebImplTest {
             )
         )
         val result = web.getGroupsByPosition(
-            1321321,
-            0,
-            20,
-            listOf(GroupPosition.NORMAL, GroupPosition.MANAGEMENT, GroupPosition.PRESIDENT)
+            ownId = 1321321,
+            offset = 0,
+            fetch = 20,
+            positions = listOf(GroupPosition.NORMAL, GroupPosition.MANAGEMENT, GroupPosition.PRESIDENT)
         )
         assertThat(result.isSuccess).isTrue()
         assertThat(result.getOrThrow()).hasSize(2)
     }
 
-    @Test
-    fun `getUserOwnGroup_取得用戶所擁有社團失敗測試`() = testScope.runTest {
+    @Test(expected = HttpException::class)
+    fun getUserOwnGroup_failure_HttpException() = testScope.runTest {
         coEvery {
             forumOceanService.getGroupsWithPosition(
+                url = any(),
                 authorization = any(),
                 memberId = any(),
                 offset = any(),
                 fetch = any(),
                 position = any(),
-                includeAppGroup = any(),
-                path = ""
+                includeAppGroup = any()
             )
         } returns Response.error(403, "".toResponseBody())
         val result = web.getGroupsByPosition(
-            1321321,
-            0,
-            20,
-            listOf(GroupPosition.NORMAL, GroupPosition.MANAGEMENT, GroupPosition.PRESIDENT)
+            ownId = 1321321,
+            offset = 0,
+            fetch = 20,
+            positions = listOf(GroupPosition.NORMAL, GroupPosition.MANAGEMENT, GroupPosition.PRESIDENT)
         )
         assertThat(result.isSuccess).isFalse()
+        result.getOrThrow()
     }
 
     @Test
-    fun `readMemberManagedGroups_取得指定使用者管理的所有社團成功測試`() = testScope.runTest {
+    fun `readMemberManagedGroups_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/Group/GetGroupsWithPosition"
+        val urlSlot = slot<String>()
         coEvery {
             forumOceanService.getGroupsWithPosition(
+                url = capture(urlSlot),
                 authorization = any(),
                 memberId = any(),
                 offset = any(),
                 fetch = any(),
                 position = any(),
-                includeAppGroup = any(),
-                path = ""
+                includeAppGroup = any()
             )
         } returns Response.success(
             listOf(
@@ -1762,33 +1873,79 @@ class ForumOceanWebImplTest {
                 )
             )
         )
-        val result = web.getMemberManagedGroups(1, 0, 20)
+        web.getMemberManagedGroups(memberId = 1, offset = 0, fetch = 20)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun readMemberManagedGroups_success() = testScope.runTest {
+        coEvery {
+            forumOceanService.getGroupsWithPosition(
+                url = any(),
+                authorization = any(),
+                memberId = any(),
+                offset = any(),
+                fetch = any(),
+                position = any(),
+                includeAppGroup = any()
+            )
+        } returns Response.success(
+            listOf(
+                GroupResponseBody(
+                    description = null,
+                    id = 1,
+                    imageUrl = null,
+                    isPublic = null,
+                    joinType = null,
+                    name = null,
+                    ownerId = null,
+                    searchable = null,
+                    memberCount = null,
+                    groupPosition = null,
+                    articleCount = null,
+                    unreadCount = null,
+                    lastViewTime = null
+                )
+            )
+        )
+        val result = web.getMemberManagedGroups(
+            memberId = 1,
+            offset = 0,
+            fetch = 20
+        )
         assertThat(result.isSuccess).isTrue()
         assertThat(result.getOrThrow().first().id).isEqualTo(1)
     }
 
-    @Test
-    fun `readMemberManagedGroups_取得指定使用者管理的所有社團失敗測試`() = testScope.runTest {
+    @Test(expected = HttpException::class)
+    fun readMemberManagedGroups_failure_HttpException() = testScope.runTest {
         coEvery {
             forumOceanService.getGroupsWithPosition(
+                url = any(),
                 authorization = any(),
                 memberId = any(),
                 offset = any(),
                 fetch = any(),
                 position = any(),
-                includeAppGroup = any(),
-                path = ""
+                includeAppGroup = any()
             )
         } returns Response.error(500, "".toResponseBody())
-        val result = web.getMemberManagedGroups(1, 0, 20)
+        val result = web.getMemberManagedGroups(
+            memberId = 1,
+            offset = 0,
+            fetch = 20
+        )
         assertThat(result.isFailure).isTrue()
+        result.getOrThrow()
     }
 
-
     @Test
-    fun `getMemberBelongGroups_取得用戶所屬社團成功測試`() = testScope.runTest {
+    fun `getMemberBelongGroups_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/Group/GetGroupsWithPosition"
+        val urlSlot = slot<String>()
         coEvery {
             forumOceanService.getGroupsWithPosition(
+                url = capture(urlSlot),
                 authorization = any(),
                 memberId = any(),
                 offset = any(),
@@ -1798,8 +1955,7 @@ class ForumOceanWebImplTest {
                     GroupPosition.MANAGEMENT,
                     GroupPosition.PRESIDENT
                 ).map { it.position }.sum(),
-                includeAppGroup = any(),
-                path = ""
+                includeAppGroup = any()
             )
         } returns Response.success(
             listOf(
@@ -1820,15 +1976,15 @@ class ForumOceanWebImplTest {
                 )
             )
         )
-        val result = web.getMemberBelongGroups(1231321, 0, 20)
-        assertThat(result.isSuccess).isTrue()
-        assertThat(result.getOrThrow()).hasSize(1)
+        web.getMemberBelongGroups(memberId = 1231321, offset = 0, fetch = 20)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
     }
 
     @Test
-    fun `getMemberBelongGroups_取得用戶所屬社團失敗測試`() = testScope.runTest {
+    fun getMemberBelongGroups_success() = testScope.runTest {
         coEvery {
             forumOceanService.getGroupsWithPosition(
+                url = any(),
                 authorization = any(),
                 memberId = any(),
                 offset = any(),
@@ -1838,12 +1994,60 @@ class ForumOceanWebImplTest {
                     GroupPosition.MANAGEMENT,
                     GroupPosition.PRESIDENT
                 ).map { it.position }.sum(),
-                includeAppGroup = any(),
-                path = ""
+                includeAppGroup = any()
+            )
+        } returns Response.success(
+            listOf(
+                GroupResponseBody(
+                    description = null,
+                    id = 1,
+                    imageUrl = null,
+                    isPublic = null,
+                    joinType = null,
+                    name = null,
+                    ownerId = null,
+                    searchable = null,
+                    memberCount = null,
+                    groupPosition = null,
+                    articleCount = null,
+                    unreadCount = null,
+                    lastViewTime = null
+                )
+            )
+        )
+        val result = web.getMemberBelongGroups(
+            memberId = 1231321,
+            offset = 0,
+            fetch = 20
+        )
+        assertThat(result.isSuccess).isTrue()
+        assertThat(result.getOrThrow()).hasSize(1)
+    }
+
+    @Test(expected = HttpException::class)
+    fun getMemberBelongGroups_failure() = testScope.runTest {
+        coEvery {
+            forumOceanService.getGroupsWithPosition(
+                url = any(),
+                authorization = any(),
+                memberId = any(),
+                offset = any(),
+                fetch = any(),
+                position = listOf(
+                    GroupPosition.NORMAL,
+                    GroupPosition.MANAGEMENT,
+                    GroupPosition.PRESIDENT
+                ).map { it.position }.sum(),
+                includeAppGroup = any()
             )
         } returns Response.error(402, "".toResponseBody())
-        val result = web.getMemberBelongGroups(1231321, 0, 20)
+        val result = web.getMemberBelongGroups(
+            memberId = 1231321,
+            offset = 0,
+            fetch = 20
+        )
         assertThat(result.isFailure).isTrue()
+        result.getOrThrow()
     }
 
     @Test

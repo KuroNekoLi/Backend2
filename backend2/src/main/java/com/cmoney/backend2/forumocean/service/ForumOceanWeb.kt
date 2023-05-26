@@ -349,6 +349,8 @@ interface ForumOceanWeb {
      * @param reactions 需要取得的反應
      * @param offset 跳過的數量(選項)
      * @param fetch 取得的數項(選項)
+     * @param domain 網域名稱
+     * @param url 完整的Url
      * @return 反應 對照 做此反應會員清單
      */
     suspend fun getReactionDetailV2(
@@ -388,9 +390,15 @@ interface ForumOceanWeb {
      * 取得社團資訊
      *
      * @param groupId 社團Id
+     * @param domain 網域名稱
+     * @param url 完整的Url
      * @return
      */
-    suspend fun getGroup(groupId: Long): Result<GroupResponseBody>
+    suspend fun getGroup(
+        groupId: Long,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Group/GetGroup/${groupId}"
+    ): Result<GroupResponseBody>
 
     /**
      * 關鍵字搜尋社團(沒有處理查詢使用者社團身份 故position欄位固定為null)
@@ -414,6 +422,8 @@ interface ForumOceanWeb {
      * @param fetch 取得數量
      * @param positions 取得的社團職位
      * @param includeAppGroup 是否包含app的社團
+     * @param domain 網域名稱
+     * @param url 完整的Url
      * @return
      */
     suspend fun getGroupsByPosition(
@@ -421,7 +431,9 @@ interface ForumOceanWeb {
         offset: Int,
         fetch: Int,
         positions: List<GroupPosition>,
-        includeAppGroup: Boolean = false
+        includeAppGroup: Boolean = false,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Group/GetGroupsWithPosition"
     ): Result<List<GroupResponseBody>>
 
     /**
@@ -436,7 +448,9 @@ interface ForumOceanWeb {
         memberId: Long,
         offset: Int,
         fetch: Int,
-        includeAppGroup: Boolean = false
+        includeAppGroup: Boolean = false,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Group/GetGroupsWithPosition"
     ): Result<List<GroupResponseBody>>
 
     /**
@@ -452,7 +466,9 @@ interface ForumOceanWeb {
         memberId: Long,
         offset: Int,
         fetch: Int,
-        includeAppGroup: Boolean = false
+        includeAppGroup: Boolean = false,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Group/GetGroupsWithPosition"
     ): Result<List<GroupResponseBody>>
 
     /**
@@ -612,6 +628,8 @@ interface ForumOceanWeb {
      *
      * @param id 文章或留言id
      * @param type 反應類型
+     * @param domain 網域名稱
+     * @param url 完整的Url
      * @return
      */
     suspend fun createReaction(
@@ -625,6 +643,8 @@ interface ForumOceanWeb {
      * 移除對文章/回覆的反應
      *
      * @param id 文章或留言Id
+     * @param domain 網域名稱
+     * @param url 完整的Url
      * @return
      */
     suspend fun deleteReaction(
@@ -637,6 +657,8 @@ interface ForumOceanWeb {
      * 對文章有興趣
      *
      * @param articleId 文章Id
+     * @param domain 網域名稱
+     * @param url 完整的Url
      * @return
      */
     suspend fun createArticleInterest(
@@ -650,6 +672,8 @@ interface ForumOceanWeb {
      *
      * @param articleId 文章Id
      * @param donateValue 打賞金額
+     * @param domain 網域名稱
+     * @param url 完整的Url
      * @return
      */
     suspend fun createArticleDonate(
@@ -665,12 +689,16 @@ interface ForumOceanWeb {
      * @param articleId 文章Id
      * @param offset 偏移數量
      * @param fetch 查詢數量
+     * @param domain 網域名稱
+     * @param url 完整的Url
      * @return
      */
     suspend fun getArticleDonate(
         articleId: Long,
         offset: Int,
-        fetch: Int
+        fetch: Int,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Interactive/GetDonate/${articleId}"
     ): Result<List<DonateInfo>>
 
     //endregion

@@ -414,14 +414,15 @@ class ForumOceanWebImpl(
     override suspend fun getArticleDonate(
         articleId: Long,
         offset: Int,
-        fetch: Int
+        fetch: Int,
+        domain: String,
+        url: String
     ): Result<List<DonateInfo>> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getArticleDonate(
-                    path = serverName,
+                    url = url,
                     authorization = manager.getAccessToken().createAuthorizationBearer(),
-                    articleId = articleId,
                     offset = offset,
                     fetch = fetch
                 ).checkResponseBody(jsonParser)
@@ -465,13 +466,16 @@ class ForumOceanWebImpl(
             }
         }
 
-    override suspend fun getGroup(groupId: Long): Result<GroupResponseBody> =
+    override suspend fun getGroup(
+        groupId: Long,
+        domain: String,
+        url: String
+    ): Result<GroupResponseBody> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getGroup(
-                    path = serverName,
-                    authorization = manager.getAccessToken().createAuthorizationBearer(),
-                    groupId = groupId
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer()
                 ).checkResponseBody(jsonParser)
             }
         }
@@ -498,12 +502,14 @@ class ForumOceanWebImpl(
         offset: Int,
         fetch: Int,
         positions: List<GroupPosition>,
-        includeAppGroup: Boolean
+        includeAppGroup: Boolean,
+        domain: String,
+        url: String
     ): Result<List<GroupResponseBody>> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getGroupsWithPosition(
-                    path = serverName,
+                    url = url,
                     authorization = manager.getAccessToken().createAuthorizationBearer(),
                     memberId = ownId,
                     offset = offset,
@@ -518,26 +524,34 @@ class ForumOceanWebImpl(
         memberId: Long,
         offset: Int,
         fetch: Int,
-        includeAppGroup: Boolean
+        includeAppGroup: Boolean,
+        domain: String,
+        url: String
     ): Result<List<GroupResponseBody>> = getGroupsByPosition(
-        memberId,
-        offset,
-        fetch,
-        listOf(GroupPosition.MANAGEMENT),
-        includeAppGroup
+        ownId = memberId,
+        offset = offset,
+        fetch = fetch,
+        positions = listOf(GroupPosition.MANAGEMENT),
+        includeAppGroup = includeAppGroup,
+        domain = domain,
+        url = url
     )
 
     override suspend fun getMemberBelongGroups(
         memberId: Long,
         offset: Int,
         fetch: Int,
-        includeAppGroup: Boolean
+        includeAppGroup: Boolean,
+        domain: String,
+        url: String
     ): Result<List<GroupResponseBody>> = getGroupsByPosition(
-        memberId,
-        offset,
-        fetch,
-        listOf(GroupPosition.NORMAL, GroupPosition.MANAGEMENT, GroupPosition.PRESIDENT),
-        includeAppGroup
+        ownId = memberId,
+        offset = offset,
+        fetch = fetch,
+        positions = listOf(GroupPosition.NORMAL, GroupPosition.MANAGEMENT, GroupPosition.PRESIDENT),
+        includeAppGroup = includeAppGroup,
+        domain = domain,
+        url = url
     )
 
     override suspend fun getMemberJoinAnyGroups(memberId: Long): Result<GetMemberJoinAnyGroupsResponseBody> =

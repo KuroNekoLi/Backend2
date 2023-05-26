@@ -303,28 +303,26 @@ interface ForumOceanService {
     ): Response<Void>
 
     @RecordApi
-    @GET("{path}/api/Interactive/GetDonate/{articleId}")
+    @GET
     suspend fun getArticleDonate(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: Long,
         @Query("offset") offset: Int,
         @Query("fetch") fetch: Int
     ): Response<List<DonateInfo>>
 
     @RecordApi
-    @GET("{path}/api/Group/GetGroup/{groupId}")
+    @GET
     suspend fun getGroup(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("groupId") groupId: Long
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<GroupResponseBody>
 
     @RecordApi
-    @GET("{path}/api/Group/GetGroupsWithPosition")
+    @GET
     suspend fun getGroupsWithPosition(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("memberId") memberId: Long,
         @Query("position") position: Int,
         @Query("offset") offset: Int,
