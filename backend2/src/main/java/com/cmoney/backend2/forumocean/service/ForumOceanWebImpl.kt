@@ -554,58 +554,77 @@ class ForumOceanWebImpl(
         url = url
     )
 
-    override suspend fun getMemberJoinAnyGroups(memberId: Long): Result<GetMemberJoinAnyGroupsResponseBody> =
+    override suspend fun getMemberJoinAnyGroups(
+        memberId: Long,
+        domain: String,
+        url: String
+    ): Result<GetMemberJoinAnyGroupsResponseBody> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getMemberJoinAnyGroups(
-                    path = serverName,
+                    url = url,
                     authorization = manager.getAccessToken().createAuthorizationBearer(),
                     memberId = memberId
                 ).checkResponseBody(jsonParser)
             }
         }
 
-    override suspend fun createGroup(groupName: String): Result<CreateGroupResponseBody> =
+    override suspend fun createGroup(
+        groupName: String,
+        domain: String,
+        url: String
+    ): Result<CreateGroupResponseBody> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.createGroup(
-                    path = serverName,
+                    url = url,
                     authorization = manager.getAccessToken().createAuthorizationBearer(),
                     groupName = groupName
                 ).checkResponseBody(jsonParser)
             }
         }
 
-    override suspend fun updateGroup(groupId: Long, body: UpdateGroupRequestBody): Result<Unit> =
+    override suspend fun updateGroup(
+        groupId: Long,
+        body: UpdateGroupRequestBody,
+        domain: String,
+        url: String
+    ): Result<Unit> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
-                service.updateGroup(
-                    path = serverName,
+                service.updateGroupV1(
+                    url = url,
                     authorization = manager.getAccessToken().createAuthorizationBearer(),
-                    groupId = groupId,
                     body = body
                 ).handleNoContent(jsonParser)
             }
         }
 
-    override suspend fun transferGroup(groupId: Long, memberId: Long): Result<Unit> =
+    override suspend fun transferGroup(
+        groupId: Long,
+        memberId: Long,
+        domain: String,
+        url: String
+    ): Result<Unit> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.transferGroup(
-                    path = serverName,
+                    url = url,
                     authorization = manager.getAccessToken().createAuthorizationBearer(),
-                    groupId = groupId,
                     memberId = memberId
                 ).handleNoContent(jsonParser)
             }
         }
 
-    override suspend fun deleteGroup(groupId: Long): Result<Unit> = withContext(dispatcher.io()) {
+    override suspend fun deleteGroup(
+        groupId: Long,
+        domain: String,
+        url: String
+    ): Result<Unit> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.deleteGroup(
-                path = serverName,
-                authorization = manager.getAccessToken().createAuthorizationBearer(),
-                groupId = groupId
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer()
             ).handleNoContent(jsonParser)
         }
     }

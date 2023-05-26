@@ -331,45 +331,42 @@ interface ForumOceanService {
     ): Response<List<GroupResponseBody>>
 
     @RecordApi
-    @GET("{path}/api/Group/GetMemberJoinAnyGroups")
+    @GET
     suspend fun getMemberJoinAnyGroups(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("memberId") memberId: Long
     ): Response<GetMemberJoinAnyGroupsResponseBody>
 
     @RecordApi
-    @POST("{path}/api/Group/Create")
+    @POST
     suspend fun createGroup(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("groupName") groupName: String
     ): Response<CreateGroupResponseBody>
 
     @RecordApi
-    @PUT("{path}/api/Group/Update/{groupId}")
-    suspend fun updateGroup(
+    @PUT
+    suspend fun updateGroupV1(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("groupId") groupId: Long,
         @Body body: UpdateGroupRequestBody
     ): Response<Void>
 
     @RecordApi
-    @PUT("{path}/api/Group/TransferOwner/{groupId}")
+    @PUT
     suspend fun transferGroup(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("groupId") groupId: Long,
         @Query("memberId") memberId: Long
     ): Response<Void>
 
     @RecordApi
-    @DELETE("{path}/api/Group/Delete/{groupId}")
+    @DELETE
     suspend fun deleteGroup(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("groupId") groupId: Long
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<Void>
 
     @RecordApi

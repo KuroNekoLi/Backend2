@@ -2051,12 +2051,31 @@ class ForumOceanWebImplTest {
     }
 
     @Test
-    fun `getMemberJoinAnyGroups_取得指定使用者是否加入或擁有任何社團成功測試`() = testScope.runTest {
+    fun `getMemberJoinAnyGroups_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/Group/GetMemberJoinAnyGroups"
+        val urlSlot = slot<String>()
         coEvery {
             forumOceanService.getMemberJoinAnyGroups(
+                url = capture(urlSlot),
                 authorization = any(),
-                memberId = any(),
-                path = ""
+                memberId = any()
+            )
+        } returns Response.success(
+            GetMemberJoinAnyGroupsResponseBody(
+                isJoin = true
+            )
+        )
+        web.getMemberJoinAnyGroups(23454734)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getMemberJoinAnyGroups_success() = testScope.runTest {
+        coEvery {
+            forumOceanService.getMemberJoinAnyGroups(
+                url = any(),
+                authorization = any(),
+                memberId = any()
             )
         } returns Response.success(
             GetMemberJoinAnyGroupsResponseBody(
@@ -2068,26 +2087,46 @@ class ForumOceanWebImplTest {
         assertThat(result.getOrThrow().isJoin).isTrue()
     }
 
-    @Test
-    fun `getMemberJoinAnyGroups_取得指定使用者是否加入或擁有任何社團失敗測試`() = testScope.runTest {
+    @Test(expected = HttpException::class)
+    fun getMemberJoinAnyGroups_failure() = testScope.runTest {
         coEvery {
             forumOceanService.getMemberJoinAnyGroups(
+                url = any(),
                 authorization = any(),
-                memberId = any(),
-                path = ""
+                memberId = any()
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getMemberJoinAnyGroups(23454734)
         assertThat(result.isFailure).isTrue()
+        result.getOrThrow()
     }
 
     @Test
-    fun `createGroup_建立社團成功測試`() = testScope.runTest {
+    fun `createGroup_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/Group/Create"
+        val urlSlot = slot<String>()
         coEvery {
             forumOceanService.createGroup(
+                url = capture(urlSlot),
                 authorization = any(),
-                groupName = any(),
-                path = ""
+                groupName = any()
+            )
+        } returns Response.success(
+            CreateGroupResponseBody(100321)
+        )
+        val result = web.createGroup("社團名稱")
+        assertThat(result.isSuccess).isTrue()
+        assertThat(result.getOrThrow().groupId).isEqualTo(100321)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun createGroup_success() = testScope.runTest {
+        coEvery {
+            forumOceanService.createGroup(
+                url = any(),
+                authorization = any(),
+                groupName = any()
             )
         } returns Response.success(
             CreateGroupResponseBody(100321)
@@ -2097,21 +2136,24 @@ class ForumOceanWebImplTest {
         assertThat(result.getOrThrow().groupId).isEqualTo(100321)
     }
 
-    @Test
-    fun `createGroup_建立社團失敗測試`() = testScope.runTest {
+    @Test(expected = HttpException::class)
+    fun createGroup_failure_HttpException() = testScope.runTest {
         coEvery {
             forumOceanService.createGroup(
+                url = any(),
                 authorization = any(),
-                groupName = any(),
-                path = ""
+                groupName = any()
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.createGroup("社團名稱")
         assertThat(result.isFailure).isTrue()
+        result.getOrThrow()
     }
 
     @Test
-    fun `updateGroup_更新社團資訊成功測試`() = testScope.runTest {
+    fun `updateGroup_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/Group/Update/10220"
+        val urlSlot = slot<String>()
         val updateRequestBody = UpdateGroupRequestBody(
             name = null,
             description = null,
@@ -2121,22 +2163,21 @@ class ForumOceanWebImplTest {
             joinType = null
         )
         coEvery {
-            forumOceanService.updateGroup(
+            forumOceanService.updateGroupV1(
+                url = capture(urlSlot),
                 authorization = any(),
-                groupId = any(),
-                body = updateRequestBody,
-                path = ""
+                body = any()
             )
         } returns Response.success<Void>(204, null)
-        val result = web.updateGroup(
-            10220,
-            updateRequestBody
+        web.updateGroup(
+            groupId = 10220,
+            body = updateRequestBody
         )
-        assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
     }
 
     @Test
-    fun `updateGroup_更新社團資訊失敗測試`() = testScope.runTest {
+    fun updateGroup_success() = testScope.runTest {
         val updateRequestBody = UpdateGroupRequestBody(
             name = null,
             description = null,
@@ -2146,72 +2187,129 @@ class ForumOceanWebImplTest {
             joinType = null
         )
         coEvery {
-            forumOceanService.updateGroup(
+            forumOceanService.updateGroupV1(
+                url = any(),
                 authorization = any(),
-                groupId = any(),
-                body = updateRequestBody,
-                path = ""
+                body = any()
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.updateGroup(
+            groupId = 10220,
+            body = updateRequestBody
+        )
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @Test
+    fun updateGroup_failure_HttpException() = testScope.runTest {
+        val updateRequestBody = UpdateGroupRequestBody(
+            name = null,
+            description = null,
+            imageUrl = null,
+            isPublic = false,
+            searchable = null,
+            joinType = null
+        )
+        coEvery {
+            forumOceanService.updateGroupV1(
+                url = any(),
+                authorization = any(),
+                body = any()
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.updateGroup(
-            10220,
-            updateRequestBody
+            groupId = 10220,
+            body = updateRequestBody
         )
         assertThat(result.isFailure).isTrue()
     }
 
     @Test
-    fun `transferGroup_轉讓社團成功測試`() = testScope.runTest {
+    fun `transferGroup_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/Group/TransferOwner/2032032"
+        val urlSlot = slot<String>()
         coEvery {
             forumOceanService.transferGroup(
+                url = capture(urlSlot),
                 authorization = any(),
-                groupId = any(),
-                memberId = any(),
-                path = ""
+                memberId = any()
             )
         } returns Response.success<Void>(204, null)
-        val result = web.transferGroup(2032032, 20320)
+        val result = web.transferGroup(groupId = 2032032, memberId = 20320)
         assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
     }
 
     @Test
-    fun `transferGroup_轉讓社團失敗測試`() = testScope.runTest {
+    fun transferGroup_success() = testScope.runTest {
         coEvery {
             forumOceanService.transferGroup(
+                url = any(),
                 authorization = any(),
-                groupId = any(),
-                memberId = any(),
-                path = ""
+                memberId = any()
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.transferGroup(groupId = 2032032, memberId = 20320)
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @Test(expected = HttpException::class)
+    fun transferGroup_failure_HttpException() = testScope.runTest {
+        coEvery {
+            forumOceanService.transferGroup(
+                url = any(),
+                authorization = any(),
+                memberId = any()
             )
         } returns Response.error(500, "".toResponseBody())
-        val result = web.transferGroup(2032032, 20320)
+        val result = web.transferGroup(groupId = 2032032, memberId = 20320)
         assertThat(result.isFailure).isTrue()
+        result.getOrThrow()
     }
 
     @Test
-    fun `deleteGroup_刪除社團成功測試`() = testScope.runTest {
+    fun `deleteGroup_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/Group/Delete/2020"
+        val urlSlot = slot<String>()
         coEvery {
             forumOceanService.deleteGroup(
-                authorization = any(),
-                groupId = any(),
-                path = ""
+                url = capture(urlSlot),
+                authorization = any()
+            )
+        } returns Response.success<Void>(204, null)
+        web.deleteGroup(2020)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun deleteGroup_success() = testScope.runTest {
+        coEvery {
+            forumOceanService.deleteGroup(
+                url = any(),
+                authorization = any()
             )
         } returns Response.success<Void>(204, null)
         val result = web.deleteGroup(2020)
         assertThat(result.isSuccess).isTrue()
     }
 
-    @Test
-    fun `deleteGroup_刪除社團失敗測試`() = testScope.runTest {
+    @Test(expected = ServerException::class)
+    fun deleteGroup_failure_ServerException() = testScope.runTest {
+        val error = CMoneyError(
+            detail = CMoneyError.Detail(
+                message = "沒有權限進行刪除"
+            )
+        )
+        val errorBody = jsonParser.toJson(error)
         coEvery {
             forumOceanService.deleteGroup(
-                authorization = any(),
-                groupId = any(),
-                path = ""
+                url = any(),
+                authorization = any()
             )
-        } returns Response.error(400, "".toResponseBody())
+        } returns Response.error(400, errorBody.toResponseBody())
         val result = web.deleteGroup(2020)
         assertThat(result.isFailure).isTrue()
+        result.getOrThrow()
     }
 
     @Test

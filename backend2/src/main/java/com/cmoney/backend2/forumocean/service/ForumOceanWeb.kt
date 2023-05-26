@@ -443,6 +443,8 @@ interface ForumOceanWeb {
      * @param offset 起始index
      * @param fetch 取得數量
      * @param includeAppGroup 是否包含app的社團
+     * @param domain 網域名稱
+     * @param url 完整的Url
      */
     suspend fun getMemberManagedGroups(
         memberId: Long,
@@ -460,6 +462,8 @@ interface ForumOceanWeb {
      * @param offset 起始index
      * @param fetch 取得數量
      * @param includeAppGroup 是否包含app的社團
+     * @param domain 網域名稱
+     * @param url 完整的Url
      * @return
      */
     suspend fun getMemberBelongGroups(
@@ -475,43 +479,75 @@ interface ForumOceanWeb {
      * 取得指定使用者是否加入或擁有任何社團
      *
      * @param memberId 使用者Id
+     * @param domain 網域名稱
+     * @param url 完整的Url
      * @return
      */
-    suspend fun getMemberJoinAnyGroups(memberId: Long): Result<GetMemberJoinAnyGroupsResponseBody>
+    suspend fun getMemberJoinAnyGroups(
+        memberId: Long,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Group/GetMemberJoinAnyGroups"
+    ): Result<GetMemberJoinAnyGroupsResponseBody>
 
     /**
      * 創建社團
      *
      * @param groupName 社團名稱
+     * @param domain 網域名稱
+     * @param url 完整的Url
      * @return
      */
-    suspend fun createGroup(groupName: String): Result<CreateGroupResponseBody>
+    suspend fun createGroup(
+        groupName: String,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Group/Create"
+    ): Result<CreateGroupResponseBody>
 
     /**
      * 更新社團資訊
      *
      * @param groupId 社團id
      * @param body 社團body
+     * @param domain 網域名稱
+     * @param url 完整的Url
      * @return
      */
-    suspend fun updateGroup(groupId: Long, body: UpdateGroupRequestBody): Result<Unit>
+    suspend fun updateGroup(
+        groupId: Long,
+        body: UpdateGroupRequestBody,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Group/Update/${groupId}"
+    ): Result<Unit>
 
     /**
      * 轉讓社團
      *
      * @param groupId 社團Id
      * @param memberId 轉讓對象
+     * @param domain 網域名稱
+     * @param url 完整的Url
      * @return
      */
-    suspend fun transferGroup(groupId: Long, memberId: Long): Result<Unit>
+    suspend fun transferGroup(
+        groupId: Long,
+        memberId: Long,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Group/TransferOwner/${groupId}"
+    ): Result<Unit>
 
     /**
      * 刪除社團
      *
      * @param groupId 社團Id
+     * @param domain 網域名稱
+     * @param url 完整的Url
      * @return
      */
-    suspend fun deleteGroup(groupId: Long): Result<Unit>
+    suspend fun deleteGroup(
+        groupId: Long,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Group/Delete/${groupId}"
+    ): Result<Unit>
 
     //endregion
 
