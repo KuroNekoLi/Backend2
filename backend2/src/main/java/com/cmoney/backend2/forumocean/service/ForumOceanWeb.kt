@@ -1,5 +1,6 @@
 package com.cmoney.backend2.forumocean.service
 
+import androidx.annotation.Size
 import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.forumocean.service.api.article.ExchangeCount
 import com.cmoney.backend2.forumocean.service.api.article.create.CreateArticleResponseBody
@@ -558,21 +559,15 @@ interface ForumOceanWeb {
      *
      * @param groupId 社團Id
      * @param reason 申請加入的理由(不能為空字串)
+     * @param domain 網域名稱
+     * @param url 完整的Url
      * @return
      */
     suspend fun join(
         groupId: Long,
-        reason: String
-    ): Result<Unit>
-
-    /**
-     * 申請加入社團
-     *
-     * @param groupId 社團Id
-     * @return
-     */
-    suspend fun join(
-        groupId: Long
+        @Size(min = 1) reason: String? = null,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/GroupMember/Join/${groupId}"
     ): Result<Unit>
 
     /**

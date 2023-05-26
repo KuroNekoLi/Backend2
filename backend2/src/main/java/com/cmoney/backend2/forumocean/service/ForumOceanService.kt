@@ -370,11 +370,10 @@ interface ForumOceanService {
     ): Response<Void>
 
     @RecordApi
-    @POST("{path}/api/GroupMember/Join/{groupId}")
+    @POST
     suspend fun join(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("groupId") groupId: Long,
         @Query("reason") reason: String?
     ): Response<Void>
 

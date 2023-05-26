@@ -629,32 +629,25 @@ class ForumOceanWebImpl(
         }
     }
 
-    override suspend fun join(groupId: Long, reason: String): Result<Unit> =
-        withContext(dispatcher.io()) {
-            kotlin.runCatching {
-                if (reason.isEmpty()) {
-                    error("reason不能為空字串")
+    override suspend fun join(
+        groupId: Long,
+        reason: String?,
+        domain: String,
+        url: String
+    ): Result<Unit> = withContext(dispatcher.io()) {
+        kotlin.runCatching {
+            if (reason != null) {
+                require(reason.isNotEmpty()) {
+                    "reason不能為空字串"
                 }
-                service.join(
-                    path = serverName,
-                    authorization = manager.getAccessToken().createAuthorizationBearer(),
-                    groupId = groupId,
-                    reason = reason
-                ).handleNoContent(jsonParser)
             }
+            service.join(
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
+                reason = reason
+            ).handleNoContent(jsonParser)
         }
-
-    override suspend fun join(groupId: Long): Result<Unit> =
-        withContext(dispatcher.io()) {
-            kotlin.runCatching {
-                service.join(
-                    path = serverName,
-                    authorization = manager.getAccessToken().createAuthorizationBearer(),
-                    groupId = groupId,
-                    reason = null
-                ).handleNoContent(jsonParser)
-            }
-        }
+    }
 
     override suspend fun getMembers(
         groupId: Long,

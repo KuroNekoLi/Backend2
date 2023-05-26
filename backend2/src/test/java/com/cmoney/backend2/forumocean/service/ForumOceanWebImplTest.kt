@@ -2313,27 +2313,46 @@ class ForumOceanWebImplTest {
     }
 
     @Test
-    fun `join_加入社團成功測試`() = testScope.runTest {
+    fun `join_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/GroupMember/Join/1202020"
+        val urlSlot = slot<String>()
         coEvery {
             forumOceanService.join(
+                url = capture(urlSlot),
                 authorization = any(),
-                groupId = any(),
-                reason = any(),
-                path = ""
+                reason = any()
+            )
+        } returns Response.success<Void>(204, null)
+        web.join(1202020, "入社理由")
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun join_success() = testScope.runTest {
+        coEvery {
+            forumOceanService.join(
+                url = any(),
+                authorization = any(),
+                reason = any()
             )
         } returns Response.success<Void>(204, null)
         val result = web.join(1202020, "入社理由")
         assertThat(result.isSuccess).isTrue()
     }
 
+    @Test(expected = IllegalArgumentException::class)
+    fun join_failure_IllegalArgumentException() = testScope.runTest {
+        val result = web.join(1202020, "")
+        result.getOrThrow()
+    }
+
     @Test
-    fun `join_加入社團失敗測試`() = testScope.runTest {
+    fun join_failure_HttpException() = testScope.runTest {
         coEvery {
             forumOceanService.join(
+                url = any(),
                 authorization = any(),
-                groupId = any(),
-                reason = any(),
-                path = ""
+                reason = any()
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.join(1202020, "入社理由")
