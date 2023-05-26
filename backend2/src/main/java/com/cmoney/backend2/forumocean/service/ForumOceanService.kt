@@ -262,25 +262,11 @@ interface ForumOceanService {
     ): Response<Void>
 
     @RecordApi
-    @Deprecated("請使用getReactionDetailV2")
-    @GET("{path}/api/CommentInteractive/GetReactionDetail/{articleId}/{commentIndex}")
-    suspend fun getReactionDetail(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: Long,
-        @Path("commentIndex") commentIndex: Long,
-        @Query("reactions") reactions: String,
-        @Query("skipCount") skipCount: Int,
-        @Query("takeCount") takeCount: Int
-    ): Response<List<ReactionInfo>>
-
-    @RecordApi
     @Headers("X-Version: 2.0")
-    @GET("{path}/api/Article/{articleId}/Emoji/Detail")
+    @GET
     suspend fun getReactionDetailV2(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: String,
         @Query("emojiTypes") emojiTypes: String,
         @Query("offset") offset: Int,
         @Query("fetch") fetch: Int
