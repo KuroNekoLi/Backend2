@@ -303,28 +303,26 @@ interface ForumOceanService {
     ): Response<Void>
 
     @RecordApi
-    @GET("{path}/api/Interactive/GetDonate/{articleId}")
+    @GET
     suspend fun getArticleDonate(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: Long,
         @Query("offset") offset: Int,
         @Query("fetch") fetch: Int
     ): Response<List<DonateInfo>>
 
     @RecordApi
-    @GET("{path}/api/Group/GetGroup/{groupId}")
+    @GET
     suspend fun getGroup(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("groupId") groupId: Long
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<GroupResponseBody>
 
     @RecordApi
-    @GET("{path}/api/Group/GetGroupsWithPosition")
+    @GET
     suspend fun getGroupsWithPosition(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("memberId") memberId: Long,
         @Query("position") position: Int,
         @Query("offset") offset: Int,
@@ -333,53 +331,49 @@ interface ForumOceanService {
     ): Response<List<GroupResponseBody>>
 
     @RecordApi
-    @GET("{path}/api/Group/GetMemberJoinAnyGroups")
+    @GET
     suspend fun getMemberJoinAnyGroups(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("memberId") memberId: Long
     ): Response<GetMemberJoinAnyGroupsResponseBody>
 
     @RecordApi
-    @POST("{path}/api/Group/Create")
+    @POST
     suspend fun createGroup(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("groupName") groupName: String
     ): Response<CreateGroupResponseBody>
 
     @RecordApi
-    @PUT("{path}/api/Group/Update/{groupId}")
-    suspend fun updateGroup(
+    @PUT
+    suspend fun updateGroupV1(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("groupId") groupId: Long,
         @Body body: UpdateGroupRequestBody
     ): Response<Void>
 
     @RecordApi
-    @PUT("{path}/api/Group/TransferOwner/{groupId}")
+    @PUT
     suspend fun transferGroup(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("groupId") groupId: Long,
         @Query("memberId") memberId: Long
     ): Response<Void>
 
     @RecordApi
-    @DELETE("{path}/api/Group/Delete/{groupId}")
+    @DELETE
     suspend fun deleteGroup(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("groupId") groupId: Long
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<Void>
 
     @RecordApi
-    @POST("{path}/api/GroupMember/Join/{groupId}")
+    @POST
     suspend fun join(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("groupId") groupId: Long,
         @Query("reason") reason: String?
     ): Response<Void>
 

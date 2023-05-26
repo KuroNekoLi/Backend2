@@ -1,5 +1,6 @@
 package com.cmoney.backend2.forumocean.service
 
+import androidx.annotation.Size
 import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.forumocean.service.api.article.ExchangeCount
 import com.cmoney.backend2.forumocean.service.api.article.create.CreateArticleResponseBody
@@ -330,6 +331,8 @@ interface ForumOceanWeb {
      * @param reactions 需要取得的反應
      * @param offset 跳過的數量(選項)
      * @param fetch 取得的數項(選項)
+     * @param domain 網域名稱
+     * @param url 完整的Url
      * @return 反應 對照 做此反應會員清單
      */
     suspend fun getReactionDetailV2(
@@ -349,6 +352,8 @@ interface ForumOceanWeb {
      * @param fetch 取得數量
      * @param positions 取得的社團職位
      * @param includeAppGroup 是否包含app的社團
+     * @param domain 網域名稱
+     * @param url 完整的Url
      * @return
      */
     suspend fun getGroupsByPosition(
@@ -356,7 +361,9 @@ interface ForumOceanWeb {
         offset: Int,
         fetch: Int,
         positions: List<GroupPosition>,
-        includeAppGroup: Boolean = false
+        includeAppGroup: Boolean = false,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Group/GetGroupsWithPosition"
     ): Result<List<GroupResponseBody>>
 
     /**
@@ -366,12 +373,16 @@ interface ForumOceanWeb {
      * @param offset 起始index
      * @param fetch 取得數量
      * @param includeAppGroup 是否包含app的社團
+     * @param domain 網域名稱
+     * @param url 完整的Url
      */
     suspend fun getMemberManagedGroups(
         memberId: Long,
         offset: Int,
         fetch: Int,
-        includeAppGroup: Boolean = false
+        includeAppGroup: Boolean = false,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Group/GetGroupsWithPosition"
     ): Result<List<GroupResponseBody>>
 
     /**
@@ -381,77 +392,107 @@ interface ForumOceanWeb {
      * @param offset 起始index
      * @param fetch 取得數量
      * @param includeAppGroup 是否包含app的社團
+     * @param domain 網域名稱
+     * @param url 完整的Url
      * @return
      */
     suspend fun getMemberBelongGroups(
         memberId: Long,
         offset: Int,
         fetch: Int,
-        includeAppGroup: Boolean = false
+        includeAppGroup: Boolean = false,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Group/GetGroupsWithPosition"
     ): Result<List<GroupResponseBody>>
 
     /**
      * 取得指定使用者是否加入或擁有任何社團
      *
      * @param memberId 使用者Id
+     * @param domain 網域名稱
+     * @param url 完整的Url
      * @return
      */
-    suspend fun getMemberJoinAnyGroups(memberId: Long): Result<GetMemberJoinAnyGroupsResponseBody>
+    suspend fun getMemberJoinAnyGroups(
+        memberId: Long,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Group/GetMemberJoinAnyGroups"
+    ): Result<GetMemberJoinAnyGroupsResponseBody>
 
     /**
      * 創建社團
      *
      * @param groupName 社團名稱
+     * @param domain 網域名稱
+     * @param url 完整的Url
      * @return
      */
-    suspend fun createGroup(groupName: String): Result<CreateGroupResponseBody>
+    suspend fun createGroup(
+        groupName: String,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Group/Create"
+    ): Result<CreateGroupResponseBody>
 
     /**
      * 更新社團資訊
      *
      * @param groupId 社團id
      * @param body 社團body
+     * @param domain 網域名稱
+     * @param url 完整的Url
      * @return
      */
-    suspend fun updateGroup(groupId: Long, body: UpdateGroupRequestBody): Result<Unit>
+    suspend fun updateGroup(
+        groupId: Long,
+        body: UpdateGroupRequestBody,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Group/Update/${groupId}"
+    ): Result<Unit>
 
     /**
      * 轉讓社團
      *
      * @param groupId 社團Id
      * @param memberId 轉讓對象
+     * @param domain 網域名稱
+     * @param url 完整的Url
      * @return
      */
-    suspend fun transferGroup(groupId: Long, memberId: Long): Result<Unit>
+    suspend fun transferGroup(
+        groupId: Long,
+        memberId: Long,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Group/TransferOwner/${groupId}"
+    ): Result<Unit>
 
     /**
      * 刪除社團
      *
      * @param groupId 社團Id
+     * @param domain 網域名稱
+     * @param url 完整的Url
      * @return
      */
-    suspend fun deleteGroup(groupId: Long): Result<Unit>
-
-    /**
-     * 申請加入社團
-     *
-     * @param groupId 社團Id
-     * @param reason 申請加入的理由(不能為空字串)
-     * @return
-     */
-    suspend fun join(
+    suspend fun deleteGroup(
         groupId: Long,
-        reason: String
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Group/Delete/${groupId}"
     ): Result<Unit>
 
     /**
      * 申請加入社團
      *
      * @param groupId 社團Id
+     * @param reason 申請加入的理由(不能為空字串)
+     * @param domain 網域名稱
+     * @param url 完整的Url
      * @return
      */
     suspend fun join(
-        groupId: Long
+        groupId: Long,
+        @Size(min = 1) reason: String? = null,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/GroupMember/Join/${groupId}"
     ): Result<Unit>
 
     /**
@@ -512,12 +553,16 @@ interface ForumOceanWeb {
      * @param articleId 文章Id
      * @param offset 偏移數量
      * @param fetch 查詢數量
+     * @param domain 網域名稱
+     * @param url 完整的Url
      * @return
      */
     suspend fun getArticleDonate(
         articleId: Long,
         offset: Int,
-        fetch: Int
+        fetch: Int,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Interactive/GetDonate/${articleId}"
     ): Result<List<DonateInfo>>
 
     /**

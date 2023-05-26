@@ -488,7 +488,7 @@ class ForumOceanServiceCase : ServiceCase {
 
         groupId?.apply {
             user2.changeUser(globalBackend2Manager)
-            join(this, "測試api用").logResponse(TAG)
+            join(groupId = this, reason = "測試api用").logResponse(TAG)
             val groupArticleId = createArticle(
                 body = Content.Article.Group(
                     text = "我在社團發文",
@@ -515,7 +515,7 @@ class ForumOceanServiceCase : ServiceCase {
             ).logResponse(TAG)
 
             user2.changeUser(globalBackend2Manager)
-            join(this, "測試api用").logResponse(TAG)
+            join(groupId = this, reason = "測試api用").logResponse(TAG)
 
             user1.changeUser(globalBackend2Manager)
             getMembers(
@@ -658,7 +658,7 @@ class ForumOceanServiceCase : ServiceCase {
 
             user2.changeUser(globalBackend2Manager)
             val user2MemberId = globalBackend2Manager.getIdentityToken().getMemberId().toLong()
-            join(groupId, "測試").logResponse(TAG)
+            join(groupId = groupId, reason = "測試").logResponse(TAG)
 
             presidentGroupArticleId?.apply {
                 createCommentV2(
