@@ -571,7 +571,11 @@ interface ForumOceanWeb {
      * @param groupId 社團Id
      * @return
      */
-    suspend fun getGroup(groupId: Long): Result<GroupResponseBody>
+    suspend fun getGroup(
+        groupId: Long,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Group/GetGroup/${groupId}"
+    ): Result<GroupResponseBody>
 
     /**
      * 取得社團成員清單

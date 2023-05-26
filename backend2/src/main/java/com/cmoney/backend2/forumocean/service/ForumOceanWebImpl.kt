@@ -91,8 +91,6 @@ class ForumOceanWebImpl(
     private val dispatcher: DispatcherProvider = DefaultDispatcherProvider
 ) : ForumOceanWeb {
 
-    private val serverName = ""
-
     override suspend fun getBanState(
         domain: String,
         url: String
@@ -429,7 +427,11 @@ class ForumOceanWebImpl(
             }
         }
 
-    override suspend fun getGroup(groupId: Long): Result<GroupResponseBody> =
+    override suspend fun getGroup(
+        groupId: Long,
+        domain: String,
+        url: String
+    ): Result<GroupResponseBody> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getGroup(
@@ -438,7 +440,6 @@ class ForumOceanWebImpl(
                 ).checkResponseBody(jsonParser)
             }
         }
-
 
     override suspend fun getGroupsByPosition(
         ownId: Long,
