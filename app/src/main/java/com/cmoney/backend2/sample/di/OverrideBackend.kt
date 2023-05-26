@@ -4,6 +4,7 @@ import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.base.model.setting.Platform
 import com.cmoney.backend2.chat.model.ChatRoomSettingAdapter
 import com.cmoney.backend2.crawlsetting.model.CrawlSettingSettingAdapter
+import com.cmoney.backend2.forumocean.model.ForumOceanSettingAdapter
 import org.koin.dsl.module
 
 val sampleBackendModule = module {
@@ -21,6 +22,15 @@ val sampleBackendModule = module {
             crawlSettingSettingAdapter = object : CrawlSettingSettingAdapter {
                 override fun getDomain(): String {
                     return "https://apitest-inner.cmoney.tw/"
+                }
+            }
+            forumOceanSettingAdapter = object : ForumOceanSettingAdapter {
+                override fun getDomain(): String {
+                    return "https://outpost.cmoney.tw/"
+                }
+
+                override fun getPathName(): String {
+                    return "ForumOcean/"
                 }
             }
         }
