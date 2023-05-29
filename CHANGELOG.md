@@ -1,4 +1,15 @@
+# [5.52.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.51.0...5.52.0)
+
+
+### Features
+
+- ForumOcean
+  - 新增聊天室相關API
+  - 調整社團推播設定層級至看板
+
+
 # [5.51.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.50.2...5.51.0)
+
 
 ### Features
 
@@ -6,6 +17,16 @@
 - 升級 CMoney-Util 到 5.5.0
 - 升級 CMoney-LogDataRecorder 到 5.5.0
 - 升級 SDK 版本 Min SDK 23，Target SDK 33
+
+
+## [5.50.3](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.50.2...5.50.3)
+
+
+### Features
+
+- ForumOcean
+  - 新增聊天室相關API
+  - 調整社團推播設定層級至看板
 
 ## [5.50.2](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.50.1...5.50.2)
 

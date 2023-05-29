@@ -15,19 +15,17 @@ import retrofit2.http.Url
 interface AuthorizationService {
     /**
      *取得會員某種權限類型的基底功能權限到期日(到期日是沒加時區的Utc時戳)
-     *
-     * @param type 權限類型
-     * @param subjectId appId
-     *
      */
     @RecordApi
-    @GET("AuthorizationServer/Authorization/ExpiredTime/{type}/{subjectId}")
+    @GET
     suspend fun getExpiredTime(
         @Header("Authorization") authorization: String,
-        @Path("type") type: String,
-        @Path("subjectId") subjectId: Long
+        @Url url: String
     ): Response<ExpiredTime>
 
+    /**
+     * 是否有授權
+     */
     @RecordApi
     @GET
     suspend fun hasAuth(
@@ -35,14 +33,13 @@ interface AuthorizationService {
         @Url url: String
     ): Response<Auth>
 
-
     /**
      * 取得會員指定類型有權限的基底功能清單
      */
     @RecordApi
-    @GET("AuthorizationServer/Authorization/{type}/SubjectIds")
+    @GET
     suspend fun getPurchasedSubjectIds(
         @Header("Authorization") authorization: String,
-        @Path("type") type: String
+        @Url url: String
     ): Response<List<Long>>
 }

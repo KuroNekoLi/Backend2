@@ -1,5 +1,6 @@
 package com.cmoney.backend2.frontendlogger.service
 
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.frontendlogger.service.api.LogRequestBody
 
 /**
@@ -10,20 +11,22 @@ import com.cmoney.backend2.frontendlogger.service.api.LogRequestBody
  */
 interface FrontEndLoggerWeb {
 
-    val baseHost: String
+    val manager: GlobalBackend2Manager
 
     /**
      * 新增 log
      *
      * @param body 要新增的 log
      * @param indexName elk的index name
-     * @param host
+     * @param domain 網域名稱
+     * @param url 完整的Url
      * @return
      */
     suspend fun log(
         body: List<LogRequestBody>,
         indexName: String = "default",
-        host: String = this.baseHost
+        domain: String = manager.getFrontEndLoggerSettingAdapter().getDomain(),
+        url: String = "${domain}frontendlogger/log/$indexName"
     ): Result<Unit>
 
 }

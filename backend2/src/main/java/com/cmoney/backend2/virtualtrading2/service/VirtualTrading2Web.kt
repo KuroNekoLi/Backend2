@@ -249,51 +249,6 @@ interface VirtualTrading2Web {
     ): Result<GetHistoryAllDelegateResponseBody>
 
     /**
-     * 取得上市櫃特定委託單
-     *
-     * @param domain 網域名稱
-     * @param url 完整的Url，預設使用[domain]當作網域名稱
-     * @param query 查詢內容
-    {
-    tseOtcOrder(accountId: $accountId, orderNo: $delegateId) {
-    ordNo
-    targetOrdNo
-    account
-    groupId
-    tradeTime
-    status
-    ordType
-    condition
-    tradeType
-    stockMarketType
-    buySellType
-    commKey
-    ordPr
-    ordQty
-    dealAvgPr
-    dealQty
-    avQty
-    cutQty
-    prePayment
-    serverRcvTe
-    serverRcvNo
-    marginCredit
-    marginOwn
-    shortSellingCollateral
-    shortSellingEntrust
-    memo
-    noteId
-    modifyTime
-    }
-    }
-     */
-    suspend fun getTseOtcDelegateById(
-        domain: String = globalBackend2Manager.getVirtualTrading2SettingAdapter().getDomain(),
-        url: String = "${domain}trading-api/graphql",
-        query: String
-    ): Result<GetDelegateByIdResponseBody>
-
-    /**
      * 取得上市櫃今日所有的委託單
      *
      * @param domain 網域名稱
@@ -340,6 +295,51 @@ interface VirtualTrading2Web {
         url: String = "${domain}trading-api/graphql",
         query: String
     ): Result<GetTodayAllDelegateResponseBody>
+
+    /**
+     * 取得上市櫃特定委託單
+     *
+     * @param domain 網域名稱
+     * @param url 完整的Url，預設使用[domain]當作網域名稱
+     * @param query 查詢內容
+    {
+    tseOtcOrder(accountId: $accountId, orderNo: $delegateId) {
+    ordNo
+    targetOrdNo
+    account
+    groupId
+    tradeTime
+    status
+    ordType
+    condition
+    tradeType
+    stockMarketType
+    buySellType
+    commKey
+    ordPr
+    ordQty
+    dealAvgPr
+    dealQty
+    avQty
+    cutQty
+    prePayment
+    serverRcvTe
+    serverRcvNo
+    marginCredit
+    marginOwn
+    shortSellingCollateral
+    shortSellingEntrust
+    memo
+    noteId
+    modifyTime
+    }
+    }
+     */
+    suspend fun getTseOtcDelegateById(
+        domain: String = globalBackend2Manager.getVirtualTrading2SettingAdapter().getDomain(),
+        url: String = "${domain}trading-api/graphql",
+        query: String
+    ): Result<GetDelegateByIdResponseBody>
 
     /**
      * 取得上市櫃所有的成交單

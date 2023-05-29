@@ -10,11 +10,10 @@ import com.cmoney.backend2.forumocean.service.api.article.getbanstate.GetBanStat
 import com.cmoney.backend2.forumocean.service.api.article.update.UpdateArticleRequestBody
 import com.cmoney.backend2.forumocean.service.api.channel.getchannelsarticlebyweight.GetChannelsArticleByWeightRequestBody
 import com.cmoney.backend2.forumocean.service.api.channel.getmemberstatistics.GetMemberStatisticsResponseBody
+import com.cmoney.backend2.forumocean.service.api.chatroom.GetUncheckChatRoomCountResponse
 import com.cmoney.backend2.forumocean.service.api.columnist.Columnist
 import com.cmoney.backend2.forumocean.service.api.columnist.GetColumnistVipGroupResponse
-import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentRequestBody
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentRequestBodyV2
-import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBody
 import com.cmoney.backend2.forumocean.service.api.comment.create.CreateCommentResponseBodyV2
 import com.cmoney.backend2.forumocean.service.api.comment.hide.HideCommentRequestBody
 import com.cmoney.backend2.forumocean.service.api.comment.update.UpdateCommentRequestBody
@@ -29,10 +28,10 @@ import com.cmoney.backend2.forumocean.service.api.group.v2.Board
 import com.cmoney.backend2.forumocean.service.api.group.v2.BoardManipulation
 import com.cmoney.backend2.forumocean.service.api.group.v2.BoardSingle
 import com.cmoney.backend2.forumocean.service.api.group.v2.Group
+import com.cmoney.backend2.forumocean.service.api.group.v2.GroupBoardPushSettingRequestBody
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupManipulation
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupMember2
 import com.cmoney.backend2.forumocean.service.api.group.v2.GroupPushSetting
-import com.cmoney.backend2.forumocean.service.api.group.v2.GroupPushSettingRequest
 import com.cmoney.backend2.forumocean.service.api.group.v2.InsertedId
 import com.cmoney.backend2.forumocean.service.api.group.v2.JoinGroupRequest
 import com.cmoney.backend2.forumocean.service.api.group.v2.MemberRoles
@@ -59,6 +58,8 @@ import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
 import com.cmoney.backend2.forumocean.service.api.support.SearchMembersResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetAllChatRoomResponse
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetGroupBoardArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.PromotedArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations.GetRecommendationResponse
@@ -68,7 +69,6 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.commentrespo
 import com.cmoney.backend2.forumocean.service.api.variable.response.commentresponse.GetCommentsResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.groupresponse.GroupResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.MemberEmojis
-import com.cmoney.backend2.forumocean.service.api.variable.response.interactive.ReactionInfo
 import com.cmoney.backend2.forumocean.service.api.vote.get.VoteInfo
 import okhttp3.ResponseBody
 import retrofit2.Response
@@ -81,13 +81,14 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
+import retrofit2.http.Url
 
 interface ForumOceanService {
 
     @RecordApi
-    @GET("{path}/api/Article/GetBanState")
+    @GET
     suspend fun getBanState(
-        @Path("path") path: String,
+        @Url url: String,
         @Header("Authorization") authorization: String
     ): Response<GetBanStateResponseBody>
 
@@ -95,11 +96,10 @@ interface ForumOceanService {
      * 發專欄文章
      */
     @RecordApi
-    @POST("{path}/api/Article/{articleType}")
+    @POST
     suspend fun createPersonalArticle(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleType") articleType: String,
         @Body requestBody: Content.PersonalArticle.Columnist
     ): Response<CreatePersonalArticleResponseBody>
 
@@ -107,11 +107,10 @@ interface ForumOceanService {
      * 發筆記文
      */
     @RecordApi
-    @POST("{path}/api/Article/{articleType}")
+    @POST
     suspend fun createPersonalArticle(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleType") articleType: String,
         @Body requestBody: Content.PersonalArticle.Note
     ): Response<CreatePersonalArticleResponseBody>
 
@@ -120,10 +119,10 @@ interface ForumOceanService {
      *
      */
     @RecordApi
-    @POST("{path}/api/Article/Create")
+    @POST
     suspend fun createArticle(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Body requestBody: Content.Article.General
     ): Response<CreateArticleResponseBody>
 
@@ -132,10 +131,10 @@ interface ForumOceanService {
      *
      */
     @RecordApi
-    @POST("{path}/api/Article/Create")
+    @POST
     suspend fun createArticle(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Body requestBody: Content.Article.Group
     ): Response<CreateArticleResponseBody>
 
@@ -144,10 +143,10 @@ interface ForumOceanService {
      *
      */
     @RecordApi
-    @POST("{path}/api/Article/Create")
+    @POST
     suspend fun createArticle(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Body requestBody: Content.Article.Shared
     ): Response<CreateArticleResponseBody>
 
@@ -155,10 +154,10 @@ interface ForumOceanService {
      * 發問答文章
      */
     @RecordApi
-    @POST("{path}/api/Article/CreateQuestion")
+    @POST
     suspend fun createQuestion(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Body requestBody: Content.Question
     ): Response<CreateQuestionResponseBody>
 
@@ -166,125 +165,21 @@ interface ForumOceanService {
      * 發專欄文章
      */
     @RecordApi
-    @POST("{path}/api/article/columnist")
+    @POST
     suspend fun createArticle(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Body requestBody: Content.Article.Column
     ): Response<CreateArticleResponseBody>
-
-    /**
-     * 取得文章資訊
-     *
-     */
-    @RecordApi
-    @Deprecated("請使用getArticleV2")
-    @GET("{path}/api/Article/Get/{articleId}")
-    suspend fun getArticle(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: Long
-    ): Response<ArticleResponseBody.GeneralArticleResponseBody>
-
-    /**
-     * 取得問答文章資訊
-     *
-     */
-    @RecordApi
-    @Deprecated("請使用getArticleV2")
-    @GET("{path}/api/Article/Get/{articleId}")
-    suspend fun getQuestionArticle(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: Long
-    ): Response<ArticleResponseBody.QuestionArticleResponseBody>
-
-    /**
-     * 取得新聞文章資訊
-     *
-     */
-    @RecordApi
-    @Deprecated("請使用getArticleV2")
-    @GET("{path}/api/Article/Get/{articleId}")
-    suspend fun getNewsArticle(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: Long
-    ): Response<ArticleResponseBody.NewsArticleResponseBody>
-
-    /**
-     * 取得訊號文章資訊
-     *
-     */
-    @RecordApi
-    @Deprecated("請使用getArticleV2")
-    @GET("{path}/api/Article/Get/{articleId}")
-    suspend fun getSignalArticle(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: Long
-    ): Response<ArticleResponseBody.SignalArticleResponseBody>
-
-    /**
-     * 取得社團文章資訊
-     *
-     */
-    @RecordApi
-    @Deprecated("請使用getArticleV2")
-    @GET("{path}/api/Article/Get/{articleId}")
-    suspend fun getGroupArticle(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: Long
-    ): Response<ArticleResponseBody.GroupArticleResponseBody>
-
-    /**
-     * 取得轉推文章資訊
-     *
-     */
-    @RecordApi
-    @Deprecated("請使用getArticleV2")
-    @GET("{path}/api/Article/Get/{articleId}")
-    suspend fun getSharedArticle(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: Long
-    ): Response<ArticleResponseBody.SharedArticleResponseBody>
-
-    /**
-     * 取得個人文章資訊(專欄文章/筆記)
-     */
-    @RecordApi
-    @Deprecated("請使用getArticleV2")
-    @GET("{path}/api/Article/Get/{articleId}")
-    suspend fun getPersonalArticle(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: Long
-    ): Response<ArticleResponseBody.PersonalArticleResponseBody>
-
-    /**
-     * 取得未知文章資訊
-     *
-     */
-    @RecordApi
-    @Deprecated("請使用getArticleV2")
-    @GET("{path}/api/Article/Get/{articleId}")
-    suspend fun getUnknownArticle(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: Long
-    ): Response<ArticleResponseBody.UnknownArticleResponseBody>
 
     /**
      * 修改文章資訊
      */
     @RecordApi
-    @PUT("{path}/api/Article/Update/{articleId}")
+    @PUT
     suspend fun updateArticle(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: Long,
         @Body body: UpdateArticleRequestBody
     ): Response<Void>
 
@@ -293,11 +188,10 @@ interface ForumOceanService {
      */
     @RecordApi
     @Deprecated("待服務實作完成，使用deleteArticleV2")
-    @DELETE("{path}/api/Article/Delete/{articleId}")
+    @DELETE
     suspend fun deleteArticle(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: Long
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<Void>
 
     /**
@@ -305,274 +199,130 @@ interface ForumOceanService {
      */
     @RecordApi
     @Headers("X-Version: 2.0")
-    @DELETE("{path}/api/Article/{articleId}")
+    @DELETE
     suspend fun deleteArticleV2(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: String
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<Void>
 
     @RecordApi
-    @GET("{path}/api/Member/Info")
+    @GET
     suspend fun getMemberStatistics(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("memberIds") memberIds: String
     ): Response<List<GetMemberStatisticsResponseBody>>
 
     @RecordApi
-    @POST("{path}/api/Channel/GetChannelsArticleByWeight")
+    @POST
     suspend fun getChannelsArticleByWeight(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Body channelNameList: GetChannelsArticleByWeightRequestBody,
-        @Query("startScore") startScore: Long,
-        @Query("count") count: Int
-    ): Response<List<ArticleResponseBody.UnknownArticleResponseBody>>
-
-    /**
-     * First page of api getChannelsArticleByWeight
-     * @see getChannelsArticleByWeight
-     */
-    @RecordApi
-    @POST("{path}/api/Channel/GetChannelsArticleByWeight")
-    suspend fun getChannelsArticleByWeight(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Body channelNameList: GetChannelsArticleByWeightRequestBody,
+        @Query("startScore") startScore: Long?,
         @Query("count") count: Int
     ): Response<List<ArticleResponseBody.UnknownArticleResponseBody>>
 
     @RecordApi
-    @POST("{path}/api/Collection/Create/{articleId}")
+    @POST
     suspend fun createCollection(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: Long
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<Void>
 
     @RecordApi
-    @DELETE("{path}/api/Collection/Delete/{articleId}")
+    @DELETE
     suspend fun deleteCollection(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: Long
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<Void>
 
     @RecordApi
-    @Deprecated("請使用createCommentV2")
-    @POST("{path}/api/Comment/Create/{articleId}")
-    suspend fun createComment(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: Long,
-        @Body body: CreateCommentRequestBody
-    ): Response<CreateCommentResponseBody>
-
-    @RecordApi
-    @Deprecated("請使用createCommentV2")
-    @POST("{path}/api/GroupArticle/{articleId}/Comment")
-    @Headers("X-Version: 2.0")
-    suspend fun createGroupArticleComment(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: Long,
-        @Body body: CreateCommentRequestBody
-    ): Response<CreateCommentResponseBody>
-
-    @RecordApi
-    @Deprecated("請使用getCommentV2")
-    @GET("{path}/api/Comment/Get/{articleId}")
-    suspend fun getComment(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: Long,
-        @Query("commentId") commentId: Long?,
-        @Query("offsetCount") offsetCount: Int?
-    ): Response<List<CommentResponseBody>>
-
-    @RecordApi
-    @Deprecated("請使用getCommentsByIndex")
-    @GET("{path}/api/Comment/GetWithIds/{articleId}")
-    suspend fun getCommentWithId(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: Long,
-        @Query("commentIds") commentIds: String
-    ): Response<List<CommentResponseBody>>
-
-    @RecordApi
-    @GET("{path}/api/Comment/GetGroupManagerComments/{articleId}")
+    @GET
     suspend fun getGroupManagerComments(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: Long
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<List<CommentResponseBody>>
 
     @RecordApi
-    @PUT("{path}/api/Comment/Update/{articleId}/{commentId}")
+    @PUT
     suspend fun updateComment(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: Long,
-        @Path("commentId") commentId: Long,
         @Body body: UpdateCommentRequestBody
     ): Response<Void>
 
     @RecordApi
-    @Deprecated("請使用deleteCommentV2")
-    @DELETE("{path}/api/Comment/Delete/{articleId}/{commentIndex}")
-    suspend fun deleteComment(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: Long,
-        @Path("commentIndex") commentIndex: Long
-    ): Response<Void>
-
-    @RecordApi
     @Headers("X-Version: 2.0")
-    @DELETE("{path}/api/Article/{articleId}")
+    @DELETE
     suspend fun deleteCommentV2(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: String
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<Void>
-
-    @RecordApi
-    @POST("{path}/api/CommentInteractive/Reaction/{articleId}/{commentIndex}")
-    suspend fun reactComment(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: Long,
-        @Path("commentIndex") commentIndex: Long,
-        @Query("reactionType") reactionType: Int
-    ): Response<Void>
-
-    @RecordApi
-    @Deprecated("請使用getReactionDetailV2")
-    @GET("{path}/api/CommentInteractive/GetReactionDetail/{articleId}/{commentIndex}")
-    suspend fun getReactionDetail(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: Long,
-        @Path("commentIndex") commentIndex: Long,
-        @Query("reactions") reactions: String,
-        @Query("skipCount") skipCount: Int,
-        @Query("takeCount") takeCount: Int
-    ): Response<List<ReactionInfo>>
 
     @RecordApi
     @Headers("X-Version: 2.0")
-    @GET("{path}/api/Article/{articleId}/Emoji/Detail")
+    @GET
     suspend fun getReactionDetailV2(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: String,
         @Query("emojiTypes") emojiTypes: String,
         @Query("offset") offset: Int,
         @Query("fetch") fetch: Int
     ): Response<MemberEmojis>
 
     @RecordApi
-    @Deprecated("請使用deleteReaction")
-    @DELETE("{path}/api/CommentInteractive/RemoveReaction/{articleId}/{commentIndex}")
-    suspend fun removeCommentReaction(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: Long,
-        @Path("commentIndex") commentIndex: Long
-    ): Response<Void>
-
-    @RecordApi
-    @Deprecated("請使用createReaction")
-    @POST("{path}/api/Interactive/Reaction/{articleId}")
-    suspend fun createArticleReaction(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: Long,
-        @Query("reactionType") reactionType: Int
-    ): Response<Void>
-
-    @RecordApi
     @Headers("X-Version: 2.0")
-    @PUT("{path}/api/Article/{articleId}/Emoji/{emojiType}")
+    @PUT
     suspend fun createReaction(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: String,
-        @Path("emojiType") emojiType: Int
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<Void>
 
     @RecordApi
-    @Deprecated("請使用getReactionDetailV2")
-    @GET("{path}/api/Interactive/GetReactionDetail/{articleId}")
-    suspend fun getArticleReactionDetail(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: Long,
-        @Query("reactions") reactions: String,
-        @Query("skipCount") skipCount: Int,
-        @Query("takeCount") count: Int
-    ): Response<List<ReactionInfo>>
-
-    @RecordApi
-    @POST("{path}/api/Interactive/Donate/{articleId}")
+    @POST
     suspend fun createArticleDonate(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: Long,
         @Query("donateValue") donateValue: Int
     ): Response<Void>
 
     @RecordApi
-    @Deprecated("請使用deleteReaction")
-    @DELETE("{path}/api/Interactive/RemoveReaction/{articleId}")
-    suspend fun deleteArticleReaction(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: Long
-    ): Response<Void>
-
-    @RecordApi
     @Headers("X-Version: 2.0")
-    @DELETE("{path}/api/Article/{articleId}/Emoji")
+    @DELETE
     suspend fun deleteReaction(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: String
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<Void>
 
     @RecordApi
-    @POST("{path}/api/Interactive/Interest/{articleId}")
+    @POST
     suspend fun createArticleInterest(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: Long
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<Void>
 
     @RecordApi
-    @GET("{path}/api/Interactive/GetDonate/{articleId}")
+    @GET
     suspend fun getArticleDonate(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: Long,
         @Query("offset") offset: Int,
         @Query("fetch") fetch: Int
     ): Response<List<DonateInfo>>
 
     @RecordApi
-    @GET("{path}/api/Group/GetGroup/{groupId}")
+    @GET
     suspend fun getGroup(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("groupId") groupId: Long
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<GroupResponseBody>
 
     @RecordApi
-    @GET("{path}/api/Group/GetGroupsWithPosition")
+    @GET
     suspend fun getGroupsWithPosition(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("memberId") memberId: Long,
         @Query("position") position: Int,
         @Query("offset") offset: Int,
@@ -581,399 +331,378 @@ interface ForumOceanService {
     ): Response<List<GroupResponseBody>>
 
     @RecordApi
-    @GET("{path}/api/Group/GetMemberJoinAnyGroups")
+    @GET
     suspend fun getMemberJoinAnyGroups(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("memberId") memberId: Long
     ): Response<GetMemberJoinAnyGroupsResponseBody>
 
     @RecordApi
-    @POST("{path}/api/Group/Create")
+    @POST
     suspend fun createGroup(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("groupName") groupName: String
     ): Response<CreateGroupResponseBody>
 
     @RecordApi
-    @PUT("{path}/api/Group/Update/{groupId}")
-    suspend fun updateGroup(
+    @PUT
+    suspend fun updateGroupV1(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("groupId") groupId: Long,
         @Body body: UpdateGroupRequestBody
     ): Response<Void>
 
     @RecordApi
-    @PUT("{path}/api/Group/TransferOwner/{groupId}")
+    @PUT
     suspend fun transferGroup(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("groupId") groupId: Long,
         @Query("memberId") memberId: Long
     ): Response<Void>
 
     @RecordApi
-    @DELETE("{path}/api/Group/Delete/{groupId}")
+    @DELETE
     suspend fun deleteGroup(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("groupId") groupId: Long
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<Void>
 
     @RecordApi
-    @POST("{path}/api/GroupMember/Join/{groupId}")
+    @POST
     suspend fun join(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("groupId") groupId: Long,
         @Query("reason") reason: String?
     ): Response<Void>
 
     @RecordApi
-    @GET("{path}/api/GroupMember/GetMembers/{groupId}")
+    @GET
     suspend fun getMembers(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("groupId") groupId: Long,
         @Query("offset") offset: Int,
         @Query("fetch") fetch: Int,
         @Query("position") position: Int
     ): Response<List<com.cmoney.backend2.forumocean.service.api.group.getmember.GroupMember>>
 
     @RecordApi
-    @GET("{path}/api/GroupMember/GetApprovals/{groupId}")
+    @GET
     suspend fun getApprovals(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("groupId") groupId: Long,
         @Query("offset") offset: Int,
         @Query("fetch") fetch: Int
     ): Response<List<GroupPendingApproval>>
 
     @RecordApi
-    @POST("{path}/api/GroupMember/Approval/{groupId}")
+    @POST
     suspend fun approval(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("groupId") groupId: Long,
         @Query("memberId") memberId: Long,
         @Query("isAgree") isAgree: Boolean
     ): Response<Void>
 
     @RecordApi
-    @PUT("{path}/api/GroupMember/ChangeGroupMemberPosition/{groupId}")
+    @PUT
     suspend fun changeGroupMemberPosition(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("groupId") groupId: Long,
         @Query("memberId") memberId: Long,
         @Query("position") position: Int
     ): Response<Void>
 
     @RecordApi
-    @DELETE("{path}/api/GroupMember/Kick/{groupId}")
+    @DELETE
     suspend fun kick(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("groupId") groupId: Long,
         @Query("memberId") memberId: Long
     ): Response<Void>
 
     @RecordApi
-    @DELETE("{path}/api/GroupMember/Leave/{groupId}")
+    @DELETE
     suspend fun leave(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("groupId") groupId: Long
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<Void>
 
     @RecordApi
-    @POST("{path}/api/GroupArticle/PinArticle/{articleId}")
+    @POST
     suspend fun pinArticle(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: Long
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<Void>
 
     @RecordApi
-    @DELETE("{path}/api/GroupArticle/UnpinArticle/{articleId}")
+    @DELETE
     suspend fun unpinArticle(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: Long
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<Void>
 
     @RecordApi
-    @GET("{path}/api/NotifySetting/GetPushDefaultSetting")
+    @GET
     suspend fun getPushDefaultSetting(
-        @Path("path") path: String,
+        @Url url: String,
         @Header("Authorization") authorization: String
     ): Response<List<NotifyPushSetting>>
 
     @RecordApi
-    @GET("{path}/api/NotifySetting/Get")
+    @GET
     suspend fun getUserNotifySetting(
-        @Path("path") path: String,
+        @Url url: String,
         @Header("Authorization") authorization: String
     ): Response<List<NotifyPushSetting>>
 
     @RecordApi
-    @POST("{path}/api/NotifySetting/Set")
+    @POST
     suspend fun setNotifySetting(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("type") notifyType: String,
         @Query("subType") subType: String = "",
         @Query("enable") enable: Boolean
     ): Response<Void>
 
     @RecordApi
-    @GET("{path}/api/Official/GetOfficials")
+    @GET
     suspend fun getOfficials(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("offset") offset: Int,
         @Query("fetch") fetch: Int
     ): Response<List<OfficialChannelInfo>>
 
     @RecordApi
-    @GET("{path}/api/Official/GetOfficialsByIds")
+    @GET
     suspend fun getOfficialsByIds(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("officialIds") officialIds: String
     ): Response<List<OfficialChannelInfo>>
 
     @RecordApi
-    @GET("{path}/api/Official/GetOfficialsByKeyword")
+    @GET
     suspend fun getOfficialsByKeyword(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("keyword") keyword: String,
         @Query("offset") offset: Int,
         @Query("fetch") fetch: Int
     ): Response<List<OfficialChannelInfo>>
 
     @RecordApi
-    @GET("{path}/api/Group/GetGroupsByKeyword")
+    @GET
     suspend fun getGroupsByKeyword(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("keyword") keyword: String,
         @Query("offset") offset: Int,
         @Query("fetch") fetch: Int
     ): Response<List<GroupResponseBody>>
 
     @RecordApi
-    @GET("{path}/api/OfficialSubscriber/GetOfficialSubscribedCount/{officialId}")
+    @GET
     suspend fun getOfficialSubscribedCount(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("officialId") officialId: Long
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<GetOfficialSubscribedCountResponseBody>
 
     @RecordApi
-    @GET("{path}/api/OfficialSubscriber/GetSubscribedCount")
+    @GET
     suspend fun getSubscribedCount(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("memberId") memberId: Long
     ): Response<GetSubscribedCountResponseBody>
 
     @RecordApi
-    @GET("{path}/api/OfficialSubscriber/GetSubscribeds")
+    @GET
     suspend fun getSubscribed(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("memberId") memberId: Long,
         @Query("offset") offset: Int,
         @Query("fetch") fetch: Int
     ): Response<List<Int>>
 
     @RecordApi
-    @POST("{path}/api/OfficialSubscriber/Subscribe/{officialId}")
+    @POST
     suspend fun subscribe(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("officialId") officialId: Long
-    ): Response<Void>
-
-    @RecordApi
-    @DELETE("{path}/api/OfficialSubscriber/Unsubscribe/{officialId}")
-    suspend fun unsubscribe(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("officialId") officialId: Long
-    ): Response<Void>
-
-    @RecordApi
-    @DELETE("{path}/api/OfficialSubscriber/UnsubscribeAll")
-    suspend fun unsubscribeAll(
-        @Path("path") path: String,
+        @Url url: String,
         @Header("Authorization") authorization: String
     ): Response<Void>
 
     @RecordApi
-    @GET("{path}/api/Relationship/GetFollowingList/{memberId}")
+    @DELETE
+    suspend fun unsubscribe(
+        @Url url: String,
+        @Header("Authorization") authorization: String,
+        @Path("officialId") officialId: Long
+    ): Response<Void>
+
+    @RecordApi
+    @DELETE
+    suspend fun unsubscribeAll(
+        @Url url: String,
+        @Header("Authorization") authorization: String
+    ): Response<Void>
+
+    @RecordApi
+    @GET
     suspend fun getFollowingList(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("memberId") memberId: Long,
         @Query("offset") offset: Int,
         @Query("fetch") fetch: Int
     ): Response<List<Long>>
 
     @RecordApi
-    @GET("{path}/api/Relationship/GetFollowers/{memberId}")
+    @GET
     suspend fun getFollowers(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("memberId") memberId: Long,
         @Query("offset") offset: Int,
         @Query("fetch") fetch: Int
     ): Response<List<Long>>
 
     @RecordApi
-    @POST("{path}/api/Relationship/Follow")
+    @POST
     suspend fun follow(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("memberId") memberId: Long
     ): Response<Void>
 
     @RecordApi
-    @DELETE("{path}/api/Relationship/Unfollow")
+    @DELETE
     suspend fun unfollow(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("memberId") memberId: Long
     ): Response<Void>
 
     @RecordApi
-    @POST("{path}/api/Relationship/Block")
+    @POST
     suspend fun block(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("memberId") memberId: Long
     ): Response<Void>
 
     @RecordApi
-    @DELETE("{path}/api/Relationship/Unblock")
+    @DELETE
     suspend fun unblock(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("memberId") memberId: Long
     ): Response<Void>
 
     @RecordApi
-    @GET("{path}/api/Relationship/GetBlockingList")
+    @GET
     suspend fun getBlockingList(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("offset") offset: Int,
         @Query("fetch") fetch: Int
     ): Response<List<Long>>
 
     @RecordApi
-    @GET("{path}/api/Relationship/GetBlockers")
+    @GET
     suspend fun getBlockers(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("offset") offset: Int,
         @Query("fetch") fetch: Int
     ): Response<List<Long>>
 
     @RecordApi
-    @GET("{path}/api/Relationship/GetRelationshipWithMe")
+    @GET
     suspend fun getRelationshipWithMe(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("memberIds") memberIds: String
     ): Response<List<RelationshipWithMe>>
 
     @RecordApi
     @Deprecated("檢舉留言請使用createReportV2，檢舉主文仍暫時使用這道，待服務實作後遷移")
-    @POST("{path}/api/Report/Create/{articleId}")
+    @POST
     suspend fun createReport(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: Long,
         @Query("reasonType") reasonType: Int,
         @Query("commentId") commentId: Long?
     ): Response<Void>
 
     @RecordApi
-    @POST("{path}/api/Article/{articleId}/Report")
+    @POST
     @Headers("X-Version: 2.0")
     suspend fun createReportV2(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: String,
         @Body body: ReportRequestBody
     ): Response<Void>
 
     @RecordApi
-    @DELETE("{path}/api/Report/Delete/{articleId}")
+    @DELETE
     suspend fun deleteReport(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: Long,
         @Query("commentId") commentId: Long?
     ): Response<Void>
 
     @RecordApi
-    @GET("{path}/api/Support/GetMemberIds")
+    @GET
     suspend fun getMemberIds(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("channelIds") channelIds: String
     ): Response<List<ChannelIdAndMemberId>>
 
     @RecordApi
-    @GET("{path}/api/Support/GetChannelIds")
+    @GET("{path}/")
     suspend fun getChannelIds(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("memberIds") memberIds: String
     ): Response<List<ChannelIdAndMemberId>>
 
     @RecordApi
-    @GET("{path}/api/Support/SearchMember")
+    @GET
     suspend fun searchMembers(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("keyword") keyword: String,
         @Query("offset") offset: Int,
         @Query("fetch") fetch: Int
     ): Response<List<SearchMembersResponseBody>>
 
     @RecordApi
-    @POST("{path}/api/Vote/Create/{articleId}")
+    @POST
     suspend fun createVote(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: Long,
         @Query("optionIndex") optionIndex: Int
     ): Response<Void>
 
     @RecordApi
-    @GET("{path}/api/Vote/GetCurrentVotes/{articleId}")
+    @GET
     suspend fun getCurrentVote(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: Long
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<List<VoteInfo>>
 
     /**
      * 取得個股排行(不含美股)
      */
     @RecordApi
-    @GET("{path}/api/Rank/Commodity")
+    @GET
     suspend fun getCommodityRank(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("offset") offset: Int,
         @Query("fetch") fetch: Int
     ): Response<List<GetCommodityRankResponseBody>>
@@ -982,10 +711,10 @@ interface ForumOceanService {
      * 取得美股排行
      */
     @RecordApi
-    @GET("{path}/api/Rank/USCommodity")
+    @GET
     suspend fun getUSCommodityRank(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("offset") offset: Int,
         @Query("fetch") fetch: Int
     ): Response<List<GetCommodityRankResponseBody>>
@@ -994,10 +723,10 @@ interface ForumOceanService {
      * 取得達人排行
      */
     @RecordApi
-    @GET("{path}/api/Rank/ExpertMember")
+    @GET
     suspend fun getExpertMemberRank(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("offset") offset: Int,
         @Query("fetch") fetch: Int
     ): Response<List<GetExpertMemberRankResponseBody>>
@@ -1006,10 +735,10 @@ interface ForumOceanService {
      * 取得指定達人排行
      */
     @RecordApi
-    @GET("{path}/api/Rank/SpecificExpertMemberRanks")
+    @GET
     suspend fun getSpecificExpertMemberRank(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("memberIds") memberIds: String
     ): Response<List<GetExpertMemberRankResponseBody>>
 
@@ -1018,10 +747,10 @@ interface ForumOceanService {
      * 取得粉絲成長達人排行
      */
     @RecordApi
-    @GET("{path}/api/Rank/MemberFansRank")
+    @GET
     suspend fun getMemberFansRank(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("offset") offset: Int,
         @Query("fetch") fetch: Int
     ): Response<List<FansMemberRankResponseBody>>
@@ -1030,10 +759,10 @@ interface ForumOceanService {
      * 取得指定粉絲成長達人排行
      */
     @RecordApi
-    @GET("{path}/api/Rank/SpecificMemberFansRank")
+    @GET
     suspend fun getSpecificMemberFansRank(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("memberIds") memberIds: String
     ): Response<List<FansMemberRankResponseBody>>
 
@@ -1042,10 +771,10 @@ interface ForumOceanService {
      * 取得解題達人排行
      */
     @RecordApi
-    @GET("{path}/api/Rank/SolutionExpert")
+    @GET
     suspend fun getSolutionExpertRank(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("offset") offset: Int,
         @Query("fetch") fetch: Int
     ): Response<List<SolutionExpertRankResponseBody>>
@@ -1054,109 +783,103 @@ interface ForumOceanService {
      * 取得指定解題達人排行
      */
     @RecordApi
-    @GET("{path}/api/Rank/SpecificSolutionExpert")
+    @GET
     suspend fun getSpecificSolutionExpertRank(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("memberIds") memberIds: String
     ): Response<List<SolutionExpertRankResponseBody>>
 
     @RecordApi
-    @GET("{path}/api/Notify/Get")
+    @GET
     suspend fun getNotify(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("updateTime") updateTime: Long,
         @Query("offsetCount") offsetCount: Int
     ): Response<List<GetNotifyResponseBody>>
 
     @RecordApi
-    @GET("{path}/api/Notify/GetCount")
+    @GET
     suspend fun getCount(
-        @Path("path") path: String,
+        @Url url: String,
         @Header("Authorization") authorization: String
     ): Response<GetNotifyCountResponseBody>
 
     @RecordApi
-    @POST("{path}/api/Notify/ResetCount")
+    @POST
     suspend fun resetCount(
-        @Path("path") path: String,
+        @Url url: String,
         @Header("Authorization") authorization: String
     ): Response<Void>
 
     @RecordApi
-    @POST("{path}/api/Notify/SetRead")
+    @POST
     suspend fun setRead(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("type") notifyType: String,
         @Query("mergeKey") mergeKey: String,
         @Query("isNew") isNew: Boolean
     ): Response<Void>
 
     @RecordApi
-    @POST("{path}/api/BonusPointExchange/{articleId}")
+    @POST
     suspend fun exchangeColumnArticle(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: Long
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<Void>
 
     @RecordApi
-    @GET("{path}/api/Role")
+    @GET
     suspend fun getRole(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<List<Int>>
 
     @RecordApi
-    @GET("{path}/api/Role/Id/{communityRoleId}")
+    @GET
     suspend fun getMembersByRoleId(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("communityRoleId") roleId: Int
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<GetMembersByRoleResponse>
 
     @RecordApi
-    @GET("{path}/api/Role/{otherMemberId}")
-    suspend fun getRole(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("otherMemberId") memberId: Long
+    @GET
+    suspend fun getRoleByMemberId(
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<List<Int>>
 
     @RecordApi
-    @GET("{path}/api/ExchangeCount/{memberId}")
+    @GET
     suspend fun getExchangeCount(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("memberId") memberId: Long
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<ExchangeCount>
 
     @RecordApi
-    @GET("{path}/api/IsMemberSubscribe/{memberId}")
+    @GET
     suspend fun isMemberSubscribe(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("memberId") memberId: Long
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<ResponseBody>
 
     @RecordApi
-    @GET("{path}/api/ColumnistVipGroup/{columnistMemberId}")
+    @GET
     suspend fun getColumnistVipGroup(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("columnistMemberId") columnistMemberId: Long
     ): Response<GetColumnistVipGroupResponse>
 
     /**
      * 取得指定研究報告文章ID
      */
     @RecordApi
-    @GET("{path}/api/StockReport")
+    @GET
     suspend fun getStockReportId(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("date") date: String,
         @Query("brokerId") brokerId: String,
         @Query("stockId") stockId: String
@@ -1166,23 +889,22 @@ interface ForumOceanService {
      * 取得指定社團資訊
      */
     @RecordApi
-    @GET("{path}/api/Group/{groupId}")
+    @GET
     @Headers("X-Version: 2.0")
     suspend fun getGroupV2(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("groupId") groupId: Long,
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<Group>
 
     /**
      * 依角色取得會員所有社團(MemberId不帶等於取自己)
      */
     @RecordApi
-    @GET("{path}/api/Group/All")
+    @GET
     @Headers("X-Version: 2.0")
     suspend fun getGroupsByRole(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("memberId") memberId: Long?, // Optional
         @Query("roleTypes", encoded = true) roles: String
     ): Response<List<Group>>
@@ -1191,11 +913,11 @@ interface ForumOceanService {
      * 創建社團
      */
     @RecordApi
-    @POST("{path}/api/Group")
+    @POST
     @Headers("X-Version: 2.0")
     suspend fun createGroup(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Body body: GroupManipulation
     ): Response<InsertedId>
 
@@ -1203,50 +925,47 @@ interface ForumOceanService {
      * 更新社團資訊
      */
     @RecordApi
-    @PUT("{path}/api/Group/{groupId}")
+    @PUT
     @Headers("X-Version: 2.0")
     suspend fun updateGroup(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("groupId") groupId: Long,
         @Body body: GroupManipulation
-    ): Response<Void>
-
-    /**
-     * 解散社團(鎖權限：社長)
-     */
-    @RecordApi
-    @DELETE("{path}/api/Group/{groupId}")
-    @Headers("X-Version: 2.0")
-    suspend fun deleteGroupV2(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("groupId") groupId: Long
     ): Response<Void>
 
     /**
      * 增加社團的板(鎖權限:社長)
      */
     @RecordApi
-    @POST("{path}/api/Group/{groupId}/Board")
+    @POST
     @Headers("X-Version: 2.0")
     suspend fun createGroupBoard(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("groupId") groupId: Long,
+        @Query("isChatRoom") isChatRoom: Boolean,
         @Body body: BoardManipulation
     ): Response<InsertedId>
+
+    /**
+     * 解散社團(鎖權限：社長)
+     */
+    @RecordApi
+    @DELETE
+    @Headers("X-Version: 2.0")
+    suspend fun deleteGroupV2(
+        @Url url: String,
+        @Header("Authorization") authorization: String
+    ): Response<Void>
 
     /**
      * 修改看板
      */
     @RecordApi
-    @PUT("{path}/api/Group/Board/{boardId}")
+    @PUT
     @Headers("X-Version: 2.0")
     suspend fun updateGroupBoard(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("boardId") boardId: Long,
         @Body body: BoardManipulation
     ): Response<Void>
 
@@ -1254,74 +973,66 @@ interface ForumOceanService {
      * 取得社團所有看板
      */
     @RecordApi
-    @GET("{path}/api/Group/{groupId}/Board/All")
+    @GET
     @Headers("X-Version: 2.0")
     suspend fun getGroupBoards(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("groupId") groupId: Long,
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<List<Board>>
 
     /**
      * 取得特定看板資訊
      */
     @RecordApi
-    @GET("{path}/api/Group/Board/{boardId}")
+    @GET
     @Headers("X-Version: 2.0")
     suspend fun getGroupBoard(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("boardId") boardId: Long,
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<BoardSingle>
 
     /**
      * 刪除社團看板(鎖權限：幹部以上)
      */
     @RecordApi
-    @DELETE("{path}/api/Group/Board/{boardId}")
+    @DELETE
     @Headers("X-Version: 2.0")
     suspend fun deleteGroupBoard(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("boardId") boardId: Long,
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<Void>
 
     /**
      * 取得社團是否有未察看的待審用戶
      */
     @RecordApi
-    @GET("{path}/api/Group/{groupId}/HasNewPending")
+    @GET
     @Headers("X-Version: 2.0")
     suspend fun hasNewGroupPending(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("groupId") groupId: Long,
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<ResponseBody>
 
     /**
      * 取得該社員在社團的所有角色
      */
     @RecordApi
-    @GET("{path}/api/GroupMember/{groupId}/{memberId}/Role")
+    @GET
     @Headers("X-Version: 2.0")
     suspend fun getGroupMemberRoles(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("groupId") groupId: Long,
-        @Path("memberId") memberId: Long
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<MemberRoles>
 
     /**
      * 設定社團身份(鎖權限：幹部以上)
      */
     @RecordApi
-    @PUT("{path}/api/GroupMember/{groupId}/{memberId}/Role")
+    @PUT
     @Headers("X-Version: 2.0")
     suspend fun updateGroupMemberRoles(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("groupId") groupId: Long,
-        @Path("memberId") memberId: Long,
         @Body roles: List<Int>
     ): Response<Void>
 
@@ -1329,12 +1040,11 @@ interface ForumOceanService {
      * 取得社團成員列表
      */
     @RecordApi
-    @GET("{path}/api/GroupMember/{groupId}")
+    @GET
     @Headers("X-Version: 2.0")
     suspend fun getGroupMembers(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("groupId") groupId: Long,
         @Query("roleTypes", encoded = true) roles: String,
         @Query("offset") offset: Int,
         @Query("fetch") fetch: Int
@@ -1344,36 +1054,33 @@ interface ForumOceanService {
      * 離開社團
      */
     @RecordApi
-    @DELETE("{path}/api/GroupMember/{groupId}")
+    @DELETE
     @Headers("X-Version: 2.0")
     suspend fun leaveGroup(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("groupId") groupId: Long
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<Void>
 
     /**
      * 取得社長及幹部清單
      */
     @RecordApi
-    @GET("{path}/api/GroupMember/{groupId}/Admins")
+    @GET
     @Headers("X-Version: 2.0")
     suspend fun getGroupAdmins(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("groupId") groupId: Long
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<Admins>
 
     /**
      * 搜尋社員
      */
     @RecordApi
-    @GET("{path}/api/GroupMember/{groupId}/Search")
+    @GET
     @Headers("X-Version: 2.0")
     suspend fun searchGroupMember(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("groupId") groupId: Long,
         @Query("keyword") keyword: String,
         @Query("offset") offset: Int,
         @Query("fetch") fetch: Int
@@ -1383,12 +1090,11 @@ interface ForumOceanService {
      * 申請加入社團
      */
     @RecordApi
-    @POST("{path}/api/GroupMember/{groupId}/Join")
+    @POST
     @Headers("X-Version: 2.0")
     suspend fun joinGroup(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("groupId") groupId: Long,
         @Body body: JoinGroupRequest
     ): Response<Void>
 
@@ -1396,12 +1102,11 @@ interface ForumOceanService {
      * 取得審核成員列表(鎖權限：幹部以上)
      */
     @RecordApi
-    @GET("{path}/api/GroupMember/{groupId}/Pending")
+    @GET
     @Headers("X-Version: 2.0")
     suspend fun getGroupPendingRequests(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("groupId") groupId: Long,
         @Query("timestamp") timestamp: Long,
         @Query("fetch") fetch: Int = 20
     ): Response<PendingRequests>
@@ -1410,12 +1115,11 @@ interface ForumOceanService {
      * 搜尋審核中的社員(鎖權限：幹部以上)
      */
     @RecordApi
-    @GET("{path}/api/GroupMember/{groupId}/SearchPending")
+    @GET
     @Headers("X-Version: 2.0")
     suspend fun searchGroupPendingRequests(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("groupId") groupId: Long,
         @Query("keyword") keyword: String,
         @Query("timestamp") timestamp: Long?,
         @Query("fetch") fetch: Int = 20
@@ -1425,12 +1129,11 @@ interface ForumOceanService {
      * 審核成員加入(鎖權限：幹部以上)
      */
     @RecordApi
-    @POST("{path}/api/GroupMember/{groupId}/Approve")
+    @POST
     @Headers("X-Version: 2.0")
     suspend fun approvalGroupRequest(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("groupId") groupId: Long,
         @Body body: List<Approval>
     ): Response<Void>
 
@@ -1438,122 +1141,111 @@ interface ForumOceanService {
      * 踢出成員(鎖權限：幹部以上)
      */
     @RecordApi
-    @DELETE("{path}/api/GroupMember/{groupId}/{memberId}")
+    @DELETE
     @Headers("X-Version: 2.0")
     suspend fun kickGroupMember(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("groupId") groupId: Long,
-        @Path("memberId") memberId: Long
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<Void>
 
     /**
      * 對社團看板發文
      */
     @RecordApi
-    @POST("{path}/api/GroupArticle/Board/{boardId}/normal")
+    @POST
     @Headers("X-Version: 2.0")
     suspend fun createGroupArticle(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("boardId") boardId: Long,
         @Body requestBody: Content.Article.General
     ): Response<CreateArticleResponseBody>
 
     /**
-     * 刪除社團文章
+     * 取得指定看板文章
      */
     @RecordApi
-    @DELETE("{path}/api/GroupArticle/{articleId}")
+    @GET
     @Headers("X-Version: 2.0")
-    @Deprecated("待服務實作完成後，請使用deleteArticleV2")
-    suspend fun deleteGroupArticle(
+    suspend fun getBoardArticles(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: Long
-    ): Response<Void>
+        @Query("startWeight") startWeight: Long?, // Optional.
+        @Query("fetch") fetch: Int
+    ): Response<GetGroupBoardArticlesResponse>
 
     /**
-     * 刪除看板文章留言
+     * 聊天室: 收回自己的訊息
      */
     @RecordApi
-    @DELETE("{path}/api/GroupArticle/{articleId}/Comment/{commentId}")
+    @PUT
     @Headers("X-Version: 2.0")
-    @Deprecated("請使用deleteCommentV2")
-    suspend fun deleteGroupArticleComment(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: Long,
-        @Path("commentId") commentId: Long
+    suspend fun unsendArticle(
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<Void>
 
     /**
      * 取得用戶可以進入的所有看板 id
      */
     @RecordApi
-    @GET("{path}/api/Group/Board/All")
+    @GET
     @Headers("X-Version: 2.0")
     suspend fun getAvailableBoardIds(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<AvailableBoardIds>
 
     /**
-     * 取得會員在社團內的推播設定
+     * 取得會員在社團看板的推播設定
      */
     @RecordApi
-    @GET("{path}/api/GroupNotification/PushSetting/Group/{groupId}")
+    @GET
     @Headers("X-Version: 2.0")
-    suspend fun getGroupPushSetting(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("groupId") groupId: Long
+    suspend fun getGroupBoardPushSetting(
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<GroupPushSetting>
 
     /**
-     * 設定會員在社團內的推播
+     * 設定會員在社團看板的推播
      */
     @RecordApi
-    @PUT("{path}/api/GroupNotification/PushSetting")
+    @PUT
     @Headers("X-Version: 2.0")
-    suspend fun setGroupPushSetting(
+    suspend fun setGroupBoardPushSetting(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Body body: GroupPushSettingRequest
+        @Body body: GroupBoardPushSettingRequestBody
     ): Response<Void>
 
     /**
      * 取得會員的被評價資訊統計
      */
     @RecordApi
-    @GET("{path}/api/Rating/{memberId}")
+    @GET
     suspend fun getMemberRatingCounter(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("memberId") memberId: Long
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<MemberRatingCounter>
 
     /**
      * 取得指定評價
      */
     @RecordApi
-    @GET("{path}/api/Rating/Review/{creatorId}/{memberId}")
+    @GET
     suspend fun getRatingComment(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("creatorId") creatorId: Long,
-        @Path("memberId") memberId: Long
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<RatingComment>
 
     /**
      * 取得指定會員的被評價清單
      */
     @RecordApi
-    @GET("{path}/api/Rating/Reviews/{memberId}")
+    @GET
     suspend fun getMemberRatingComments(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("memberId") memberId: Long,
         @Query("sortType") sortType: Int,
         @Query("skipCount") skipCount: Int,
         @Query("fetchCount") fetchCount: Int
@@ -1563,18 +1255,18 @@ interface ForumOceanService {
      * 滿分為5, 評論字數不可多於200
      */
     @RecordApi
-    @PUT("{path}/api/Rating/Review")
+    @PUT
     suspend fun reviewUser(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Body body: ReviewRequest
     ): Response<String>
 
     @RecordApi
-    @GET("{path}/api/Columnist/All")
+    @GET
     suspend fun getColumnistAll(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<List<Columnist>>
 
 
@@ -1582,24 +1274,22 @@ interface ForumOceanService {
      * 取得文章資訊v2
      */
     @RecordApi
-    @GET("{path}/api/Article/{articleId}")
+    @GET
     @Headers("X-Version: 2.0")
     suspend fun getArticleV2(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: String
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<ArticleResponseBodyV2>
 
     /**
      * 取得留言V2(可訪客)
      */
     @RecordApi
-    @GET("{path}/api/Article/{articleId}/Comments")
+    @GET
     @Headers("X-Version: 2.0")
     suspend fun getCommentV2(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: String,
         @Query("startCommentIndex") startCommentIndex: Long?,
         @Query("fetch") fetch: Int?
     ): Response<GetCommentsResponseBody>
@@ -1608,11 +1298,11 @@ interface ForumOceanService {
      * 取得指定 index 的留言
      */
     @RecordApi
-    @GET("{path}/api/Article/CommentsByIndex")
+    @GET
     @Headers("X-Version: 2.0")
     suspend fun getCommentsByIndex(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("articleId") articleId: String,
         @Query("commentIndex") commentIndex: String
     ): Response<List<CommentResponseBodyV2>>
@@ -1621,12 +1311,11 @@ interface ForumOceanService {
      * 發留言v2
      */
     @RecordApi
-    @POST("{path}/api/Article/{articleId}/Comment")
+    @POST
     @Headers("X-Version: 2.0")
     suspend fun createCommentV2(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: String,
         @Body body: CreateCommentRequestBodyV2
     ): Response<CreateCommentResponseBodyV2>
 
@@ -1634,12 +1323,11 @@ interface ForumOceanService {
      * 隱藏/取消隱藏留言
      */
     @RecordApi
-    @PUT("{path}/api/Article/{articleId}/Hide")
+    @PUT
     @Headers("X-Version: 2.0")
     suspend fun changeCommentHideState(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: String,
         @Body body: HideCommentRequestBody
     ): Response<Void>
 
@@ -1647,22 +1335,21 @@ interface ForumOceanService {
      * 取得單一留言
      */
     @RecordApi
-    @GET("{path}/api/Article/{articleId}")
+    @GET
     @Headers("X-Version: 2.0")
     suspend fun getSingleComment(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: String
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<CommentResponseBodyV2>
 
     /**
      * 取得個人化推薦文章
      */
     @RecordApi
-    @GET("{path}/api/Channel/GetRecommendation/Recommendation")
+    @GET
     suspend fun getRecommendation(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("offset") offset: Int,
         @Query("fetch") fetch: Int
     ): Response<GetRecommendationResponse>
@@ -1671,57 +1358,88 @@ interface ForumOceanService {
      * 取得置頂精選文章清單
      */
     @RecordApi
-    @GET("{path}/api/PromotedArticle/Pin")
+    @GET
     suspend fun getPinPromotedArticles(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<List<PromotedArticleResponseBody>>
 
     /**
      * 取得精選文章清單
      */
     @RecordApi
-    @GET("{path}/api/PromotedArticle")
+    @GET
     suspend fun getPromotedArticles(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("path") path: String,
         @Query("startWeight") startWeight: Long,
         @Query("fetch") fetch: Int
     ): Response<GetPromotedArticlesResponse>
 
     /**
+     * 取得聊天室列表
+     */
+    @RecordApi
+    @GET
+    @Headers("X-Version: 2.0")
+    suspend fun getAllChatRoom(
+        @Url url: String,
+        @Header("Authorization") authorization: String
+    ): Response<List<GetAllChatRoomResponse>>
+
+    /**
+     * 取得使用者未檢查的聊天室看板數
+     */
+    @RecordApi
+    @GET
+    @Headers("X-Version: 2.0")
+    suspend fun getUncheckChatRoomCount(
+        @Url url: String,
+        @Header("Authorization") authorization: String
+    ): Response<GetUncheckChatRoomCountResponse>
+
+    /**
+     * 重設使用者未檢查的聊天室看板數
+     */
+    @RecordApi
+    @PUT
+    @Headers("X-Version: 2.0")
+    suspend fun resetUncheckChatRoomCount(
+        @Url url: String,
+        @Header("Authorization") authorization: String
+    ): Response<Void>
+
+    /**
      * 釘選社團看板文章
      */
     @RecordApi
-    @POST("{path}/api/GroupArticle/{articleId}/Pin")
+    @POST
     @Headers("X-Version: 2.0")
     suspend fun pinSpaceBoardArticle(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: String
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<Void>
 
     /**
      * 取消釘選社團看板文章
      */
     @RecordApi
-    @POST("{path}/api/GroupArticle/{articleId}/Unpin")
+    @POST
     @Headers("X-Version: 2.0")
     suspend fun unpinSpaceBoardArticle(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("articleId") articleId: String
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<Void>
 
     /**
      * 取得社團看板置頂文章列表
      */
     @RecordApi
-    @GET("{path}/api/GroupArticle/Board/{boardId}/Pin")
+    @GET
     @Headers("X-Version: 2.0")
     suspend fun getSpaceBoardPinArticles(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
-        @Path("boardId") boardId: Long
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<GetSpaceBoardPinArticlesResponseBody>
 }
+

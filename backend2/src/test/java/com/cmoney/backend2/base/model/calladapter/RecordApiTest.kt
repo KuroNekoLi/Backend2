@@ -14,8 +14,8 @@ import com.cmoney.backend2.common.service.CommonService
 import com.cmoney.backend2.commonuse.service.CommonUseService
 import com.cmoney.backend2.crawlsetting.service.CrawlSettingService
 import com.cmoney.backend2.customgroup.service.CustomGroupService
+import com.cmoney.backend2.customgroup2.service.CustomGroup2Service
 import com.cmoney.backend2.data.service.DataService
-import com.cmoney.backend2.dtno.service.DtnoService
 import com.cmoney.backend2.emilystock.service.EmilyService
 import com.cmoney.backend2.forumocean.service.ForumOceanService
 import com.cmoney.backend2.frontendlogger.service.FrontEndLoggerService
@@ -79,8 +79,8 @@ class RecordApiTest(
                 arrayOf<Any?>(CommonUseService::class),
                 arrayOf<Any?>(CrawlSettingService::class),
                 arrayOf<Any?>(CustomGroupService::class),
+                arrayOf<Any?>(CustomGroup2Service::class),
                 arrayOf<Any?>(DataService::class),
-                arrayOf<Any?>(DtnoService::class),
                 arrayOf<Any?>(EmilyService::class),
                 arrayOf<Any?>(ForumOceanService::class),
                 arrayOf<Any?>(IdentityProviderService::class),

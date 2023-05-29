@@ -20,22 +20,16 @@ import com.cmoney.backend2.billing.service.api.verifyhuaweiinappreceipt.VerifyHu
 import com.cmoney.backend2.billing.service.api.verifyhuaweisubreceipt.VerifyHuaweiSubReceiptRequestBody
 import okhttp3.ResponseBody
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.POST
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface BillingService {
     /**
      * CommonMethod-取得後台自定義的資料
      */
     @RecordApi
-    @POST("PurchaseService/CommonMethod/GetDeveloperPayLoadAsync")
+    @POST
     suspend fun getDeveloperPayload(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: GetDeveloperPayloadRequestBody
     ): Response<GetDeveloperPayloadResponseBody>
@@ -44,9 +38,9 @@ interface BillingService {
      * CommonMethod-取得可購買的商品資訊
      */
     @RecordApi
-    @POST("PurchaseService/CommonMethod/ProductsInfo/{device}")
+    @POST
     suspend fun getIapProductInformation(
-        @Path("device") platform: Int,
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: GetProductInfoRequestBody
     ): Response<List<ProductInformation>>
@@ -55,9 +49,9 @@ interface BillingService {
      * CommonMethod-確認該平台是否開放應用程式內購買
      */
     @RecordApi
-    @POST("PurchaseService/CommonMethod/IsPurchasable/{device}")
+    @POST
     suspend fun isReadyToPurchase(
-        @Path("device") platform: Int,
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: IsPurchasableRequestBody
     ): Response<IsPurchasableResponseBody>
@@ -66,8 +60,9 @@ interface BillingService {
      * 華為-InApp商品購買的訂單驗證
      */
     @RecordApi
-    @POST("PurchaseService/HuaWei/VerifyHUAWEIOrderReceipt")
+    @POST
     suspend fun verifyHuaweiInAppReceipt(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: VerifyHuaweiInAppReceiptRequestBody
     ): Response<Void>
@@ -76,8 +71,9 @@ interface BillingService {
      * 華為-Sub商品購買的訂單驗證
      */
     @RecordApi
-    @POST("PurchaseService/HuaWei/VerifyHUAWEISubscriptReceipt")
+    @POST
     suspend fun verifyHuaweiSubReceipt(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: VerifyHuaweiSubReceiptRequestBody
     ): Response<Void>
@@ -87,8 +83,9 @@ interface BillingService {
      *
      */
     @RecordApi
-    @POST("PurchaseService/HuaWei/RecoveryHUAWEIOrderReceipt")
+    @POST
     suspend fun recoveryHuaweiInAppReceipt(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: RecoveryHuaweiInAppReceiptRequestBody
     ): Response<Void>
@@ -98,8 +95,9 @@ interface BillingService {
      *
      */
     @RecordApi
-    @POST("PurchaseService/HuaWei/RecoveryHUAWEISubscriptReceipt")
+    @POST
     suspend fun recoveryHuaweiSubReceipt(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: RecoveryHuaweiSubReceiptRequestBody
     ): Response<Void>
@@ -108,8 +106,9 @@ interface BillingService {
      * Google-InApp商品購買的訂單驗證
      */
     @RecordApi
-    @POST("PurchaseService/Google/VerifyOrderReceipt")
+    @POST
     suspend fun verifyGoogleInAppReceipt(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: VerifyGoogleInAppReceiptRequestBody
     ): Response<Void>
@@ -118,8 +117,9 @@ interface BillingService {
      * Google-Sub商品購買的訂單驗證
      */
     @RecordApi
-    @POST("PurchaseService/Google/VerifySubscriptReceipt")
+    @POST
     suspend fun verifyGoogleSubReceipt(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: VerifyGoogleSubReceiptRequestBody
     ): Response<Void>
@@ -128,8 +128,9 @@ interface BillingService {
      * Google-恢復InApp商品權限
      */
     @RecordApi
-    @POST("PurchaseService/Google/RecoveryOrderReceipt")
+    @POST
     suspend fun recoveryGoogleInAppReceipt(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: RecoveryGoogleInAppReceiptRequestBody
     ): Response<Void>
@@ -138,8 +139,9 @@ interface BillingService {
      * Google-恢復Sub商品權限
      */
     @RecordApi
-    @POST("PurchaseService/Google/RecoverySubscriptReceipt")
+    @POST
     suspend fun recoveryGoogleSubReceipt(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: RecoveryGoogleSubReceiptRequestBody
     ): Response<Void>
@@ -150,8 +152,9 @@ interface BillingService {
      */
     @RecordApi(cmoneyAction = "getauth")
     @FormUrlEncoded
-    @POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
+    @POST
     suspend fun getAuthStatus(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("Action") action: String = "getauth",
         @Field("Guid") guid: String,
@@ -164,8 +167,9 @@ interface BillingService {
      */
     @RecordApi(cmoneyAction = "getappauth")
     @FormUrlEncoded
-    @POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
+    @POST
     suspend fun getTargetAppAuthStatus(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("Action") action: String = "getappauth",
         @Field("Guid") guid: String,
@@ -177,10 +181,10 @@ interface BillingService {
      * 用戶是否有CMoney正在續約中的手機商品
      */
     @RecordApi
-    @GET("PurchaseService/Order/AutorenewalingByCM/{appId}")
+    @GET
     suspend fun getAuthByCMoney(
-        @Header("Authorization") authorization: String,
-        @Path("appId") appId: Int
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<AuthByCMoneyResponseBody>
 
     /**
@@ -189,8 +193,9 @@ interface BillingService {
      * @param functionIds 商品銷售代號
      */
     @RecordApi
-    @GET("PurchaseService/Statistics/Subscription/CMSales/HistoryCount")
+    @GET
     suspend fun getHistoryCount(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Query("productType") productType: Long,
         @Query("functionIds") functionIds: Long

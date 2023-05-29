@@ -12,5 +12,4 @@ data class GetManagerListRequestBody(
     val guid: String?,
     @SerializedName("NeedInfo")
     val needInfo: Int?
-) {
-}
+)

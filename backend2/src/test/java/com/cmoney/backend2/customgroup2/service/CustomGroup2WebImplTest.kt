@@ -1,16 +1,13 @@
 package com.cmoney.backend2.customgroup2.service
 
-import com.cmoney.backend2.TestSetting
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.base.model.request.Language
-import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.customgroup2.service.api.createcustomgroup.CreateCustomGroupResponseBody
 import com.cmoney.backend2.customgroup2.service.api.data.CustomGroup
 import com.cmoney.backend2.customgroup2.service.api.data.DocMarketType
 import com.cmoney.backend2.customgroup2.service.api.data.Document
-import com.cmoney.backend2.customgroup2.service.api.data.MarketType
 import com.cmoney.backend2.customgroup2.service.api.data.MarketTypeV2
 import com.cmoney.backend2.customgroup2.service.api.data.RawStock
-import com.cmoney.backend2.customgroup2.service.api.data.Stock
 import com.cmoney.backend2.customgroup2.service.api.data.StockV2
 import com.cmoney.backend2.customgroup2.service.api.data.UserConfigurationDocument
 import com.cmoney.backend2.customgroup2.service.api.getcustomgroup.Documents
@@ -20,9 +17,8 @@ import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
-import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
-import io.mockk.spyk
+import io.mockk.slot
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
@@ -40,29 +36,34 @@ import retrofit2.Response
 class CustomGroup2WebImplTest {
 
     private val testScope = TestScope()
+
     @get:Rule
     val mainCoroutineRule = CoroutineTestRule(testScope = testScope)
 
     @MockK
     private lateinit var service: CustomGroup2Service
     private lateinit var web: CustomGroup2Web
-    private lateinit var setting: Setting
     private val gson = GsonBuilder().serializeNulls().setLenient().setPrettyPrinting().create()
+
+    @MockK(relaxed = true)
+    private lateinit var manager: GlobalBackend2Manager
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        setting = TestSetting()
         web = CustomGroup2WebImpl(
-            setting = setting,
+            manager = manager,
             gson = gson,
             service = service,
             dispatcher = TestDispatcherProvider()
         )
+        coEvery {
+            manager.getCustomGroup2SettingAdapter().getDomain()
+        } returns EXCEPT_DOMAIN
     }
 
     @Test
-    fun `檢查所有的MarketTypeV2類型`() = testScope.runTest {
+    fun `check all MarketTypeV2 enum`() = testScope.runTest {
         val except = MarketTypeV2::class.sealedSubclasses
             .flatMap { market ->
                 market.sealedSubclasses.map { subType ->
@@ -78,58 +79,31 @@ class CustomGroup2WebImplTest {
     }
 
     @Test
-    fun `MarketTypeV2的valueOf，尋找上市的台積電`() = testScope.runTest {
-        val except = MarketTypeV2.Tse.Stock
-        val result = MarketTypeV2.valueOf(2, 90)
-        Truth.assertThat(result).isEqualTo(except)
-    }
+    fun `MarketTypeV2 valueOf_input type is 2 and subType is 90_MarketTypeV2 Tse Stock`() =
+        testScope.runTest {
+            val except = MarketTypeV2.Tse.Stock
+            val result = MarketTypeV2.valueOf(2, 90)
+            Truth.assertThat(result).isEqualTo(except)
+        }
 
     @Test
-    fun `searchStocks_成功`() = testScope.runTest {
-        val expect = listOf(
-            Stock(
-                id = "2330",
-                name = "台積電",
-                marketType = MarketType.Tse()
-            )
-        )
-
-        val rawStocks = listOf(
-            RawStock(
-                id = "2330",
-                name = "台積電",
-                marketType = 2,
-                type = 90
-            )
-        )
+    fun `searchStocksV2_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}CustomGroupService/api/searchstocksbyappid"
+        val urlSlot = slot<String>()
         coEvery {
-            service.searchStocks(any(), any(), any())
-        } returns Response.success(rawStocks)
-
-        val result = web.searchStocks(keyword = "2330", languages = listOf(Language.zhTw()))
-        Truth.assertThat(result.isSuccess).isTrue()
-        val data = result.getOrThrow()
-        Truth.assertThat(data).isEqualTo(expect)
+            service.searchStocks(
+                url = capture(urlSlot),
+                authorization = any(),
+                language = any(),
+                requestBody = any()
+            )
+        } returns Response.success(emptyList())
+        web.searchStocksV2(keyword = "2330", language = Language.zhTw())
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
     }
 
     @Test
-    fun `searchStocks_失敗`() = testScope.runTest {
-        coEvery {
-            service.searchStocks(any(), any(), any())
-        } returns Response.error(401, "".toResponseBody())
-
-        val result = web.searchStocks(keyword = "2330", languages = listOf(Language.zhTw()))
-        Truth.assertThat(result.isSuccess).isFalse()
-        val exception = result.exceptionOrNull()
-        Truth.assertThat(exception).isNotNull()
-        requireNotNull(exception)
-        Truth.assertThat(exception).isInstanceOf(HttpException::class.java)
-        val httpException = exception as HttpException
-        Truth.assertThat(httpException.code()).isEqualTo(401)
-    }
-
-    @Test
-    fun `searchStocksV2_成功`() = testScope.runTest {
+    fun searchStocksV2_success() = testScope.runTest {
         val expect = listOf(
             StockV2(
                 id = "2330",
@@ -147,22 +121,32 @@ class CustomGroup2WebImplTest {
             )
         )
         coEvery {
-            service.searchStocks(any(), any(), any())
+            service.searchStocks(
+                url = any(),
+                authorization = any(),
+                language = any(),
+                requestBody = any()
+            )
         } returns Response.success(rawStocks)
 
-        val result = web.searchStocksV2(keyword = "2330", languages = listOf(Language.zhTw()))
+        val result = web.searchStocksV2(keyword = "2330", language = Language.zhTw())
         Truth.assertThat(result.isSuccess).isTrue()
         val data = result.getOrThrow()
         Truth.assertThat(data).isEqualTo(expect)
     }
 
     @Test
-    fun `searchStocksV2_失敗`() = testScope.runTest {
+    fun searchStocksV2_failure() = testScope.runTest {
         coEvery {
-            service.searchStocks(any(), any(), any())
+            service.searchStocks(
+                url = any(),
+                authorization = any(),
+                language = any(),
+                requestBody = any()
+            )
         } returns Response.error(401, "".toResponseBody())
 
-        val result = web.searchStocksV2(keyword = "2330", languages = listOf(Language.zhTw()))
+        val result = web.searchStocksV2(keyword = "2330", language = Language.zhTw())
         Truth.assertThat(result.isSuccess).isFalse()
         val exception = result.exceptionOrNull()
         Truth.assertThat(exception).isNotNull()
@@ -173,89 +157,23 @@ class CustomGroup2WebImplTest {
     }
 
     @Test
-    fun `searchStocks_one_language_param_will_invoke_list_param_default`() =
-        testScope.runTest {
-            coEvery {
-                service.searchStocks(any(), any(), any())
-            } returns Response.success(emptyList())
-
-            val spyWeb = spyk(web)
-            spyWeb.searchStocks("2330", Language.zhTw())
-            coVerify(exactly = 1) {
-                spyWeb.searchStocks(any(), Language.zhTw())
-                spyWeb.searchStocks(any(), listOf(Language.zhTw()))
-            }
-        }
-
-    @Test
-    fun `searchStocksV2_one_language_param_will_invoke_list_param_default`() =
-        testScope.runTest {
-            coEvery {
-                service.searchStocks(any(), any(), any())
-            } returns Response.success(emptyList())
-
-            val spyWeb = spyk(web)
-            spyWeb.searchStocksV2("2330", Language.zhTw())
-            coVerify(exactly = 1) {
-                spyWeb.searchStocksV2(any(), Language.zhTw())
-                spyWeb.searchStocksV2(any(), listOf(Language.zhTw()))
-            }
-        }
-
-    @Test
-    fun `searchStocksByMarketTypes_成功`() = testScope.runTest {
-        val expect = listOf(
-            Stock(
-                id = "2330",
-                name = "台積電",
-                marketType = MarketType.Tse()
-            )
-        )
-
-        val rawStocks = listOf(
-            RawStock(
-                id = "2330",
-                name = "台積電",
-                marketType = 2,
-                type = 90
-            )
-        )
+    fun `searchStocksV2(List)_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}CustomGroupService/api/searchstocksbyappid"
+        val urlSlot = slot<String>()
         coEvery {
-            service.searchStocksByMarketType(any(), any(), any())
-        } returns Response.success(rawStocks)
-
-        val result = web.searchStocksByMarketTypes(
-            keyword = "2330",
-            languages = listOf(Language.zhTw()),
-            marketTypes = listOf(MarketType.Tse())
-        )
-        Truth.assertThat(result.isSuccess).isTrue()
-        val data = result.getOrThrow()
-        Truth.assertThat(data).isEqualTo(expect)
+            service.searchStocks(
+                url = capture(urlSlot),
+                authorization = any(),
+                language = any(),
+                requestBody = any()
+            )
+        } returns Response.success(emptyList())
+        web.searchStocksV2(keyword = "2330", languages = listOf(Language.zhTw()))
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
     }
 
     @Test
-    fun `searchStocksByMarketTypes_失敗`() = testScope.runTest {
-        coEvery {
-            service.searchStocksByMarketType(any(), any(), any())
-        } returns Response.error(401, "".toResponseBody())
-
-        val result = web.searchStocksByMarketTypes(
-            keyword = "2330",
-            languages = listOf(Language.zhTw()),
-            marketTypes = listOf(MarketType.Tse())
-        )
-        Truth.assertThat(result.isSuccess).isFalse()
-        val exception = result.exceptionOrNull()
-        Truth.assertThat(exception).isNotNull()
-        requireNotNull(exception)
-        Truth.assertThat(exception).isInstanceOf(HttpException::class.java)
-        val httpException = exception as HttpException
-        Truth.assertThat(httpException.code()).isEqualTo(401)
-    }
-
-    @Test
-    fun `searchStocksByMarketTypesV2_成功`() = testScope.runTest {
+    fun `searchStocksV2(List)_success`() = testScope.runTest {
         val expect = listOf(
             StockV2(
                 id = "2330",
@@ -273,7 +191,168 @@ class CustomGroup2WebImplTest {
             )
         )
         coEvery {
-            service.searchStocksByMarketType(any(), any(), any())
+            service.searchStocks(
+                url = any(),
+                authorization = any(),
+                language = any(),
+                requestBody = any()
+            )
+        } returns Response.success(rawStocks)
+
+        val result = web.searchStocksV2(keyword = "2330", languages = listOf(Language.zhTw()))
+        Truth.assertThat(result.isSuccess).isTrue()
+        val data = result.getOrThrow()
+        Truth.assertThat(data).isEqualTo(expect)
+    }
+
+    @Test
+    fun `searchStocksV2(List)_failure`() = testScope.runTest {
+        coEvery {
+            service.searchStocks(
+                url = any(),
+                authorization = any(),
+                language = any(),
+                requestBody = any()
+            )
+        } returns Response.error(401, "".toResponseBody())
+
+        val result = web.searchStocksV2(keyword = "2330", languages = listOf(Language.zhTw()))
+        Truth.assertThat(result.isSuccess).isFalse()
+        val exception = result.exceptionOrNull()
+        Truth.assertThat(exception).isNotNull()
+        requireNotNull(exception)
+        Truth.assertThat(exception).isInstanceOf(HttpException::class.java)
+        val httpException = exception as HttpException
+        Truth.assertThat(httpException.code()).isEqualTo(401)
+    }
+
+    @Test
+    fun `searchStocksByMarketTypesV2_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}CustomGroupService/api/searchstocksbycommoditytype"
+        val urlSlot = slot<String>()
+        coEvery {
+            service.searchStocksByMarketType(
+                url = capture(urlSlot),
+                authorization = any(),
+                language = any(),
+                requestBody = any()
+            )
+        } returns Response.success(emptyList())
+        web.searchStocksByMarketTypesV2(
+            keyword = "2330",
+            language = Language.zhTw(),
+            marketTypes = MarketTypeV2.Tse.getAll()
+        )
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun searchStocksByMarketTypesV2_success() = testScope.runTest {
+        val expect = listOf(
+            StockV2(
+                id = "2330",
+                name = "台積電",
+                marketType = MarketTypeV2.Tse.Stock
+            )
+        )
+
+        val rawStocks = listOf(
+            RawStock(
+                id = "2330",
+                name = "台積電",
+                marketType = 2,
+                type = 90
+            )
+        )
+        coEvery {
+            service.searchStocksByMarketType(
+                url = any(),
+                authorization = any(),
+                language = any(),
+                requestBody = any()
+            )
+        } returns Response.success(rawStocks)
+
+        val result = web.searchStocksByMarketTypesV2(
+            keyword = "2330",
+            language = Language.zhTw(),
+            marketTypes = MarketTypeV2.Tse.getAll()
+        )
+        Truth.assertThat(result.isSuccess).isTrue()
+        val data = result.getOrThrow()
+        Truth.assertThat(data).isEqualTo(expect)
+    }
+
+    @Test
+    fun searchStocksByMarketTypesV2_failure() = testScope.runTest {
+        coEvery {
+            service.searchStocksByMarketType(
+                url = any(),
+                authorization = any(),
+                language = any(),
+                requestBody = any()
+            )
+        } returns Response.error(401, "".toResponseBody())
+
+        val result = web.searchStocksByMarketTypesV2(
+            keyword = "2330",
+            language = Language.zhTw(),
+            marketTypes = MarketTypeV2.Tse.getAll()
+        )
+        Truth.assertThat(result.isSuccess).isFalse()
+        val exception = result.exceptionOrNull()
+        Truth.assertThat(exception).isNotNull()
+        requireNotNull(exception)
+        Truth.assertThat(exception).isInstanceOf(HttpException::class.java)
+        val httpException = exception as HttpException
+        Truth.assertThat(httpException.code()).isEqualTo(401)
+    }
+
+    @Test
+    fun `searchStocksByMarketTypesV2(List)_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}CustomGroupService/api/searchstocksbycommoditytype"
+        val urlSlot = slot<String>()
+        coEvery {
+            service.searchStocksByMarketType(
+                url = capture(urlSlot),
+                authorization = any(),
+                language = any(),
+                requestBody = any()
+            )
+        } returns Response.success(emptyList())
+        web.searchStocksByMarketTypesV2(
+            keyword = "2330",
+            languages = listOf(Language.zhTw()),
+            marketTypes = MarketTypeV2.Tse.getAll()
+        )
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun `searchStocksByMarketTypesV2(List)_success`() = testScope.runTest {
+        val expect = listOf(
+            StockV2(
+                id = "2330",
+                name = "台積電",
+                marketType = MarketTypeV2.Tse.Stock
+            )
+        )
+
+        val rawStocks = listOf(
+            RawStock(
+                id = "2330",
+                name = "台積電",
+                marketType = 2,
+                type = 90
+            )
+        )
+        coEvery {
+            service.searchStocksByMarketType(
+                url = any(),
+                authorization = any(),
+                language = any(),
+                requestBody = any()
+            )
         } returns Response.success(rawStocks)
 
         val result = web.searchStocksByMarketTypesV2(
@@ -287,9 +366,14 @@ class CustomGroup2WebImplTest {
     }
 
     @Test
-    fun `searchStocksByMarketTypesV2_失敗`() = testScope.runTest {
+    fun `searchStocksByMarketTypesV2(List)_failure`() = testScope.runTest {
         coEvery {
-            service.searchStocksByMarketType(any(), any(), any())
+            service.searchStocksByMarketType(
+                url = any(),
+                authorization = any(),
+                language = any(),
+                requestBody = any()
+            )
         } returns Response.error(401, "".toResponseBody())
 
         val result = web.searchStocksByMarketTypesV2(
@@ -307,61 +391,29 @@ class CustomGroup2WebImplTest {
     }
 
     @Test
-    fun `searchStocksByMarketTypes_one_language_param_will_invoke_list_param_default`() =
-        testScope.runTest {
-            coEvery {
-                service.searchStocksByMarketType(any(), any(), any())
-            } returns Response.success(emptyList())
-
-            val spyWeb = spyk(web)
-            spyWeb.searchStocksByMarketTypes(
-                keyword = "2330",
-                language = Language.zhTw(),
-                marketTypes = listOf(MarketType.Tse())
-            )
-
-            coVerify(exactly = 1) {
-                spyWeb.searchStocksByMarketTypes(any(), Language.zhTw(), listOf(MarketType.Tse()))
-                spyWeb.searchStocksByMarketTypes(
-                    any(),
-                    listOf(Language.zhTw()),
-                    listOf(MarketType.Tse())
-                )
-            }
-        }
-
-    @Test
-    fun `searchStocksByMarketTypesV2_one_language_param_will_invoke_list_param_default`() =
-        testScope.runTest {
-            coEvery {
-                service.searchStocksByMarketType(any(), any(), any())
-            } returns Response.success(emptyList())
-
-            val spyWeb = spyk(web)
-            spyWeb.searchStocksByMarketTypesV2(
-                keyword = "2330",
-                language = Language.zhTw(),
-                marketTypes = MarketTypeV2.Tse.getAll()
-            )
-
-            coVerify(exactly = 1) {
-                spyWeb.searchStocksByMarketTypesV2(
-                    any(),
-                    Language.zhTw(),
-                    MarketTypeV2.Tse.getAll()
-                )
-                spyWeb.searchStocksByMarketTypesV2(
-                    any(),
-                    listOf(Language.zhTw()),
-                    MarketTypeV2.Tse.getAll()
-                )
-            }
-        }
-
-    @Test
-    fun getCustomGroup_成功() = testScope.runTest {
+    fun `getCustomGroup(Default)_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}custom-group/api"
+        val urlSlot = slot<String>()
         coEvery {
             service.getCustomGroup(
+                url = capture(urlSlot),
+                authorization = any(),
+                filters = any()
+            )
+        } returns Response.success(
+            Documents(
+                documents = emptyList()
+            )
+        )
+        web.getCustomGroup(marketType = DocMarketType.Stock)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun `getCustomGroup(Default)_success`() = testScope.runTest {
+        coEvery {
+            service.getCustomGroup(
+                url = any(),
                 authorization = any(),
                 filters = any()
             )
@@ -377,7 +429,7 @@ class CustomGroup2WebImplTest {
                 )
             )
         )
-        val result = web.getCustomGroup(DocMarketType.Stock)
+        val result = web.getCustomGroup(marketType = DocMarketType.Stock)
         Truth.assertThat(result.isSuccess).isTrue()
         val customGroupDataList = result.getOrThrow()
         Truth.assertThat(customGroupDataList).hasSize(1)
@@ -389,14 +441,15 @@ class CustomGroup2WebImplTest {
     }
 
     @Test
-    fun getCustomGroup_401_失敗() = testScope.runTest {
+    fun `getCustomGroup(Default)_401_failure`() = testScope.runTest {
         coEvery {
             service.getCustomGroup(
+                url = any(),
                 authorization = any(),
                 filters = any()
             )
         } returns Response.error(401, "".toResponseBody())
-        val result = web.getCustomGroup(DocMarketType.Stock)
+        val result = web.getCustomGroup(marketType = DocMarketType.Stock)
         Truth.assertThat(result.isFailure).isTrue()
         val exception = result.exceptionOrNull()
         Truth.assertThat(exception).isInstanceOf(HttpException::class.java)
@@ -405,11 +458,13 @@ class CustomGroup2WebImplTest {
     }
 
     @Test
-    fun getCustomGroup_by_id_成功() = testScope.runTest {
+    fun `getCustomGroup(id)_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}custom-group/api/1"
+        val urlSlot = slot<String>()
         coEvery {
             service.getCustomGroupBy(
-                authorization = any(),
-                id = any()
+                url = capture(urlSlot),
+                authorization = any()
             )
         } returns Response.success(
             Document(
@@ -419,7 +474,26 @@ class CustomGroup2WebImplTest {
                 stocks = listOf("2330")
             )
         )
-        val result = web.getCustomGroup("1")
+        web.getCustomGroup(id = "1")
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun `getCustomGroup(id)_success`() = testScope.runTest {
+        coEvery {
+            service.getCustomGroupBy(
+                url = any(),
+                authorization = any()
+            )
+        } returns Response.success(
+            Document(
+                id = "1",
+                displayName = "測試用群組",
+                marketType = DocMarketType.Stock.value,
+                stocks = listOf("2330")
+            )
+        )
+        val result = web.getCustomGroup(id = "1")
         Truth.assertThat(result.isSuccess).isTrue()
         val customGroup = result.getOrThrow()
         Truth.assertThat(customGroup.id).isEqualTo("1")
@@ -429,14 +503,14 @@ class CustomGroup2WebImplTest {
     }
 
     @Test
-    fun getCustomGroup_by_id_401_失敗() = testScope.runTest {
+    fun `getCustomGroup(id)_401_failure`() = testScope.runTest {
         coEvery {
             service.getCustomGroupBy(
-                authorization = any(),
-                id = any()
+                url = any(),
+                authorization = any()
             )
         } returns Response.error(401, "".toResponseBody())
-        val result = web.getCustomGroup("1")
+        val result = web.getCustomGroup(id = "1")
         Truth.assertThat(result.isFailure).isTrue()
         val exception = result.exceptionOrNull()
         Truth.assertThat(exception).isInstanceOf(HttpException::class.java)
@@ -445,11 +519,32 @@ class CustomGroup2WebImplTest {
     }
 
     @Test
-    fun updateCustomGroup_成功() = testScope.runTest {
+    fun `updateCustomGroup_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}custom-group/api/1"
+        val urlSlot = slot<String>()
+        val newGroup = CustomGroup(
+            id = "1",
+            name = "測試群組",
+            marketType = DocMarketType.Stock,
+            stocks = listOf("2330", "0050")
+        )
         coEvery {
             service.updateCustomGroup(
+                url = capture(urlSlot),
                 authorization = any(),
-                id = any(),
+                newGroup = any()
+            )
+        } returns Response.success<Void>(204, null)
+        web.updateCustomGroup(newGroup)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun updateCustomGroup_success() = testScope.runTest {
+        coEvery {
+            service.updateCustomGroup(
+                url = any(),
+                authorization = any(),
                 newGroup = any()
             )
         } returns Response.success<Void>(204, null)
@@ -465,11 +560,11 @@ class CustomGroup2WebImplTest {
     }
 
     @Test
-    fun updateCustomGroup_401_失敗() = testScope.runTest {
+    fun updateCustomGroup_401_failure() = testScope.runTest {
         coEvery {
             service.updateCustomGroup(
+                url = any(),
                 authorization = any(),
-                id = any(),
                 newGroup = any()
             )
         } returns Response.error(401, "".toResponseBody())
@@ -488,9 +583,27 @@ class CustomGroup2WebImplTest {
     }
 
     @Test
-    fun createCustomGroup_成功() = testScope.runTest {
+    fun `createCustomGroup_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}custom-group/api"
+        val urlSlot = slot<String>()
         coEvery {
             service.createCustomGroup(
+                url = capture(urlSlot),
+                authorization = any(),
+                baseDocument = any()
+            )
+        } returns Response.success(
+            CreateCustomGroupResponseBody("1")
+        )
+        web.createCustomGroup(displayName = "自選股清單", marketType = DocMarketType.Stock)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun createCustomGroup_success() = testScope.runTest {
+        coEvery {
+            service.createCustomGroup(
+                url = any(),
                 authorization = any(),
                 baseDocument = any()
             )
@@ -509,9 +622,10 @@ class CustomGroup2WebImplTest {
     }
 
     @Test
-    fun createCustomGroup_401_失敗() = testScope.runTest {
+    fun createCustomGroup_401_failure() = testScope.runTest {
         coEvery {
             service.createCustomGroup(
+                url = any(),
                 authorization = any(),
                 baseDocument = any()
             )
@@ -525,11 +639,25 @@ class CustomGroup2WebImplTest {
     }
 
     @Test
-    fun deleteCustomGroup_成功() = testScope.runTest {
+    fun `deleteCustomGroup_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}custom-group/api/1"
+        val urlSlot = slot<String>()
         coEvery {
             service.deleteCustomGroup(
-                authorization = any(),
-                id = any()
+                url = capture(urlSlot),
+                authorization = any()
+            )
+        } returns Response.success<Void>(204, null)
+        web.deleteCustomGroup("1")
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun deleteCustomGroup_success() = testScope.runTest {
+        coEvery {
+            service.deleteCustomGroup(
+                url = any(),
+                authorization = any()
             )
         } returns Response.success<Void>(204, null)
         val result = web.deleteCustomGroup("1")
@@ -538,11 +666,11 @@ class CustomGroup2WebImplTest {
     }
 
     @Test
-    fun deleteCustomGroup_401_失敗() = testScope.runTest {
+    fun deleteCustomGroup_401_failure() = testScope.runTest {
         coEvery {
             service.deleteCustomGroup(
-                authorization = any(),
-                id = any()
+                url = any(),
+                authorization = any()
             )
         } returns Response.error(401, "".toResponseBody())
         val result = web.deleteCustomGroup("1")
@@ -554,9 +682,33 @@ class CustomGroup2WebImplTest {
     }
 
     @Test
-    fun getUserConfiguration_成功() = testScope.runTest {
+    fun `getUserConfiguration_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}custom-group/api/_configuration"
+        val urlSlot = slot<String>()
         coEvery {
-            service.getUserConfiguration(authorization = any())
+            service.getUserConfiguration(
+                url = capture(urlSlot),
+                authorization = any()
+            )
+        } returns Response.success(
+            UserConfigurationDocument(
+                documentOrders = mapOf(
+                    "10000" to 1,
+                    "10001" to 2
+                )
+            )
+        )
+        web.getUserConfiguration()
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getUserConfiguration_success() = testScope.runTest {
+        coEvery {
+            service.getUserConfiguration(
+                url = any(),
+                authorization = any()
+            )
         } returns Response.success(
             UserConfigurationDocument(
                 documentOrders = mapOf(
@@ -577,9 +729,12 @@ class CustomGroup2WebImplTest {
     }
 
     @Test
-    fun getUserConfiguration_401_失敗() = testScope.runTest {
+    fun getUserConfiguration_401_failure() = testScope.runTest {
         coEvery {
-            service.getUserConfiguration(authorization = any())
+            service.getUserConfiguration(
+                url = any(),
+                authorization = any()
+            )
         } returns Response.error(401, "".toResponseBody())
         val result = web.getUserConfiguration()
         Truth.assertThat(result.isFailure).isTrue()
@@ -590,9 +745,62 @@ class CustomGroup2WebImplTest {
     }
 
     @Test
-    fun updateUserConfiguration_成功() = testScope.runTest {
+    fun `updateUserConfiguration_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}custom-group/api/_configuration"
+        val urlSlot = slot<String>()
         coEvery {
             service.updateUserConfiguration(
+                url = capture(urlSlot),
+                authorization = any(),
+                newUserConfigurationDocument = any()
+            )
+        } returns Response.success<Void>(204, null)
+        web.updateConfiguration(emptyList())
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun `updateUserConfiguration_UserConfigurationDocument id _configuration and is type is UserConfiguration`() =
+        testScope.runTest {
+            val slot = slot<UserConfigurationDocument>()
+            coEvery {
+                service.updateUserConfiguration(
+                    url = any(),
+                    authorization = any(),
+                    newUserConfigurationDocument = capture(slot)
+                )
+            } returns Response.success<Void>(204, null)
+            web.updateConfiguration(emptyList())
+            slot.captured.id
+            Truth.assertThat(slot.captured.id).isEqualTo("_configuration")
+            Truth.assertThat(slot.captured.type).isEqualTo("UserConfiguration")
+        }
+
+    @Test
+    fun `updateUserConfiguration_input CustomGroup 10000 and 10001_documentOrders key is 10000 10001 and value is 1 2`() =
+        testScope.runTest {
+            val slot = slot<UserConfigurationDocument>()
+            coEvery {
+                service.updateUserConfiguration(
+                    url = any(),
+                    authorization = any(),
+                    newUserConfigurationDocument = capture(slot)
+                )
+            } returns Response.success<Void>(204, null)
+            val newCustomGroups = listOf(
+                CustomGroup(id = "10000", name = null, marketType = null, stocks = listOf()),
+                CustomGroup(id = "10001", name = null, marketType = null, stocks = listOf())
+            )
+            web.updateConfiguration(newCustomGroups)
+            Truth.assertThat(slot.captured.documentOrders?.keys).isEqualTo(setOf("10000", "10001"))
+            Truth.assertThat(slot.captured.documentOrders?.values?.toList()).isEqualTo(listOf(1, 2))
+        }
+
+    @Test
+    fun updateUserConfiguration_success() = testScope.runTest {
+        coEvery {
+            service.updateUserConfiguration(
+                url = any(),
                 authorization = any(),
                 newUserConfigurationDocument = any()
             )
@@ -607,9 +815,10 @@ class CustomGroup2WebImplTest {
     }
 
     @Test
-    fun updateUserConfiguration_401_失敗() = testScope.runTest {
+    fun updateUserConfiguration_401_failure() = testScope.runTest {
         coEvery {
             service.updateUserConfiguration(
+                url = any(),
                 authorization = any(),
                 newUserConfigurationDocument = any()
             )
@@ -620,5 +829,9 @@ class CustomGroup2WebImplTest {
         Truth.assertThat(exception).isInstanceOf(HttpException::class.java)
         require(exception is HttpException)
         Truth.assertThat(exception.code()).isEqualTo(401)
+    }
+
+    companion object {
+        private const val EXCEPT_DOMAIN = "localhost://8080:80/"
     }
 }

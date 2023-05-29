@@ -5,8 +5,7 @@ import com.cmoney.backend2.base.extension.checkIsSuccessful
 import com.cmoney.backend2.base.extension.checkResponseBody
 import com.cmoney.backend2.base.extension.createAuthorizationBearer
 import com.cmoney.backend2.base.extension.requireBody
-import com.cmoney.backend2.base.model.request.MemberApiParam
-import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.customgroup.service.api.addcustomgroup.NewCustomGroup
 import com.cmoney.backend2.customgroup.service.api.common.CustomGroupType
 import com.cmoney.backend2.customgroup.service.api.getcustomgroupwithorder.SingleGroupWithOrder
@@ -20,19 +19,24 @@ import com.google.gson.Gson
 import kotlinx.coroutines.withContext
 
 class CustomGroupWebImpl(
+    override val manager: GlobalBackend2Manager,
     private val gson: Gson,
     private val service: CustomGroupService,
-    private val setting: Setting,
     private val dispatcher: DispatcherProvider = DefaultDispatcherProvider
 ) : CustomGroupWeb {
 
-    override suspend fun getCustomGroupListIncludeOrder(groupType: CustomGroupType): Result<List<SingleGroupWithOrder>> =
+    override suspend fun getCustomGroupListIncludeOrder(
+        groupType: CustomGroupType,
+        domain: String,
+        url: String
+    ): Result<List<SingleGroupWithOrder>> =
         withContext(dispatcher.io()) {
             runCatching {
                 val response = service.getCustomGroupWithOrder(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    guid = setting.identityToken.getMemberGuid(),
-                    appId = setting.appId,
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
+                    guid = manager.getIdentityToken().getMemberGuid(),
+                    appId = manager.getAppId(),
                     docType = groupType.name
                 )
                 response.checkIsSuccessful()
@@ -45,13 +49,16 @@ class CustomGroupWebImpl(
         }
 
     override suspend fun getCustomGroupContent(
-        docNo: Int
+        docNo: Int,
+        domain: String,
+        url: String
     ): Result<List<String>> = withContext(dispatcher.io()) {
         runCatching {
             val response = service.getCustomGroupContent(
-                authorization = setting.accessToken.createAuthorizationBearer(),
-                guid = setting.identityToken.getMemberGuid(),
-                appId = setting.appId,
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
+                guid = manager.getIdentityToken().getMemberGuid(),
+                appId = manager.getAppId(),
                 docNo = docNo
             )
             response.checkIsSuccessful()
@@ -63,21 +70,18 @@ class CustomGroupWebImpl(
         }
     }
 
-    override suspend fun getCustomGroupWithOrderAndList(
-        apiParam: MemberApiParam,
-        groupType: CustomGroupType
-    ): Result<CustomGroupWithOrderAndList> = getCustomGroupWithOrderAndList(groupType)
-
-    override suspend fun getCustomGroupWithOrderAndList(groupType: CustomGroupType): Result<CustomGroupWithOrderAndList> =
-        getCustomGroupListIncludeOrderAndContent(groupType)
-
-    override suspend fun getCustomGroupListIncludeOrderAndContent(groupType: CustomGroupType): Result<CustomGroupWithOrderAndList> =
+    override suspend fun getCustomGroupListIncludeOrderAndContent(
+        groupType: CustomGroupType,
+        domain: String,
+        url: String
+    ): Result<CustomGroupWithOrderAndList> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 val response = service.getCustomGroupWithOrderAndList(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    guid = setting.identityToken.getMemberGuid(),
-                    appId = setting.appId,
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
+                    guid = manager.getIdentityToken().getMemberGuid(),
+                    appId = manager.getAppId(),
                     docType = groupType.name
                 )
                 response.checkIsSuccessful()
@@ -87,32 +91,20 @@ class CustomGroupWebImpl(
             }
         }
 
-    override suspend fun updateCustomList(
-        apiParam: MemberApiParam,
-        groupType: CustomGroupType,
-        docNo: Int,
-        docName: String,
-        list: List<String>
-    ): Result<Boolean> = updateCustomList(groupType, docNo, docName, list)
-
-    override suspend fun updateCustomList(
-        groupType: CustomGroupType,
-        docNo: Int,
-        docName: String,
-        list: List<String>
-    ): Result<Boolean> = updateCustomGroupNameAndContent(groupType, docNo, docName, list)
-
     override suspend fun updateCustomGroupNameAndContent(
         groupType: CustomGroupType,
         docNo: Int,
         docName: String,
-        list: List<String>
+        list: List<String>,
+        domain: String,
+        url: String
     ): Result<Boolean> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             val response = service.updateCustomList(
-                authorization = setting.accessToken.createAuthorizationBearer(),
-                appId = setting.appId,
-                guid = setting.identityToken.getMemberGuid(),
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
+                appId = manager.getAppId(),
+                guid = manager.getIdentityToken().getMemberGuid(),
                 docType = groupType.name,
                 docNo = docNo,
                 docName = docName,
@@ -127,21 +119,18 @@ class CustomGroupWebImpl(
     }
 
     override suspend fun addCustomGroup(
-        apiParam: MemberApiParam,
         groupType: CustomGroupType,
-        docName: String
-    ): Result<NewCustomGroup> = addCustomGroup(groupType, docName)
-
-    override suspend fun addCustomGroup(
-        groupType: CustomGroupType,
-        docName: String
+        docName: String,
+        domain: String,
+        url: String
     ): Result<NewCustomGroup> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 val response = service.addCustomGroup(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    appId = setting.appId,
-                    guid = setting.identityToken.getMemberGuid(),
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
+                    appId = manager.getAppId(),
+                    guid = manager.getIdentityToken().getMemberGuid(),
                     docType = groupType.name,
                     docName = docName
                 )
@@ -153,17 +142,17 @@ class CustomGroupWebImpl(
         }
 
     override suspend fun deleteCustomGroup(
-        apiParam: MemberApiParam,
-        docNo: Int
-    ): Result<Boolean> = deleteCustomGroup(docNo)
-
-    override suspend fun deleteCustomGroup(docNo: Int): Result<Boolean> =
+        docNo: Int,
+        domain: String,
+        url: String
+    ): Result<Boolean> =
         withContext(dispatcher.io()) {
             runCatching {
                 val response = service.deleteCustomGroup(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    appId = setting.appId,
-                    guid = setting.identityToken.getMemberGuid(),
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
+                    appId = manager.getAppId(),
+                    guid = manager.getIdentityToken().getMemberGuid(),
                     docNo = docNo
                 )
                 response.checkIsSuccessful()
@@ -174,26 +163,19 @@ class CustomGroupWebImpl(
             }
         }
 
-    /**
-     * 更名自選股清單
-     */
-    override suspend fun renameCustomGroup(
-        apiParam: MemberApiParam,
-        groupType: CustomGroupType,
-        docNo: Int,
-        newDocName: String
-    ): Result<Boolean> = renameCustomGroup(groupType, docNo, newDocName)
-
     override suspend fun renameCustomGroup(
         groupType: CustomGroupType,
         docNo: Int,
-        newDocName: String
+        newDocName: String,
+        domain: String,
+        url: String
     ): Result<Boolean> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             val response = service.updateCustomGroupName(
-                authorization = setting.accessToken.createAuthorizationBearer(),
-                appId = setting.appId,
-                guid = setting.identityToken.getMemberGuid(),
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
+                appId = manager.getAppId(),
+                guid = manager.getIdentityToken().getMemberGuid(),
                 docType = groupType.name,
                 docNo = docNo,
                 docName = newDocName
@@ -206,18 +188,11 @@ class CustomGroupWebImpl(
         }
     }
 
-    /**
-     * 排序自選股清單
-     */
-    override suspend fun updateCustomGroupOrder(
-        apiParam: MemberApiParam,
-        groupType: CustomGroupType,
-        docNoList: List<Int>
-    ): Result<UpdateCustomGroupOrderComplete> = updateCustomGroupOrder(groupType, docNoList)
-
     override suspend fun updateCustomGroupOrder(
         groupType: CustomGroupType,
-        docNoList: List<Int>
+        docNoList: List<Int>,
+        domain: String,
+        url: String
     ): Result<UpdateCustomGroupOrderComplete> =
         withContext(dispatcher.io()) {
             runCatching {
@@ -226,9 +201,10 @@ class CustomGroupWebImpl(
                 }.toMap()
                 val orderString = gson.toJson(orderMap).orEmpty()
                 val response = service.updateCustomGroupOrder(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    appId = setting.appId,
-                    guid = setting.identityToken.getMemberGuid(),
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
+                    appId = manager.getAppId(),
+                    guid = manager.getIdentityToken().getMemberGuid(),
                     docType = groupType.name,
                     orderMap = orderString
                 )
@@ -240,14 +216,17 @@ class CustomGroupWebImpl(
         }
 
     override suspend fun searchStocks(
-        keyword: String
+        keyword: String,
+        domain: String,
+        url: String
     ): Result<SearchStocksResponseBody> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             service.searchStocks(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
                 requestBody = SearchStocksRequestBody(
-                    appId = setting.appId,
-                    guid = setting.identityToken.getMemberGuid(),
+                    appId = manager.getAppId(),
+                    guid = manager.getIdentityToken().getMemberGuid(),
                     keyword = keyword
                 )
             ).checkResponseBody(gson)

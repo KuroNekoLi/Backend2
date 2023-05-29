@@ -29,7 +29,7 @@ class TickDataServiceCase : ServiceCase {
             minuteInterval = 30,
             count = 5,
             dataPoints = listOf(1, 5, 30, 60)
-        )
+        ).logResponse(TAG)
     }
 
     companion object {

@@ -10,27 +10,23 @@ import com.cmoney.backend2.base.extension.checkResponseBody
 import com.cmoney.backend2.base.extension.createAuthorizationBearer
 import com.cmoney.backend2.base.extension.handleNoContent
 import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
-import com.cmoney.backend2.base.model.request.MemberApiParam
+import com.cmoney.core.DefaultDispatcherProvider
+import com.cmoney.core.DispatcherProvider
 import com.google.gson.Gson
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class ActivityWebImpl(
-    private val manager: GlobalBackend2Manager,
+    override val manager: GlobalBackend2Manager,
     private val gson: Gson,
     private val activityService: ActivityService,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val dispatcherProvider: DispatcherProvider = DefaultDispatcherProvider
 ) : ActivityWeb {
 
-    override suspend fun getDayCount(
-        apiParam: MemberApiParam
-    ): Result<GetDayCountResponseBody> = getDayCount()
-
-    override suspend fun getDayCount(): Result<GetDayCountResponseBody> =
-        withContext(ioDispatcher) {
-            kotlin.runCatching {
+    override suspend fun getDayCount(domain: String, url: String): Result<GetDayCountResponseBody> =
+        withContext(dispatcherProvider.io()) {
+            runCatching {
                 activityService.getDayCount(
+                    url = url,
                     authorization = manager.getAccessToken().createAuthorizationBearer(),
                     requestBody = GetDayCountRequestBody(
                         appId = manager.getAppId(),
@@ -41,41 +37,40 @@ class ActivityWebImpl(
         }
 
     override suspend fun requestBonus(
-        apiParam: MemberApiParam,
         referrerId: Long,
-        eventId: Long): Result<Unit> = requestBonus(referrerId, eventId)
-
-    override suspend fun requestBonus(referrerId: Long, eventId: Long): Result<Unit> =
-        withContext(ioDispatcher) {
-            kotlin.runCatching {
-                activityService.requestBonus(
-                    authorization = manager.getAccessToken().createAuthorizationBearer(),
-                    requestBody = RequestBonusRequestBody(
-                        appId = manager.getAppId(),
-                        guid = manager.getIdentityToken().getMemberGuid(),
-                        referrerId = referrerId,
-                        eventId = eventId
-                    )
-                ).handleNoContent(gson)
-            }
+        eventId: Long,
+        domain: String,
+        url: String
+    ): Result<Unit> = withContext(dispatcherProvider.io()) {
+        runCatching {
+            activityService.requestBonus(
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
+                requestBody = RequestBonusRequestBody(
+                    appId = manager.getAppId(),
+                    guid = manager.getIdentityToken().getMemberGuid(),
+                    referrerId = referrerId,
+                    eventId = eventId
+                )
+            ).handleNoContent(gson)
         }
+    }
 
     override suspend fun getReferralCount(
-        apiParam: MemberApiParam,
-        eventId: Long
-    ): Result<GetReferralCountResponseBody> = getReferralCount(eventId)
-
-    override suspend fun getReferralCount(eventId: Long): Result<GetReferralCountResponseBody> =
-        withContext(ioDispatcher) {
-            kotlin.runCatching {
-                activityService.getReferralCount(
-                    authorization = manager.getAccessToken().createAuthorizationBearer(),
-                    requestBody = GetReferralCountRequestBody(
-                        appId = manager.getAppId(),
-                        guid = manager.getIdentityToken().getMemberGuid(),
-                        eventId = eventId
-                    )
-                ).checkResponseBody(gson)
-            }
+        eventId: Long,
+        domain: String,
+        url: String
+    ): Result<GetReferralCountResponseBody> = withContext(dispatcherProvider.io()) {
+        runCatching {
+            activityService.getReferralCount(
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
+                requestBody = GetReferralCountRequestBody(
+                    appId = manager.getAppId(),
+                    guid = manager.getIdentityToken().getMemberGuid(),
+                    eventId = eventId
+                )
+            ).checkResponseBody(gson)
         }
+    }
 }

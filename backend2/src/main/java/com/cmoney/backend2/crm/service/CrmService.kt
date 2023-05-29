@@ -7,14 +7,16 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Url
 
 interface CrmService {
     /**
      * 建立與客服對話視窗
      */
     @RecordApi
-    @POST("CRM/livechat")
+    @POST
     suspend fun createLiveChat(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: CreateLiveChatRequestBody
     ): Response<CreateLiveChatResponseBody>

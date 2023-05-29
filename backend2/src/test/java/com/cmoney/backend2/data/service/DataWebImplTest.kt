@@ -1,8 +1,7 @@
 package com.cmoney.backend2.data.service
 
-import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.ServerException
-import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.data.service.api.FundIdWithError
 import com.cmoney.core.CoroutineTestRule
 import com.cmoney.core.TestDispatcherProvider
@@ -10,6 +9,7 @@ import com.google.common.truth.Truth
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
+import io.mockk.slot
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
@@ -31,18 +31,45 @@ class DataWebImplTest {
 
     @MockK
     private lateinit var service: DataService
-    private lateinit var setting: Setting
     private lateinit var dataWeb: DataWeb
+
+    @MockK(relaxed = true)
+    private lateinit var manager: GlobalBackend2Manager
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        setting = TestSetting()
         dataWeb = DataWebImpl(
+            manager = manager,
             service = service,
-            setting = setting,
             dispatcher = TestDispatcherProvider()
         )
+        coEvery {
+            manager.getDataSettingAdapter().getDomain()
+        } returns EXCEPT_DOMAIN
+    }
+
+    @Test
+    fun `getFundIdData check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}api/ChipK"
+        val urlSlot = slot<String>()
+        val response = FundIdWithError(
+            state = FundIdWithError.STATE_SUCCESS,
+            title = listOf("日期"),
+            data = listOf(listOf("20211122"))
+        )
+
+        coEvery {
+            service.getFundIdData(
+                url = capture(urlSlot),
+                authToken = any(),
+                fundId = any(),
+                params = any()
+            )
+        } returns Response.success(response)
+
+        dataWeb.getFundIdData(fundId = 190, params = "1")
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
     }
 
     @Test
@@ -55,8 +82,10 @@ class DataWebImplTest {
 
         coEvery {
             service.getFundIdData(
+                url = any(),
                 authToken = any(),
-                url = any()
+                fundId = any(),
+                params = any()
             )
         } returns Response.success(response)
 
@@ -76,8 +105,10 @@ class DataWebImplTest {
 
         coEvery {
             service.getFundIdData(
+                url = any(),
                 authToken = any(),
-                url = any()
+                fundId = any(),
+                params = any()
             )
         } returns Response.success(response)
 
@@ -97,8 +128,10 @@ class DataWebImplTest {
 
         coEvery {
             service.getFundIdData(
+                url = any(),
                 authToken = any(),
-                url = any()
+                fundId = any(),
+                params = any()
             )
         } returns Response.success(response)
 
@@ -118,8 +151,10 @@ class DataWebImplTest {
 
         coEvery {
             service.getFundIdData(
+                url = any(),
                 authToken = any(),
-                url = any()
+                fundId = any(),
+                params = any()
             )
         } returns Response.success(response)
 
@@ -129,4 +164,7 @@ class DataWebImplTest {
         Truth.assertThat(exception).isInstanceOf(ServerException::class.java)
     }
 
+    companion object {
+        private const val EXCEPT_DOMAIN = "localhost://8080:80/"
+    }
 }

@@ -2,9 +2,8 @@ package com.cmoney.backend2.customgroup.service
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
-import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.ServerException
-import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.customgroup.TW_CUSTOM_GROUP_CONTENT
 import com.cmoney.backend2.customgroup.TW_CUSTOM_GROUP_LIST
 import com.cmoney.backend2.customgroup.TW_CUSTOM_GROUP_LIST_WITH_CONTENT
@@ -30,6 +29,7 @@ import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
+import io.mockk.slot
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
@@ -55,22 +55,51 @@ class CustomGroupWebImplTest {
     private val context = ApplicationProvider.getApplicationContext<Context>()
     private val gson = GsonBuilder().serializeNulls().setLenient().setPrettyPrinting().create()
     private lateinit var customGroupWeb: CustomGroupWebImpl
-    private lateinit var setting: Setting
+
+    @MockK(relaxed = true)
+    private lateinit var manager: GlobalBackend2Manager
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        setting = TestSetting()
         customGroupWeb = CustomGroupWebImpl(
+            manager = manager,
             gson = gson,
             service = service,
-            setting = setting,
             dispatcher = TestDispatcherProvider()
         )
+        coEvery {
+            manager.getCustomGroupSettingAdapter().getDomain()
+        } returns EXCEPT_DOMAIN
     }
 
     private inline fun <reified T> String.asCustomGroup(gson: Gson) =
         gson.fromJson<T>(this, object : TypeToken<T>() {}.type)
+
+    @Test
+    fun `getCustomGroupWithOrder_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}MobileService/ashx/CustomerGroup/CustomGroup.ashx"
+        val urlSlot = slot<String>()
+        val response = context.assets.open(TW_CUSTOM_GROUP_LIST)
+            .bufferedReader()
+            .use {
+                it.readText()
+            }
+            .asCustomGroup<CustomGroupWithOrderWithError>(gson)
+
+        coEvery {
+            service.getCustomGroupWithOrder(
+                url = capture(urlSlot),
+                authorization = any(),
+                action = any(),
+                guid = any(),
+                appId = any(),
+                docType = any()
+            )
+        } returns Response.success(response)
+        customGroupWeb.getCustomGroupListIncludeOrder(groupType = CustomGroupType.Stock)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
 
     @Test
     fun `getCustomGroupWithOrder_TW成功`() = testScope.runTest {
@@ -82,16 +111,24 @@ class CustomGroupWebImplTest {
             .asCustomGroup<CustomGroupWithOrderWithError>(gson)
 
         coEvery {
-            service.getCustomGroupWithOrder(any(), any(), any(), any(), any())
+            service.getCustomGroupWithOrder(
+                url = any(),
+                authorization = any(),
+                action = any(),
+                guid = any(),
+                appId = any(),
+                docType = any()
+            )
         } returns Response.success(response)
         val result =
             customGroupWeb.getCustomGroupListIncludeOrder(groupType = CustomGroupType.Stock)
         coVerify {
             service.getCustomGroupWithOrder(
-                any(),
-                any(),
-                any(),
-                any(),
+                url = any(),
+                authorization = any(),
+                action = any(),
+                guid = any(),
+                appId = any(),
                 docType = CustomGroupType.Stock.name
             )
         }
@@ -110,16 +147,24 @@ class CustomGroupWebImplTest {
             .asCustomGroup<CustomGroupWithOrderWithError>(gson)
 
         coEvery {
-            service.getCustomGroupWithOrder(any(), any(), any(), any(), any())
+            service.getCustomGroupWithOrder(
+                url = any(),
+                authorization = any(),
+                action = any(),
+                guid = any(),
+                appId = any(),
+                docType = any()
+            )
         } returns Response.success(response)
         val result =
             customGroupWeb.getCustomGroupListIncludeOrder(groupType = CustomGroupType.UsStock)
         coVerify {
             service.getCustomGroupWithOrder(
-                any(),
-                any(),
-                any(),
-                any(),
+                url = any(),
+                authorization = any(),
+                action = any(),
+                guid = any(),
+                appId = any(),
                 docType = CustomGroupType.UsStock.name
             )
         }
@@ -136,10 +181,42 @@ class CustomGroupWebImplTest {
         val responseBody =
             gson.fromJson(responseBodyJson, CustomGroupWithOrderWithError::class.java)
         coEvery {
-            service.getCustomGroupWithOrder(any(), any(), any(), any(), any())
+            service.getCustomGroupWithOrder(
+                url = any(),
+                authorization = any(),
+                action = any(),
+                guid = any(),
+                appId = any(),
+                docType = any()
+            )
         } returns Response.success(responseBody)
         val result = customGroupWeb.getCustomGroupListIncludeOrder()
         result.getOrThrow()
+    }
+
+    @Test
+    fun `getCustomGroupContent_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}MobileService/ashx/CustomerGroup/CustomGroup.ashx"
+        val urlSlot = slot<String>()
+        val response = context.assets.open(TW_CUSTOM_GROUP_CONTENT)
+            .bufferedReader()
+            .use {
+                it.readText()
+            }
+            .asCustomGroup<CustomListWithError>(gson)
+
+        coEvery {
+            service.getCustomGroupContent(
+                url = capture(urlSlot),
+                authorization = any(),
+                action = any(),
+                guid = any(),
+                appId = any(),
+                docNo = any()
+            )
+        } returns Response.success(response)
+        customGroupWeb.getCustomGroupContent(1234)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
     }
 
     @Test
@@ -152,11 +229,11 @@ class CustomGroupWebImplTest {
             .asCustomGroup<CustomListWithError>(gson)
 
         coEvery {
-            service.getCustomGroupContent(any(), any(), any(), any(), any())
+            service.getCustomGroupContent(any(), any(), any(), any(), any(), any())
         } returns Response.success(response)
         val result = customGroupWeb.getCustomGroupContent(1234)
         coVerify {
-            service.getCustomGroupContent(any(), any(), any(), any(), docNo = 1234)
+            service.getCustomGroupContent(any(), any(), any(), any(), any(), docNo = 1234)
         }
         Truth.assertThat(result.isSuccess).isTrue()
         val data = result.getOrThrow()
@@ -173,11 +250,11 @@ class CustomGroupWebImplTest {
             .asCustomGroup<CustomListWithError>(gson)
 
         coEvery {
-            service.getCustomGroupContent(any(), any(), any(), any(), any())
+            service.getCustomGroupContent(any(), any(), any(), any(), any(), any())
         } returns Response.success(response)
         val result = customGroupWeb.getCustomGroupContent(1234)
         coVerify {
-            service.getCustomGroupContent(any(), any(), any(), any(), docNo = 1234)
+            service.getCustomGroupContent(any(), any(), any(), any(), any(), docNo = 1234)
         }
         Truth.assertThat(result.isSuccess).isTrue()
         val data = result.getOrThrow()
@@ -192,10 +269,34 @@ class CustomGroupWebImplTest {
         val responseBody =
             gson.fromJson(responseBodyJson, CustomListWithError::class.java)
         coEvery {
-            service.getCustomGroupContent(any(), any(), any(), any(), any())
+            service.getCustomGroupContent(any(), any(), any(), any(), any(), any())
         } returns Response.success(responseBody)
         val result = customGroupWeb.getCustomGroupContent(1234)
         result.getOrThrow()
+    }
+
+    @Test
+    fun `getCustomGroupListIncludeOrderAndContent_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}MobileService/ashx/CustomerGroup/CustomGroup.ashx"
+        val urlSlot = slot<String>()
+        val response = context.assets.open(TW_CUSTOM_GROUP_LIST_WITH_CONTENT)
+            .bufferedReader()
+            .use {
+                it.readText()
+            }
+            .asCustomGroup<CustomGroupWithOrderAndListWithError>(gson)
+        coEvery {
+            service.getCustomGroupWithOrderAndList(
+                url = capture(urlSlot),
+                authorization = any(),
+                action = any(),
+                guid = any(),
+                appId = any(),
+                docType = any()
+            )
+        } returns Response.success(response)
+        customGroupWeb.getCustomGroupListIncludeOrderAndContent(groupType = CustomGroupType.Stock)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
     }
 
     @Test
@@ -207,16 +308,17 @@ class CustomGroupWebImplTest {
             }
             .asCustomGroup<CustomGroupWithOrderAndListWithError>(gson)
         coEvery {
-            service.getCustomGroupWithOrderAndList(any(), any(), any(), any(), any())
+            service.getCustomGroupWithOrderAndList(any(), any(), any(), any(), any(), any())
         } returns Response.success(response)
         val result =
             customGroupWeb.getCustomGroupListIncludeOrderAndContent(groupType = CustomGroupType.Stock)
         coVerify {
             service.getCustomGroupWithOrderAndList(
-                any(),
-                any(),
-                any(),
-                any(),
+                url = any(),
+                authorization = any(),
+                action = any(),
+                guid = any(),
+                appId = any(),
                 docType = CustomGroupType.Stock.name
             )
         }
@@ -233,10 +335,36 @@ class CustomGroupWebImplTest {
         val responseBody =
             gson.fromJson(responseBodyJson, CustomGroupWithOrderAndListWithError::class.java)
         coEvery {
-            service.getCustomGroupWithOrderAndList(any(), any(), any(), any(), any())
+            service.getCustomGroupWithOrderAndList(any(), any(), any(), any(), any(), any())
         } returns Response.success(responseBody)
         val result = customGroupWeb.getCustomGroupListIncludeOrderAndContent()
         result.getOrThrow()
+    }
+
+    @Test
+    fun `updateCustomList_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}MobileService/ashx/CustomerGroup/CustomGroup.ashx"
+        val urlSlot = slot<String>()
+        val responseBody = UpdateCustomListCompleteWithError(isSuccess = true)
+        coEvery {
+            service.updateCustomList(
+                url = capture(urlSlot),
+                guid = any(),
+                authorization = any(),
+                appId = any(),
+                docType = any(),
+                docNo = any(),
+                docName = any(),
+                list = any()
+            )
+        } returns Response.success(responseBody)
+        customGroupWeb.updateCustomGroupNameAndContent(
+            groupType = CustomGroupType.Stock,
+            docNo = 1,
+            docName = "",
+            list = listOf()
+        )
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
     }
 
     @Test
@@ -244,6 +372,7 @@ class CustomGroupWebImplTest {
         val responseBody = UpdateCustomListCompleteWithError(isSuccess = true)
         coEvery {
             service.updateCustomList(
+                url = any(),
                 guid = any(),
                 authorization = any(),
                 appId = any(),
@@ -262,6 +391,7 @@ class CustomGroupWebImplTest {
             )
         coVerify {
             service.updateCustomList(
+                url = any(),
                 guid = any(),
                 authorization = any(),
                 appId = any(),
@@ -275,7 +405,6 @@ class CustomGroupWebImplTest {
         Truth.assertThat(result.getOrThrow()).isTrue()
     }
 
-
     @Test(expected = ServerException::class)
     fun `updateCustomList_失敗`() = testScope.runTest {
         //GIVEN
@@ -288,6 +417,7 @@ class CustomGroupWebImplTest {
 
         coEvery {
             service.updateCustomList(
+                url = any(),
                 guid = any(),
                 authorization = any(),
                 appId = any(),
@@ -306,11 +436,32 @@ class CustomGroupWebImplTest {
     }
 
     @Test
+    fun `addCustomGroup_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}MobileService/ashx/CustomerGroup/CustomGroup.ashx"
+        val urlSlot = slot<String>()
+        val responseBody = NewCustomGroupWithError(docNo = 1, docName = "DocName")
+        coEvery {
+            service.addCustomGroup(
+                url = capture(urlSlot),
+                guid = any(),
+                authorization = any(),
+                appId = any(),
+                docType = any(),
+                docName = any()
+            )
+        } returns Response.success(responseBody)
+
+        customGroupWeb.addCustomGroup(groupType = CustomGroupType.Stock, docName = "")
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun `addCustomGroup_成功`() = testScope.runTest {
         val responseBody = NewCustomGroupWithError(docNo = 1, docName = "DocName")
 
         coEvery {
             service.addCustomGroup(
+                url = any(),
                 guid = any(),
                 authorization = any(),
                 appId = any(),
@@ -322,6 +473,7 @@ class CustomGroupWebImplTest {
         val result = customGroupWeb.addCustomGroup(groupType = CustomGroupType.Stock, docName = "")
         coVerify {
             service.addCustomGroup(
+                url = any(),
                 guid = any(),
                 authorization = any(),
                 appId = any(),
@@ -345,6 +497,7 @@ class CustomGroupWebImplTest {
             gson.fromJson(responseBodyJson, NewCustomGroupWithError::class.java)
         coEvery {
             service.addCustomGroup(
+                url = any(),
                 guid = any(),
                 authorization = any(),
                 appId = any(),
@@ -357,12 +510,37 @@ class CustomGroupWebImplTest {
     }
 
     @Test
+    fun `deleteCustomGroup_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}MobileService/ashx/CustomerGroup/CustomGroup.ashx"
+        val urlSlot = slot<String>()
+        //GIVEN
+        val responseBody = DeleteCustomGroupCompleteWithError(isSuccess = true)
+
+        coEvery {
+            service.deleteCustomGroup(
+                url = capture(urlSlot),
+                guid = any(),
+                authorization = any(),
+                appId = any(),
+                docNo = any()
+            )
+        } returns Response.success(responseBody)
+
+        //WHEN
+        customGroupWeb.deleteCustomGroup(1)
+
+        //THEN
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun `deleteCustomGroup_成功`() = testScope.runTest {
         //GIVEN
         val responseBody = DeleteCustomGroupCompleteWithError(isSuccess = true)
 
         coEvery {
             service.deleteCustomGroup(
+                url = any(),
                 guid = any(),
                 authorization = any(),
                 appId = any(),
@@ -389,6 +567,7 @@ class CustomGroupWebImplTest {
             gson.fromJson(responseBodyJson, DeleteCustomGroupCompleteWithError::class.java)
         coEvery {
             service.deleteCustomGroup(
+                url = any(),
                 guid = any(),
                 authorization = any(),
                 appId = any(),
@@ -405,11 +584,35 @@ class CustomGroupWebImplTest {
     }
 
     @Test
+    fun `updateCustomGroupOrder_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}MobileService/ashx/CustomerGroup/CustomGroup.ashx"
+        val urlSlot = slot<String>()
+        val responseBody = UpdateCustomGroupOrderCompleteWithError(isSuccess = true)
+
+        coEvery {
+            service.updateCustomGroupOrder(
+                url = capture(urlSlot),
+                guid = any(),
+                authorization = any(),
+                appId = any(),
+                docType = any(),
+                orderMap = any()
+            )
+        } returns Response.success(responseBody)
+        customGroupWeb.updateCustomGroupOrder(
+            groupType = CustomGroupType.Stock,
+            docNoList = listOf()
+        )
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun `updateCustomGroupOrder_成功`() = testScope.runTest {
         val responseBody = UpdateCustomGroupOrderCompleteWithError(isSuccess = true)
 
         coEvery {
             service.updateCustomGroupOrder(
+                url = any(),
                 guid = any(),
                 authorization = any(),
                 appId = any(),
@@ -423,6 +626,7 @@ class CustomGroupWebImplTest {
         )
         coVerify {
             service.updateCustomGroupOrder(
+                url = any(),
                 guid = any(),
                 authorization = any(),
                 appId = any(),
@@ -447,6 +651,7 @@ class CustomGroupWebImplTest {
 
         coEvery {
             service.updateCustomGroupOrder(
+                url = any(),
                 guid = any(),
                 authorization = any(),
                 appId = any(),
@@ -459,11 +664,37 @@ class CustomGroupWebImplTest {
     }
 
     @Test
+    fun `renameCustomGroup_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}MobileService/ashx/CustomerGroup/CustomGroup.ashx"
+        val urlSlot = slot<String>()
+        val responseBody = UpdateCustomGroupNameCompleteWithError(isSuccess = true)
+
+        coEvery {
+            service.updateCustomGroupName(
+                url = capture(urlSlot),
+                guid = any(),
+                authorization = any(),
+                appId = any(),
+                docType = any(),
+                docNo = any(),
+                docName = any()
+            )
+        } returns Response.success(responseBody)
+        customGroupWeb.renameCustomGroup(
+            groupType = CustomGroupType.Stock,
+            docNo = 1,
+            newDocName = ""
+        )
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun `renameCustomGroup_成功`() = testScope.runTest {
         val responseBody = UpdateCustomGroupNameCompleteWithError(isSuccess = true)
 
         coEvery {
             service.updateCustomGroupName(
+                url = any(),
                 guid = any(),
                 authorization = any(),
                 appId = any(),
@@ -479,6 +710,7 @@ class CustomGroupWebImplTest {
         )
         coVerify {
             service.updateCustomGroupName(
+                url = any(),
                 guid = any(),
                 authorization = any(),
                 appId = any(),
@@ -502,6 +734,7 @@ class CustomGroupWebImplTest {
 
         coEvery {
             service.updateCustomGroupName(
+                url = any(),
                 guid = any(),
                 authorization = any(),
                 appId = any(),
@@ -517,12 +750,32 @@ class CustomGroupWebImplTest {
     }
 
     @Test
+    fun `searchStocks搜尋關鍵字找股票_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}CustomGroupService/api/SearchStocks"
+        val urlSlot = slot<String>()
+        //準備api成功時的回傳
+        val responseBody = SearchStocksResponseBody()
+        //設定api成功時的回傳
+        coEvery {
+            service.searchStocks(
+                url = capture(urlSlot),
+                authorization = any(),
+                requestBody = any()
+            )
+        } returns Response.success(responseBody)
+
+        customGroupWeb.searchStocks("A")
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun `searchStocks搜尋關鍵字找股票 成功`() = testScope.runTest {
         //準備api成功時的回傳
         val responseBody = SearchStocksResponseBody()
         //設定api成功時的回傳
         coEvery {
             service.searchStocks(
+                url = any(),
                 authorization = any(),
                 requestBody = any()
             )
@@ -548,6 +801,7 @@ class CustomGroupWebImplTest {
         //設定api成功時的回傳
         coEvery {
             service.searchStocks(
+                url = any(),
                 authorization = any(),
                 requestBody = any()
             )
@@ -562,5 +816,9 @@ class CustomGroupWebImplTest {
         Truth.assertThat(result.isSuccess).isFalse()
         val exception = result.exceptionOrNull() as ServerException
         Truth.assertThat(exception).isNotNull()
+    }
+
+    companion object {
+        private const val EXCEPT_DOMAIN = "localhost://8080:80/"
     }
 }

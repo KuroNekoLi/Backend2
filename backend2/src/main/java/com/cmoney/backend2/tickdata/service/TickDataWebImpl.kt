@@ -3,7 +3,7 @@ package com.cmoney.backend2.tickdata.service
 
 import com.cmoney.backend2.base.extension.checkResponseBody
 import com.cmoney.backend2.base.extension.createAuthorizationBearer
-import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.tickdata.service.api.getkchartdata.GetKChartRequestBody
 import com.cmoney.backend2.tickdata.service.api.getkchartdata.KDataItem
 import com.cmoney.backend2.tickdata.service.api.getmachartdata.GetMaChartRequestBody
@@ -16,9 +16,9 @@ import com.google.gson.Gson
 import kotlinx.coroutines.withContext
 
 class TickDataWebImpl(
-    private val gson: Gson,
-    private val setting: Setting,
+    override val manager: GlobalBackend2Manager,
     private val tickDataService: TickDataService,
+    private val gson: Gson,
     private val dispatcher: DispatcherProvider = DefaultDispatcherProvider
 ) : TickDataWeb {
 
@@ -26,12 +26,15 @@ class TickDataWebImpl(
         date: Long,
         commKey: String,
         minuteInterval: Int,
-        count: Int
+        count: Int,
+        domain: String,
+        url: String
     ): Result<List<KDataItem>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             val response = tickDataService.getKChartData(
-                setting.accessToken.createAuthorizationBearer(),
-                GetKChartRequestBody(
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
+                body = GetKChartRequestBody(
                     date = date,
                     key = commKey,
                     interval = minuteInterval,
@@ -46,12 +49,15 @@ class TickDataWebImpl(
         date: Long,
         commKey: String,
         minuteInterval: Int,
-        count: Int
+        count: Int,
+        domain: String,
+        url: String
     ): Result<List<MaDataItem>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             val response = tickDataService.getMAChartData(
-                setting.accessToken.createAuthorizationBearer(),
-                GetMaChartRequestBody(
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
+                body = GetMaChartRequestBody(
                     date = date,
                     key = commKey,
                     interval = minuteInterval,
@@ -67,12 +73,15 @@ class TickDataWebImpl(
         commKey: String,
         minuteInterval: Int,
         count: Int,
-        dataPoints: List<Int>
+        dataPoints: List<Int>,
+        domain: String,
+        url: String
     ): Result<List<MultipleMovingAverageData>> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             val response = tickDataService.getMultipleMovingAverage(
-                setting.accessToken.createAuthorizationBearer(),
-                GetMultipleMovingAverageRequestBody(
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
+                body = GetMultipleMovingAverageRequestBody(
                     date = date,
                     key = commKey,
                     interval = minuteInterval,

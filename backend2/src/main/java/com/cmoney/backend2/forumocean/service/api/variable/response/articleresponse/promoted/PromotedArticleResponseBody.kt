@@ -1,8 +1,12 @@
 package com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted
 
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleContentV2
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
 import com.google.gson.annotations.SerializedName
 
+/**
+ * Same as [ArticleResponseBodyV2] with additional field: [promotedArticleTitle].
+ */
 data class PromotedArticleResponseBody(
     @SerializedName("id")
     val id: String?,
