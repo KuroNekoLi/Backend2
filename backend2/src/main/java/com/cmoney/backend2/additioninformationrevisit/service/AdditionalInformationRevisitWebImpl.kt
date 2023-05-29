@@ -189,13 +189,13 @@ class AdditionalInformationRevisitWebImpl(
             AdditionalInformationRevisitWeb.MarketType.TW -> {
                 val adapter = globalBackend2Manager.getAdditionInformationRevisitTwSettingAdapter()
                 val domain = adapter.getDomain()
-                val url = "${domain}${adapter.getPathName()}api/Signal/Get/${channels.joinToString(",")}"
+                val url = "${domain}${adapter.getPathName()}api/Signal/Get/${channels.joinComma()}"
                 url
             }
             AdditionalInformationRevisitWeb.MarketType.US -> {
                 val adapter = globalBackend2Manager.getAdditionInformationRevisitUsSettingAdapter()
                 val domain = adapter.getDomain()
-                val url = "${domain}${adapter.getPathName()}api/Signal/Get/${channels.joinToString(",")}"
+                val url = "${domain}${adapter.getPathName()}api/Signal/Get/${channels.joinComma()}"
                 url
             }
         }
@@ -212,12 +212,12 @@ class AdditionalInformationRevisitWebImpl(
         val url = when (marketType) {
             AdditionalInformationRevisitWeb.MarketType.TW -> {
                 val adapter = globalBackend2Manager.getAdditionInformationRevisitTwSettingAdapter()
-                val url = "${domain}${adapter.getPathName()}api/Signal/Get/${channels.joinToString(",")}"
+                val url = "${domain}${adapter.getPathName()}api/Signal/Get/${channels.joinComma()}"
                 url
             }
             AdditionalInformationRevisitWeb.MarketType.US -> {
                 val adapter = globalBackend2Manager.getAdditionInformationRevisitUsSettingAdapter()
-                val url = "${domain}${adapter.getPathName()}api/Signal/Get/${channels.joinToString(",")}"
+                val url = "${domain}${adapter.getPathName()}api/Signal/Get/${channels.joinComma()}"
                 url
             }
         }
