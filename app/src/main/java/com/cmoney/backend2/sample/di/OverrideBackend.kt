@@ -1,5 +1,6 @@
 package com.cmoney.backend2.sample.di
 
+import com.cmoney.backend2.additioninformationrevisit.model.settingadapter.us.AdditionInformationRevisitUsSettingAdapter
 import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.base.model.setting.Platform
 import com.cmoney.backend2.chat.model.ChatRoomSettingAdapter
@@ -31,6 +32,16 @@ val sampleBackendModule = module {
 
                 override fun getPathName(): String {
                     return "ForumOcean/"
+                }
+            }
+            // 改變附加資訊美股的路徑
+            additionInformationRevisitUsSettingAdapter = object : AdditionInformationRevisitUsSettingAdapter {
+                override fun getDomain(): String {
+                    return "https://outpost.cmoney.tw/"
+                }
+
+                override fun getPathName(): String {
+                    return "AdditionInformationRevisit_www.cmoney.tw/"
                 }
             }
         }

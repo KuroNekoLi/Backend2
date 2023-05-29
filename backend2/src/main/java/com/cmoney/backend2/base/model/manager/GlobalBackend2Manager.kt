@@ -2,6 +2,10 @@ package com.cmoney.backend2.base.model.manager
 
 import com.cmoney.backend2.activity.model.ActivitySettingAdapter
 import com.cmoney.backend2.activity.model.ActivitySettingAdapterImpl
+import com.cmoney.backend2.additioninformationrevisit.model.settingadapter.tw.AdditionInformationRevisitTwSettingAdapter
+import com.cmoney.backend2.additioninformationrevisit.model.settingadapter.tw.AdditionInformationRevisitTwSettingAdapterImpl
+import com.cmoney.backend2.additioninformationrevisit.model.settingadapter.us.AdditionInformationRevisitUsSettingAdapter
+import com.cmoney.backend2.additioninformationrevisit.model.settingadapter.us.AdditionInformationRevisitUsSettingAdapterImpl
 import com.cmoney.backend2.authorization.model.AuthorizationSettingAdapter
 import com.cmoney.backend2.authorization.model.AuthorizationSettingAdapterImpl
 import com.cmoney.backend2.base.model.request.AccessToken
@@ -92,6 +96,8 @@ import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdap
  * @property backendSetting Backend設定
  * @property jwtSetting Jwt設定
  * @property activitySettingAdapter 活動設定轉接器
+ * @property additionInformationRevisitTwSettingAdapter 附加資訊台股轉接器
+ * @property additionInformationRevisitUsSettingAdapter 附加資訊美股轉接器
  * @property authorizationSettingAdapter 授權設定轉接器
  * @property billingSettingAdapter Billing設定轉接器
  * @property brokerDataTransmissionSettingAdapter 券商庫存設定轉接器
@@ -137,6 +143,8 @@ class GlobalBackend2Manager(
     private val backendSetting: BackendSetting,
     private val jwtSetting: JwtSetting,
     private val activitySettingAdapter: ActivitySettingAdapter,
+    private val additionInformationRevisitTwSettingAdapter: AdditionInformationRevisitTwSettingAdapter,
+    private val additionInformationRevisitUsSettingAdapter: AdditionInformationRevisitUsSettingAdapter,
     private val authorizationSettingAdapter: AuthorizationSettingAdapter,
     private val brokerDataTransmissionSettingAdapter: BrokerDataTransmissionSettingAdapter,
     private val billingSettingAdapter: BillingSettingAdapter,
@@ -181,6 +189,8 @@ class GlobalBackend2Manager(
         backendSetting = builder.backendSetting,
         jwtSetting = builder.jwtSetting,
         activitySettingAdapter = builder.activitySettingAdapter,
+        additionInformationRevisitTwSettingAdapter = builder.additionInformationRevisitTwSettingAdapter,
+        additionInformationRevisitUsSettingAdapter = builder.additionInformationRevisitUsSettingAdapter,
         authorizationSettingAdapter = builder.authorizationSettingAdapter,
         billingSettingAdapter = builder.billingSettingAdapter,
         brokerDataTransmissionSettingAdapter = builder.brokerDataTransmissionSettingAdapter,
@@ -360,6 +370,20 @@ class GlobalBackend2Manager(
      */
     fun getActivitySettingAdapter(): ActivitySettingAdapter {
         return activitySettingAdapter
+    }
+
+    /**
+     * 取得附加資訊台股設定轉接器
+     */
+    fun getAdditionInformationRevisitTwSettingAdapter(): AdditionInformationRevisitTwSettingAdapter {
+        return additionInformationRevisitTwSettingAdapter
+    }
+
+    /**
+     * 取得附加資訊美股設定轉接器
+     */
+    fun getAdditionInformationRevisitUsSettingAdapter(): AdditionInformationRevisitUsSettingAdapter {
+        return additionInformationRevisitUsSettingAdapter
     }
 
     /**
@@ -710,6 +734,10 @@ class GlobalBackend2Manager(
             }
         var activitySettingAdapter: ActivitySettingAdapter =
             ActivitySettingAdapterImpl(backendSetting)
+        var additionInformationRevisitTwSettingAdapter: AdditionInformationRevisitTwSettingAdapter =
+            AdditionInformationRevisitTwSettingAdapterImpl(backendSetting)
+        var additionInformationRevisitUsSettingAdapter: AdditionInformationRevisitUsSettingAdapter =
+            AdditionInformationRevisitUsSettingAdapterImpl()
         var authorizationSettingAdapter: AuthorizationSettingAdapter =
             AuthorizationSettingAdapterImpl(backendSetting)
         var billingSettingAdapter: BillingSettingAdapter =
@@ -796,7 +824,7 @@ class GlobalBackend2Manager(
                 backendSetting: BackendSetting,
                 jwtSetting: JwtSetting,
                 block: Builder.() -> Unit
-            ) = Builder(
+            ): GlobalBackend2Manager = Builder(
                 backendSetting = backendSetting,
                 jwtSetting = jwtSetting
             ).apply(block)

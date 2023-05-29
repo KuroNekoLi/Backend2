@@ -1,14 +1,9 @@
 package com.cmoney.backend2.additioninformationrevisit.service
 
 import com.cmoney.backend2.additioninformationrevisit.service.api.request.GetRequestParam
-import com.cmoney.backend2.additioninformationrevisit.service.api.request.RequestIds
 import com.cmoney.backend2.base.model.calladapter.RecordApi
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.Header
-import retrofit2.http.POST
-import retrofit2.http.Query
-import retrofit2.http.Url
+import retrofit2.http.*
 
 interface AdditionalInformationRevisitService {
 
@@ -55,7 +50,7 @@ interface AdditionalInformationRevisitService {
     suspend fun getSignal(
         @Url url: String,
         @Header("Authorization") authorization: String,
-        @Body param: RequestIds
+        @Body param: Any
     ): Response<List<List<String?>>>
 
     @RecordApi
