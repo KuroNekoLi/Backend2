@@ -1830,8 +1830,8 @@ interface ForumOceanService {
     suspend fun getJoinedClubArticles(
         @Header("Authorization") authorization: String,
         @Path("path") path: String,
-        @Query("startWeight") startWeight: Long,
-        @Query("fetch") articlesNumber: Int,
+        @Query("startWeight") startWeight: Long? = null,
+        @Query("fetch") articlesNumber: Int? = null,
     ): Response<GetJoinedClubArticlesResponse>
 }
 

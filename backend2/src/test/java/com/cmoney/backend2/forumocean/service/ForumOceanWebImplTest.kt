@@ -53,6 +53,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.GroupPositio
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetGroupBoardArticlesResponse
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.club.GetJoinedClubArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations.GetRecommendationResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.spacepin.GetSpaceBoardPinArticlesResponseBody
@@ -100,7 +101,10 @@ class ForumOceanWebImplTest {
     @MockK
     private val forumOceanService = mockk<ForumOceanService>()
     private val jsonParser =
-        GsonBuilder().serializeNulls().setLenient().setPrettyPrinting().create()
+        GsonBuilder().serializeNulls()
+            .setLenient()
+            .setPrettyPrinting()
+            .create()
     private val web: ForumOceanWeb =
         ForumOceanWebImpl(
             forumOceanService,
@@ -1072,11 +1076,26 @@ class ForumOceanWebImplTest {
 
         assertThat(result.isSuccess).isTrue()
         assertThat(result.getOrThrow().size).isEqualTo(1)
-        assertThat(result.getOrThrow().first().memberId).isEqualTo(100)
-        assertThat(result.getOrThrow().first().totalCountArticle).isEqualTo(6)
-        assertThat(result.getOrThrow().first().totalCountReaction).isEqualTo(3)
-        assertThat(result.getOrThrow().first().totalCountFollowing).isEqualTo(16)
-        assertThat(result.getOrThrow().first().totalCountFollower).isEqualTo(10)
+        assertThat(
+            result.getOrThrow()
+                .first().memberId
+        ).isEqualTo(100)
+        assertThat(
+            result.getOrThrow()
+                .first().totalCountArticle
+        ).isEqualTo(6)
+        assertThat(
+            result.getOrThrow()
+                .first().totalCountReaction
+        ).isEqualTo(3)
+        assertThat(
+            result.getOrThrow()
+                .first().totalCountFollowing
+        ).isEqualTo(16)
+        assertThat(
+            result.getOrThrow()
+                .first().totalCountFollower
+        ).isEqualTo(10)
     }
 
     @ExperimentalCoroutinesApi
@@ -1837,7 +1856,10 @@ class ForumOceanWebImplTest {
         val result = web.getArticleReactionDetail(1010, reactionTypeList, 0, 20)
         assertThat(result.isSuccess).isTrue()
         assertThat(result.getOrThrow()).hasSize(1)
-        assertThat(result.getOrThrow().first()).isNotNull()
+        assertThat(
+            result.getOrThrow()
+                .first()
+        ).isNotNull()
     }
 
     @ExperimentalCoroutinesApi
@@ -2145,7 +2167,10 @@ class ForumOceanWebImplTest {
         )
         val result = web.getMemberManagedGroups(1, 0, 20)
         assertThat(result.isSuccess).isTrue()
-        assertThat(result.getOrThrow().first().id).isEqualTo(1)
+        assertThat(
+            result.getOrThrow()
+                .first().id
+        ).isEqualTo(1)
     }
 
     @ExperimentalCoroutinesApi
@@ -2180,7 +2205,8 @@ class ForumOceanWebImplTest {
                     GroupPosition.NORMAL,
                     GroupPosition.MANAGEMENT,
                     GroupPosition.PRESIDENT
-                ).map { it.position }.sum(),
+                ).map { it.position }
+                    .sum(),
                 includeAppGroup = any(),
                 path = ""
             )
@@ -2221,7 +2247,8 @@ class ForumOceanWebImplTest {
                     GroupPosition.NORMAL,
                     GroupPosition.MANAGEMENT,
                     GroupPosition.PRESIDENT
-                ).map { it.position }.sum(),
+                ).map { it.position }
+                    .sum(),
                 includeAppGroup = any(),
                 path = ""
             )
@@ -2232,36 +2259,38 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getMemberJoinAnyGroups_取得指定使用者是否加入或擁有任何社團成功測試`() = testScope.runTest {
-        coEvery {
-            forumOceanService.getMemberJoinAnyGroups(
-                authorization = any(),
-                memberId = any(),
-                path = ""
+    fun `getMemberJoinAnyGroups_取得指定使用者是否加入或擁有任何社團成功測試`() =
+        testScope.runTest {
+            coEvery {
+                forumOceanService.getMemberJoinAnyGroups(
+                    authorization = any(),
+                    memberId = any(),
+                    path = ""
+                )
+            } returns Response.success(
+                GetMemberJoinAnyGroupsResponseBody(
+                    isJoin = true
+                )
             )
-        } returns Response.success(
-            GetMemberJoinAnyGroupsResponseBody(
-                isJoin = true
-            )
-        )
-        val result = web.getMemberJoinAnyGroups(23454734)
-        assertThat(result.isSuccess).isTrue()
-        assertThat(result.getOrThrow().isJoin).isTrue()
-    }
+            val result = web.getMemberJoinAnyGroups(23454734)
+            assertThat(result.isSuccess).isTrue()
+            assertThat(result.getOrThrow().isJoin).isTrue()
+        }
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `getMemberJoinAnyGroups_取得指定使用者是否加入或擁有任何社團失敗測試`() = testScope.runTest {
-        coEvery {
-            forumOceanService.getMemberJoinAnyGroups(
-                authorization = any(),
-                memberId = any(),
-                path = ""
-            )
-        } returns Response.error(500, "".toResponseBody())
-        val result = web.getMemberJoinAnyGroups(23454734)
-        assertThat(result.isFailure).isTrue()
-    }
+    fun `getMemberJoinAnyGroups_取得指定使用者是否加入或擁有任何社團失敗測試`() =
+        testScope.runTest {
+            coEvery {
+                forumOceanService.getMemberJoinAnyGroups(
+                    authorization = any(),
+                    memberId = any(),
+                    path = ""
+                )
+            } returns Response.error(500, "".toResponseBody())
+            val result = web.getMemberJoinAnyGroups(23454734)
+            assertThat(result.isFailure).isTrue()
+        }
 
     @ExperimentalCoroutinesApi
     @Test
@@ -2453,10 +2482,17 @@ class ForumOceanWebImplTest {
                 GroupMember(memberId = 3, position = GroupPositionInfo.PRESIDENT)
             )
         )
-        val result = web.getMembers(132132, 0, 20, GroupPosition.values().toList())
+        val result = web.getMembers(
+            132132,
+            0,
+            20,
+            GroupPosition.values()
+                .toList()
+        )
         assertThat(result.isSuccess).isTrue()
         assertThat(
-            result.getOrThrow().find { it.position == GroupPositionInfo.PRESIDENT }).isNotNull()
+            result.getOrThrow()
+                .find { it.position == GroupPositionInfo.PRESIDENT }).isNotNull()
     }
 
     @ExperimentalCoroutinesApi
@@ -2472,7 +2508,13 @@ class ForumOceanWebImplTest {
                 path = ""
             )
         } returns Response.error(500, "".toResponseBody())
-        val result = web.getMembers(132132, 0, 20, GroupPosition.values().toList())
+        val result = web.getMembers(
+            132132,
+            0,
+            20,
+            GroupPosition.values()
+                .toList()
+        )
         assertThat(result.isFailure).isTrue()
     }
 
@@ -3285,7 +3327,8 @@ class ForumOceanWebImplTest {
         )
         val result = web.getMemberIds(memberIds)
         assertThat(result.isSuccess)
-        val mappingList = result.getOrThrow().associateBy { it.memberId }
+        val mappingList = result.getOrThrow()
+            .associateBy { it.memberId }
         assertThat(mappingList[67]?.channelId).isEqualTo(1979787)
         assertThat(mappingList[68]?.channelId).isEqualTo(2266693)
     }
@@ -3330,7 +3373,8 @@ class ForumOceanWebImplTest {
         )
         val result = web.getChannelIds(channelIds)
         assertThat(result.isSuccess)
-        val mappingList = result.getOrThrow().associateBy { it.channelId }
+        val mappingList = result.getOrThrow()
+            .associateBy { it.channelId }
         assertThat(mappingList[1979787]?.memberId).isEqualTo(67)
         assertThat(mappingList[2266693]?.memberId).isEqualTo(68)
     }
@@ -5293,6 +5337,37 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getSpaceBoardPinArticles(1L)
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得用戶已加入社團的所有文章_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getJoinedClubArticles(
+                authorization = any(),
+                path = any(),
+                startWeight = any(),
+                articlesNumber = any()
+            )
+        } returns Response.success(GetJoinedClubArticlesResponse())
+        val result = web.getJoinedClubArticles()
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `取得用戶已加入社團的所有文章_failed`() = testScope.runTest {
+
+        coEvery {
+            forumOceanService.getJoinedClubArticles(
+                authorization = any(),
+                path = any(),
+                startWeight =  any(),
+                articlesNumber =  any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getJoinedClubArticles()
         assertThat(result.isFailure).isTrue()
     }
 

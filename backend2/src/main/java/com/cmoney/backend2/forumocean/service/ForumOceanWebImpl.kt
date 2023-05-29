@@ -69,6 +69,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.articlerespo
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetAllChatRoomResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetGroupBoardArticlesResponse
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.club.GetJoinedClubArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.PromotedArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations.GetRecommendationResponse
@@ -2307,6 +2308,22 @@ class ForumOceanWebImpl(
                     path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
                     boardId = boardId
+                ).checkResponseBody(jsonParser)
+            }
+        }
+    }
+
+    override suspend fun getJoinedClubArticles(
+        startWeight: Long?,
+        articlesNumber: Int?
+    ): Result<GetJoinedClubArticlesResponse> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.getJoinedClubArticles(
+                    path = serverName,
+                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    startWeight = startWeight,
+                    articlesNumber = articlesNumber
                 ).checkResponseBody(jsonParser)
             }
         }
