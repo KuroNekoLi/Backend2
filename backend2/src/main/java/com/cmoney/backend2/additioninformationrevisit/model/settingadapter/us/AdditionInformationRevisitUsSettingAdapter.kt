@@ -1,11 +1,11 @@
-package com.cmoney.backend2.additioninformationrevisit.model.settingadapter
+package com.cmoney.backend2.additioninformationrevisit.model.settingadapter.us
 
 import com.cmoney.backend2.additioninformationrevisit.service.AdditionalInformationRevisitWeb
 
 /**
  * 附加資訊設定轉接器。
  */
-interface AdditionInformationRevisitSettingAdapter {
+interface AdditionInformationRevisitUsSettingAdapter {
 
     /**
      * 取得網域名稱

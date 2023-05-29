@@ -1,5 +1,7 @@
 package com.cmoney.backend2.sample.servicecase
 
+import com.cmoney.backend2.additioninformationrevisit.di.ADDITIONAL_INFORMATION_REVISIT_TW_WEB
+import com.cmoney.backend2.additioninformationrevisit.di.ADDITIONAL_INFORMATION_REVISIT_US_WEB
 import com.cmoney.backend2.additioninformationrevisit.service.AdditionalInformationRevisitWeb
 import com.cmoney.backend2.additioninformationrevisit.service.api.request.ProcessStep
 import com.cmoney.backend2.base.di.BACKEND2_GSON
@@ -13,7 +15,8 @@ import org.koin.core.component.inject
  */
 class AdditionalInformationRevisitTestCase : ServiceCase {
 
-    private val web by inject<AdditionalInformationRevisitWeb>()
+    private val twWeb by inject<AdditionalInformationRevisitWeb>(ADDITIONAL_INFORMATION_REVISIT_TW_WEB)
+    private val usWeb by inject<AdditionalInformationRevisitWeb>(ADDITIONAL_INFORMATION_REVISIT_US_WEB)
     private val gson by inject<Gson>(BACKEND2_GSON)
 
     override suspend fun testAll() {
@@ -25,13 +28,13 @@ class AdditionalInformationRevisitTestCase : ServiceCase {
     }
 
     private suspend fun test() {
-        web.getAll(
+        twWeb.getAll(
             columns = listOf("標的", "商品名稱"),
             typeName = "StockCommodity",
             processSteps = emptyList()
         ).logResponse(TAG)
         val commKeys = listOf("2330", "0050")
-        web.getTarget(
+        twWeb.getTarget(
             typeName = "StockCalculation",
             columns = listOf("傳輸序號", "標的", "即時成交價"),
             keyNamePath = listOf("Commodity", "CommKey"),
@@ -39,7 +42,7 @@ class AdditionalInformationRevisitTestCase : ServiceCase {
             processSteps = emptyList()
         )
             .logResponse(TAG)
-        web.getMultiple(
+        twWeb.getMultiple(
             typeName = "CandlestickChartTick<StockCommodity,StockTick>",
             columns = listOf("傳輸序號", "標的", "收盤價"),
             keyNamePath = listOf("Key"),
@@ -47,7 +50,7 @@ class AdditionalInformationRevisitTestCase : ServiceCase {
             processSteps = emptyList()
         )
             .logResponse(TAG)
-        web.getOtherQuery(
+        twWeb.getOtherQuery(
             requestType = "SectionTransactionDetailsRequest<StockTick>",
             responseType = "IEnumerable<StockTick>",
             columns = listOf("傳輸序號", "標的", "即時成交價"),
@@ -61,16 +64,15 @@ class AdditionalInformationRevisitTestCase : ServiceCase {
             processSteps = emptyList()
         )
             .logResponse(TAG)
-        web.getSignal(
+        twWeb.getSignal(
             channels = listOf(
                 "2101582"
             )
-        )
-            .logResponse(TAG)
+        ).logResponse(TAG)
     }
 
     private suspend fun testProcessStep() {
-        web.getAll(
+        twWeb.getAll(
             columns = listOf("標的", "商品名稱"),
             typeName = "StockCommodity",
             processSteps = listOf(
@@ -86,7 +88,7 @@ class AdditionalInformationRevisitTestCase : ServiceCase {
         )
             .logResponse(TAG)
         val commKeys = listOf("2330", "0050", "2344", "3008")
-        web.getTarget(
+        twWeb.getTarget(
             typeName = "StockCalculation",
             columns = listOf("傳輸序號", "標的", "即時成交價"),
             keyNamePath = listOf("Commodity", "CommKey"),
@@ -103,7 +105,7 @@ class AdditionalInformationRevisitTestCase : ServiceCase {
             )
         )
             .logResponse(TAG)
-        web.getMultiple(
+        twWeb.getMultiple(
             typeName = "CandlestickChartTick<StockCommodity,StockTick>",
             columns = listOf("傳輸序號", "標的", "收盤價"),
             keyNamePath = listOf("Key"),
@@ -120,7 +122,7 @@ class AdditionalInformationRevisitTestCase : ServiceCase {
             )
         )
             .logResponse(TAG)
-        web.getOtherQuery(
+        twWeb.getOtherQuery(
             requestType = "SectionTransactionDetailsRequest<StockTick>",
             responseType = "IEnumerable<StockTick>",
             columns = listOf("傳輸序號", "標的", "即時成交價"),
@@ -154,7 +156,7 @@ class AdditionalInformationRevisitTestCase : ServiceCase {
 //        ).logResponse(TAG)
 
         val commKeys = listOf("AAPL", "AMZN")
-        web.getPreviousTarget(
+        usWeb.getPreviousTarget(
             typeName = "USAStockCalculation",
             columns = listOf("傳輸序號", "標的", "即時成交價"),
             keyNamePath = listOf("Commodity", "CommKey"),
@@ -162,7 +164,7 @@ class AdditionalInformationRevisitTestCase : ServiceCase {
             processSteps = emptyList()
         ).logResponse(TAG)
 
-        web.getPreviousMultiple(
+        usWeb.getPreviousMultiple(
             typeName = "CandlestickChartTick<USAStockCommodity, USAStockTick>",
             columns = listOf("傳輸序號", "標的", "收盤價"),
             keyNamePath = listOf("Key"),
@@ -170,7 +172,7 @@ class AdditionalInformationRevisitTestCase : ServiceCase {
             processSteps = emptyList()
         ).logResponse(TAG)
 
-        web.getPreviousOtherQuery(
+        usWeb.getPreviousOtherQuery(
             requestType = "SectionTransactionDetailsRequest<USAStockTick>",
             responseType = "IEnumerable<USAStockTick>",
             columns = TEST_COLUMNS,

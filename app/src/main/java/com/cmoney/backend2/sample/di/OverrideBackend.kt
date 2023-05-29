@@ -1,12 +1,11 @@
 package com.cmoney.backend2.sample.di
 
-import com.cmoney.backend2.additioninformationrevisit.model.settingadapter.AdditionInformationRevisitSettingAdapter
+import com.cmoney.backend2.additioninformationrevisit.model.settingadapter.us.AdditionInformationRevisitUsSettingAdapter
 import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.base.model.setting.Platform
 import com.cmoney.backend2.chat.model.ChatRoomSettingAdapter
 import com.cmoney.backend2.crawlsetting.model.CrawlSettingSettingAdapter
 import com.cmoney.backend2.forumocean.model.ForumOceanSettingAdapter
-import com.cmoney.backend2.base.model.setting.backend.BackendSetting
 import org.koin.dsl.module
 
 val sampleBackendModule = module {
@@ -35,24 +34,16 @@ val sampleBackendModule = module {
                     return "ForumOcean/"
                 }
             }
-            // 改變附加資訊的路徑
-//            additionInformationRevisitSettingAdapter = createAdditionInformationRevisitSettingAdapter(
-//                backendSetting = get()
-//            )
-        }
-    }
-}
+            // 改變附加資訊美股的路徑
+            additionInformationRevisitUsSettingAdapter = object : AdditionInformationRevisitUsSettingAdapter {
+                override fun getDomain(): String {
+                    return "https://outpost.cmoney.tw/"
+                }
 
-private fun createAdditionInformationRevisitSettingAdapter(
-    backendSetting: BackendSetting
-): AdditionInformationRevisitSettingAdapter {
-    return object : AdditionInformationRevisitSettingAdapter {
-        override fun getDomain(): String {
-            return backendSetting.getDomainUrl()
-        }
-
-        override fun getPathName(): String {
-            return "AdditionInformationRevisit_V2"
+                override fun getPathName(): String {
+                    return "AdditionInformationRevisit_www.cmoney.tw/"
+                }
+            }
         }
     }
 }

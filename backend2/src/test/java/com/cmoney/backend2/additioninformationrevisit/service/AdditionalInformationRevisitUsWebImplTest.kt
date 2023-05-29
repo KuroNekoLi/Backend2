@@ -27,7 +27,7 @@ import retrofit2.Response
 
 @ExperimentalCoroutinesApi
 @RunWith(RobolectricTestRunner::class)
-class AdditionalInformationRevisitWebImplTest {
+class AdditionalInformationRevisitUsWebImplTest {
 
     private val testScope = TestScope()
 
@@ -52,13 +52,14 @@ class AdditionalInformationRevisitWebImplTest {
         web = AdditionalInformationRevisitWebImpl(
             globalBackend2Manager = manager,
             service = service,
+            marketType = AdditionalInformationRevisitWeb.MarketType.US,
             dispatcher = TestDispatcherProvider()
         )
         coEvery {
-            manager.getAdditionInformationRevisitSettingAdapter().getDomain()
+            manager.getAdditionInformationRevisitUsSettingAdapter().getDomain()
         } returns EXCEPT_DOMAIN
         coEvery {
-            manager.getAdditionInformationRevisitSettingAdapter().getPathName()
+            manager.getAdditionInformationRevisitUsSettingAdapter().getPathName()
         } returns EXCEPT_PATH_NAME
     }
 
@@ -83,6 +84,20 @@ class AdditionalInformationRevisitWebImplTest {
         )
         web.getAll(listOf(), "StockCalculation", emptyList())
         Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        web.getAll(
+            domain = EXCEPT_DOMAIN,
+            columns = listOf(),
+            typeName = "StockCalculation",
+            processSteps = emptyList()
+        )
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        web.getAll(
+            columns = listOf(),
+            typeName = "StockCalculation",
+            processSteps = emptyList(),
+            url = "custom url"
+        )
+        Truth.assertThat(urlSlot.captured).isEqualTo("custom url")
     }
 
     @Test
@@ -151,6 +166,24 @@ class AdditionalInformationRevisitWebImplTest {
             processSteps = emptyList()
         )
         Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        web.getTarget(
+            domain = EXCEPT_DOMAIN,
+            typeName = typeName,
+            columns = listOf(),
+            keyNamePath = listOf("Commodity", "CommKey"),
+            value = gson.toJson(listOf("2330")),
+            processSteps = emptyList()
+        )
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        web.getTarget(
+            typeName = typeName,
+            columns = listOf(),
+            keyNamePath = listOf("Commodity", "CommKey"),
+            value = gson.toJson(listOf("2330")),
+            processSteps = emptyList(),
+            url = "custom url"
+        )
+        Truth.assertThat(urlSlot.captured).isEqualTo("custom url")
     }
 
     @Test
@@ -218,8 +251,12 @@ class AdditionalInformationRevisitWebImplTest {
             )
         } returns Response.success(emptyList())
         val channels = listOf("4218074", "4217863", "4218054")
-        web.getSignal(channels)
+        web.getSignal(channels = channels)
         Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        web.getSignal(domain = EXCEPT_DOMAIN, channels = channels)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        web.getSignal(channels = channels, url = "custom url")
+        Truth.assertThat(urlSlot.captured).isEqualTo("custom url")
     }
 
     @Test
@@ -270,8 +307,7 @@ class AdditionalInformationRevisitWebImplTest {
 
     @Test
     fun `getMultiple_check url`() = testScope.runTest {
-        val expect =
-            "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/GetMultiple/CandleStockChart"
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/GetMultiple/CandleStockChart"
         val urlSlot = slot<String>()
         coEvery {
             service.getMultiple(
@@ -293,6 +329,24 @@ class AdditionalInformationRevisitWebImplTest {
             processSteps = emptyList()
         )
         Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        web.getMultiple(
+            domain = EXCEPT_DOMAIN,
+            typeName = typeName,
+            columns = listOf(),
+            keyNamePath = listOf("傳輸序號", "標的"),
+            value = gson.toJson(CandleChartRequest("2330", 1)),
+            processSteps = emptyList()
+        )
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        web.getMultiple(
+            typeName = typeName,
+            columns = listOf(),
+            keyNamePath = listOf("傳輸序號", "標的"),
+            value = gson.toJson(CandleChartRequest("2330", 1)),
+            processSteps = emptyList(),
+            url = "custom url"
+        )
+        Truth.assertThat(urlSlot.captured).isEqualTo("custom url")
     }
 
     @Test
@@ -372,6 +426,24 @@ class AdditionalInformationRevisitWebImplTest {
             processSteps = emptyList()
         )
         Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        web.getOtherQuery(
+            domain = EXCEPT_DOMAIN,
+            requestType = "SectionTransactionDetailsRequest",
+            responseType = responseType,
+            columns = columns,
+            value = gson.toJson(SomeTickRequest("2330", 0, 10)),
+            processSteps = emptyList()
+        )
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        web.getOtherQuery(
+            requestType = "SectionTransactionDetailsRequest",
+            responseType = responseType,
+            columns = columns,
+            value = gson.toJson(SomeTickRequest("2330", 0, 10)),
+            processSteps = emptyList(),
+            url = "custom url"
+        )
+        Truth.assertThat(urlSlot.captured).isEqualTo("custom url")
     }
 
     @Test
@@ -447,6 +519,20 @@ class AdditionalInformationRevisitWebImplTest {
             processSteps = emptyList()
         )
         Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        web.getPreviousAll(
+            domain = EXCEPT_DOMAIN,
+            columns = emptyList(),
+            typeName = typeName,
+            processSteps = emptyList()
+        )
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        web.getPreviousAll(
+            columns = emptyList(),
+            typeName = typeName,
+            processSteps = emptyList(),
+            url = "custom url"
+        )
+        Truth.assertThat(urlSlot.captured).isEqualTo("custom url")
     }
 
     @Test
@@ -497,7 +583,8 @@ class AdditionalInformationRevisitWebImplTest {
 
     @Test
     fun `getPreviousTarget_check url`() = testScope.runTest {
-        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/PreviousData/GetTarget/StockCalculation"
+        val expect =
+            "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/PreviousData/GetTarget/StockCalculation"
         val urlSlot = slot<String>()
         coEvery {
             service.getPreviousTarget(
@@ -519,6 +606,24 @@ class AdditionalInformationRevisitWebImplTest {
             processSteps = emptyList()
         )
         Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        web.getPreviousTarget(
+            domain = EXCEPT_DOMAIN,
+            typeName = typeName,
+            columns = listOf(),
+            keyNamePath = listOf("Commodity", "CommKey"),
+            value = gson.toJson(listOf("2330")),
+            processSteps = emptyList()
+        )
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        web.getPreviousTarget(
+            typeName = typeName,
+            columns = listOf(),
+            keyNamePath = listOf("Commodity", "CommKey"),
+            value = gson.toJson(listOf("2330")),
+            processSteps = emptyList(),
+            url = "custom url"
+        )
+        Truth.assertThat(urlSlot.captured).isEqualTo("custom url")
     }
 
     @Test
@@ -575,7 +680,8 @@ class AdditionalInformationRevisitWebImplTest {
 
     @Test
     fun `getPreviousMultiple_check url`() = testScope.runTest {
-        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/PreviousData/GetMultiple/CandleStockChart"
+        val expect =
+            "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/PreviousData/GetMultiple/CandleStockChart"
         val urlSlot = slot<String>()
         coEvery {
             service.getPreviousMultiple(
@@ -597,6 +703,24 @@ class AdditionalInformationRevisitWebImplTest {
             processSteps = emptyList()
         )
         Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        web.getPreviousMultiple(
+            domain = EXCEPT_DOMAIN,
+            typeName = typeName,
+            columns = listOf(),
+            keyNamePath = listOf("傳輸序號", "標的"),
+            value = gson.toJson(CandleChartRequest("2330", 1)),
+            processSteps = emptyList()
+        )
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        web.getPreviousMultiple(
+            typeName = typeName,
+            columns = listOf(),
+            keyNamePath = listOf("傳輸序號", "標的"),
+            value = gson.toJson(CandleChartRequest("2330", 1)),
+            processSteps = emptyList(),
+            url = "custom url"
+        )
+        Truth.assertThat(urlSlot.captured).isEqualTo("custom url")
     }
 
     @Test
@@ -653,7 +777,8 @@ class AdditionalInformationRevisitWebImplTest {
 
     @Test
     fun `getPreviousOtherQuery_check url`() = testScope.runTest {
-        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/PreviousData/GetOtherQuery/SectionTransactionDetailsRequest/IEnumerable<ITick<ICommodity>>"
+        val expect =
+            "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/PreviousData/GetOtherQuery/SectionTransactionDetailsRequest/IEnumerable<ITick<ICommodity>>"
         val urlSlot = slot<String>()
         coEvery {
             service.getPreviousOtherQuery(
@@ -675,6 +800,24 @@ class AdditionalInformationRevisitWebImplTest {
             processSteps = emptyList()
         )
         Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        web.getPreviousOtherQuery(
+            domain = EXCEPT_DOMAIN,
+            requestType = "SectionTransactionDetailsRequest",
+            responseType = responseType,
+            columns = columns,
+            value = gson.toJson(SomeTickRequest("2330", 0, 10)),
+            processSteps = emptyList()
+        )
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        web.getPreviousOtherQuery(
+            requestType = "SectionTransactionDetailsRequest",
+            responseType = responseType,
+            columns = columns,
+            value = gson.toJson(SomeTickRequest("2330", 0, 10)),
+            processSteps = emptyList(),
+            url = "custom url"
+        )
+        Truth.assertThat(urlSlot.captured).isEqualTo("custom url")
     }
 
     @Test

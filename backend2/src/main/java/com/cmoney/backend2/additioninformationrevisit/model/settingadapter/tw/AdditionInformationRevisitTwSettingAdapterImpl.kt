@@ -1,10 +1,10 @@
-package com.cmoney.backend2.additioninformationrevisit.model.settingadapter
+package com.cmoney.backend2.additioninformationrevisit.model.settingadapter.tw
 
 import com.cmoney.backend2.base.model.setting.backend.BackendSetting
 
-class AdditionInformationRevisitSettingAdapterImpl(
+class AdditionInformationRevisitTwSettingAdapterImpl(
     private val backendSetting: BackendSetting
-) : AdditionInformationRevisitSettingAdapter {
+) : AdditionInformationRevisitTwSettingAdapter {
 
     override fun getDomain(): String {
         return backendSetting.getDomainUrl()
