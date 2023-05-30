@@ -10,7 +10,7 @@ import com.google.gson.annotations.SerializedName
  */
 data class GroupBoardArticleContent(
     @SerializedName("commodityTags")
-    var commodityTags: List<CommodityTags>?,
+    var commodityTags: List<CommodityTag>?,
     @SerializedName("text")
     var text: String?,
     @SerializedName("multiMedia")
