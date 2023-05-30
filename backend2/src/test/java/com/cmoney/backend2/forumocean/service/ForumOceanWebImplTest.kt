@@ -53,7 +53,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.GroupPositio
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetGroupBoardArticlesResponse
-import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.club.GetJoinedClubArticlesResponse
+import com.cmoney.backend2.forumocean.service.api.schemas.v2.GroupBoardArticlePaginationBase
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations.GetRecommendationResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.spacepin.GetSpaceBoardPinArticlesResponseBody
@@ -5350,7 +5350,7 @@ class ForumOceanWebImplTest {
                 startWeight = any(),
                 articlesNumber = any()
             )
-        } returns Response.success(GetJoinedClubArticlesResponse())
+        } returns Response.success(GroupBoardArticlePaginationBase())
         val result = web.getJoinedClubArticles()
         assertThat(result.isSuccess).isTrue()
     }

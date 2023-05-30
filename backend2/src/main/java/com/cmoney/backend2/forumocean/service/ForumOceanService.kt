@@ -63,7 +63,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.articlerespo
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetAllChatRoomResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetGroupBoardArticlesResponse
-import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.club.GetJoinedClubArticlesResponse
+import com.cmoney.backend2.forumocean.service.api.schemas.v2.GroupBoardArticlePaginationBase
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.PromotedArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations.GetRecommendationResponse
@@ -1468,6 +1468,7 @@ interface ForumOceanService {
 
     /**
      * 取得指定看板文章
+     * todo GetGroupBoardArticlesResponse 應置換為命名與結構與後端對齊的 GroupBoardArticlePaginationBase
      */
     @RecordApi
     @GET("{path}/api/GroupArticle/Board/{boardId}")
@@ -1832,6 +1833,6 @@ interface ForumOceanService {
         @Path("path") path: String,
         @Query("startWeight") startWeight: Long? = null,
         @Query("fetch") articlesNumber: Int? = null,
-    ): Response<GetJoinedClubArticlesResponse>
+    ): Response<GroupBoardArticlePaginationBase>
 }
 
