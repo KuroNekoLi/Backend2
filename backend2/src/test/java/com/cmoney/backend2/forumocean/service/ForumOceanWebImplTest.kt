@@ -5350,7 +5350,13 @@ class ForumOceanWebImplTest {
                 startWeight = any(),
                 articlesNumber = any()
             )
-        } returns Response.success(GroupBoardArticlePaginationBase())
+        } returns Response.success(
+            GroupBoardArticlePaginationBase(
+                articles = listOf(),
+                hasNext = true,
+                nextStartWeight = 0
+            )
+        )
         val result = web.getJoinedClubArticles()
         assertThat(result.isSuccess).isTrue()
     }
