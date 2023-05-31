@@ -63,6 +63,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.articlerespo
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetAllChatRoomResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetGroupBoardArticlesResponse
+import com.cmoney.backend2.forumocean.service.api.schemas.v2.GroupBoardArticlePaginationBase
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.PromotedArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations.GetRecommendationResponse
@@ -1467,6 +1468,7 @@ interface ForumOceanService {
 
     /**
      * 取得指定看板文章
+     * todo GetGroupBoardArticlesResponse 應置換為命名與結構與後端對齊的 GroupBoardArticlePaginationBase
      */
     @RecordApi
     @GET("{path}/api/GroupArticle/Board/{boardId}")
@@ -1815,5 +1817,22 @@ interface ForumOceanService {
         @Path("path") path: String,
         @Path("boardId") boardId: Long
     ): Response<GetSpaceBoardPinArticlesResponseBody>
+
+    /**
+     * 取得用戶不分社團所有非聊天室看板文章，排序為新到舊
+     * @param authorization 登入憑證
+     * @param path 主網域
+     * @param startWeight 起始權重，不帶則預設值為long的最大值
+     * @param articlesNumber 取文篇數，不帶的話預設為10
+     */
+    @RecordApi
+    @GET("{path}/api/GroupArticle/All/Latest")
+    @Headers("X-Version: 2.0")
+    suspend fun getJoinedClubArticles(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+        @Query("startWeight") startWeight: Long? = null,
+        @Query("fetch") articlesNumber: Int? = null,
+    ): Response<GroupBoardArticlePaginationBase>
 }
 

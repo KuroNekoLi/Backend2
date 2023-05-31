@@ -1,12 +1,15 @@
 package com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat
 
+import com.cmoney.backend2.forumocean.service.api.schemas.v2.GroupBoardArticle
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleContentV2
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
 import com.google.gson.annotations.SerializedName
 
 /**
+ * 為更精確反映後端API格式，請改用[GroupBoardArticle]，或參照swagger另建類別於api.schema資料夾中
  * Same as [ArticleResponseBodyV2] with additional field: [unsend].
  */
+@Deprecated("請改用 api.schemas.v2.GroupBoardArticle")
 data class GroupArticlesResponseBody(
     @SerializedName("id")
     val id: String?,
