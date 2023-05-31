@@ -1,18 +1,9 @@
 package com.cmoney.backend2.sample.servicecase
 
-import android.os.Build
 import android.util.Log
 import com.cmoney.backend2.mobileocean.service.MobileOceanWeb
 import com.cmoney.backend2.mobileocean.service.api.common.article.FilterType
-import com.cmoney.backend2.mobileocean.service.api.common.channel.NeedInfo
 import com.cmoney.backend2.mobileocean.service.api.createarticle.requestbody.ArticleAppendParam
-import com.cmoney.backend2.mobileocean.service.api.createarticle.requestbody.ArticleStockTag
-import com.cmoney.backend2.mobileocean.service.api.createarticle.requestbody.StockTag
-import com.cmoney.backend2.mobileocean.service.api.createarticletoocean.requestbody.SubmitAdviceParam
-import com.cmoney.backend2.mobileocean.service.api.getfollowedchannelarticles.ChannelCategory
-import com.cmoney.backend2.mobileocean.service.api.getpopularstocks.requestbody.GetPopularStocksParam
-import com.cmoney.backend2.mobileocean.service.api.getstockpicture.PictureType
-import com.cmoney.backend2.sample.BuildConfig
 import com.cmoney.backend2.sample.extension.logResponse
 import org.koin.core.component.inject
 import java.io.File
