@@ -57,6 +57,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.GroupPositio
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetGroupBoardArticlesResponse
+import com.cmoney.backend2.forumocean.service.api.schemas.v2.GroupBoardArticlePaginationBase
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations.GetRecommendationResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.spacepin.GetSpaceBoardPinArticlesResponseBody
@@ -7342,6 +7343,62 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getSpaceBoardPinArticles(1L)
+        Truth.assertThat(result.isFailure).isTrue()
+    }
+
+    @Test
+    fun `getJoinedClubArticles_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/GroupArticle/All/Latest"
+        val urlSlot = slot<String>()
+        coEvery {
+            forumOceanService.getJoinedClubArticles(
+                url =  capture(urlSlot),
+                authorization = any(),
+                startWeight = any(),
+                articlesNumber = any()
+            )
+        } returns Response.success(
+            GroupBoardArticlePaginationBase(
+                articles = listOf(),
+                hasNext = true,
+                nextStartWeight = 0
+            )
+        )
+        web.getJoinedClubArticles()
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getJoinedClubArticles_success() = testScope.runTest {
+        coEvery {
+            forumOceanService.getJoinedClubArticles(
+                url = any(),
+                authorization = any(),
+                startWeight = any(),
+                articlesNumber = any()
+            )
+        } returns Response.success(
+            GroupBoardArticlePaginationBase(
+                articles = listOf(),
+                hasNext = true,
+                nextStartWeight = 0
+            )
+        )
+        val result = web.getJoinedClubArticles()
+        Truth.assertThat(result.isSuccess).isTrue()
+    }
+
+    @Test
+    fun getJoinedClubArticles_failed() = testScope.runTest {
+        coEvery {
+            forumOceanService.getJoinedClubArticles(
+                url = any(),
+                authorization = any(),
+                startWeight =  any(),
+                articlesNumber =  any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getJoinedClubArticles()
         Truth.assertThat(result.isFailure).isTrue()
     }
 

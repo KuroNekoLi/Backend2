@@ -1,10 +1,15 @@
 package com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse
 
 import com.cmoney.backend2.forumocean.service.api.article.OpenGraph
+import com.cmoney.backend2.forumocean.service.api.schemas.v2.GroupBoardArticleContent
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.commoditytag.CommodityTagInfo
 import com.cmoney.backend2.forumocean.service.api.variable.response.mediatype.MediaTypeInfo
 import com.google.gson.annotations.SerializedName
 
+/**
+ *  為更精確反映後端API格式，請改用[GroupBoardArticleContent] 或其他 ArticleContent，或參照swagger另建類別於api.schema資料夾中
+ */
+@Deprecated("請改用 api.schemas.v2.GroupBoardArticleContent 或其他 ArticleContent")
 data class ArticleContentV2(
     @SerializedName("text", alternate = ["Text"])
     val text: String?,

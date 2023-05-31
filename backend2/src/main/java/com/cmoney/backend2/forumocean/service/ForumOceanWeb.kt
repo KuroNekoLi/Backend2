@@ -59,6 +59,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.articlerespo
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetAllChatRoomResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetGroupBoardArticlesResponse
+import com.cmoney.backend2.forumocean.service.api.schemas.v2.GroupBoardArticlePaginationBase
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.PromotedArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations.GetRecommendationResponse
@@ -2203,4 +2204,21 @@ interface ForumOceanWeb {
         domain: String = manager.getForumOceanSettingAdapter().getDomain(),
         url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/GroupArticle/Board/${boardId}/Pin"
     ): Result<GetSpaceBoardPinArticlesResponseBody>
+
+
+    /**
+     * 取得用戶不分社團所有非聊天室看板文章，排序為新到舊
+     *
+     * @param startWeight 起始權重，不帶則預設值為long的最大值
+     * @param articlesNumber 取文篇數，不帶的話預設為10
+     * @param domain 網域名稱
+     * @param url 完整的Url
+     *
+     */
+    suspend fun getJoinedClubArticles(
+        startWeight: Long? = null,
+        articlesNumber: Int? = null,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/GroupArticle/All/Latest"
+    ): Result<GroupBoardArticlePaginationBase>
 }

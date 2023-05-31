@@ -58,6 +58,7 @@ import com.cmoney.backend2.forumocean.service.api.relationship.getdonate.DonateI
 import com.cmoney.backend2.forumocean.service.api.relationship.getrelationshipwithme.RelationshipWithMe
 import com.cmoney.backend2.forumocean.service.api.report.ReportRequestBody
 import com.cmoney.backend2.forumocean.service.api.role.Role
+import com.cmoney.backend2.forumocean.service.api.schemas.v2.GroupBoardArticlePaginationBase
 import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
 import com.cmoney.backend2.forumocean.service.api.support.SearchMembersResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.request.GroupPosition
@@ -2184,7 +2185,23 @@ class ForumOceanWebImpl(
         runCatching {
             service.getSpaceBoardPinArticles(
                 url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer()
+            ).checkResponseBody(jsonParser)
+        }
+    }
+
+    override suspend fun getJoinedClubArticles(
+        startWeight: Long?,
+        articlesNumber: Int?,
+        domain: String,
+        url: String
+    ): Result<GroupBoardArticlePaginationBase> = withContext(dispatcher.io()) {
+        runCatching {
+            service.getJoinedClubArticles(
+                url = url,
                 authorization = manager.getAccessToken().createAuthorizationBearer(),
+                startWeight = startWeight,
+                articlesNumber = articlesNumber
             ).checkResponseBody(jsonParser)
         }
     }
