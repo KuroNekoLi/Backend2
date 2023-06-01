@@ -15,5 +15,5 @@ data class GroupBoardArticlePaginationBase(
     @SerializedName("hasNext")
     var hasNext: Boolean?,
     @SerializedName("nextStartWeight")
-    var nextStartWeight: Int?
+    var nextStartWeight: Long?
 )
