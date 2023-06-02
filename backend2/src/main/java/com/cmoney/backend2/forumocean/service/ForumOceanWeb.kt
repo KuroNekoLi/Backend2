@@ -1645,6 +1645,7 @@ interface ForumOceanWeb {
 
     /**
      * 取得用戶不分社團所有非聊天室看板文章，排序為新到舊
+     * 僅能取得社團2.0的文章
      * @param startWeight 起始權重，不帶則預設值為long的最大值
      * @param articlesNumber 取文篇數，不帶的話預設為10
      */

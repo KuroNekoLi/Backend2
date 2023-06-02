@@ -1820,6 +1820,7 @@ interface ForumOceanService {
 
     /**
      * 取得用戶不分社團所有非聊天室看板文章，排序為新到舊
+     * 僅能取得社團2.0的文章
      * @param authorization 登入憑證
      * @param path 主網域
      * @param startWeight 起始權重，不帶則預設值為long的最大值
