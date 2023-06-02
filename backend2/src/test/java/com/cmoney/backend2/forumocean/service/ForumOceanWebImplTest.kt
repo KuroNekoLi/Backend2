@@ -44,6 +44,7 @@ import com.cmoney.backend2.forumocean.service.api.rating.ReviewRequest
 import com.cmoney.backend2.forumocean.service.api.relationship.getdonate.DonateInfo
 import com.cmoney.backend2.forumocean.service.api.report.ReportRequestBody
 import com.cmoney.backend2.forumocean.service.api.role.GetMembersByRoleResponse
+import com.cmoney.backend2.forumocean.service.api.schemas.v2.GroupBoardArticlePaginationBase
 import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
 import com.cmoney.backend2.forumocean.service.api.support.SearchMembersResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.request.GroupPosition
@@ -53,7 +54,6 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.GroupPositio
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetGroupBoardArticlesResponse
-import com.cmoney.backend2.forumocean.service.api.schemas.v2.GroupBoardArticlePaginationBase
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations.GetRecommendationResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.spacepin.GetSpaceBoardPinArticlesResponseBody
@@ -68,6 +68,7 @@ import com.cmoney.backend2.forumocean.service.api.vote.get.VoteInfo
 import com.cmoney.backend2.ocean.service.api.getevaluationlist.SortType
 import com.cmoney.core.CoroutineTestRule
 import com.cmoney.core.TestDispatcherProvider
+import com.google.common.truth.Truth
 import com.google.common.truth.Truth.assertThat
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
@@ -3893,6 +3894,21 @@ class ForumOceanWebImplTest {
 
     @ExperimentalCoroutinesApi
     @Test
+    fun `getRole(self)_filter_not_expect_response`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getRole(
+                authorization = any(),
+                path = any()
+            )
+        } returns Response.success(listOf(7))
+        val result = web.getRole()
+        Truth.assertThat(result.isSuccess).isTrue()
+        val data = result.getOrThrow()
+        Truth.assertThat(data).isEmpty()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
     fun `取得會員的社群角色_failed`() = testScope.runTest {
         coEvery {
             forumOceanService.getRole(
@@ -3945,6 +3961,22 @@ class ForumOceanWebImplTest {
         } returns Response.success(listOf())
         val result = web.getRole(1)
         assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `getRole(other)_filter_not_expect_response`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getRole(
+                authorization = any(),
+                memberId = any(),
+                path = any()
+            )
+        } returns Response.success(listOf(7))
+        val result = web.getRole(memberId = 1L)
+        Truth.assertThat(result.isSuccess).isTrue()
+        val data = result.getOrThrow()
+        Truth.assertThat(data).isEmpty()
     }
 
     @ExperimentalCoroutinesApi

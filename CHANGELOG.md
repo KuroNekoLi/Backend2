@@ -1,3 +1,11 @@
+# [5.53.1](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.53.0...5.53.1)
+
+
+### Bug Fixes
+
+- ForumOcean
+  - Role 新增 CLUB_HOUSE (語音直播)
+
 # [5.53.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.52.0...5.53.0)
 
 
