@@ -18,9 +18,9 @@ data class GroupBoardArticle(
     @SerializedName("content")
     var articleContent: GroupBoardArticleContent?,
     @SerializedName("createTime")
-    var createTime: Int?,
+    var createTime: Long?,
     @SerializedName("modifyTime")
-    var modifyTime: Int?,
+    var modifyTime: Long?,
     @SerializedName("commentCount")
     var commentCount: Int?,
     @SerializedName("donation")
