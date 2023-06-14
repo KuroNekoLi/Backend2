@@ -64,6 +64,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.articlerespo
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetAllChatRoomResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetGroupBoardArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.schemas.v2.GroupBoardArticlePaginationBase
+import com.cmoney.backend2.forumocean.service.api.schemas.v2.RecommendedClubsResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.PromotedArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations.GetRecommendationResponse
@@ -1835,5 +1836,18 @@ interface ForumOceanService {
         @Query("startWeight") startWeight: Long? = null,
         @Query("fetch") articlesNumber: Int? = null,
     ): Response<GroupBoardArticlePaginationBase>
+
+    /**
+     * 推薦使用者未加入的社團
+     * @param authorization 登入憑證
+     * @param path 主網域
+     */
+    @RecordApi
+    @GET("{path}/api/Group/RecommendedGroup/All")
+    @Headers("X-Version: 2.0")
+    suspend fun getRecommendedClub(
+        @Header("Authorization") authorization: String,
+        @Path("path") path: String,
+    ):Response<RecommendedClubsResponse>
 }
 
