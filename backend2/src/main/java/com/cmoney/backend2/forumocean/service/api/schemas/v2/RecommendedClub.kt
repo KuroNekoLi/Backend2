@@ -35,5 +35,5 @@ data class RecommendedClub(
 
     /** 會員數 */
     @SerializedName("memberCount")
-    val memberCount: Long
+    val memberCount: Int
 )
