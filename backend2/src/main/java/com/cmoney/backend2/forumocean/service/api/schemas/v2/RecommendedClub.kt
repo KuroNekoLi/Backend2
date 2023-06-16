@@ -11,29 +11,29 @@ import com.google.gson.annotations.SerializedName
 data class RecommendedClub(
     /** 社團編號 */
     @SerializedName("id")
-    val id: Int,
+    val id: Int?,
 
     /** 社團名稱 */
     @SerializedName("name")
-    val name: String,
+    val name: String?,
 
     /** 加入社團是否需審核 */
     @SerializedName("needApproval")
-    val needReview: Boolean,
+    val needReview: Boolean?,
 
     /** 社團描述 */
     @SerializedName("description")
-    val description: String,
+    val description: String?,
 
     /** 是否為審核狀態 */
     @SerializedName("isPending")
-    val underReview: Boolean,
+    val underReview: Boolean?,
 
     /** 社團圖片 */
-    @SerializedName("imgURL")
-    val imgURL: String,
+    @SerializedName("imgUrl")
+    val imgUrl: String?,
 
     /** 會員數 */
     @SerializedName("memberCount")
-    val memberCount: Int
+    val memberCount: Int?
 )
