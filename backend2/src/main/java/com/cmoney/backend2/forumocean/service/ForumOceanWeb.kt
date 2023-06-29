@@ -1511,8 +1511,12 @@ interface ForumOceanWeb {
 
     /**
      * 取得用戶可以進入的所有看板 id
+     *
+     * @param excludeChatroom 是否不包含聊天室，預設為 true
      */
-    suspend fun getAvailableBoardIds(): Result<AvailableBoardIds>
+    suspend fun getAvailableBoardIds(
+        excludeChatroom: Boolean = true
+    ): Result<AvailableBoardIds>
 
     /**
      * 取得社團推播

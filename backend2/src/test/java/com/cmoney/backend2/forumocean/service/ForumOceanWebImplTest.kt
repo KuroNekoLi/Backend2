@@ -4830,7 +4830,8 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.getAvailableBoardIds(
                 authorization = any(),
-                path = ""
+                path = "",
+                excludeChatroom = true
             )
         } returns Response.success(AvailableBoardIds(listOf()))
         val result = web.getAvailableBoardIds()
@@ -4843,7 +4844,8 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.getAvailableBoardIds(
                 authorization = any(),
-                path = ""
+                path = "",
+                excludeChatroom = true
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getAvailableBoardIds()

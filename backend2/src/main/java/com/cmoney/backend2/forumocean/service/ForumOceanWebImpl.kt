@@ -2024,12 +2024,15 @@ class ForumOceanWebImpl(
         }
     }
 
-    override suspend fun getAvailableBoardIds(): Result<AvailableBoardIds> {
+    override suspend fun getAvailableBoardIds(
+        excludeChatroom: Boolean
+    ): Result<AvailableBoardIds> {
         return withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getAvailableBoardIds(
                     path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
+                    excludeChatroom = excludeChatroom
                 ).checkResponseBody(jsonParser)
             }
         }
