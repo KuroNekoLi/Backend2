@@ -1527,7 +1527,8 @@ interface ForumOceanService {
     @Headers("X-Version: 2.0")
     suspend fun getAvailableBoardIds(
         @Header("Authorization") authorization: String,
-        @Path("path") path: String
+        @Path("path") path: String,
+        @Query("excludeChatroom") excludeChatroom: Boolean
     ): Response<AvailableBoardIds>
 
     /**
