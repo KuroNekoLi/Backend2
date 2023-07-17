@@ -44,7 +44,6 @@ import com.cmoney.backend2.forumocean.service.api.rating.ReviewRequest
 import com.cmoney.backend2.forumocean.service.api.relationship.getdonate.DonateInfo
 import com.cmoney.backend2.forumocean.service.api.report.ReportRequestBody
 import com.cmoney.backend2.forumocean.service.api.role.GetMembersByRoleResponse
-import com.cmoney.backend2.forumocean.service.api.schemas.v2.GroupBoardArticlePaginationBase
 import com.cmoney.backend2.forumocean.service.api.schemas.v2.RecommendedClubsResponse
 import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
 import com.cmoney.backend2.forumocean.service.api.support.SearchMembersResponseBody
@@ -55,6 +54,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.GroupPositio
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetGroupBoardArticlesResponse
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.group.GetGroupAllLatestArticlesResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations.GetRecommendationResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.spacepin.GetSpaceBoardPinArticlesResponseBody
@@ -4831,7 +4831,8 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.getAvailableBoardIds(
                 authorization = any(),
-                path = ""
+                path = "",
+                excludeChatroom = true
             )
         } returns Response.success(AvailableBoardIds(listOf()))
         val result = web.getAvailableBoardIds()
@@ -4844,7 +4845,8 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.getAvailableBoardIds(
                 authorization = any(),
-                path = ""
+                path = "",
+                excludeChatroom = true
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getAvailableBoardIds()
@@ -5384,8 +5386,8 @@ class ForumOceanWebImplTest {
                 articlesNumber = any()
             )
         } returns Response.success(
-            GroupBoardArticlePaginationBase(
-                articles = listOf(),
+            GetGroupAllLatestArticlesResponseBody(
+                articles = emptyList(),
                 hasNext = true,
                 nextStartWeight = 0
             )

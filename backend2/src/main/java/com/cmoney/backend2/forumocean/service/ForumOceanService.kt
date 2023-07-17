@@ -63,7 +63,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.articlerespo
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetAllChatRoomResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetGroupBoardArticlesResponse
-import com.cmoney.backend2.forumocean.service.api.schemas.v2.GroupBoardArticlePaginationBase
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.group.GetGroupAllLatestArticlesResponseBody
 import com.cmoney.backend2.forumocean.service.api.schemas.v2.RecommendedClubsResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.PromotedArticleResponseBody
@@ -1469,7 +1469,6 @@ interface ForumOceanService {
 
     /**
      * 取得指定看板文章
-     * todo GetGroupBoardArticlesResponse 應置換為命名與結構與後端對齊的 GroupBoardArticlePaginationBase
      */
     @RecordApi
     @GET("{path}/api/GroupArticle/Board/{boardId}")
@@ -1529,7 +1528,8 @@ interface ForumOceanService {
     @Headers("X-Version: 2.0")
     suspend fun getAvailableBoardIds(
         @Header("Authorization") authorization: String,
-        @Path("path") path: String
+        @Path("path") path: String,
+        @Query("excludeChatroom") excludeChatroom: Boolean
     ): Response<AvailableBoardIds>
 
     /**
@@ -1835,7 +1835,7 @@ interface ForumOceanService {
         @Path("path") path: String,
         @Query("startWeight") startWeight: Long? = null,
         @Query("fetch") articlesNumber: Int? = null,
-    ): Response<GroupBoardArticlePaginationBase>
+    ): Response<GetGroupAllLatestArticlesResponseBody>
 
     /**
      * 推薦使用者未加入的社團

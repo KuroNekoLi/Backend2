@@ -48,7 +48,6 @@ import com.cmoney.backend2.forumocean.service.api.rating.ReviewRequest
 import com.cmoney.backend2.forumocean.service.api.relationship.getdonate.DonateInfo
 import com.cmoney.backend2.forumocean.service.api.relationship.getrelationshipwithme.RelationshipWithMe
 import com.cmoney.backend2.forumocean.service.api.role.Role
-import com.cmoney.backend2.forumocean.service.api.schemas.v2.GroupBoardArticlePaginationBase
 import com.cmoney.backend2.forumocean.service.api.schemas.v2.RecommendedClubsResponse
 import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
 import com.cmoney.backend2.forumocean.service.api.support.SearchMembersResponseBody
@@ -59,6 +58,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.articlerespo
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetAllChatRoomResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetGroupBoardArticlesResponse
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.group.GetGroupAllLatestArticlesResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.PromotedArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations.GetRecommendationResponse
@@ -1512,8 +1512,12 @@ interface ForumOceanWeb {
 
     /**
      * 取得用戶可以進入的所有看板 id
+     *
+     * @param excludeChatroom 是否不包含聊天室，預設為 true
      */
-    suspend fun getAvailableBoardIds(): Result<AvailableBoardIds>
+    suspend fun getAvailableBoardIds(
+        excludeChatroom: Boolean = true
+    ): Result<AvailableBoardIds>
 
     /**
      * 取得社團推播
@@ -1646,14 +1650,14 @@ interface ForumOceanWeb {
 
     /**
      * 取得用戶不分社團所有非聊天室看板文章，排序為新到舊
-     * 僅能取得社團2.0的文章
+     *
      * @param startWeight 起始權重，不帶則預設值為long的最大值
      * @param articlesNumber 取文篇數，不帶的話預設為10
      */
     suspend fun getJoinedClubArticles(
         startWeight: Long? = null,
         articlesNumber: Int? = null,
-    ): Result<GroupBoardArticlePaginationBase>
+    ): Result<GetGroupAllLatestArticlesResponseBody>
 
     /**
      * 推薦使用者未加入的社團

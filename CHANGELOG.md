@@ -1,4 +1,22 @@
-# [5.53.2](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.53.1...5.53.2)
+## [5.53.4](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.53.3...5.53.4)
+
+
+### Features
+
+- ForumOcean
+  - getAvailableBoardIds 新增 excludeChatroom 參數
+
+
+## [5.53.3](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.53.2...5.53.3)
+
+
+### Bug Fixes
+
+- ForumOcean
+  - 調整取得用戶不分社團所有非聊天室看板文章回傳型別
+
+
+## [5.53.2](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.53.1...5.53.2)
 
 
 ### Bug Fixes
@@ -7,7 +25,7 @@
   - 調整取得用戶不分社團所有非聊天室看板文章參數及回傳欄位型別(Int? -> Long?)
   
 
-# [5.53.1](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.53.0...5.53.1)
+## [5.53.1](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.53.0...5.53.1)
 
 
 ### Bug Fixes

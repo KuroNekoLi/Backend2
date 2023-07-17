@@ -69,8 +69,8 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.articlerespo
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetAllChatRoomResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetGroupBoardArticlesResponse
-import com.cmoney.backend2.forumocean.service.api.schemas.v2.GroupBoardArticlePaginationBase
 import com.cmoney.backend2.forumocean.service.api.schemas.v2.RecommendedClubsResponse
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.group.GetGroupAllLatestArticlesResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.PromotedArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations.GetRecommendationResponse
@@ -88,7 +88,6 @@ import com.cmoney.core.DispatcherProvider
 import com.google.gson.Gson
 import com.google.gson.JsonParser
 import kotlinx.coroutines.withContext
-import retrofit2.Response
 
 class ForumOceanWebImpl(
     private val service: ForumOceanService,
@@ -2026,12 +2025,15 @@ class ForumOceanWebImpl(
         }
     }
 
-    override suspend fun getAvailableBoardIds(): Result<AvailableBoardIds> {
+    override suspend fun getAvailableBoardIds(
+        excludeChatroom: Boolean
+    ): Result<AvailableBoardIds> {
         return withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getAvailableBoardIds(
                     path = serverName,
                     authorization = setting.accessToken.createAuthorizationBearer(),
+                    excludeChatroom = excludeChatroom
                 ).checkResponseBody(jsonParser)
             }
         }
@@ -2318,7 +2320,7 @@ class ForumOceanWebImpl(
     override suspend fun getJoinedClubArticles(
         startWeight: Long?,
         articlesNumber: Int?
-    ): Result<GroupBoardArticlePaginationBase> {
+    ): Result<GetGroupAllLatestArticlesResponseBody> {
         return withContext(dispatcher.io()) {
             kotlin.runCatching {
                 service.getJoinedClubArticles(
