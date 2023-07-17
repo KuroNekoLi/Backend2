@@ -1,5 +1,5 @@
 object ModuleConfig {
-    const val PROJECT_VERSION = "5.53.3"
+    const val PROJECT_VERSION = "5.53.4"
     // Maven Upload Properties
     const val RELEASE_URL = "http://192.168.99.70:8081/repository/maven-releases/"
     const val USER_NAME = "uploader"
