@@ -1,3 +1,12 @@
+## [5.53.4](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.53.3...5.53.4)
+
+
+### Features
+
+- ForumOcean
+  - getAvailableBoardIds 新增 excludeChatroom 參數
+
+
 ## [5.53.3](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.53.2...5.53.3)
 
 
