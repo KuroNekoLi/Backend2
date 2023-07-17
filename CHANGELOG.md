@@ -1,3 +1,12 @@
+## [5.54.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.53.4...5.54.0)
+
+
+### Features
+
+- ForumOcean
+  - 新增取得使用者未加入的推薦社團(getRecommendedClubs)
+
+
 ## [5.53.4](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.53.3...5.53.4)
 
 

@@ -44,6 +44,7 @@ import com.cmoney.backend2.forumocean.service.api.rating.ReviewRequest
 import com.cmoney.backend2.forumocean.service.api.relationship.getdonate.DonateInfo
 import com.cmoney.backend2.forumocean.service.api.report.ReportRequestBody
 import com.cmoney.backend2.forumocean.service.api.role.GetMembersByRoleResponse
+import com.cmoney.backend2.forumocean.service.api.schemas.v2.RecommendedClubsResponse
 import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
 import com.cmoney.backend2.forumocean.service.api.support.SearchMembersResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.request.GroupPosition
@@ -5403,8 +5404,8 @@ class ForumOceanWebImplTest {
             forumOceanService.getJoinedClubArticles(
                 authorization = any(),
                 path = any(),
-                startWeight =  any(),
-                articlesNumber =  any()
+                startWeight = any(),
+                articlesNumber = any()
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getJoinedClubArticles()
@@ -5546,6 +5547,32 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.resetUncheckChatRoomCount()
+        assertThat(result.isFailure).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `推薦使用者未加入的社團_success`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getRecommendedClub(
+                authorization = any(),
+                path = any()
+            )
+        } returns Response.success(200, RecommendedClubsResponse(clubs = listOf()))
+        val result = web.getRecommendedClubs()
+        assertThat(result.isSuccess).isTrue()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `推薦使用者未加入的社團_failed`() = testScope.runTest {
+        coEvery {
+            forumOceanService.getRecommendedClub(
+                authorization = any(),
+                path = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getRecommendedClubs()
         assertThat(result.isFailure).isTrue()
     }
 }

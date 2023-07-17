@@ -48,6 +48,7 @@ import com.cmoney.backend2.forumocean.service.api.rating.ReviewRequest
 import com.cmoney.backend2.forumocean.service.api.relationship.getdonate.DonateInfo
 import com.cmoney.backend2.forumocean.service.api.relationship.getrelationshipwithme.RelationshipWithMe
 import com.cmoney.backend2.forumocean.service.api.role.Role
+import com.cmoney.backend2.forumocean.service.api.schemas.v2.RecommendedClubsResponse
 import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
 import com.cmoney.backend2.forumocean.service.api.support.SearchMembersResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.request.GroupPosition
@@ -1657,4 +1658,9 @@ interface ForumOceanWeb {
         startWeight: Long? = null,
         articlesNumber: Int? = null,
     ): Result<GetGroupAllLatestArticlesResponseBody>
+
+    /**
+     * 推薦使用者未加入的社團
+     */
+    suspend fun getRecommendedClubs(): Result<RecommendedClubsResponse>
 }
