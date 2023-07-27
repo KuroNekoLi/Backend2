@@ -1,3 +1,283 @@
+### Features
+
+- ActivityWeb加入SettingAdapter，預設使用共用的Domain。
+- AuthorizationWeb加入SettingAdapter，預設使用共用的Domain。
+- BillingWeb加入SettingAdapter，預設使用共用的Domain。
+- BrokerDataTransmissionWeb加入SettingAdapter，預設使用共用的Domain。
+- CellphoneWeb加入SettingAdapter，預設使用共用的Domain。
+- CentralizedImageWeb加入SettingAdapter，預設使用共用的Domain。
+- ChipkWeb加入SettingAdapter，預設使用共用的Domain。
+- ChatRoomWeb加入SettingAdapter，預設使用 `https://talk.cmoney.tw/`。
+- ClientConfigurationWeb加入SettingAdapter，預設使用共用的Domain。
+- CMTalkWeb加入SettingAdapter，預設使用共用的Domain。
+- CommonWeb加入SettingAdapter，預設使用共用的Domain。
+- CrawlSettingWeb加入SettingAdapter，預設 `https://datateamapi.cmoney.tw/`。
+- CommonUseWeb加入SettingAdapter，預設使用共用的Domain。
+- CrmWeb加入SettingAdapter，預設使用共用的Domain。
+- CustomGroupWeb加入SettingAdapter，預設使用共用的Domain。
+- CustomGroup2Web加入SettingAdapter，預設使用共用的Domain。
+- DtnoWeb加入SettingAdapter，預設使用共用的Domain。
+- CrawlSettingWeb加入SettingAdapter，預設 `https://datasv.cmoney.tw:5001/`。
+- DataWeb加入SettingAdapter，預設使用共用的Domain。
+- FrontEndLoggerWeb加入SettingAdapter，預設使用共用的Domain。
+- EmilyWeb加入SettingAdapter，預設使用共用的Domain。
+- IdentityProviderWeb加入SettingAdapter，預設使用共用的Domain。
+- ImageRecognitionWeb加入SettingAdapter，預設使用 `https://datateamapi.cmoney.tw/`。
+- MediaWeb加入SettingAdapter，預設使用共用的Domain。
+- NoteExtensionWeb加入SettingAdapter，預設使用共用的Domain。
+- MobileOceanWeb加入SettingAdapter，預設使用共用的Domain。
+- NotesWeb加入SettingAdapter，預設使用共用的Domain。
+- NotificationWeb加入SettingAdapter，預設使用共用的Domain。
+- Notification2Web加入SettingAdapter，預設使用共用的Domain。
+- OceanWeb加入SettingAdapter，預設使用共用的Domain。
+- ProductDataProviderWeb加入SettingAdapter，預設使用共用的Domain。
+- PortalWeb加入SettingAdapter，預設使用共用的Domain。
+- ProfileWeb加入SettingAdapter，預設使用共用的Domain。
+- TickDataWeb加入SettingAdapter，預設使用共用的Domain。
+- TrialWeb加入SettingAdapter，預設使用共用的Domain。
+- RealTimeAfterMarketWeb加入SettingAdapter，預設使用共用的Domain。
+- UserBehaviorWeb加入SettingAdapter，預設使用共用的Domain。
+- VideoChannelWeb加入SettingAdapter，預設使用 `https://www.icheckapp.com.tw/podcast/`。
+- VirtualAssetsWeb加入SettingAdapter，預設使用共用的Domain。
+- ForumOceanWeb加入SettingAdapter，預設使用共用的Domain，Path 使用 空字串。
+- AdditionalInformationRevisitWeb加入台股SettingAdapter，預設使用共用的Domain，Path 使用 `AdditionInformationRevisit/`。
+- AdditionalInformationRevisitWeb加入美股SettingAdapter，預設使用 `https://internal.cmoney.tw/`，Path 使用 `AdditionInformationRevisit/`。
+
+### Breaking Changes
+
+- 所有的 `Service` 的DI定義改採用 `BACKEND2_RETROFIT_V2` 或 `BACKEND2_RETROFIT_WITH_GSON_NON_SERIALIZE_NULLS_V2`。
+- 所有的 `WebImp` 的DI定義移除 `Setting` 引用，改用 `GlobalBackend2Manager`，請確認有指定[named arguement](https://kotlinlang.org/docs/functions.html#named-arguments)。
+
+- ActivityWeb移除棄用方法
+	- getDayCount(apiParam: MemberApiParam)
+	- requestBonus(apiParam: MemberApiParam)
+	- getReferralCount(apiParam: MemberApiParam, eventId: Long)
+- BrokerDataTransmissionWeb的baseHost改由domain和url控制
+- CellphoneWeb移除棄用方法
+	- updatePassword(apiParam: MemberApiParam, oldPassword: String, oldHasMd5: Boolean,newPassword: String)
+	- getAccountInfo(apiParam: MemberApiParam)
+	- bindCellphone(apiParam: MemberApiParam,cellphoneParam: CellphoneParam)
+	-  checkCellphoneBindingVerifyCode(apiParam: MemberApiParam,cellphoneParam: CellphoneParam,verifyCode: String?)
+	-  unbindCellphone(apiParam: MemberApiParam)
+- ChatRoomWeb移除 DI 的 `BACKEND2_CHAT_RELEASE` 和 `BACKEND2_CHAT_DEBUG` 定義。
+- ClientConfigurationWeb移除 DI 的 `BACKEND2_CHAT_RELEASE` 和 `BACKEND2_CHAT_DEBUG` 定義。
+- CommonWeb移除棄用方法
+	- registerByEmail(account: String,password: String,device: Int) 
+	- getMemberProfile(apiParam: MemberApiParam)
+	- loginReward(apiParam: MemberApiParam)
+	- hasSentLoginRewardToday(apiParam: MemberApiParam)
+	- updateIsNeedPush(apiParam: MemberApiParam,isNeedPush: Boolean)
+	- startTrial(apiParam: MemberApiParam)
+	- pauseTrial(apiParam: MemberApiParam)
+	- invocationSerialNumber(apiParam: MemberApiParam,serial: String)
+	- getAccessToken(apiParam: MemberApiParam)
+	- addDeviceIdentification(apiParam: MemberApiParam,aaid: String)	- changeNickname(apiParam: MemberApiParam,newNickname: String)
+	- changeUserImage(apiParam: MemberApiParam,isUseFbImage: Boolean,newImageFile: File?)
+	- getDailyHeadLine(apiParam: MemberApiParam,baseArticleId: Long,newsType: Int,fetchSize: Int)
+	- getStockRssArticlesWithFilterType(apiParam: MemberApiParam,stockId: String,baseArticleId: Long,condition: String,fromDate: String,beforeDays: Int,filterType: Int,fetchSize: Int)
+	- addStockRssArticleClickCount(apiParam: MemberApiParam,memberPk: Int,articleId: Long)
+	- getMemberBonus(apiParam: MemberApiParam)
+	- hasReceivedCellphoneBindReward(apiParam: MemberApiParam)
+- CrawlSettingWeb移除 DI 的 `BACKEND2_CRAWL_SETTING_DEBUG` 和 `BACKEND2_CRAWL_SETTING_PRODUCTION` 定義。
+- CommonUseWeb的host改由domain和url控制
+- CustomGroupWeb移除棄用方法
+	- getCustomGroupWithOrderAndList(apiParam: MemberApiParam,groupType: CustomGroupType = CustomGroupType.Stock)
+	- getCustomGroupWithOrderAndList(groupType: CustomGroupType = CustomGroupType.Stock)
+	- updateCustomList(apiParam: MemberApiParam,groupType: CustomGroupType = CustomGroupType.Stock,docNo: Int,docName: String,list: List<String>)
+	- updateCustomList(groupType: CustomGroupType = CustomGroupType.Stock,docNo: Int,docName: String,list: List<String>): Result<Boolean>
+	- addCustomGroup(apiParam: MemberApiParam,groupType: CustomGroupType = CustomGroupType.Stock,docName: String)
+	- deleteCustomGroup(apiParam: MemberApiParam,docNo: Int)
+	- renameCustomGroup(apiParam: MemberApiParam,groupType: CustomGroupType = CustomGroupType.Stock,docNo: Int,newDocName: String)
+	- updateCustomGroupOrder(apiParam: MemberApiParam,groupType: CustomGroupType = CustomGroupType.Stock,docNoList: List<Int>)
+- CustomGroup2Web移除棄用方法
+	- searchStocks(keyword: String, language: Language)
+	- searchStocks(keyword: String, languages: List<Language>)
+	- searchStocksByMarketTypes(keyword: String,language: Language,marketTypes: List<MarketType>)
+	- searchStocksByMarketTypes(keyword: String,languages: List<Language>,marketTypes: List<MarketType>)
+	- searchStocksByMarketTypes(keyword: String,languages: List<Language>,marketTypes: List<MarketType>)
+- DataWeb移除 `DATA_RETROFIT`
+- DataWeb的host改由domain和url控制
+- FrontEndLoggerWeb的host改由domain和url控制
+- ImageRecognitionWeb移除 DI 的 `BACKEND2_IMAGE_RECOGNITION_DEBUG` 和 `BACKEND2_IMAGE_RECOGNITION_PRODUCTION` 定義。
+- MediaWeb移除棄用方法
+	- getMediaList(apiParam: MemberApiParam,skipCount: Int,fetchCount: Int,chargeType: Int,tagIdList : List<Int> = emptyList())
+	- getMediaPurchaseUrl(apiParam: MemberApiParam, mediaId: Long)
+	- getMediaUrl(apiParam: MemberApiParam, mediaId: Long)
+	- getLiveStreamList(apiParam: MemberApiParam,skipCount: Int,fetchCount: Int,chargeType: Int)
+	- getPaidMediaListOfMember(apiParam: MemberApiParam,skipCount: Int,fetchCount: Int)
+	- getPaidMediaList(apiParam: MemberApiParam,skipCount: Int,fetchCount: Int)
+	- getPaidLiveList(apiParam: MemberApiParam,skipCount: Int,fetchCount: Int)
+	- getMediaInfo(apiParam: MemberApiParam,mediaId: Long)
+- MobileOceanWeb移除棄用方法
+	- createArticleToOcean(apiParam: MemberApiParam,device: Int,submitAdviceParam: SubmitAdviceParam)
+	- createArticle(apiParam: MemberApiParam,articleContent: String,appendQuestionParam: ArticleAppendQuestionParam? = null,appendClubParam: ArticleAppendClubParam? = null,appendParam: ArticleAppendParam? = null)
+	- replyArticle(apiParam: MemberApiParam,stockId: String,articleId: Long,content: String,isUseClubToReply: Boolean,image: File? = null)
+	- getRepliedArticleIds(apiParam: MemberApiParam,articleIds: List<Long>)
+	- getStockArticleList(apiParam: MemberApiParam,articleId: Long,stockId: String,fetchSize: Int,replyFetchSize: Int = 0,isIncludeLimitedAskArticle: Boolean = false)
+	- getReplyArticleList(apiParam: MemberApiParam,articleId: Long)
+	- getForumLatestArticles(apiParam: MemberApiParam,baseArticleId: Long,fetchCount: Int,IsIncludeLimitedAskArticle: Boolean = false)
+	- getForumPopularArticles(apiParam: MemberApiParam,skipCount: Long,fetchCount: Int,IsIncludeLimitedAskArticle: Boolean = false)
+	- getStockLatestArticles(apiParam: ApiParam,stockIdList: List<String>,filterType: FilterType,baseArticleId: Long,fetchCount: Int,IsIncludeLimitedAskArticle: Boolean = false)
+	- getStockLatestArticles(stockIdList: List<String>,filterType: FilterType,baseArticleId: Long,fetchCount: Int,IsIncludeLimitedAskArticle: Boolean = false)
+	- getStockPopularArticles(apiParam: ApiParam,stockIdList: List<String>,filterType: FilterType,skipCount: Int,fetchCount: Int,IsIncludeLimitedAskArticle: Boolean = false)
+	- getStockPopularArticles(stockIdList: List<String>,filterType: FilterType,skipCount: Int,fetchCount: Int,IsIncludeLimitedAskArticle: Boolean = false)
+	- getChannelLatestArticles(apiParam: MemberApiParam,channelId: Long,baseArticleId: Long,fetchCount: Int)
+	- getChannelLatestArticles(channelId: Long,baseArticleId: Long,fetchCount: Int)
+	- getChannelPopularArticles(apiParam: MemberApiParam,channelIdList: List<Long>,skipCount: Int,fetchCount: Int,isIncludeLimitedAskArticle : Boolean = false)
+	- getSingleArticle(apiParam: ApiParam,articleId: Long)
+	-  getFollowedChannelArticles(apiParam: MemberApiParam,channelCategory: ChannelCategory,baseArticleId: Long,fetchCount: Int,isIncludeLimitedAskArticle: Boolean)
+	-  getPopularQuestionArticles(apiParam: MemberApiParam,stockIdList: List<String>,skipCount: Int,fetchCount: Int)
+	-  getLatestQuestionArticles(apiParam: MemberApiParam,stockIdList: List<String>,skipCount: Int,fetchCount: Int)
+	-  likeArticle(apiParam: MemberApiParam,articleId: Long)
+	-  isTodayAskedStockTendency(apiParam: MemberApiParam,stockId: String)
+	-  addAskStockTendencyLog(apiParam: MemberApiParam,stockId: String)
+	-  getAskStockTendencyAmount(apiParam: MemberApiParam,stockId: String)
+	-  followChannel(apiParam: MemberApiParam,channelId: Long)
+	-  leaveChannel(apiParam: MemberApiParam,channelId: Long)
+	-  updateChannelDescription(apiParam: MemberApiParam,description: String)
+	-  getPopularStocks(apiParam: ApiParam,param: GetPopularStocksParam)
+	-  getFansChannel(apiParam: ApiParam,channelId: Long,needInfo: NeedInfo,skipCount: Int,fetchCount: Int)
+	-  getAttentionChannel(apiParam: ApiParam,channelId: Long,needInfo: NeedInfo,skipCount: Int,fetchCount: Int)
+	-  getStockPicture(apiParam: ApiParam,stockId : String,type : PictureType)
+	-  getMemberMasterRanking(apiParam: MemberApiParam)
+	-  activeFollow(apiParam: MemberApiParam)
+- NotesWeb移除棄用方法
+	- fetchWritingPost(apiParam: MemberApiParam,noteId: Long,fetchCount: Int,tags: List<String>)
+	- getNotes(apiParam: MemberApiParam,noteId: Long,fetchSize: Int,fetchDay: Int,blogId: Int,hasPayNotes: Boolean)
+	- getNotesByTagsUsingNotesApi(apiParam: MemberApiParam,noteId: Long,fetchSize: Int,fetchDay: Int,tags: List<Long>,hasPayNotes: Boolean,isShowAllFree: Boolean)
+- NotificationWeb移除棄用方法
+	- updateArriveCount(sn: Long,pushToken: String,analyticsId: Long,title: String,content: String)
+	- updateClickCount(sn: Long,pushToken: String,analyticsId: Long,title: String,content: String)
+- Notification2Web移除棄用方法
+	- getNotifyHistory(appId: Int,parameterClass: Class<T>)
+	- getBranchFcm(apiParam: MemberApiParam)
+	- updateBranchFcmMultipleSettings(pushSettings: List<PushSetting>,apiParam: MemberApiParam)
+	- getClubFcm(clubId: Long,apiParam: MemberApiParam)
+	- updateClubFcm(pushSettingType: Int,clubId: Long,apiParam: MemberApiParam)
+	- getMainFcm(apiParam: MemberApiParam)
+	- updateMainFcm(isNeedPush: Boolean,apiParam: MemberApiParam)
+	- getMonitorConditionList(apiParam: MemberApiParam)
+	- addNewMonitorCondition(commonKey : String,strategyId : Int,monitorPrice : Double,apiParam: MemberApiParam) 
+	- updateCondition(conditionId : Long,strategyId : Int,monitorPrice : Double,apiParam: MemberApiParam)
+	- deleteMonitorCondition(conditionId: Long,apiParam: MemberApiParam)
+	- getMonitorArriveNotifyHistoryList(apiParam: MemberApiParam)
+	- updateMonitorIsNeedToPush(conditionId: Long,isNeedPush: Boolean,apiParam: MemberApiParam)
+	- getMrOptionOptionConditionList(apiParam: MemberApiParam)
+	- getMrOptionSpotGoodsConditionList(apiParam: MemberApiParam)
+	- updateMrOptionConditionList(conditions: List<UpdateMrOptionConditionRequestBody.Condition>,apiParam: MemberApiParam)
+- OceanWeb移除棄用方法
+	- changeAllBadge(apiParam: MemberApiParam,isWear: Boolean)
+	- changeWearBadge(apiParam: MemberApiParam,isWear: Boolean,badgeIds: List<Int>)
+	- getBadgesCollection(apiParam: MemberApiParam)
+	- getMetricsStats(apiParam: MemberApiParam)
+	- getUnreadBadges(apiParam: MemberApiParam)
+	- channelWearBadge(apiParam: MemberApiParam,channelIds: List<Long>)
+	- setBadgeRead(apiParam: MemberApiParam, badgeId: Long)
+	- getChannelQuestions(apiParam: MemberApiParam,channelId: Long)
+	- channelQuestions(apiParam: MemberApiParam,questionnaire: ChannelQuestionnaire)
+	- channelQuestionsActivation(apiParam: MemberApiParam,isActive: Boolean,channelId: Long)
+	- getAnswers(apiParam: MemberApiParam,channelId: Long,memberChannelIds: List<Long>,questionIds: List<Long>)
+	- answers(apiParam: MemberApiParam,answers: List<AnswerParam>)
+	- hadPhoneAuthentication(apiParam: MemberApiParam,channelId: List<Long>)
+	- getStockLatestArticle(apiParam: MemberApiParam,baseArticleId: Long,@IntRange(from = 0, to = 20)fetchCount: Int,isIncludeLimitedAskArticle: Boolean,stockIdList: List<String>,articleNeedInfo: ArticleNeedInfo,filterType: FilterType)
+	- getChannelLatestArticle(apiParam: MemberApiParam,baseArticleId: Long,@IntRange(from = 0, to = 20)fetchCount: Int,isIncludeLimitedAskArticle: Boolean,channelIdList: List<Long>,articleNeedInfo: ArticleNeedInfo)
+	- impeachArticle(apiParam: MemberApiParam,articleId: Long,reason: String)
+	- getStockPopularArticle(apiParam: MemberApiParam,skipCount: Int,fetchCount: Int,isIncludeLimitedAskArticle: Boolean,stockIdList: List<String>,articleNeedInfo: ArticleNeedInfo,filterType: FilterType)
+	- putOnBlackList(apiParam: MemberApiParam,blackChannelId: Long)
+	- spinOffBlackList(apiParam: MemberApiParam,blackChannelId: Long)
+	- getBlackList(apiParam: MemberApiParam)
+	- getNotify(apiParam: MemberApiParam,isIncludeClub: Boolean,lowerBoundNotifyTime: Long,notifyTypes: List<NotificationType>,fetchCount: Int)
+	- getUnreadCount(apiParam: MemberApiParam,isIncludeClub: Boolean,lowerBoundNotifyTime: Long,notifyTypes: List<NotificationType>)
+	- setReaded(apiParam: MemberApiParam,notifyIdAndIsSpecificPair: List<NotifyIdAndIsSpecificPair>)
+	- getSingleArticle(apiParam: MemberApiParam,articleId: Long,articleNeedInfo: ArticleNeedInfo)
+	- getComments(apiParam: MemberApiParam,articleId: Long,upperBoundArticleId: Long,fetchCount: Int)
+	- getManagerList(apiParam: MemberApiParam,needInfo: Int,channelId: Long)
+	- deleteArticle(apiParam: MemberApiParam,articleId: Long)
+	- isJoinedClub(apiParam: MemberApiParam,channelId: Long,relation: Relation)
+	- getOtherChannelInfo(apiParam: MemberApiParam,channelId: Long,needInfo: ChannelNeedInfo<ChannelInfoOption.Other>)
+	- getRssSignalChannelInfo(apiParam: MemberApiParam,channelId: Long,needInfo: ChannelNeedInfo<ChannelInfoOption.RssSignal>)
+	- getMemberChannelInfo(apiParam: MemberApiParam,channelId: Long,needInfo: ChannelNeedInfo<ChannelInfoOption.Member>)
+	- getClubChannelInfo(apiParam: MemberApiParam,channelId: Long,needInfo: ChannelNeedInfo<ChannelInfoOption.Club>)
+	- searchChannel(apiParam: MemberApiParam,channelTypes: ChannelTypes,fetchCount: Int,keyword: String)
+	- getFanListExcludeJoinedClub(apiParam: MemberApiParam,needInfo: ChannelNeedInfo<ChannelInfoOption.Member>,excludeClubChannelId: Long,fetchCount: Int,skipCount: Int)
+	- getSimpleChannelInfo(apiParam: MemberApiParam,channelIds: List<Long>)
+	- setEvaluation(apiParam: MemberApiParam,channelId: Long,content: String,score: Int)
+	- checkHasEvaluated(apiParam: MemberApiParam,channelId: Long)
+	- getEvaluationList(apiParam: MemberApiParam,channelId: Long,fetchCount: Int,skipCount: Int,sortType: SortType)
+	- changeCollectArticleState(apiParam: MemberApiParam,articleId: Long,isCollect: Boolean)
+	- getCollectArticleList(apiParam: MemberApiParam,skipCount: Int,fetchCount: Int,articleNeedInfo: ArticleNeedInfo,isIncludeLimitedAskArticle: Boolean)
+	- getMasters(apiParam: MemberApiParam,masterType: MasterType,fetchCount: Int)
+	- getAskLatestArticle(apiParam: MemberApiParam,baseArticleId: Long,@IntRange(from = 0, to = 20)fetchCount: Int,stockListList: List<String>,articleNeedInfo: ArticleNeedInfo)
+	- getStockMasterEvaluationList(apiParam: MemberApiParam,stockIdList: List<String>)
+	- getStockMasterEvaluation(apiParam: MemberApiParam,stockId: String)
+	- uploadChannelImage(apiParam: MemberApiParam,channelId: Long,image: File? = null)
+	- createClub(apiParam: MemberApiParam,clubName: String,description: String,joinMethod: JoinMethod)
+	- deleteClub(apiParam: MemberApiParam,clubChannelId: Long)
+	- leaveClub(apiParam: MemberApiParam,clubChannelId: Long)
+	- invite(apiParam: MemberApiParam,clubChannelId: Long,memberChannelIds: List<Long>)
+	- joinClub(apiParam: MemberApiParam,clubChannelId: Long,message: String)
+	- getMemberClubs(apiParam: MemberApiParam,memberChannelId: Long,needInfo: ChannelNeedInfo<ChannelInfoOption.Club>,relation: Relation)
+	- getRecommendClubs(apiParam: MemberApiParam,fetchCount: Int,skipCount: Int,needInfo: RecommendClubsNeedInfo)
+	- changeMemberStatus(apiParam: MemberApiParam,clubChannelId: Long,memberChannelIds: List<Long>,operation: Operation)
+	- updateClubDescription(apiParam: MemberApiParam,clubChannelId: Long,description: String)
+	- fun getMemberStatusList(apiParam: MemberApiParam,clubChannelId: Long,memberPosition: MemberPosition,fetchCount: Int,skipCount: Int,needInfo: ChannelNeedInfo<ChannelInfoOption.Member>)
+	- getManagerList(apiParam: MemberApiParam,clubChannelId: Long,needInfo: ChannelNeedInfo<ChannelInfoOption.Member>)
+- PortalWeb移除棄用方法
+	- getTarget(apiParam: MemberApiParam) 
+	- getSignals(apiParam: MemberApiParam)
+	- getAdditionalInfo(apiParam: MemberApiParam,settingId: Int)
+	- getActivitiesBaseInfo(apiParam: MemberApiParam)
+	- getActivityNowInfo(apiParam: MemberApiParam,commKey: String)
+	- getMemberPerformance(apiParam: MemberApiParam,commKey: String,queryGuid: String)
+	- getRanking(apiParam: MemberApiParam,commKey: String,fetchCount: Int,skipCount: Int)
+	- getPersonActivityHistory(apiParam: MemberApiParam,commKey: String,fetchCount: Int,skipCount: Int,queryGuid: String)
+	- askMemberForecastStatus(apiParam: MemberApiParam,commKey: String)
+	- askMemberLastForecastInfo(apiParam: MemberApiParam,commKey: String)
+	- joinActivity(apiParam: MemberApiParam,commKey: String,forecastValue: ForecastValue)
+	- askAllMemberLastForecastInfo(apiParam: MemberApiParam)
+- ProfileWeb移除棄用方法
+	- mutationMyUserGraphQlInfo(variable : MutationData,type: Type) 
+	- getUserGraphQLInfo(memberIds: List<Long>,fields: Set<UserGraphQLInfo>,type: Type)
+- TrialWeb移除棄用方法
+	- setQuotaUsageUse(memberApiParam: MemberApiParam,trialKey: String)
+	- setQuotaTimeUse(memberApiParam: MemberApiParam,trialKey: String,quotaUsed: Int)
+	- checkTrialTime(memberApiParam: MemberApiParam,trialKey: String)
+	- getQuotaTime(memberApiParam: MemberApiParam,trialKey: String)
+- RealTimeAfterMarketWeb移除棄用方法
+	- getNewTickInfo(apiParam: MemberApiParam,commKeys: List<String>,statusCodes: List<Int>,isSimplified: Boolean = false)
+	- getSingleStockLongNewTick(apiParam: MemberApiParam,commKey: String,statusCode: String)
+	- getMarketNewTick(apiParam: MemberApiParam,commKey: String,statusCode: String)
+	- getInternationalNewTick(apiParam: MemberApiParam,commKey: String,statusCode: String)
+	- getDtno(apiParam: ApiParam,dtno: Long,paramStr: String,assignSpid: String,keyMap: String,filterNo: Long)
+	- getStockDealDetail(apiParam: MemberApiParam,commKey: String,perReturnCode: Int,timeCode: Int)
+- VideoChannelWeb移除 DI 的 `BACKEND2_ICHECKAPP_RETROFIT` 定義。
+- ForumOceanWeb移除棄用方法
+	- getArticle(articleId: Long)
+	- getQuestionArticle(articleId: Long)
+	- getGroupArticle(articleId: Long)
+	- getSharedArticle(articleId: Long)
+	- getSignalArticle(articleId: Long)
+	- getNewsArticle(articleId: Long)
+	- getPersonalArticle(articleId: Long)
+	- getUnknownArticle(articleId: Long)
+	- createComment(articleId: Long,text: String?,multiMedia: List<MediaType>?,position: Any?)
+	- createGroupArticleComment(articleId: Long,text: String?,multiMedia: List<MediaType>?,position: Any?)
+	- getComment(articleId: Long,commentId: Long?,offsetCount: Int?)
+	- getCommentsWithId(articleId: Long,commentIds: List<Long>)
+	- deleteComment(articleId: Long, commentIndex: Long)
+	- reactionComment(articleId: Long,commentIndex: Long,reactionType: ReactionType)
+	- getReactionDetail(articleId: Long,commentIndex: Long,reactions: List<ReactionType>,skipCount: Int,takeCount: Int)
+	- removeReactionComment(articleId: Long,commentIndex: Long)
+	- createArticleReaction(articleId: Long,type: ReactionType)
+	- getArticleReactionDetail(articleId: Long,reactionTypeList: List<ReactionType>,skipCount: Int,count: Int)
+	- deleteArticleReaction(articleId: Long)
+	- getGroupPushSetting(groupId: Long)
+	- setGroupPushSetting(groupId: Long, pushType: PushType)
+- AdditionalInformationRevisitWeb切割成台股和美股的實體
+	- 台股：single<AdditionalInformationRevisitWeb>(qualifier = ADDITIONAL_INFORMATION_REVISIT_TW_WEB)
+	- 美股：single<AdditionalInformationRevisitWeb>(qualifier = ADDITIONAL_INFORMATION_REVISIT_US_WEB)
+
+
 ## [5.54.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.53.4...5.54.0)
 
 
@@ -32,7 +312,7 @@
 
 - ForumOcean
   - 調整取得用戶不分社團所有非聊天室看板文章參數及回傳欄位型別(Int? -> Long?)
-  
+
 
 ## [5.53.1](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.53.0...5.53.1)
 
@@ -41,6 +321,7 @@
 
 - ForumOcean
   - Role 新增 CLUB_HOUSE (語音直播)
+
 
 # [5.53.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.52.0...5.53.0)
 

@@ -16,18 +16,15 @@ interface CentralizedImageService {
      * 500未知的錯誤
      *
      * @param authorization 權限Token
-     * @param genre 分類
-     * @param subGenre 子分類
      * @param file 圖片檔案
-     * @return
+     *
      */
     @RecordApi
     @Multipart
-    @POST("centralizedImage/v1/upload/{genre}/{subgenre}")
+    @POST
     suspend fun upload(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("genre") genre : String,
-        @Path("subgenre") subGenre : String,
         @Part file: MultipartBody.Part
     ): Response<UploadResponseBody>
 }

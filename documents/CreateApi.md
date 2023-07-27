@@ -40,10 +40,12 @@ interface VirtualTrading2Service {
 #### 在需要驗證的Retrofit的API中，加入Header的Authorization欄位
 
 ```kotlin
-@GET(value = "identity/session/isLatest")
+@RecordApi
+@GET
 suspend fun isTokenLatest(
+    ...
     @Header("Authorization")
-    accessToken: String
+    ...
 ): Response<IsLatestResponseBodyWithError>
 ```
 
@@ -51,12 +53,13 @@ suspend fun isTokenLatest(
 
 ```kotlin
 @FormUrlEncoded
-@POST("MobileService/ashx/LoginCheck/LoginCheck.ashx")
+@POST
 suspend fun getAuthStatus(
-    @Header("Authorization") authorization: String,
-    @Field("Action") action: String = "getauth",
-    @Field("Guid") guid: String,
-    @Field("AppId") appId: Int
+	@Url url: String,
+	@Header("Authorization") authorization: String,
+	@Field("Action") action: String = "getauth",
+	@Field("Guid") guid: String,
+	@Field("AppId") appId: Int
 ): Response<GetAuthResponseBody>
 ```
 
@@ -213,6 +216,11 @@ interface VirtualTrading2SettingAdapter {
     fun getDomain(): String
 }
 ```
+
+實作 `SettingAdapter`。
+
+- domain：網域名稱，結尾必須是 `/`。
+- **path(可選)：路徑名稱，需要更換的服務並不多，結尾必需是 `/`。可查看附加資訊的寫法**
 
 ```
 class VirtualTrading2SettingAdapterImpl : VirtualTrading2SettingAdapter {

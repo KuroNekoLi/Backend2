@@ -1,10 +1,11 @@
 package com.cmoney.backend2.mobileocean.service
 
-import com.cmoney.backend2.TestSetting
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.mobileocean.service.api.createarticletoocean.requestbody.SubmitAdviceParam
 import com.cmoney.core.CoroutineTestRule
 import com.cmoney.core.TestDispatcherProvider
 import io.mockk.MockKAnnotations
+import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -17,10 +18,12 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
 class MobileOceanWebImplVerify {
 
     private val testScope = TestScope()
+
     @ExperimentalCoroutinesApi
     @get:Rule
     val mainCoroutineRule = CoroutineTestRule(testScope = testScope)
@@ -29,10 +32,20 @@ class MobileOceanWebImplVerify {
     private lateinit var service: MobileOceanService
     private lateinit var webImpl: MobileOceanWeb
 
+    @MockK(relaxed = true)
+    private lateinit var manager: GlobalBackend2Manager
+
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        webImpl = MobileOceanWebImpl(service, TestSetting(), TestDispatcherProvider())
+        webImpl = MobileOceanWebImpl(
+            manager = manager,
+            service = service,
+            dispatcher = TestDispatcherProvider()
+        )
+        coEvery {
+            manager.getMobileOceanSettingAdapter().getDomain()
+        } returns EXCEPT_DOMAIN
     }
 
     @After
@@ -54,17 +67,21 @@ class MobileOceanWebImplVerify {
 
         coVerify {
             service.createArticleToOcean(
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any()
+                url = any(),
+                appId = any(),
+                guid = any(),
+                authorization = any(),
+                device = any(),
+                content = any(),
+                osVersion = any(),
+                appVersion = any(),
+                deviceName = any()
             )
         }
+    }
+
+    companion object {
+        private const val EXCEPT_DOMAIN = "localhost://8080:80/"
     }
 }
 

@@ -17,8 +17,9 @@ interface EmilyService {
      */
     @RecordApi
     @FormUrlEncoded
-    @POST("EmilyFixedStock/api/EmilyStock/GetEmilyCommKeys")
+    @POST
     suspend fun getEmilyCommKeys(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("AppId") appId: Int,
         @Field("Guid") guid: String
@@ -29,8 +30,9 @@ interface EmilyService {
      */
     @RecordApi
     @FormUrlEncoded
-    @POST("EmilyFixedStock/api/EmilyStock/GetStockInfos")
+    @POST
     suspend fun getStockInfos(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Query("teacherDefault") isTeacherDefault: Boolean,
         @Field("AppId") appId: Int,
@@ -42,8 +44,9 @@ interface EmilyService {
      */
     @RecordApi
     @FormUrlEncoded
-    @POST("EmilyFixedStock/api/EmilyStock/GetTargetStockInfos")
+    @POST
     suspend fun getTargetStockInfos(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Query("teacherDefault") isTeacherDefault: Boolean,
         @Field("AppId") appId: Int,
@@ -56,8 +59,9 @@ interface EmilyService {
      */
     @RecordApi
     @FormUrlEncoded
-    @POST("EmilyFixedStock/api/EmilyStock/GetTargetConstitution")
+    @POST
     suspend fun getTargetConstitution(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Query("teacherDefault") isTeacherDefault: Boolean,
         @Field("AppId") appId: Int,
@@ -70,8 +74,9 @@ interface EmilyService {
      */
     @RecordApi
     @FormUrlEncoded
-    @POST("EmilyFixedStock/api/EmilyStock/GetFilterCondition")
+    @POST
     suspend fun getFilterCondition(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("AppId") appId: Int,
         @Field("Guid") guid: String
@@ -82,8 +87,9 @@ interface EmilyService {
      */
     @RecordApi
     @FormUrlEncoded
-    @POST("EmilyFixedStock/api/EmilyStock/GetTrafficLightRecord")
+    @POST
     suspend fun getTrafficLightRecord(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("AppId") appId: Int,
         @Field("Guid") guid: String

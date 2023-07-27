@@ -2,7 +2,7 @@ package com.cmoney.backend2.commonuse.service
 
 import com.cmoney.backend2.base.extension.checkResponseBody
 import com.cmoney.backend2.base.extension.createAuthorizationBearer
-import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.commonuse.service.api.historyevent.HistoryEvents
 import com.cmoney.backend2.commonuse.service.api.investmentpreference.InvestmentPreference
 import com.cmoney.backend2.commonuse.service.api.investmentpreference.InvestmentPreferenceType
@@ -14,23 +14,18 @@ import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.withContext
 
 class CommonUseWebImpl(
-    override val baseHost: String,
+    override val manager: GlobalBackend2Manager,
     private val commonUseService: CommonUseService,
-    private val setting: Setting,
     private val gson: Gson,
     private val dispatcherProvider: DispatcherProvider = DefaultDispatcherProvider
 ) : CommonUseWeb {
 
-    companion object {
-        private const val servicePath = "commonuse"
-    }
-
-    override suspend fun getRemoteConfigLabel(host: String): Result<String> =
+    override suspend fun getRemoteConfigLabel(domain: String, url: String): Result<String> =
         withContext(dispatcherProvider.io()) {
             kotlin.runCatching {
                 val responseBody = commonUseService.query(
-                    url = "$host$servicePath/graphql",
-                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
                     query = QueryParam("query{member{remoteConfigLabel}}")
                 )
                     .checkResponseBody(gson)
@@ -48,15 +43,16 @@ class CommonUseWebImpl(
         }
 
     override suspend fun updateInvestmentPreference(
-        host: String,
-        investmentPreferenceType: InvestmentPreferenceType
+        investmentPreferenceType: InvestmentPreferenceType,
+        domain: String,
+        url: String
     ): Result<InvestmentPreferenceType> =
         withContext(dispatcherProvider.io()) {
             kotlin.runCatching {
                 val requestBody = gson.toJson(investmentPreferenceType.ids)
                 val responseBody = commonUseService.query(
-                    url = "$host$servicePath/graphql",
-                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
                     query = QueryParam("mutation{updateMember{updateInvestmentRiskPreference(ids:$requestBody)}}")
                 )
                     .checkResponseBody(gson)
@@ -74,12 +70,15 @@ class CommonUseWebImpl(
             }
         }
 
-    override suspend fun getInvestmentPreferences(host: String): Result<List<InvestmentPreference>> =
+    override suspend fun getInvestmentPreferences(
+        domain: String,
+        url: String
+    ): Result<List<InvestmentPreference>> =
         withContext(dispatcherProvider.io()) {
             kotlin.runCatching {
                 val responseBody = commonUseService.query(
-                    url = "$host$servicePath/graphql",
-                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
                     query = QueryParam("query{member{investmentRiskPreferences{id name isChosen}}}")
                 )
                     .checkResponseBody(gson)
@@ -100,16 +99,17 @@ class CommonUseWebImpl(
         }
 
     override suspend fun getCommodityHistoryEvent(
-        host: String,
         commodityIds: List<String>,
-        endCursor: String?
+        endCursor: String?,
+        domain: String,
+        url: String
     ): Result<HistoryEvents> = withContext(dispatcherProvider.io()) {
         kotlin.runCatching {
             val requestCommodityIds = gson.toJson(commodityIds)
             val requestEndCursor = gson.toJson(endCursor)
             val responseBody = commonUseService.query(
-                url = "$host$servicePath/graphql",
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
                 query = QueryParam(
                     """
                         |query{

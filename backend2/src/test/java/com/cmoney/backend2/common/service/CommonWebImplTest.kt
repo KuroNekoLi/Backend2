@@ -1,9 +1,8 @@
 package com.cmoney.backend2.common.service
 
-import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.ServerException
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.base.model.response.error.CMoneyError
-import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.common.service.api.adddeviceidentification.AddDeviceIdentificationComplete
 import com.cmoney.backend2.common.service.api.changenickname.ChangeNicknameResponseWithError
 import com.cmoney.backend2.common.service.api.changeuserimage.ChangeUserImageResponseWithError
@@ -32,6 +31,7 @@ import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
+import io.mockk.slot
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
@@ -44,7 +44,7 @@ import org.robolectric.RobolectricTestRunner
 import retrofit2.Response
 import java.util.*
 
-@ExperimentalCoroutinesApi
+@OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
 class CommonWebImplTest {
     private val testScope = TestScope()
@@ -54,19 +54,54 @@ class CommonWebImplTest {
     @MockK
     private lateinit var service: CommonService
     private lateinit var commonWeb: CommonWeb
-    private lateinit var setting: Setting
     private val gson = GsonBuilder().serializeNulls().setLenient().setPrettyPrinting().create()
+
+    @MockK(relaxed = true)
+    private lateinit var manager: GlobalBackend2Manager
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        setting = TestSetting()
         commonWeb = CommonWebImpl(
-            gson = gson,
+            manager = manager,
             service = service,
-            setting = setting,
+            gson = gson,
             dispatcher = TestDispatcherProvider()
         )
+        coEvery {
+            manager.getCommonSettingAdapter().getDomain()
+        } returns EXCEPT_DOMAIN
+    }
+
+    @Test
+    fun `getConfig_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}MobileService/ashx/SystemCheck.ashx"
+        val urlSlot = slot<String>()
+        val responseBody = GetConfigResponseBody(
+            dpscPort = 0,
+            dpscChkSum = 1,
+            serverUrl = "https://api.cmoney.tw/",
+            serverPushUrl = "https://api.cmoney.tw/",
+            vipServerUrl = "https://api.cmoney.tw/",
+            vipServerPushUrl = "https://api.cmoney.tw/",
+            statusAnnouncement = "",
+            appStatus = AppStatus.OK,
+            isUnderReview = false,
+            isSuccess = true,
+            responseCode = 1,
+            responseMsg = ""
+        )
+        coEvery {
+            service.getConfig(
+                url = capture(urlSlot),
+                appId = any(),
+                version = any(),
+                device = any()
+            )
+        } returns Response.success(responseBody)
+
+        commonWeb.getAppConfig()
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
     }
 
     @Test
@@ -87,6 +122,7 @@ class CommonWebImplTest {
         )
         coEvery {
             service.getConfig(
+                url = any(),
                 appId = any(),
                 version = any(),
                 device = any()
@@ -118,6 +154,7 @@ class CommonWebImplTest {
         )
         coEvery {
             service.getConfig(
+                url = any(),
                 appId = any(),
                 version = any(),
                 device = any()
@@ -149,6 +186,7 @@ class CommonWebImplTest {
         )
         coEvery {
             service.getConfig(
+                url = any(),
                 appId = any(),
                 version = any(),
                 device = any()
@@ -160,6 +198,26 @@ class CommonWebImplTest {
     }
 
     @Test
+    fun `forgotPasswordForEmail_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}MobileService/ashx/LoginCheck/LoginCheck.ashx"
+        val urlSlot = slot<String>()
+        val responseBody = EmailForgotPassword(
+            responseCode = 1,
+            responseMsg = ""
+        )
+        coEvery {
+            service.forgotPasswordForEmail(
+                url = capture(urlSlot),
+                action = any(),
+                account = any()
+            )
+        } returns Response.success(responseBody)
+
+        commonWeb.forgotPasswordForEmail("")
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun `forgotPasswordForEmail_response code is 1_成功`() = testScope.runTest {
         val responseBody = EmailForgotPassword(
             responseCode = 1,
@@ -167,6 +225,7 @@ class CommonWebImplTest {
         )
         coEvery {
             service.forgotPasswordForEmail(
+                url = any(),
                 action = any(),
                 account = any()
             )
@@ -186,6 +245,7 @@ class CommonWebImplTest {
         )
         coEvery {
             service.forgotPasswordForEmail(
+                url = any(),
                 action = any(),
                 account = any()
             )
@@ -203,6 +263,7 @@ class CommonWebImplTest {
         )
         coEvery {
             service.forgotPasswordForEmail(
+                url = any(),
                 action = any(),
                 account = any()
             )
@@ -220,6 +281,7 @@ class CommonWebImplTest {
         )
         coEvery {
             service.forgotPasswordForEmail(
+                url = any(),
                 action = any(),
                 account = any()
             )
@@ -230,6 +292,28 @@ class CommonWebImplTest {
     }
 
     @Test
+    fun `registerByEmail_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}MobileService/ashx/LoginCheck/LoginCheck.ashx"
+        val urlSlot = slot<String>()
+        val responseBody = EmailRegister(
+            responseCode = 1,
+            responseMsg = ""
+        )
+        coEvery {
+            service.registerByEmail(
+                url = capture(urlSlot),
+                xApiLog = any(),
+                account = any(),
+                password = any(),
+                device = any()
+            )
+        } returns Response.success(responseBody)
+
+        commonWeb.registerByEmail("", "")
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun `registerByEmail_response code is 1_成功`() = testScope.runTest {
         val responseBody = EmailRegister(
             responseCode = 1,
@@ -237,6 +321,7 @@ class CommonWebImplTest {
         )
         coEvery {
             service.registerByEmail(
+                url = any(),
                 xApiLog = any(),
                 account = any(),
                 password = any(),
@@ -250,7 +335,6 @@ class CommonWebImplTest {
         Truth.assertThat(responseCode).isEqualTo(1)
     }
 
-
     @Test
     fun `registerByEmail_response code is 4_帳號已註冊`() = testScope.runTest {
         val responseBody = EmailRegister(
@@ -259,6 +343,7 @@ class CommonWebImplTest {
         )
         coEvery {
             service.registerByEmail(
+                url = any(),
                 xApiLog = any(),
                 account = any(),
                 password = any(),
@@ -278,6 +363,7 @@ class CommonWebImplTest {
         )
         coEvery {
             service.registerByEmail(
+                url = any(),
                 xApiLog = any(),
                 account = any(),
                 password = any(),
@@ -297,6 +383,7 @@ class CommonWebImplTest {
         )
         coEvery {
             service.registerByEmail(
+                url = any(),
                 xApiLog = any(),
                 account = any(),
                 password = any(),
@@ -316,6 +403,7 @@ class CommonWebImplTest {
         )
         coEvery {
             service.registerByEmail(
+                url = any(),
                 xApiLog = any(),
                 account = any(),
                 password = any(),
@@ -325,6 +413,37 @@ class CommonWebImplTest {
 
         val result = commonWeb.registerByEmail("", "")
         checkServerException(result, 10)
+    }
+
+    @Test
+    fun `getMemberProfile_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}MobileService/ashx/LoginCheck/LoginCheck.ashx"
+        val urlSlot = slot<String>()
+        val responseBody = MemberProfile(
+            channelId = 3915521,
+            channelImage = "https://fsv.cmoney.tw/cmstatic/t/images/channel/34025791.png",
+            email = "boring12@yopmail.com",
+            email2 = "boring12@yopmail.com",
+            fBImage = "",
+            hasBindedFb = false,
+            imagePath = "https://fsv.cmoney.tw/cmstatic/t/images/channel/34025791.png",
+            isUseFbImage = false,
+            nickName = "Poll",
+            registerTime = 1558599387,
+            responseCode = 1,
+            responseMsg = ""
+        )
+        coEvery {
+            service.getMemberProfile(
+                url = capture(urlSlot),
+                guid = any(),
+                authorization = any(),
+                appId = any()
+            )
+        } returns Response.success(responseBody)
+
+        commonWeb.getMemberProfile()
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
     }
 
     @Test
@@ -345,6 +464,7 @@ class CommonWebImplTest {
         )
         coEvery {
             service.getMemberProfile(
+                url = any(),
                 guid = any(),
                 authorization = any(),
                 appId = any()
@@ -365,6 +485,7 @@ class CommonWebImplTest {
         val responseBody = gson.fromJson<MemberProfile>(responseBodyJson, MemberProfile::class.java)
         coEvery {
             service.getMemberProfile(
+                url = any(),
                 guid = any(),
                 authorization = any(),
                 appId = any()
@@ -376,10 +497,29 @@ class CommonWebImplTest {
     }
 
     @Test
+    fun `logInReward_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}MobileService/ashx/LoginCheck/LoginCheck.ashx"
+        val urlSlot = slot<String>()
+        val responseBody = LoginRewardComplete(true, 0)
+        coEvery {
+            service.loginReward(
+                url = capture(urlSlot),
+                guid = any(),
+                authorization = any(),
+                appId = any()
+            )
+        } returns Response.success(responseBody)
+
+        commonWeb.loginReward()
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun `logInReward_response code is 1_成功`() = testScope.runTest {
         val responseBody = LoginRewardComplete(true, 0)
         coEvery {
             service.loginReward(
+                url = any(),
                 guid = any(),
                 authorization = any(),
                 appId = any()
@@ -399,6 +539,7 @@ class CommonWebImplTest {
             gson.fromJson<LoginRewardComplete>(responseBodyJson, LoginRewardComplete::class.java)
         coEvery {
             service.loginReward(
+                url = any(),
                 guid = any(),
                 authorization = any(),
                 appId = any()
@@ -418,6 +559,7 @@ class CommonWebImplTest {
             gson.fromJson<LoginRewardComplete>(responseBodyJson, LoginRewardComplete::class.java)
         coEvery {
             service.loginReward(
+                url = any(),
                 guid = any(),
                 authorization = any(),
                 appId = any()
@@ -429,10 +571,29 @@ class CommonWebImplTest {
     }
 
     @Test
+    fun `hasSentLogInReward_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}MobileService/ashx/LoginCheck/LoginCheck.ashx"
+        val urlSlot = slot<String>()
+        val responseBody = HasSentLoginRewardTodayComplete(true, 0)
+        coEvery {
+            service.hasSentLoginRewardToday(
+                url = capture(urlSlot),
+                guid = any(),
+                authorization = any(),
+                appId = any()
+            )
+        } returns Response.success(responseBody)
+
+        commonWeb.hasSentLoginRewardToday()
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun `hasSentLogInReward_response code is 1_成功`() = testScope.runTest {
         val responseBody = HasSentLoginRewardTodayComplete(true, 0)
         coEvery {
             service.hasSentLoginRewardToday(
+                url = any(),
                 guid = any(),
                 authorization = any(),
                 appId = any()
@@ -454,6 +615,7 @@ class CommonWebImplTest {
         )
         coEvery {
             service.hasSentLoginRewardToday(
+                url = any(),
                 guid = any(),
                 authorization = any(),
                 appId = any()
@@ -465,10 +627,29 @@ class CommonWebImplTest {
     }
 
     @Test
+    fun `startTrial_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}MobileService/ashx/LoginCheck/LoginCheck.ashx"
+        val urlSlot = slot<String>()
+        val responseBody = TrialBeginStatus(canTrial = false, trialRemainingSeconds = 0)
+        coEvery {
+            service.startTrial(
+                url = capture(urlSlot),
+                authorization = any(),
+                guid = any(),
+                appId = any()
+            )
+        } returns Response.success(responseBody)
+
+        commonWeb.startTrial()
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun `startTrial_response code is 1_成功`() = testScope.runTest {
         val responseBody = TrialBeginStatus(canTrial = false, trialRemainingSeconds = 0)
         coEvery {
             service.startTrial(
+                url = any(),
                 authorization = any(),
                 guid = any(),
                 appId = any()
@@ -488,6 +669,7 @@ class CommonWebImplTest {
             gson.fromJson<TrialBeginStatus>(responseBodyJson, TrialBeginStatus::class.java)
         coEvery {
             service.startTrial(
+                url = any(),
                 authorization = any(),
                 guid = any(),
                 appId = any()
@@ -499,10 +681,29 @@ class CommonWebImplTest {
     }
 
     @Test
+    fun `pauseTrial_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}MobileService/ashx/LoginCheck/LoginCheck.ashx"
+        val urlSlot = slot<String>()
+        val responseBody = TrialPauseStatus(isSuccess = false)
+        coEvery {
+            service.pauseTrial(
+                url = capture(urlSlot),
+                guid = any(),
+                authorization = any(),
+                appId = any()
+            )
+        } returns Response.success(responseBody)
+
+        commonWeb.pauseTrial()
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun `pauseTrial_response code is 1_成功`() = testScope.runTest {
         val responseBody = TrialPauseStatus(isSuccess = false)
         coEvery {
             service.pauseTrial(
+                url = any(),
                 guid = any(),
                 authorization = any(),
                 appId = any()
@@ -513,7 +714,6 @@ class CommonWebImplTest {
         Truth.assertThat(result.isSuccess).isTrue()
     }
 
-
     @Test
     fun `pauseTrial_response code is 101_授權失敗`() = testScope.runTest {
         val responseBodyJson = """
@@ -523,6 +723,7 @@ class CommonWebImplTest {
             gson.fromJson<TrialPauseStatus>(responseBodyJson, TrialPauseStatus::class.java)
         coEvery {
             service.pauseTrial(
+                url = any(),
                 guid = any(),
                 authorization = any(),
                 appId = any()
@@ -534,6 +735,29 @@ class CommonWebImplTest {
     }
 
     @Test
+    fun `addDeviceIdentification_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}MobileService/ashx/LoginCheck/LoginCheck.ashx"
+        val urlSlot = slot<String>()
+        val responseBody = AddDeviceIdentificationComplete(
+            isSuccess = true,
+            responseCode = null,
+            responseMsg = null
+        )
+        coEvery {
+            service.addDeviceIdentification(
+                url = capture(urlSlot),
+                authorization = any(),
+                guid = any(),
+                aaid = any(),
+                appId = any()
+            )
+        } returns Response.success(responseBody)
+
+        commonWeb.addDeviceIdentification("")
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun `addDeviceIdentification_isSuccess=true_成功`() = testScope.runTest {
         val responseBody = AddDeviceIdentificationComplete(
             isSuccess = true,
@@ -542,6 +766,7 @@ class CommonWebImplTest {
         )
         coEvery {
             service.addDeviceIdentification(
+                url = any(),
                 authorization = any(),
                 guid = any(),
                 aaid = any(),
@@ -564,6 +789,7 @@ class CommonWebImplTest {
         )
         coEvery {
             service.addDeviceIdentification(
+                url = any(),
                 authorization = any(),
                 guid = any(),
                 aaid = any(),
@@ -585,6 +811,28 @@ class CommonWebImplTest {
     }
 
     @Test
+    fun `getAccessToken_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}MobileService/ashx/AccessToken.ashx"
+        val urlSlot = slot<String>()
+        val fakeToken = UUID.randomUUID().toString()
+        val responseBody = GetAccessTokenResponseWithError(
+            accessToken = fakeToken
+        )
+        coEvery {
+            service.getAccessToken(
+                url = capture(urlSlot),
+                authorization = any(),
+                action = any(),
+                guid = any(),
+                appId = any()
+            )
+        } returns Response.success(responseBody)
+
+        commonWeb.getAccessToken()
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun `getAccessToken 成功`() = testScope.runTest {
         val fakeToken = UUID.randomUUID().toString()
         val responseBody = GetAccessTokenResponseWithError(
@@ -592,7 +840,11 @@ class CommonWebImplTest {
         )
         coEvery {
             service.getAccessToken(
-                authorization = any(), action = any(), guid = any(), appId = any()
+                url = any(),
+                authorization = any(),
+                action = any(),
+                guid = any(),
+                appId = any()
             )
         } returns Response.success(responseBody)
 
@@ -614,7 +866,10 @@ class CommonWebImplTest {
         )
         coEvery {
             service.getAccessToken(
-                authorization = any(), guid = any(), appId = any()
+                url = any(),
+                authorization = any(),
+                guid = any(),
+                appId = any()
             )
         } returns Response.success<GetAccessTokenResponseWithError>(
             200,
@@ -635,6 +890,30 @@ class CommonWebImplTest {
     }
 
     @Test
+    fun `invocationSerialNumber_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}MobileService/ashx/LoginCheck/LoginCheck.ashx"
+        val urlSlot = slot<String>()
+        val responseBody = InvocationSerialComplete(
+            isSuccess = true,
+            responseCode = 1,
+            responseMsg = ""
+        )
+        coEvery {
+            service.invocationSerialNumber(
+                url = capture(urlSlot),
+                guid = any(),
+                authorization = any(),
+                appId = any(),
+                serial = any()
+            )
+        } returns Response.success(responseBody)
+
+
+        commonWeb.invocationSerialNumber("6JE-LMK-7SL")
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun `invocationSerialNumber 開通序號成功`() = testScope.runTest {
         val responseBody = InvocationSerialComplete(
             isSuccess = true,
@@ -643,6 +922,7 @@ class CommonWebImplTest {
         )
         coEvery {
             service.invocationSerialNumber(
+                url = any(),
                 guid = any(),
                 authorization = any(),
                 appId = any(),
@@ -671,6 +951,7 @@ class CommonWebImplTest {
         )
         coEvery {
             service.invocationSerialNumber(
+                url = any(),
                 guid = any(),
                 authorization = any(),
                 appId = any(),
@@ -697,6 +978,7 @@ class CommonWebImplTest {
         )
         coEvery {
             service.invocationSerialNumber(
+                url = any(),
                 guid = any(),
                 authorization = any(),
                 appId = any(),
@@ -710,6 +992,43 @@ class CommonWebImplTest {
         Truth.assertThat(content.isSuccess).isFalse()
         Truth.assertThat(content.responseCode).isEqualTo(11)
         Truth.assertThat(content.responseMsg).isEqualTo("序號不得為空")
+    }
+
+    @Test
+    fun `getDailyHeadline_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}MobileService/ashx/StockNews/StockNews.ashx"
+        val urlSlot = slot<String>()
+        val responseBody = HeadlineResponse(
+            newsList = listOf(
+                News(
+                    hasLiked = null,
+                    id = null,
+                    likeCount = null,
+                    newsTime = null,
+                    reTweetCount = null,
+                    sourceName = null,
+                    tags = null,
+                    title = null,
+                    url = null,
+                    viewCount = null
+                )
+            )
+        )
+        coEvery {
+            service.getDailyHeadLine(
+                url = capture(urlSlot),
+                authorization = any(),
+                action = any(),
+                appId = any(),
+                guid = any(),
+                baseArticleId = any(),
+                newsType = any(),
+                fetchSize = any()
+            )
+        } returns Response.success(responseBody)
+
+        commonWeb.getDailyHeadLine(0, 1, 20)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
     }
 
     @Test
@@ -732,6 +1051,7 @@ class CommonWebImplTest {
         )
         coEvery {
             service.getDailyHeadLine(
+                url = any(),
                 authorization = any(),
                 action = any(),
                 appId = any(),
@@ -758,6 +1078,7 @@ class CommonWebImplTest {
             gson.fromJson<HeadlineResponse>(errorString, HeadlineResponse::class.java)
         coEvery {
             service.getDailyHeadLine(
+                url = any(),
                 authorization = any(),
                 action = any(),
                 appId = any(),
@@ -781,6 +1102,55 @@ class CommonWebImplTest {
     }
 
     @Test
+    fun `getStockRssArticleResponse_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}MobileService/ashx/StockNews/StockNews.ashx"
+        val urlSlot = slot<String>()
+        val responseBody = StockRssNewsResponse(
+            stockNewsList = listOf(
+                StockNews(
+                    hasLiked = null,
+                    id = null,
+                    likeCount = null,
+                    newsTime = null,
+                    reTweetCount = null,
+                    sourceName = null,
+                    tags = null,
+                    title = null,
+                    url = null,
+                    viewCount = null
+                )
+            )
+        )
+        coEvery {
+            service.getStockRssArticlesWithFilterType(
+                url = capture(urlSlot),
+                authorization = any(),
+                action = any(),
+                appId = any(),
+                guid = any(),
+                stockId = any(),
+                baseArticleId = any(),
+                condition = any(),
+                fromDate = any(),
+                beforeDays = any(),
+                filterType = any(),
+                fetchSize = any()
+            )
+        } returns Response.success(responseBody)
+
+        commonWeb.getStockRssArticlesWithFilterType(
+            stockId = "",
+            baseArticleId = 0,
+            condition = "",
+            fromDate = "",
+            beforeDays = 0,
+            filterType = 0,
+            fetchSize = 0
+        )
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun `getStockRssArticleResponse 取得清單成功`() = testScope.runTest {
         val responseBody = StockRssNewsResponse(
             stockNewsList = listOf(
@@ -800,6 +1170,7 @@ class CommonWebImplTest {
         )
         coEvery {
             service.getStockRssArticlesWithFilterType(
+                url = any(),
                 authorization = any(),
                 action = any(),
                 appId = any(),
@@ -838,6 +1209,7 @@ class CommonWebImplTest {
             gson.fromJson<StockRssNewsResponse>(errorString, StockRssNewsResponse::class.java)
         coEvery {
             service.getStockRssArticlesWithFilterType(
+                url = any(),
                 authorization = any(),
                 action = any(),
                 appId = any(),
@@ -873,9 +1245,30 @@ class CommonWebImplTest {
     }
 
     @Test
+    fun `addRssStockNewsResponse_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}MobileService/ashx/StockNews/StockNews.ashx"
+        val urlSlot = slot<String>()
+        coEvery {
+            service.addRssArticleClickCount(
+                url = capture(urlSlot),
+                authorization = any(),
+                action = any(),
+                appId = any(),
+                guid = any(),
+                memberPk = any(),
+                articleId = any()
+            )
+        } returns Response.success("".toResponseBody())
+
+        commonWeb.addStockRssArticleClickCount(0, 0L)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun `addRssStockNewsResponse 增加成功`() = testScope.runTest {
         coEvery {
             service.addRssArticleClickCount(
+                url = any(),
                 authorization = any(),
                 action = any(),
                 appId = any(),
@@ -895,6 +1288,7 @@ class CommonWebImplTest {
         val errorString = gson.toJson(error)
         coEvery {
             service.addRssArticleClickCount(
+                url = any(),
                 authorization = any(),
                 action = any(),
                 appId = any(),
@@ -915,9 +1309,34 @@ class CommonWebImplTest {
     }
 
     @Test
+    fun `changeNickname_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}MobileService/ashx/LoginCheck/LoginCheck.ashx"
+        val urlSlot = slot<String>()
+        coEvery {
+            service.changeNickname(
+                url = capture(urlSlot),
+                action = any(),
+                appId = any(),
+                guid = any(),
+                authorization = any(),
+                nickname = any()
+            )
+        } returns Response.success(
+            ChangeNicknameResponseWithError(
+                isSuccess = true,
+                nickname = ""
+            )
+        )
+
+        commonWeb.changeNickname("")
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun `changeNickname 成功`() = testScope.runTest {
         coEvery {
             service.changeNickname(
+                url = any(),
                 action = any(),
                 appId = any(),
                 guid = any(),
@@ -947,6 +1366,7 @@ class CommonWebImplTest {
         val responseBody = gson.fromJson(json, ChangeNicknameResponseWithError::class.java)
         coEvery {
             service.changeNickname(
+                url = any(),
                 action = any(),
                 appId = any(),
                 guid = any(),
@@ -966,9 +1386,31 @@ class CommonWebImplTest {
     }
 
     @Test
+    fun `changeUserImage_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}MobileService/ashx/LoginCheck/LoginCheck.ashx"
+        val urlSlot = slot<String>()
+        coEvery {
+            service.changeUserImage(
+                url = capture(urlSlot),
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success(
+            ChangeUserImageResponseWithError(
+                isSuccess = true,
+                imagePath = null
+            )
+        )
+
+        commonWeb.changeUserImage(false, null)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun `changeUserImage 成功`() = testScope.runTest {
         coEvery {
             service.changeUserImage(
+                url = any(),
                 authorization = any(),
                 body = any()
             )
@@ -995,6 +1437,7 @@ class CommonWebImplTest {
         val responseBody = gson.fromJson(json, ChangeUserImageResponseWithError::class.java)
         coEvery {
             service.changeUserImage(
+                url = any(),
                 authorization = any(),
                 body = any()
             )
@@ -1011,9 +1454,32 @@ class CommonWebImplTest {
     }
 
     @Test
+    fun `getMemberBonus_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}MobileService/ashx/LoginCheck/LoginCheck.ashx"
+        val urlSlot = slot<String>()
+        coEvery {
+            service.getMemberBonus(
+                url = capture(urlSlot),
+                action = any(),
+                appId = any(),
+                guid = any(),
+                authorization = any()
+            )
+        } returns Response.success(
+            GetMemberBonusResponseBodyWithError(
+                bonus = 399
+            )
+        )
+
+        commonWeb.getMemberBonus()
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun `getMemberBonus 成功`() = testScope.runTest {
         coEvery {
             service.getMemberBonus(
+                url = any(),
                 action = any(),
                 appId = any(),
                 guid = any(),
@@ -1041,6 +1507,7 @@ class CommonWebImplTest {
         val responseBody = gson.fromJson(json, GetMemberBonusResponseBodyWithError::class.java)
         coEvery {
             service.getMemberBonus(
+                url = any(),
                 action = any(),
                 appId = any(),
                 guid = any(),
@@ -1059,9 +1526,31 @@ class CommonWebImplTest {
     }
 
     @Test
+    fun `hasReceivedCellphoneBindRewards_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}MobileService/ashx/LoginCheck/LoginCheck.ashx"
+        val urlSlot = slot<String>()
+        coEvery {
+            service.hasReceivedCellphoneBindReward(
+                url = capture(urlSlot),
+                appId = any(),
+                guid = any(),
+                authorization = any()
+            )
+        } returns Response.success(
+            HasReceivedCellphoneBindRewardResponseBodyWithError(
+                hasReceived = false
+            )
+        )
+
+        commonWeb.hasReceivedCellphoneBindReward()
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun `hasReceivedCellphoneBindRewards 成功`() = testScope.runTest {
         coEvery {
             service.hasReceivedCellphoneBindReward(
+                url = any(),
                 appId = any(),
                 guid = any(),
                 authorization = any()
@@ -1089,6 +1578,7 @@ class CommonWebImplTest {
             )
         coEvery {
             service.hasReceivedCellphoneBindReward(
+                url = any(),
                 appId = any(),
                 guid = any(),
                 authorization = any()
@@ -1100,10 +1590,30 @@ class CommonWebImplTest {
     }
 
     @Test
+    fun `updateIsNeedPush_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}MobileService/ashx/MobilePush.ashx"
+        val urlSlot = slot<String>()
+        val responseBody = UpdateIsNeedPushComplete(true)
+        coEvery {
+            service.updateIsNeedPush(
+                url = capture(urlSlot),
+                guid = any(),
+                appId = any(),
+                authorization = any(),
+                isNeedPush = any()
+            )
+        } returns Response.success(responseBody)
+
+        commonWeb.updateIsNeedPush(true)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun `updateIsNeedPush 成功`() = testScope.runTest {
         val responseBody = UpdateIsNeedPushComplete(true)
         coEvery {
             service.updateIsNeedPush(
+                url = any(),
                 guid = any(),
                 appId = any(),
                 authorization = any(),
@@ -1125,6 +1635,7 @@ class CommonWebImplTest {
             )
         coEvery {
             service.updateIsNeedPush(
+                url = any(),
                 guid = any(),
                 appId = any(),
                 authorization = any(),
@@ -1133,5 +1644,9 @@ class CommonWebImplTest {
         } returns Response.success(responseBody)
         val result = commonWeb.updateIsNeedPush(true)
         checkServerException(result, 9001)
+    }
+
+    companion object {
+        private const val EXCEPT_DOMAIN = "localhost://8080:80/"
     }
 }

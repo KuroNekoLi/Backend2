@@ -36,8 +36,8 @@ private const val DEFAULT_URL = "http://localhost/"
  * V2不會透過Setting來替換Domain，由每一個服務的RequestConfig進行轉接。
  */
 val BACKEND2_OKHTTP_V2 = named("backend2_okhttp_v2")
-val BACKEND2_RETROFIT_WITH_GSON_NON_SERIALIZE_NULLS_V2 =
-    named("backend2_retrofit_with_gson_non_serialize_nulls_v2")
+val BACKEND2_RETROFIT_V2 = named("backend2_retrofit_v2")
+val BACKEND2_RETROFIT_WITH_GSON_NON_SERIALIZE_NULLS_V2 = named("backend2_retrofit_with_gson_non_serialize_nulls_v2")
 
 val backendBaseModuleV2 = module {
     factory<BackendSettingLocalDataSource> {
@@ -78,6 +78,20 @@ val backendBaseModuleV2 = module {
             .writeTimeout(30L, TimeUnit.SECONDS)
             .addCMoneyApiTraceContextInterceptor()
             .addLogInterceptor()
+            .build()
+    }
+    single(BACKEND2_RETROFIT_V2) {
+        Retrofit.Builder()
+            // 不會使用到預設的Url
+            .baseUrl(DEFAULT_URL)
+            .client(get(BACKEND2_OKHTTP_V2))
+            .addConverterFactory(GsonConverterFactory.create(get(BACKEND2_GSON)))
+            .addCallAdapterFactory(
+                RecordApiLogCallAdapterFactoryV2(
+                    manager = get(),
+                    logDataRecorder = LogDataRecorder.getInstance()
+                )
+            )
             .build()
     }
     single(BACKEND2_RETROFIT_WITH_GSON_NON_SERIALIZE_NULLS_V2) {

@@ -15,6 +15,7 @@ class DataServiceCase : ServiceCase {
     private val gson by inject<Gson>(BACKEND2_GSON)
 
     override suspend fun testAll() {
+        // 2023/05/11 Client 請使用籌碼K線進行登入，僅有正式機
         dataWeb.getFundIdData(fundId = 190, params = "1")
             .mapCatching { data ->
                 data.toListOfSomething<FundId190Response>(gson)

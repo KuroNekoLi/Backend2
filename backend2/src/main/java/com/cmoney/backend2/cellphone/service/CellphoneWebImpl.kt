@@ -5,8 +5,7 @@ import com.cmoney.backend2.base.extension.checkIsSuccessful
 import com.cmoney.backend2.base.extension.createAuthorizationBearer
 import com.cmoney.backend2.base.extension.requireBody
 import com.cmoney.backend2.base.model.log.XApiLog
-import com.cmoney.backend2.base.model.request.MemberApiParam
-import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.cellphone.service.api.CellphoneParam
 import com.cmoney.backend2.cellphone.service.api.bindcellphone.BindCellphoneResponseBody
 import com.cmoney.backend2.cellphone.service.api.checkcellphonebindingverifycode.CheckCellphoneBindingVerifyCodeResponseBody
@@ -25,32 +24,39 @@ import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 
 class CellphoneWebImpl(
+    override val manager: GlobalBackend2Manager,
     private val service: CellphoneService,
-    private val setting: Setting,
     private val gson: Gson,
     private val dispatcher: DispatcherProvider = DefaultDispatcherProvider
 ) : CellphoneWeb {
 
-    override suspend fun getVerifyCode(cellphoneParam: CellphoneParam): Result<CellphoneGetVerifyCode> =
-        withContext(dispatcher.io()) {
-            kotlin.runCatching {
-                val response = service.getVerifyCode(
-                    countryCode = cellphoneParam.countryCode,
-                    cellphoneNumber = cellphoneParam.cellphoneNumber
-                )
-                response.checkIsSuccessful()
-                    .requireBody()
-                    .checkIWithError()
-                    .toRealResponse()
-            }
+    override suspend fun getVerifyCode(
+        cellphoneParam: CellphoneParam,
+        domain: String,
+        url: String
+    ): Result<CellphoneGetVerifyCode> = withContext(dispatcher.io()) {
+        runCatching {
+            val response = service.getVerifyCode(
+                url = url,
+                countryCode = cellphoneParam.countryCode,
+                cellphoneNumber = cellphoneParam.cellphoneNumber,
+            )
+            response.checkIsSuccessful()
+                .requireBody()
+                .checkIWithError()
+                .toRealResponse()
         }
+    }
 
     override suspend fun checkVerifyCode(
         cellphoneParam: CellphoneParam,
-        verifyCode: String
+        verifyCode: String,
+        domain: String,
+        url: String
     ): Result<CellphoneCheckVerifyCode> = withContext(dispatcher.io()) {
-        kotlin.runCatching {
+        runCatching {
             val response = service.checkVerifyCode(
+                url = url,
                 countryCode = cellphoneParam.countryCode,
                 cellphoneNumber = cellphoneParam.cellphoneNumber,
                 verifyCode = verifyCode
@@ -65,19 +71,22 @@ class CellphoneWebImpl(
     @Throws(NoSuchAlgorithmException::class)
     override suspend fun registerByCellphone(
         cellphoneParam: CellphoneParam,
-        password: String
+        password: String,
+        domain: String,
+        url: String
     ): Result<CellphoneRegister> = withContext(dispatcher.io()) {
         runCatching {
             val response = service.registerByCellphone(
+                url = url,
                 xApiLog = XApiLog(
-                    appId = setting.appId,
-                    platform = setting.platform.code,
+                    appId = manager.getAppId(),
+                    platform = manager.getPlatform().code,
                     mode = 3
                 ).let { gson.toJson(it) },
-                countryCode = cellphoneParam . countryCode,
+                countryCode = cellphoneParam.countryCode,
                 cellphoneNumber = cellphoneParam.cellphoneNumber,
                 password = password.md5(),
-                platform = setting.platform.code
+                platform = manager.getPlatform().code
             )
             response.checkIsSuccessful()
                 .requireBody()
@@ -86,37 +95,37 @@ class CellphoneWebImpl(
         }
     }
 
-    override suspend fun forgotPasswordForCellphone(cellphoneParam: CellphoneParam): Result<CellphoneForgotPassword> =
-        withContext(dispatcher.io()) {
-            kotlin.runCatching {
-                val response = service.forgotPasswordForCellphone(
-                    countryCode = cellphoneParam.countryCode,
-                    cellphoneNumber = cellphoneParam.cellphoneNumber
-                )
-                response.checkIsSuccessful()
-                    .requireBody()
-                    .checkIWithError()
-                    .toRealResponse()
-            }
+    override suspend fun forgotPasswordForCellphone(
+        cellphoneParam: CellphoneParam,
+        domain: String,
+        url: String
+    ): Result<CellphoneForgotPassword> = withContext(dispatcher.io()) {
+        runCatching {
+            val response = service.forgotPasswordForCellphone(
+                url = url,
+                countryCode = cellphoneParam.countryCode,
+                cellphoneNumber = cellphoneParam.cellphoneNumber
+            )
+            response.checkIsSuccessful()
+                .requireBody()
+                .checkIWithError()
+                .toRealResponse()
         }
-
-    override suspend fun updatePassword(
-        apiParam: MemberApiParam,
-        oldPassword: String,
-        oldHasMd5: Boolean,
-        newPassword: String
-    ) = updatePassword(oldPassword, oldHasMd5, newPassword)
+    }
 
     override suspend fun updatePassword(
         oldPassword: String,
         oldHasMd5: Boolean,
-        newPassword: String
+        newPassword: String,
+        domain: String,
+        url: String
     ): Result<UpdatePasswordResponseBody> = withContext(dispatcher.io()) {
         kotlin.runCatching {
             val response = service.updatePassword(
-                authorization = setting.accessToken.createAuthorizationBearer(),
-                appId = setting.appId,
-                guid = setting.identityToken.getMemberGuid(),
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
+                appId = manager.getAppId(),
+                guid = manager.getIdentityToken().getMemberGuid(),
                 oldPassword = if (oldHasMd5) {
                     oldPassword
                 } else {
@@ -131,15 +140,16 @@ class CellphoneWebImpl(
         }
     }
 
-    override suspend fun getAccountInfo(apiParam: MemberApiParam): Result<AccountInfo> =
-        getAccountInfo()
-
-    override suspend fun getAccountInfo(): Result<AccountInfo> = withContext(dispatcher.io()) {
+    override suspend fun getAccountInfo(
+        domain: String,
+        url: String
+    ): Result<AccountInfo> = withContext(dispatcher.io()) {
         runCatching {
             val response = service.getAccountInfo(
-                authorization = setting.accessToken.createAuthorizationBearer(),
-                appId = setting.appId,
-                guid = setting.identityToken.getMemberGuid()
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
+                appId = manager.getAppId(),
+                guid = manager.getIdentityToken().getMemberGuid()
             )
             response.checkIsSuccessful()
                 .requireBody()
@@ -148,16 +158,18 @@ class CellphoneWebImpl(
         }
     }
 
-    override suspend fun bindCellphone(apiParam: MemberApiParam, cellphoneParam: CellphoneParam) =
-        bindCellphone(cellphoneParam)
-
-    override suspend fun bindCellphone(cellphoneParam: CellphoneParam): Result<BindCellphoneResponseBody> =
+    override suspend fun bindCellphone(
+        cellphoneParam: CellphoneParam,
+        domain: String,
+        url: String
+    ): Result<BindCellphoneResponseBody> =
         withContext(dispatcher.io()) {
             runCatching {
                 val response = service.bindCellphone(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    appId = setting.appId,
-                    guid = setting.identityToken.getMemberGuid(),
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
+                    appId = manager.getAppId(),
+                    guid = manager.getIdentityToken().getMemberGuid(),
                     countryCode = cellphoneParam.countryCode,
                     cellphoneNumber = cellphoneParam.cellphoneNumber
                 )
@@ -169,20 +181,17 @@ class CellphoneWebImpl(
         }
 
     override suspend fun checkCellphoneBindingVerifyCode(
-        apiParam: MemberApiParam,
         cellphoneParam: CellphoneParam,
-        verifyCode: String?
-    ) = checkCellphoneBindingVerifyCode(cellphoneParam, verifyCode)
-
-    override suspend fun checkCellphoneBindingVerifyCode(
-        cellphoneParam: CellphoneParam,
-        verifyCode: String?
+        verifyCode: String?,
+        domain: String,
+        url: String
     ): Result<CheckCellphoneBindingVerifyCodeResponseBody> = withContext(dispatcher.io()) {
         runCatching {
             val response = service.checkCellphoneBindingVerifyCode(
-                authorization = setting.accessToken.createAuthorizationBearer(),
-                appId = setting.appId,
-                guid = setting.identityToken.getMemberGuid(),
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
+                appId = manager.getAppId(),
+                guid = manager.getIdentityToken().getMemberGuid(),
                 countryCode = cellphoneParam.countryCode,
                 cellphoneNumber = cellphoneParam.cellphoneNumber,
                 verifyCode = verifyCode
@@ -194,15 +203,17 @@ class CellphoneWebImpl(
         }
     }
 
-    override suspend fun unbindCellphone(apiParam: MemberApiParam) = unbindCellphone()
-
-    override suspend fun unbindCellphone(): Result<UnbindCellphoneResponseBody> =
+    override suspend fun unbindCellphone(
+        domain: String,
+        url: String
+    ): Result<UnbindCellphoneResponseBody> =
         withContext(dispatcher.io()) {
             runCatching {
                 val response = service.unbindCellphone(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    appId = setting.appId,
-                    guid = setting.identityToken.getMemberGuid()
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
+                    appId = manager.getAppId(),
+                    guid = manager.getIdentityToken().getMemberGuid()
                 )
                 response.checkIsSuccessful()
                     .requireBody()
