@@ -60,7 +60,8 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.articlerespo
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetAllChatRoomResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetGroupBoardArticlesResponse
-import com.cmoney.backend2.forumocean.service.api.schemas.v2.GroupBoardArticlePaginationBase
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.group.GetGroupAllLatestArticlesResponseBody
+import com.cmoney.backend2.forumocean.service.api.schemas.v2.RecommendedClubsResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.PromotedArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations.GetRecommendationResponse
@@ -1163,7 +1164,6 @@ interface ForumOceanService {
 
     /**
      * 取得指定看板文章
-     * todo GetGroupBoardArticlesResponse 應置換為命名與結構與後端對齊的 GroupBoardArticlePaginationBase
      */
     @RecordApi
     @GET
@@ -1194,7 +1194,8 @@ interface ForumOceanService {
     @Headers("X-Version: 2.0")
     suspend fun getAvailableBoardIds(
         @Url url: String,
-        @Header("Authorization") authorization: String
+        @Header("Authorization") authorization: String,
+        @Query("excludeChatroom") excludeChatroom: Boolean,
     ): Response<AvailableBoardIds>
 
     /**
@@ -1446,7 +1447,8 @@ interface ForumOceanService {
 
     /**
      * 取得用戶不分社團所有非聊天室看板文章，排序為新到舊
-     *
+     * 僅能取得社團2.0的文章
+     * @param authorization 登入憑證
      * @param startWeight 起始權重，不帶則預設值為long的最大值
      * @param articlesNumber 取文篇數，不帶的話預設為10
      *
@@ -1459,6 +1461,19 @@ interface ForumOceanService {
         @Header("Authorization") authorization: String,
         @Query("startWeight") startWeight: Long? = null,
         @Query("fetch") articlesNumber: Int? = null,
-    ): Response<GroupBoardArticlePaginationBase>
+    ): Response<GetGroupAllLatestArticlesResponseBody>
+
+    /**
+     * 推薦使用者未加入的社團
+     *
+     * @param authorization 登入憑證
+     */
+    @RecordApi
+    @GET
+    @Headers("X-Version: 2.0")
+    suspend fun getRecommendedClub(
+        @Url url: String,
+        @Header("Authorization") authorization: String
+    ):Response<RecommendedClubsResponse>
 }
 

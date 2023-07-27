@@ -49,6 +49,7 @@ import com.cmoney.backend2.forumocean.service.api.relationship.getdonate.DonateI
 import com.cmoney.backend2.forumocean.service.api.relationship.getrelationshipwithme.RelationshipWithMe
 import com.cmoney.backend2.forumocean.service.api.report.ReportRequestBody
 import com.cmoney.backend2.forumocean.service.api.role.GetMembersByRoleResponse
+import com.cmoney.backend2.forumocean.service.api.schemas.v2.RecommendedClubsResponse
 import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
 import com.cmoney.backend2.forumocean.service.api.support.SearchMembersResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.request.GroupPosition
@@ -57,7 +58,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.GroupPositio
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetGroupBoardArticlesResponse
-import com.cmoney.backend2.forumocean.service.api.schemas.v2.GroupBoardArticlePaginationBase
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.group.GetGroupAllLatestArticlesResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations.GetRecommendationResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.spacepin.GetSpaceBoardPinArticlesResponseBody
@@ -6197,7 +6198,8 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.getAvailableBoardIds(
                 url = capture(urlSlot),
-                authorization = any()
+                authorization = any(),
+                excludeChatroom = any()
             )
         } returns Response.success(AvailableBoardIds(listOf()))
         web.getAvailableBoardIds()
@@ -6209,7 +6211,8 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.getAvailableBoardIds(
                 url = any(),
-                authorization = any()
+                authorization = any(),
+                excludeChatroom = any()
             )
         } returns Response.success(AvailableBoardIds(listOf()))
         val result = web.getAvailableBoardIds()
@@ -6221,7 +6224,8 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.getAvailableBoardIds(
                 url = any(),
-                authorization = any()
+                authorization = any(),
+                excludeChatroom = any()
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getAvailableBoardIds()
@@ -7358,8 +7362,8 @@ class ForumOceanWebImplTest {
                 articlesNumber = any()
             )
         } returns Response.success(
-            GroupBoardArticlePaginationBase(
-                articles = listOf(),
+            GetGroupAllLatestArticlesResponseBody(
+                articles = emptyList(),
                 hasNext = true,
                 nextStartWeight = 0
             )
@@ -7378,7 +7382,7 @@ class ForumOceanWebImplTest {
                 articlesNumber = any()
             )
         } returns Response.success(
-            GroupBoardArticlePaginationBase(
+            GetGroupAllLatestArticlesResponseBody(
                 articles = listOf(),
                 hasNext = true,
                 nextStartWeight = 0
@@ -7399,6 +7403,44 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getJoinedClubArticles()
+        Truth.assertThat(result.isFailure).isTrue()
+    }
+
+    @Test
+    fun `getRecommendedClubs_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/Group/RecommendedGroup/All"
+        val urlSlot = slot<String>()
+        coEvery {
+            forumOceanService.getRecommendedClub(
+                url = capture(urlSlot),
+                authorization = any()
+            )
+        } returns Response.success(200, RecommendedClubsResponse(clubs = emptyList()))
+        web.getRecommendedClubs()
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getRecommendedClubs_success() = testScope.runTest {
+        coEvery {
+            forumOceanService.getRecommendedClub(
+                url = any(),
+                authorization = any()
+            )
+        } returns Response.success(200, RecommendedClubsResponse(clubs = listOf()))
+        val result = web.getRecommendedClubs()
+        Truth.assertThat(result.isSuccess).isTrue()
+    }
+
+    @Test
+    fun getRecommendedClubs_failed() = testScope.runTest {
+        coEvery {
+            forumOceanService.getRecommendedClub(
+                url = any(),
+                authorization = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getRecommendedClubs()
         Truth.assertThat(result.isFailure).isTrue()
     }
 

@@ -58,7 +58,7 @@ import com.cmoney.backend2.forumocean.service.api.relationship.getdonate.DonateI
 import com.cmoney.backend2.forumocean.service.api.relationship.getrelationshipwithme.RelationshipWithMe
 import com.cmoney.backend2.forumocean.service.api.report.ReportRequestBody
 import com.cmoney.backend2.forumocean.service.api.role.Role
-import com.cmoney.backend2.forumocean.service.api.schemas.v2.GroupBoardArticlePaginationBase
+import com.cmoney.backend2.forumocean.service.api.schemas.v2.RecommendedClubsResponse
 import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
 import com.cmoney.backend2.forumocean.service.api.support.SearchMembersResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.request.GroupPosition
@@ -68,6 +68,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.articlerespo
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetAllChatRoomResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetGroupBoardArticlesResponse
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.group.GetGroupAllLatestArticlesResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.PromotedArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations.GetRecommendationResponse
@@ -1860,6 +1861,7 @@ class ForumOceanWebImpl(
     }
 
     override suspend fun getAvailableBoardIds(
+        excludeChatroom: Boolean,
         domain: String,
         url: String
     ): Result<AvailableBoardIds> = withContext(dispatcher.io()) {
@@ -1867,6 +1869,7 @@ class ForumOceanWebImpl(
             service.getAvailableBoardIds(
                 url = url,
                 authorization = manager.getAccessToken().createAuthorizationBearer(),
+                excludeChatroom = excludeChatroom
             ).checkResponseBody(jsonParser)
         }
     }
@@ -2195,7 +2198,7 @@ class ForumOceanWebImpl(
         articlesNumber: Int?,
         domain: String,
         url: String
-    ): Result<GroupBoardArticlePaginationBase> = withContext(dispatcher.io()) {
+    ): Result<GetGroupAllLatestArticlesResponseBody> = withContext(dispatcher.io()) {
         runCatching {
             service.getJoinedClubArticles(
                 url = url,
@@ -2203,6 +2206,20 @@ class ForumOceanWebImpl(
                 startWeight = startWeight,
                 articlesNumber = articlesNumber
             ).checkResponseBody(jsonParser)
+        }
+    }
+
+    override suspend fun getRecommendedClubs(
+        domain: String,
+        url: String
+    ): Result<RecommendedClubsResponse> {
+        return withContext(dispatcher.io()){
+            kotlin.runCatching {
+                service.getRecommendedClub(
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
+                ).checkResponseBody(jsonParser)
+            }
         }
     }
 }

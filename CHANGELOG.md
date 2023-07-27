@@ -278,6 +278,50 @@
 	- 美股：single<AdditionalInformationRevisitWeb>(qualifier = ADDITIONAL_INFORMATION_REVISIT_US_WEB)
 
 
+## [5.54.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.53.4...5.54.0)
+
+
+### Features
+
+- ForumOcean
+  - 新增取得使用者未加入的推薦社團(getRecommendedClubs)
+
+
+## [5.53.4](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.53.3...5.53.4)
+
+
+### Features
+
+- ForumOcean
+  - getAvailableBoardIds 新增 excludeChatroom 參數
+
+
+## [5.53.3](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.53.2...5.53.3)
+
+
+### Bug Fixes
+
+- ForumOcean
+  - 調整取得用戶不分社團所有非聊天室看板文章回傳型別
+
+
+## [5.53.2](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.53.1...5.53.2)
+
+
+### Bug Fixes
+
+- ForumOcean
+  - 調整取得用戶不分社團所有非聊天室看板文章參數及回傳欄位型別(Int? -> Long?)
+
+
+## [5.53.1](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.53.0...5.53.1)
+
+
+### Bug Fixes
+
+- ForumOcean
+  - Role 新增 CLUB_HOUSE (語音直播)
+
 
 # [5.53.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.52.0...5.53.0)
 

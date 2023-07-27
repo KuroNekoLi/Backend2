@@ -49,6 +49,7 @@ import com.cmoney.backend2.forumocean.service.api.rating.ReviewRequest
 import com.cmoney.backend2.forumocean.service.api.relationship.getdonate.DonateInfo
 import com.cmoney.backend2.forumocean.service.api.relationship.getrelationshipwithme.RelationshipWithMe
 import com.cmoney.backend2.forumocean.service.api.role.Role
+import com.cmoney.backend2.forumocean.service.api.schemas.v2.RecommendedClubsResponse
 import com.cmoney.backend2.forumocean.service.api.support.ChannelIdAndMemberId
 import com.cmoney.backend2.forumocean.service.api.support.SearchMembersResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.request.GroupPosition
@@ -59,7 +60,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.articlerespo
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetAllChatRoomResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetGroupBoardArticlesResponse
-import com.cmoney.backend2.forumocean.service.api.schemas.v2.GroupBoardArticlePaginationBase
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.group.GetGroupAllLatestArticlesResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.PromotedArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations.GetRecommendationResponse
@@ -1870,11 +1871,12 @@ interface ForumOceanWeb {
     /**
      * 取得用戶可以進入的所有看板 id
      *
+     * @param excludeChatroom 是否不包含聊天室，預設為 true
      * @param domain 網域名稱
      * @param url 完整的Url
-     *
      */
     suspend fun getAvailableBoardIds(
+        excludeChatroom: Boolean = true,
         domain: String = manager.getForumOceanSettingAdapter().getDomain(),
         url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Group/Board/All"
     ): Result<AvailableBoardIds>
@@ -2220,5 +2222,13 @@ interface ForumOceanWeb {
         articlesNumber: Int? = null,
         domain: String = manager.getForumOceanSettingAdapter().getDomain(),
         url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/GroupArticle/All/Latest"
-    ): Result<GroupBoardArticlePaginationBase>
+    ): Result<GetGroupAllLatestArticlesResponseBody>
+
+    /**
+     * 推薦使用者未加入的社團
+     */
+    suspend fun getRecommendedClubs(
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Group/RecommendedGroup/All"
+    ): Result<RecommendedClubsResponse>
 }
