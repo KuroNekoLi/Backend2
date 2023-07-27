@@ -1,6 +1,5 @@
 package com.cmoney.backend2.base.di
 
-import com.cmoney.backend2.BuildConfig
 import com.cmoney.backend2.base.model.calladapter.RecordApiLogCallAdapterFactoryV2
 import com.cmoney.backend2.base.model.log.ApiLog
 import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
@@ -114,7 +113,8 @@ val backendBaseModuleV2 = module {
  * 加入Http Body Log
  */
 internal fun OkHttpClient.Builder.addLogInterceptor() = apply {
-    if (BuildConfig.DEBUG) {
+    val manager = getKoin().get<GlobalBackend2Manager>()
+    if (manager.getIsDebug()) {
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
         addInterceptor(interceptor)

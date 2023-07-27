@@ -93,6 +93,7 @@ import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdap
 /**
  * Backend模組經常變動設定的管理者。
  *
+ * @property isDebug 是否為偵錯模式
  * @property backendSetting Backend設定
  * @property jwtSetting Jwt設定
  * @property activitySettingAdapter 活動設定轉接器
@@ -140,6 +141,7 @@ import com.cmoney.backend2.vtwebapi.model.settingadapter.VirtualTradeSettingAdap
  *
  */
 class GlobalBackend2Manager(
+    private val isDebug: Boolean,
     private val backendSetting: BackendSetting,
     private val jwtSetting: JwtSetting,
     private val activitySettingAdapter: ActivitySettingAdapter,
@@ -186,6 +188,7 @@ class GlobalBackend2Manager(
     private val virtualTrading2SettingAdapter: VirtualTrading2SettingAdapter,
 ) {
     constructor(builder: Builder) : this(
+        isDebug = builder.isDebug,
         backendSetting = builder.backendSetting,
         jwtSetting = builder.jwtSetting,
         activitySettingAdapter = builder.activitySettingAdapter,
@@ -231,6 +234,15 @@ class GlobalBackend2Manager(
         virtualTradeSettingAdapter = builder.virtualTradeSettingAdapter,
         virtualTrading2SettingAdapter = builder.virtualTrading2SettingAdapter
     )
+
+    /**
+     * 是否為偵錯模式
+     *
+     * @return true 是偵錯模式，false 不是偵錯模式
+     */
+    fun getIsDebug(): Boolean {
+        return isDebug
+    }
 
     /**
      * 取得全域的DomainUrl
@@ -732,6 +744,7 @@ class GlobalBackend2Manager(
             set(value) {
                 backendSetting.setPlatform(value)
             }
+        var isDebug: Boolean = false
         var activitySettingAdapter: ActivitySettingAdapter =
             ActivitySettingAdapterImpl(backendSetting)
         var additionInformationRevisitTwSettingAdapter: AdditionInformationRevisitTwSettingAdapter =

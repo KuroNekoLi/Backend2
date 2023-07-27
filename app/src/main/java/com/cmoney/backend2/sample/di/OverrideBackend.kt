@@ -6,6 +6,7 @@ import com.cmoney.backend2.base.model.setting.Platform
 import com.cmoney.backend2.chat.model.ChatRoomSettingAdapter
 import com.cmoney.backend2.crawlsetting.model.CrawlSettingSettingAdapter
 import com.cmoney.backend2.forumocean.model.ForumOceanSettingAdapter
+import com.cmoney.backend2.sample.BuildConfig
 import org.koin.dsl.module
 
 val sampleBackendModule = module {
@@ -14,6 +15,7 @@ val sampleBackendModule = module {
             backendSetting = get(),
             jwtSetting = get()
         ) {
+            isDebug = BuildConfig.DEBUG
             platform = Platform.Android
             chatRoomSettingAdapter = object : ChatRoomSettingAdapter {
                 override fun getDomain(): String {
