@@ -1194,7 +1194,8 @@ interface ForumOceanService {
     @Headers("X-Version: 2.0")
     suspend fun getAvailableBoardIds(
         @Url url: String,
-        @Header("Authorization") authorization: String
+        @Header("Authorization") authorization: String,
+        @Query("excludeChatroom") excludeChatroom: Boolean,
     ): Response<AvailableBoardIds>
 
     /**
@@ -1464,15 +1465,15 @@ interface ForumOceanService {
 
     /**
      * 推薦使用者未加入的社團
+     *
      * @param authorization 登入憑證
-     * @param path 主網域
      */
     @RecordApi
-    @GET("{path}/api/Group/RecommendedGroup/All")
+    @GET
     @Headers("X-Version: 2.0")
     suspend fun getRecommendedClub(
-        @Header("Authorization") authorization: String,
-        @Path("path") path: String,
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ):Response<RecommendedClubsResponse>
 }
 

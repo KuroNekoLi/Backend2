@@ -74,8 +74,6 @@ import com.cmoney.backend2.ocean.service.api.getevaluationlist.SortType
 import com.cmoney.core.CoroutineTestRule
 import com.cmoney.core.TestDispatcherProvider
 import com.google.common.truth.Truth
-import com.google.common.truth.Truth
-import com.google.common.truth.Truth.assertThat
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
@@ -6199,9 +6197,9 @@ class ForumOceanWebImplTest {
         val urlSlot = slot<String>()
         coEvery {
             forumOceanService.getAvailableBoardIds(
-                excludeChatroom = true,
                 url = capture(urlSlot),
-                authorization = any()
+                authorization = any(),
+                excludeChatroom = any()
             )
         } returns Response.success(AvailableBoardIds(listOf()))
         web.getAvailableBoardIds()
@@ -6212,9 +6210,9 @@ class ForumOceanWebImplTest {
     fun getAvailableBoardIds_success() = testScope.runTest {
         coEvery {
             forumOceanService.getAvailableBoardIds(
-                excludeChatroom = true,
                 url = any(),
-                authorization = any()
+                authorization = any(),
+                excludeChatroom = any()
             )
         } returns Response.success(AvailableBoardIds(listOf()))
         val result = web.getAvailableBoardIds()
@@ -6226,7 +6224,8 @@ class ForumOceanWebImplTest {
         coEvery {
             forumOceanService.getAvailableBoardIds(
                 url = any(),
-                authorization = any()
+                authorization = any(),
+                excludeChatroom = any()
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getAvailableBoardIds()
@@ -7363,7 +7362,7 @@ class ForumOceanWebImplTest {
                 articlesNumber = any()
             )
         } returns Response.success(
-            GroupBoardArticlePaginationBase(
+            GetGroupAllLatestArticlesResponseBody(
                 articles = emptyList(),
                 hasNext = true,
                 nextStartWeight = 0
@@ -7383,7 +7382,7 @@ class ForumOceanWebImplTest {
                 articlesNumber = any()
             )
         } returns Response.success(
-            GroupBoardArticlePaginationBase(
+            GetGroupAllLatestArticlesResponseBody(
                 articles = listOf(),
                 hasNext = true,
                 nextStartWeight = 0
@@ -7407,30 +7406,42 @@ class ForumOceanWebImplTest {
         Truth.assertThat(result.isFailure).isTrue()
     }
 
-    @ExperimentalCoroutinesApi
     @Test
-    fun `推薦使用者未加入的社團_success`() = testScope.runTest {
+    fun `getRecommendedClubs_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/Group/RecommendedGroup/All"
+        val urlSlot = slot<String>()
         coEvery {
             forumOceanService.getRecommendedClub(
-                authorization = any(),
-                path = any()
+                url = capture(urlSlot),
+                authorization = any()
+            )
+        } returns Response.success(200, RecommendedClubsResponse(clubs = emptyList()))
+        web.getRecommendedClubs()
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getRecommendedClubs_success() = testScope.runTest {
+        coEvery {
+            forumOceanService.getRecommendedClub(
+                url = any(),
+                authorization = any()
             )
         } returns Response.success(200, RecommendedClubsResponse(clubs = listOf()))
         val result = web.getRecommendedClubs()
-        assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess).isTrue()
     }
 
-    @ExperimentalCoroutinesApi
     @Test
-    fun `推薦使用者未加入的社團_failed`() = testScope.runTest {
+    fun getRecommendedClubs_failed() = testScope.runTest {
         coEvery {
             forumOceanService.getRecommendedClub(
-                authorization = any(),
-                path = any()
+                url = any(),
+                authorization = any()
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getRecommendedClubs()
-        assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure).isTrue()
     }
 
     companion object {

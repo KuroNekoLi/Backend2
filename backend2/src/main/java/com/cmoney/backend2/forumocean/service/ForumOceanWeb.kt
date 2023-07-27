@@ -1878,7 +1878,7 @@ interface ForumOceanWeb {
     suspend fun getAvailableBoardIds(
         excludeChatroom: Boolean = true,
         domain: String = manager.getForumOceanSettingAdapter().getDomain(),
-        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Group/Board/All?excludeChatroom=$excludeChatroom"
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Group/Board/All"
     ): Result<AvailableBoardIds>
 
     /**
@@ -2222,10 +2222,13 @@ interface ForumOceanWeb {
         articlesNumber: Int? = null,
         domain: String = manager.getForumOceanSettingAdapter().getDomain(),
         url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/GroupArticle/All/Latest"
-    ): Result<GroupBoardArticlePaginationBase>
+    ): Result<GetGroupAllLatestArticlesResponseBody>
 
     /**
      * 推薦使用者未加入的社團
      */
-    suspend fun getRecommendedClubs(): Result<RecommendedClubsResponse>
+    suspend fun getRecommendedClubs(
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Group/RecommendedGroup/All"
+    ): Result<RecommendedClubsResponse>
 }
