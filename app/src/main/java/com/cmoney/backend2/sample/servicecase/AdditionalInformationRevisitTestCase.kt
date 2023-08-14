@@ -1,59 +1,40 @@
 package com.cmoney.backend2.sample.servicecase
 
-import com.cmoney.backend2.additioninformationrevisit.di.BACKEND_ADDITION_INFORMATION_REVISIT_SERVICE
+import com.cmoney.backend2.additioninformationrevisit.di.ADDITIONAL_INFORMATION_REVISIT_TW_WEB
+import com.cmoney.backend2.additioninformationrevisit.di.ADDITIONAL_INFORMATION_REVISIT_US_WEB
 import com.cmoney.backend2.additioninformationrevisit.service.AdditionalInformationRevisitWeb
-import com.cmoney.backend2.additioninformationrevisit.service.ServicePath
 import com.cmoney.backend2.additioninformationrevisit.service.api.request.ProcessStep
 import com.cmoney.backend2.base.di.BACKEND2_GSON
-import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.sample.extension.logResponse
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
-import org.koin.core.component.get
 import org.koin.core.component.inject
-import org.koin.core.parameter.parametersOf
 
 /**
- * Additional information revisit test case
- *
- * @param hasSignal 是否有要測試[AdditionalInformationRevisitWeb.getSignal]，用於調整測試機的service name
+ * 附加資訊測試案例
  */
-class AdditionalInformationRevisitTestCase(hasSignal: Boolean) : ServiceCase {
+class AdditionalInformationRevisitTestCase : ServiceCase {
 
-    private val web by lazy {
-        get<AdditionalInformationRevisitWeb>(BACKEND_ADDITION_INFORMATION_REVISIT_SERVICE) {
-            parametersOf(servicePath)
-        }
-    }
+    private val twWeb by inject<AdditionalInformationRevisitWeb>(ADDITIONAL_INFORMATION_REVISIT_TW_WEB)
+    private val usWeb by inject<AdditionalInformationRevisitWeb>(ADDITIONAL_INFORMATION_REVISIT_US_WEB)
     private val gson by inject<Gson>(BACKEND2_GSON)
-    private val globalBackend2Manager by inject<GlobalBackend2Manager>()
-    private val servicePath = if (hasSignal) {
-        ServicePath().copy(signal = "AdditionInformationRevisit_V2")
-    } else {
-        ServicePath()
-    }
 
     override suspend fun testAll() {
         test()
         // 測試後續處理功能
-        testHasProcessStep()
+        testProcessStep()
         // 測試前一次交易資料
         testPreviousData()
     }
 
     private suspend fun test() {
-        web.getAll(
-            domain = globalBackend2Manager.getGlobalDomainUrl(),
-            serviceParam = servicePath.all,
+        twWeb.getAll(
             columns = listOf("標的", "商品名稱"),
             typeName = "StockCommodity",
             processSteps = emptyList()
-        )
-            .logResponse(TAG)
+        ).logResponse(TAG)
         val commKeys = listOf("2330", "0050")
-        web.getTarget(
-            domain = globalBackend2Manager.getGlobalDomainUrl(),
-            serviceParam = servicePath.target,
+        twWeb.getTarget(
             typeName = "StockCalculation",
             columns = listOf("傳輸序號", "標的", "即時成交價"),
             keyNamePath = listOf("Commodity", "CommKey"),
@@ -61,9 +42,7 @@ class AdditionalInformationRevisitTestCase(hasSignal: Boolean) : ServiceCase {
             processSteps = emptyList()
         )
             .logResponse(TAG)
-        web.getMultiple(
-            domain = globalBackend2Manager.getGlobalDomainUrl(),
-            serviceParam = servicePath.multiple,
+        twWeb.getMultiple(
             typeName = "CandlestickChartTick<StockCommodity,StockTick>",
             columns = listOf("傳輸序號", "標的", "收盤價"),
             keyNamePath = listOf("Key"),
@@ -71,9 +50,7 @@ class AdditionalInformationRevisitTestCase(hasSignal: Boolean) : ServiceCase {
             processSteps = emptyList()
         )
             .logResponse(TAG)
-        web.getOtherQuery(
-            domain = globalBackend2Manager.getGlobalDomainUrl(),
-            serviceParam = servicePath.otherQuery,
+        twWeb.getOtherQuery(
             requestType = "SectionTransactionDetailsRequest<StockTick>",
             responseType = "IEnumerable<StockTick>",
             columns = listOf("傳輸序號", "標的", "即時成交價"),
@@ -87,23 +64,15 @@ class AdditionalInformationRevisitTestCase(hasSignal: Boolean) : ServiceCase {
             processSteps = emptyList()
         )
             .logResponse(TAG)
-        web.getSignal(
-            domain = globalBackend2Manager.getGlobalDomainUrl(),
-            serviceParam = servicePath.signal,
+        twWeb.getSignal(
             channels = listOf(
-                // 台股上市櫃(不含ETF)
-                "1175865",
-                // 可現股當沖標的(不含ETF)
-                "13335330"
+                "2101582"
             )
-        )
-            .logResponse(TAG)
+        ).logResponse(TAG)
     }
 
-    private suspend fun testHasProcessStep() {
-        web.getAll(
-            domain = globalBackend2Manager.getGlobalDomainUrl(),
-            serviceParam = servicePath.all,
+    private suspend fun testProcessStep() {
+        twWeb.getAll(
             columns = listOf("標的", "商品名稱"),
             typeName = "StockCommodity",
             processSteps = listOf(
@@ -113,15 +82,13 @@ class AdditionalInformationRevisitTestCase(hasSignal: Boolean) : ServiceCase {
                 ),
                 ProcessStep(
                     type = "AscOrder",
-                    json = "{\"TargetPropertyNamePath\":[\"High\"]}"
+                    json = "{\"TargetPropertyNamePath\":[\"TradeDate\"]}"
                 )
             )
         )
             .logResponse(TAG)
         val commKeys = listOf("2330", "0050", "2344", "3008")
-        web.getTarget(
-            domain = globalBackend2Manager.getGlobalDomainUrl(),
-            serviceParam = servicePath.target,
+        twWeb.getTarget(
             typeName = "StockCalculation",
             columns = listOf("傳輸序號", "標的", "即時成交價"),
             keyNamePath = listOf("Commodity", "CommKey"),
@@ -138,9 +105,7 @@ class AdditionalInformationRevisitTestCase(hasSignal: Boolean) : ServiceCase {
             )
         )
             .logResponse(TAG)
-        web.getMultiple(
-            domain = globalBackend2Manager.getGlobalDomainUrl(),
-            serviceParam = servicePath.multiple,
+        twWeb.getMultiple(
             typeName = "CandlestickChartTick<StockCommodity,StockTick>",
             columns = listOf("傳輸序號", "標的", "收盤價"),
             keyNamePath = listOf("Key"),
@@ -157,9 +122,7 @@ class AdditionalInformationRevisitTestCase(hasSignal: Boolean) : ServiceCase {
             )
         )
             .logResponse(TAG)
-        web.getOtherQuery(
-            domain = globalBackend2Manager.getGlobalDomainUrl(),
-            serviceParam = servicePath.otherQuery,
+        twWeb.getOtherQuery(
             requestType = "SectionTransactionDetailsRequest<StockTick>",
             responseType = "IEnumerable<StockTick>",
             columns = listOf("傳輸序號", "標的", "即時成交價"),
@@ -185,14 +148,15 @@ class AdditionalInformationRevisitTestCase(hasSignal: Boolean) : ServiceCase {
     }
 
     private suspend fun testPreviousData() {
-        web.getPreviousAll(
-            columns = listOf("標的", "商品名稱"),
-            typeName = "USAStockCommodity",
-            processSteps = emptyList()
-        ).logResponse(TAG)
+        // 目前沒有相關的GetPreviousAll類型
+//        web.getPreviousAll(
+//            columns = listOf(""),
+//            typeName = "",
+//            processSteps = emptyList()
+//        ).logResponse(TAG)
 
         val commKeys = listOf("AAPL", "AMZN")
-        web.getPreviousTarget(
+        usWeb.getPreviousTarget(
             typeName = "USAStockCalculation",
             columns = listOf("傳輸序號", "標的", "即時成交價"),
             keyNamePath = listOf("Commodity", "CommKey"),
@@ -200,7 +164,7 @@ class AdditionalInformationRevisitTestCase(hasSignal: Boolean) : ServiceCase {
             processSteps = emptyList()
         ).logResponse(TAG)
 
-        web.getPreviousMultiple(
+        usWeb.getPreviousMultiple(
             typeName = "CandlestickChartTick<USAStockCommodity, USAStockTick>",
             columns = listOf("傳輸序號", "標的", "收盤價"),
             keyNamePath = listOf("Key"),
@@ -208,7 +172,7 @@ class AdditionalInformationRevisitTestCase(hasSignal: Boolean) : ServiceCase {
             processSteps = emptyList()
         ).logResponse(TAG)
 
-        web.getPreviousOtherQuery(
+        usWeb.getPreviousOtherQuery(
             requestType = "SectionTransactionDetailsRequest<USAStockTick>",
             responseType = "IEnumerable<USAStockTick>",
             columns = TEST_COLUMNS,
@@ -224,7 +188,7 @@ class AdditionalInformationRevisitTestCase(hasSignal: Boolean) : ServiceCase {
     }
 
     companion object {
-        private const val TAG = "AIRTestCase"
+        private const val TAG = "AdditionalInformationRevisitTestCase"
         private val TEST_COLUMNS = listOf("傳輸序號", "標的", "即時成交價")
     }
 

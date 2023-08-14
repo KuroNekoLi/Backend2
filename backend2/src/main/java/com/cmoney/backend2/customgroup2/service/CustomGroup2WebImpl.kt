@@ -4,15 +4,13 @@ import com.cmoney.backend2.base.extension.asRequestHeader
 import com.cmoney.backend2.base.extension.checkResponseBody
 import com.cmoney.backend2.base.extension.createAuthorizationBearer
 import com.cmoney.backend2.base.extension.handleNoContent
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.base.model.request.Language
-import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.customgroup2.service.api.data.CustomGroup
 import com.cmoney.backend2.customgroup2.service.api.data.DocMarketType
 import com.cmoney.backend2.customgroup2.service.api.data.Document
-import com.cmoney.backend2.customgroup2.service.api.data.MarketType
 import com.cmoney.backend2.customgroup2.service.api.data.MarketTypeV2
 import com.cmoney.backend2.customgroup2.service.api.data.RequestMarketType
-import com.cmoney.backend2.customgroup2.service.api.data.Stock
 import com.cmoney.backend2.customgroup2.service.api.data.StockV2
 import com.cmoney.backend2.customgroup2.service.api.data.UserConfiguration
 import com.cmoney.backend2.customgroup2.service.api.data.UserConfigurationDocument
@@ -24,41 +22,39 @@ import com.google.gson.Gson
 import kotlinx.coroutines.withContext
 
 class CustomGroup2WebImpl(
-    private val setting: Setting,
+    override val manager: GlobalBackend2Manager,
     private val gson: Gson,
     private val service: CustomGroup2Service,
-    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider
+    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider,
 ) : CustomGroup2Web {
-
-    override suspend fun searchStocks(
+    override suspend fun searchStocksV2(
         keyword: String,
-        languages: List<Language>
-    ): Result<List<Stock>> = searchStocksV2(keyword, languages)
-        .map { stocksV2 ->
-            stocksV2.map { stockV2 ->
-                val marketType = stockV2.marketType?.type?.let { type ->
-                    MarketType.fromInt(type)
-                }
-                Stock(
-                    id = stockV2.id,
-                    name = stockV2.name,
-                    marketType = marketType
-                )
-            }
-        }
+        language: Language,
+        domain: String,
+        url: String
+    ): Result<List<StockV2>> {
+        return searchStocksV2(
+            keyword = keyword,
+            languages = listOf(language),
+            domain = domain,
+            url = url
+        )
+    }
 
     override suspend fun searchStocksV2(
         keyword: String,
-        languages: List<Language>
+        languages: List<Language>,
+        domain: String,
+        url: String
     ): Result<List<StockV2>> = withContext(dispatcher.io()) {
         runCatching {
             val requestBody = SearchStocksRequestBody(keyword = keyword)
             service.searchStocks(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
                 language = languages.asRequestHeader(),
                 requestBody = requestBody
-            )
-                .checkResponseBody(gson)
+            ).checkResponseBody(gson)
                 .filterNotNull()
                 .map { stock ->
                     val type = stock.marketType
@@ -76,40 +72,28 @@ class CustomGroup2WebImpl(
         }
     }
 
-    override suspend fun searchStocksByMarketTypes(
+    override suspend fun searchStocksByMarketTypesV2(
         keyword: String,
-        languages: List<Language>,
-        marketTypes: List<MarketType>
-    ): Result<List<Stock>> = withContext(dispatcher.io()) {
-        val marketTypeV2 = marketTypes.flatMap { marketType ->
-            val type = marketType.value
-            val subTypes = marketType.types
-            subTypes.map { subType ->
-                MarketTypeV2.valueOf(type, subType.value)
-            }
-        }.filterNotNull()
-        searchStocksByMarketTypesV2(
+        language: Language,
+        marketTypes: List<MarketTypeV2>,
+        domain: String,
+        url: String
+    ): Result<List<StockV2>> {
+        return searchStocksByMarketTypesV2(
             keyword = keyword,
-            languages = languages,
-            marketTypes = marketTypeV2
-        ).map { stocksV2 ->
-            stocksV2.map { stockV2 ->
-                val marketType = stockV2.marketType?.type?.let { type ->
-                    MarketType.fromInt(type)
-                }
-                Stock(
-                    id = stockV2.id,
-                    name = stockV2.name,
-                    marketType = marketType
-                )
-            }
-        }
+            languages = listOf(language),
+            marketTypes = marketTypes,
+            domain = domain,
+            url = url
+        )
     }
 
     override suspend fun searchStocksByMarketTypesV2(
         keyword: String,
         languages: List<Language>,
-        marketTypes: List<MarketTypeV2>
+        marketTypes: List<MarketTypeV2>,
+        domain: String,
+        url: String
     ): Result<List<StockV2>> = withContext(dispatcher.io()) {
         runCatching {
             val marketTypeMap = marketTypes.groupBy { marketType ->
@@ -127,11 +111,11 @@ class CustomGroup2WebImpl(
                 marketTypes = requestMarketTypes
             )
             service.searchStocksByMarketType(
-                authorization = setting.accessToken.createAuthorizationBearer(),
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
                 language = languages.asRequestHeader(),
                 requestBody = requestBody
-            )
-                .checkResponseBody(gson)
+            ).checkResponseBody(gson)
                 .filterNotNull()
                 .map { stock ->
                     val type = stock.marketType
@@ -149,41 +133,47 @@ class CustomGroup2WebImpl(
         }
     }
 
-    override suspend fun getCustomGroup(marketType: DocMarketType): Result<List<CustomGroup>> =
-        withContext(dispatcher.io()) {
-            kotlin.runCatching {
-                val docTypeCondition = "type:StockGroup"
-                val marketTypeCondition = "${DocMarketType.KEY}:${marketType.value}"
-                val filters = listOf(docTypeCondition, marketTypeCondition)
-                service.getCustomGroup(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    filters = filters.joinToString(",")
-                )
-                    .checkResponseBody(gson)
-                    .documents?.mapNotNull { document ->
-                        val id = document.id ?: return@mapNotNull null
-                        val responseMarketType = document.marketType?.let { type ->
-                            DocMarketType.fromValue(type)
-                        }
-                        CustomGroup(
-                            id = id,
-                            name = document.displayName,
-                            marketType = responseMarketType,
-                            stocks = document.stocks
-                        )
+    override suspend fun getCustomGroup(
+        marketType: DocMarketType,
+        domain: String,
+        url: String
+    ): Result<List<CustomGroup>> = withContext(dispatcher.io()) {
+        runCatching {
+            val docTypeCondition = "type:StockGroup"
+            val marketTypeCondition = "${DocMarketType.KEY}:${marketType.value}"
+            val filters = listOf(docTypeCondition, marketTypeCondition)
+            service.getCustomGroup(
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
+                filters = filters.joinToString(",")
+            ).checkResponseBody(gson)
+                .documents?.mapNotNull { document ->
+                    val id = document.id ?: return@mapNotNull null
+                    val responseMarketType = document.marketType?.let { type ->
+                        DocMarketType.fromValue(type)
                     }
-                    .orEmpty()
-            }
+                    CustomGroup(
+                        id = id,
+                        name = document.displayName,
+                        marketType = responseMarketType,
+                        stocks = document.stocks
+                    )
+                }
+                .orEmpty()
         }
+    }
 
-    override suspend fun getCustomGroup(id: String): Result<CustomGroup> =
+    override suspend fun getCustomGroup(
+        id: String,
+        domain: String,
+        url: String
+    ): Result<CustomGroup> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 val document = service.getCustomGroupBy(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    id = id
-                )
-                    .checkResponseBody(gson)
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer()
+                ).checkResponseBody(gson)
                 val responseMarketType = document.marketType?.let { type ->
                     DocMarketType.fromValue(type)
                 }
@@ -196,27 +186,31 @@ class CustomGroup2WebImpl(
             }
         }
 
-    override suspend fun updateCustomGroup(newGroup: CustomGroup): Result<Unit> =
-        withContext(dispatcher.io()) {
-            kotlin.runCatching {
-                val newDocument = Document(
-                    id = newGroup.id,
-                    displayName = newGroup.name,
-                    marketType = newGroup.marketType?.value,
-                    stocks = newGroup.stocks
-                )
-                service.updateCustomGroup(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    id = newGroup.id,
-                    newGroup = newDocument
-                )
-                    .handleNoContent(gson)
-            }
+    override suspend fun updateCustomGroup(
+        newGroup: CustomGroup,
+        domain: String,
+        url: String
+    ): Result<Unit> = withContext(dispatcher.io()) {
+        runCatching {
+            val newDocument = Document(
+                id = newGroup.id,
+                displayName = newGroup.name,
+                marketType = newGroup.marketType?.value,
+                stocks = newGroup.stocks
+            )
+            service.updateCustomGroup(
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
+                newGroup = newDocument
+            ).handleNoContent(gson)
         }
+    }
 
     override suspend fun createCustomGroup(
         displayName: String,
-        marketType: DocMarketType
+        marketType: DocMarketType,
+        domain: String,
+        url: String
     ): Result<CustomGroup> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
@@ -226,10 +220,10 @@ class CustomGroup2WebImpl(
                     stocks = emptyList()
                 )
                 val groupId = service.createCustomGroup(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
                     baseDocument = baseDocument
-                )
-                    .checkResponseBody(gson)
+                ).checkResponseBody(gson)
                     .id ?: throw IllegalStateException("id return is null")
                 CustomGroup(
                     id = groupId,
@@ -240,31 +234,40 @@ class CustomGroup2WebImpl(
             }
         }
 
-    override suspend fun deleteCustomGroup(id: String): Result<Unit> =
-        withContext(dispatcher.io()) {
-            kotlin.runCatching {
-                service.deleteCustomGroup(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    id = id
-                )
-                    .handleNoContent(gson)
-            }
+    override suspend fun deleteCustomGroup(
+        id: String,
+        domain: String,
+        url: String
+    ): Result<Unit> = withContext(dispatcher.io()) {
+        runCatching {
+            service.deleteCustomGroup(
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer()
+            ).handleNoContent(gson)
         }
+    }
 
-    override suspend fun getUserConfiguration(): Result<UserConfiguration> =
+    override suspend fun getUserConfiguration(
+        domain: String,
+        url: String
+    ): Result<UserConfiguration> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 val userConfigurationDocument = service.getUserConfiguration(
-                    authorization = setting.accessToken.createAuthorizationBearer()
-                )
-                    .checkResponseBody(gson)
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer()
+                ).checkResponseBody(gson)
                 UserConfiguration(
                     customGroupOrders = userConfigurationDocument.documentOrders
                 )
             }
         }
 
-    override suspend fun updateConfiguration(customGroups: List<CustomGroup>): Result<Unit> =
+    override suspend fun updateConfiguration(
+        customGroups: List<CustomGroup>,
+        domain: String,
+        url: String
+    ): Result<Unit> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
                 val newConfiguration = UserConfigurationDocument(
@@ -273,10 +276,10 @@ class CustomGroup2WebImpl(
                     }.toMap()
                 )
                 service.updateUserConfiguration(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer(),
                     newUserConfigurationDocument = newConfiguration
-                )
-                    .handleNoContent(gson)
+                ).handleNoContent(gson)
             }
         }
 }

@@ -1,7 +1,6 @@
 package com.cmoney.backend2.frontendlogger.service
 
-import com.cmoney.backend2.TestSetting
-import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.core.CoroutineTestRule
 import com.cmoney.core.TestDispatcherProvider
 import com.google.common.truth.Truth
@@ -9,6 +8,7 @@ import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
+import io.mockk.slot
 import io.mockk.unmockkAll
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
@@ -28,7 +28,6 @@ import retrofit2.Response
 class FrontEndLoggerWebImplTest {
 
     private val testScope = TestScope()
-    @ExperimentalCoroutinesApi
     @get:Rule
     val mainCoroutineRule = CoroutineTestRule(testScope = testScope)
 
@@ -36,24 +35,60 @@ class FrontEndLoggerWebImplTest {
     private lateinit var service: FrontEndLoggerService
     private val gson = GsonBuilder().serializeNulls().setLenient().setPrettyPrinting().create()
     private lateinit var web: FrontEndLoggerWebImpl
-    private lateinit var setting: Setting
+
+    @MockK(relaxed = true)
+    private lateinit var manager: GlobalBackend2Manager
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        setting = TestSetting()
         web = FrontEndLoggerWebImpl(
-            baseHost = "",
+            manager = manager,
             service = service,
-            setting = setting,
             gson = gson,
             dispatcher = TestDispatcherProvider()
         )
+        coEvery {
+            manager.getFrontEndLoggerSettingAdapter().getDomain()
+        } returns EXCEPT_DOMAIN
     }
 
     @After
     fun tearDown() {
         unmockkAll()
+    }
+
+    @Test
+    fun `log_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}frontendlogger/log/default"
+        val urlSlot = slot<String>()
+        coEvery {
+            service.log(
+                url = capture(urlSlot),
+                authToken = any(),
+                body = any()
+            )
+        } returns Response.success<Void>(204, null)
+
+        web.log(body = emptyList())
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun `log_check url when index change`() = testScope.runTest {
+        val changeIndex = "change"
+        val expect = "${EXCEPT_DOMAIN}frontendlogger/log/$changeIndex"
+        val urlSlot = slot<String>()
+        coEvery {
+            service.log(
+                url = capture(urlSlot),
+                authToken = any(),
+                body = any()
+            )
+        } returns Response.success<Void>(204, null)
+
+        web.log(indexName = changeIndex, body = emptyList())
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
     }
 
     @Test
@@ -98,4 +133,7 @@ class FrontEndLoggerWebImplTest {
         Truth.assertThat((exception as HttpException).code()).isEqualTo(404)
     }
 
+    companion object {
+        private const val EXCEPT_DOMAIN = "localhost://8080:80"
+    }
 }

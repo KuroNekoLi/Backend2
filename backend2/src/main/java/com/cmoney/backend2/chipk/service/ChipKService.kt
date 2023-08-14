@@ -11,6 +11,7 @@ import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Url
 
 interface ChipKService {
 
@@ -19,8 +20,9 @@ interface ChipKService {
      */
     @RecordApi(cmoneyAction = "getdata")
     @FormUrlEncoded
-    @POST("chipk/ashx/GetDtnoData.ashx")
+    @POST
     suspend fun getData(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("Action") action: String = "GetData",
         @Field("stockId") stockId: String,
@@ -34,8 +36,9 @@ interface ChipKService {
      */
     @RecordApi(cmoneyAction = "indexforeigninvestment")
     @FormUrlEncoded
-    @POST("chipk/ashx/GetDtnoData.ashx")
+    @POST
     suspend fun getIndexForeignInvestment(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("Action") action: String = "IndexForeignInvestment",
         @Field("appId") appId: Int,
@@ -48,8 +51,9 @@ interface ChipKService {
      */
     @RecordApi(cmoneyAction = "indexmain")
     @FormUrlEncoded
-    @POST("chipk/ashx/GetDtnoData.ashx")
+    @POST
     suspend fun getIndexMain(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("Action") action: String = "IndexMain",
         @Field("appId") appId: Int,
@@ -62,8 +66,9 @@ interface ChipKService {
      */
     @RecordApi(cmoneyAction = "indexfunded")
     @FormUrlEncoded
-    @POST("chipk/ashx/GetDtnoData.ashx")
+    @POST
     suspend fun getIndexFunded(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("Action") action: String = "IndexFunded",
         @Field("appId") appId: Int,
@@ -79,8 +84,9 @@ interface ChipKService {
      */
     @RecordApi(cmoneyAction = "internationalkchart")
     @FormUrlEncoded
-    @POST("chipk/ashx/GetDtnoData.ashx")
+    @POST
     suspend fun getInternationalKData(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("Action") action: String = "InternationalKChart",
         @Field("ProductType") productType: Int,
@@ -93,8 +99,9 @@ interface ChipKService {
      */
     @RecordApi(cmoneyAction = "getcreditrate")
     @FormUrlEncoded
-    @POST("chipk/ashx/GetDtnoData.ashx")
+    @POST
     suspend fun getCreditRate(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("Action") action: String = "GetCreditRate",
         @Field("appId") appId: Int,
@@ -106,8 +113,9 @@ interface ChipKService {
      */
     @RecordApi(cmoneyAction = "getindexcalculaterate")
     @FormUrlEncoded
-    @POST("chipk/ashx/GetDtnoData.ashx")
+    @POST
     suspend fun getIndexCalculateRate(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("Action") action: String = "GetIndexCalculateRate",
         @Field("appId") appId: Int,
@@ -121,8 +129,9 @@ interface ChipKService {
      */
     @RecordApi(cmoneyAction = "getindexkdata")
     @FormUrlEncoded
-    @POST("chipk/ashx/GetDtnoData.ashx")
+    @POST
     suspend fun getIndexKData(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("Action") action: String = "GetIndexKData",
         @Field("CommKey") commKey: String,
@@ -136,8 +145,9 @@ interface ChipKService {
      */
     @RecordApi(cmoneyAction = "getchipkdata")
     @FormUrlEncoded
-    @POST("chipk/ashx/ChipK.ashx")
+    @POST
     suspend fun getChipKData(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("action") action: String = "GetChipKData",
         @Field("fundId") fundId: Int,
@@ -151,8 +161,9 @@ interface ChipKService {
      */
     @RecordApi(cmoneyAction = "getofficialstockpick")
     @FormUrlEncoded
-    @POST("chipk/Ashx/GetDtnoData.ashx")
+    @POST
     suspend fun getOfficialStockPickData(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("action") action: String = "GetOfficialStockPick",
         @Field("appId") appId: Int,
@@ -166,8 +177,9 @@ interface ChipKService {
      */
     @RecordApi(cmoneyAction = "getofficialstockpicktitle")
     @FormUrlEncoded
-    @POST("chipk/Ashx/GetDtnoData.ashx")
+    @POST
     suspend fun getOfficialStockPickTitle(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("action") action: String = "GetOfficialStockPickTitle",
         @Field("appId") appId: Int,
@@ -182,8 +194,9 @@ interface ChipKService {
      */
     @RecordApi(cmoneyAction = "IndexAnalysis")
     @FormUrlEncoded
-    @POST("chipk/ashx/GetDtnoData.ashx")
+    @POST
     suspend fun getFutureDayTradeIndexAnalysis(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("action") action: String = "IndexAnalysis",
         @Field("appId") appId: Int,

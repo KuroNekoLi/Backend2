@@ -28,6 +28,9 @@ android {
             )
         }
     }
+    buildFeatures {
+        buildConfig = false
+    }
     testOptions {
         unitTests {
             isIncludeAndroidResources = true

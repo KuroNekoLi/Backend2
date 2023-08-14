@@ -10,14 +10,16 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Url
 
 interface ActivityService {
     /**
      * 取得用戶這個月開啟幾天APP
      */
     @RecordApi
-    @POST("ActivityService/Statistics/ActiveApp/Month/DayCount")
+    @POST
     suspend fun getDayCount(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: GetDayCountRequestBody
     ): Response<GetDayCountResponseBody>
@@ -26,8 +28,9 @@ interface ActivityService {
      * 請求獎勵
      */
     @RecordApi
-    @POST("ActivityService/Referral/Request")
+    @POST
     suspend fun requestBonus(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: RequestBonusRequestBody
     ): Response<Void>
@@ -36,8 +39,9 @@ interface ActivityService {
      * 取得推薦人總共成功推薦次數
      */
     @RecordApi
-    @POST("ActivityService/Referral/ReferralCount")
+    @POST
     suspend fun getReferralCount(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: GetReferralCountRequestBody
     ): Response<GetReferralCountResponseBody>

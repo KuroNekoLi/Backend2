@@ -9,14 +9,28 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Url
 
 interface NotificationService {
+
+    /**
+     * 增加到達數
+     */
+    @RecordApi
+    @POST
+    suspend fun updateArriveCount(
+        @Url url: String,
+        @Header("Authorization") authorization: String,
+        @Body body: UpdateArrivedRequestBody
+    ): Response<Void>
+
     /**
      * 新增訪客Token
      */
     @RecordApi
-    @POST("NotificationService/DeviceToken/guest")
+    @POST
     suspend fun updateGuestPushToken(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: UpdateGuestTokenRequestBody
     ): Response<Void>
@@ -25,8 +39,9 @@ interface NotificationService {
      * 新增會員Token
      */
     @RecordApi
-    @POST("NotificationService/DeviceToken/member")
+    @POST
     suspend fun updateMemberPushToken(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: UpdateMemberTokenRequestBody
     ): Response<Void>
@@ -35,20 +50,11 @@ interface NotificationService {
      * 增加點擊數
      */
     @RecordApi
-    @POST("NotificationService/Statistics/clicked")
+    @POST
     suspend fun updateClickCount(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: UpdateClickedCountRequestBody
-    ): Response<Void>
-
-    /**
-     * 增加到達數
-     */
-    @RecordApi
-    @POST("NotificationService/Statistics/arrived")
-    suspend fun updateArriveCount(
-        @Header("Authorization") authorization: String,
-        @Body body: UpdateArrivedRequestBody
     ): Response<Void>
 }
 

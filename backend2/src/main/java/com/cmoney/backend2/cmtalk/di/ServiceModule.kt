@@ -12,6 +12,6 @@ val cmtalkServiceModule = module {
         get<Retrofit>(BACKEND2_RETROFIT).create(CMTalkService::class.java)
     }
     single<CMTalkWeb> {
-        CMTalkWebImpl(get())
+        CMTalkWebImpl(manager = get(), service = get())
     }
 }

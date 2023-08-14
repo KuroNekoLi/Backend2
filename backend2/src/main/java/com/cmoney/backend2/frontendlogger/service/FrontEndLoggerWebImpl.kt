@@ -2,7 +2,7 @@ package com.cmoney.backend2.frontendlogger.service
 
 import com.cmoney.backend2.base.extension.createAuthorizationBearer
 import com.cmoney.backend2.base.extension.handleNoContent
-import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.frontendlogger.service.api.LogRequestBody
 import com.cmoney.core.DefaultDispatcherProvider
 import com.cmoney.core.DispatcherProvider
@@ -10,9 +10,8 @@ import com.google.gson.Gson
 import kotlinx.coroutines.withContext
 
 class FrontEndLoggerWebImpl(
-    override val baseHost: String,
+    override val manager: GlobalBackend2Manager,
     private val service: FrontEndLoggerService,
-    private val setting: Setting,
     private val gson: Gson,
     private val dispatcher: DispatcherProvider = DefaultDispatcherProvider
 ) : FrontEndLoggerWeb {
@@ -20,18 +19,16 @@ class FrontEndLoggerWebImpl(
     override suspend fun log(
         body: List<LogRequestBody>,
         indexName: String,
-        host: String
+        domain: String,
+        url: String
     ): Result<Unit> =
         withContext(dispatcher.io()) {
             kotlin.runCatching {
-                val requestUrl = "${host}frontendlogger/log/$indexName"
-
                 service.log(
-                    url = requestUrl,
-                    authToken = setting.accessToken.createAuthorizationBearer(),
+                    url = url,
+                    authToken = manager.getAccessToken().createAuthorizationBearer(),
                     body = body
-                )
-                    .handleNoContent(gson)
+                ).handleNoContent(gson)
             }
         }
 

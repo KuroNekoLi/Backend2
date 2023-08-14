@@ -9,6 +9,7 @@ import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Url
 
 interface TrialService {
 
@@ -17,12 +18,13 @@ interface TrialService {
      */
     @RecordApi
     @FormUrlEncoded
-    @POST("Authentication/trial-quota/usage/use")
+    @POST
     suspend fun setQuotaUsageUse(
-            @Header("Authorization") authorization: String,
-            @Field("AppId") appId: Int,
-            @Field("Guid") guid: String,
-            @Field("trialKey") trialKey: String
+        @Url url: String,
+        @Header("Authorization") authorization: String,
+        @Field("AppId") appId: Int,
+        @Field("Guid") guid: String,
+        @Field("trialKey") trialKey: String
     ): Response<SetQuotaUseResponseBody>
 
     /**
@@ -30,8 +32,9 @@ interface TrialService {
      */
     @RecordApi
     @FormUrlEncoded
-    @POST("Authentication/trial-quota/time/use")
+    @POST
     suspend fun setQuotaTimeUse(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("AppId") appId: Int,
         @Field("Guid") guid: String,
@@ -46,12 +49,13 @@ interface TrialService {
      */
     @RecordApi
     @FormUrlEncoded
-    @POST("Authentication/trial-time/check")
+    @POST
     suspend fun checkTrialTime(
-            @Header("Authorization") authorization: String,
-            @Field("AppId") appId: Int,
-            @Field("Guid") guid: String,
-            @Field("trialKey") trialKey: String
+        @Url url: String,
+        @Header("Authorization") authorization: String,
+        @Field("AppId") appId: Int,
+        @Field("Guid") guid: String,
+        @Field("trialKey") trialKey: String
     ): Response<CheckTrialTimeResponseBody>
 
     /**
@@ -59,11 +63,12 @@ interface TrialService {
      */
     @RecordApi
     @FormUrlEncoded
-    @POST("Authentication/trial-quota/get")
+    @POST
     suspend fun getTrialQuota(
-            @Header("Authorization") authorization: String,
-            @Field("AppId") appId: Int,
-            @Field("Guid") guid: String,
-            @Field("trialKey") trialKey: String
+        @Url url: String,
+        @Header("Authorization") authorization: String,
+        @Field("AppId") appId: Int,
+        @Field("Guid") guid: String,
+        @Field("trialKey") trialKey: String
     ): Response<GetTrialQuotaResponseBody>
 }

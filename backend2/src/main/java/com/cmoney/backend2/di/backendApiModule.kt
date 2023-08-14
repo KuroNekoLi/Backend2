@@ -20,7 +20,6 @@ import com.cmoney.backend2.crm.di.crmServiceModule
 import com.cmoney.backend2.customgroup.di.customGroupServiceModule
 import com.cmoney.backend2.customgroup2.di.customGroup2ServiceModule
 import com.cmoney.backend2.data.di.dataServiceModule
-import com.cmoney.backend2.dtno.di.dtnoServiceModule
 import com.cmoney.backend2.emilystock.di.emilyServiceModule
 import com.cmoney.backend2.forumocean.di.forumOceanServiceModule
 import com.cmoney.backend2.frontendlogger.di.frontEndLoggerServiceModule
@@ -73,7 +72,6 @@ val backendServicesModule: Module = module {
         customGroupServiceModule,
         customGroup2ServiceModule,
         dataServiceModule,
-        dtnoServiceModule,
         emilyServiceModule,
         forumOceanServiceModule,
         frontEndLoggerServiceModule,

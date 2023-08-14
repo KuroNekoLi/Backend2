@@ -5,7 +5,7 @@ import com.cmoney.backend2.base.extension.checkIsSuccessful
 import com.cmoney.backend2.base.extension.checkResponseBody
 import com.cmoney.backend2.base.extension.createAuthorizationBearer
 import com.cmoney.backend2.base.extension.requireBody
-import com.cmoney.backend2.base.model.setting.Setting
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.emilystock.service.api.getemilycommkeys.GetEmilyCommKeysResponse
 import com.cmoney.backend2.emilystock.service.api.getfiltercondition.GetFilterConditionResponse
 import com.cmoney.backend2.emilystock.service.api.getstockinfos.GetStockInfosResponse
@@ -18,101 +18,118 @@ import com.google.gson.Gson
 import kotlinx.coroutines.withContext
 
 class EmilyWebImpl(
-    private val setting: Setting,
+    override val manager: GlobalBackend2Manager,
     private val service: EmilyService,
     private val gson: Gson,
-    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider
+    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider,
 ) : EmilyWeb {
-    override suspend fun getEmilyCommKeys(): Result<GetEmilyCommKeysResponse> =
-        withContext(dispatcher.io()) {
-            kotlin.runCatching {
-                val response = service.getEmilyCommKeys(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    appId = setting.appId,
-                    guid = setting.identityToken.getMemberGuid()
-                )
-                response.checkResponseBody(gson)
-            }
+    override suspend fun getEmilyCommKeys(
+        domain: String,
+        url: String
+    ): Result<GetEmilyCommKeysResponse> = withContext(dispatcher.io()) {
+        runCatching {
+            val response = service.getEmilyCommKeys(
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
+                appId = manager.getAppId(),
+                guid = manager.getIdentityToken().getMemberGuid()
+            )
+            response.checkResponseBody(gson)
         }
+    }
 
-    override suspend fun getStockInfos(isTeacherDefault: Boolean): Result<GetStockInfosResponse> =
-        withContext(dispatcher.io()) {
-            kotlin.runCatching {
-                val response = service.getStockInfos(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    isTeacherDefault = isTeacherDefault,
-                    appId = setting.appId,
-                    guid = setting.identityToken.getMemberGuid()
-                )
-                response.checkResponseBody(gson)
-            }
+    override suspend fun getStockInfos(
+        isTeacherDefault: Boolean,
+        domain: String,
+        url: String
+    ): Result<GetStockInfosResponse> = withContext(dispatcher.io()) {
+        runCatching {
+            val response = service.getStockInfos(
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
+                isTeacherDefault = isTeacherDefault,
+                appId = manager.getAppId(),
+                guid = manager.getIdentityToken().getMemberGuid()
+            )
+            response.checkResponseBody(gson)
         }
+    }
 
     override suspend fun getTargetStockInfos(
         isTeacherDefault: Boolean,
-        commKeyList: List<String>
-    ): Result<GetTargetStockInfos> =
-        withContext(dispatcher.io()) {
-            kotlin.runCatching {
-                val response = service.getTargetStockInfos(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    isTeacherDefault = isTeacherDefault,
-                    appId = setting.appId,
-                    guid = setting.identityToken.getMemberGuid(),
-                    commKeys = commKeyList
-                )
-                response.checkIsSuccessful()
-                    .requireBody()
-                    .checkIWithError()
-                    .toRealResponse()
-            }
+        commKeyList: List<String>,
+        domain: String,
+        url: String
+    ): Result<GetTargetStockInfos> = withContext(dispatcher.io()) {
+        runCatching {
+            val response = service.getTargetStockInfos(
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
+                isTeacherDefault = isTeacherDefault,
+                appId = manager.getAppId(),
+                guid = manager.getIdentityToken().getMemberGuid(),
+                commKeys = commKeyList
+            )
+            response.checkIsSuccessful()
+                .requireBody()
+                .checkIWithError()
+                .toRealResponse()
         }
+    }
 
     override suspend fun getTargetConstitution(
         isTeacherDefault: Boolean,
-        commKey: String
-    ): Result<GetTargetConstitution> =
-        withContext(dispatcher.io()) {
-            kotlin.runCatching {
-                val response = service.getTargetConstitution(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    isTeacherDefault = isTeacherDefault,
-                    appId = setting.appId,
-                    guid = setting.identityToken.getMemberGuid(),
-                    commKey = commKey
-                )
-                response.checkIsSuccessful()
-                    .requireBody()
-                    .checkIWithError()
-                    .toRealResponse()
-            }
+        commKey: String,
+        domain: String,
+        url: String
+    ): Result<GetTargetConstitution> = withContext(dispatcher.io()) {
+        runCatching {
+            val response = service.getTargetConstitution(
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
+                isTeacherDefault = isTeacherDefault,
+                appId = manager.getAppId(),
+                guid = manager.getIdentityToken().getMemberGuid(),
+                commKey = commKey
+            )
+            response.checkIsSuccessful()
+                .requireBody()
+                .checkIWithError()
+                .toRealResponse()
         }
+    }
 
-    override suspend fun getFilterCondition(): Result<GetFilterConditionResponse> =
-        withContext(dispatcher.io()) {
-            kotlin.runCatching {
-                val response = service.getFilterCondition(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    appId = setting.appId,
-                    guid = setting.identityToken.getMemberGuid()
-                )
-                response.checkResponseBody(gson)
-            }
+    override suspend fun getFilterCondition(
+        domain: String,
+        url: String
+    ): Result<GetFilterConditionResponse> = withContext(dispatcher.io()) {
+        runCatching {
+            val response = service.getFilterCondition(
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
+                appId = manager.getAppId(),
+                guid = manager.getIdentityToken().getMemberGuid()
+            )
+            response.checkResponseBody(gson)
         }
+    }
 
-    override suspend fun getTrafficLightRecord(): Result<GetTrafficLightRecord> =
-        withContext(dispatcher.io()) {
-            kotlin.runCatching {
-                val response = service.getTrafficLightRecord(
-                    authorization = setting.accessToken.createAuthorizationBearer(),
-                    appId = setting.appId,
-                    guid = setting.identityToken.getMemberGuid()
-                )
-                response.checkIsSuccessful()
-                    .requireBody()
-                    .checkIWithError()
-                    .toRealResponse()
-            }
+    override suspend fun getTrafficLightRecord(
+        domain: String,
+        url: String
+    ): Result<GetTrafficLightRecord> = withContext(dispatcher.io()) {
+        runCatching {
+            val response = service.getTrafficLightRecord(
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
+                appId = manager.getAppId(),
+                guid = manager.getIdentityToken().getMemberGuid()
+            )
+            response.checkIsSuccessful()
+                .requireBody()
+                .checkIWithError()
+                .toRealResponse()
         }
+    }
 
 }

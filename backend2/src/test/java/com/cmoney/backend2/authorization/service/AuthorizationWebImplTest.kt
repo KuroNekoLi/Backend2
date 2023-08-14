@@ -2,14 +2,13 @@ package com.cmoney.backend2.authorization.service
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
-import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.authorization.service.api.getexpiredtime.ExpiredTime
 import com.cmoney.backend2.authorization.service.api.getexpiredtime.Type
 import com.cmoney.backend2.authorization.service.api.hasauth.Auth
 import com.cmoney.backend2.base.model.exception.EmptyBodyException
 import com.cmoney.backend2.base.model.exception.ServerException
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.base.model.response.error.CMoneyError
-import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.core.CoroutineTestRule
 import com.cmoney.core.TestDispatcherProvider
 import com.google.common.truth.Truth
@@ -34,16 +33,18 @@ import retrofit2.Response
 class AuthorizationWebImplTest {
 
     private val testScope = TestScope()
+
     @get:Rule
     val mainCoroutineRule = CoroutineTestRule(testScope = testScope)
 
     @MockK
     lateinit var service: AuthorizationService
 
+    @MockK(relaxed = true)
+    private lateinit var manager: GlobalBackend2Manager
     private val context = ApplicationProvider.getApplicationContext<Context>()
     private val gson = GsonBuilder().serializeNulls().setLenient().setPrettyPrinting().create()
     private lateinit var authorizationWeb: AuthorizationWeb
-    private lateinit var setting: Setting
 
     companion object {
         private const val HAS_AUTH_RESPONSE = "authorization_get_expire_time_has_auth_response.txt"
@@ -53,11 +54,10 @@ class AuthorizationWebImplTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        setting = TestSetting()
         authorizationWeb = AuthorizationWebImpl(
             gson = gson,
             service = service,
-            setting = setting,
+            manager = manager,
             dispatcher = TestDispatcherProvider()
         )
     }
@@ -74,8 +74,7 @@ class AuthorizationWebImplTest {
         coEvery {
             service.getExpiredTime(
                 authorization = any(),
-                type = any(),
-                subjectId = any()
+                url = any()
             )
         } returns Response.success(responseBody)
 
@@ -107,8 +106,7 @@ class AuthorizationWebImplTest {
         coEvery {
             service.getExpiredTime(
                 authorization = any(),
-                type = any(),
-                subjectId = any()
+                url = any()
             )
         } returns Response.success(responseBody)
 
@@ -132,8 +130,7 @@ class AuthorizationWebImplTest {
         coEvery {
             service.getExpiredTime(
                 authorization = any(),
-                type = any(),
-                subjectId = any()
+                url = any()
             )
         } returns Response.success<ExpiredTime>(200, null)
 
@@ -157,8 +154,7 @@ class AuthorizationWebImplTest {
         coEvery {
             service.getExpiredTime(
                 authorization = any(),
-                type = any(),
-                subjectId = any()
+                url = any()
             )
         } returns Response.error<ExpiredTime>(400, errorBody)
 
@@ -185,8 +181,7 @@ class AuthorizationWebImplTest {
         coEvery {
             service.getExpiredTime(
                 authorization = any(),
-                type = any(),
-                subjectId = any()
+                url = any()
             )
         } returns Response.error<ExpiredTime>(401, errorBody)
 
@@ -213,8 +208,7 @@ class AuthorizationWebImplTest {
         coEvery {
             service.getExpiredTime(
                 authorization = any(),
-                type = any(),
-                subjectId = any()
+                url = any()
             )
         } returns Response.error<ExpiredTime>(500, errorBody)
 
@@ -269,7 +263,7 @@ class AuthorizationWebImplTest {
     @Test
     fun getPurchasedSubjectIds_success() = testScope.runTest {
         coEvery {
-            service.getPurchasedSubjectIds(authorization = any(), type = any())
+            service.getPurchasedSubjectIds(authorization = any(), url = any())
         } returns Response.success(listOf())
         val result = authorizationWeb.getPurchasedSubjectIds(type = Type.MOBILE_PAID)
         Truth.assertThat(result.isSuccess).isTrue()
@@ -278,7 +272,7 @@ class AuthorizationWebImplTest {
     @Test
     fun getPurchasedSubjectIds_failure() = testScope.runTest {
         coEvery {
-            service.getPurchasedSubjectIds(authorization = any(), type = any())
+            service.getPurchasedSubjectIds(authorization = any(), url = any())
         } returns Response.error(400, "".toResponseBody())
         val result = authorizationWeb.getPurchasedSubjectIds(type = Type.MOBILE_PAID)
         Truth.assertThat(result.isSuccess).isFalse()

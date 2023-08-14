@@ -1,12 +1,10 @@
 package com.cmoney.backend2.realtimeaftermarket.service
 
-import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.EmptyBodyException
 import com.cmoney.backend2.base.model.exception.ServerException
-import com.cmoney.backend2.base.model.request.GuestApiParam
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.base.model.response.dtno.DtnoWithError
 import com.cmoney.backend2.base.model.response.error.ISuccess
-import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.realtimeaftermarket.service.api.getInternationalTicks.InternationalChartData
 import com.cmoney.backend2.realtimeaftermarket.service.api.getInternationalTicks.InternationalNewTicks
 import com.cmoney.backend2.realtimeaftermarket.service.api.getafterhourstime.AfterHoursTimeWithError
@@ -36,6 +34,7 @@ import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
+import io.mockk.slot
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
@@ -53,28 +52,54 @@ import java.util.concurrent.TimeoutException
 class RealTimeAfterMarketWebImplTest {
 
     private val testScope = TestScope()
+
     @get:Rule
     val mainCoroutineRule = CoroutineTestRule(testScope = testScope)
 
     @MockK
     private lateinit var service: RealTimeAfterMarketService
     private val gson = GsonBuilder().serializeNulls().setLenient().setPrettyPrinting().create()
-    private lateinit var setting: Setting
-    private lateinit var webImpl: RealTimeAfterMarketWeb
+    private lateinit var web: RealTimeAfterMarketWeb
+
+    @MockK(relaxed = true)
+    private lateinit var manager: GlobalBackend2Manager
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        setting = TestSetting()
-        webImpl = RealTimeAfterMarketWebImpl(
+        web = RealTimeAfterMarketWebImpl(
+            manager = manager,
             service = service,
-            setting = setting,
             dispatcher = TestDispatcherProvider()
         )
+        coEvery {
+            manager.getRealtimeAfterMarketSettingAdapter().getDomain()
+        } returns EXCEPT_DOMAIN
     }
 
     @Test
-    fun `getCommList_成功`() = testScope.runTest {
+    fun `getCommList_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}MobileService/ashx/InstantTrading/InstantTrading.ashx"
+        val urlSlot = slot<String>()
+        val mockResponse = GetCommListResponseBody(
+            products = emptyList(),
+            responseCode = 1
+        )
+        coEvery {
+            service.getCommList(
+                url = capture(urlSlot),
+                authorization = any(),
+                areaIds = any(),
+                appId = any(),
+                guid = any()
+            )
+        } returns Response.success(mockResponse)
+        web.getCommList(listOf("1"))
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getCommList_success() = testScope.runTest {
         val mockResponse = GetCommListResponseBody(
             products = listOf(
                 Product(
@@ -93,13 +118,14 @@ class RealTimeAfterMarketWebImplTest {
         )
         coEvery {
             service.getCommList(
+                url = any(),
                 authorization = any(),
                 areaIds = any(),
-                appId = setting.appId,
-                guid = setting.identityToken.getMemberId()
+                appId = any(),
+                guid = any()
             )
         } returns Response.success(mockResponse)
-        val result = webImpl.getCommList(listOf("1"))
+        val result = web.getCommList(listOf("1"))
         Truth.assertThat(result.isSuccess).isTrue()
         val data = result.getOrThrow()
         Truth.assertThat(data.responseCode).isEqualTo(1)
@@ -115,127 +141,32 @@ class RealTimeAfterMarketWebImplTest {
     }
 
     @Test
-    fun `getForeignExchangeTicks_成功`() = testScope.runTest {
-        val responseBody = GetForeignExchangeTickResponseBody(
-            isMarketClosed = false,
+    fun `getNewTickInfo_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}MobileService/ashx/InstantTrading/InstantTrading.ashx"
+        val urlSlot = slot<String>()
+        val response = NewTickInfo(
+            isMarketClosed = true,
             isSuccess = true,
             responseCode = 0,
             responseMsg = "",
-            tickInfoSet = listOf(
-                com.cmoney.backend2.realtimeaftermarket.service.api.getforeignexchangeticks.TickInfo(
-                    buyOrSell = 0,
-                    commKey = "SUSDTWD",
-                    dealPrice = 27.988,
-                    highestPrice = 0.0,
-                    investorStatus = 0,
-                    limitDown = "0",
-                    limitUp = "0",
-                    lowestPrice = 0.0,
-                    openPrice = 0.0,
-                    packageDataType = 0,
-                    priceChange = -0.061,
-                    quoteChange = -0.2175,
-                    refPrice = 0.0,
-                    singleVolume = 0,
-                    statusCode = 12507,
-                    tickTime = 1626233984L,
-                    totalVolume = 0
-                )
-            )
+            tickInfoSet = listOf()
         )
         coEvery {
-            service.getForeignExchangeTicks(
-                authorization = any(),
-                action = any(),
-                guid = any(),
-                appId = any(),
+            service.getNewTickInfo(
+                url = capture(urlSlot),
                 commKeys = any(),
-                statusCodes = any()
-            )
-        } returns Response.success(responseBody)
-        val result = webImpl.getForeignExchangeTicks(listOf("SUSDTWD" to 0))
-        Truth.assertThat(result.isSuccess)
-        val data = result.getOrThrow()
-        Truth.assertThat(data.isSuccess).isTrue()
-        Truth.assertThat(data.isMarketClosed).isFalse()
-        Truth.assertThat(data.responseCode).isEqualTo(0)
-        Truth.assertThat(data.responseMsg).isEmpty()
-        val tickInfoSets = data.tickInfoSet
-        Truth.assertThat(tickInfoSets).hasSize(1)
-        val tickInfoSet = tickInfoSets!!.first()
-        Truth.assertThat(tickInfoSet.buyOrSell).isEqualTo(0)
-        Truth.assertThat(tickInfoSet.commKey).isEqualTo("SUSDTWD")
-        Truth.assertThat(tickInfoSet.dealPrice).isEqualTo(27.988)
-        Truth.assertThat(tickInfoSet.highestPrice).isEqualTo(0.0)
-        Truth.assertThat(tickInfoSet.limitDown).isEqualTo("0")
-        Truth.assertThat(tickInfoSet.limitUp).isEqualTo("0")
-        Truth.assertThat(tickInfoSet.lowestPrice).isEqualTo(0.0)
-        Truth.assertThat(tickInfoSet.openPrice).isEqualTo(0.0)
-        Truth.assertThat(tickInfoSet.packageDataType).isEqualTo(0)
-        Truth.assertThat(tickInfoSet.priceChange).isEqualTo(-0.061)
-        Truth.assertThat(tickInfoSet.quoteChange).isEqualTo(-0.2175)
-        Truth.assertThat(tickInfoSet.refPrice).isEqualTo(0.0)
-        Truth.assertThat(tickInfoSet.singleVolume).isEqualTo(0)
-        Truth.assertThat(tickInfoSet.statusCode).isEqualTo(12507)
-        Truth.assertThat(tickInfoSet.tickTime).isEqualTo(1626233984L)
-        Truth.assertThat(tickInfoSet.totalVolume).isEqualTo(0)
-    }
-
-    @Test
-    fun `searchStock_成功`() = testScope.runTest {
-        val response = listOf(
-            ResultEntry("2222", "2222", 1),
-            ResultEntry("4444", "4444", 3),
-            ResultEntry("6666", "6666", 5)
-        )
-        coEvery {
-            service.searchStock(
-                authorization = any(),
-                queryKey = any()
+                statusCodes = any(),
+                appId = any(),
+                guid = any(),
+                authorization = any()
             )
         } returns Response.success(response)
-        val result = webImpl.searchStock("0000")
-        Truth.assertThat(result.isSuccess).isTrue()
-        val data = result.getOrThrow()
-        Truth.assertThat(data.size).isEqualTo(3)
+        web.getNewTickInfo(listOf("1111"), listOf(1))
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
     }
 
     @Test
-    fun `searchStock_無搜尋結果`() = testScope.runTest {
-        val response = emptyList<ResultEntry>()
-        coEvery {
-            service.searchStock(
-                authorization = any(),
-                queryKey = any()
-            )
-        } returns Response.success(response)
-        val result = webImpl.searchStock("8888")
-        Truth.assertThat(result.isSuccess).isTrue()
-        val data = result.getOrThrow()
-        Truth.assertThat(data.size).isEqualTo(0)
-    }
-
-    @Test
-    fun `searchUsStock_成功`() = testScope.runTest {
-        val response = listOf(
-            UsResultEntry("2222", 1, "2222"),
-            UsResultEntry("4444", 3, "4444"),
-            UsResultEntry("6666", 5, "6666")
-        )
-        coEvery {
-            service.searchUsStock(
-                authorization = any(),
-                queryKey = any()
-            )
-        } returns Response.success(response)
-        val result = webImpl.searchUsStock("0000")
-        Truth.assertThat(result.isSuccess).isTrue()
-        val data = result.getOrThrow()
-        Truth.assertThat(data.size).isEqualTo(3)
-    }
-
-    @Test
-    fun `getNewTickInfo_成功`() = testScope.runTest {
+    fun getNewTickInfo_success() = testScope.runTest {
         val response = NewTickInfo(
             isMarketClosed = true,
             isSuccess = true,
@@ -265,6 +196,7 @@ class RealTimeAfterMarketWebImplTest {
         )
         coEvery {
             service.getNewTickInfo(
+                url = any(),
                 commKeys = any(),
                 statusCodes = any(),
                 appId = any(),
@@ -272,14 +204,14 @@ class RealTimeAfterMarketWebImplTest {
                 authorization = any()
             )
         } returns Response.success(response)
-        val result = webImpl.getNewTickInfo(listOf("1111"), listOf(1))
+        val result = web.getNewTickInfo(listOf("1111"), listOf(1))
         Truth.assertThat(result.isSuccess).isTrue()
         val data = result.getOrThrow()
         Truth.assertThat(data).isNotNull()
     }
 
     @Test
-    fun `getNewTickInfo_失敗`() = testScope.runTest {
+    fun getNewTickInfo_failure() = testScope.runTest {
         val response = NewTickInfo(
             isMarketClosed = true,
             isSuccess = false,
@@ -289,6 +221,7 @@ class RealTimeAfterMarketWebImplTest {
         )
         coEvery {
             service.getNewTickInfo(
+                url = any(),
                 commKeys = any(),
                 statusCodes = any(),
                 appId = any(),
@@ -296,12 +229,79 @@ class RealTimeAfterMarketWebImplTest {
                 authorization = any()
             )
         } returns Response.success(response)
-        val result = webImpl.getNewTickInfo(emptyList(), emptyList())
+        val result = web.getNewTickInfo(emptyList(), emptyList())
         checkServerException(result)
     }
 
     @Test
-    fun `getSingleStockNewTick_成功`() = testScope.runTest {
+    fun `getSingleStockLongNewTick_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}MobileService/ashx/InstantTrading/InstantTrading.ashx"
+        val urlSlot = slot<String>()
+        val response = SingleStockNewTick(
+            askQty = null,
+            averagePrice = null,
+            bidQty = null,
+            buyOrSell = null,
+            buyPr1 = null,
+            buyPr2 = null,
+            buyPr3 = null,
+            buyPr4 = null,
+            buyPr5 = null,
+            buyQty1 = null,
+            buyQty2 = null,
+            buyQty3 = null,
+            buyQty4 = null,
+            buyQty5 = null,
+            ceilingPrice = null,
+            chartData = listOf(),
+            closePrice = null,
+            commkey = null,
+            groupedPriceVolumeData = listOf(),
+            investorChartData = listOf(),
+            isCloseMarket = null,
+            isSuccess = null,
+            limitDown = null,
+            limitUp = null,
+            lowestPrice = null,
+            marketTime = null,
+            openPrice = null,
+            packageDataType = null,
+            prevClose = null,
+            priceChange = null,
+            quoteChange = null,
+            refPrice = null,
+            responseCode = null,
+            responseMsg = null,
+            sellPr1 = null,
+            sellPr2 = null,
+            sellPr3 = null,
+            sellPr4 = null,
+            sellPr5 = null,
+            sellQty1 = null,
+            sellQty2 = null,
+            sellQty3 = null,
+            sellQty4 = null,
+            sellQty5 = null,
+            statusCode = null,
+            tickQty = null,
+            totalQty = null
+        )
+        coEvery {
+            service.getSingleStockNewTick(
+                url = capture(urlSlot),
+                commKey = any(),
+                statusCode = any(),
+                appId = any(),
+                guid = any(),
+                authorization = any()
+            )
+        } returns Response.success(response)
+        web.getSingleStockLongNewTick("1111", "0")
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getSingleStockLongNewTick_success() = testScope.runTest {
         val response = SingleStockNewTick(
             askQty = 1,
             averagePrice = 12.2,
@@ -382,6 +382,7 @@ class RealTimeAfterMarketWebImplTest {
         )
         coEvery {
             service.getSingleStockNewTick(
+                url = any(),
                 commKey = any(),
                 statusCode = any(),
                 appId = any(),
@@ -389,14 +390,14 @@ class RealTimeAfterMarketWebImplTest {
                 authorization = any()
             )
         } returns Response.success(response)
-        val result = webImpl.getSingleStockLongNewTick("1111", "0")
+        val result = web.getSingleStockLongNewTick("1111", "0")
         Truth.assertThat(result.isSuccess).isTrue()
         val data = result.getOrThrow()
         Truth.assertThat(data).isNotNull()
     }
 
     @Test
-    fun `getSingleStockNewTick_失敗`() = testScope.runTest {
+    fun getSingleStockLongNewTick_failure() = testScope.runTest {
         val response = SingleStockNewTick(
             askQty = 0,
             averagePrice = 0.0,
@@ -448,6 +449,7 @@ class RealTimeAfterMarketWebImplTest {
         )
         coEvery {
             service.getSingleStockNewTick(
+                url = any(),
                 commKey = any(),
                 statusCode = any(),
                 appId = any(),
@@ -455,12 +457,37 @@ class RealTimeAfterMarketWebImplTest {
                 authorization = any()
             )
         } returns Response.success(response)
-        val result = webImpl.getSingleStockLongNewTick("", "")
+        val result = web.getSingleStockLongNewTick("", "")
         checkServerException(result)
     }
 
     @Test
-    fun `getMarketNewTick_成功`() = testScope.runTest {
+    fun `getMarketNewTick_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}MobileService/ashx/InstantTrading/InstantTrading.ashx"
+        val urlSlot = slot<String>()
+        val response = MarketNewTick(
+            isMarketClosed = null,
+            tickInfoSet = listOf(),
+            isSuccess = null,
+            responseCode = null,
+            responseMsg = null
+        )
+        coEvery {
+            service.getMarketNewTick(
+                url = capture(urlSlot),
+                commkey = any(),
+                statusCode = any(),
+                appId = any(),
+                guid = any(),
+                authorization = any()
+            )
+        } returns Response.success(response)
+        web.getMarketNewTick("1111", "0")
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getMarketNewTick_success() = testScope.runTest {
         val response = MarketNewTick(
             isMarketClosed = true,
             tickInfoSet = listOf(
@@ -502,6 +529,7 @@ class RealTimeAfterMarketWebImplTest {
         )
         coEvery {
             service.getMarketNewTick(
+                url = any(),
                 commkey = any(),
                 statusCode = any(),
                 appId = any(),
@@ -509,14 +537,14 @@ class RealTimeAfterMarketWebImplTest {
                 authorization = any()
             )
         } returns Response.success(response)
-        val result = webImpl.getMarketNewTick("1111", "0")
+        val result = web.getMarketNewTick("1111", "0")
         Truth.assertThat(result.isSuccess).isTrue()
         val data = result.getOrThrow()
         Truth.assertThat(data).isNotNull()
     }
 
     @Test
-    fun `getMarketNewTick_失敗`() = testScope.runTest {
+    fun getMarketNewTick_failure() = testScope.runTest {
         val response = MarketNewTick(
             isMarketClosed = false,
             tickInfoSet = emptyList(),
@@ -526,6 +554,7 @@ class RealTimeAfterMarketWebImplTest {
         )
         coEvery {
             service.getMarketNewTick(
+                url = any(),
                 commkey = any(),
                 statusCode = any(),
                 appId = any(),
@@ -533,12 +562,50 @@ class RealTimeAfterMarketWebImplTest {
                 authorization = any()
             )
         } returns Response.success(response)
-        val result = webImpl.getMarketNewTick("", "")
+        val result = web.getMarketNewTick("", "")
         checkServerException(result)
     }
 
     @Test
-    fun `getInternationalNewTick_成功`() = testScope.runTest {
+    fun `getInternationalNewTick_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}MobileService/ashx/InstantTrading/InternationalTrading.ashx"
+        val urlSlot = slot<String>()
+        val response = InternationalNewTicks(
+            commKey = null,
+            refPr = null,
+            openPrice = null,
+            ceilingPrice = null,
+            lowestPrice = null,
+            prevClose = null,
+            salePr = null,
+            marketTime = null,
+            totalQty = null,
+            priceChange = null,
+            quoteChange = null,
+            statusCode = null,
+            chartData = listOf(),
+            startTime = null,
+            endTime = null,
+            isSuccess = null,
+            responseCode = null,
+            responseMsg = null
+        )
+        coEvery {
+            service.getInternationalNewTick(
+                url = capture(urlSlot),
+                commKey = any(),
+                statusCode = any(),
+                appId = any(),
+                guid = any(),
+                authorization = any()
+            )
+        } returns Response.success(response)
+        web.getInternationalNewTick("1111", "0")
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getInternationalNewTick_success() = testScope.runTest {
         val response = InternationalNewTicks(
             commKey = "1111",
             refPr = "456",
@@ -570,6 +637,7 @@ class RealTimeAfterMarketWebImplTest {
         )
         coEvery {
             service.getInternationalNewTick(
+                url = any(),
                 commKey = any(),
                 statusCode = any(),
                 appId = any(),
@@ -577,14 +645,14 @@ class RealTimeAfterMarketWebImplTest {
                 authorization = any()
             )
         } returns Response.success(response)
-        val result = webImpl.getInternationalNewTick("1111", "0")
+        val result = web.getInternationalNewTick("1111", "0")
         Truth.assertThat(result.isSuccess).isTrue()
         val data = result.getOrThrow()
         Truth.assertThat(data).isNotNull()
     }
 
     @Test
-    fun `getInternationalNewTick_失敗`() = testScope.runTest {
+    fun getInternationalNewTick_failure() = testScope.runTest {
         val response = InternationalNewTicks(
             commKey = "1111",
             refPr = "",
@@ -607,6 +675,7 @@ class RealTimeAfterMarketWebImplTest {
         )
         coEvery {
             service.getInternationalNewTick(
+                url = any(),
                 commKey = any(),
                 statusCode = any(),
                 appId = any(),
@@ -614,86 +683,18 @@ class RealTimeAfterMarketWebImplTest {
                 authorization = any()
             )
         } returns Response.success(response)
-        val result = webImpl.getInternationalNewTick("", "")
+        val result = web.getInternationalNewTick("", "")
         checkServerException(result)
     }
 
     @Test
-    fun `getDtno_成功_訪客`() = testScope.runTest {
-        val response = DtnoWithError(
-            listOf(
-                "股票代號",
-                "股票名稱",
-                "日期",
-                "股票名稱1",
-                "產業指數代號",
-                "上市上櫃"
-            ),
-            listOf(
-                listOf(
-                    "0050",
-                    "元大台灣50",
-                    "20200803",
-                    "元大台灣50",
-                    "",
-                    ""
-                ),
-                listOf(
-                    "0051",
-                    "元大中型100",
-                    "20200803",
-                    "元大中型100",
-                    "",
-                    ""
-                )
-            )
-        )
+    fun `getDtno_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}MobileService/ashx/GetDtnoData.ashx"
+        val urlSlot = slot<String>()
+        val response = DtnoWithError(title = listOf(), data = listOf())
         coEvery {
             service.getDtno(
-                authorization = any(),
-                guid = any(),
-                action = any(),
-                dtno = any(),
-                paramStr = any(),
-                assignSpid = any(),
-                keyMap = any(),
-                filterNo = any(),
-                appId = any()
-            )
-        } returns Response.success(response)
-        val guestApiParam = GuestApiParam(
-            appId = 99
-        )
-        val result = webImpl.getDtno(guestApiParam, 4210983, "", "", "", 0)
-        Truth.assertThat(result.isSuccess).isTrue()
-        val data = result.getOrThrow()
-        Truth.assertThat(data).isNotNull()
-    }
-
-    @Test
-    fun `getDtno_成功_身分識別`() = testScope.runTest {
-        val response = DtnoWithError(
-            listOf(
-                "股票代號",
-                "股票名稱",
-                "日期",
-                "股票名稱1",
-                "產業指數代號",
-                "上市上櫃"
-            ),
-            listOf(
-                listOf(
-                    "0050",
-                    "元大台灣50",
-                    "20200803",
-                    "元大台灣50",
-                    "",
-                    ""
-                )
-            )
-        )
-        coEvery {
-            service.getDtno(
+                url = capture(urlSlot),
                 action = any(),
                 dtno = any(),
                 paramStr = any(),
@@ -705,20 +706,61 @@ class RealTimeAfterMarketWebImplTest {
                 authorization = any()
             )
         } returns Response.success(response)
-        val result = webImpl.getDtno(4210983, "", "", "", 0)
+        web.getDtno(4210983, "", "", "", 0)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getDtno_success() = testScope.runTest {
+        val response = DtnoWithError(
+            listOf(
+                "股票代號",
+                "股票名稱",
+                "日期",
+                "股票名稱1",
+                "產業指數代號",
+                "上市上櫃"
+            ),
+            listOf(
+                listOf(
+                    "0050",
+                    "元大台灣50",
+                    "20200803",
+                    "元大台灣50",
+                    "",
+                    ""
+                )
+            )
+        )
+        coEvery {
+            service.getDtno(
+                url = any(),
+                action = any(),
+                dtno = any(),
+                paramStr = any(),
+                assignSpid = any(),
+                keyMap = any(),
+                filterNo = any(),
+                appId = any(),
+                guid = any(),
+                authorization = any()
+            )
+        } returns Response.success(response)
+        val result = web.getDtno(4210983, "", "", "", 0)
         Truth.assertThat(result.isSuccess).isTrue()
         val data = result.getOrThrow()
         Truth.assertThat(data).isNotNull()
     }
 
     @Test
-    fun `getDtno_空表`() = testScope.runTest {
+    fun `getDtno_not found`() = testScope.runTest {
         val responseBodyJson = """
             { "Error": {"Code": 101,"Message": "身分驗證錯誤"}}
         """.trimIndent()
         val responseBody = gson.fromJson(responseBodyJson, DtnoWithError::class.java)
         coEvery {
             service.getDtno(
+                url = any(),
                 action = any(),
                 dtno = any(),
                 paramStr = any(),
@@ -730,7 +772,7 @@ class RealTimeAfterMarketWebImplTest {
                 authorization = any()
             )
         } returns Response.success(responseBody)
-        val result = webImpl.getDtno(0, "", "", "", 0)
+        val result = web.getDtno(0, "", "", "", 0)
         Truth.assertThat(result.isSuccess).isFalse()
     }
 
@@ -742,6 +784,7 @@ class RealTimeAfterMarketWebImplTest {
         val responseBody = gson.fromJson(responseBodyJson, DtnoWithError::class.java)
         coEvery {
             service.getDtno(
+                url = any(),
                 authorization = any(),
                 appId = any(),
                 guid = any(),
@@ -753,40 +796,288 @@ class RealTimeAfterMarketWebImplTest {
                 filterNo = any()
             )
         } returns Response.success(responseBody)
-        val result = webImpl.getDtno(4210983, "", "", "", 0)
+        val result = web.getDtno(4210983, "", "", "", 0)
         Truth.assertThat(result.isSuccess).isFalse()
     }
 
     @Test
-    fun `getAfterHoursTime_成功`() = testScope.runTest {
+    fun `getAfterHoursTime_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}MobileService/ashx/InstantTrading/InstantTrading.ashx"
+        val urlSlot = slot<String>()
         coEvery {
             service.getAfterHoursTime(
+                url = capture(urlSlot),
                 authorization = any(),
                 appId = any(),
                 guid = any()
             )
         } returns Response.success(AfterHoursTimeWithError("2021-01-20T00:00:00"))
-        val result = webImpl.getAfterHoursTime()
+        web.getAfterHoursTime()
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getAfterHoursTime_success() = testScope.runTest {
+        coEvery {
+            service.getAfterHoursTime(
+                url = any(),
+                authorization = any(),
+                appId = any(),
+                guid = any()
+            )
+        } returns Response.success(AfterHoursTimeWithError("2021-01-20T00:00:00"))
+        val result = web.getAfterHoursTime()
         Truth.assertThat(result.isSuccess).isTrue()
     }
 
     @Test(expected = ParseException::class)
-    fun `getAfterHoursTime_日期格式錯誤`() = testScope.runTest {
+    fun `getAfterHoursTime_format error_ParseException`() = testScope.runTest {
         coEvery {
             service.getAfterHoursTime(
+                url = any(),
                 authorization = any(),
                 appId = any(),
                 guid = any()
             )
         } returns Response.success(AfterHoursTimeWithError("2021-01-20T00:00"))
-        val result = webImpl.getAfterHoursTime()
+        val result = web.getAfterHoursTime()
         result.getOrThrow()
     }
 
-    @Test(expected = TimeoutException::class)
-    fun `getStockDealDetail_TimeoutException`() = testScope.runTest {
+    @Test
+    fun `searchStock_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}MobileService/ashx/CustomerGroup/CustomGroup.ashx"
+        val urlSlot = slot<String>()
+        coEvery {
+            service.searchStock(
+                url = capture(urlSlot),
+                authorization = any(),
+                queryKey = any()
+            )
+        } returns Response.success(emptyList())
+        web.searchStock("0000")
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun searchStock_success() = testScope.runTest {
+        val response = listOf(
+            ResultEntry("2222", "2222", 1),
+            ResultEntry("4444", "4444", 3),
+            ResultEntry("6666", "6666", 5)
+        )
+        coEvery {
+            service.searchStock(
+                url = any(),
+                authorization = any(),
+                queryKey = any()
+            )
+        } returns Response.success(response)
+        val result = web.searchStock("0000")
+        Truth.assertThat(result.isSuccess).isTrue()
+        val data = result.getOrThrow()
+        Truth.assertThat(data.size).isEqualTo(3)
+    }
+
+    @Test
+    fun `searchStock_not found`() = testScope.runTest {
+        val response = emptyList<ResultEntry>()
+        coEvery {
+            service.searchStock(
+                url = any(),
+                authorization = any(),
+                queryKey = any()
+            )
+        } returns Response.success(response)
+        val result = web.searchStock("8888")
+        Truth.assertThat(result.isSuccess).isTrue()
+        val data = result.getOrThrow()
+        Truth.assertThat(data.size).isEqualTo(0)
+    }
+
+    @Test
+    fun `searchUsStock_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}MobileService/ashx/CustomerGroup/CustomGroup.ashx"
+        val urlSlot = slot<String>()
+        coEvery {
+            service.searchStock(
+                url = capture(urlSlot),
+                authorization = any(),
+                queryKey = any()
+            )
+        } returns Response.success(emptyList())
+        web.searchStock("0000")
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun searchUsStock_success() = testScope.runTest {
+        val response = listOf(
+            UsResultEntry("2222", 1, "2222"),
+            UsResultEntry("4444", 3, "4444"),
+            UsResultEntry("6666", 5, "6666")
+        )
+        coEvery {
+            service.searchUsStock(
+                url = any(),
+                authorization = any(),
+                queryKey = any()
+            )
+        } returns Response.success(response)
+        val result = web.searchUsStock("0000")
+        Truth.assertThat(result.isSuccess).isTrue()
+        val data = result.getOrThrow()
+        Truth.assertThat(data.size).isEqualTo(3)
+    }
+
+    @Test
+    fun `getForeignExchangeTicks_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}MobileService/ashx/InstantTrading/ForeignExchangeTrading.ashx"
+        val urlSlot = slot<String>()
+        val responseBody = GetForeignExchangeTickResponseBody(
+            isMarketClosed = null,
+            isSuccess = null,
+            responseCode = null,
+            responseMsg = null,
+            tickInfoSet = listOf()
+        )
+        coEvery {
+            service.getForeignExchangeTicks(
+                url = capture(urlSlot),
+                authorization = any(),
+                action = any(),
+                guid = any(),
+                appId = any(),
+                commKeys = any(),
+                statusCodes = any()
+            )
+        } returns Response.success(responseBody)
+        web.getForeignExchangeTicks(listOf("SUSDTWD" to 0))
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getForeignExchangeTicks_success() = testScope.runTest {
+        val responseBody = GetForeignExchangeTickResponseBody(
+            isMarketClosed = false,
+            isSuccess = true,
+            responseCode = 0,
+            responseMsg = "",
+            tickInfoSet = listOf(
+                com.cmoney.backend2.realtimeaftermarket.service.api.getforeignexchangeticks.TickInfo(
+                    buyOrSell = 0,
+                    commKey = "SUSDTWD",
+                    dealPrice = 27.988,
+                    highestPrice = 0.0,
+                    investorStatus = 0,
+                    limitDown = "0",
+                    limitUp = "0",
+                    lowestPrice = 0.0,
+                    openPrice = 0.0,
+                    packageDataType = 0,
+                    priceChange = -0.061,
+                    quoteChange = -0.2175,
+                    refPrice = 0.0,
+                    singleVolume = 0,
+                    statusCode = 12507,
+                    tickTime = 1626233984L,
+                    totalVolume = 0
+                )
+            )
+        )
+        coEvery {
+            service.getForeignExchangeTicks(
+                url = any(),
+                authorization = any(),
+                action = any(),
+                guid = any(),
+                appId = any(),
+                commKeys = any(),
+                statusCodes = any()
+            )
+        } returns Response.success(responseBody)
+        val result = web.getForeignExchangeTicks(listOf("SUSDTWD" to 0))
+        val data = result.getOrThrow()
+        Truth.assertThat(data.isSuccess).isTrue()
+        Truth.assertThat(data.isMarketClosed).isFalse()
+        Truth.assertThat(data.responseCode).isEqualTo(0)
+        Truth.assertThat(data.responseMsg).isEmpty()
+        val tickInfoSets = data.tickInfoSet
+        Truth.assertThat(tickInfoSets).hasSize(1)
+        val tickInfoSet = tickInfoSets!!.first()
+        Truth.assertThat(tickInfoSet.buyOrSell).isEqualTo(0)
+        Truth.assertThat(tickInfoSet.commKey).isEqualTo("SUSDTWD")
+        Truth.assertThat(tickInfoSet.dealPrice).isEqualTo(27.988)
+        Truth.assertThat(tickInfoSet.highestPrice).isEqualTo(0.0)
+        Truth.assertThat(tickInfoSet.limitDown).isEqualTo("0")
+        Truth.assertThat(tickInfoSet.limitUp).isEqualTo("0")
+        Truth.assertThat(tickInfoSet.lowestPrice).isEqualTo(0.0)
+        Truth.assertThat(tickInfoSet.openPrice).isEqualTo(0.0)
+        Truth.assertThat(tickInfoSet.packageDataType).isEqualTo(0)
+        Truth.assertThat(tickInfoSet.priceChange).isEqualTo(-0.061)
+        Truth.assertThat(tickInfoSet.quoteChange).isEqualTo(-0.2175)
+        Truth.assertThat(tickInfoSet.refPrice).isEqualTo(0.0)
+        Truth.assertThat(tickInfoSet.singleVolume).isEqualTo(0)
+        Truth.assertThat(tickInfoSet.statusCode).isEqualTo(12507)
+        Truth.assertThat(tickInfoSet.tickTime).isEqualTo(1626233984L)
+        Truth.assertThat(tickInfoSet.totalVolume).isEqualTo(0)
+    }
+
+    @Test
+    fun `getStockDealDetail_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}MobileService/ashx/InstantTrading/InstantTrading.ashx"
+        val urlSlot = slot<String>()
+        val response = StockDealDetailWithError(
+            timeCode = 0,
+            dealInfoSet = listOf(),
+            responseCode = 0,
+            responseMsg = "",
+            isSuccess = true
+        )
         coEvery {
             service.getStockDealDetail(
+                url = capture(urlSlot),
+                commKey = any(),
+                appId = any(),
+                guid = any(),
+                authorization = any(),
+                timeCode = any(),
+                perReturnCode = any()
+            )
+        } returns Response.success(response)
+        web.getStockDealDetail("2330", 10, 0)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getStockDealDetail_success() = testScope.runTest {
+        val response = StockDealDetailWithError(
+            timeCode = 0,
+            dealInfoSet = listOf(),
+            responseCode = 0,
+            responseMsg = "",
+            isSuccess = true
+        )
+        coEvery {
+            service.getStockDealDetail(
+                url = any(),
+                commKey = any(),
+                appId = any(),
+                guid = any(),
+                authorization = any(),
+                timeCode = any(),
+                perReturnCode = any()
+            )
+        } returns Response.success(response)
+        val result = web.getStockDealDetail("2330", 10, 0)
+        Truth.assertThat(result.getOrNull()).isEqualTo(response.toRealResponse())
+    }
+
+    @Test(expected = TimeoutException::class)
+    fun getStockDealDetail_failure_TimeoutException() = testScope.runTest {
+        coEvery {
+            service.getStockDealDetail(
+                url = any(),
                 commKey = any(),
                 appId = any(),
                 guid = any(),
@@ -797,35 +1088,12 @@ class RealTimeAfterMarketWebImplTest {
         } answers {
             throw TimeoutException()
         }
-        val result = webImpl.getStockDealDetail("2330", 10, 0)
+        val result = web.getStockDealDetail("2330", 10, 0)
         result.getOrThrow()
     }
 
     @Test
-    fun `getStockDealDetail_成功`() = testScope.runTest {
-        val response = StockDealDetailWithError(
-            timeCode = 0,
-            dealInfoSet = listOf(),
-            responseCode = 0,
-            responseMsg = "",
-            isSuccess = true
-        )
-        coEvery {
-            service.getStockDealDetail(
-                commKey = any(),
-                appId = any(),
-                guid = any(),
-                authorization = any(),
-                timeCode = any(),
-                perReturnCode = any()
-            )
-        } returns Response.success(response)
-        val result = webImpl.getStockDealDetail("2330", 10, 0)
-        Truth.assertThat(result.getOrNull()).isEqualTo(response.toRealResponse())
-    }
-
-    @Test
-    fun `getStockDealDetail_失敗_股票代號錯誤`() = testScope.runTest {
+    fun `getStockDealDetail_failure_commKey error`() = testScope.runTest {
         val expectResponseCode = 100004
         val response = StockDealDetailWithError(
             timeCode = -1,
@@ -836,6 +1104,7 @@ class RealTimeAfterMarketWebImplTest {
         )
         coEvery {
             service.getStockDealDetail(
+                url = any(),
                 commKey = any(),
                 appId = any(),
                 guid = any(),
@@ -844,18 +1113,19 @@ class RealTimeAfterMarketWebImplTest {
                 perReturnCode = any()
             )
         } returns Response.success(response)
-        val result = webImpl.getStockDealDetail("1111", 10, 0)
+        val result = web.getStockDealDetail("1111", 10, 0)
         Truth.assertThat(result.getOrNull()).isEqualTo(response.toRealResponse())
     }
 
     @Test
-    fun `getStockDealDetail_失敗_AuthFailed`() = testScope.runTest {
+    fun getStockDealDetail_failure_AuthFailed() = testScope.runTest {
         val errorJson =
             "{\"Error\":{\"Code\":101,\"Message\":\"Auth Failed\"},\"error\":{\"Code\":101,\"Message\":\"Auth Failed\"}}"
         val responseBody =
-            gson.fromJson<StockDealDetailWithError>(errorJson, StockDealDetailWithError::class.java)
+            gson.fromJson(errorJson, StockDealDetailWithError::class.java)
         coEvery {
             service.getStockDealDetail(
+                url = any(),
                 commKey = any(),
                 appId = any(),
                 guid = any(),
@@ -864,14 +1134,15 @@ class RealTimeAfterMarketWebImplTest {
                 perReturnCode = any()
             )
         } returns Response.success(responseBody)
-        val result = webImpl.getStockDealDetail("1111", 10, 0)
+        val result = web.getStockDealDetail("1111", 10, 0)
         Truth.assertThat(result.getOrNull()).isEqualTo(responseBody.toRealResponse())
     }
 
     @Test(expected = EmptyBodyException::class)
-    fun `getStockDealDetail_失敗_bodyIsNull`() = testScope.runTest {
+    fun getStockDealDetail_failure_bodyIsNull() = testScope.runTest {
         coEvery {
             service.getStockDealDetail(
+                url = any(),
                 commKey = any(),
                 appId = any(),
                 guid = any(),
@@ -880,28 +1151,48 @@ class RealTimeAfterMarketWebImplTest {
                 perReturnCode = any()
             )
         } returns Response.success(null)
-        val result = webImpl.getStockDealDetail("1111", 10, 0)
+        val result = web.getStockDealDetail("1111", 10, 0)
         result.getOrThrow()
     }
 
     @Test
-    fun `getIsInTradeDay_成功`() = testScope.runTest {
+    fun `getIsInTradeDay_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}MobileService/ashx/InstantTrading/InstantTrading.ashx"
+        val urlSlot = slot<String>()
         val response = GetIsInTradeDayResponseBodyWithError(
             isInTradeDay = true
         )
         coEvery {
             service.getIsInTradeDay(
+                url = capture(urlSlot),
                 guid = any(),
                 authorization = any(),
                 appId = any()
             )
         } returns Response.success(response)
-        val result = webImpl.getIsInTradeDay()
+        web.getIsInTradeDay()
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getIsInTradeDay_success() = testScope.runTest {
+        val response = GetIsInTradeDayResponseBodyWithError(
+            isInTradeDay = true
+        )
+        coEvery {
+            service.getIsInTradeDay(
+                url = any(),
+                guid = any(),
+                authorization = any(),
+                appId = any()
+            )
+        } returns Response.success(response)
+        val result = web.getIsInTradeDay()
         Truth.assertThat(result.getOrNull()).isEqualTo(response.toRealResponse())
     }
 
     @Test(expected = ServerException::class)
-    fun `getIsInTradeDay_失敗_AuthFailed`() = testScope.runTest {
+    fun getIsInTradeDay_failure_AuthFailed() = testScope.runTest {
         val errorJson =
             "{\"Error\":{\"Code\":101,\"Message\":\"Auth Failed\"},\"error\":{\"Code\":101,\"Message\":\"Auth Failed\"}}"
         val responseBody = gson.fromJson<GetIsInTradeDayResponseBodyWithError>(
@@ -910,13 +1201,118 @@ class RealTimeAfterMarketWebImplTest {
         )
         coEvery {
             service.getIsInTradeDay(
+                url = any(),
                 appId = any(),
                 guid = any(),
                 authorization = any()
             )
         } returns Response.success(responseBody)
-        val result = webImpl.getIsInTradeDay()
+        val result = web.getIsInTradeDay()
         result.getOrThrow()
+    }
+
+    @Test
+    fun `getStockSinIndex_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}MobileService/ashx/InstantTrading/InstantTrading.ashx"
+        val urlSlot = slot<String>()
+        val responseBody = GetStocksInIndexResponseBodyWithError(
+            stocks = listOf()
+        )
+        coEvery {
+            service.getStockSinIndex(
+                url = capture(urlSlot),
+                commKey = any(),
+                appId = any(),
+                guid = any(),
+                authorization = any(),
+            )
+        } returns Response.success(responseBody)
+        web.getStockSinIndex(commKey = "TWB12")
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getStockSinIndex_success() = testScope.runTest {
+        val responseJSON =
+            "{\"Stocks\":[{\"Commkey\":\"1201\",\"CommName\":\"味全\"},{\"Commkey\":\"1203\",\"CommName\":\"味王\"},{\"Commkey\":\"1210\",\"CommName\":\"大成\"},{\"Commkey\":\"1213\",\"CommName\":\"大飲\"},{\"Commkey\":\"1215\",\"CommName\":\"卜蜂\"},{\"Commkey\":\"1216\",\"CommName\":\"統一\"},{\"Commkey\":\"1217\",\"CommName\":\"愛之味\"},{\"Commkey\":\"1218\",\"CommName\":\"泰山\"},{\"Commkey\":\"1219\",\"CommName\":\"福壽\"},{\"Commkey\":\"1220\",\"CommName\":\"台榮\"},{\"Commkey\":\"1225\",\"CommName\":\"福懋油\"},{\"Commkey\":\"1227\",\"CommName\":\"佳格\"},{\"Commkey\":\"1229\",\"CommName\":\"聯華\"},{\"Commkey\":\"1231\",\"CommName\":\"聯華食\"},{\"Commkey\":\"1232\",\"CommName\":\"大統益\"},{\"Commkey\":\"1233\",\"CommName\":\"天仁\"},{\"Commkey\":\"1234\",\"CommName\":\"黑松\"},{\"Commkey\":\"1235\",\"CommName\":\"興泰\"},{\"Commkey\":\"1236\",\"CommName\":\"宏亞\"},{\"Commkey\":\"1256\",\"CommName\":\"鮮活果汁-KY\"},{\"Commkey\":\"1702\",\"CommName\":\"南僑\"},{\"Commkey\":\"1737\",\"CommName\":\"臺鹽\"}]}"
+        val response =
+            gson.fromJson(responseJSON, GetStocksInIndexResponseBodyWithError::class.java)
+        coEvery {
+            service.getStockSinIndex(
+                url = any(),
+                commKey = any(),
+                appId = any(),
+                guid = any(),
+                authorization = any(),
+            )
+        } returns Response.success(response)
+        val answer = GetStocksInIndexResponseBody(
+            stocks = listOf(
+                Stock(commKey = "1201", commName = "味全"),
+                Stock(commKey = "1203", commName = "味王"),
+                Stock(commKey = "1210", commName = "大成"),
+                Stock(commKey = "1213", commName = "大飲"),
+                Stock(commKey = "1215", commName = "卜蜂"),
+                Stock(commKey = "1216", commName = "統一"),
+                Stock(commKey = "1217", commName = "愛之味"),
+                Stock(commKey = "1218", commName = "泰山"),
+                Stock(commKey = "1219", commName = "福壽"),
+                Stock(commKey = "1220", commName = "台榮"),
+                Stock(commKey = "1225", commName = "福懋油"),
+                Stock(commKey = "1227", commName = "佳格"),
+                Stock(commKey = "1229", commName = "聯華"),
+                Stock(commKey = "1231", commName = "聯華食"),
+                Stock(commKey = "1232", commName = "大統益"),
+                Stock(commKey = "1233", commName = "天仁"),
+                Stock(commKey = "1234", commName = "黑松"),
+                Stock(commKey = "1235", commName = "興泰"),
+                Stock(commKey = "1236", commName = "宏亞"),
+                Stock(commKey = "1256", commName = "鮮活果汁-KY"),
+                Stock(commKey = "1702", commName = "南僑"),
+                Stock(commKey = "1737", commName = "臺鹽"),
+            )
+        )
+        val result = web.getStockSinIndex(commKey = "TWB12")
+        Truth.assertThat(result.getOrNull()).isEqualTo(answer)
+    }
+
+    @Test
+    fun getStockSinIndex_failure_AuthFailed() = testScope.runTest {
+        val errorJson =
+            "{\"Error\":{\"Code\":101,\"Message\":\"Auth Failed\"},\"error\":{\"Code\":101,\"Message\":\"Auth Failed\"}}"
+        val responseBody =
+            gson.fromJson(errorJson, GetStocksInIndexResponseBodyWithError::class.java)
+        coEvery {
+            service.getStockSinIndex(
+                url = any(),
+                commKey = any(),
+                appId = any(),
+                guid = any(),
+                authorization = any(),
+            )
+        } returns Response.success(responseBody)
+        val result = web.getStockSinIndex(commKey = "TWB12")
+        Truth.assertThat(result.isFailure).isTrue()
+    }
+
+    @Test
+    fun getStockSinIndex_failure_not_match_commKey() = testScope.runTest {
+        val errorJson =
+            "{\"Stocks\":[]}"
+        val responseBody =
+            gson.fromJson(errorJson, GetStocksInIndexResponseBodyWithError::class.java)
+        coEvery {
+            service.getStockSinIndex(
+                url = any(),
+                commKey = any(),
+                appId = any(),
+                guid = any(),
+                authorization = any(),
+            )
+        } returns Response.success(responseBody)
+        val answer = GetStocksInIndexResponseBody(stocks = listOf())
+        val result = web.getStockSinIndex(commKey = "2330")
+        Truth.assertThat(result.getOrNull()).isEqualTo(answer)
     }
 
     private fun <T> checkServerException(result: Result<T>) {
@@ -925,80 +1321,7 @@ class RealTimeAfterMarketWebImplTest {
         Truth.assertThat(exception).isNotNull()
     }
 
-    @Test
-    fun `getStockSinIndex_成功`() = testScope.runTest {
-        val responseJSON =
-            "{\"Stocks\":[{\"Commkey\":\"1201\",\"CommName\":\"味全\"},{\"Commkey\":\"1203\",\"CommName\":\"味王\"},{\"Commkey\":\"1210\",\"CommName\":\"大成\"},{\"Commkey\":\"1213\",\"CommName\":\"大飲\"},{\"Commkey\":\"1215\",\"CommName\":\"卜蜂\"},{\"Commkey\":\"1216\",\"CommName\":\"統一\"},{\"Commkey\":\"1217\",\"CommName\":\"愛之味\"},{\"Commkey\":\"1218\",\"CommName\":\"泰山\"},{\"Commkey\":\"1219\",\"CommName\":\"福壽\"},{\"Commkey\":\"1220\",\"CommName\":\"台榮\"},{\"Commkey\":\"1225\",\"CommName\":\"福懋油\"},{\"Commkey\":\"1227\",\"CommName\":\"佳格\"},{\"Commkey\":\"1229\",\"CommName\":\"聯華\"},{\"Commkey\":\"1231\",\"CommName\":\"聯華食\"},{\"Commkey\":\"1232\",\"CommName\":\"大統益\"},{\"Commkey\":\"1233\",\"CommName\":\"天仁\"},{\"Commkey\":\"1234\",\"CommName\":\"黑松\"},{\"Commkey\":\"1235\",\"CommName\":\"興泰\"},{\"Commkey\":\"1236\",\"CommName\":\"宏亞\"},{\"Commkey\":\"1256\",\"CommName\":\"鮮活果汁-KY\"},{\"Commkey\":\"1702\",\"CommName\":\"南僑\"},{\"Commkey\":\"1737\",\"CommName\":\"臺鹽\"}]}"
-        val response = gson.fromJson(responseJSON, GetStocksInIndexResponseBodyWithError::class.java)
-        coEvery {
-            service.getStockSinIndex(
-                commKey = any(),
-                appId = any(),
-                guid = any(),
-                authorization = any(),
-            )
-        } returns Response.success(response)
-        val answer = GetStocksInIndexResponseBody(stocks = listOf(
-            Stock(commKey = "1201", commName = "味全"),
-            Stock(commKey = "1203", commName = "味王"),
-            Stock(commKey = "1210", commName = "大成"),
-            Stock(commKey = "1213", commName = "大飲"),
-            Stock(commKey = "1215", commName = "卜蜂"),
-            Stock(commKey = "1216", commName = "統一"),
-            Stock(commKey = "1217", commName = "愛之味"),
-            Stock(commKey = "1218", commName = "泰山"),
-            Stock(commKey = "1219", commName = "福壽"),
-            Stock(commKey = "1220", commName = "台榮"),
-            Stock(commKey = "1225", commName = "福懋油"),
-            Stock(commKey = "1227", commName = "佳格"),
-            Stock(commKey = "1229", commName = "聯華"),
-            Stock(commKey = "1231", commName = "聯華食"),
-            Stock(commKey = "1232", commName = "大統益"),
-            Stock(commKey = "1233", commName = "天仁"),
-            Stock(commKey = "1234", commName = "黑松"),
-            Stock(commKey = "1235", commName = "興泰"),
-            Stock(commKey = "1236", commName = "宏亞"),
-            Stock(commKey = "1256", commName = "鮮活果汁-KY"),
-            Stock(commKey = "1702", commName = "南僑"),
-            Stock(commKey = "1737", commName = "臺鹽"),
-        ))
-        val result = webImpl.getStockSinIndex(commKey = "TWB12")
-        Truth.assertThat(result.getOrNull()).isEqualTo(answer)
-    }
-
-    @Test
-    fun `getStockSinIndex_失敗_AuthFailed`() = testScope.runTest {
-        val errorJson =
-            "{\"Error\":{\"Code\":101,\"Message\":\"Auth Failed\"},\"error\":{\"Code\":101,\"Message\":\"Auth Failed\"}}"
-        val responseBody =
-            gson.fromJson(errorJson, GetStocksInIndexResponseBodyWithError::class.java)
-        coEvery {
-            service.getStockSinIndex(
-                commKey = any(),
-                appId = any(),
-                guid = any(),
-                authorization = any(),
-            )
-        } returns Response.success(responseBody)
-        val result = webImpl.getStockSinIndex(commKey = "TWB12")
-        Truth.assertThat(result.isFailure).isTrue()
-    }
-    @Test
-    fun `getStockSinIndex_失敗_not_match_commKey`() = testScope.runTest {
-        val errorJson =
-            "{\"Stocks\":[]}"
-        val responseBody =
-            gson.fromJson(errorJson, GetStocksInIndexResponseBodyWithError::class.java)
-        coEvery {
-            service.getStockSinIndex(
-                commKey = any(),
-                appId = any(),
-                guid = any(),
-                authorization = any(),
-            )
-        } returns Response.success(responseBody)
-        val answer = GetStocksInIndexResponseBody(stocks = listOf())
-        val result = webImpl.getStockSinIndex(commKey = "2330")
-        Truth.assertThat(result.getOrNull()).isEqualTo(answer)
+    companion object {
+        private const val EXCEPT_DOMAIN = "localhost://8080:80/"
     }
 }
