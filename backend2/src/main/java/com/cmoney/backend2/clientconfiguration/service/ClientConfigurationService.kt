@@ -4,9 +4,8 @@ import com.cmoney.backend2.base.model.calladapter.RecordApi
 import com.cmoney.backend2.clientconfiguration.service.api.ClientConfigResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
+import retrofit2.http.Url
 
 interface ClientConfigurationService {
 
@@ -16,8 +15,9 @@ interface ClientConfigurationService {
      *  @param keys Key list
      */
     @RecordApi
-    @POST("ClientConfiguration/api/config/get")
+    @POST
     suspend fun getConfig(
+        @Url url: String,
         @Body keys: List<String>
     ): Response<ClientConfigResponseBody>
 

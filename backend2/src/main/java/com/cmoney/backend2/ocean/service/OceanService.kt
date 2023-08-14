@@ -18,14 +18,11 @@ import com.cmoney.backend2.ocean.service.api.checkHasJoinedClub.HasJoinedClubRes
 import com.cmoney.backend2.ocean.service.api.checkhasevaluated.CheckHasEvaluatedRequestBody
 import com.cmoney.backend2.ocean.service.api.checkhasevaluated.CheckHasEvaluatedResponseBodyWithError
 import com.cmoney.backend2.ocean.service.api.club.*
-import com.cmoney.backend2.ocean.service.api.createannouncement.CreateAnnouncementRequest
-import com.cmoney.backend2.ocean.service.api.createannouncement.CreateAnnouncementResponseWithError
 import com.cmoney.backend2.ocean.service.api.createclub.CreateClubRequestBody
 import com.cmoney.backend2.ocean.service.api.createclub.CreateClubResponseBodyWithError
 import com.cmoney.backend2.ocean.service.api.deletearticle.DeleteArticleRequestBody
 import com.cmoney.backend2.ocean.service.api.deleteclub.DeleteClubRequestBody
 import com.cmoney.backend2.ocean.service.api.deleteclub.DeleteClubResponseBodyWithError
-import com.cmoney.backend2.ocean.service.api.getAnnouncements.GetAnnouncementsWithError
 import com.cmoney.backend2.ocean.service.api.getCollectArticleList.GetCollectArticleLIstRequestBody
 import com.cmoney.backend2.ocean.service.api.getCollectArticleList.GetCollectArticleListResponseBodyWithError
 import com.cmoney.backend2.ocean.service.api.getanswers.GetAnswersBody
@@ -84,15 +81,11 @@ import com.cmoney.backend2.ocean.service.api.hadphoneauthentication.HadPhoneAuth
 import com.cmoney.backend2.ocean.service.api.impeacharticle.ImpeachArticleBody
 import com.cmoney.backend2.ocean.service.api.invite.InviteRequestBody
 import com.cmoney.backend2.ocean.service.api.invite.InviteResponseBodyWithError
-import com.cmoney.backend2.ocean.service.api.isinwhitelist.IsInCreateArticleWhiteListRequestBody
-import com.cmoney.backend2.ocean.service.api.isinwhitelist.IsInCreateArticleWhiteListResponseBody
 import com.cmoney.backend2.ocean.service.api.joinclub.JoinClubRequestBody
 import com.cmoney.backend2.ocean.service.api.joinclub.JoinClubResponseBodyWithError
 import com.cmoney.backend2.ocean.service.api.leaveclub.LeaveClubRequestBody
 import com.cmoney.backend2.ocean.service.api.leaveclub.LeaveClubResponseBodyWithError
 import com.cmoney.backend2.ocean.service.api.putonblacklist.PutOnBlackListRequestBody
-import com.cmoney.backend2.ocean.service.api.removeannouncement.RemoveAnnouncementRequest
-import com.cmoney.backend2.ocean.service.api.removeannouncement.RemoveAnnouncementResponseWithError
 import com.cmoney.backend2.ocean.service.api.searchchannel.SearchChannelRequestBody
 import com.cmoney.backend2.ocean.service.api.searchchannel.SearchChannelResponseBody
 import com.cmoney.backend2.ocean.service.api.setbadgeread.SetBadgeReadRequestBody
@@ -115,8 +108,9 @@ interface OceanService {
      * 全穿或脫掉所有徽章
      */
     @RecordApi
-    @POST("OceanService/api/Badge/ChangeAllBadge")
+    @POST
     suspend fun changeAllBadge(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: ChangeAllBadgeRequestBody
     ): Response<SuccessResultWithError>
@@ -126,8 +120,9 @@ interface OceanService {
      * 更換裝備的徽章(目前單選由前端控制)
      */
     @RecordApi
-    @POST("OceanService/api/Badge/ChangeWearBadge")
+    @POST
     suspend fun changeWearBadge(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: ChangeWearBadgeRequestBody
     ): Response<SuccessResultWithError>
@@ -137,16 +132,20 @@ interface OceanService {
      * 取得所有達成徽章及達成條件
      */
     @RecordApi
-    @GET("OceanService/api/Badge/GetBadgeAndRequirement")
-    suspend fun getBadgeAndRequirement(): Response<JsonElement>
+    @GET
+    suspend fun getBadgeAndRequirement(
+        @Url url: String,
+        @Header("Authorization") authorization: String,
+    ): Response<JsonElement>
 
 
     /**
      * 取得所有徽章持有狀態
      */
     @RecordApi
-    @POST("OceanService/api/Badge/GetBadgesCollection")
+    @POST
     suspend fun getBadgesCollection(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: GetBadgesCollectionRequestBody
     ): Response<JsonElement>
@@ -156,8 +155,9 @@ interface OceanService {
      * 取得目前所有指標清單
      */
     @RecordApi
-    @POST("OceanService/api/Badge/GetMetricsStats")
+    @POST
     suspend fun getMetricsStats(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: GetMetricsStatsRequestBody
     ): Response<JsonElement>
@@ -166,8 +166,9 @@ interface OceanService {
      * 取得未讀徽章
      */
     @RecordApi
-    @POST("OceanService/api/Badge/GetUnreadBadges")
+    @POST
     suspend fun getUnreadBadges(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: GetUnreadBadgesRequestBody
     ): Response<JsonElement>
@@ -176,8 +177,9 @@ interface OceanService {
      * 取得頻道裝備的徽章(多個頻道)
      */
     @RecordApi
-    @POST("OceanService/api/Badge/ChannelWearBadge")
+    @POST
     suspend fun channelWearBadge(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: ChannelWearBadgeRequestBody
     ): Response<JsonElement>
@@ -186,47 +188,42 @@ interface OceanService {
      * 標記徽章已讀
      */
     @RecordApi
-    @POST("OceanService/api/Badge/SetBadgeRead")
+    @POST
     suspend fun setBadgeRead(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: SetBadgeReadRequestBody
     ): Response<SuccessResultWithError>
 
     /**
      * 取得加入社團問卷
-     *
-     * @param body
-     * @return
      */
     @RecordApi
-    @POST("OceanService/api/Questionnaire/GetChannelQuestions")
+    @POST
     suspend fun getChannelQuestions(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: GetChannelQuestionsBody
     ): Response<GetChannelQuestionsResponseWithError>
 
     /**
      * 新增或更新加入社團問卷
-     *
-     * @param body
-     * @return
      */
     @RecordApi
-    @POST("OceanService/api/Questionnaire/ChannelQuestions")
+    @POST
     suspend fun channelQuestions(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: ChannelQuestionsBody
     ): Response<SuccessResultWithError>
 
     /**
      * 開啟或關閉加入社團問卷
-     *
-     * @param body
-     * @return
      */
     @RecordApi
-    @POST("OceanService/api/Questionnaire/ChannelQuestionsActivation")
+    @POST
     suspend fun channelQuestionsActivation(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: ChannelQuestionsActivationBody
     ): Response<ChannelQuestionsActivationResponseWithError>
@@ -238,8 +235,9 @@ interface OceanService {
      * @return
      */
     @RecordApi
-    @POST("OceanService/api/Questionnaire/GetAnswers")
+    @POST
     suspend fun getAnswers(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: GetAnswersBody
     ): Response<AnswersResultWithError>
@@ -251,47 +249,42 @@ interface OceanService {
      * @return
      */
     @RecordApi
-    @POST("OceanService/api/Questionnaire/Answers")
+    @POST
     suspend fun answers(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: AnswersBody
     ): Response<SuccessResultWithError>
 
     /**
      * 查詢多用戶是否有手機權限
-     *
-     * @param body
-     * @return
      */
     @RecordApi
-    @POST("OceanService/api/MemberBadge/HadPhoneAuthentication")
+    @POST
     suspend fun hadPhoneAuthentication(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: HadPhoneAuthenticationBody
     ): Response<HadPhoneAuthResponse>
 
     /**
      * 取得多檔股票的最新文章清單(可訪客)
-     *
-     * @param body
-     * @return
      */
     @RecordApi
-    @POST("OceanService/api/Article/GetStockLatestArticle")
+    @POST
     suspend fun getStockLatestArticle(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: GetStockLatestArticleBody
     ): Response<GetStockLatestArticleResponse>
 
     /**
      * 取得多個頻道的最新文章清單(可訪客)
-     *
-     * @param body
-     * @return
      */
     @RecordApi
-    @POST("OceanService/api/Article/GetChannelLatestArticle")
+    @POST
     suspend fun getChannelLatestArticle(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: GetChannelLatestArticleBody
     ): Response<GetChannelLatestArticleResponse>
@@ -300,8 +293,9 @@ interface OceanService {
      * 設定收藏文章/取消收藏文章
      */
     @RecordApi
-    @POST("OceanService/api/SetArticle/ChangeCollectArticleState")
+    @POST
     suspend fun changeCollectArticleState(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: ChangeCollectArticleStateRequestBody
     ): Response<SuccessResultWithError>
@@ -313,8 +307,9 @@ interface OceanService {
      * @return
      */
     @RecordApi
-    @POST("OceanService/api/SetArticle/ImpeachArticle")
+    @POST
     suspend fun impeachArticle(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: ImpeachArticleBody
     ): Response<SuccessResultWithError>
@@ -325,8 +320,9 @@ interface OceanService {
      * Note: 限定對此文章有管理權限用的會員使用
      */
     @RecordApi
-    @POST("OceanService/api/SetArticle/DeleteArticle")
+    @POST
     suspend fun deleteArticle(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: DeleteArticleRequestBody
     ): Response<SuccessResultWithError>
@@ -338,125 +334,108 @@ interface OceanService {
      * @return
      */
     @RecordApi
-    @POST("OceanService/api/Article/GetStockPopularArticle")
+    @POST
     suspend fun getStockPopularArticle(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: GetStockPopularArticleBody
     ): Response<GetStockPopularArticleResponse>
 
     /**
      * 加入我的黑名單成功or失敗(原本就存在黑名單內視為成功)
-     *
-     * @param body
-     * @return
      */
     @RecordApi
-    @POST("OceanService/api/ChannelBlackList/PutOnBlackList")
+    @POST
     suspend fun putOnBlackList(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: PutOnBlackListRequestBody
     ): Response<SuccessResultWithError>
 
     /**
      * 從我的黑名單移除成功or失敗(原本就不存在黑名單內也視為成功)
-     *
-     * @param body
-     * @return
      */
     @RecordApi
-    @POST("OceanService/api/ChannelBlackList/SpinOffBlackList")
+    @POST
     suspend fun spinOffBlackList(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: SpinOffBlackListRequestBody
     ): Response<SuccessResultWithError>
 
     /**
      * 取得我的黑名單
-     *
-     * @param body
-     * @return
      */
     @RecordApi
-    @POST("OceanService/api/ChannelBlackList/GetBlackList")
+    @POST
     suspend fun getBlackList(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: RequestIds
     ): Response<GetBlackListResponseBodyWithError>
 
     /**
      * 取得黑名單我的人
-     *
-     * @param body
-     * @return
      */
     @RecordApi
-    @POST("OceanService/api/ChannelBlackList/GetBlockList")
+    @POST
     suspend fun getBlockList(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: RequestIds
     ): Response<GetBlockListResponseBodyWithError>
 
     /**
      * 取得通知
-     *
-     * @param body
-     * @return
      */
     @RecordApi
-    @POST("OceanService/api/Notify/GetNotify")
+    @POST
     suspend fun getNotify(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: GetNotifyRequestBody
     ): Response<GetNotifyResponseBody>
 
     /**
      * 取得未讀通知數
-     *
-     * @param body
-     * @return
      */
     @RecordApi
-    @POST("OceanService/api/Notify/GetUnreadCount")
+    @POST
     suspend fun getUnreadCount(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: GetUnreadCountRequestBody
     ): Response<GetUnreadCountResponseBody>
 
     /**
      * 設定通知已讀
-     *
-     * @param body
-     * @return
      */
     @RecordApi
-    @POST("OceanService/api/Notify/SetReaded")
+    @POST
     suspend fun setReaded(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: SetReadedRequestBody
     ): Response<Void>
 
     /**
      * 取得指定文章
-     *
-     * @param body
-     * @return
      */
     @RecordApi
-    @POST("OceanService/api/Article/GetSingleArticleV2")
+    @POST
     suspend fun getSingleArticle(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: GetSingleArticleRequestBody
     ): Response<GetSingleArticleResponseBody>
 
     /**
      * 取得指定文章的回覆
-     *
-     * @param body
-     * @return
      */
     @RecordApi
-    @POST("OceanService/api/Comment/GetComments")
+    @POST
     suspend fun getComments(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: GetCommentsRequestBody
     ): Response<GetCommentsResponseBody>
@@ -465,8 +444,9 @@ interface OceanService {
      * 取得管理者清單 (幹部、社長)
      */
     @RecordApi
-    @POST("OceanService/api/GetClub/GetMangerList")
+    @POST
     suspend fun getManagerList(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: GetManagerListRequestBody
     ): Response<GetManagerListResponseWithError>
@@ -475,86 +455,75 @@ interface OceanService {
      * 是否有參加的社團
      */
     @RecordApi
-    @POST("OceanService/api/GetClub/CheckHasJoinedClub")
+    @POST
     suspend fun isJoinClub(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: HasJoinedClubRequestBody
     ): Response<HasJoinedClubResponseWithError>
 
     /**
      * 取得指定頻道資訊
-     *
-     * @param requestBody
-     * @return
      */
     @RecordApi
-    @POST("OceanService/api/GetChannel/GetChannelInfo")
+    @POST
     suspend fun getOtherChannelInfo(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: GetChannelInfoRequestBody
     ): Response<ChannelInfo.ChannelBaseInfo>
 
     /**
      * 取得指定頻道資訊
-     *
-     * @param requestBody
-     * @return
      */
     @RecordApi
-    @POST("OceanService/api/GetChannel/GetChannelInfo")
-    suspend fun getRssSignalChannelInfo(
-        @Header("Authorization") authorization: String,
-        @Body requestBody: GetChannelInfoRequestBody
-    ): Response<ChannelInfo.RssSignalChannelInfo>
-
-    /**
-     * 取得指定頻道資訊
-     *
-     * @param requestBody
-     * @return
-     */
-    @RecordApi
-    @POST("OceanService/api/GetChannel/GetChannelInfo")
+    @POST
     suspend fun getMemberChannelInfo(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: GetChannelInfoRequestBody
     ): Response<ChannelInfo.MemberChannelInfo>
 
     /**
      * 取得指定頻道資訊
-     *
-     * @param requestBody
-     * @return
      */
     @RecordApi
-    @POST("OceanService/api/GetChannel/GetChannelInfo")
+    @POST
     suspend fun getClubChannelInfo(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: GetChannelInfoRequestBody
     ): Response<ChannelInfo.ClubChannelInfo>
 
     /**
-     * 搜尋社團 ( 搜尋頻道 )
-     *
-     * @param requestBody
-     * @return
+     * 取得指定頻道資訊
      */
     @RecordApi
-    @POST("OceanService/api/GetChannel/SearchChannel")
+    @POST
+    suspend fun getRssSignalChannelInfo(
+        @Url url: String,
+        @Header("Authorization") authorization: String,
+        @Body requestBody: GetChannelInfoRequestBody
+    ): Response<ChannelInfo.RssSignalChannelInfo>
+
+    /**
+     * 搜尋社團 ( 搜尋頻道 )
+     */
+    @RecordApi
+    @POST
     suspend fun searchChannel(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: SearchChannelRequestBody
     ): Response<SearchChannelResponseBody>
 
     /**
      * 取得排除加入社團的粉絲清單(已邀請或審核中或黑名單的粉絲也會排除)
-     *
-     * @param requestBody
-     * @return
      */
     @RecordApi
-    @POST("OceanService/api/GetChannel/GetFansListExcludeJoinedClub")
+    @POST
     suspend fun getFanListExcludeJoinedClub(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: GetFansListExcludeJoinedClubRequestBody
     ): Response<GetFansListExcludeJoinedClubResponseBody>
@@ -566,72 +535,64 @@ interface OceanService {
      * @return
      */
     @RecordApi
-    @POST("OceanService/api/GetChannel/GetSimpleChannelInfo")
+    @POST
     suspend fun getSimpleChannelInfo(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: GetSimpleChannelInfoRequestBody
     ): Response<GetSimpleChannelInfoResponseBody>
 
     /**
      * 設定評價
-     *
-     * @param requestBody
-     * @return
      */
     @RecordApi
-    @POST("OceanService/api/Evaluation/SetEvaluation")
+    @POST
     suspend fun setEvaluation(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: SetEvaluationRequestBody
     ): Response<SuccessResultWithError>
 
     /**
      * 是否給過評價
-     *
-     * @param requestBody
-     * @return
      */
     @RecordApi
-    @POST("OceanService/api/Evaluation/CheckHasEvaluated")
+    @POST
     suspend fun checkHasEvaluated(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: CheckHasEvaluatedRequestBody
     ): Response<CheckHasEvaluatedResponseBodyWithError>
 
     /**
      * 取得指定用戶的評價清單
-     *
-     * @param requestBody
-     * @return
      */
     @RecordApi
-    @POST("OceanService/api/Evaluation/GetEvaluationList")
+    @POST
     suspend fun getEvaluationList(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: GetEvaluationListRequestBody
     ): Response<GetEvaluationListResponseBodyWithError>
 
     /**
      * 取得收藏文章清單
-     *
-     * @param requestBody
-     * @return
      */
     @RecordApi
-    @POST("OceanService/api/GetArticleList/GetCollectArticleList")
+    @POST
     suspend fun getCollectArticleList(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: GetCollectArticleLIstRequestBody
     ): Response<GetCollectArticleListResponseBodyWithError>
 
     /**
      * 取得大師排行榜
-     *
-     * @param requestBody
      */
     @RecordApi
-    @POST("OceanService/api/Customization/GetMasters")
+    @POST
     suspend fun getMasters(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: GetMastersRequestBody
     ): Response<GetMastersResponseBodyWithError>
@@ -643,32 +604,31 @@ interface OceanService {
      * @return
      */
     @RecordApi
-    @POST("OceanService/api/Article/GetAskLatestArticle")
+    @POST
     suspend fun getAskLatestArticle(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: GetAskLatestArticleRequestBody
     ): Response<GetAskLatestArticleResponseBody>
 
     /**
      * 取得多股大師評價分數
-     * @param requestBody
-     * @return
      */
     @RecordApi
-    @POST("OceanService/api/Customization/GetStockMasterEvaluationList")
+    @POST
     suspend fun getStockMasterEvaluationList(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: GetStockMasterEvaluationListRequestBody
     ): Response<GetStockMasterEvaluationListResponseBodyWithError>
 
     /**
      * 取得個股大師評價
-     * @param requestBody
-     * @return
      */
     @RecordApi
-    @POST("OceanService/api/Customization/GetStockMasterEvaluation")
+    @POST
     suspend fun getStockMasterEvaluation(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: GetStockMasterEvaluationRequestBody
     ): Response<GetStockMasterEvaluationResponseBodyWithError>
@@ -677,8 +637,9 @@ interface OceanService {
      * 上傳社團頭像
      */
     @RecordApi
-    @POST("OceanService/api/File/UploadChannelImage")
+    @POST
     suspend fun uploadChannelImage(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: MultipartBody
     ): Response<UploadChannelImageResponseBodyWithError>
@@ -687,8 +648,9 @@ interface OceanService {
      * 創建社團
      */
     @RecordApi
-    @POST("OceanService/api/SetClub/CreateClub")
+    @POST
     suspend fun createClub(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: CreateClubRequestBody
     ): Response<CreateClubResponseBodyWithError>
@@ -697,8 +659,9 @@ interface OceanService {
      * 關閉社團(解散社團)
      */
     @RecordApi
-    @POST("OceanService/api/SetClub/DeleteClub")
+    @POST
     suspend fun deleteClub(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: DeleteClubRequestBody
     ): Response<DeleteClubResponseBodyWithError>
@@ -707,8 +670,9 @@ interface OceanService {
      * 離開社團
      */
     @RecordApi
-    @POST("OceanService/api/SetClub/LeaveClub")
+    @POST
     suspend fun leaveClub(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: LeaveClubRequestBody
     ): Response<LeaveClubResponseBodyWithError>
@@ -717,8 +681,9 @@ interface OceanService {
      * 邀請加入社團
      */
     @RecordApi
-    @POST("OceanService/api/SetClub/Invitation")
+    @POST
     suspend fun invite(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: InviteRequestBody
     ): Response<InviteResponseBodyWithError>
@@ -727,8 +692,9 @@ interface OceanService {
      * 加入社團
      */
     @RecordApi
-    @POST("OceanService/api/SetClub/JoinClub")
+    @POST
     suspend fun joinClub(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: JoinClubRequestBody
     ): Response<JoinClubResponseBodyWithError>
@@ -737,8 +703,9 @@ interface OceanService {
      * 取得指定會員的社團清單
      */
     @RecordApi
-    @POST("OceanService/api/GetClub/GetMemberClubs")
+    @POST
     suspend fun getMemberClubs(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: GetMemberClubsRequestBody
     ): Response<GetMemberClubsResponseBodyWithError>
@@ -747,8 +714,9 @@ interface OceanService {
      * 取得推薦社團
      */
     @RecordApi
-    @POST("OceanService/api/GetClub/GetRecommendClubs")
+    @POST
     suspend fun getRecommendClubs(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: GetRecommendClubsRequestBody
     ): Response<GetRecommendClubsResponseBodyWithError>
@@ -757,8 +725,9 @@ interface OceanService {
      * 改變會員身分
      */
     @RecordApi
-    @POST("OceanService/api/SetClub/ChangeMemberStatus")
+    @POST
     suspend fun changeMemberStatus(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: ChangeMemberStatusRequestBody
     ): Response<ChangeMemberStatusResponseBodyWithError>
@@ -767,8 +736,9 @@ interface OceanService {
      * 變更社團描述
      */
     @RecordApi
-    @POST("OceanService/api/SetClub/UpdateClubDescription")
+    @POST
     suspend fun updateClubDescription(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: UpdateClubDescriptionRequestBody
     ): Response<UpdateClubDescriptionResponseBodyWithError>
@@ -777,48 +747,20 @@ interface OceanService {
      * 取得指定身份的社團成員清單(審核清單,黑名單)
      */
     @RecordApi
-    @POST("OceanService/api/GetClub/GetMemberStatusList")
+    @POST
     suspend fun getMemberStatusList(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: GetMemberStatusListRequestBody
     ): Response<GetMemberStatusListResponseBodyWithError>
 
     /**
-     * 取得公告清單
-     */
-    @RecordApi
-    @POST("OceanService/api/club/{channelId}/readannouncements")
-    suspend fun getAnnouncements(
-        @Header("Authorization") authorization: String,
-        @Path("channelId") channelId: String,
-        @Body body: RequestIds
-    ): Response<GetAnnouncementsWithError>
-
-    /**
-     * 移除公告
-     */
-    @RecordApi
-    @POST("OceanService/api/club/{channelId}/removeannouncement")
-    suspend fun removeAnnouncement(
-        @Header("Authorization") authorization: String,
-        @Path("channelId") channelId: String,
-        @Body body: RemoveAnnouncementRequest
-    ): Response<RemoveAnnouncementResponseWithError>
-
-    @RecordApi
-    @POST("OceanService/api/club/{channelId}/createorupdateannouncement")
-    suspend fun createAnnouncement(
-        @Header("Authorization") authorization: String,
-        @Path("channelId") channelId: String,
-        @Body body: CreateAnnouncementRequest
-    ): Response<CreateAnnouncementResponseWithError>
-
-    /**
      * 取得與某會員相關的重要留言(現為作者或管理者回覆)
      */
     @RecordApi
-    @POST("OceanService/api/Article/GetRelevantComments")
+    @POST
     suspend fun getRelevantComments(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: GetRelevantCommentsRequest
     ): Response<GetRelevantCommentsResponseWithError>
@@ -827,8 +769,9 @@ interface OceanService {
      * 取得主題標籤文章(可訪客)
      */
     @RecordApi
-    @POST("OceanService/api/Article/GetTopicArticles")
+    @POST
     suspend fun getTopicArticles(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: GetTopicArticlesRequestBody
     ): Response<GetTopicArticlesResponseBodyWithError>
@@ -837,48 +780,44 @@ interface OceanService {
      * 取得個股下有主題標籤文章(可訪客)
      */
     @RecordApi
-    @POST("OceanService/api/Article/GetStockAndTopicArticles")
+    @POST
     suspend fun getStockAndTopicArticles(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body body: GetStockAndTopicArticlesRequestBody
     ): Response<GetStockAndTopicArticlesResponseBodyWithError>
 
     /**
      * 新增或更新公告
-     * @param channelId String
-     * @param requestBody CreateOrUpdateAnnouncementRequestBody
      */
     @RecordApi
-    @POST("OceanService/api/club/{channelId}/createorupdateannouncement")
+    @POST
     suspend fun createOrUpdateAnnouncement(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("channelId") channelId: Long,
         @Body requestBody: CreateOrUpdateAnnouncementRequestBody
     ): Response<IsCreateOrUpdateSuccessResponseWithError>
 
     /**
      * 拿到該Channel所有公告
-     * @param channelId String
-     * @param requestBody ReadAnnouncementsRequestBody
      */
     @RecordApi
-    @POST("OceanService/api/club/{channelId}/readannouncements")
+    @POST
     suspend fun readAnnouncement(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("channelId") channelId: Long,
         @Body requestBody: ReadAnnouncementsRequestBody
     ): Response<AnnouncementListResponseWithError>
 
     /**
      * 刪除公告
-     * @param channelId String
-     * @param requestBody RemoveAnnouncementRequestBody
      */
     @RecordApi
-    @POST("OceanService/api/club/{channelId}/removeannouncement")
+    @POST
     suspend fun removeAnnouncement(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("channelId") channelId: Long,
         @Body requestBody: RemoveAnnouncementRequestBody
     ): Response<IsRemoveAnnouncementSuccessWithError>
+
 }

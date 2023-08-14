@@ -1,7 +1,6 @@
 package com.cmoney.backend2.centralizedimage.service
 
-import com.cmoney.backend2.TestSetting
-import com.cmoney.backend2.base.model.exception.ServerException
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.centralizedimage.service.api.upload.GenreAndSubGenre
 import com.cmoney.backend2.centralizedimage.service.api.upload.UploadResponseBody
 import com.cmoney.core.CoroutineTestRule
@@ -11,10 +10,12 @@ import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
+import io.mockk.slot
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import okhttp3.ResponseBody.Companion.toResponseBody
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -22,17 +23,14 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import retrofit2.HttpException
 import retrofit2.Response
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
-import java.io.InputStream
-import java.io.OutputStream
+import java.io.*
 
 @ExperimentalCoroutinesApi
 @RunWith(RobolectricTestRunner::class)
 class CentralizedImageWebImplTest {
 
     private val testScope = TestScope()
+
     @get:Rule
     val mainCoroutineRule = CoroutineTestRule(testScope = testScope)
 
@@ -41,24 +39,59 @@ class CentralizedImageWebImplTest {
     private val gson = GsonBuilder().serializeNulls().setLenient().setPrettyPrinting().create()
     private lateinit var webImpl: CentralizedImageWeb
 
+    @MockK(relaxed = true)
+    private lateinit var manager: GlobalBackend2Manager
+
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
         webImpl = CentralizedImageWebImpl(
             service = service,
-            setting = TestSetting(),
-            jsonParser = gson,
+            gson = gson,
+            manager = manager,
             dispatcher = TestDispatcherProvider()
         )
+        coEvery {
+            manager.getCentralizedImageSettingAdapter().getDomain()
+        } returns EXCEPT_DOMAIN
+    }
+
+    @After
+    fun tearDown() {
+        // remove test file after test
+        try {
+            val testFile = File(TEST_FILE_OUTPUT_PATH)
+            testFile.delete()
+        } catch (e: Throwable) {
+            e.printStackTrace()
+        }
     }
 
     @Test
-    fun `upload_成功`() = testScope.runTest {
+    fun `getVerifyCode_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}centralizedImage/v1/upload/servicetest/swagger"
+        val urlSlot = slot<String>()
         coEvery {
             service.upload(
+                url = capture(urlSlot),
                 authorization = any(),
-                genre = any(),
-                subGenre = any(),
+                file = any()
+            )
+        } returns Response.success(UploadResponseBody("publicImageUrl"))
+        webImpl.upload(
+            GenreAndSubGenre.ServiceTestSwagger,
+            getTestFile("src/test/resources/image/maple-leaf-1510431-639x761.jpeg")
+        )
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+
+    @Test
+    fun upload_success() = testScope.runTest {
+        coEvery {
+            service.upload(
+                url = any(),
+                authorization = any(),
                 file = any()
             )
         } returns Response.success(UploadResponseBody("publicImageUrl"))
@@ -73,12 +106,11 @@ class CentralizedImageWebImplTest {
     }
 
     @Test
-    fun `upload_檔案太大失敗`() = testScope.runTest {
+    fun `upload_file is too big_IllegalArgumentException`() = testScope.runTest {
         coEvery {
             service.upload(
+                url = any(),
                 authorization = any(),
-                genre = any(),
-                subGenre = any(),
                 file = any()
             )
         } returns Response.success(UploadResponseBody("publicImageUrl"))
@@ -91,12 +123,11 @@ class CentralizedImageWebImplTest {
     }
 
     @Test
-    fun `upload_401_UNAUTHORIZATION`() = testScope.runTest {
+    fun upload_401_UNAUTHORIZATION() = testScope.runTest {
         coEvery {
             service.upload(
+                url = any(),
                 authorization = any(),
-                genre = any(),
-                subGenre = any(),
                 file = any()
             )
         } returns Response.error(401, "".toResponseBody())
@@ -109,15 +140,9 @@ class CentralizedImageWebImplTest {
         Truth.assertThat(exception.code()).isEqualTo(401)
     }
 
-    private fun <T> checkServerException(result: Result<T>) {
-        Truth.assertThat(result.isSuccess).isFalse()
-        val exception = result.exceptionOrNull() as ServerException
-        Truth.assertThat(exception).isNotNull()
-    }
-
     private fun getTestFile(
         srcPath: String,
-        outputPath: String = "src/test/resources/image/targetFile.tmp"
+        outputPath: String = TEST_FILE_OUTPUT_PATH
     ): File {
         val initialStream: InputStream = FileInputStream(File(srcPath))
         val buffer = ByteArray(initialStream.available())
@@ -130,5 +155,10 @@ class CentralizedImageWebImplTest {
         outStream.close()
 
         return targetFile
+    }
+
+    companion object {
+        private const val EXCEPT_DOMAIN = "localhost://8080:80/"
+        private const val TEST_FILE_OUTPUT_PATH = "src/test/resources/image/targetFile.tmp"
     }
 }

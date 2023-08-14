@@ -15,6 +15,7 @@ class TrialServiceCase : ServiceCase {
     override suspend fun testAll() {
         trial2Web.apply {
             setQuotaUsageUse(QUOTA_KEY).logResponse(TAG)
+            // 僅測試用 (時間及次數在產品不應混用金鑰)
             setQuotaTimeUse(QUOTA_KEY, 20).logResponse(TAG)
             checkTrialTime(TIME_KEY).logResponse(TAG)
             getQuotaTime(QUOTA_KEY).logResponse(TAG)

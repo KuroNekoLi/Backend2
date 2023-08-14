@@ -1,6 +1,6 @@
 package com.cmoney.backend2.cellphone.service
 
-import com.cmoney.backend2.base.model.request.MemberApiParam
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.cellphone.service.api.CellphoneParam
 import com.cmoney.backend2.cellphone.service.api.bindcellphone.BindCellphoneResponseBody
 import com.cmoney.backend2.cellphone.service.api.checkcellphonebindingverifycode.CheckCellphoneBindingVerifyCodeResponseBody
@@ -14,112 +14,136 @@ import com.cmoney.backend2.cellphone.service.api.updatepassword.UpdatePasswordRe
 import java.security.NoSuchAlgorithmException
 
 interface CellphoneWeb {
+
+    val manager: GlobalBackend2Manager
+
     /**
      * 服務1. 取得驗證碼 / 重寄驗證碼
+     *
+     * @param cellphoneParam 電話參數
+     * @param domain 網域名稱
+     * @param url 完整的Url
+     *
      */
-    suspend fun getVerifyCode(cellphoneParam: CellphoneParam): Result<CellphoneGetVerifyCode>
+    suspend fun getVerifyCode(
+        cellphoneParam: CellphoneParam,
+        domain: String = manager.getCellphoneSettingAdapter().getDomain(),
+        url: String = "${domain}MobileService/ashx/LoginCheck/LoginCheck.ashx"
+    ): Result<CellphoneGetVerifyCode>
 
     /**
      * 服務2. 驗證註冊驗證碼
+     *
+     * @param cellphoneParam 電話參數
+     * @param verifyCode 驗證碼
+     * @param domain 網域名稱
+     * @param url 完整的Url
+     *
      */
     suspend fun checkVerifyCode(
         cellphoneParam: CellphoneParam,
-        verifyCode: String
+        verifyCode: String,
+        domain: String = manager.getCellphoneSettingAdapter().getDomain(),
+        url: String = "${domain}MobileService/ashx/LoginCheck/LoginCheck.ashx"
     ): Result<CellphoneCheckVerifyCode>
 
     /**
      * 服務3. 手機號碼註冊
+     *
+     * @param cellphoneParam 電話參數
+     * @param password 密碼
+     * @param domain 網域名稱
+     * @param url 完整的Url
+     *
      */
     @Throws(NoSuchAlgorithmException::class)
     suspend fun registerByCellphone(
         cellphoneParam: CellphoneParam,
-        password: String
+        password: String,
+        domain: String = manager.getCellphoneSettingAdapter().getDomain(),
+        url: String = "${domain}MobileService/ashx/LoginCheck/LoginCheck.ashx"
     ): Result<CellphoneRegister>
 
     /**
      * 服務5. 忘記密碼 by手機
+     *
+     * @param cellphoneParam 電話參數
+     * @param domain 網域名稱
+     * @param url 完整的Url
+     *
      */
-    suspend fun forgotPasswordForCellphone(cellphoneParam: CellphoneParam): Result<CellphoneForgotPassword>
+    suspend fun forgotPasswordForCellphone(
+        cellphoneParam: CellphoneParam,
+        domain: String = manager.getCellphoneSettingAdapter().getDomain(),
+        url: String = "${domain}MobileService/ashx/LoginCheck/LoginCheck.ashx"
+    ): Result<CellphoneForgotPassword>
 
     /**
      * 服務6. 更改密碼
-     */
-    @Deprecated("ApiParam no longer required")
-    suspend fun updatePassword(
-        apiParam: MemberApiParam,
-        oldPassword: String,
-        oldHasMd5: Boolean,
-        newPassword: String
-    ): Result<UpdatePasswordResponseBody>
-
-    /**
-     * 服務6. 更改密碼
+     *
+     * @param oldPassword 舊密碼
+     * @param oldHasMd5 舊密碼是否為MD5
+     * @param newPassword 新密碼
+     * @param domain 網域名稱
+     * @param url 完整的Url
+     *
      */
     suspend fun updatePassword(
         oldPassword: String,
         oldHasMd5: Boolean,
-        newPassword: String
+        newPassword: String,
+        domain: String = manager.getCellphoneSettingAdapter().getDomain(),
+        url: String = "${domain}MobileService/ashx/LoginCheck/LoginCheck.ashx"
     ): Result<UpdatePasswordResponseBody>
 
     /**
      * 服務7. 取得帳號資訊
+     *
+     * @param domain 網域名稱
+     * @param url 完整的Url
+     *
      */
-    @Deprecated("ApiParam no longer required")
-    suspend fun getAccountInfo(apiParam: MemberApiParam): Result<AccountInfo>
-
-    /**
-     * 服務7. 取得帳號資訊
-     */
-    suspend fun getAccountInfo(): Result<AccountInfo>
+    suspend fun getAccountInfo(
+        domain: String = manager.getCellphoneSettingAdapter().getDomain(),
+        url: String = "${domain}MobileService/ashx/LoginCheck/LoginCheck.ashx"
+    ): Result<AccountInfo>
 
     /**
      * 服務8. 觸發手機綁定
      *
-     */
-    @Deprecated("ApiParam no longer required")
-    suspend fun bindCellphone(
-        apiParam: MemberApiParam,
-        cellphoneParam: CellphoneParam
-    ): Result<BindCellphoneResponseBody>
-
-    /**
-     * 服務8. 觸發手機綁定
+     * @param domain 網域名稱
+     * @param url 完整的Url
      *
      */
     suspend fun bindCellphone(
-        cellphoneParam: CellphoneParam
+        cellphoneParam: CellphoneParam,
+        domain: String = manager.getCellphoneSettingAdapter().getDomain(),
+        url: String = "${domain}MobileService/ashx/LoginCheck/LoginCheck.ashx"
     ): Result<BindCellphoneResponseBody>
 
     /**
      * 服務9. 執行手機綁定驗證手機綁定驗證碼
      *
-     */
-    @Deprecated("ApiParam no longer required")
-    suspend fun checkCellphoneBindingVerifyCode(
-        apiParam: MemberApiParam,
-        cellphoneParam: CellphoneParam,
-        verifyCode: String?
-    ): Result<CheckCellphoneBindingVerifyCodeResponseBody>
-
-    /**
-     * 服務9. 執行手機綁定驗證手機綁定驗證碼
+     * @param domain 網域名稱
+     * @param url 完整的Url
      *
      */
     suspend fun checkCellphoneBindingVerifyCode(
         cellphoneParam: CellphoneParam,
-        verifyCode: String?
+        verifyCode: String?,
+        domain: String = manager.getCellphoneSettingAdapter().getDomain(),
+        url: String = "${domain}MobileService/ashx/LoginCheck/LoginCheck.ashx"
     ): Result<CheckCellphoneBindingVerifyCodeResponseBody>
 
     /**
      * 服務10. 取消手機綁定
      *
-     */
-    @Deprecated("ApiParam no longer required")
-    suspend fun unbindCellphone(apiParam: MemberApiParam): Result<UnbindCellphoneResponseBody>
-
-    /**
-     * 服務10. 取消手機綁定
+     * @param domain 網域名稱
+     * @param url 完整的Url
      *
      */
-    suspend fun unbindCellphone(): Result<UnbindCellphoneResponseBody>
+    suspend fun unbindCellphone(
+        domain: String = manager.getCellphoneSettingAdapter().getDomain(),
+        url: String = "${domain}MobileService/ashx/LoginCheck/LoginCheck.ashx"
+    ): Result<UnbindCellphoneResponseBody>
 }

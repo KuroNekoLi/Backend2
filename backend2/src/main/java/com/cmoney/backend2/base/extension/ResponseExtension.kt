@@ -6,7 +6,9 @@ import com.cmoney.backend2.base.model.request.Constant
 import com.cmoney.backend2.base.model.response.error.CMoneyError
 import com.cmoney.backend2.base.model.response.error.ISuccess
 import com.google.gson.Gson
+import com.google.gson.JsonElement
 import com.google.gson.JsonSyntaxException
+import com.google.gson.reflect.TypeToken
 import okhttp3.ResponseBody
 import retrofit2.HttpException
 import retrofit2.Response
@@ -159,6 +161,68 @@ fun <T> Response<T>.parseServerException(gson: Gson): ServerException {
         ServerException(
             code = Constant.SERVICE_NOT_SUPPORT_ERROR_CODE,
             message = cmoneyError.message.orEmpty()
+        )
+    }
+}
+
+/**
+ * 處理正常回傳是JsonArray 發生錯誤是JsonObject 的api回傳
+ *
+ * @param T 資料類型
+ * @return 正常資料
+ * @throws EmptyBodyException 無資料的例外
+ * @throws ServerException 400或是200時沒有預期的資料物件時服務錯誤結果回傳的例外
+ * @throws JsonSyntaxException 轉換錯誤資料物件失敗時的例外
+ * @throws HttpException 其餘的例外
+ */
+@Throws(
+    HttpException::class,
+    EmptyBodyException::class,
+    ServerException::class,
+    JsonSyntaxException::class
+)
+internal inline fun <reified T> Response<JsonElement>.toJsonArrayWithErrorResponse(gson: Gson): T {
+    val bodyObj = checkIsSuccessful()
+        .requireBody()
+    return bodyObj.toJsonArrayWithErrorResponse(gson = gson)
+}
+
+/**
+ * 處理 Json 回傳，若是 JsonArray 是預期的成功回傳，否則為錯誤結果的回傳
+ *
+ * @param T 預期的集合資料類型
+ * @param gson 轉換用物件
+ * @return 集合資料
+ * @throws ServerException 沒有預期的資料物件時服務錯誤結果回傳的例外或是轉換預期資料物件時的例外
+ * @throws JsonSyntaxException 轉換錯誤資料物件失敗時的例外
+ */
+@Throws(
+    ServerException::class,
+    JsonSyntaxException::class
+)
+internal inline fun <reified T> JsonElement.toJsonArrayWithErrorResponse(gson: Gson): T {
+    val parsedResult = if (this.isJsonArray) {
+        try {
+            gson.fromJson<T>(this, object : TypeToken<T>() {}.type)
+        } catch (exception: JsonSyntaxException) {
+            throw ServerException(
+                code = Constant.SERVICE_ERROR_CODE,
+                message = "Parse ${T::class.simpleName} failure, check the response data type."
+            )
+        }
+    } else {
+        null
+    }
+    return if (parsedResult != null) {
+        parsedResult
+    } else {
+        val error = gson.fromJson<CMoneyError>(
+            this,
+            object : TypeToken<CMoneyError>() {}.type
+        )
+        throw ServerException(
+            error.detail?.code ?: Constant.SERVICE_ERROR_CODE,
+            error.detail?.message.orEmpty()
         )
     }
 }

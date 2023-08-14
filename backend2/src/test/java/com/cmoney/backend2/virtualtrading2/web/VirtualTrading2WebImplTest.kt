@@ -53,6 +53,28 @@ class VirtualTrading2WebImplTest {
             globalBackend2Manager = manager,
             service = service
         )
+        coEvery {
+            manager.getVirtualTrading2SettingAdapter().getDomain()
+        } returns EXCEPT_DOMAIN
+    }
+
+    @Test
+    fun `createAccount_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}account-api/Account"
+        val urlSlot = slot<String>()
+        val responseBody = getCreateAccountSuccess()
+        coEvery {
+            service.createAccount(
+                url = capture(urlSlot),
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success(responseBody)
+        web.createAccount(
+            accountInvestType = 1,
+            cardSn = 0
+        ).getOrThrow()
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
     }
 
     @Test
@@ -175,6 +197,32 @@ class VirtualTrading2WebImplTest {
             cardSn = 0
         ).getOrThrow()
         Truth.assertThat(result.accountPayType).isEqualTo(4)
+    }
+
+    @Test
+    fun `createTseOtcDelegate_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}trading-api/Trading/TseOtc/NewOrder"
+        val urlSlot = slot<String>()
+        val responseBody = getCreateTseOtcDelegateSuccess()
+        coEvery {
+            service.createTseOtcDelegate(
+                url = capture(urlSlot),
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success(responseBody)
+        web.createTseOtcDelegate(
+            accountId = 0,
+            buySellType = 66,
+            commodityId = "",
+            subsistingType = 82,
+            groupId = 0,
+            delegatePrice = "0",
+            delegateVolume = "0",
+            marketUnit = 1,
+            transactionType = 1
+        ).getOrThrow()
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
     }
 
     @Test
@@ -479,6 +527,26 @@ class VirtualTrading2WebImplTest {
         }
 
     @Test
+    fun `deleteTseOtcDelegate_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}trading-api/Trading/TseOtc/CancelOrder"
+        val urlSlot = slot<String>()
+        val responseBody = getDeleteTseOtcDelegateSuccess()
+        coEvery {
+            service.deleteTseOtcDelegate(
+                url = capture(urlSlot),
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success(responseBody)
+        web.deleteTseOtcDelegate(
+            accountId = 0,
+            groupId = 0,
+            delegateId = 1
+        )
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun `deleteTseOtcDelegate_成功`() = testScope.runTest {
         val responseBody = getDeleteTseOtcDelegateSuccess()
         coEvery {
@@ -494,6 +562,24 @@ class VirtualTrading2WebImplTest {
             delegateId = 1
         )
         Truth.assertThat(result.isSuccess).isTrue()
+    }
+
+    @Test
+    fun `getAccount_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}account-api/graphql"
+        val urlSlot = slot<String>()
+        val responseBody = getAccountSuccess()
+        coEvery {
+            service.getAccount(
+                url = capture(urlSlot),
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success(responseBody)
+        web.getAccount(
+            query = ""
+        ).getOrThrow()
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
     }
 
     @Test
@@ -568,6 +654,24 @@ class VirtualTrading2WebImplTest {
     }
 
     @Test
+    fun `getAllAccount_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}account-api/graphql"
+        val urlSlot = slot<String>()
+        val responseBody = getAllAccountSuccess()
+        coEvery {
+            service.getAllAccount(
+                url = capture(urlSlot),
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success(responseBody)
+        web.getAllAccount(
+            query = ""
+        ).getOrThrow()
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun `getAllAccount_成功`() = testScope.runTest {
         val responseBody = getAllAccountSuccess()
         coEvery {
@@ -639,6 +743,24 @@ class VirtualTrading2WebImplTest {
     }
 
     @Test
+    fun `getAccountRatio_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}account-api/graphql"
+        val urlSlot = slot<String>()
+        val responseBody = getAccountRatioSuccess()
+        coEvery {
+            service.getAccountRatio(
+                url = capture(urlSlot),
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success(responseBody)
+        web.getAccountRatio(
+            query = ""
+        ).getOrThrow()
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun `getAccountRatio_成功`() = testScope.runTest {
         val responseBody = getAccountRatioSuccess()
         coEvery {
@@ -685,6 +807,24 @@ class VirtualTrading2WebImplTest {
                 }
             """.trimIndent()
         ).getOrThrow()
+    }
+
+    @Test
+    fun `getTseOtcHistoryAllDelegate_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}trading-api/graphql"
+        val urlSlot = slot<String>()
+        val responseBody = getTseOtcHistoryAllDelegateSuccess()
+        coEvery {
+            service.getTseOtcHistoryAllDelegate(
+                url = capture(urlSlot),
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success(responseBody)
+        web.getTseOtcHistoryAllDelegate(
+            query = ""
+        ).getOrThrow()
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
     }
 
     @Test
@@ -769,6 +909,24 @@ class VirtualTrading2WebImplTest {
     }
 
     @Test
+    fun `getTseOtcTodayAllDelegate_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}trading-api/graphql"
+        val urlSlot = slot<String>()
+        val responseBody = getTseOtcTodayAllDelegateSuccess()
+        coEvery {
+            service.getTseOtcTodayAllDelegate(
+                url = capture(urlSlot),
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success(responseBody)
+        web.getTseOtcTodayAllDelegate(
+            query = ""
+        ).getOrThrow()
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun `getTseOtcTodayAllDelegate_成功`() = testScope.runTest {
         val responseBody = getTseOtcTodayAllDelegateSuccess()
         coEvery {
@@ -846,7 +1004,25 @@ class VirtualTrading2WebImplTest {
     }
 
     @Test
-    fun `getTseOtcHistoryDelegateById_成功`() = testScope.runTest {
+    fun `getTseOtcDelegateById_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}trading-api/graphql"
+        val urlSlot = slot<String>()
+        val responseBody = getTseOtcDelegateByIdSuccess()
+        coEvery {
+            service.getTseOtcDelegateById(
+                url = capture(urlSlot),
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success(responseBody)
+        web.getTseOtcDelegateById(
+            query = "".trimIndent()
+        ).getOrThrow()
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun `getTseOtcDelegateById_成功`() = testScope.runTest {
         val responseBody = getTseOtcDelegateByIdSuccess()
         coEvery {
             service.getTseOtcDelegateById(
@@ -895,7 +1071,7 @@ class VirtualTrading2WebImplTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `getTseOtcHistoryDelegateById_失敗_ServerException`() = testScope.runTest {
+    fun `getTseOtcDelegateById_失敗_ServerException`() = testScope.runTest {
         val error = CMoneyError(message = "")
         val responseBody = gson.toJson(error, CMoneyError::class.java).toResponseBody()
         coEvery {
@@ -914,6 +1090,24 @@ class VirtualTrading2WebImplTest {
             }
             """.trimIndent()
         ).getOrThrow()
+    }
+
+    @Test
+    fun `getTseOtcAllSuccessDeal_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}trading-api/graphql"
+        val urlSlot = slot<String>()
+        val responseBody = getTseOtcAllSuccessDealSuccess()
+        coEvery {
+            service.getTseOtcAllSuccessDeal(
+                url = capture(urlSlot),
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success(responseBody)
+        web.getTseOtcAllSuccessDeal(
+            query = ""
+        ).getOrThrow()
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
     }
 
     @Test
@@ -992,6 +1186,24 @@ class VirtualTrading2WebImplTest {
     }
 
     @Test
+    fun `getTseOtcSuccessDealById_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}trading-api/graphql"
+        val urlSlot = slot<String>()
+        val responseBody = getTseOtcSuccessDealByIdSuccess()
+        coEvery {
+            service.getTseOtcSuccessDealById(
+                url = capture(urlSlot),
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success(responseBody)
+        web.getTseOtcSuccessDealById(
+            query = ""
+        ).getOrThrow()
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun `getTseOtcSuccessDealById_成功`() = testScope.runTest {
         val responseBody = getTseOtcSuccessDealByIdSuccess()
         coEvery {
@@ -1062,6 +1274,24 @@ class VirtualTrading2WebImplTest {
     }
 
     @Test
+    fun `getTseOtcAllInventory_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}trading-api/graphql"
+        val urlSlot = slot<String>()
+        val responseBody = getTseOtcInventorySuccess()
+        coEvery {
+            service.getTseOtcAllInventory(
+                url = capture(urlSlot),
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success(responseBody)
+        web.getTseOtcAllInventory(
+            query = ""
+        ).getOrThrow()
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun `getTseOtcInventory_成功`() = testScope.runTest {
         val responseBody = getTseOtcInventorySuccess()
         coEvery {
@@ -1121,5 +1351,9 @@ class VirtualTrading2WebImplTest {
                 }
             """.trimIndent()
         ).getOrThrow()
+    }
+
+    companion object {
+        private const val EXCEPT_DOMAIN = "localhost://8080:80/"
     }
 }

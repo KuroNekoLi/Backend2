@@ -1,18 +1,16 @@
 package com.cmoney.backend2.notification.service
 
-import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.ServerException
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.base.model.response.error.CMoneyError
-import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.core.CoroutineTestRule
 import com.cmoney.core.TestDispatcherProvider
 import com.google.common.truth.Truth
 import com.google.gson.GsonBuilder
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
-import io.mockk.coVerifyOrder
 import io.mockk.impl.annotations.MockK
-import io.mockk.spyk
+import io.mockk.slot
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
@@ -28,6 +26,7 @@ import retrofit2.Response
 @RunWith(RobolectricTestRunner::class)
 class NotificationWebImplTest {
     private val testScope = TestScope()
+
     @ExperimentalCoroutinesApi
     @get:Rule
     val mainCoroutineRule = CoroutineTestRule(testScope = testScope)
@@ -35,26 +34,54 @@ class NotificationWebImplTest {
     @MockK
     private lateinit var service: NotificationService
     private val gson = GsonBuilder().serializeNulls().setLenient().setPrettyPrinting().create()
-    private lateinit var setting: Setting
     private lateinit var web: NotificationWeb
+
+    @MockK(relaxed = true)
+    private lateinit var manager: GlobalBackend2Manager
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        setting = TestSetting()
         web = NotificationWebImpl(
+            manager = manager,
             gson = gson,
             service = service,
-            setting = setting,
             dispatcher = TestDispatcherProvider()
         )
+        coEvery {
+            manager.getNotificationSettingAdapter().getDomain()
+        } returns EXCEPT_DOMAIN
     }
 
     @Test
-    fun `updateArrivedCount_成功`() = testScope.runTest {
+    fun `updateArrivedCount_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}NotificationService/Statistics/arrived"
+        val urlSlot = slot<String>()
         coEvery {
             service.updateArriveCount(
-                authorization = any(), body = any()
+                url = capture(urlSlot),
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success<Void>(204, null)
+        web.updateArriveCount(
+            sn = 0,
+            pushToken = "",
+            title = "",
+            content = "",
+            analyticsLabels = listOf("test"),
+            createTime = 1001L
+        )
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun updateArrivedCount_success() = testScope.runTest {
+        coEvery {
+            service.updateArriveCount(
+                url = any(),
+                authorization = any(),
+                body = any()
             )
         } returns Response.success<Void>(204, null)
         val result = web.updateArriveCount(
@@ -71,7 +98,7 @@ class NotificationWebImplTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `updateArrivedCount_失敗_ServerException`() = testScope.runTest {
+    fun updateArrivedCount_failure_ServerException() = testScope.runTest {
         val errorBody = gson.toJson(
             CMoneyError(
                 detail = CMoneyError.Detail(
@@ -81,7 +108,9 @@ class NotificationWebImplTest {
         ).toResponseBody()
         coEvery {
             service.updateArriveCount(
-                authorization = any(), body = any()
+                url = any(),
+                authorization = any(),
+                body = any()
             )
         } returns Response.error(400, errorBody)
         val result = web.updateArriveCount(
@@ -97,10 +126,137 @@ class NotificationWebImplTest {
     }
 
     @Test
-    fun `updateClickCount_成功`() = testScope.runTest {
+    fun `updateGuestPushToken_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}NotificationService/DeviceToken/guest"
+        val urlSlot = slot<String>()
+        coEvery {
+            service.updateGuestPushToken(
+                url = capture(urlSlot),
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success<Void>(204, null)
+        web.updateGuestPushToken(pushToken = "")
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun updateGuestPushToken_success() = testScope.runTest {
+        coEvery {
+            service.updateGuestPushToken(
+                url = any(),
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.updateGuestPushToken(pushToken = "")
+        Truth.assertThat(result.isSuccess).isTrue()
+        val data = result.getOrThrow()
+        Truth.assertThat(data).isEqualTo(Unit)
+    }
+
+    @Test(expected = ServerException::class)
+    fun updateGuestPushToken_failure_ServerException() = testScope.runTest {
+        val errorBody = gson.toJson(
+            CMoneyError(
+                detail = CMoneyError.Detail(
+                    code = 101
+                )
+            )
+        ).toResponseBody()
+        coEvery {
+            service.updateGuestPushToken(
+                url = any(),
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.error(400, errorBody)
+        val result = web.updateGuestPushToken(pushToken = "")
+        Truth.assertThat(result.isFailure).isTrue()
+        result.getOrThrow()
+    }
+
+    @Test
+    fun `updateMemberPushToken_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}NotificationService/DeviceToken/member"
+        val urlSlot = slot<String>()
+        coEvery {
+            service.updateMemberPushToken(
+                url = capture(urlSlot),
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success<Void>(204, null)
+        web.updateMemberPushToken(pushToken = "")
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun updateMemberPushToken_success() = testScope.runTest {
+        coEvery {
+            service.updateMemberPushToken(
+                url = any(),
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.updateMemberPushToken(pushToken = "")
+        Truth.assertThat(result.isSuccess).isTrue()
+        val data = result.getOrThrow()
+        Truth.assertThat(data).isEqualTo(Unit)
+    }
+
+    @Test(expected = ServerException::class)
+    fun updateMemberPushToken_failure_ServerException() = testScope.runTest {
+        val errorBody = gson.toJson(
+            CMoneyError(
+                detail = CMoneyError.Detail(
+                    code = 101
+                )
+            )
+        ).toResponseBody()
+        coEvery {
+            service.updateMemberPushToken(
+                url = any(),
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.error(400, errorBody)
+        val result = web.updateMemberPushToken(pushToken = "")
+        Truth.assertThat(result.isFailure).isTrue()
+        result.getOrThrow()
+    }
+
+    @Test
+    fun `updateClickCount_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}NotificationService/Statistics/clicked"
+        val urlSlot = slot<String>()
         coEvery {
             service.updateClickCount(
-                authorization = any(), body = any()
+                url = capture(urlSlot),
+                authorization = any(),
+                body = any()
+            )
+        } returns Response.success<Void>(204, null)
+        web.updateClickCount(
+            sn = 0,
+            pushToken = "",
+            title = "",
+            content = "",
+            analyticsLabels = listOf("test"),
+            createTime = 1001L
+        )
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+
+    @Test
+    fun updateClickCount_success() = testScope.runTest {
+        coEvery {
+            service.updateClickCount(
+                url = any(),
+                authorization = any(),
+                body = any()
             )
         } returns Response.success<Void>(204, null)
         val result = web.updateClickCount(
@@ -117,7 +273,7 @@ class NotificationWebImplTest {
     }
 
     @Test(expected = ServerException::class)
-    fun `updateClickCount_失敗_ServerException`() = testScope.runTest {
+    fun updateClickCount_failure_ServerException() = testScope.runTest {
         val errorBody = gson.toJson(
             CMoneyError(
                 detail = CMoneyError.Detail(
@@ -127,7 +283,9 @@ class NotificationWebImplTest {
         ).toResponseBody()
         coEvery {
             service.updateClickCount(
-                authorization = any(), body = any()
+                url = any(),
+                authorization = any(),
+                body = any()
             )
         } returns Response.error(400, errorBody)
         val result = web.updateClickCount(
@@ -142,143 +300,7 @@ class NotificationWebImplTest {
         result.getOrThrow()
     }
 
-    @Test
-    fun `updateGuestPushToken_成功`() = testScope.runTest {
-        coEvery {
-            service.updateGuestPushToken(
-                authorization = any(), body = any()
-            )
-        } returns Response.success<Void>(204, null)
-        val result = web.updateGuestPushToken(pushToken = "")
-        Truth.assertThat(result.isSuccess).isTrue()
-        val data = result.getOrThrow()
-        Truth.assertThat(data).isEqualTo(Unit)
-    }
-
-    @Test(expected = ServerException::class)
-    fun `updateGuestPushToken_失敗_ServerException`() = testScope.runTest {
-        val errorBody = gson.toJson(
-            CMoneyError(
-                detail = CMoneyError.Detail(
-                    code = 101
-                )
-            )
-        ).toResponseBody()
-        coEvery {
-            service.updateGuestPushToken(
-                authorization = any(), body = any()
-            )
-        } returns Response.error(400, errorBody)
-        val result = web.updateGuestPushToken(pushToken = "")
-        Truth.assertThat(result.isFailure).isTrue()
-        result.getOrThrow()
-    }
-
-    @Test
-    fun `updateMemberPushToken_成功`() = testScope.runTest {
-        coEvery {
-            service.updateMemberPushToken(
-                authorization = any(), body = any()
-            )
-        } returns Response.success<Void>(204, null)
-        val result = web.updateMemberPushToken(pushToken = "")
-        Truth.assertThat(result.isSuccess).isTrue()
-        val data = result.getOrThrow()
-        Truth.assertThat(data).isEqualTo(Unit)
-    }
-
-    @Test(expected = ServerException::class)
-    fun `updateMemberPushToken_失敗_ServerException`() = testScope.runTest {
-        val errorBody = gson.toJson(
-            CMoneyError(
-                detail = CMoneyError.Detail(
-                    code = 101
-                )
-            )
-        ).toResponseBody()
-        coEvery {
-            service.updateMemberPushToken(
-                authorization = any(), body = any()
-            )
-        } returns Response.error(400, errorBody)
-        val result = web.updateMemberPushToken(pushToken = "")
-        Truth.assertThat(result.isFailure).isTrue()
-        result.getOrThrow()
-    }
-
-    @Test
-    fun `deprecate updateArriveCount will invoke new function`() = testScope.runTest {
-        coEvery {
-            service.updateArriveCount(
-                authorization = any(),
-                body = any()
-            )
-        } returns Response.success<Void>(204, null)
-
-        val spyWeb = spyk(web)
-        val result = spyWeb.updateArriveCount(
-            sn = 0,
-            pushToken = "",
-            analyticsId = 0,
-            title = "",
-            content = ""
-        )
-
-        coVerifyOrder {
-            spyWeb.updateArriveCount(
-                sn = any(),
-                pushToken = any(),
-                analyticsId = any(),
-                title = any(),
-                content = any()
-            )
-            spyWeb.updateArriveCount(
-                sn = any(),
-                pushToken = any(),
-                title = any(),
-                content = any(),
-                analyticsLabels = any(),
-                createTime = any()
-            )
-        }
-        Truth.assertThat(result.isSuccess).isTrue()
-    }
-
-    @Test
-    fun `deprecate updateClickCount will invoke new function`() = testScope.runTest {
-        coEvery {
-            service.updateClickCount(
-                authorization = any(),
-                body = any()
-            )
-        } returns Response.success<Void>(204, null)
-
-        val spyWeb = spyk(web)
-        val result = spyWeb.updateClickCount(
-            sn = 0,
-            pushToken = "",
-            analyticsId = 0,
-            title = "",
-            content = ""
-        )
-
-        coVerifyOrder {
-            spyWeb.updateClickCount(
-                sn = any(),
-                pushToken = any(),
-                analyticsId = any(),
-                title = any(),
-                content = any()
-            )
-            spyWeb.updateClickCount(
-                sn = any(),
-                pushToken = any(),
-                title = any(),
-                content = any(),
-                analyticsLabels = any(),
-                createTime = any()
-            )
-        }
-        Truth.assertThat(result.isSuccess).isTrue()
+    companion object {
+        private const val EXCEPT_DOMAIN = "localhost://8080:80/"
     }
 }

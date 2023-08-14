@@ -18,15 +18,15 @@ import retrofit2.http.*
  */
 interface NotesService {
 
-
     /**
      * Notes API
      * 服務1. 取得網誌文章
      */
     @RecordApi(cmoneyAction = "getnotes")
     @FormUrlEncoded
-    @POST("notes/ashx/chipkapi.ashx")
+    @POST
     suspend fun getNotes(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("action") action: String = "getnotes",
         @Field("Guid") guid: String,
@@ -44,8 +44,9 @@ interface NotesService {
      */
     @RecordApi(cmoneyAction = "getnotesbytags")
     @FormUrlEncoded
-    @POST("notes/ashx/chipkapi.ashx")
+    @POST
     suspend fun getNotesByTagsUsingNotesApi(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Field("action") action: String = "getnotesbytags",
         @Field("Guid") guid: String,
@@ -65,8 +66,9 @@ interface NotesService {
      *
      */
     @RecordApi
-    @POST("NotesService/Notes/GetNotesByTags")
+    @POST
     suspend fun getNotesByTags(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: GetNotesByTagsRequestBody
     ): Response<GetNotesByTagsResponseWithError>
@@ -76,8 +78,9 @@ interface NotesService {
      * 取得網誌近三天觀看次數達5000以上以及近一日付費文章清單
      */
     @RecordApi
-    @POST("NotesService/Notes/GetPopularAndPayNotes")
+    @POST
     suspend fun getPopularAndPayNotes(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: GetPopularAndPayNotesRequestBody
     ): Response<GetPopularAndPayNotesResponseBodyWithError>
@@ -88,8 +91,9 @@ interface NotesService {
      * 取得指定網誌作者(撰文者)的網誌文章清單
      */
     @RecordApi
-    @POST("NotesService/Notes/GetNotesByCoAuthorIds")
+    @POST
     suspend fun getNotesByCoAuthorIds(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body requestBody: GetNotesByCoAuthorIdsRequestBody
     ): Response<GetNotesByCoAuthorIdsResponseBody>

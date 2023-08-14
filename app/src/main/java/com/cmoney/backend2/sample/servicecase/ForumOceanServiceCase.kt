@@ -130,6 +130,46 @@ class ForumOceanServiceCase : ServiceCase {
             testVote()
             testSupport(globalBackend2Manager.getIdentityToken().getMemberId().toLong())
         }
+        testChatRoom()
+//        testSpaceBoardPinArticles()
+    }
+
+    /**
+     * 測試聊天室
+     */
+    private suspend fun testChatRoom() {
+        forumOceanWeb.getAllChatRoom()
+        forumOceanWeb.getUncheckChatRoomCount()
+        forumOceanWeb.resetUncheckChatRoomCount()
+    }
+
+    private suspend fun testSpaceBoardPinArticles(boardId: Long, articleId: String) {
+        val currentCountResult = forumOceanWeb.getSpaceBoardPinArticles(
+            boardId = boardId
+        )
+        currentCountResult.logResponse(TAG)
+        val currentCount = currentCountResult.getOrNull()?.articles?.size
+        Log.d(TAG, "current pin count is $currentCount")
+        forumOceanWeb.pinSpaceBoardArticle(
+            articleId = articleId
+        )
+        // 檢查Pin的文章數量是否+1
+        val pinCountResult = forumOceanWeb.getSpaceBoardPinArticles(
+            boardId = boardId
+        )
+        pinCountResult.logResponse(TAG)
+        val pinCount = pinCountResult.getOrNull()?.articles?.size
+        Log.d(TAG, "current pin count is $pinCount")
+        forumOceanWeb.unpinSpaceBoardArticle(
+            articleId = articleId
+        )
+        // 檢查Pin的文章數量是否-1
+        val unpinCountResult = forumOceanWeb.getSpaceBoardPinArticles(
+            boardId = boardId
+        )
+        unpinCountResult.logResponse(TAG)
+        val unpinCount = unpinCountResult.getOrNull()?.articles?.size
+        Log.d(TAG, "current pin count is $unpinCount")
     }
 
     /**
@@ -173,10 +213,10 @@ class ForumOceanServiceCase : ServiceCase {
 
     private suspend fun ForumOceanWeb.testInteractive(articleId: Long) {
         createReaction(articleId.toString(), ReactionType.LIKE).logResponse(TAG)
-        getArticleReactionDetail(articleId, listOf(ReactionType.LIKE), 0, 20).logResponse(TAG)
+        getReactionDetailV2(articleId.toString(), listOf(ReactionType.LIKE), 0, 20).logResponse(TAG)
         createReaction(articleId.toString(), ReactionType.DISLIKE).logResponse(TAG)
-        getArticleReactionDetail(
-            articleId,
+        getReactionDetailV2(
+            articleId.toString(),
             listOf(ReactionType.LIKE, ReactionType.DISLIKE),
             0,
             20
@@ -448,7 +488,7 @@ class ForumOceanServiceCase : ServiceCase {
 
         groupId?.apply {
             user2.changeUser(globalBackend2Manager)
-            join(this, "測試api用").logResponse(TAG)
+            join(groupId = this, reason = "測試api用").logResponse(TAG)
             val groupArticleId = createArticle(
                 body = Content.Article.Group(
                     text = "我在社團發文",
@@ -475,7 +515,7 @@ class ForumOceanServiceCase : ServiceCase {
             ).logResponse(TAG)
 
             user2.changeUser(globalBackend2Manager)
-            join(this, "測試api用").logResponse(TAG)
+            join(groupId = this, reason = "測試api用").logResponse(TAG)
 
             user1.changeUser(globalBackend2Manager)
             getMembers(
@@ -618,7 +658,7 @@ class ForumOceanServiceCase : ServiceCase {
 
             user2.changeUser(globalBackend2Manager)
             val user2MemberId = globalBackend2Manager.getIdentityToken().getMemberId().toLong()
-            join(groupId, "測試").logResponse(TAG)
+            join(groupId = groupId, reason = "測試").logResponse(TAG)
 
             presidentGroupArticleId?.apply {
                 createCommentV2(

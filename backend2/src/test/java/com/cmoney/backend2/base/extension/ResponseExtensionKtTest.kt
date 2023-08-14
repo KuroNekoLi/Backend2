@@ -5,8 +5,11 @@ import com.cmoney.backend2.base.model.exception.ServerException
 import com.cmoney.backend2.base.model.request.Constant
 import com.cmoney.backend2.base.model.response.error.CMoneyError
 import com.cmoney.backend2.base.model.response.error.ISuccess
+import com.google.common.truth.Truth
 import com.google.common.truth.Truth.assertThat
 import com.google.gson.GsonBuilder
+import com.google.gson.JsonArray
+import com.google.gson.JsonElement
 import com.google.gson.JsonSyntaxException
 import okhttp3.ResponseBody
 import okhttp3.ResponseBody.Companion.toResponseBody
@@ -370,4 +373,124 @@ class ResponseExtensionKtTest {
         assertThat(serverException.code).isEqualTo(Constant.SERVICE_NOT_SUPPORT_ERROR_CODE)
     }
 
+    @Test
+    fun response_toJsonArrayWithErrorResponse_success() {
+        val responseArray = JsonArray().apply {
+            add(0)
+            add(1)
+            add(2)
+            add(3)
+        }
+        val response: Response<JsonElement> = Response.success(responseArray)
+        val data = response.toJsonArrayWithErrorResponse<List<Int>>(gson = gson)
+        Truth.assertThat(data).hasSize(4)
+        repeat(4) {
+            Truth.assertThat(data[it]).isEqualTo(it)
+        }
+    }
+
+    @Test(expected = HttpException::class)
+    fun response_toJsonArrayWithErrorResponse_failure_HttpException() {
+        val response: Response<JsonElement> = Response.error(400, "".toResponseBody())
+        response.toJsonArrayWithErrorResponse<List<Int>>(gson = gson)
+    }
+
+    @Test(expected = EmptyBodyException::class)
+    fun response_toJsonArrayWithErrorResponse_failure_EmptyBodyException() {
+        val response = Response.success<JsonElement>(200, null)
+        response.toJsonArrayWithErrorResponse<List<Int>>(gson = gson)
+    }
+
+    @Test
+    fun `response_toJsonArrayWithErrorResponse_failure_ServerException dataType wrong`() {
+        val successBody = JsonArray().apply {
+            add("{}")
+            add("{}")
+            add("{}")
+        }
+        val response = Response.success<JsonElement>(200, successBody)
+        val result = kotlin.runCatching {
+            response.toJsonArrayWithErrorResponse<List<Int>>(gson = gson)
+        }
+        Truth.assertThat(result.isSuccess).isFalse()
+        val exception = result.exceptionOrNull()
+        Truth.assertThat(exception).isNotNull()
+        requireNotNull(exception)
+        Truth.assertThat(exception).isInstanceOf(ServerException::class.java)
+        require(exception is ServerException)
+        Truth.assertThat(exception.code).isEqualTo(Constant.SERVICE_ERROR_CODE)
+    }
+
+    @Test
+    fun `response_toJsonArrayWithErrorResponse_failure_ServerException 101`() {
+        val result = kotlin.runCatching {
+            val responseBodyJson = """
+                    {"Error":{"Code":101,"Message":"身分驗證錯誤"}} 
+                """.trimIndent()
+            val errorBody = gson.fromJson(responseBodyJson, JsonElement::class.java)
+            val response = Response.success(200, errorBody)
+            response.toJsonArrayWithErrorResponse<List<Int>>(gson = gson)
+        }
+        Truth.assertThat(result.isSuccess).isFalse()
+        val exception = result.exceptionOrNull()
+        Truth.assertThat(exception).isNotNull()
+        requireNotNull(exception)
+        Truth.assertThat(exception).isInstanceOf(ServerException::class.java)
+        require(exception is ServerException)
+        Truth.assertThat(exception).isNotNull()
+        Truth.assertThat(exception.code).isEqualTo(101)
+    }
+
+    @Test
+    fun toJsonArrayWithErrorResponse_success() {
+        val responseArray = JsonArray().apply {
+            add(0)
+            add(1)
+            add(2)
+            add(3)
+        }
+        val data = responseArray.toJsonArrayWithErrorResponse<List<Int>>(gson = gson)
+        Truth.assertThat(data).hasSize(4)
+        repeat(4) {
+            Truth.assertThat(data[it]).isEqualTo(it)
+        }
+    }
+
+    @Test
+    fun `toJsonArrayWithErrorResponse_failure_ServerException dataType wrong`() {
+        val jsonArray = JsonArray().apply {
+            add("{}")
+            add("{}")
+            add("{}")
+        }
+        val result = kotlin.runCatching {
+            jsonArray.toJsonArrayWithErrorResponse<List<Int>>(gson = gson)
+        }
+        Truth.assertThat(result.isSuccess).isFalse()
+        val exception = result.exceptionOrNull()
+        Truth.assertThat(exception).isNotNull()
+        requireNotNull(exception)
+        Truth.assertThat(exception).isInstanceOf(ServerException::class.java)
+        require(exception is ServerException)
+        Truth.assertThat(exception.code).isEqualTo(Constant.SERVICE_ERROR_CODE)
+    }
+
+    @Test
+    fun `toJsonArrayWithErrorResponse_failure_ServerException 101`() {
+        val result = kotlin.runCatching {
+            val responseBodyJson = """
+                    {"Error":{"Code":101,"Message":"身分驗證錯誤"}} 
+                """.trimIndent()
+            val errorBody = gson.fromJson(responseBodyJson, JsonElement::class.java)
+            errorBody.toJsonArrayWithErrorResponse<List<Int>>(gson = gson)
+        }
+        Truth.assertThat(result.isSuccess).isFalse()
+        val exception = result.exceptionOrNull()
+        Truth.assertThat(exception).isNotNull()
+        requireNotNull(exception)
+        Truth.assertThat(exception).isInstanceOf(ServerException::class.java)
+        require(exception is ServerException)
+        Truth.assertThat(exception).isNotNull()
+        Truth.assertThat(exception.code).isEqualTo(101)
+    }
 }

@@ -1,9 +1,8 @@
 package com.cmoney.backend2.brokerdatatransmission.service
 
-import com.cmoney.backend2.TestSetting
 import com.cmoney.backend2.base.model.exception.ServerException
+import com.cmoney.backend2.base.model.manager.GlobalBackend2Manager
 import com.cmoney.backend2.base.model.request.Constant
-import com.cmoney.backend2.base.model.setting.Setting
 import com.cmoney.backend2.brokerdatatransmission.service.api.BrokerAccount
 import com.cmoney.backend2.brokerdatatransmission.service.api.Country
 import com.cmoney.backend2.brokerdatatransmission.service.api.brokers.BrokerResponseWithError
@@ -21,6 +20,7 @@ import com.google.gson.JsonElement
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
+import io.mockk.slot
 import io.mockk.unmockkAll
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
@@ -35,6 +35,7 @@ import org.robolectric.RobolectricTestRunner
 import retrofit2.HttpException
 import retrofit2.Response
 
+@Suppress("NonAsciiCharacters")
 @ExperimentalCoroutinesApi
 @RunWith(RobolectricTestRunner::class)
 class BrokerDataTransmissionWebImplTest {
@@ -46,26 +47,48 @@ class BrokerDataTransmissionWebImplTest {
 
     @MockK
     private lateinit var service: BrokerDataTransmissionService
+    @MockK(relaxed = true)
+    private lateinit var manager: GlobalBackend2Manager
     private val gson = GsonBuilder().serializeNulls().setLenient().setPrettyPrinting().create()
     private lateinit var web: BrokerDataTransmissionWeb
-    private lateinit var setting: Setting
-
+    companion object {
+        private const val EXCEPT_DOMAIN = "localhost://8080:80/"
+    }
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        setting = TestSetting()
         web = BrokerDataTransmissionWebImpl(
-            baseHost = "",
             gson = gson,
             service = service,
-            setting = setting,
+            manager = manager,
             dispatcher = TestDispatcherProvider()
         )
+        coEvery {
+            manager.getBrokerDataTransmissionSettingAdapter().getDomain()
+        } returns EXCEPT_DOMAIN
     }
 
     @After
     fun tearDown() {
         unmockkAll()
+    }
+
+    @Test
+    fun `getBrokers_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}BrokerDataTransmission/api/brokers"
+        val responseBody = BrokerResponseWithError(
+            brokers = emptyList()
+        )
+        val urlSlot = slot<String>()
+        coEvery {
+            service.getBrokers(
+                url = capture(urlSlot),
+                code = any(),
+                authToken = any()
+            )
+        } returns Response.success(responseBody)
+        web.getBrokers(Country.TW)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
     }
 
     @Test
@@ -109,6 +132,22 @@ class BrokerDataTransmissionWebImplTest {
     }
 
     @Test
+    fun `getEncryptionKey_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}BrokerDataTransmission/api/encryptionkey"
+        val responseBody = GetEncryptionKeyResponseWithError("")
+        val urlSlot = slot<String>()
+        coEvery {
+            service.getEncryptionKey(
+                url = capture(urlSlot),
+                code = any(),
+                authToken = any()
+            )
+        } returns Response.success(responseBody)
+        web.getEncryptionKey(Country.TW)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun `getEncryptionKey 成功`() = testScope.runTest {
         val responseBody =
             GetEncryptionKeyResponseWithError("""-----BEGIN PUBLIC KEY-----\r\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAi5f+LhvlxB32a3AOeIno\r\n/+dhdu92P9IR0P1in6GUNW+vEgzZAZdBNF+EPgsEPRi0tGLYXrx9BJUIHah1ORoY\r\nUgU0PD1ydyJ2cDp/kP8IQ3cDIvXKSYyKNQ2erxFvvOFFvrqoB7QxLQgP+xKkFoz/\r\nbdAAQAjT/4dtRHGd82wZETWcXHqv7mL9KZj1TEvNDu77yu90PhodGtByCmvJjXd8\r\nYi2Nr7esIapsQafFOyyOAYFXE3UtFiHDf19SAVqC4TS7WpVDeBn/+PPNeSrkApVs\r\n0nxXNDpCumuXkqVtcbih3pKF5mrfPaTSlVClNBTXaj2UdQfrjfFCcqIyyWIdnkEc\r\nVQIDAQAB\r\n-----END PUBLIC KEY-----\r\n""")
@@ -148,6 +187,21 @@ class BrokerDataTransmissionWebImplTest {
     }
 
     @Test
+    fun `fetchTransactionHistory_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}BrokerDataTransmission/api/fetch/transactionhistory"
+        val urlSlot = slot<String>()
+        coEvery {
+            service.fetchTransactionHistory(
+                url = capture(urlSlot),
+                body = any(),
+                authToken = any()
+            )
+        } returns Response.success<Void>(204, null)
+        web.fetchTransactionHistory(BrokerAccount("", "", "", "", "", "", ""))
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun `fetchTransactionHistory 成功`() = testScope.runTest {
         coEvery {
             service.fetchTransactionHistory(
@@ -184,6 +238,20 @@ class BrokerDataTransmissionWebImplTest {
     }
 
     @Test
+    fun `getUserAgreesImportRecord_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}BrokerDataTransmission/api/useragreesimportrecord"
+        val urlSlot = slot<String>()
+        coEvery {
+            service.getUserAgreesImportRecord(
+                url = capture(urlSlot),
+                authToken = any()
+            )
+        } returns Response.success(true)
+        web.getUserAgreesImportRecord()
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun `getUserAgreesImportRecord 成功`() = testScope.runTest {
         val expect = true
 
@@ -199,6 +267,25 @@ class BrokerDataTransmissionWebImplTest {
 
         val actual = result.getOrThrow()
         Truth.assertThat(actual).isEqualTo(expect)
+    }
+
+    @Test
+    fun `getBrokerStockData_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}BrokerDataTransmission/api/brokerstockdata"
+        val urlSlot = slot<String>()
+        val responseBody = gson.fromJson(
+            "[]",
+            JsonElement::class.java
+        )
+        coEvery {
+            service.getBrokerStockData(
+                url = capture(urlSlot),
+                body = any(),
+                authToken = any()
+            )
+        } returns Response.success(responseBody)
+        web.getBrokerStockData(Country.TW)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
     }
 
     @Test
@@ -262,6 +349,37 @@ class BrokerDataTransmissionWebImplTest {
         Truth.assertThat(exception).isNotNull()
         Truth.assertThat(exception).isInstanceOf(HttpException::class.java)
         Truth.assertThat((exception as HttpException).code()).isEqualTo(500)
+    }
+
+    @Test
+    fun `getBrokerStockDataByImageRecognition_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}BrokerDataTransmission/api/brokerstockdata/imagerecongnition"
+        val urlSlot = slot<String>()
+        val responseBody = ImageRecognitionResponseBody(
+            brokerId = null,
+            brokerShortName = null,
+            subBrokerId = null,
+            updateTimeOfUnixTimeSeconds = null,
+            inStockData = listOf()
+        )
+        coEvery {
+            service.getBrokerStockDataByImageRecognition(
+                url = capture(urlSlot),
+                body = any(),
+                authToken = any()
+            )
+        } returns Response.success(200, responseBody)
+        web.getBrokerStockDataByImageRecognition(
+            country = Country.TW,
+            imageRecognitionData = ImageRecognitionData(
+                brokerId = "",
+                subBrokerId = "",
+                encryptedStockDataImages = emptyList(),
+                encryptedAesKey = "",
+                encryptedAesIv = ""
+            )
+        )
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
     }
 
     @Test
@@ -403,6 +521,21 @@ class BrokerDataTransmissionWebImplTest {
     }
 
     @Test
+    fun `putBrokerStockData_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}BrokerDataTransmission/api/brokerstockdata"
+        val urlSlot = slot<String>()
+        coEvery {
+            service.putBrokerStockData(
+                url = capture(urlSlot),
+                body = any(),
+                authToken = any()
+            )
+        } returns Response.success<Void>(204, null)
+        web.putBrokerStockData(Country.TW, BrokerData("", "", emptyList()))
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun `putBrokerStockData 成功`() = testScope.runTest {
         coEvery {
             service.putBrokerStockData(
@@ -436,6 +569,21 @@ class BrokerDataTransmissionWebImplTest {
     }
 
     @Test
+    fun `deleteBrokerStockData_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}BrokerDataTransmission/api/brokerstockdata"
+        val urlSlot = slot<String>()
+        coEvery {
+            service.deleteBrokerStockData(
+                url = capture(urlSlot),
+                body = any(),
+                authToken = any()
+            )
+        } returns Response.success<Void>(204, null)
+        web.deleteBrokerStockData(Country.TW, emptyList())
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
     fun `deleteBrokerStockData 成功`() = testScope.runTest {
         coEvery {
             service.deleteBrokerStockData(
@@ -466,6 +614,25 @@ class BrokerDataTransmissionWebImplTest {
         Truth.assertThat(exception).isNotNull()
         Truth.assertThat(exception).isInstanceOf(HttpException::class.java)
         Truth.assertThat((exception as HttpException).code()).isEqualTo(500)
+    }
+
+    @Test
+    fun `getConsents_check url`() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}BrokerDataTransmission/Consent"
+        val urlSlot = slot<String>()
+        val responseBody = gson.fromJson(
+            """[{"brokerId":"9800","hasSigned":true}]""",
+            JsonElement::class.java
+        )
+        coEvery {
+            service.getConsents(
+                url = capture(urlSlot),
+                code = any(),
+                authToken = any()
+            )
+        } returns Response.success(responseBody)
+        web.getConsents(Country.TW)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
     }
 
     @Test
@@ -513,6 +680,21 @@ class BrokerDataTransmissionWebImplTest {
         Truth.assertThat(exception).isInstanceOf(ServerException::class.java)
         Truth.assertThat((exception as ServerException).code)
             .isEqualTo(Constant.SERVICE_NOT_SUPPORT_ERROR_CODE)
+    }
+
+    @Test
+    fun `signConsent_check url`() = testScope.runTest {
+        val brokerId = "9800"
+        val expect = "${EXCEPT_DOMAIN}BrokerDataTransmission/Consent/$brokerId"
+        val urlSlot = slot<String>()
+        coEvery {
+            service.signConsent(
+                url = capture(urlSlot),
+                authToken = any()
+            )
+        } returns Response.success<Void>(204, null)
+        web.signConsent(brokerId = brokerId)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
     }
 
     @Test

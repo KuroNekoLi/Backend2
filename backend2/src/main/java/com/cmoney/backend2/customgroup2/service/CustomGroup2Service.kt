@@ -17,8 +17,9 @@ interface CustomGroup2Service {
      * 根據關鍵字、回傳語系搜尋股市標的
      */
     @RecordApi
-    @POST("CustomGroupService/api/searchstocksbyappid")
+    @POST
     suspend fun searchStocks(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Header("Accept-Language") language: String,
         @Body requestBody: SearchStocksRequestBody
@@ -28,8 +29,9 @@ interface CustomGroup2Service {
      * 根據關鍵字、回傳語系、市場類別搜尋股市標的
      */
     @RecordApi
-    @POST("CustomGroupService/api/searchstocksbycommoditytype")
+    @POST
     suspend fun searchStocksByMarketType(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Header("Accept-Language") language: String,
         @Body requestBody: SearchStocksByMarketTypeRequestBody
@@ -42,8 +44,9 @@ interface CustomGroup2Service {
      * @param filters 篩選條件，以逗號區隔，條件格式為{欄位名稱:欄位數值}
      */
     @RecordApi
-    @GET("custom-group/api")
+    @GET
     suspend fun getCustomGroup(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Query(value = "filters") filters: String
     ): Response<Documents>
@@ -52,14 +55,14 @@ interface CustomGroup2Service {
      * 取得自選股文件
      *
      * @param authorization 權限JWT Token
-     * @param id 指定文件ID
+     *
      * @return 指定自選股文件
      */
     @RecordApi
-    @GET("custom-group/api/{id}")
+    @GET
     suspend fun getCustomGroupBy(
-        @Header("Authorization") authorization: String,
-        @Path("id") id: String
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<Document>
 
     /**
@@ -70,8 +73,9 @@ interface CustomGroup2Service {
      * @return 新文件ID
      */
     @RecordApi
-    @POST("custom-group/api")
+    @POST
     suspend fun createCustomGroup(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body baseDocument: Document
     ): Response<CreateCustomGroupResponseBody>
@@ -80,13 +84,12 @@ interface CustomGroup2Service {
      * 更新自選股文件
      *
      * @param authorization 權限JWT Token
-     * @param id 指定文件ID
      */
     @RecordApi
-    @PUT("custom-group/api/{id}")
+    @PUT
     suspend fun updateCustomGroup(
+        @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("id") id: String,
         @Body newGroup: Document
     ): Response<Void>
 
@@ -94,13 +97,13 @@ interface CustomGroup2Service {
      * 刪除自選股文件
      *
      * @param authorization 權限JWT Token
-     * @param id 指定文件ID
+     *
      */
     @RecordApi
-    @DELETE("custom-group/api/{id}")
+    @DELETE
     suspend fun deleteCustomGroup(
-        @Header("Authorization") authorization: String,
-        @Path("id") id: String
+        @Url url: String,
+        @Header("Authorization") authorization: String
     ): Response<Void>
 
     /**
@@ -110,8 +113,9 @@ interface CustomGroup2Service {
      * @return 使用者設定
      */
     @RecordApi
-    @GET("custom-group/api/_configuration")
+    @GET
     suspend fun getUserConfiguration(
+        @Url url: String,
         @Header("Authorization") authorization: String
     ): Response<UserConfigurationDocument>
 
@@ -122,8 +126,9 @@ interface CustomGroup2Service {
      * @return 是否成功
      */
     @RecordApi
-    @PUT("custom-group/api/_configuration")
+    @PUT
     suspend fun updateUserConfiguration(
+        @Url url: String,
         @Header("Authorization") authorization: String,
         @Body newUserConfigurationDocument: UserConfigurationDocument
     ): Response<Void>
