@@ -1,3 +1,6 @@
+# [5.54.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.54.0...5.55.0)
+
+
 ### Features
 
 - ActivityWeb加入SettingAdapter，預設使用共用的Domain。
@@ -45,7 +48,7 @@
 
 ### Breaking Changes
 
-- 只發佈 release version: `backend2`, `backend2-debug` 不在發佈
+- 只發佈 release version: `backend2`, `backend2-debug` 不再發佈
 - 所有的 `Service` 的DI定義改採用 `BACKEND2_RETROFIT_V2` 或 `BACKEND2_RETROFIT_WITH_GSON_NON_SERIALIZE_NULLS_V2`。
 - 所有的 `WebImp` 的DI定義移除 `Setting` 引用，改用 `GlobalBackend2Manager`，請確認有指定[named arguement](https://kotlinlang.org/docs/functions.html#named-arguments)。
 
