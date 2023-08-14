@@ -54,8 +54,7 @@ dependecies {
 
 ```groovy
 dependecies {
-	releaseImplementation("com.cmoney.backend2:backend2:5.55.0")
-	debugImplementation("com.cmoney.backend2:backend2-debug:5.55.0")
+	implementation("com.cmoney.backend2:backend2:5.55.0")
 	implementation("com.cmoney.logdatarecorder:logdatarecorder-data:5.5.0")
 	implementation("com.cmoney.logdatarecorder:logdatarecorder-domain:5.5.0")
 }
