@@ -786,7 +786,7 @@ class GlobalBackend2Manager(
         var emilyStockSettingAdapter: EmilyStockSettingAdapter =
             EmilyStockSettingAdapterImpl(backendSetting)
         var forumOceanSettingAdapter: ForumOceanSettingAdapter =
-            ForumOceanSettingAdapterImpl(backendSetting)
+            ForumOceanSettingAdapterImpl()
         var frontEndLoggerSettingAdapter: FrontEndLoggerSettingAdapter =
             FrontEndLoggerSettingAdapterImpl(backendSetting)
         var identityProviderSettingAdapter: IdentityProviderSettingAdapter =
