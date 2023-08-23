@@ -1,13 +1,8 @@
 package com.cmoney.backend2.forumocean.model
 
-import com.cmoney.backend2.base.model.setting.backend.BackendSetting
-
-class ForumOceanSettingAdapterImpl(
-    private val setting: BackendSetting
-) : ForumOceanSettingAdapter {
-
+class ForumOceanSettingAdapterImpl : ForumOceanSettingAdapter {
     override fun getDomain(): String {
-        return setting.getDomainUrl()
+        return "https://forumservice.cmoney.tw/"
     }
 
     override fun getPathName(): String {
