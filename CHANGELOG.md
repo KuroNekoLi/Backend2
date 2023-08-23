@@ -1,4 +1,12 @@
-# [5.54.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.54.0...5.55.0)
+## [5.55.1](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.54.0...5.55.0)
+
+
+### Bug Fixes
+
+- ForumOceanSettingAdapter，預設 `https://forumservice.cmoney.tw/`，Path 使用 空字串。
+
+
+# [5.55.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.54.0...5.55.0)
 
 
 ### Features
