@@ -1,4 +1,15 @@
-## [5.55.1](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.54.0...5.55.0)
+## [5.55.2](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.55.1...5.55.2)
+
+
+### Bug Fixes
+
+- ChatRoomService
+	- 修正 uploadImage 設定錯誤
+- ForumOceanService
+	- 修正 getChannelIds 設定錯誤
+
+	
+## [5.55.1](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.55.0...5.55.1)
 
 
 ### Bug Fixes

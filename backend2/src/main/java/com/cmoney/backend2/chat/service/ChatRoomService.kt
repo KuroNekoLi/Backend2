@@ -261,7 +261,7 @@ interface ChatRoomService {
      */
     @RecordApi
     @Multipart
-    @POST("api/Image/Upload")
+    @POST
     suspend fun uploadImage(
         @Url url: String,
         @Part formFile: MultipartBody.Part

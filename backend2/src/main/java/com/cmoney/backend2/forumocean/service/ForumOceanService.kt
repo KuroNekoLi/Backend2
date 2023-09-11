@@ -665,7 +665,7 @@ interface ForumOceanService {
     ): Response<List<ChannelIdAndMemberId>>
 
     @RecordApi
-    @GET("{path}/")
+    @GET
     suspend fun getChannelIds(
         @Url url: String,
         @Header("Authorization") authorization: String,
