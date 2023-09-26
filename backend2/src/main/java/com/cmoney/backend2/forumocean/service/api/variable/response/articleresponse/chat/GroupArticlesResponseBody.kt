@@ -3,6 +3,37 @@ package com.cmoney.backend2.forumocean.service.api.variable.response.articleresp
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleContentV2
 import com.google.gson.annotations.SerializedName
 
+/**
+ * 看板文章回傳
+ *
+ * @property id
+ * @property creatorId
+ * @property unsend
+ * @property articleContent
+ * @property createTime
+ * @property modifyTime
+ * @property myEmoji
+ * @property emojiCount
+ * @property collected
+ * @property collectCount
+ * @property myCommentIndex
+ * @property commentCount
+ * @property shareCount
+ * @property interested
+ * @property interestCount
+ * @property rewardPoints
+ * @property donateCount
+ * @property voteCount
+ * @property voteStatus
+ * @property totalReportCount
+ * @property hasReport
+ * @property isHidden
+ * @property anonymous
+ * @property authType
+ * @property isPromotedArticle
+ * @property isPinnedPromotedArticle
+ * @property reply 被回覆的訊息內容
+ */
 data class GroupArticlesResponseBody(
     @SerializedName("id")
     val id: String?,
@@ -55,5 +86,7 @@ data class GroupArticlesResponseBody(
     @SerializedName("isPromotedArticle")
     val isPromotedArticle: Boolean?,
     @SerializedName("isPinnedPromotedArticle")
-    val isPinnedPromotedArticle: Boolean?
+    val isPinnedPromotedArticle: Boolean?,
+    @SerializedName("reply")
+    val reply: ArticleReply?
 )
