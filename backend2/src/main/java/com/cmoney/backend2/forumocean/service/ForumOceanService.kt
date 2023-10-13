@@ -1346,6 +1346,18 @@ interface ForumOceanService {
     ): Response<CommentResponseBodyV2>
 
     /**
+     * 取得個股最相關文章
+     */
+    @RecordApi
+    @POST
+    suspend fun getMostRelevantCommodityArticles(
+        @Url url: String,
+        @Header("Authorization") authorization: String,
+        @Query("offset") offset: Int?,
+        @Query("fetch") fetch: Int
+    ): Response<List<ArticleResponseBody.UnknownArticleResponseBody>>
+
+    /**
      * 取得個人化推薦文章
      */
     @RecordApi
