@@ -2093,7 +2093,7 @@ interface ForumOceanWeb {
      * @param url 完整的Url
      */
     suspend fun getMostRelevantCommodityArticles(
-        commodityId:String,
+        commodityId: String,
         offset: Int? = null,
         fetch: Int,
         domain: String = manager.getForumOceanSettingAdapter().getDomain(),
