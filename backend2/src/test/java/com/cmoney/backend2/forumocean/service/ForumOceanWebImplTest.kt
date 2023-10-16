@@ -7489,7 +7489,6 @@ class ForumOceanWebImplTest {
 
     @Test
     fun `getMostRelevantCommodityArticles_check url`() = testScope.runTest {
-
         val givenCommodityId = 10000
         val urlSlot = slot<String>()
         coEvery {
@@ -7509,8 +7508,47 @@ class ForumOceanWebImplTest {
         val expect =
             "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/Article/Stock/${givenCommodityId}/Recommended"
 
-        Truth.assertThat(urlSlot.captured)
-            .isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getMostRelevantCommodityArticles_success() = testScope.runTest {
+        coEvery {
+            forumOceanService.getMostRelevantCommodityArticles(
+                url = any(),
+                authorization = any(),
+                offset = any(),
+                fetch = any()
+            )
+        } returns Response.success(listOf())
+        val result = web.getMostRelevantCommodityArticles(
+            commodityId = "2330",
+            offset = 0,
+            fetch = 0
+        )
+        Truth.assertThat(result.isSuccess).isTrue()
+    }
+
+    @Test
+    fun getMostRelevantCommodityArticles_failure() = testScope.runTest {
+        coEvery {
+            forumOceanService.getMostRelevantCommodityArticles(
+                url = any(),
+                authorization = any(),
+                offset = any(),
+                fetch = any()
+            )
+        } returns Response.error(401, "".toResponseBody())
+        val result = web.getMostRelevantCommodityArticles(
+            commodityId = "2330",
+            offset = 0,
+            fetch = 0
+        )
+        Truth.assertThat(result.isSuccess).isFalse()
+        val exception = result.exceptionOrNull() as? HttpException
+        Truth.assertThat(exception).isNotNull()
+        requireNotNull(exception)
+        Truth.assertThat(exception.code()).isEqualTo(401)
     }
 
     @Test
