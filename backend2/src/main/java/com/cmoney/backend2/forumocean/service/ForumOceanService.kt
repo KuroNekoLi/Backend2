@@ -1350,6 +1350,7 @@ interface ForumOceanService {
      */
     @RecordApi
     @GET
+    @Headers("X-Version: 2.0")
     suspend fun getMostRelevantCommodityArticles(
         @Url url: String,
         @Header("Authorization") authorization: String,
@@ -1367,6 +1368,7 @@ interface ForumOceanService {
      */
     @RecordApi
     @GET
+    @Headers("X-Version: 2.0")
     suspend fun getMostRelevantMarketArticles(
         @Url url: String,
         @Header("Authorization") authorization: String,
