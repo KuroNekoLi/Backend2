@@ -931,7 +931,7 @@ class ForumOceanWebImplTest {
     }
 
     @Test
-    fun deleteGroupArticle_failed() = testScope.runTest {
+    fun deleteGroupArticle_failure() = testScope.runTest {
         coEvery {
             forumOceanService.deleteGroupArticle(
                     url = any(),
