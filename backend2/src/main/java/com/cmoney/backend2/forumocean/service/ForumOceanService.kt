@@ -1163,6 +1163,18 @@ interface ForumOceanService {
     ): Response<CreateArticleResponseBody>
 
     /**
+     * 刪除社團文章
+     */
+    @RecordApi
+    @DELETE
+    @Headers("X-Version: 2.0")
+    suspend fun deleteGroupArticle(
+        @Url url: String,
+        @Header("Authorization") authorization: String,
+        @Path("articleId") articleId: Long
+    ): Response<Void>
+
+    /**
      * 取得指定看板文章
      */
     @RecordApi
