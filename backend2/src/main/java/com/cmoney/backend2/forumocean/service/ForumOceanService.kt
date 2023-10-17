@@ -1349,7 +1349,7 @@ interface ForumOceanService {
      * 取得個股最相關文章
      */
     @RecordApi
-    @POST
+    @GET
     suspend fun getMostRelevantCommodityArticles(
         @Url url: String,
         @Header("Authorization") authorization: String,
@@ -1366,7 +1366,7 @@ interface ForumOceanService {
      * @param fetch 取得數量
      */
     @RecordApi
-    @POST
+    @GET
     suspend fun getMostRelevantMarketArticles(
         @Url url: String,
         @Header("Authorization") authorization: String,
