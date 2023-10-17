@@ -2101,6 +2101,21 @@ interface ForumOceanWeb {
     ):Result<List<ArticleResponseBody.UnknownArticleResponseBody>>
 
     /**
+     * 取得大盤最相關文章
+     *
+     * @param offset 起始權重 (不帶從頭取)
+     * @param fetch 取得數量
+     * @param domain 網域名稱
+     * @param url 完整的Url
+     */
+    suspend fun getMostRelevantMarketArticles(
+        offset: Int? = null,
+        fetch: Int,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Article/Market/Recommended"
+    ): Result<List<ArticleResponseBody.UnknownArticleResponseBody>>
+
+    /**
      * 取得推薦文章
      *
      * @param offset 起始權重

@@ -2089,6 +2089,22 @@ class ForumOceanWebImpl(
         }
     }
 
+    override suspend fun getMostRelevantMarketArticles(
+        offset: Int?,
+        fetch: Int,
+        domain: String,
+        url: String
+    ): Result<List<ArticleResponseBody.UnknownArticleResponseBody>> = withContext(dispatcher.io()) {
+        kotlin.runCatching {
+            service.getMostRelevantMarketArticles(
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
+                offset = offset,
+                fetch = fetch
+            ).checkResponseBody(jsonParser)
+        }
+    }
+
     override suspend fun getRecommendation(
         offset: Int,
         fetch: Int,
