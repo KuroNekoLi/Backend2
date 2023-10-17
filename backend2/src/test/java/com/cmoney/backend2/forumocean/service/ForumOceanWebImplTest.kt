@@ -7552,6 +7552,66 @@ class ForumOceanWebImplTest {
     }
 
     @Test
+    fun `getMostRelevantMarketArticles_check url`() = testScope.runTest {
+        val urlSlot = slot<String>()
+        coEvery {
+            forumOceanService.getMostRelevantMarketArticles(
+                url = capture(urlSlot),
+                authorization = any(),
+                offset = any(),
+                fetch = any()
+            )
+        } returns Response.success(listOf())
+        web.getMostRelevantMarketArticles(
+            offset = 0,
+            fetch = 0
+        )
+
+        val expect =
+            "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/Article/Market/Recommended"
+
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getMostRelevantMarketArticles_success() = testScope.runTest {
+        coEvery {
+            forumOceanService.getMostRelevantMarketArticles(
+                url = any(),
+                authorization = any(),
+                offset = any(),
+                fetch = any()
+            )
+        } returns Response.success(listOf())
+        val result = web.getMostRelevantMarketArticles(
+            offset = 0,
+            fetch = 0
+        )
+        Truth.assertThat(result.isSuccess).isTrue()
+    }
+
+    @Test
+    fun getMostRelevantMarketArticles_failure() = testScope.runTest {
+        coEvery {
+            forumOceanService.getMostRelevantMarketArticles(
+                url = any(),
+                authorization = any(),
+                offset = any(),
+                fetch = any()
+            )
+        } returns Response.error(401, "".toResponseBody())
+        val result = web.getMostRelevantMarketArticles(
+            offset = 0,
+            fetch = 0
+        )
+        Truth.assertThat(result.isSuccess).isFalse()
+        val exception = result.exceptionOrNull() as? HttpException
+        Truth.assertThat(exception).isNotNull()
+        requireNotNull(exception)
+        Truth.assertThat(exception.code()).isEqualTo(401)
+    }
+
+    @Test
     fun `getRecommendation_check url`() = testScope.runTest {
         val expect =
             "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/Channel/GetRecommendation/Recommendation"
