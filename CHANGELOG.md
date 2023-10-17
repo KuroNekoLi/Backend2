@@ -1,3 +1,12 @@
+# [5.56.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.55.2...5.56.0)
+
+
+### Features
+
+- ForumOceanService
+	- 新增 deleteGroupArticle (棄用後補回)
+
+
 ## [5.55.2](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.55.1...5.55.2)
 
 
