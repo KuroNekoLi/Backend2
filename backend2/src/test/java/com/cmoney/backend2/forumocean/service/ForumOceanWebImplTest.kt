@@ -107,7 +107,10 @@ class ForumOceanWebImplTest {
     @MockK
     private lateinit var forumOceanService: ForumOceanService
     private val jsonParser =
-        GsonBuilder().serializeNulls().setLenient().setPrettyPrinting().create()
+        GsonBuilder().serializeNulls()
+            .setLenient()
+            .setPrettyPrinting()
+            .create()
     private lateinit var web: ForumOceanWeb
 
     @MockK(relaxed = true)
@@ -123,10 +126,12 @@ class ForumOceanWebImplTest {
             dispatcher = TestDispatcherProvider()
         )
         coEvery {
-            manager.getForumOceanSettingAdapter().getDomain()
+            manager.getForumOceanSettingAdapter()
+                .getDomain()
         } returns EXCEPT_DOMAIN
         coEvery {
-            manager.getForumOceanSettingAdapter().getPathName()
+            manager.getForumOceanSettingAdapter()
+                .getPathName()
         } returns EXCEPT_PATH_NAME
     }
 
@@ -150,7 +155,8 @@ class ForumOceanWebImplTest {
         } returns Response.success(responseBody)
 
         web.getBanState()
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -166,9 +172,11 @@ class ForumOceanWebImplTest {
         } returns Response.success(responseBody)
 
         val result = web.getBanState()
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
         val response = result.getOrThrow()
-        Truth.assertThat(response.isBan).isTrue()
+        Truth.assertThat(response.isBan)
+            .isTrue()
     }
 
     @Test
@@ -179,7 +187,8 @@ class ForumOceanWebImplTest {
                 message = "無授權"
             )
         )
-        val jsonBody = jsonParser.toJson(errorBody).toResponseBody()
+        val jsonBody = jsonParser.toJson(errorBody)
+            .toResponseBody()
         coEvery {
             forumOceanService.getBanState(
                 url = any(),
@@ -188,13 +197,18 @@ class ForumOceanWebImplTest {
         } returns Response.error(400, jsonBody)
 
         val result = web.getBanState()
-        Truth.assertThat(result.isSuccess).isFalse()
+        Truth.assertThat(result.isSuccess)
+            .isFalse()
         val exception = result.exceptionOrNull()
-        Truth.assertThat(exception).isNotNull()
-        Truth.assertThat(exception).isInstanceOf(ServerException::class.java)
+        Truth.assertThat(exception)
+            .isNotNull()
+        Truth.assertThat(exception)
+            .isInstanceOf(ServerException::class.java)
         require(exception is ServerException)
-        Truth.assertThat(exception.code).isEqualTo(101)
-        Truth.assertThat(exception.message).isEqualTo("無授權")
+        Truth.assertThat(exception.code)
+            .isEqualTo(101)
+        Truth.assertThat(exception.message)
+            .isEqualTo("無授權")
     }
 
     @Test
@@ -216,7 +230,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(responseBody)
         web.createPersonalArticle(body = createContent)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -236,8 +251,10 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(responseBody)
         val result = web.createPersonalArticle(body = createContent)
-        Truth.assertThat(result.isSuccess).isTrue()
-        Truth.assertThat(result.getOrThrow().articleId).isEqualTo(1L)
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
+        Truth.assertThat(result.getOrThrow().articleId)
+            .isEqualTo(1L)
     }
 
     @Test(expected = HttpException::class)
@@ -258,7 +275,8 @@ class ForumOceanWebImplTest {
         val result = web.createPersonalArticle(
             body = createContent
         )
-        Truth.assertThat(result.isSuccess).isFalse()
+        Truth.assertThat(result.isSuccess)
+            .isFalse()
         result.getOrThrow()
     }
 
@@ -281,7 +299,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(responseBody)
         web.createPersonalArticle(body = createContent)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -301,8 +320,10 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(responseBody)
         val result = web.createPersonalArticle(body = createContent)
-        Truth.assertThat(result.isSuccess).isTrue()
-        Truth.assertThat(result.getOrThrow().articleId).isEqualTo(1)
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
+        Truth.assertThat(result.getOrThrow().articleId)
+            .isEqualTo(1)
     }
 
     @Test(expected = HttpException::class)
@@ -323,7 +344,8 @@ class ForumOceanWebImplTest {
         val result = web.createPersonalArticle(
             body = createContent
         )
-        Truth.assertThat(result.isSuccess).isFalse()
+        Truth.assertThat(result.isSuccess)
+            .isFalse()
         result.getOrThrow()
     }
 
@@ -352,7 +374,8 @@ class ForumOceanWebImplTest {
         web.createArticle(
             body = createContent
         )
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -378,8 +401,10 @@ class ForumOceanWebImplTest {
         val result = web.createArticle(
             body = createContent
         )
-        Truth.assertThat(result.isSuccess).isTrue()
-        Truth.assertThat(result.getOrThrow().articleId).isEqualTo(1)
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
+        Truth.assertThat(result.getOrThrow().articleId)
+            .isEqualTo(1)
     }
 
     @Test(expected = HttpException::class)
@@ -404,7 +429,8 @@ class ForumOceanWebImplTest {
         val result = web.createArticle(
             body = createContent
         )
-        Truth.assertThat(result.isSuccess).isFalse()
+        Truth.assertThat(result.isSuccess)
+            .isFalse()
         result.getOrThrow()
     }
 
@@ -433,7 +459,8 @@ class ForumOceanWebImplTest {
         web.createArticle(
             body = createContent
         )
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -459,8 +486,10 @@ class ForumOceanWebImplTest {
         val result = web.createArticle(
             body = createContent
         )
-        Truth.assertThat(result.isSuccess).isTrue()
-        Truth.assertThat(result.getOrThrow().articleId).isEqualTo(1)
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
+        Truth.assertThat(result.getOrThrow().articleId)
+            .isEqualTo(1)
     }
 
     @Test(expected = HttpException::class)
@@ -485,7 +514,8 @@ class ForumOceanWebImplTest {
         val result = web.createArticle(
             body = createContent
         )
-        Truth.assertThat(result.isSuccess).isFalse()
+        Truth.assertThat(result.isSuccess)
+            .isFalse()
         result.getOrThrow()
     }
 
@@ -514,7 +544,8 @@ class ForumOceanWebImplTest {
         web.createArticle(
             body = createContent
         )
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -540,8 +571,10 @@ class ForumOceanWebImplTest {
         val result = web.createArticle(
             body = createContent
         )
-        Truth.assertThat(result.isSuccess).isTrue()
-        Truth.assertThat(result.getOrThrow().articleId).isEqualTo(1)
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
+        Truth.assertThat(result.getOrThrow().articleId)
+            .isEqualTo(1)
     }
 
     @Test(expected = HttpException::class)
@@ -566,7 +599,8 @@ class ForumOceanWebImplTest {
         val result = web.createArticle(
             body = createContent
         )
-        Truth.assertThat(result.isSuccess).isFalse()
+        Truth.assertThat(result.isSuccess)
+            .isFalse()
         result.getOrThrow()
     }
 
@@ -595,7 +629,8 @@ class ForumOceanWebImplTest {
         web.createArticle(
             body = createContent
         )
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -621,8 +656,10 @@ class ForumOceanWebImplTest {
         val result = web.createArticle(
             body = createContent
         )
-        Truth.assertThat(result.isSuccess).isTrue()
-        Truth.assertThat(result.getOrThrow().articleId).isEqualTo(1)
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
+        Truth.assertThat(result.getOrThrow().articleId)
+            .isEqualTo(1)
     }
 
     @Test(expected = HttpException::class)
@@ -647,7 +684,8 @@ class ForumOceanWebImplTest {
         val result = web.createArticle(
             body = createContent
         )
-        Truth.assertThat(result.isSuccess).isFalse()
+        Truth.assertThat(result.isSuccess)
+            .isFalse()
         result.getOrThrow()
     }
 
@@ -674,7 +712,8 @@ class ForumOceanWebImplTest {
         web.createQuestion(
             body = createContent
         )
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -698,8 +737,10 @@ class ForumOceanWebImplTest {
         val result = web.createQuestion(
             body = createContent
         )
-        Truth.assertThat(result.isSuccess).isTrue()
-        Truth.assertThat(result.getOrThrow().articleId).isEqualTo(1)
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
+        Truth.assertThat(result.getOrThrow().articleId)
+            .isEqualTo(1)
     }
 
     @Test(expected = HttpException::class)
@@ -722,7 +763,8 @@ class ForumOceanWebImplTest {
         val result = web.createQuestion(
             body = createContent
         )
-        Truth.assertThat(result.isSuccess).isFalse()
+        Truth.assertThat(result.isSuccess)
+            .isFalse()
         result.getOrThrow()
     }
 
@@ -740,7 +782,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         web.updateArticle(100, helper)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -756,7 +799,8 @@ class ForumOceanWebImplTest {
         } returns Response.success<Void>(204, null)
         val result = web.updateArticle(100, helper)
 
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test(expected = HttpException::class)
@@ -772,7 +816,8 @@ class ForumOceanWebImplTest {
         } returns Response.error(403, "".toResponseBody())
         val result = web.updateArticle(100, helper)
 
-        Truth.assertThat(result.isSuccess).isFalse()
+        Truth.assertThat(result.isSuccess)
+            .isFalse()
         result.getOrThrow()
     }
 
@@ -787,9 +832,12 @@ class ForumOceanWebImplTest {
         } returns Response.error(404, "".toResponseBody())
         val result = web.updateArticle(132434, UpdateArticleHelper())
 
-        Truth.assertThat(result.isSuccess).isFalse()
-        Truth.assertThat(result.exceptionOrNull()).isInstanceOf(HttpException::class.java)
-        Truth.assertThat((result.exceptionOrNull() as? HttpException)?.code()).isEqualTo(404)
+        Truth.assertThat(result.isSuccess)
+            .isFalse()
+        Truth.assertThat(result.exceptionOrNull())
+            .isInstanceOf(HttpException::class.java)
+        Truth.assertThat((result.exceptionOrNull() as? HttpException)?.code())
+            .isEqualTo(404)
     }
 
     @Test
@@ -803,7 +851,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         web.deleteArticle(100)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
 
@@ -817,7 +866,8 @@ class ForumOceanWebImplTest {
         } returns Response.success<Void>(204, null)
         val result = web.deleteArticle(100)
 
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -830,7 +880,8 @@ class ForumOceanWebImplTest {
         } returns Response.error(403, "".toResponseBody())
         val result = web.deleteArticle(100)
 
-        Truth.assertThat(result.isSuccess).isFalse()
+        Truth.assertThat(result.isSuccess)
+            .isFalse()
     }
 
     @Test(expected = HttpException::class)
@@ -843,7 +894,8 @@ class ForumOceanWebImplTest {
         } returns Response.error(404, "".toResponseBody())
         val result = web.deleteArticle(132434)
 
-        Truth.assertThat(result.isSuccess).isFalse()
+        Truth.assertThat(result.isSuccess)
+            .isFalse()
         result.getOrThrow()
     }
 
@@ -858,7 +910,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         web.deleteArticleV2("100")
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -871,7 +924,8 @@ class ForumOceanWebImplTest {
         } returns Response.success<Void>(204, null)
         val result = web.deleteArticleV2("100")
 
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test(expected = HttpException::class)
@@ -884,7 +938,8 @@ class ForumOceanWebImplTest {
         } returns Response.error(403, "".toResponseBody())
         val result = web.deleteArticleV2("100")
 
-        Truth.assertThat(result.isSuccess).isFalse()
+        Truth.assertThat(result.isSuccess)
+            .isFalse()
         result.getOrThrow()
     }
 
@@ -898,7 +953,8 @@ class ForumOceanWebImplTest {
         } returns Response.error(404, "".toResponseBody())
         val result = web.deleteArticleV2("132434")
 
-        Truth.assertThat(result.isSuccess).isFalse()
+        Truth.assertThat(result.isSuccess)
+            .isFalse()
         result.getOrThrow()
     }
 
@@ -963,7 +1019,8 @@ class ForumOceanWebImplTest {
             )
         )
         web.getMemberStatistics(listOf(100))
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -988,13 +1045,35 @@ class ForumOceanWebImplTest {
         )
         val result = web.getMemberStatistics(listOf(100))
 
-        Truth.assertThat(result.isSuccess).isTrue()
-        Truth.assertThat(result.getOrThrow().size).isEqualTo(1)
-        Truth.assertThat(result.getOrThrow().first().memberId).isEqualTo(100)
-        Truth.assertThat(result.getOrThrow().first().totalCountArticle).isEqualTo(6)
-        Truth.assertThat(result.getOrThrow().first().totalCountReaction).isEqualTo(3)
-        Truth.assertThat(result.getOrThrow().first().totalCountFollowing).isEqualTo(16)
-        Truth.assertThat(result.getOrThrow().first().totalCountFollower).isEqualTo(10)
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
+        Truth.assertThat(result.getOrThrow().size)
+            .isEqualTo(1)
+        Truth.assertThat(
+            result.getOrThrow()
+                .first().memberId
+        )
+            .isEqualTo(100)
+        Truth.assertThat(
+            result.getOrThrow()
+                .first().totalCountArticle
+        )
+            .isEqualTo(6)
+        Truth.assertThat(
+            result.getOrThrow()
+                .first().totalCountReaction
+        )
+            .isEqualTo(3)
+        Truth.assertThat(
+            result.getOrThrow()
+                .first().totalCountFollowing
+        )
+            .isEqualTo(16)
+        Truth.assertThat(
+            result.getOrThrow()
+                .first().totalCountFollower
+        )
+            .isEqualTo(10)
     }
 
     @Test(expected = HttpException::class)
@@ -1008,7 +1087,8 @@ class ForumOceanWebImplTest {
         } returns Response.error(403, "".toResponseBody())
         val result = web.getMemberStatistics(listOf(100))
 
-        Truth.assertThat(result.isSuccess).isFalse()
+        Truth.assertThat(result.isSuccess)
+            .isFalse()
         result.getOrThrow()
     }
 
@@ -1060,7 +1140,8 @@ class ForumOceanWebImplTest {
             weight = 0,
             count = 0
         )
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -1109,8 +1190,10 @@ class ForumOceanWebImplTest {
             0,
             0
         )
-        Truth.assertThat(result.isSuccess).isTrue()
-        Truth.assertThat(result.getOrThrow().size).isEqualTo(1)
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
+        Truth.assertThat(result.getOrThrow().size)
+            .isEqualTo(1)
     }
 
     @Test
@@ -1129,7 +1212,8 @@ class ForumOceanWebImplTest {
             0,
             0
         )
-        Truth.assertThat(result.isSuccess).isFalse()
+        Truth.assertThat(result.isSuccess)
+            .isFalse()
     }
 
     @Test
@@ -1143,7 +1227,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         web.createCollection(1000)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -1155,7 +1240,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         val result = web.createCollection(1000)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test(expected = HttpException::class)
@@ -1167,7 +1253,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(403, "".toResponseBody())
         val result = web.createCollection(1000)
-        Truth.assertThat(result.isSuccess).isFalse()
+        Truth.assertThat(result.isSuccess)
+            .isFalse()
         result.getOrThrow()
     }
 
@@ -1182,7 +1269,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         web.deleteCollection(1000)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -1194,7 +1282,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         val result = web.deleteCollection(1000)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test(expected = HttpException::class)
@@ -1206,7 +1295,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(403, "".toResponseBody())
         val result = web.deleteCollection(1000)
-        Truth.assertThat(result.isSuccess).isFalse()
+        Truth.assertThat(result.isSuccess)
+            .isFalse()
         result.getOrThrow()
     }
 
@@ -1254,7 +1344,8 @@ class ForumOceanWebImplTest {
             )
         )
         web.getGroupManagerComments(10101)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -1299,8 +1390,10 @@ class ForumOceanWebImplTest {
             )
         )
         val result = web.getGroupManagerComments(10101)
-        Truth.assertThat(result.isSuccess).isTrue()
-        Truth.assertThat(result.getOrThrow()).hasSize(2)
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
+        Truth.assertThat(result.getOrThrow())
+            .hasSize(2)
     }
 
     @Test(expected = HttpException::class)
@@ -1312,7 +1405,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(403, "".toResponseBody())
         val result = web.getGroupManagerComments(10101)
-        Truth.assertThat(result.isSuccess).isFalse()
+        Truth.assertThat(result.isSuccess)
+            .isFalse()
         result.getOrThrow()
     }
 
@@ -1332,7 +1426,8 @@ class ForumOceanWebImplTest {
             commentId = 2000,
             helper = UpdateCommentHelper()
         )
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -1349,7 +1444,8 @@ class ForumOceanWebImplTest {
             commentId = 2000,
             helper = UpdateCommentHelper()
         )
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test(expected = HttpException::class)
@@ -1366,7 +1462,8 @@ class ForumOceanWebImplTest {
             commentId = 2000,
             helper = UpdateCommentHelper()
         )
-        Truth.assertThat(result.isSuccess).isFalse()
+        Truth.assertThat(result.isSuccess)
+            .isFalse()
         result.getOrThrow()
     }
 
@@ -1381,7 +1478,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         web.deleteCommentV2("123-1")
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
 
@@ -1394,7 +1492,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         val result = web.deleteCommentV2("123-1")
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test(expected = HttpException::class)
@@ -1406,7 +1505,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(403, "".toResponseBody())
         val result = web.deleteCommentV2("123-1")
-        Truth.assertThat(result.isSuccess).isFalse()
+        Truth.assertThat(result.isSuccess)
+            .isFalse()
         result.getOrThrow()
     }
 
@@ -1421,7 +1521,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         web.createReaction(id = "1010-1", type = ReactionType.LIKE)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -1433,7 +1534,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         val result = web.createReaction(id = "1010-1", type = ReactionType.LIKE)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test(expected = HttpException::class)
@@ -1445,7 +1547,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(403, "".toResponseBody())
         val result = web.createReaction("1010-1", ReactionType.LIKE)
-        Truth.assertThat(result.isSuccess).isFalse()
+        Truth.assertThat(result.isSuccess)
+            .isFalse()
         result.getOrThrow()
     }
 
@@ -1475,7 +1578,8 @@ class ForumOceanWebImplTest {
             )
         )
         web.getReactionDetailV2("123-1", reactionTypeList, 0, 20)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -1502,8 +1606,10 @@ class ForumOceanWebImplTest {
             )
         )
         val result = web.getReactionDetailV2("123-1", reactionTypeList, 0, 20)
-        Truth.assertThat(result.isSuccess).isTrue()
-        Truth.assertThat(result.getOrThrow().memberEmojis).hasSize(2)
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
+        Truth.assertThat(result.getOrThrow().memberEmojis)
+            .hasSize(2)
     }
 
 
@@ -1520,7 +1626,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getReactionDetailV2("123-1", reactionTypeList, 0, 20)
-        Truth.assertThat(result.isSuccess).isFalse()
+        Truth.assertThat(result.isSuccess)
+            .isFalse()
         result.getOrThrow()
     }
 
@@ -1535,7 +1642,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         web.deleteReaction(id = "123-1")
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -1547,7 +1655,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         val result = web.deleteReaction(id = "123-1")
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test(expected = ServerException::class)
@@ -1557,7 +1666,8 @@ class ForumOceanWebImplTest {
                 message = "不存在的文章"
             )
         )
-        val errorBody = jsonParser.toJson(error).toResponseBody()
+        val errorBody = jsonParser.toJson(error)
+            .toResponseBody()
         coEvery {
             forumOceanService.deleteReaction(
                 url = any(),
@@ -1565,7 +1675,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(400, errorBody)
         val result = web.deleteReaction(id = "123-1")
-        Truth.assertThat(result.isSuccess).isFalse()
+        Truth.assertThat(result.isSuccess)
+            .isFalse()
         result.getOrThrow()
     }
 
@@ -1580,7 +1691,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         web.createArticleInterest(10101)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -1592,7 +1704,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         val result = web.createArticleInterest(10101)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test(expected = HttpException::class)
@@ -1604,7 +1717,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.createArticleInterest(10101)
-        Truth.assertThat(result.isSuccess).isFalse()
+        Truth.assertThat(result.isSuccess)
+            .isFalse()
         result.getOrThrow()
     }
 
@@ -1620,7 +1734,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         web.createArticleDonate(10101, 1)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -1633,7 +1748,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         val result = web.createArticleDonate(10101, 1)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test(expected = HttpException::class)
@@ -1646,7 +1762,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.createArticleDonate(10101, 1)
-        Truth.assertThat(result.isSuccess).isFalse()
+        Truth.assertThat(result.isSuccess)
+            .isFalse()
         result.getOrThrow()
     }
 
@@ -1669,7 +1786,8 @@ class ForumOceanWebImplTest {
             )
         )
         web.getArticleDonate(10101, 0, 20)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -1689,9 +1807,12 @@ class ForumOceanWebImplTest {
             )
         )
         val result = web.getArticleDonate(10101, 0, 20)
-        Truth.assertThat(result.isSuccess).isTrue()
-        Truth.assertThat(result.getOrThrow()).hasSize(3)
-        Truth.assertThat(result.getOrThrow()[2].donateValue).isEqualTo(100)
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
+        Truth.assertThat(result.getOrThrow())
+            .hasSize(3)
+        Truth.assertThat(result.getOrThrow()[2].donateValue)
+            .isEqualTo(100)
     }
 
     @Test(expected = HttpException::class)
@@ -1705,7 +1826,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getArticleDonate(10101, 0, 20)
-        Truth.assertThat(result.isSuccess).isFalse()
+        Truth.assertThat(result.isSuccess)
+            .isFalse()
         result.getOrThrow()
     }
 
@@ -1737,7 +1859,8 @@ class ForumOceanWebImplTest {
             )
         )
         web.getGroup(groupId)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -1766,8 +1889,10 @@ class ForumOceanWebImplTest {
             )
         )
         val result = web.getGroup(groupId)
-        Truth.assertThat(result.isSuccess).isTrue()
-        Truth.assertThat(result.getOrThrow().id).isEqualTo(groupId)
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
+        Truth.assertThat(result.getOrThrow().id)
+            .isEqualTo(groupId)
     }
 
     @Test(expected = HttpException::class)
@@ -1780,7 +1905,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getGroup(groupId)
-        Truth.assertThat(result.isSuccess).isFalse()
+        Truth.assertThat(result.isSuccess)
+            .isFalse()
         result.getOrThrow()
     }
 
@@ -1836,9 +1962,14 @@ class ForumOceanWebImplTest {
             ownId = 1321321,
             offset = 0,
             fetch = 20,
-            positions = listOf(GroupPosition.NORMAL, GroupPosition.MANAGEMENT, GroupPosition.PRESIDENT)
+            positions = listOf(
+                GroupPosition.NORMAL,
+                GroupPosition.MANAGEMENT,
+                GroupPosition.PRESIDENT
+            )
         )
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -1891,10 +2022,16 @@ class ForumOceanWebImplTest {
             ownId = 1321321,
             offset = 0,
             fetch = 20,
-            positions = listOf(GroupPosition.NORMAL, GroupPosition.MANAGEMENT, GroupPosition.PRESIDENT)
+            positions = listOf(
+                GroupPosition.NORMAL,
+                GroupPosition.MANAGEMENT,
+                GroupPosition.PRESIDENT
+            )
         )
-        Truth.assertThat(result.isSuccess).isTrue()
-        Truth.assertThat(result.getOrThrow()).hasSize(2)
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
+        Truth.assertThat(result.getOrThrow())
+            .hasSize(2)
     }
 
     @Test(expected = HttpException::class)
@@ -1914,9 +2051,14 @@ class ForumOceanWebImplTest {
             ownId = 1321321,
             offset = 0,
             fetch = 20,
-            positions = listOf(GroupPosition.NORMAL, GroupPosition.MANAGEMENT, GroupPosition.PRESIDENT)
+            positions = listOf(
+                GroupPosition.NORMAL,
+                GroupPosition.MANAGEMENT,
+                GroupPosition.PRESIDENT
+            )
         )
-        Truth.assertThat(result.isSuccess).isFalse()
+        Truth.assertThat(result.isSuccess)
+            .isFalse()
         result.getOrThrow()
     }
 
@@ -1954,7 +2096,8 @@ class ForumOceanWebImplTest {
             )
         )
         web.getMemberManagedGroups(memberId = 1, offset = 0, fetch = 20)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -1993,8 +2136,13 @@ class ForumOceanWebImplTest {
             offset = 0,
             fetch = 20
         )
-        Truth.assertThat(result.isSuccess).isTrue()
-        Truth.assertThat(result.getOrThrow().first().id).isEqualTo(1)
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
+        Truth.assertThat(
+            result.getOrThrow()
+                .first().id
+        )
+            .isEqualTo(1)
     }
 
     @Test(expected = HttpException::class)
@@ -2015,7 +2163,8 @@ class ForumOceanWebImplTest {
             offset = 0,
             fetch = 20
         )
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
         result.getOrThrow()
     }
 
@@ -2034,7 +2183,8 @@ class ForumOceanWebImplTest {
                     GroupPosition.NORMAL,
                     GroupPosition.MANAGEMENT,
                     GroupPosition.PRESIDENT
-                ).map { it.position }.sum(),
+                ).map { it.position }
+                    .sum(),
                 includeAppGroup = any()
             )
         } returns Response.success(
@@ -2057,7 +2207,8 @@ class ForumOceanWebImplTest {
             )
         )
         web.getMemberBelongGroups(memberId = 1231321, offset = 0, fetch = 20)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -2073,7 +2224,8 @@ class ForumOceanWebImplTest {
                     GroupPosition.NORMAL,
                     GroupPosition.MANAGEMENT,
                     GroupPosition.PRESIDENT
-                ).map { it.position }.sum(),
+                ).map { it.position }
+                    .sum(),
                 includeAppGroup = any()
             )
         } returns Response.success(
@@ -2100,8 +2252,10 @@ class ForumOceanWebImplTest {
             offset = 0,
             fetch = 20
         )
-        Truth.assertThat(result.isSuccess).isTrue()
-        Truth.assertThat(result.getOrThrow()).hasSize(1)
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
+        Truth.assertThat(result.getOrThrow())
+            .hasSize(1)
     }
 
     @Test(expected = HttpException::class)
@@ -2117,7 +2271,8 @@ class ForumOceanWebImplTest {
                     GroupPosition.NORMAL,
                     GroupPosition.MANAGEMENT,
                     GroupPosition.PRESIDENT
-                ).map { it.position }.sum(),
+                ).map { it.position }
+                    .sum(),
                 includeAppGroup = any()
             )
         } returns Response.error(402, "".toResponseBody())
@@ -2126,7 +2281,8 @@ class ForumOceanWebImplTest {
             offset = 0,
             fetch = 20
         )
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
         result.getOrThrow()
     }
 
@@ -2146,7 +2302,8 @@ class ForumOceanWebImplTest {
             )
         )
         web.getMemberJoinAnyGroups(23454734)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -2163,8 +2320,10 @@ class ForumOceanWebImplTest {
             )
         )
         val result = web.getMemberJoinAnyGroups(23454734)
-        Truth.assertThat(result.isSuccess).isTrue()
-        Truth.assertThat(result.getOrThrow().isJoin).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
+        Truth.assertThat(result.getOrThrow().isJoin)
+            .isTrue()
     }
 
     @Test(expected = HttpException::class)
@@ -2177,7 +2336,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getMemberJoinAnyGroups(23454734)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
         result.getOrThrow()
     }
 
@@ -2195,9 +2355,12 @@ class ForumOceanWebImplTest {
             CreateGroupResponseBody(100321)
         )
         val result = web.createGroup("社團名稱")
-        Truth.assertThat(result.isSuccess).isTrue()
-        Truth.assertThat(result.getOrThrow().groupId).isEqualTo(100321)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
+        Truth.assertThat(result.getOrThrow().groupId)
+            .isEqualTo(100321)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -2212,8 +2375,10 @@ class ForumOceanWebImplTest {
             CreateGroupResponseBody(100321)
         )
         val result = web.createGroup("社團名稱")
-        Truth.assertThat(result.isSuccess).isTrue()
-        Truth.assertThat(result.getOrThrow().groupId).isEqualTo(100321)
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
+        Truth.assertThat(result.getOrThrow().groupId)
+            .isEqualTo(100321)
     }
 
     @Test(expected = HttpException::class)
@@ -2226,7 +2391,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.createGroup("社團名稱")
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
         result.getOrThrow()
     }
 
@@ -2253,7 +2419,8 @@ class ForumOceanWebImplTest {
             groupId = 10220,
             body = updateRequestBody
         )
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -2277,7 +2444,8 @@ class ForumOceanWebImplTest {
             groupId = 10220,
             body = updateRequestBody
         )
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -2301,7 +2469,8 @@ class ForumOceanWebImplTest {
             groupId = 10220,
             body = updateRequestBody
         )
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -2316,8 +2485,10 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         val result = web.transferGroup(groupId = 2032032, memberId = 20320)
-        Truth.assertThat(result.isSuccess).isTrue()
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -2330,7 +2501,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         val result = web.transferGroup(groupId = 2032032, memberId = 20320)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test(expected = HttpException::class)
@@ -2343,7 +2515,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.transferGroup(groupId = 2032032, memberId = 20320)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
         result.getOrThrow()
     }
 
@@ -2358,7 +2531,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         web.deleteGroup(2020)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -2370,7 +2544,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         val result = web.deleteGroup(2020)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test(expected = ServerException::class)
@@ -2388,7 +2563,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(400, errorBody.toResponseBody())
         val result = web.deleteGroup(2020)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
         result.getOrThrow()
     }
 
@@ -2404,7 +2580,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         web.join(1202020, "入社理由")
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -2417,7 +2594,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         val result = web.join(1202020, "入社理由")
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test(expected = IllegalArgumentException::class)
@@ -2436,7 +2614,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.join(1202020, "入社理由")
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
 
@@ -2453,8 +2632,15 @@ class ForumOceanWebImplTest {
                 fetch = any()
             )
         } returns Response.success(emptyList())
-        web.getMembers(132132, 0, 20, GroupPosition.values().toList())
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        web.getMembers(
+            132132,
+            0,
+            20,
+            GroupPosition.values()
+                .toList()
+        )
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -2474,9 +2660,19 @@ class ForumOceanWebImplTest {
                 GroupMember(memberId = 3, position = GroupPositionInfo.PRESIDENT)
             )
         )
-        val result = web.getMembers(132132, 0, 20, GroupPosition.values().toList())
-        Truth.assertThat(result.isSuccess).isTrue()
-        Truth.assertThat(result.getOrThrow().find { it.position == GroupPositionInfo.PRESIDENT }).isNotNull()
+        val result = web.getMembers(
+            132132,
+            0,
+            20,
+            GroupPosition.values()
+                .toList()
+        )
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
+        Truth.assertThat(
+            result.getOrThrow()
+                .find { it.position == GroupPositionInfo.PRESIDENT })
+            .isNotNull()
     }
 
     @Test
@@ -2490,8 +2686,15 @@ class ForumOceanWebImplTest {
                 fetch = any()
             )
         } returns Response.error(500, "".toResponseBody())
-        val result = web.getMembers(132132, 0, 20, GroupPosition.values().toList())
-        Truth.assertThat(result.isFailure).isTrue()
+        val result = web.getMembers(
+            132132,
+            0,
+            20,
+            GroupPosition.values()
+                .toList()
+        )
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -2507,7 +2710,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(emptyList())
         web.getApprovals(1321684, 0, 20)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -2530,8 +2734,10 @@ class ForumOceanWebImplTest {
             )
         )
         val result = web.getApprovals(1321684, 0, 20)
-        Truth.assertThat(result.isSuccess).isTrue()
-        Truth.assertThat(result.getOrThrow()).hasSize(2)
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
+        Truth.assertThat(result.getOrThrow())
+            .hasSize(2)
     }
 
     @Test
@@ -2545,7 +2751,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getApprovals(1321684, 0, 20)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -2561,7 +2768,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         web.approval(132112, 213213, true)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -2575,7 +2783,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         val result = web.approval(132112, 213213, true)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -2589,12 +2798,14 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.approval(132112, 213213, true)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
     fun `changeGroupMemberPosition_check url`() = testScope.runTest {
-        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/GroupMember/ChangeGroupMemberPosition/1321321"
+        val expect =
+            "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/GroupMember/ChangeGroupMemberPosition/1321321"
         val urlSlot = slot<String>()
         coEvery {
             forumOceanService.changeGroupMemberPosition(
@@ -2605,7 +2816,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         web.changeGroupMemberPosition(1321321, 1231, GroupPosition.PRESIDENT)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -2619,7 +2831,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         val result = web.changeGroupMemberPosition(1321321, 1231, GroupPosition.PRESIDENT)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -2633,7 +2846,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.changeGroupMemberPosition(1321321, 1231, GroupPosition.PRESIDENT)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -2648,7 +2862,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         web.kick(13213, 1321)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -2661,7 +2876,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         val result = web.kick(13213, 1321)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -2674,7 +2890,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.kick(13213, 1321)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -2688,7 +2905,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         web.leave(5050)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -2700,7 +2918,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         val result = web.leave(5050)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -2712,7 +2931,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.leave(5050)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -2726,7 +2946,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         web.pinArticle(1321342)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -2738,7 +2959,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         val result = web.pinArticle(1321342)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -2750,7 +2972,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.pinArticle(1321342)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -2764,7 +2987,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         web.unpinArticle(1321342)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -2776,7 +3000,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         val result = web.unpinArticle(1321342)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -2788,7 +3013,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.unpinArticle(1321342)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -2802,7 +3028,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(200, emptyList())
         web.getPushDefaultSetting()
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -2820,7 +3047,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(200, responseBody)
         val result = web.getPushDefaultSetting()
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -2832,7 +3060,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getPushDefaultSetting()
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -2846,7 +3075,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(200, emptyList())
         web.getUserNotifySetting()
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -2864,7 +3094,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(200, responseBody)
         val result = web.getUserNotifySetting()
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -2876,7 +3107,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getUserNotifySetting()
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -2893,7 +3125,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         web.setNotifySetting(notifyType = "", subType = "", enable = false)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -2906,10 +3139,11 @@ class ForumOceanWebImplTest {
                 subType = any(),
                 enable = any()
             )
-        } returns  Response.success<Void>(204, null)
+        } returns Response.success<Void>(204, null)
         val result = web.setNotifySetting(notifyType = "", subType = "", enable = false)
             .getOrThrow()
-        Truth.assertThat(result).isEqualTo(Unit)
+        Truth.assertThat(result)
+            .isEqualTo(Unit)
     }
 
     @Test
@@ -2924,7 +3158,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.setNotifySetting(notifyType = "", subType = "", enable = false)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -2940,7 +3175,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(emptyList())
         web.getOfficials(0, 20)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -2973,8 +3209,10 @@ class ForumOceanWebImplTest {
             )
         )
         val result = web.getOfficials(0, 20)
-        Truth.assertThat(result.isSuccess).isTrue()
-        Truth.assertThat(result.getOrThrow()).hasSize(2)
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
+        Truth.assertThat(result.getOrThrow())
+            .hasSize(2)
     }
 
     @Test
@@ -2988,7 +3226,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getOfficials(0, 20)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -3003,22 +3242,25 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(emptyList())
         web.getOfficialsByIds(emptyList())
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
-    fun `getOfficialsByIds_input official id is 1 2 3 4_official id string is 1,2,3,4`() = testScope.runTest {
-        val officialIdsSlot = slot<String>()
-        coEvery {
-            forumOceanService.getOfficialsByIds(
-                url = any(),
-                authorization = any(),
-                officialIds = capture(officialIdsSlot)
-            )
-        } returns Response.success(emptyList())
-        web.getOfficialsByIds(listOf(1,2,3,4))
-        Truth.assertThat(officialIdsSlot.captured).isEqualTo("1,2,3,4")
-    }
+    fun `getOfficialsByIds_input official id is 1 2 3 4_official id string is 1,2,3,4`() =
+        testScope.runTest {
+            val officialIdsSlot = slot<String>()
+            coEvery {
+                forumOceanService.getOfficialsByIds(
+                    url = any(),
+                    authorization = any(),
+                    officialIds = capture(officialIdsSlot)
+                )
+            } returns Response.success(emptyList())
+            web.getOfficialsByIds(listOf(1, 2, 3, 4))
+            Truth.assertThat(officialIdsSlot.captured)
+                .isEqualTo("1,2,3,4")
+        }
 
     @Test
     fun getOfficialsByIds_success() = testScope.runTest {
@@ -3039,9 +3281,10 @@ class ForumOceanWebImplTest {
                 officialIds = any()
             )
         } returns Response.success(responseBody)
-        val result = web.getOfficialsByIds(listOf(1,2,3,4))
+        val result = web.getOfficialsByIds(listOf(1, 2, 3, 4))
             .getOrThrow()
-        Truth.assertThat(result[0].id).isEqualTo(123)
+        Truth.assertThat(result[0].id)
+            .isEqualTo(123)
     }
 
     @Test
@@ -3054,7 +3297,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getOfficialsByIds(emptyList())
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -3071,7 +3315,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(emptyList())
         web.getOfficialsByKeyWord(keyword = "", offset = 0, fetch = 0)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -3097,7 +3342,8 @@ class ForumOceanWebImplTest {
         } returns Response.success(responseBody)
         val result = web.getOfficialsByKeyWord(keyword = "", offset = 0, fetch = 0)
             .getOrThrow()
-        Truth.assertThat(result[0].id).isEqualTo(123)
+        Truth.assertThat(result[0].id)
+            .isEqualTo(123)
     }
 
     @Test
@@ -3112,7 +3358,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getOfficialsByKeyWord(keyword = "", offset = 0, fetch = 0)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -3129,7 +3376,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(emptyList())
         web.getGroupsByKeyword(keyword = "", offset = 0, fetch = 0)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -3162,7 +3410,8 @@ class ForumOceanWebImplTest {
         } returns Response.success(responseBody)
         val result = web.getGroupsByKeyword(keyword = "", offset = 0, fetch = 0)
             .getOrThrow()
-        Truth.assertThat(result[0].id).isEqualTo(123)
+        Truth.assertThat(result[0].id)
+            .isEqualTo(123)
     }
 
     @Test
@@ -3177,7 +3426,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getGroupsByKeyword(keyword = "", offset = 0, fetch = 0)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -3194,7 +3444,8 @@ class ForumOceanWebImplTest {
             GetOfficialSubscribedCountResponseBody(132132)
         )
         web.getOfficialSubscribedCount(21321)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -3208,8 +3459,10 @@ class ForumOceanWebImplTest {
             GetOfficialSubscribedCountResponseBody(132132)
         )
         val result = web.getOfficialSubscribedCount(21321)
-        Truth.assertThat(result.isSuccess).isTrue()
-        Truth.assertThat(result.getOrThrow().count).isEqualTo(132132)
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
+        Truth.assertThat(result.getOrThrow().count)
+            .isEqualTo(132132)
     }
 
     @Test
@@ -3221,7 +3474,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getOfficialSubscribedCount(21321)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -3236,7 +3490,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(GetSubscribedCountResponseBody(2134979))
         web.getSubscribedCount(1465)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -3249,8 +3504,10 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(GetSubscribedCountResponseBody(2134979))
         val result = web.getSubscribedCount(1465)
-        Truth.assertThat(result.isSuccess).isTrue()
-        Truth.assertThat(result.getOrThrow().count).isEqualTo(2134979)
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
+        Truth.assertThat(result.getOrThrow().count)
+            .isEqualTo(2134979)
     }
 
     @Test
@@ -3263,7 +3520,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getSubscribedCount(1465)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
 
@@ -3283,7 +3541,8 @@ class ForumOceanWebImplTest {
             listOf(1, 2, 3, 4, 5, 6)
         )
         web.getSubscribed(21321, 0, 20)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -3300,8 +3559,10 @@ class ForumOceanWebImplTest {
             listOf(1, 2, 3, 4, 5, 6)
         )
         val result = web.getSubscribed(21321, 0, 20)
-        Truth.assertThat(result.isSuccess).isTrue()
-        Truth.assertThat(result.getOrThrow()).hasSize(6)
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
+        Truth.assertThat(result.getOrThrow())
+            .hasSize(6)
     }
 
     @Test
@@ -3316,7 +3577,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getSubscribed(21321, 0, 20)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -3330,7 +3592,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         web.subscribe(21321)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -3342,7 +3605,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         val result = web.subscribe(21321)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -3354,7 +3618,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.subscribe(21321)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -3369,7 +3634,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         web.unsubscribe(3213489)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     fun unsubscribe_success() = testScope.runTest {
@@ -3381,7 +3647,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         val result = web.unsubscribe(3213489)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -3394,7 +3661,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.unsubscribe(3213489)
-        Truth.assertThat(result.isSuccess).isFalse()
+        Truth.assertThat(result.isSuccess)
+            .isFalse()
     }
 
     @Test
@@ -3408,7 +3676,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         web.unsubscribeAll()
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -3420,7 +3689,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         val result = web.unsubscribeAll()
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
 
@@ -3433,7 +3703,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.unsubscribeAll()
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -3451,7 +3722,8 @@ class ForumOceanWebImplTest {
             listOf(1, 2, 3, 4)
         )
         web.getFollowingList(4564, 0, 10)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -3467,7 +3739,8 @@ class ForumOceanWebImplTest {
             listOf(1, 2, 3, 4)
         )
         val result = web.getFollowingList(4564, 0, 10)
-        Truth.assertThat(result.getOrThrow()).hasSize(4)
+        Truth.assertThat(result.getOrThrow())
+            .hasSize(4)
     }
 
     @Test
@@ -3481,7 +3754,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getFollowingList(4564, 0, 10)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -3497,7 +3771,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(listOf(1, 2, 3, 4))
         web.getFollowers(43241321, 0, 10)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -3511,7 +3786,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(listOf(1, 2, 3, 4))
         val result = web.getFollowers(43241321, 0, 10)
-        Truth.assertThat(result.getOrThrow()).hasSize(4)
+        Truth.assertThat(result.getOrThrow())
+            .hasSize(4)
     }
 
     @Test
@@ -3525,7 +3801,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getFollowers(43241321, 0, 10)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -3540,7 +3817,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         web.follow(1324324)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -3566,7 +3844,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.follow(1324324)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -3581,7 +3860,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         web.unfollow(21324324)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -3607,7 +3887,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.unfollow(21324324)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -3622,7 +3903,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         web.block(2344654)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -3648,7 +3930,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.block(2344654)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -3663,7 +3946,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         web.unblock(342321)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     fun unblock_success() = testScope.runTest {
@@ -3689,7 +3973,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.unblock(342321)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -3705,7 +3990,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(listOf(1, 2, 3, 4, 5))
         web.getBlockingList(0, 10)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -3719,7 +4005,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(listOf(1, 2, 3, 4, 5))
         val result = web.getBlockingList(0, 10)
-        Truth.assertThat(result.getOrThrow()).hasSize(5)
+        Truth.assertThat(result.getOrThrow())
+            .hasSize(5)
     }
 
     @Test
@@ -3733,7 +4020,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getBlockingList(0, 10)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -3749,7 +4037,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(listOf(1, 3, 5, 7, 9))
         web.getBlockers(0, 10)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -3763,7 +4052,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(listOf(1, 3, 5, 7, 9))
         val result = web.getBlockers(0, 10)
-        Truth.assertThat(result.getOrThrow()).hasSize(5)
+        Truth.assertThat(result.getOrThrow())
+            .hasSize(5)
     }
 
 
@@ -3778,7 +4068,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getBlockers(0, 10)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -3793,7 +4084,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(200, emptyList())
         web.getRelationshipWithMe(emptyList())
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -3825,7 +4117,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getRelationshipWithMe(listOf(123))
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -3841,7 +4134,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         web.createReport(231321, 1, null)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -3869,7 +4163,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.createReport(231321, 1, null)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -3884,7 +4179,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         web.createReportV2("123-1", 1)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -3910,7 +4206,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.createReportV2("123-1", 1)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -3925,7 +4222,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         web.deleteReport(2136541, commentId = null)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -3951,7 +4249,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.deleteReport(2136541, commentId = null)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -3966,7 +4265,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(emptyList())
         web.getMemberIds(listOf(67, 68))
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -3991,9 +4291,12 @@ class ForumOceanWebImplTest {
             )
         )
         val result = web.getMemberIds(memberIds)
-        val mappingList = result.getOrThrow().associateBy { it.memberId }
-        Truth.assertThat(mappingList[67]?.channelId).isEqualTo(1979787)
-        Truth.assertThat(mappingList[68]?.channelId).isEqualTo(2266693)
+        val mappingList = result.getOrThrow()
+            .associateBy { it.memberId }
+        Truth.assertThat(mappingList[67]?.channelId)
+            .isEqualTo(1979787)
+        Truth.assertThat(mappingList[68]?.channelId)
+            .isEqualTo(2266693)
     }
 
     @Test
@@ -4007,7 +4310,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getMemberIds(memberIds)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -4022,7 +4326,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(emptyList())
         web.getChannelIds(listOf(1979787, 2266693))
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     fun getChannelIds_success() = testScope.runTest {
@@ -4046,9 +4351,12 @@ class ForumOceanWebImplTest {
             )
         )
         val result = web.getChannelIds(channelIds)
-        val mappingList = result.getOrThrow().associateBy { it.channelId }
-        Truth.assertThat(mappingList[1979787]?.memberId).isEqualTo(67)
-        Truth.assertThat(mappingList[2266693]?.memberId).isEqualTo(68)
+        val mappingList = result.getOrThrow()
+            .associateBy { it.channelId }
+        Truth.assertThat(mappingList[1979787]?.memberId)
+            .isEqualTo(67)
+        Truth.assertThat(mappingList[2266693]?.memberId)
+            .isEqualTo(68)
     }
 
     @Test
@@ -4062,7 +4370,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getChannelIds(channelIds)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -4079,7 +4388,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(emptyList())
         web.searchMembers("123", 0, 20)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     fun searchMembers_success() = testScope.runTest {
@@ -4102,7 +4412,8 @@ class ForumOceanWebImplTest {
             )
         )
         val result = web.searchMembers("123", 0, 20)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -4117,7 +4428,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.searchMembers("123", 0, 20)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -4132,7 +4444,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         web.createVote(132434, 4)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -4158,7 +4471,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.createVote(132434, 4)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -4172,7 +4486,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(emptyList())
         web.getCurrentVote(1324324)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -4203,7 +4518,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getCurrentVote(1324324)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -4219,7 +4535,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(emptyList())
         web.getCommodityRank(0, 10)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -4262,7 +4579,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getCommodityRank(0, 10)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
 
@@ -4279,7 +4597,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(emptyList())
         web.getUSCommodityRank(0, 10)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -4322,7 +4641,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getUSCommodityRank(0, 10)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -4338,7 +4658,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(emptyList())
         web.getExpertMemberRank(0, 10)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -4381,7 +4702,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getExpertMemberRank(0, 10)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -4396,7 +4718,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(emptyList())
         web.getSpecificExpertMemberRank("7777,8888")
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -4437,7 +4760,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getSpecificExpertMemberRank("7777,8888")
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -4453,7 +4777,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(emptyList())
         web.getMemberFansRank(0, 10)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -4496,7 +4821,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getMemberFansRank(0, 10)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -4512,7 +4838,8 @@ class ForumOceanWebImplTest {
         } returns Response.success(emptyList())
         web.getSpecificMemberFansRank("7777,8888")
 
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -4553,7 +4880,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getSpecificMemberFansRank("7777,8888")
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -4569,7 +4897,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(emptyList())
         web.getSolutionExpertRank(0, 10)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -4598,7 +4927,8 @@ class ForumOceanWebImplTest {
             )
         )
         val result = web.getSolutionExpertRank(0, 10)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -4612,7 +4942,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getSolutionExpertRank(0, 10)
-        Truth.assertThat(result.isSuccess).isFalse()
+        Truth.assertThat(result.isSuccess)
+            .isFalse()
     }
 
     @Test
@@ -4627,7 +4958,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(emptyList())
         web.getSpecificSolutionExpertRank("7777,8888")
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -4649,7 +4981,8 @@ class ForumOceanWebImplTest {
             )
         )
         val result = web.getSpecificSolutionExpertRank("7777,8888")
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -4662,7 +4995,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getSpecificSolutionExpertRank("7777,8888")
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -4678,7 +5012,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(null)
         web.getNotify(updateTime = 0, offsetCount = 5)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -4692,7 +5027,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(emptyList())
         val result = web.getNotify(updateTime = 0, offsetCount = 5)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -4706,7 +5042,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getNotify(updateTime = 0, offsetCount = 5)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -4720,7 +5057,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(null)
         web.getNotifyCount()
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -4733,7 +5071,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(responseBody)
         val result = web.getNotifyCount()
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -4745,7 +5084,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getNotifyCount()
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -4759,7 +5099,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(null)
         web.resetNotifyCount()
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -4771,7 +5112,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         val result = web.resetNotifyCount()
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -4783,7 +5125,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.resetNotifyCount()
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -4800,7 +5143,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(null)
         web.setNotifyRead(notifyType = "", mergeKey = "", isNew = false)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -4815,7 +5159,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         val result = web.setNotifyRead(notifyType = "", mergeKey = "", isNew = false)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -4830,7 +5175,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.setNotifyRead(notifyType = "", mergeKey = "", isNew = false)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -4844,7 +5190,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(null)
         web.exchangeColumnArticle(123)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -4856,7 +5203,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(null)
         val result = web.exchangeColumnArticle(1)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -4868,7 +5216,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.exchangeColumnArticle(1)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -4882,7 +5231,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(listOf())
         web.getRole()
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -4894,7 +5244,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(listOf())
         val result = web.getRole()
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -4906,7 +5257,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getRole()
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -4920,7 +5272,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(GetMembersByRoleResponse(listOf()))
         web.getMembersByRole(123)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -4932,7 +5285,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(GetMembersByRoleResponse(listOf()))
         val result = web.getMembersByRole(1)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -4944,7 +5298,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getMembersByRole(1)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -4958,7 +5313,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(listOf())
         web.getRoleByMemberId(123)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -4970,7 +5326,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(listOf())
         val result = web.getRoleByMemberId(1)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -4982,7 +5339,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getRoleByMemberId(1)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -4996,7 +5354,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(ExchangeCount(1, 1))
         web.getExchangeCount(123)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -5008,7 +5367,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(ExchangeCount(1, 1))
         val result = web.getExchangeCount(1)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -5020,7 +5380,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(400, "".toResponseBody())
         val result = web.getExchangeCount(1)
-        Truth.assertThat(result.isSuccess).isFalse()
+        Truth.assertThat(result.isSuccess)
+            .isFalse()
     }
 
     @Test
@@ -5034,7 +5395,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success("{}".toResponseBody())
         web.isMemberSubscribe(123)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -5047,7 +5409,8 @@ class ForumOceanWebImplTest {
         } returns Response.success("true".toResponseBody())
         val result = web.isMemberSubscribe(1)
             .getOrThrow()
-        Truth.assertThat(result).isTrue()
+        Truth.assertThat(result)
+            .isTrue()
     }
 
     @Test
@@ -5060,7 +5423,8 @@ class ForumOceanWebImplTest {
         } returns Response.success("".toResponseBody())
         val result = web.isMemberSubscribe(1)
             .getOrThrow()
-        Truth.assertThat(result).isFalse()
+        Truth.assertThat(result)
+            .isFalse()
     }
 
     @Test
@@ -5072,7 +5436,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.isMemberSubscribe(-1L)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -5086,7 +5451,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(GetColumnistVipGroupResponse(1))
         web.getColumnistVipGroup(123)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -5098,7 +5464,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(GetColumnistVipGroupResponse(1))
         val result = web.getColumnistVipGroup(1)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -5110,7 +5477,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(400, "".toResponseBody())
         val result = web.getColumnistVipGroup(1)
-        Truth.assertThat(result.isSuccess).isFalse()
+        Truth.assertThat(result.isSuccess)
+            .isFalse()
     }
 
     @Test
@@ -5127,7 +5495,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(145516088)
         web.getStockReportId("20220505", "C0090", "8046")
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -5142,7 +5511,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(145516088)
         val result = web.getStockReportId("20220505", "C0090", "8046")
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -5157,7 +5527,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getStockReportId("20220505", "C0090", "8046")
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -5185,7 +5556,8 @@ class ForumOceanWebImplTest {
             )
         )
         web.getGroupV2(123)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -5211,7 +5583,8 @@ class ForumOceanWebImplTest {
             )
         )
         val result = web.getGroupV2(1)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -5223,7 +5596,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getGroupV2(-1L)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -5239,7 +5613,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(listOf())
         web.getGroupByRoles(1, listOf())
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -5253,7 +5628,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(listOf())
         val result = web.getGroupByRoles(1, listOf())
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -5267,7 +5643,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getGroupByRoles(-1L, listOf())
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -5282,7 +5659,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(200, InsertedId(0))
         web.createGroup(GroupManipulation(null, null, null, null))
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -5295,7 +5673,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(200, InsertedId(0))
         val result = web.createGroup(GroupManipulation(null, null, null, null))
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -5308,7 +5687,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.createGroup("name")
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -5326,7 +5706,8 @@ class ForumOceanWebImplTest {
             123,
             GroupManipulation("", "", "", false)
         )
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -5342,7 +5723,8 @@ class ForumOceanWebImplTest {
             1,
             GroupManipulation("", "", "", false)
         )
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -5355,7 +5737,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.updateGroup(1, GroupManipulation(null, null, null, null))
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -5371,7 +5754,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(InsertedId(-1))
         web.createGroupBoard(123, false, BoardManipulation(null, null))
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -5385,7 +5769,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(InsertedId(-1))
         val result = web.createGroupBoard(1, false, BoardManipulation(null, null))
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -5399,7 +5784,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.createGroupBoard(1, false, BoardManipulation(null, null))
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -5413,7 +5799,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         web.dismissGroup(123)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -5425,7 +5812,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         val result = web.dismissGroup(123)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -5437,7 +5825,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.dismissGroup(123)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -5452,7 +5841,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         web.updateGroupBoard(123, BoardManipulation(null, null))
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -5465,7 +5855,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         val result = web.updateGroupBoard(1, BoardManipulation(null, null))
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -5478,7 +5869,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.updateGroupBoard(1, BoardManipulation(null, null))
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -5492,7 +5884,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(listOf())
         web.getGroupBoards(123)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -5504,7 +5897,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(listOf())
         val result = web.getGroupBoards(1)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -5516,7 +5910,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getGroupBoards(1)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -5530,7 +5925,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(BoardSingle(null, null, null, null, null, null, null, null))
         web.getGroupBoard(123)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -5542,7 +5938,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(BoardSingle(null, null, null, null, null, null, null, null))
         val result = web.getGroupBoard(1)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -5554,7 +5951,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getGroupBoard(123)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -5568,7 +5966,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         web.deleteGroupBoard(123)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -5580,7 +5979,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         val result = web.deleteGroupBoard(1)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -5592,7 +5992,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.deleteGroupBoard(1)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -5611,7 +6012,8 @@ class ForumOceanWebImplTest {
             """{ "hasNewPending": true }""".toResponseBody(jsonMediaType)
         )
         web.hasNewGroupPending(123)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -5628,7 +6030,8 @@ class ForumOceanWebImplTest {
             """{ "hasNewPending": true }""".toResponseBody(jsonMediaType)
         )
         val result = web.hasNewGroupPending(1)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -5640,7 +6043,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.hasNewGroupPending(1)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -5654,7 +6058,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(MemberRoles(listOf()))
         web.getGroupMemberRoles(123, 456)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -5666,7 +6071,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(MemberRoles(listOf()))
         val result = web.getGroupMemberRoles(1, 1)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -5678,7 +6084,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getGroupMemberRoles(1, 1)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -5693,7 +6100,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         web.updateGroupMemberRoles(123, 456, listOf())
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -5706,7 +6114,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         val result = web.updateGroupMemberRoles(1, 1, listOf())
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -5719,7 +6128,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.updateGroupMemberRoles(1, 1, listOf())
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -5736,7 +6146,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         web.getGroupMembers(123, listOf(), 0, 0)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -5751,7 +6162,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(listOf())
         val result = web.getGroupMembers(1, listOf(), 0, 0)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -5766,7 +6178,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getGroupMembers(1, listOf(), 0, 0)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -5780,7 +6193,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         web.leaveGroup(123)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -5792,7 +6206,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         val result = web.leaveGroup(1)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -5804,7 +6219,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.leaveGroup(1)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -5818,7 +6234,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(Admins(listOf(), 0L))
         web.getGroupAdmins(123)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -5830,7 +6247,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(Admins(listOf(), 0L))
         val result = web.getGroupAdmins(1)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -5842,7 +6260,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getGroupAdmins(1)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -5859,7 +6278,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(listOf())
         web.searchGroupMember(123, "", 0, 0)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -5874,7 +6294,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(listOf())
         val result = web.searchGroupMember(1, "", 0, 0)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -5889,7 +6310,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.searchGroupMember(1, "", 0, 0)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -5904,7 +6326,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         web.joinGroup(123, JoinGroupRequest("reason"))
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -5917,7 +6340,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         val result = web.joinGroup(1, JoinGroupRequest("reason"))
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -5930,7 +6354,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.joinGroup(1, JoinGroupRequest("reason"))
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -5945,7 +6370,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(PendingRequests(0L, listOf()))
         web.getGroupPendingRequests(123, 0)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -5958,7 +6384,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(PendingRequests(0L, listOf()))
         val result = web.getGroupPendingRequests(1, 0)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -5971,7 +6398,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getGroupPendingRequests(1, -1L)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -5987,7 +6415,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(PendingRequests(0L, listOf()))
         web.searchGroupPendingRequests(123L, "keyword", 0L)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -6001,7 +6430,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(PendingRequests(0L, listOf()))
         val result = web.searchGroupPendingRequests(1L, "keyword", 0L)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -6015,7 +6445,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.searchGroupPendingRequests(1L, "keyword", 0L)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -6030,7 +6461,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         web.approvalGroupRequest(123L, listOf())
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -6043,7 +6475,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         val result = web.approvalGroupRequest(1L, listOf())
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -6056,7 +6489,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.approvalGroupRequest(1L, listOf())
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -6070,7 +6504,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         web.kickGroupMember(123L, 456L)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -6082,7 +6517,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         val result = web.kickGroupMember(1L, 1L)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -6094,7 +6530,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.kickGroupMember(1L, 1L)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -6112,7 +6549,8 @@ class ForumOceanWebImplTest {
             123L,
             Content.Article.General(null, null, null, null, null, null, null, null)
         )
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -6128,7 +6566,8 @@ class ForumOceanWebImplTest {
             1L,
             Content.Article.General(null, null, null, null, null, null, null, null)
         )
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -6144,7 +6583,8 @@ class ForumOceanWebImplTest {
             1L,
             Content.Article.General(null, null, null, null, null, null, null, null)
         )
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -6160,7 +6600,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(GetGroupBoardArticlesResponse(listOf(), true, 0))
         web.getBoardArticles(123, 0, 0)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -6174,7 +6615,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(GetGroupBoardArticlesResponse(listOf(), true, 0))
         val result = web.getBoardArticles(0, 0, 0)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -6188,7 +6630,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getBoardArticles(0, 0, 0)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -6202,7 +6645,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         web.unsendArticle(0)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -6214,7 +6658,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         val result = web.unsendArticle(0)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -6226,7 +6671,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.unsendArticle(0)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -6241,7 +6687,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(AvailableBoardIds(listOf()))
         web.getAvailableBoardIds()
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -6254,7 +6701,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(AvailableBoardIds(listOf()))
         val result = web.getAvailableBoardIds()
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -6267,7 +6715,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getAvailableBoardIds()
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -6281,7 +6730,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(GroupPushSetting(""))
         web.getGroupBoardPushSetting(1L)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -6293,7 +6743,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(GroupPushSetting(""))
         val result = web.getGroupBoardPushSetting(1L)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -6305,7 +6756,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getGroupBoardPushSetting(1L)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -6323,7 +6775,8 @@ class ForumOceanWebImplTest {
             1L,
             PushType.NONE
         )
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -6339,7 +6792,8 @@ class ForumOceanWebImplTest {
             1L,
             PushType.NONE
         )
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -6355,7 +6809,8 @@ class ForumOceanWebImplTest {
             -1,
             PushType.NONE
         )
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -6369,7 +6824,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(MemberRatingCounter(rating = 0.0, reviewCount = 0))
         web.getMemberRatingCounter(1L)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -6381,7 +6837,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(MemberRatingCounter(rating = 0.0, reviewCount = 0))
         val result = web.getMemberRatingCounter(1L)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -6393,7 +6850,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getMemberRatingCounter(1L)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -6407,7 +6865,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(RatingComment("comment", 0, 0))
         web.getRatingComment(1L, 1L)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -6419,7 +6878,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(RatingComment("comment", 0, 0))
         val result = web.getRatingComment(1L, 1L)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -6431,7 +6891,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getRatingComment(-1, -1L)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -6448,7 +6909,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(listOf())
         web.getMemberRatingComments(1L, 0, 10, SortType.LatestToOldest)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -6463,7 +6925,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(listOf())
         val result = web.getMemberRatingComments(1L, 0, 10, SortType.LatestToOldest)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -6478,7 +6941,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getMemberRatingComments(1L, 0, 10, SortType.LatestToOldest)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -6495,7 +6959,8 @@ class ForumOceanWebImplTest {
         web.reviewUser(
             ReviewRequest("comment", 1, 0L)
         )
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -6510,7 +6975,8 @@ class ForumOceanWebImplTest {
         val result = web.reviewUser(
             ReviewRequest("comment", 1, 0L)
         )
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -6525,7 +6991,8 @@ class ForumOceanWebImplTest {
         val result = web.reviewUser(
             ReviewRequest("comment", 0, 0L)
         )
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -6539,7 +7006,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(listOf())
         web.getColumnistAll()
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -6551,7 +7019,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(listOf())
         val result = web.getColumnistAll()
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -6563,7 +7032,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getColumnistAll()
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -6605,7 +7075,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(successResponse)
         web.getArticleV2(articleId)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -6645,8 +7116,10 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(successResponse)
         val result = web.getArticleV2(articleId)
-        Truth.assertThat(result.isSuccess).isTrue()
-        Truth.assertThat(result.getOrThrow().id).isEqualTo(articleId.toString())
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
+        Truth.assertThat(result.getOrThrow().id)
+            .isEqualTo(articleId.toString())
     }
 
     @Test
@@ -6659,7 +7132,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(403, "".toResponseBody())
         val result = web.getArticleV2(articleId)
-        Truth.assertThat(result.isSuccess).isFalse()
+        Truth.assertThat(result.isSuccess)
+            .isFalse()
     }
 
     @Test
@@ -6699,7 +7173,8 @@ class ForumOceanWebImplTest {
             startCommentIndex = null,
             fetch = null
         )
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -6737,8 +7212,10 @@ class ForumOceanWebImplTest {
             startCommentIndex = null,
             fetch = null
         )
-        Truth.assertThat(result.isSuccess).isTrue()
-        Truth.assertThat(result.getOrThrow().comments).hasSize(1)
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
+        Truth.assertThat(result.getOrThrow().comments)
+            .hasSize(1)
     }
 
     @Test(expected = HttpException::class)
@@ -6756,7 +7233,8 @@ class ForumOceanWebImplTest {
             startCommentIndex = null,
             fetch = null
         )
-        Truth.assertThat(result.isSuccess).isFalse()
+        Truth.assertThat(result.isSuccess)
+            .isFalse()
         result.getOrThrow()
     }
 
@@ -6802,7 +7280,8 @@ class ForumOceanWebImplTest {
             )
         )
         web.getCommentsByIndex(id = "10101", commentIndices = listOf(2, 3))
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -6845,8 +7324,10 @@ class ForumOceanWebImplTest {
             )
         )
         val result = web.getCommentsByIndex("10101", listOf(2, 3))
-        Truth.assertThat(result.isSuccess).isTrue()
-        Truth.assertThat(result.getOrThrow()).hasSize(2)
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
+        Truth.assertThat(result.getOrThrow())
+            .hasSize(2)
     }
 
     @Test(expected = HttpException::class)
@@ -6860,7 +7341,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(403, "".toResponseBody())
         val result = web.getCommentsByIndex(id = "10101", commentIndices = listOf(2, 3))
-        Truth.assertThat(result.isSuccess).isFalse()
+        Truth.assertThat(result.isSuccess)
+            .isFalse()
         result.getOrThrow()
     }
 
@@ -6884,7 +7366,8 @@ class ForumOceanWebImplTest {
             text = null,
             multiMedia = listOf()
         )
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -6905,7 +7388,8 @@ class ForumOceanWebImplTest {
             text = null,
             multiMedia = listOf()
         )
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
         Truth.assertThat(result.getOrThrow().commentIndex == commentIndex)
     }
 
@@ -6923,7 +7407,8 @@ class ForumOceanWebImplTest {
             text = null,
             multiMedia = listOf()
         )
-        Truth.assertThat(result.isSuccess).isFalse()
+        Truth.assertThat(result.isSuccess)
+            .isFalse()
     }
 
     @Test
@@ -6938,7 +7423,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         web.changeCommentHideState("123-1", true)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -6951,7 +7437,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         val result = web.changeCommentHideState("123-1", true)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -6964,7 +7451,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.changeCommentHideState("123-1", true)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -6991,7 +7479,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(response)
         web.getSingleComment("123")
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -7017,8 +7506,10 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(response)
         val result = web.getSingleComment(commentId)
-        Truth.assertThat(result.isSuccess).isTrue()
-        Truth.assertThat(result.getOrThrow().id).isEqualTo(commentId)
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
+        Truth.assertThat(result.getOrThrow().id)
+            .isEqualTo(commentId)
     }
 
     @Test
@@ -7030,7 +7521,132 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getSingleComment("123-1")
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
+    }
+
+    @Test
+    fun `getMostRelevantCommodityArticles_check url`() = testScope.runTest {
+        val givenCommodityId = 10000
+        val urlSlot = slot<String>()
+        coEvery {
+            forumOceanService.getMostRelevantCommodityArticles(
+                url = capture(urlSlot),
+                authorization = any(),
+                offset = any(),
+                fetch = any()
+            )
+        } returns Response.success(listOf())
+        web.getMostRelevantCommodityArticles(
+            commodityId = givenCommodityId.toString(),
+            offset = 0,
+            fetch = 0
+        )
+
+        val expect =
+            "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/Article/Stock/${givenCommodityId}/Recommended"
+
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getMostRelevantCommodityArticles_success() = testScope.runTest {
+        coEvery {
+            forumOceanService.getMostRelevantCommodityArticles(
+                url = any(),
+                authorization = any(),
+                offset = any(),
+                fetch = any()
+            )
+        } returns Response.success(listOf())
+        val result = web.getMostRelevantCommodityArticles(
+            commodityId = "2330",
+            offset = 0,
+            fetch = 0
+        )
+        Truth.assertThat(result.isSuccess).isTrue()
+    }
+
+    @Test
+    fun getMostRelevantCommodityArticles_failure() = testScope.runTest {
+        coEvery {
+            forumOceanService.getMostRelevantCommodityArticles(
+                url = any(),
+                authorization = any(),
+                offset = any(),
+                fetch = any()
+            )
+        } returns Response.error(401, "".toResponseBody())
+        val result = web.getMostRelevantCommodityArticles(
+            commodityId = "2330",
+            offset = 0,
+            fetch = 0
+        )
+        Truth.assertThat(result.isSuccess).isFalse()
+        val exception = result.exceptionOrNull() as? HttpException
+        Truth.assertThat(exception).isNotNull()
+        requireNotNull(exception)
+        Truth.assertThat(exception.code()).isEqualTo(401)
+    }
+
+    @Test
+    fun `getMostRelevantMarketArticles_check url`() = testScope.runTest {
+        val urlSlot = slot<String>()
+        coEvery {
+            forumOceanService.getMostRelevantMarketArticles(
+                url = capture(urlSlot),
+                authorization = any(),
+                offset = any(),
+                fetch = any()
+            )
+        } returns Response.success(listOf())
+        web.getMostRelevantMarketArticles(
+            offset = 0,
+            fetch = 0
+        )
+
+        val expect =
+            "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/Article/Market/Recommended"
+
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun getMostRelevantMarketArticles_success() = testScope.runTest {
+        coEvery {
+            forumOceanService.getMostRelevantMarketArticles(
+                url = any(),
+                authorization = any(),
+                offset = any(),
+                fetch = any()
+            )
+        } returns Response.success(listOf())
+        val result = web.getMostRelevantMarketArticles(
+            offset = 0,
+            fetch = 0
+        )
+        Truth.assertThat(result.isSuccess).isTrue()
+    }
+
+    @Test
+    fun getMostRelevantMarketArticles_failure() = testScope.runTest {
+        coEvery {
+            forumOceanService.getMostRelevantMarketArticles(
+                url = any(),
+                authorization = any(),
+                offset = any(),
+                fetch = any()
+            )
+        } returns Response.error(401, "".toResponseBody())
+        val result = web.getMostRelevantMarketArticles(
+            offset = 0,
+            fetch = 0
+        )
+        Truth.assertThat(result.isSuccess).isFalse()
+        val exception = result.exceptionOrNull() as? HttpException
+        Truth.assertThat(exception).isNotNull()
+        requireNotNull(exception)
+        Truth.assertThat(exception.code()).isEqualTo(401)
     }
 
     @Test
@@ -7047,7 +7663,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(GetRecommendationResponse(listOf(), true, 0))
         web.getRecommendation(0, 0)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -7061,7 +7678,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(GetRecommendationResponse(listOf(), true, 0))
         val result = web.getRecommendation(0, 0)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -7075,7 +7693,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getRecommendation(0, 0)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -7089,7 +7708,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(listOf())
         web.getPinPromotedArticles()
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -7101,7 +7721,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(listOf())
         val result = web.getPinPromotedArticles()
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -7113,7 +7734,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getPinPromotedArticles()
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -7129,7 +7751,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(GetPromotedArticlesResponse(listOf(), true, 0))
         web.getPromotedArticles(0, 0)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -7143,7 +7766,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(GetPromotedArticlesResponse(listOf(), true, 0))
         val result = web.getPromotedArticles(0, 0)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -7157,7 +7781,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getPromotedArticles(0, 0)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -7171,7 +7796,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(listOf())
         web.getAllChatRoom()
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -7183,7 +7809,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(listOf())
         val result = web.getAllChatRoom()
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -7195,7 +7822,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getAllChatRoom()
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -7209,7 +7837,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(GetUncheckChatRoomCountResponse(0))
         web.getUncheckChatRoomCount()
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -7221,7 +7850,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(GetUncheckChatRoomCountResponse(0))
         val result = web.getUncheckChatRoomCount()
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -7233,7 +7863,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getUncheckChatRoomCount()
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -7247,7 +7878,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         web.resetUncheckChatRoomCount()
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -7259,7 +7891,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         val result = web.resetUncheckChatRoomCount()
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -7271,7 +7904,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.resetUncheckChatRoomCount()
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -7285,7 +7919,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         web.pinSpaceBoardArticle("123")
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -7297,7 +7932,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         val result = web.pinSpaceBoardArticle("123")
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -7309,7 +7945,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.pinSpaceBoardArticle("123")
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -7323,7 +7960,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         web.unpinSpaceBoardArticle("123")
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -7335,7 +7973,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success<Void>(204, null)
         val result = web.unpinSpaceBoardArticle("123")
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -7347,7 +7986,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.unpinSpaceBoardArticle("123")
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -7361,7 +8001,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(GetSpaceBoardPinArticlesResponseBody(listOf()))
         web.getSpaceBoardPinArticles(1L)
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -7373,7 +8014,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(GetSpaceBoardPinArticlesResponseBody(listOf()))
         val result = web.getSpaceBoardPinArticles(1L)
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -7385,7 +8027,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getSpaceBoardPinArticles(1L)
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -7394,7 +8037,7 @@ class ForumOceanWebImplTest {
         val urlSlot = slot<String>()
         coEvery {
             forumOceanService.getJoinedClubArticles(
-                url =  capture(urlSlot),
+                url = capture(urlSlot),
                 authorization = any(),
                 startWeight = any(),
                 articlesNumber = any()
@@ -7407,7 +8050,8 @@ class ForumOceanWebImplTest {
             )
         )
         web.getJoinedClubArticles()
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -7427,7 +8071,8 @@ class ForumOceanWebImplTest {
             )
         )
         val result = web.getJoinedClubArticles()
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -7436,12 +8081,13 @@ class ForumOceanWebImplTest {
             forumOceanService.getJoinedClubArticles(
                 url = any(),
                 authorization = any(),
-                startWeight =  any(),
-                articlesNumber =  any()
+                startWeight = any(),
+                articlesNumber = any()
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getJoinedClubArticles()
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     @Test
@@ -7455,7 +8101,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(200, RecommendedClubsResponse(clubs = emptyList()))
         web.getRecommendedClubs()
-        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
     }
 
     @Test
@@ -7467,7 +8114,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(200, RecommendedClubsResponse(clubs = listOf()))
         val result = web.getRecommendedClubs()
-        Truth.assertThat(result.isSuccess).isTrue()
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
     }
 
     @Test
@@ -7479,7 +8127,8 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getRecommendedClubs()
-        Truth.assertThat(result.isFailure).isTrue()
+        Truth.assertThat(result.isFailure)
+            .isTrue()
     }
 
     companion object {

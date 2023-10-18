@@ -1357,6 +1357,37 @@ interface ForumOceanService {
     ): Response<CommentResponseBodyV2>
 
     /**
+     * 取得個股最相關文章
+     */
+    @RecordApi
+    @GET
+    @Headers("X-Version: 2.0")
+    suspend fun getMostRelevantCommodityArticles(
+        @Url url: String,
+        @Header("Authorization") authorization: String,
+        @Query("offset") offset: Int?,
+        @Query("fetch") fetch: Int
+    ): Response<List<ArticleResponseBody.UnknownArticleResponseBody>>
+
+    /**
+     * 取得大盤最相關文章
+     *
+     * @param url 要求網址
+     * @param authorization 授權Token
+     * @param offset 起始權重 (不帶從頭取)
+     * @param fetch 取得數量
+     */
+    @RecordApi
+    @GET
+    @Headers("X-Version: 2.0")
+    suspend fun getMostRelevantMarketArticles(
+        @Url url: String,
+        @Header("Authorization") authorization: String,
+        @Query("offset") offset: Int?,
+        @Query("fetch") fetch: Int
+    ): Response<List<ArticleResponseBody.UnknownArticleResponseBody>>
+
+    /**
      * 取得個人化推薦文章
      */
     @RecordApi
