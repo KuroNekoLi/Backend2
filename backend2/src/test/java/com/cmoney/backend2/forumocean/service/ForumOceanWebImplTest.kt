@@ -910,7 +910,6 @@ class ForumOceanWebImplTest {
             forumOceanService.deleteGroupArticle(
                 url = capture(urlSlot),
                 authorization = any(),
-                articleId = 100L
             )
         } returns Response.success<Void>(204, null)
         web.deleteGroupArticle(100L)
@@ -923,7 +922,6 @@ class ForumOceanWebImplTest {
             forumOceanService.deleteGroupArticle(
                 url = any(),
                 authorization = any(),
-                articleId = 1L
             )
         } returns Response.success<Void>(204, null)
         val result = web.deleteGroupArticle(1L)
@@ -936,7 +934,6 @@ class ForumOceanWebImplTest {
             forumOceanService.deleteGroupArticle(
                     url = any(),
                 authorization = any(),
-                articleId = 0L
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.deleteGroupArticle(1L)
