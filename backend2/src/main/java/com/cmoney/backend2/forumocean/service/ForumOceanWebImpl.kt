@@ -224,6 +224,21 @@ class ForumOceanWebImpl(
         }
     }
 
+    override suspend fun deleteGroupArticle(
+        articleId: Long,
+        domain: String,
+        url: String
+    ): Result<Unit> {
+        return withContext(dispatcher.io()) {
+            kotlin.runCatching {
+                service.deleteGroupArticle(
+                    url = url,
+                    authorization = manager.getAccessToken().createAuthorizationBearer()
+                ).handleNoContent(jsonParser)
+            }
+        }
+    }
+
 
     //endregion
 

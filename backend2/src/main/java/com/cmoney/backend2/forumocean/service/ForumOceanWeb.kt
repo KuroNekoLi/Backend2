@@ -199,6 +199,16 @@ interface ForumOceanWeb {
     ): Result<Unit>
 
     /**
+     * 刪除看板文章
+     */
+    suspend fun deleteGroupArticle(
+        articleId: Long,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/GroupArticle/${articleId}"
+    ): Result<Unit>
+
+
+    /**
      * 取得指定使用者的統計資訊
      *
      * @param memberIdList 會員Id

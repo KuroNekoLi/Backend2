@@ -959,6 +959,44 @@ class ForumOceanWebImplTest {
     }
 
     @Test
+    fun deleteGroupArticle_check_url() = testScope.runTest {
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/GroupArticle/100"
+        val urlSlot = slot<String>()
+        coEvery {
+            forumOceanService.deleteGroupArticle(
+                url = capture(urlSlot),
+                authorization = any(),
+            )
+        } returns Response.success<Void>(204, null)
+        web.deleteGroupArticle(100L)
+        Truth.assertThat(urlSlot.captured).isEqualTo(expect)
+    }
+
+    @Test
+    fun deleteGroupArticle_success() = testScope.runTest {
+        coEvery {
+            forumOceanService.deleteGroupArticle(
+                url = any(),
+                authorization = any(),
+            )
+        } returns Response.success<Void>(204, null)
+        val result = web.deleteGroupArticle(1L)
+        Truth.assertThat(result.isSuccess).isTrue()
+    }
+
+    @Test
+    fun deleteGroupArticle_failure() = testScope.runTest {
+        coEvery {
+            forumOceanService.deleteGroupArticle(
+                    url = any(),
+                authorization = any(),
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.deleteGroupArticle(1L)
+        Truth.assertThat(result.isSuccess).isFalse()
+    }
+
+    @Test
     fun `getMemberStatistics_check url`() = testScope.runTest {
         val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/Member/Info"
         val urlSlot = slot<String>()
