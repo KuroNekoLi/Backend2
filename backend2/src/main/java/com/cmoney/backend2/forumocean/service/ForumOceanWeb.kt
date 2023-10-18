@@ -60,7 +60,9 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.articlerespo
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetAllChatRoomResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetGroupBoardArticlesResponse
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.commodityrecommendation.GetCommodityRecommendationResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.group.GetGroupAllLatestArticlesResponseBody
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.marketrecommendation.GetMarketRecommendationResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.PromotedArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations.GetRecommendationResponse
@@ -2108,7 +2110,7 @@ interface ForumOceanWeb {
         fetch: Int,
         domain: String = manager.getForumOceanSettingAdapter().getDomain(),
         url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Article/Stock/${commodityId}/Recommended"
-    ):Result<List<ArticleResponseBody.UnknownArticleResponseBody>>
+    ):Result<GetCommodityRecommendationResponseBody>
 
     /**
      * 取得大盤最相關文章
@@ -2123,7 +2125,7 @@ interface ForumOceanWeb {
         fetch: Int,
         domain: String = manager.getForumOceanSettingAdapter().getDomain(),
         url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Article/Market/Recommended"
-    ): Result<List<ArticleResponseBody.UnknownArticleResponseBody>>
+    ): Result<GetMarketRecommendationResponseBody>
 
     /**
      * 取得推薦文章

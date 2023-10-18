@@ -58,7 +58,9 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.GroupPositio
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetGroupBoardArticlesResponse
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.commodityrecommendation.GetCommodityRecommendationResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.group.GetGroupAllLatestArticlesResponseBody
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.marketrecommendation.GetMarketRecommendationResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations.GetRecommendationResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.spacepin.GetSpaceBoardPinArticlesResponseBody
@@ -7536,7 +7538,13 @@ class ForumOceanWebImplTest {
                 offset = any(),
                 fetch = any()
             )
-        } returns Response.success(listOf())
+        } returns Response.success(
+            GetCommodityRecommendationResponseBody(
+                articles = emptyList(),
+                hasNext = false,
+                nextOffset = 100L
+            )
+        )
         web.getMostRelevantCommodityArticles(
             commodityId = givenCommodityId.toString(),
             offset = 0,
@@ -7558,7 +7566,13 @@ class ForumOceanWebImplTest {
                 offset = any(),
                 fetch = any()
             )
-        } returns Response.success(listOf())
+        } returns Response.success(
+            GetCommodityRecommendationResponseBody(
+                articles = emptyList(),
+                hasNext = false,
+                nextOffset = 100L
+            )
+        )
         val result = web.getMostRelevantCommodityArticles(
             commodityId = "2330",
             offset = 0,
@@ -7599,7 +7613,13 @@ class ForumOceanWebImplTest {
                 offset = any(),
                 fetch = any()
             )
-        } returns Response.success(listOf())
+        } returns Response.success(
+            GetMarketRecommendationResponseBody(
+                articles = emptyList(),
+                hasNext = false,
+                nextOffset = 100L
+            )
+        )
         web.getMostRelevantMarketArticles(
             offset = 0L,
             fetch = 0
@@ -7620,7 +7640,13 @@ class ForumOceanWebImplTest {
                 offset = any(),
                 fetch = any()
             )
-        } returns Response.success(listOf())
+        } returns Response.success(
+            GetMarketRecommendationResponseBody(
+                articles = emptyList(),
+                hasNext = false,
+                nextOffset = 100L
+            )
+        )
         val result = web.getMostRelevantMarketArticles(
             offset = 0L,
             fetch = 0

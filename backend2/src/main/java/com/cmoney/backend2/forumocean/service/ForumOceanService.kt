@@ -62,6 +62,8 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.articlerespo
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetGroupBoardArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.group.GetGroupAllLatestArticlesResponseBody
 import com.cmoney.backend2.forumocean.service.api.schemas.v2.RecommendedClubsResponse
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.commodityrecommendation.GetCommodityRecommendationResponseBody
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.marketrecommendation.GetMarketRecommendationResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.PromotedArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations.GetRecommendationResponse
@@ -1367,7 +1369,7 @@ interface ForumOceanService {
         @Header("Authorization") authorization: String,
         @Query("offset") offset: Long?,
         @Query("fetch") fetch: Int
-    ): Response<List<ArticleResponseBody.UnknownArticleResponseBody>>
+    ): Response<GetCommodityRecommendationResponseBody>
 
     /**
      * 取得大盤最相關文章
@@ -1385,7 +1387,7 @@ interface ForumOceanService {
         @Header("Authorization") authorization: String,
         @Query("offset") offset: Long?,
         @Query("fetch") fetch: Int
-    ): Response<List<ArticleResponseBody.UnknownArticleResponseBody>>
+    ): Response<GetMarketRecommendationResponseBody>
 
     /**
      * 取得個人化推薦文章
