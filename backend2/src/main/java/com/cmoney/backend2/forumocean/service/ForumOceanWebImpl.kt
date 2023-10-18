@@ -233,7 +233,6 @@ class ForumOceanWebImpl(
             kotlin.runCatching {
                 service.deleteGroupArticle(
                     url = url,
-                    articleId = articleId,
                     authorization = manager.getAccessToken().createAuthorizationBearer()
                 ).handleNoContent(jsonParser)
             }

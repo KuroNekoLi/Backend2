@@ -1171,7 +1171,6 @@ interface ForumOceanService {
     suspend fun deleteGroupArticle(
         @Url url: String,
         @Header("Authorization") authorization: String,
-        @Path("articleId") articleId: Long
     ): Response<Void>
 
     /**
