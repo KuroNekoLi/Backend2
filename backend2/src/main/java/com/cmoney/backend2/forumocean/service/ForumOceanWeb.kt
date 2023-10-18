@@ -2104,7 +2104,7 @@ interface ForumOceanWeb {
      */
     suspend fun getMostRelevantCommodityArticles(
         commodityId: String,
-        offset: Int? = null,
+        offset: Long? = null,
         fetch: Int,
         domain: String = manager.getForumOceanSettingAdapter().getDomain(),
         url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Article/Stock/${commodityId}/Recommended"
@@ -2119,7 +2119,7 @@ interface ForumOceanWeb {
      * @param url 完整的Url
      */
     suspend fun getMostRelevantMarketArticles(
-        offset: Int? = null,
+        offset: Long? = null,
         fetch: Int,
         domain: String = manager.getForumOceanSettingAdapter().getDomain(),
         url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Article/Market/Recommended"

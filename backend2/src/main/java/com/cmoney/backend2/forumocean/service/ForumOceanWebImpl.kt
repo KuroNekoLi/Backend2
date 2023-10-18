@@ -2089,7 +2089,7 @@ class ForumOceanWebImpl(
 
     override suspend fun getMostRelevantCommodityArticles(
         commodityId: String,
-        offset: Int?,
+        offset: Long?,
         fetch: Int,
         domain: String,
         url: String
@@ -2105,7 +2105,7 @@ class ForumOceanWebImpl(
     }
 
     override suspend fun getMostRelevantMarketArticles(
-        offset: Int?,
+        offset: Long?,
         fetch: Int,
         domain: String,
         url: String

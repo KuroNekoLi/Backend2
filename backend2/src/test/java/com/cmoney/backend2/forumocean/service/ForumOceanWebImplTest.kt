@@ -7601,7 +7601,7 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(listOf())
         web.getMostRelevantMarketArticles(
-            offset = 0,
+            offset = 0L,
             fetch = 0
         )
 
@@ -7622,7 +7622,7 @@ class ForumOceanWebImplTest {
             )
         } returns Response.success(listOf())
         val result = web.getMostRelevantMarketArticles(
-            offset = 0,
+            offset = 0L,
             fetch = 0
         )
         Truth.assertThat(result.isSuccess).isTrue()
@@ -7639,7 +7639,7 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(401, "".toResponseBody())
         val result = web.getMostRelevantMarketArticles(
-            offset = 0,
+            offset = 0L,
             fetch = 0
         )
         Truth.assertThat(result.isSuccess).isFalse()

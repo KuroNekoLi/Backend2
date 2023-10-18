@@ -1365,7 +1365,7 @@ interface ForumOceanService {
     suspend fun getMostRelevantCommodityArticles(
         @Url url: String,
         @Header("Authorization") authorization: String,
-        @Query("offset") offset: Int?,
+        @Query("offset") offset: Long?,
         @Query("fetch") fetch: Int
     ): Response<List<ArticleResponseBody.UnknownArticleResponseBody>>
 
@@ -1383,7 +1383,7 @@ interface ForumOceanService {
     suspend fun getMostRelevantMarketArticles(
         @Url url: String,
         @Header("Authorization") authorization: String,
-        @Query("offset") offset: Int?,
+        @Query("offset") offset: Long?,
         @Query("fetch") fetch: Int
     ): Response<List<ArticleResponseBody.UnknownArticleResponseBody>>
 
