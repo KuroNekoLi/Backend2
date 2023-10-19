@@ -1,3 +1,13 @@
+## [5.57.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.56.1...5.57.0) (2023-10-19)
+
+
+### Features
+
+- ForumOceanService
+	- 新增 getMostRelevantCommodityArticles 個股最相關文章 
+	- 新增 getMostRelevantMarketArticles 大盤最相關文章
+
+
 ## [5.56.1](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.56.0...5.56.1) (2023-10-18)
 
 
