@@ -68,7 +68,9 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.articlerespo
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetAllChatRoomResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetGroupBoardArticlesResponse
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.commodityrecommendation.GetCommodityRecommendationResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.group.GetGroupAllLatestArticlesResponseBody
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.marketrecommendation.GetMarketRecommendationResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.PromotedArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations.GetRecommendationResponse
@@ -2083,6 +2085,39 @@ class ForumOceanWebImpl(
             service.getSingleComment(
                 url = url,
                 authorization = manager.getAccessToken().createAuthorizationBearer()
+            ).checkResponseBody(jsonParser)
+        }
+    }
+
+    override suspend fun getMostRelevantCommodityArticles(
+        commodityId: String,
+        offset: Long?,
+        fetch: Int,
+        domain: String,
+        url: String
+    ): Result<GetCommodityRecommendationResponseBody> = withContext(dispatcher.io()){
+        kotlin.runCatching  {
+            service.getMostRelevantCommodityArticles(
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
+                offset = offset,
+                fetch = fetch
+            ).checkResponseBody(jsonParser)
+        }
+    }
+
+    override suspend fun getMostRelevantMarketArticles(
+        offset: Long?,
+        fetch: Int,
+        domain: String,
+        url: String
+    ): Result<GetMarketRecommendationResponseBody> = withContext(dispatcher.io()) {
+        kotlin.runCatching {
+            service.getMostRelevantMarketArticles(
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
+                offset = offset,
+                fetch = fetch
             ).checkResponseBody(jsonParser)
         }
     }
