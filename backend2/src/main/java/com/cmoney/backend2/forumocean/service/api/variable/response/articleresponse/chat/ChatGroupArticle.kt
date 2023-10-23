@@ -4,7 +4,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.articlerespo
 import com.google.gson.annotations.SerializedName
 
 /**
- * 看板文章回傳
+ * 聊天室看板文章資料
  *
  * @property id
  * @property creatorId
@@ -32,8 +32,9 @@ import com.google.gson.annotations.SerializedName
  * @property authType
  * @property isPromotedArticle
  * @property isPinnedPromotedArticle
+ * @property reply 被回覆的訊息內容
  */
-data class GroupArticlesResponseBody(
+data class ChatGroupArticle(
     @SerializedName("id")
     val id: String?,
     @SerializedName("creatorId")
@@ -85,5 +86,7 @@ data class GroupArticlesResponseBody(
     @SerializedName("isPromotedArticle")
     val isPromotedArticle: Boolean?,
     @SerializedName("isPinnedPromotedArticle")
-    val isPinnedPromotedArticle: Boolean?
+    val isPinnedPromotedArticle: Boolean?,
+    @SerializedName("reply")
+    val reply: ArticleReply?
 )
