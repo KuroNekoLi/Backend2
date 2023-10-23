@@ -60,7 +60,9 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.articlerespo
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetAllChatRoomResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetGroupBoardArticlesResponse
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.commodityrecommendation.GetCommodityRecommendationResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.group.GetGroupAllLatestArticlesResponseBody
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.marketrecommendation.GetMarketRecommendationResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.PromotedArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.recommendations.GetRecommendationResponse
@@ -197,6 +199,16 @@ interface ForumOceanWeb {
         domain: String = manager.getForumOceanSettingAdapter().getDomain(),
         url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Article/${articleId}"
     ): Result<Unit>
+
+    /**
+     * 刪除看板文章
+     */
+    suspend fun deleteGroupArticle(
+        articleId: Long,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/GroupArticle/${articleId}"
+    ): Result<Unit>
+
 
     /**
      * 取得指定使用者的統計資訊
@@ -2084,6 +2096,36 @@ interface ForumOceanWeb {
         url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Article/${commentId}"
     ): Result<CommentResponseBodyV2>
 
+    /**
+     * 取得個股最相關文章
+     * @param commodityId 商品id
+     * @param offset 起始權重，不帶則從頭取文章
+     * @param fetch 取得筆數
+     * @param domain 網域名稱
+     * @param url 完整的Url
+     */
+    suspend fun getMostRelevantCommodityArticles(
+        commodityId: String,
+        offset: Long? = null,
+        fetch: Int,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Article/Stock/${commodityId}/Recommended"
+    ):Result<GetCommodityRecommendationResponseBody>
+
+    /**
+     * 取得大盤最相關文章
+     *
+     * @param offset 起始權重 (不帶從頭取)
+     * @param fetch 取得數量
+     * @param domain 網域名稱
+     * @param url 完整的Url
+     */
+    suspend fun getMostRelevantMarketArticles(
+        offset: Long? = null,
+        fetch: Int,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/Article/Market/Recommended"
+    ): Result<GetMarketRecommendationResponseBody>
 
     /**
      * 取得推薦文章
