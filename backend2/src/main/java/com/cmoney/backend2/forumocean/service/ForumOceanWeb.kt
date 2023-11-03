@@ -59,6 +59,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.request.mediatype.Med
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetAllChatRoomResponse
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetChatGroupArticlesResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetGroupBoardArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.commodityrecommendation.GetCommodityRecommendationResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.group.GetGroupAllLatestArticlesResponseBody
@@ -1865,6 +1866,28 @@ interface ForumOceanWeb {
         domain: String = manager.getForumOceanSettingAdapter().getDomain(),
         url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/GroupArticle/Board/${boardId}"
     ): Result<GetGroupBoardArticlesResponse>
+
+    /**
+     * 取得指定聊天室看板文章
+     *
+     * 取回來的文章中不包含起始權重那篇文章，不帶起始權重其預設值會根據fetch的正負而不同。 分以下情況:
+     * fetch > 0時，起始權重會被設為long的最大值，並往權重小的文章取。
+     * fetch < 0時，起始權重會被設為long的最小值，並往權重大的文章取。
+     *
+     * @param boardId 看板Id
+     * @param startWeight 起始權重，可不帶，其預設值隨fetch的正負改變
+     * @param fetch 欲取的文章篇數，不帶的話預設為10，上限為20筆
+     * @param domain 網域名稱
+     * @param url 完整的Url
+     *
+     */
+    suspend fun getChatroomArticles(
+        boardId: Long,
+        startWeight: Long?,
+        fetch: Int?,
+        domain: String = manager.getForumOceanSettingAdapter().getDomain(),
+        url: String = "${domain}${manager.getForumOceanSettingAdapter().getPathName()}api/GroupArticle/Chatroom/Board/${boardId}"
+    ): Result<GetChatGroupArticlesResponseBody>
 
     /**
      * 聊天室: 收回自己的訊息

@@ -67,6 +67,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.request.mediatype.Med
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetAllChatRoomResponse
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetChatGroupArticlesResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetGroupBoardArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.commodityrecommendation.GetCommodityRecommendationResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.group.GetGroupAllLatestArticlesResponseBody
@@ -1856,6 +1857,23 @@ class ForumOceanWebImpl(
     ): Result<GetGroupBoardArticlesResponse> = withContext(dispatcher.io()) {
         runCatching {
             service.getBoardArticles(
+                url = url,
+                authorization = manager.getAccessToken().createAuthorizationBearer(),
+                startWeight = startWeight,
+                fetch = fetch
+            ).checkResponseBody(jsonParser)
+        }
+    }
+
+    override suspend fun getChatroomArticles(
+        boardId: Long,
+        startWeight: Long?,
+        fetch: Int?,
+        domain: String,
+        url: String
+    ): Result<GetChatGroupArticlesResponseBody> = withContext(dispatcher.io()) {
+        kotlin.runCatching {
+            service.getChatroomArticles(
                 url = url,
                 authorization = manager.getAccessToken().createAuthorizationBearer(),
                 startWeight = startWeight,

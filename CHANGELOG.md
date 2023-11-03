@@ -1,4 +1,13 @@
-## [5.57.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.56.1...5.57.0) (2023-10-19)
+# [5.58.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.57.0...5.58.0) (2023-11-3)
+
+
+### Features
+
+- ForumOceanService
+	- 新增 getChatroomArticles 取得指定聊天室看板文章 
+
+
+# [5.57.0](http://192.168.10.147/CG_Mobile/CG_Module_Android/Backend2/backend2/compare/5.56.1...5.57.0) (2023-10-19)
 
 
 ### Features

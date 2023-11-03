@@ -62,6 +62,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.response.articlerespo
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetGroupBoardArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.group.GetGroupAllLatestArticlesResponseBody
 import com.cmoney.backend2.forumocean.service.api.schemas.v2.RecommendedClubsResponse
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetChatGroupArticlesResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.commodityrecommendation.GetCommodityRecommendationResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.marketrecommendation.GetMarketRecommendationResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.promoted.GetPromotedArticlesResponse
@@ -1187,6 +1188,25 @@ interface ForumOceanService {
         @Query("startWeight") startWeight: Long?, // Optional.
         @Query("fetch") fetch: Int
     ): Response<GetGroupBoardArticlesResponse>
+
+    /**
+     * 取得指定聊天室看板文章
+     *
+     * @param url 網址
+     * @param authorization 授權 Token
+     * @param startWeight 起始權重 null 表示重頭開始
+     * @param fetch 取得數量 上限 20, 預設為 10
+     * @return
+     */
+    @RecordApi
+    @GET
+    @Headers("X-Version: 2.0")
+    suspend fun getChatroomArticles(
+        @Url url: String,
+        @Header("Authorization") authorization: String,
+        @Query("startWeight") startWeight: Long?,
+        @Query("fetch") fetch: Int?
+    ): Response<GetChatGroupArticlesResponseBody>
 
     /**
      * 聊天室: 收回自己的訊息
