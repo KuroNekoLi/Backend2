@@ -57,6 +57,7 @@ import com.cmoney.backend2.forumocean.service.api.variable.request.ReactionType
 import com.cmoney.backend2.forumocean.service.api.variable.response.GroupPositionInfo
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.ArticleResponseBodyV2
+import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetChatGroupArticlesResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.chat.GetGroupBoardArticlesResponse
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.commodityrecommendation.GetCommodityRecommendationResponseBody
 import com.cmoney.backend2.forumocean.service.api.variable.response.articleresponse.group.GetGroupAllLatestArticlesResponseBody
@@ -6632,6 +6633,66 @@ class ForumOceanWebImplTest {
             )
         } returns Response.error(500, "".toResponseBody())
         val result = web.getBoardArticles(0, 0, 0)
+        Truth.assertThat(result.isFailure)
+            .isTrue()
+    }
+
+    @Test
+    fun `getChatroomArticles_check url`() = testScope.runTest {
+        val boardId = 123L
+        val expect = "${EXCEPT_DOMAIN}${EXCEPT_PATH_NAME}api/GroupArticle/Chatroom/Board/$boardId"
+        val urlSlot = slot<String>()
+        coEvery {
+            forumOceanService.getChatroomArticles(
+                url = capture(urlSlot),
+                authorization = any(),
+                startWeight = any(),
+                fetch = any()
+            )
+        } returns Response.success(
+            GetChatGroupArticlesResponseBody(
+                articles = emptyList(),
+                hasNext = true,
+                nextStartWeight = 0
+            )
+        )
+        web.getChatroomArticles(boardId = boardId, startWeight = 0, fetch = 0)
+        Truth.assertThat(urlSlot.captured)
+            .isEqualTo(expect)
+    }
+
+    @Test
+    fun getChatroomArticles_success() = testScope.runTest {
+        coEvery {
+            forumOceanService.getChatroomArticles(
+                url = any(),
+                authorization = any(),
+                startWeight = any(),
+                fetch = any()
+            )
+        } returns Response.success(
+            GetChatGroupArticlesResponseBody(
+                articles = emptyList(),
+                hasNext = true,
+                nextStartWeight = 0L
+            )
+        )
+        val result = web.getChatroomArticles(boardId = 0, startWeight = 0, fetch = 0)
+        Truth.assertThat(result.isSuccess)
+            .isTrue()
+    }
+
+    @Test
+    fun getChatroomArticles_failure() = testScope.runTest {
+        coEvery {
+            forumOceanService.getChatroomArticles(
+                url = any(),
+                authorization = any(),
+                startWeight = any(),
+                fetch = any()
+            )
+        } returns Response.error(500, "".toResponseBody())
+        val result = web.getBoardArticles(boardId = 0, startWeight = 0, fetch = 0)
         Truth.assertThat(result.isFailure)
             .isTrue()
     }
